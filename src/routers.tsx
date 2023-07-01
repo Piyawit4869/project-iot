@@ -29,4 +29,7 @@ export const router = createBrowserRouter([
     // action: LoginAction,
     element: <QuotationPage />,
   },
+  {
+    path: ""
+  }
 ]);
