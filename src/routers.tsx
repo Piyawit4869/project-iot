@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { Root } from "./pages/Roots";
 import { DashboardPage } from "./pages/Dashboard";
 import { LoginPage } from "./pages/Login";
+import { QuotationPage } from "./components/dashboard/Quotation";
 
 export const router = createBrowserRouter([
   {
@@ -22,5 +23,10 @@ export const router = createBrowserRouter([
     path: "/login",
     // action: LoginAction,
     element: <LoginPage />,
+  },
+  {
+    path: "/quotation",
+    // action: LoginAction,
+    element: <QuotationPage />,
   },
 ]);

@@ -1,6 +1,5 @@
 import { Layout, Menu } from "antd";
 import { FileAddOutlined, DashboardOutlined } from "@ant-design/icons";
-
 import { Content, Header } from "antd/es/layout/layout";
 import { useNavigate } from "react-router";
 
@@ -23,8 +22,8 @@ export const AppLayout = (props: any) => {
             console.log(collapsed, type);
           }}
         >
-          <div>
-            <h1>Hello world</h1>
+          <div style={{marginLeft:"12px"}}>
+            <h1>Stay-Organize</h1>
           </div>
 
           <Menu
@@ -44,6 +43,10 @@ export const AppLayout = (props: any) => {
                 key: "/settings",
                 icon: <FileAddOutlined />,
               },
+              {
+                label: "quotaion",
+                key: "/quotation",
+              }
             ]}
           ></Menu>
         </Sider>

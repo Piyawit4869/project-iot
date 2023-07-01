@@ -6,8 +6,8 @@ export const DashboardPage = () => {
     <div>
       <Card
         title="testing"
-        extra={<Link to="/dashboard">เพิ่มเติม</Link>}
-      ></Card>
+        extra={<Link to="/dashboard">เพิ่มเติม</Link>}>      
+      </Card>
     </div>
   );
 };
