@@ -46,6 +46,10 @@ export const AppLayout = (props: any) => {
               {
                 label: "quotaion",
                 key: "/quotation",
+              },
+              {
+                label: "indexquotationpage",
+                key: "/indexquotationpage",
               }
             ]}
           ></Menu>
