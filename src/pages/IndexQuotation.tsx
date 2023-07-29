@@ -2,8 +2,6 @@ import { Button, Dropdown, Form, MenuProps, Row, Space, Table, Typography, messa
 import { Title } from "../components/global/Title";
 import { ThemeColors } from "../styles/theme";
 import { DownOutlined, PlusSquareOutlined } from "@ant-design/icons";
-import Column from "antd/es/table/Column";
-
 export const IndexQuotationPage = () => {
 
     const dataSource = [
