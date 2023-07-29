@@ -53,3 +53,6 @@ code {
     transform: rotate(360deg);
   }
 }
+.add_new_quotation{
+  margin-top: 20px;
+}

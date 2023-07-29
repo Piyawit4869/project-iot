@@ -2,7 +2,11 @@ import { createBrowserRouter } from "react-router-dom";
 import { Root } from "./pages/Roots";
 import { DashboardPage } from "./pages/Dashboard";
 import { LoginPage } from "./pages/Login";
+import { IndexQuotationPage } from "./pages/IndexQuotation";
 import { CreateQuotationPage } from "./pages/CreateQuotation";
+
+
+
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +26,11 @@ export const router = createBrowserRouter([
         // action: LoginAction,
         element: <CreateQuotationPage />,
       },
+      
+  {
+    path: "/indexquotationpage",
+    element: <IndexQuotationPage/>,
+  }
     ],
   },
   {
@@ -33,4 +42,8 @@ export const router = createBrowserRouter([
   {
     path: "",
   },
+
+ 
+
+
 ]);
