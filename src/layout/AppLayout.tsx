@@ -47,7 +47,7 @@ export const AppLayout = (props: any) => {
                 key: "/settings",
                 icon: <FileAddOutlined />,
               },
-            {
+{
                 label: "quotaion",
                 key: "/quotation",
               },
