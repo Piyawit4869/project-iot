@@ -60,7 +60,7 @@ export const AppLayout = (props: any) => {
 
         <Content
           style={{
-            margin: "24px 16px 0",
+            backgroundColor: ThemeColors.bgColor,
           }}
         >
           <div
