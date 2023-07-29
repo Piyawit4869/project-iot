@@ -3,63 +3,61 @@ import { AppLayout } from "../layout/AppLayout";
 import { Link } from "react-router-dom";
 import { PlusOutlined } from "@ant-design/icons";
 
+
 export const IndexQuotationPage = () => {
-
-    const { Option } = Select;
-
     const handleChange = (_value: string[]) => {
         console.log('selected ${value}');
     }
 
     const dataSource = [
         {
-          key: '2',
+          key: '1',
           documentNumber: 1234,
           name: 'John',
           issueDate: '01/01/2566',
           validDate: '01/01/2566',
           value: 2000,
-          status: 'wait',
+          status: 'ร่าง',
         },
         {
           key: '2',
-          documentNumber: 1234,
-          name: 'John',
+          documentNumber: 1235,
+          name: 'Po',
           issueDate: '01/01/2566',
           validDate: '01/01/2566',
-          value: 2000,
-          status: 'wait',
+          value: 212100,
+          status: 'ร่าง',
         },
       ];
       
       const columns = [
         {
-          title: 'Document Number',
+          title: 'เลขที่เอกสาร',
           dataIndex: 'documentNumber',
           key: 'documentNumber',
         },
         {
-          title: 'Name',
+          title: 'ลูกค้า',
           dataIndex: 'name',
           key: 'name',
         },
         {
-          title: 'IssueDate',
+          title: 'วันที่ออก',
           dataIndex: 'issueDate',
           key: 'issueDate',
         },
         {
-            title: 'ValidDate',
+            title: 'ใช้ได้ถึง',
             dataIndex: 'validDate',
             key: 'validDate',
         },
         {
-            title: 'value',
+            title: 'มูลค่าสุทธิ์',
             dataIndex: 'value',
             key: 'value',
         },
         {
-            title: 'Status',
+            title: 'สถานะ',
             dataIndex: 'status',
             key: 'status',
         },
@@ -68,35 +66,32 @@ export const IndexQuotationPage = () => {
   return (
     <AppLayout>
         <Card
-           title="indexquotation"
+           title="quotation"
            extra={<Link to="/dashboard">เพิ่มเติม</Link>}>
-        <div className="status">
-                <Select
+        <div>
+          <div className="status">
+              <Select
                 className="status_select"
-                mode="multiple"
-                style={{width:'275px'}}
-                placeholder="select"
-                defaultValue={['all']}
+                style={{minWidth:'175px',}}
+                defaultValue={['ทั้งหมด']}
                 onChange={handleChange}
-                optionLabelProp="label"
-                >
-                    <Option value="ทั้งหมด" label="ทั้งหมด">           
-                    </Option>
-                    <Option value="ร่าง" label="ร่าง">           
-                    </Option>
-                    <Option value="รออนุมัติ" label="รออนุมัติ">           
-                    </Option>
-                    <Option value="รอตอบรับ" label="รอตอบรับ">           
-                    </Option>
-                    <Option value="ยอมรับแล้ว" label="ยอมรับแล้ว">           
-                    </Option>
-                </Select>
-        </div>
-        <div className="add_new_quotation">
-            <Button type="primary" icon={<PlusOutlined />}
-            style={{widows:'275px', height:'75px'}}>
-                สร้างใบเสนอราคา
-            </Button>
+                options={[
+                  {value: 'ทั้งหมด', label:'ทั้งหมด'},
+                  {value: 'ร่าง', label:'ร่าง'},
+                  {value: 'รออนุมัติ', label:'รออนุมัติ'},
+                  {value: 'รอตอบรับ', label:'รอตอบรับ'},
+                  {value: 'ตอบรับแล้ว', label:'ตอบรับแล้ว'}
+                ]}>
+              </Select>
+          </div>
+          <div className="add_new_quotation">
+            <Link to="/quotation">
+              <Button type="primary" icon={<PlusOutlined />} 
+              style={{width:'175px', height:'75px'}} >
+                    สร้างใบเสนอราคา
+              </Button>
+            </Link>
+          </div>
         </div>
         <div className="table_index_quota">
             <Table columns={columns} dataSource={dataSource} style={{marginTop:'20px'}}/>
