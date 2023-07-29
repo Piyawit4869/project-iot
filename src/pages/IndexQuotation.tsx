@@ -64,7 +64,7 @@ export const IndexQuotationPage = () => {
       ];
 
   return (
-    <AppLayout>
+
         <Card
            title="quotation"
            extra={<Link to="/dashboard">เพิ่มเติม</Link>}>
@@ -97,6 +97,6 @@ export const IndexQuotationPage = () => {
             <Table columns={columns} dataSource={dataSource} style={{marginTop:'20px'}}/>
         </div>
         </Card>
-    </AppLayout>
+
   );
 };
