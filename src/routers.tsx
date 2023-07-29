@@ -2,8 +2,12 @@ import { createBrowserRouter } from "react-router-dom";
 import { Root } from "./pages/Roots";
 import { DashboardPage } from "./pages/Dashboard";
 import { LoginPage } from "./pages/Login";
+
 import { QuotationPage } from "./components/dashboard/Quotation";
 import { IndexQuotationPage } from "./pages/IndexQuotation";
+
+import { CreateQuotationPage } from "./pages/CreateQuotation";
+
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +22,11 @@ export const router = createBrowserRouter([
         // action: deskIndexAction, // FIXME: action is defined to call api
         element: <DashboardPage />,
       },
+      {
+        path: "/create",
+        // action: LoginAction,
+        element: <CreateQuotationPage />,
+      },
     ],
   },
   {
@@ -25,13 +34,13 @@ export const router = createBrowserRouter([
     // action: LoginAction,
     element: <LoginPage />,
   },
+
   {
-    path: "/quotation",
-    // action: LoginAction,
-    element: <QuotationPage />,
+    path: "",
   },
   {
     path: "/indexquotationpage",
     element: <IndexQuotationPage/>,
   }
+
 ]);

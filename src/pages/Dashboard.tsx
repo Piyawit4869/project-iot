@@ -1,13 +1,14 @@
 import { Card } from "antd";
 import { Link } from "react-router-dom";
+import { ThemeColors } from "../styles/theme";
 
 export const DashboardPage = () => {
   return (
     <div>
       <Card
-        title="testing"
-        extra={<Link to="/dashboard">เพิ่มเติม</Link>}>      
-      </Card>
+        style={{ backgroundColor: ThemeColors.lightOrangeColor }}
+        extra={<Link to="/dashboard">เพิ่มเติม</Link>}
+      ></Card>
     </div>
   );
 };

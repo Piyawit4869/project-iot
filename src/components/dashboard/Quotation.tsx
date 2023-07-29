@@ -1,17 +1,18 @@
-import { Button, Card, DatePicker, Input, Select, } from "antd";
-import { Form } from "antd";
-import { AppLayout } from "../../layout/AppLayout";
-import { Link } from "react-router-dom";
+// import { Button, Card, DatePicker, Input, Select, } from "antd";
+// import { Form } from "antd";
+// import { AppLayout } from "../../layout/AppLayout";
+// import { Link } from "react-router-dom";
 
-export const QuotationPage = () => {
+// export const QuotationPage = () => {
 
-    const onFinish = (values: any) =>{
-        console.log('success:', values);
-    }
+//     const onFinish = (values: any) =>{
+//         console.log('success:', values);
+//     }
 
-    const onFinishFailed = (errorInfo: any) =>{
-        console.log('Failed:', errorInfo);
-    }
+//     const onFinishFailed = (errorInfo: any) =>{
+//         console.log('Failed:', errorInfo);
+//     }
+
 
     const {RangePicker} = DatePicker;
   return (
@@ -74,3 +75,4 @@ export const QuotationPage = () => {
     </AppLayout>
   );
 };
+

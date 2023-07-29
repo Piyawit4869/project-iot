@@ -1,7 +1,8 @@
 import { Layout, Menu } from "antd";
-import { FileAddOutlined, DashboardOutlined } from "@ant-design/icons";
+import { DashboardOutlined } from "@ant-design/icons";
 import { Content, Header } from "antd/es/layout/layout";
 import { useNavigate } from "react-router";
+import { ThemeColors } from "../styles/theme";
 
 export const AppLayout = (props: any) => {
   const { Sider } = Layout;
@@ -12,6 +13,7 @@ export const AppLayout = (props: any) => {
     <>
       <Layout style={{ height: "100%" }}>
         <Sider
+          style={{ backgroundColor: ThemeColors.primaryColor }}
           theme="light"
           breakpoint="lg"
           collapsedWidth="0"
@@ -22,13 +24,14 @@ export const AppLayout = (props: any) => {
             console.log(collapsed, type);
           }}
         >
-          <div style={{marginLeft:"12px"}}>
+          <div style={{ marginLeft: "12px" }}>
             <h1>Stay-Organize</h1>
           </div>
 
           <Menu
             theme="light"
             mode="inline"
+            style={{ backgroundColor: ThemeColors.primaryColor }}
             onClick={({ key }) => {
               navigate(key);
             }}
@@ -39,6 +42,7 @@ export const AppLayout = (props: any) => {
                 icon: <DashboardOutlined />,
               },
               {
+
                 label: "setting",
                 key: "/settings",
                 icon: <FileAddOutlined />,
@@ -47,6 +51,11 @@ export const AppLayout = (props: any) => {
                 label: "quotation",
                 key: "/indexquotationpage",
               }
+
+                label: "quotaion",
+                key: "/quotation",
+              },
+
             ]}
           ></Menu>
         </Sider>
@@ -62,7 +71,7 @@ export const AppLayout = (props: any) => {
 
         <Content
           style={{
-            margin: "24px 16px 0",
+            backgroundColor: ThemeColors.bgColor,
           }}
         >
           <div
