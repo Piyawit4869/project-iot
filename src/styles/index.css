@@ -56,3 +56,11 @@ code {
 .add_new_quotation{
   margin-top: 20px;
 }
+
+.ant-table-row {
+  font-size: 20px;
+  height: 64px;
+}
+
+
+
