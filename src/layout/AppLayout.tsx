@@ -44,8 +44,8 @@ export const AppLayout = (props: any) => {
                 icon: <FileAddOutlined />,
               },
               {
-                label: "quotaion",
-                key: "/quotation",
+                label: "quotation",
+                key: "/indexquotationpage",
               }
             ]}
           ></Menu>

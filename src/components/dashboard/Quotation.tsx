@@ -63,6 +63,11 @@ export const QuotationPage = () => {
                         <Form.Item>
                             <Button type="primary" htmlType="submit">Submit</Button>
                         </Form.Item>
+                        <Form.Item>
+                            <Link to={"/indexquotationpage"}>
+                                <Button>Cancel</Button>
+                            </Link>
+                        </Form.Item>
                 </Form>
         </div>
         </Card>

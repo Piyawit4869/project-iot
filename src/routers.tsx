@@ -3,6 +3,7 @@ import { Root } from "./pages/Roots";
 import { DashboardPage } from "./pages/Dashboard";
 import { LoginPage } from "./pages/Login";
 import { QuotationPage } from "./components/dashboard/Quotation";
+import { IndexQuotationPage } from "./pages/IndexQuotation";
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,7 @@ export const router = createBrowserRouter([
     element: <QuotationPage />,
   },
   {
-    path: ""
+    path: "/indexquotationpage",
+    element: <IndexQuotationPage/>,
   }
 ]);
