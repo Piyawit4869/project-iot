@@ -2,6 +2,7 @@
 
 /**
  * This function is a theme color of this project
+ *
  * @returns {ThemeColors{}}
  */
 
