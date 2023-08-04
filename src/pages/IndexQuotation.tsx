@@ -1,4 +1,4 @@
-import { Button, Card, Dropdown, Form, MenuProps, Row, Select, Space, Table, Typography, message, } from "antd";
+import { Button, Card, Dropdown, Form, MenuProps, Space, Table, Typography, message, } from "antd";
 import { Link } from "react-router-dom";
 import { DownOutlined, PlusOutlined } from "@ant-design/icons";
 import { ThemeColors } from "../styles/theme";
@@ -174,14 +174,7 @@ export const IndexQuotationPage = () => {
               boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
             }}>
               <Typography style={{ fontSize: "18px" }}>สถานะ</Typography>
-              <Form.Item
-              rules={[
-                {
-                  required: true,
-                  message: "กรุณากรอกชื่อ",
-                },
-              ]}
-            >
+              <Form.Item>
               <Dropdown
                 menu={{ items: itemsCurrency, onClick: onClickCurrency }}
               >
