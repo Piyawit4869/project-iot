@@ -159,7 +159,6 @@ export const IndexQuotationPage = () => {
       ];
 
   return (
-
         <Card
            title="quotation"
            extra={<Link to="/dashboard">เพิ่มเติม</Link>}>
@@ -204,15 +203,27 @@ export const IndexQuotationPage = () => {
               height:'72px',
               backgroundColor:'#E46F1B',
               fontSize:'22px',
-              }} >
+              }}>
                     สร้างใบเสนอราคา
               </Button>
             </Link>
           </div>
+        <div
+          style={{
+          width:'100%',
+          height:'124px',
+          flexShrink:'0', 
+          borderRadius:'10px', 
+          borderBottom:'1px solid var(--palettes-22, #EE9437', 
+          background:'var(--palettes-22, #EE9437)',
+          marginTop:'20px',
+          }}>
+            <Table columns={columns} dataSource={dataSource}></Table>
         </div>
         <div className="table_index_quota">
             <Table columns={columns} dataSource={dataSource} style={{marginTop:'40px'}}/>
         </div>
-        </Card>
+      </div>
+      </Card>
   );
 };
