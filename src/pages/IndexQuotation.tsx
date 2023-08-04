@@ -192,11 +192,9 @@ export const IndexQuotationPage = () => {
                 </a>
               </Dropdown>
             </Form.Item>
-          </div>
-          <div className="create" style={{
-            flex:'',
-          }}>
-          <Link to="/create">
+            </div>
+            <div>
+            <Link to="/create">
               <Button type="primary" icon={<PlusOutlined />} 
               style={{
               width:'253px',
@@ -208,22 +206,10 @@ export const IndexQuotationPage = () => {
               </Button>
             </Link>
           </div>
-        <div
-          style={{
-          width:'100%',
-          height:'124px',
-          flexShrink:'0', 
-          borderRadius:'10px', 
-          borderBottom:'1px solid var(--palettes-22, #EE9437', 
-          background:'var(--palettes-22, #EE9437)',
-          marginTop:'20px',
-          }}>
-            <Table columns={columns} dataSource={dataSource}></Table>
         </div>
         <div className="table_index_quota">
             <Table columns={columns} dataSource={dataSource} style={{marginTop:'40px'}}/>
         </div>
-      </div>
       </Card>
   );
 };
