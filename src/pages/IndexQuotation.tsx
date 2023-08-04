@@ -5,10 +5,6 @@ import { ThemeColors } from "../styles/theme";
 
 
 export const IndexQuotationPage = () => {
-    const handleChange = (_value: string[]) => {
-        console.log('selected ${value}');
-    }
-
     const dataSource = [
         {
           key: '1',
