@@ -1,6 +1,7 @@
-import { Button, Card, Select, Table, } from "antd";
+import { Button, Card, Dropdown, Form, MenuProps, Row, Select, Space, Table, Typography, message, } from "antd";
 import { Link } from "react-router-dom";
-import { PlusOutlined } from "@ant-design/icons";
+import { DownOutlined, PlusOutlined } from "@ant-design/icons";
+import { ThemeColors } from "../styles/theme";
 
 
 export const IndexQuotationPage = () => {
@@ -20,6 +21,78 @@ export const IndexQuotationPage = () => {
         },
         {
           key: '2',
+          documentNumber: 1235,
+          name: 'Po',
+          issueDate: '01/01/2566',
+          validDate: '01/01/2566',
+          value: 212100,
+          status: 'ร่าง',
+        },
+        {
+          key: '3',
+          documentNumber: 1235,
+          name: 'Po',
+          issueDate: '01/01/2566',
+          validDate: '01/01/2566',
+          value: 212100,
+          status: 'ร่าง',
+        },
+        {
+          key: '4',
+          documentNumber: 1235,
+          name: 'Po',
+          issueDate: '01/01/2566',
+          validDate: '01/01/2566',
+          value: 212100,
+          status: 'ร่าง',
+        },
+        {
+          key: '5',
+          documentNumber: 1235,
+          name: 'Po',
+          issueDate: '01/01/2566',
+          validDate: '01/01/2566',
+          value: 212100,
+          status: 'ร่าง',
+        },
+        {
+          key: '6',
+          documentNumber: 1235,
+          name: 'Po',
+          issueDate: '01/01/2566',
+          validDate: '01/01/2566',
+          value: 212100,
+          status: 'ร่าง',
+        },
+        {
+          key: '7',
+          documentNumber: 1235,
+          name: 'Po',
+          issueDate: '01/01/2566',
+          validDate: '01/01/2566',
+          value: 212100,
+          status: 'ร่าง',
+        },
+        {
+          key: '8',
+          documentNumber: 1235,
+          name: 'Po',
+          issueDate: '01/01/2566',
+          validDate: '01/01/2566',
+          value: 212100,
+          status: 'ร่าง',
+        },
+        {
+          key: '9',
+          documentNumber: 1235,
+          name: 'Po',
+          issueDate: '01/01/2566',
+          validDate: '01/01/2566',
+          value: 212100,
+          status: 'ร่าง',
+        },
+        {
+          key: '10',
           documentNumber: 1235,
           name: 'Po',
           issueDate: '01/01/2566',
@@ -62,40 +135,95 @@ export const IndexQuotationPage = () => {
         },
       ];
 
+      const onClickCurrency: MenuProps["onClick"] = ({ key }) => {
+        message.info(`Click on item ${key}`);
+      };
+
+      const itemsCurrency: MenuProps["items"] = [
+        {
+          label: "ทั้งหมด",
+          key: "1",
+        },
+        {
+          label: "ร่าง",
+          key: "2",
+        },
+        {
+          label: "รออนุมัติ",
+          key: "3",
+        },
+        {
+          label: "รอตอบรับ",
+          key: "4",
+        },
+        {
+          label: "ตอบรับแล้ว",
+          key: "5",
+        },
+      ];
+
   return (
 
         <Card
            title="quotation"
            extra={<Link to="/dashboard">เพิ่มเติม</Link>}>
-        <div>
-          <div className="status">
-              <Select
-                className="status_select"
-                style={{minWidth:'175px',}}
-                defaultValue={['ทั้งหมด']}
-                onChange={handleChange}
-                options={[
-                  {value: 'ทั้งหมด', label:'ทั้งหมด'},
-                  {value: 'ร่าง', label:'ร่าง'},
-                  {value: 'รออนุมัติ', label:'รออนุมัติ'},
-                  {value: 'รอตอบรับ', label:'รอตอบรับ'},
-                  {value: 'ตอบรับแล้ว', label:'ตอบรับแล้ว'}
-                ]}>
-              </Select>
+        <div className="statusbar" style={{display:'grid' ,gap:'2rem'}}> 
+          <div className="status" style={{
+              width: "253px",
+              height:"72px",
+              backgroundColor: "white",
+              paddingTop: "10px",
+              paddingLeft: "10px",
+              borderRadius: "10px",
+              boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
+            }}>
+              <Typography style={{ fontSize: "18px" }}>สถานะ</Typography>
+              <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "กรุณากรอกชื่อ",
+                },
+              ]}
+            >
+              <Dropdown
+                menu={{ items: itemsCurrency, onClick: onClickCurrency }}
+              >
+                <a onClick={(e) => e.preventDefault()}>
+                  <Space
+                    style={{
+                      width: "90%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      color: ThemeColors.lightOrangeColor,
+                    }}
+                  >
+                    -
+                    <DownOutlined />
+                  </Space>
+                </a>
+              </Dropdown>
+            </Form.Item>
           </div>
-          <div className="add_new_quotation">
-            <Link to="/quotation">
+          <div className="create" style={{
+            flex:'',
+          }}>
+          <Link to="/create">
               <Button type="primary" icon={<PlusOutlined />} 
-              style={{width:'175px', height:'75px'}} >
+              style={{
+              width:'253px',
+              height:'72px',
+              backgroundColor:'#E46F1B',
+              fontSize:'22px',
+              }} >
                     สร้างใบเสนอราคา
               </Button>
             </Link>
           </div>
         </div>
         <div className="table_index_quota">
-            <Table columns={columns} dataSource={dataSource} style={{marginTop:'20px'}}/>
+            <Table columns={columns} dataSource={dataSource} style={{marginTop:'40px'}}/>
         </div>
         </Card>
-
   );
 };

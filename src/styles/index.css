@@ -56,3 +56,11 @@ code {
 .add_new_quotation{
   margin-top: 20px;
 }
+
+.ant-table-tbody > tr:hover {
+  background-color: #E46F1B;
+}
+
+.statusbar {
+  grid-template-columns: repeat(12, 1fr);
+}
