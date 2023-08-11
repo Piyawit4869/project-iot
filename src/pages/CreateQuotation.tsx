@@ -46,7 +46,7 @@ export const CreateQuotationPage = () => {
 
   return (
     <div>
-      {Title("Quotation")}
+      {Title("Create Quotation")}
       <Form>
         <Row>
           <div

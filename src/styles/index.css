@@ -53,12 +53,23 @@ code {
     transform: rotate(360deg);
   }
 }
-.add_new_quotation{
+.add_new_quotation {
   margin-top: 20px;
 }
 
+.ant-menu-item-selected {
+  background-color: #fff5ed !important;
+  color: #ee9437 !important;
+}
+
+.ant-menu-item:hover {
+  background-color: #f0ba3d !important;
+  color: white !important;
+  opacity: 0.5;
+}
+
 .ant-table-tbody > tr:hover {
-  background-color: #E46F1B;
+  background-color: #e46f1b;
 }
 
 .statusbar {

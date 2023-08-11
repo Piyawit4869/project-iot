@@ -5,9 +5,6 @@ import { LoginPage } from "./pages/Login";
 import { IndexQuotationPage } from "./pages/IndexQuotation";
 import { CreateQuotationPage } from "./pages/CreateQuotation";
 
-
-
-
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -26,11 +23,11 @@ export const router = createBrowserRouter([
         // action: LoginAction,
         element: <CreateQuotationPage />,
       },
-      
-  {
-    path: "/indexquotationpage",
-    element: <IndexQuotationPage/>,
-  }
+
+      {
+        path: "/quotation",
+        element: <IndexQuotationPage />,
+      },
     ],
   },
   {
@@ -42,8 +39,4 @@ export const router = createBrowserRouter([
   {
     path: "",
   },
-
- 
-
-
 ]);
