@@ -67,3 +67,11 @@ code {
   color: white !important;
   opacity: 0.5;
 }
+
+.ant-table-tbody > tr:hover {
+  background-color: #e46f1b;
+}
+
+.statusbar {
+  grid-template-columns: repeat(12, 1fr);
+}
