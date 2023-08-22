@@ -32,7 +32,7 @@ export const LoginPage = () => {
     <Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
       <Card style={{
         width:"600px", 
-        height:"450px", 
+        height:"500px", 
         justifyItems:"center",
         }}>
       <Row>
