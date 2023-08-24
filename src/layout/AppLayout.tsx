@@ -1,6 +1,5 @@
 import { Button, Image, Layout, Menu, Row, Typography } from "antd";
 import {
-  BarsOutlined,
   FileDoneOutlined,
   HomeOutlined,
   MenuFoldOutlined,
