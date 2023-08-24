@@ -50,7 +50,7 @@ export const CreateQuotationPage = () => {
       {Title("Create Quotation")}
       <Form>
         <Row justify={"space-between"} wrap={false}>
-          <div>
+          <div style={{ width: "55%" }}>
             <Row wrap={false}>
               <div
                 style={{
@@ -621,15 +621,15 @@ export const CreateQuotationPage = () => {
             >
               <Typography style={{ fontSize: "18px" }}>ลบรายการ </Typography>
             </div>
-            <div
+            <Button
               style={{
                 width: "100%",
                 height: "80px",
                 backgroundColor: ThemeColors.orangeColor,
                 borderRadius: "10px",
                 marginBottom: "10px",
-                paddingTop: "25px",
               }}
+              onClick={() => {}}
             >
               <Row justify={"center"} align={"middle"}>
                 <div
@@ -651,7 +651,7 @@ export const CreateQuotationPage = () => {
 
                 <Typography style={{ fontSize: "18px" }}>ลบ </Typography>
               </Row>
-            </div>
+            </Button>
           </Row>
         </div>
         <Typography
@@ -663,7 +663,38 @@ export const CreateQuotationPage = () => {
         >
           ปุ่มเพิ่มรายการ
         </Typography>
-        <div
+        <Button
+          style={{
+            width: "16%",
+            height: "80px",
+            backgroundColor: ThemeColors.orangeColor,
+            borderRadius: "10px",
+            marginBottom: "20px",
+          }}
+          onClick={() => {}}
+        >
+          <Row justify={"center"} align={"middle"}>
+            <div
+              style={{
+                display: "flex",
+                width: "28px",
+                height: "28px",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "white",
+                borderRadius: "4px",
+                marginRight: "5px",
+              }}
+            >
+              <PlusCircleOutlined
+                style={{ color: ThemeColors.orangeColor, fontSize: "24px" }}
+              />
+            </div>
+
+            <Typography style={{ fontSize: "18px" }}>เพิ่ม </Typography>
+          </Row>
+        </Button>
+        {/* <div
           style={{
             width: "16%",
             height: "80px",
@@ -693,7 +724,7 @@ export const CreateQuotationPage = () => {
 
             <Typography style={{ fontSize: "18px" }}>เพิ่ม </Typography>
           </Row>
-        </div>
+        </div> */}
         <div
           style={{
             backgroundColor: ThemeColors.goldColor,

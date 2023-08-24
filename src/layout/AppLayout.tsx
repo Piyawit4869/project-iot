@@ -3,15 +3,19 @@ import {
   BarsOutlined,
   FileDoneOutlined,
   HomeOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
 import { Content, Header } from "antd/es/layout/layout";
 import { useNavigate } from "react-router";
 import { ThemeColors } from "../styles/theme";
 import Logo from "../assets/images/Logo-StayOrganized.png";
+import { useState } from "react";
 
 export const AppLayout = (props: any) => {
   const { Sider } = Layout;
+  const [collapsed, setCollapsed] = useState(false);
 
   const navigate = useNavigate();
 
@@ -21,32 +25,36 @@ export const AppLayout = (props: any) => {
         <Sider
           style={{
             backgroundColor: ThemeColors.primaryColor,
+            overflow: "auto",
+            zIndex: 1,
+            left: 0,
+            top: 0,
+            bottom: 0,
           }}
-          theme="light"
-          breakpoint="lg"
-          collapsedWidth="0"
-          onBreakpoint={(broken) => {
-            console.log(broken);
-          }}
-          onCollapse={(collapsed, type) => {
-            console.log(collapsed, type);
-          }}
+          trigger={null}
+          collapsible
+          collapsed={collapsed}
         >
           <div
             style={{
               display: "flex",
               left: "25px",
-              position: "fixed",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
               marginTop: "10px",
             }}
           >
-            <Image width={100} src={Logo} preview={false} />
-            <Typography style={{ fontSize: "24px", color: "white" }}>
-              Stay-Organize
-            </Typography>
+            <Image width={50} src={Logo} preview={false} />
+            {collapsed ? (
+              <div style={{ height: "100px" }}></div>
+            ) : (
+              <div style={{ height: "100px" }}>
+                <Typography style={{ fontSize: "24px", color: "white" }}>
+                  Stay-Organize
+                </Typography>
+              </div>
+            )}
           </div>
 
           <Menu
@@ -54,9 +62,9 @@ export const AppLayout = (props: any) => {
             theme="light"
             mode="inline"
             style={{
-              width: "200px",
+              width: "100%",
               top: "170px",
-              position: "fixed",
+
               backgroundColor: ThemeColors.primaryColor,
               color: "white",
             }}
@@ -96,8 +104,9 @@ export const AppLayout = (props: any) => {
             }}
           >
             <Button
-              icon={<BarsOutlined />}
               size={"middle"}
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
               style={{
                 backgroundColor: ThemeColors.orangeColor,
                 color: "white",

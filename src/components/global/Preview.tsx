@@ -14,7 +14,7 @@ export const Preview = () => {
   return (
     <Card
       style={{
-        width: "70%",
+        width: "100%",
         height: "100%",
         borderRadius: "25px",
         marginLeft: "30px",
@@ -49,13 +49,25 @@ export const Preview = () => {
               alignItems: "end",
             }}
           >
-            <Typography>(ต้นฉบับ)</Typography>
-            <Typography>ใบเสนอราคา</Typography>
+            <Typography style={{ fontSize: "18px", fontWeight: "900" }}>
+              (ต้นฉบับ)
+            </Typography>
+            <Typography
+              style={{
+                fontSize: "24px",
+                fontWeight: "900",
+                color: ThemeColors.orangeColor,
+              }}
+            >
+              ใบเสนอราคา
+            </Typography>
           </div>
         </Row>
         <Row justify="space-between" wrap={false}>
           <div>
-            <Typography>Company name</Typography>
+            <Typography style={{ fontSize: "24px", fontWeight: "900" }}>
+              Company name
+            </Typography>
             <Typography>
               ห้องเลขที่ 1454/127 ถนน เทพรัตน แขวงบางนาใต้ เขตบางนา
               กรุงเทพมหานคร 10260
@@ -117,7 +129,15 @@ export const Preview = () => {
         <div style={{ height: "300px" }}>
           <Card bodyStyle={{ padding: "10px" }}>
             <Row justify="space-between">
-              <Typography>1.Topic</Typography>
+              <Typography
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "900",
+                  color: ThemeColors.orangeColor,
+                }}
+              >
+                1.Topic
+              </Typography>
               <div
                 style={{
                   width: "30%",
@@ -125,9 +145,33 @@ export const Preview = () => {
                   justifyContent: "space-between",
                 }}
               >
-                <Typography>0</Typography>
-                <Typography>0</Typography>
-                <Typography>0</Typography>
+                <Typography
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: "900",
+                    color: ThemeColors.orangeColor,
+                  }}
+                >
+                  0
+                </Typography>
+                <Typography
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: "900",
+                    color: ThemeColors.orangeColor,
+                  }}
+                >
+                  0
+                </Typography>
+                <Typography
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: "900",
+                    color: ThemeColors.orangeColor,
+                  }}
+                >
+                  0
+                </Typography>
               </div>
             </Row>
           </Card>
@@ -236,13 +280,27 @@ export const Preview = () => {
         />
         <Row justify="space-around">
           <div>
-            <Typography style={{ marginBottom: "100px" }}>
+            <Typography
+              style={{
+                marginBottom: "100px",
+                fontSize: "14px",
+                fontWeight: "900",
+                color: ThemeColors.orangeColor,
+              }}
+            >
               Company name
             </Typography>
             <Typography>30/07/2566</Typography>
           </div>
           <div>
-            <Typography style={{ marginBottom: "100px" }}>
+            <Typography
+              style={{
+                marginBottom: "100px",
+                fontSize: "14px",
+                fontWeight: "900",
+                color: ThemeColors.orangeColor,
+              }}
+            >
               ผู้รับเอกสาร
             </Typography>
             <Typography>30/07/2566</Typography>
