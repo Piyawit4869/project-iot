@@ -20,4 +20,6 @@ export const ThemeColors = {
   greenColor: "#22BE7D",
   waringColor: "#EA5959",
   saveDraftColor: "#4CBFFF",
+  lightYellowColor: "#fbffd1",
+  lightGreenColor: "#d8e6d9",
 };

@@ -20,7 +20,7 @@ export const router = createBrowserRouter([
         element: <DashboardPage />,
       },
       {
-        path: "/create",
+        path: "quotation/create",
         // action: LoginAction,
         element: <CreateQuotationPage />,
       },

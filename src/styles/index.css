@@ -68,6 +68,12 @@ code {
   opacity: 0.5;
 }
 
+.ant-menu-submenu-title:hover {
+  background-color: #f0ba3d !important;
+  color: white !important;
+  opacity: 0.5;
+}
+
 .ant-table-tbody > tr:hover {
   background-color: #e46f1b;
 }
