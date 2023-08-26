@@ -1,5 +1,6 @@
 import { Button, Image, Layout, Menu, Row, Typography } from "antd";
 import {
+  DollarOutlined,
   FileDoneOutlined,
   HomeOutlined,
   MenuFoldOutlined,
@@ -11,25 +12,39 @@ import { useNavigate } from "react-router";
 import { ThemeColors } from "../styles/theme";
 import Logo from "../assets/images/Logo-StayOrganized.png";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 export const AppLayout = (props: any) => {
   const { Sider } = Layout;
   const [collapsed, setCollapsed] = useState(false);
+  // const [activekey, setActivekey] = useState("");
 
+  const location = useLocation();
   const navigate = useNavigate();
+
+  console.log(location);
+
+  // React.useEffect(() => {
+  //   const key = location.pathname.split("/") as any[];
+
+  //   if (key.length) {
+  //     if (Number(key[2]) > 0) {
+  //       setActivekey(key[1] ? `${key[1]}` : "");
+  //     } else {
+  //       setActivekey(`${key[1]}${key[2] ? `/${key[2]}` : ""} `);
+  //     }
+  //   }
+  // }, [location.pathname]);
 
   return (
     <>
-      <Layout>
+      <Layout style={{ display: "flex", height: "100vh" }}>
         <Sider
           style={{
             backgroundColor: ThemeColors.primaryColor,
-            overflow: "auto",
-            zIndex: 1,
-            left: 0,
-            top: 0,
-            bottom: 0,
           }}
+          width={230}
+          breakpoint="sm"
           trigger={null}
           collapsible
           collapsed={collapsed}
@@ -37,11 +52,10 @@ export const AppLayout = (props: any) => {
           <div
             style={{
               display: "flex",
-              left: "25px",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              marginTop: "10px",
+              marginTop: "50px",
             }}
           >
             <Image width={50} src={Logo} preview={false} />
@@ -55,15 +69,15 @@ export const AppLayout = (props: any) => {
               </div>
             )}
           </div>
-
           <Menu
+            selectedKeys={[location.pathname]}
             selectable={true}
             theme="light"
             mode="inline"
             style={{
               width: "100%",
+              height: "calc(100vh - 140px)",
               top: "170px",
-
               backgroundColor: ThemeColors.primaryColor,
               color: "white",
             }}
@@ -72,16 +86,26 @@ export const AppLayout = (props: any) => {
             }}
             items={[
               {
-                style: { backgroundColor: ThemeColors.orangeColor },
+                style: { backgroundColor: ThemeColors.brickOrangeColor },
                 label: "dashboard",
                 key: "/",
                 icon: <HomeOutlined />,
               },
               {
-                style: { backgroundColor: ThemeColors.orangeColor },
-                label: "quotaion",
-                key: "/quotation",
-                icon: <FileDoneOutlined />,
+                style: {
+                  backgroundColor: ThemeColors.brickOrangeColor,
+                  margin: "4px",
+                },
+                label: "income",
+                key: "",
+                icon: <DollarOutlined />,
+                children: [
+                  {
+                    key: "/quotation",
+                    label: "quotaion",
+                    icon: <FileDoneOutlined />,
+                  },
+                ],
               },
             ]}
           ></Menu>
@@ -126,7 +150,9 @@ export const AppLayout = (props: any) => {
             </Row>
           </Header>
 
-          <Content style={{ backgroundColor: ThemeColors.bgColor }}>
+          <Content
+            style={{ backgroundColor: ThemeColors.bgColor, overflow: "auto" }}
+          >
             <div
               style={{
                 padding: 24,

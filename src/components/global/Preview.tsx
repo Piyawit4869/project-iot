@@ -262,7 +262,7 @@ export const Preview = () => {
                 />
                 <Typography>ช่องทางการชำระเงิน</Typography>
               </Row>
-              <Row wrap={false}>
+              <Row wrap={false} align="middle">
                 <Image width="150px" src={ThaiParNich}></Image>
                 <Typography>
                   ธนาคาร ไทยพาณิชย์ ออมทรัพย์ 4301609608 ยูโทเทค
