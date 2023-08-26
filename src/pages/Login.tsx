@@ -29,44 +29,41 @@ export const LoginPage = () => {
   // };
 
   return (
-  <div style={{backgroundColor:"#FFF5ED"}}>
+  <div style={{backgroundColor:"#FFF5ED" , width : "100vw" , height : "100vh"  }}>
     <Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
       <Card style={{
-        width:"600px", 
-        height:"475px", 
+        width:"35%",
+        minWidth:"365px", 
         justifyItems:"center",
         borderRadius:"2rem",
+        boxShadow:"rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
         }}>
-      <Row>
-      <div style={{
-        backgroundColor:"#E46F1B", 
-        width:"120px", 
-        height:"135px",
-        borderRadius:"0px 0px 50px 0px",
-        marginLeft:"25px",
-        marginTop:"-35px"
-        }}>
-        <Image width={100} height={100}src={Logo} preview={false} style={{margin:"auto", display:"flex",marginTop:"15px",marginLeft:"8px"}}/>
-      </div>
-      <div style={{marginLeft:"15px"}}>
-        <Typography style={{fontSize:"32px"}}>Stay Organize</Typography>
-        <Typography style={{fontSize:"27px"}}>เข้าสู่ระบบ</Typography>
-      </div>
-      </Row> 
-      <div
+          <Row>
+            <div style={{
+              backgroundColor:"#E46F1B", 
+              width:"120px", 
+              height:"135px",
+              borderRadius:"0px 0px 50px 0px",
+              marginTop:"-35px"
+            }}>
+            <Image width={100} height={100}src={Logo} preview={false} style={{margin:"auto", display:"flex",marginTop:"15px",marginLeft:"8px"}}/>
+            </div>
+            <div style={{marginLeft:"15px"}}>
+              <Typography style={{fontSize:"32px"}}>Stay Organize</Typography>
+              <Typography style={{fontSize:"27px"}}>เข้าสู่ระบบ</Typography>
+            </div>
+          </Row>
+          <div
             style={{
-              borderBottom: "2px solid #EFAB3A",
-              width: "475px",
-              margin: "auto",
-              marginTop:"20px",
-              marginBottom:"20px",
-            }}
-          ></div>
-        <Form style={{marginTop:"10px"}}>
+            borderBottom: "2px solid #EFAB3A",
+            margin: "auto",
+            marginTop:"20px",
+            marginBottom:"20px",
+            }}></div>
+      <Form style={{marginTop:"10px"}}>
         <div
             style={{
               height:"69px",
-              width: "475px",
               backgroundColor: "white",
               paddingTop: "10px",
               paddingLeft: "10px",
@@ -91,7 +88,6 @@ export const LoginPage = () => {
           <div
             style={{
               height:"69px",
-              width: "475px",
               backgroundColor: "white",
               paddingTop: "10px",
               paddingLeft: "10px",
@@ -99,8 +95,7 @@ export const LoginPage = () => {
               border:"1px solid #EE9437",
               margin:"auto",
               marginTop:"20px"
-            }}
-          >
+            }}>
             <Typography style={{ fontSize: "18px" }}>รหัสผ่าน</Typography>
             <Form.Item>
               <Input
@@ -115,10 +110,11 @@ export const LoginPage = () => {
             </Form.Item>
             </div>
             <Form.Item 
-              wrapperCol={{
-                offset: 8,
-                span: 16,
-              }}>
+              style={{
+                display : 'flex',
+                justifyContent : "center"
+              }}
+              >
               <Link to="/">
                 <Button type="primary" htmlType="submit" style={{backgroundColor:"#F0BA3D", width:"180px", height:"50px", marginTop:"30px"}}>
                   เข้าสู่ระบบ
@@ -127,7 +123,7 @@ export const LoginPage = () => {
             </Form.Item>
           </Form>
         </Card>
-      </Row>
+    </Row>
   </div>
   );
 };
