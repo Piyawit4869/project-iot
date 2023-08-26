@@ -1,14 +1,206 @@
-import { Card } from "antd";
-import { Link } from "react-router-dom";
-import { ThemeColors } from "../styles/theme";
+import { Card, Typography } from "antd";
+import { Column } from '@ant-design/plots';
+import  { useState } from 'react';
+
 
 export const DashboardPage = () => {
+  const dataChart = [
+  {
+    "city": "ม.ค.",
+    "type": "รายได้ ปี 2566 \n500,000 บาท",
+    "value": 14500
+  },
+  {
+    "city": "ม.ค.",
+    "type": "ค่าใช้จ่าย ปี 2566\n250,000 บาท",
+    "value": 8500
+  },
+  {
+    "city": "ม.ค.",
+    "type": "กำไร ปี 2566\n250,000 บาท",
+    "value": 10000
+  },
+  {
+    "city": "ก.พ.",
+    "type": "รายได้ ปี 2566 \n500,000 บาท",
+    "value": 14500
+  },
+  {
+    "city": "ก.พ.",
+    "type": "ค่าใช้จ่าย ปี 2566\n250,000 บาท",
+    "value": 8500
+  },
+  {
+    "city": "ก.พ.",
+    "type": "กำไร ปี 2566\n250,000 บาท",
+    "value": 10000
+  },
+  {
+    "city": "มึ.ค.",
+    "type": "รายได้ ปี 2566 \n500,000 บาท",
+    "value": 14500
+  },
+  {
+    "city": "มึ.ค.",
+    "type": "ค่าใช้จ่าย ปี 2566\n250,000 บาท",
+    "value": 8500
+  },
+  {
+    "city": "มึ.ค.",
+    "type": "กำไร ปี 2566\n250,000 บาท",
+    "value": 10000
+  },
+  {
+    "city": "เม.ย.",
+    "type": "รายได้ ปี 2566 \n500,000 บาท",
+    "value": 14500
+  },
+  {
+    "city": "เม.ย.",
+    "type": "ค่าใช้จ่าย ปี 2566\n250,000 บาท",
+    "value": 8500
+  },
+  {
+    "city": "เม.ย.",
+    "type": "กำไร ปี 2566\n250,000 บาท",
+    "value": 10000
+  },
+  {
+    "city": "พ.ค.",
+    "type": "รายได้ ปี 2566 \n500,000 บาท",
+    "value": 14500
+  },
+  {
+    "city": "พ.ค.",
+    "type": "ค่าใช้จ่าย ปี 2566\n250,000 บาท",
+    "value": 8500
+  },
+  {
+    "city": "พ.ค.",
+    "type": "กำไร ปี 2566\n250,000 บาท",
+    "value": 10000
+  },
+  {
+    "city": "มิ.ย.",
+    "type": "รายได้ ปี 2566 \n500,000 บาท",
+    "value": 14500
+  },
+  {
+    "city": "มิ.ย.",
+    "type": "ค่าใช้จ่าย ปี 2566\n250,000 บาท",
+    "value": 8500
+  },
+  {
+    "city": "มิ.ย.",
+    "type": "กำไร ปี 2566\n250,000 บาท",
+    "value": 10000
+  },
+  {
+    "city": "ก.ค.",
+    "type": "รายได้ ปี 2566 \n500,000 บาท",
+    "value": 14500
+  },
+  {
+    "city": "ก.ค.",
+    "type": "ค่าใช้จ่าย ปี 2566\n250,000 บาท",
+    "value": 8500
+  },
+  {
+    "city": "ก.ค.",
+    "type": "กำไร ปี 2566\n250,000 บาท",
+    "value": 10000
+  },
+  {
+    "city": "ส.ค.",
+    "type": "รายได้ ปี 2566 \n500,000 บาท",
+    "value": 14500
+  },
+  {
+    "city": "ส.ค.",
+    "type": "ค่าใช้จ่าย ปี 2566\n250,000 บาท",
+    "value": 8500
+  },
+  {
+    "city": "ส.ค.",
+    "type": "กำไร ปี 2566\n250,000 บาท",
+    "value": 10000
+  },
+  {
+    "city": "ก.ย.",
+    "type": "รายได้ ปี 2566 \n500,000 บาท",
+    "value": 14500
+  },
+  {
+    "city": "ก.ย.",
+    "type": "ค่าใช้จ่าย ปี 2566\n250,000 บาท",
+    "value": 8500
+  },
+  {
+    "city": "ก.ย.",
+    "type": "กำไร ปี 2566\n250,000 บาท",
+    "value": 10000
+  },
+  {
+    "city": "ต.ค.",
+    "type": "รายได้ ปี 2566 \n500,000 บาท",
+    "value": 14500
+  },
+  {
+    "city": "ต.ค.",
+    "type": "ค่าใช้จ่าย ปี 2566\n250,000 บาท",
+    "value": 8500
+  },
+  {
+    "city": "ต.ค.",
+    "type": "กำไร ปี 2566\n250,000 บาท",
+    "value": 10000
+  },
+  {
+    "city": "พ.ย.",
+    "type": "รายได้ ปี 2566 \n500,000 บาท",
+    "value": 14500
+  },
+  {
+    "city": "พ.ย.",
+    "type": "ค่าใช้จ่าย ปี 2566\n250,000 บาท",
+    "value": 8500
+  },
+  {
+    "city": "พ.ย.",
+    "type": "กำไร ปี 2566\n250,000 บาท",
+    "value": 10000
+  },
+  {
+    "city": "ธ.ค.",
+    "type": "รายได้ ปี 2566 \n500,000 บาท",
+    "value": 14500
+  },
+  {
+    "city": "ธ.ค.",
+    "type": "ค่าใช้จ่าย ปี 2566\n250,000 บาท",
+    "value": 8500
+  },
+  {
+    "city": "ธ.ค.",
+    "type": "กำไร ปี 2566\n250,000 บาท",
+    "value": 1000000
+  },
+  ]
+  const [data] = useState(dataChart);
+
+  const config = {
+    data,
+    xField: 'city',
+    yField: 'value',
+    seriesField: 'type',
+    isGroup: true,
+    color: ["#EA5959","#F0BA3D","#33D1C9"]
+  };
+
   return (
     <div>
-      <Card
-        style={{ backgroundColor: ThemeColors.lightOrangeColor }}
-        extra={<Link to="/dashboard">เพิ่มเติม</Link>}
-      ></Card>
+      <Typography style={{fontSize:"25px"}}>ภาพรวมรายรับรายจ่าย</Typography>
+      <Card style={{borderColor:"#E46F1B",}}><Column {...config} /></Card>
     </div>
   );
 };
