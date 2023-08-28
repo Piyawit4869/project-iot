@@ -1,17 +1,19 @@
 import {
   Button,
-  Card,
   Dropdown,
   Form,
+  Input,
   MenuProps,
+  Row,
   Space,
   Table,
   Typography,
   message,
 } from "antd";
 import { Link } from "react-router-dom";
-import { DownOutlined, PlusOutlined } from "@ant-design/icons";
+import { DownOutlined, FilterOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { ThemeColors } from "../styles/theme";
+import { Title } from "../components/global/Title";
 
 export const IndexQuotationPage = () => {
   const dataSource = [
@@ -168,11 +170,28 @@ export const IndexQuotationPage = () => {
   ];
 
   return (
-    <Card title="quotation" extra={<Link to="/dashboard">เพิ่มเติม</Link>}>
-      <div className="statusbar" style={{ display: "grid", gap: "2rem" }}>
+    <div>
+      {Title("Quotation")}
+      <Row>
+      <Input 
+      prefix={<SearchOutlined />} 
+      placeholder="Search Doccument Number"
+      bordered={true}
+      style={{
+        paddingLeft: "10px",
+        fontSize: "16px",
+        color: ThemeColors.lightOrangeColor,
+        border:"2px solid #EFAB3A",
+        height:"50px",
+        width:"75vw"
+        }}/>
+      <Button icon={<SearchOutlined />} style={{marginLeft:"20px", width:"15vh", height:"5vh", backgroundColor:"#EFAB3A", fontSize:"16px",}}>Search</Button>
+      </Row>
+        <Row style={{marginTop:"20px"}}>
+        <Button icon={<FilterOutlined />} style={{backgroundColor:"#E46F1B", width:"5vh", height:"5vh", marginTop:"15px"}}/>
         <div
-          className="status"
           style={{
+            marginLeft:"10px",
             width: "253px",
             height: "72px",
             backgroundColor: "white",
@@ -180,8 +199,7 @@ export const IndexQuotationPage = () => {
             paddingLeft: "10px",
             borderRadius: "10px",
             boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
-          }}
-        >
+          }}>
           <Typography style={{ fontSize: "18px" }}>สถานะ</Typography>
           <Form.Item>
             <Dropdown menu={{ items: itemsCurrency, onClick: onClickCurrency }}>
@@ -192,8 +210,7 @@ export const IndexQuotationPage = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     color: ThemeColors.lightOrangeColor,
-                  }}
-                >
+                  }}>
                   -
                   <DownOutlined />
                 </Space>
@@ -201,7 +218,7 @@ export const IndexQuotationPage = () => {
             </Dropdown>
           </Form.Item>
         </div>
-        <div>
+        <div style={{marginLeft:"20px"}}>
           <Link to="/quotation/create">
             <Button
               type="primary"
@@ -211,20 +228,17 @@ export const IndexQuotationPage = () => {
                 height: "72px",
                 backgroundColor: "#E46F1B",
                 fontSize: "22px",
-              }}
-            >
+              }}>
               สร้างใบเสนอราคา
             </Button>
           </Link>
         </div>
-      </div>
-      <div className="table_index_quota">
-        <Table
+        </Row>
+      <Table
           columns={columns}
           dataSource={dataSource}
-          style={{ marginTop: "40px" }}
+          style={{marginTop:"20px", border:"2px solid #EFAB3A", borderRadius:"12px", backgroundColor:"#EFAB3A"}}
         />
-      </div>
-    </Card>
+    </div>
   );
 };

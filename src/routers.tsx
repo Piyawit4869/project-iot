@@ -4,7 +4,6 @@ import { DashboardPage } from "./pages/Dashboard";
 import { LoginPage } from "./pages/Login";
 import { IndexQuotationPage } from "./pages/IndexQuotation";
 import { CreateQuotationPage } from "./pages/CreateQuotation";
-import { Analytics } from "./pages/Analytics";
 
 export const router = createBrowserRouter([
   {
@@ -24,14 +23,9 @@ export const router = createBrowserRouter([
         // action: LoginAction,
         element: <CreateQuotationPage />,
       },
-
       {
         path: "/quotation",
         element: <IndexQuotationPage />,
-      },
-      {
-        path: "/analytics",
-        element: <Analytics />,
       },
     ],
   },
