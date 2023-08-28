@@ -191,7 +191,7 @@ export const IndexQuotationPage = () => {
         <Button icon={<FilterOutlined />} style={{backgroundColor:"#E46F1B", width:"5vh", height:"5vh", marginTop:"15px"}}/>
         <div
           style={{
-            marginLeft:"10px",
+            marginLeft:"15px",
             width: "253px",
             height: "72px",
             backgroundColor: "white",
