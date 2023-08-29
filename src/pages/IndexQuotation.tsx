@@ -169,6 +169,21 @@ export const IndexQuotationPage = () => {
     },
   ];
 
+  const onClick: MenuProps['onClick'] = ({ key }) => {
+    message.info(`Click on item ${key}`);
+  };
+
+  const items: MenuProps['items'] = [
+    {
+      key:'1',
+      label:'เลขที่เอกสาร',
+    },
+    {
+      key:'2',
+      label:'ลูกค้า',
+    },
+  ]
+
   return (
     <div>
       {Title("Quotation")}
@@ -185,10 +200,27 @@ export const IndexQuotationPage = () => {
         height:"50px",
         width:"75vw"
         }}/>
-      <Button icon={<SearchOutlined />} style={{marginLeft:"20px", width:"15vh", height:"5vh", backgroundColor:"#EFAB3A", fontSize:"16px",}}>Search</Button>
+      <Button
+        icon={<SearchOutlined />} 
+        style={{
+          marginLeft:"20px", 
+          width:"15vh", height:"5vh", 
+          backgroundColor:"#EFAB3A", 
+          fontSize:"16px",}}>
+            Search
+      </Button>
       </Row>
         <Row style={{marginTop:"20px"}}>
-        <Button icon={<FilterOutlined />} style={{backgroundColor:"#E46F1B", width:"5vh", height:"5vh", marginTop:"15px"}}/>
+        <Dropdown menu={{items, onClick}}>
+        <Button 
+        icon={<FilterOutlined />} 
+        style={{
+          backgroundColor:"#E46F1B", 
+          width:"5vh", 
+          height:"5vh", 
+          marginTop:"15px"
+        }}/>
+        </Dropdown>
         <div
           style={{
             marginLeft:"15px",
