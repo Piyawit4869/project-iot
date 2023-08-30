@@ -174,7 +174,7 @@ export const IndexQuotationPage = () => {
 
   return (
     <div>
-      {Title("Quotation")}
+      {Title("Quotation", false, "" )}
       <Row>
       <Input 
       prefix={<SearchOutlined />} 
