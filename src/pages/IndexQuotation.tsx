@@ -252,7 +252,6 @@ export const IndexQuotationPage = () => {
           </Link>
         </div>
       </Row>
-        <div style={{height:"70px"}}>
           {collapsed ? (
           <div></div>) : 
           (<div>
@@ -274,7 +273,6 @@ export const IndexQuotationPage = () => {
             </Button>
           </div>
           )}
-        </div>
       <Table
           columns={columns}
           dataSource={dataSource}
