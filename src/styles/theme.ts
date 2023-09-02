@@ -25,4 +25,7 @@ export const ThemeColors = {
   darkorangeColor: "#E46F1B",
   grayColor: "#727272",
   blueColor: "#4CBFFF",
+  fontColor1: "#FFFFFF",
+  fontColor2: "#000000",
+  fontColor3: "#727272",
 };

@@ -47,8 +47,9 @@ export const CreateQuotationPage = () => {
 
   return (
     <div>
-      {Title("Create Quotation")}
-      <Form>
+      {Title("Create Quotation", false, "")}
+
+      <Form style={{ marginTop: "40px" }}>
         <Row justify={"space-between"} wrap={false}>
           <div style={{ width: "55%" }}>
             <Row wrap={false}>

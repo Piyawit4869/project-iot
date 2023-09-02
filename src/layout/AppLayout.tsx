@@ -9,6 +9,7 @@ import {
   ShoppingCartOutlined,
   ShoppingOutlined,
   TeamOutlined,
+  WalletOutlined,
 } from "@ant-design/icons";
 import { Content, Header } from "antd/es/layout/layout";
 import { useNavigate } from "react-router";
@@ -79,7 +80,7 @@ export const AppLayout = (props: any) => {
             mode="inline"
             style={{
               width: "100%",
-              height: "calc(100vh - 140px)",
+              // height: "calc(100vh - 140px)",
               top: "170px",
               backgroundColor: ThemeColors.primaryColor,
               color: "white",
@@ -127,6 +128,12 @@ export const AppLayout = (props: any) => {
                 label: "product",
                 key: "/product",
                 icon: <ShoppingCartOutlined />,
+              },
+              {
+                style: { backgroundColor: ThemeColors.brickOrangeColor },
+                label: "partial",
+                key: "/partial",
+                icon: <WalletOutlined />,
               },
             ]}
           ></Menu>

@@ -10,8 +10,6 @@ import {
   Checkbox,
   MenuProps,
   Dropdown,
-  Radio,
-  RadioChangeEvent,
   Col,
 } from "antd";
 import {
@@ -19,44 +17,11 @@ import {
   EyeOutlined,
   CopyOutlined,
   DownOutlined,
-  CloseOutlined,
-  CheckOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
-import Icon from "@ant-design/icons/lib/components/Icon";
+
 import { Link } from "react-router-dom";
 
 export const CreateUserPage = () => {
-  const [value, setValue] = useState(1);
-
-  const items: MenuProps["items"] = [
-    {
-      label: "ดูได้",
-      key: "1",
-    },
-    {
-      label: "ดูไม่ได้",
-      key: "2",
-    },
-  ];
-  const itemsDropdown: MenuProps["items"] = [
-    {
-      label: "รายรับ-ร่างเท่านั้น",
-      key: "1",
-    },
-    {
-      label: "รายรับรายจ่าย-ร่างเท่านั้น",
-      key: "2",
-    },
-    {
-      label: "รายรับ-อนุมัติเท่านั้น",
-      key: "3",
-    },
-    {
-      label: "รายรับรายจ่าย-อนุมัติเท่านั้น",
-      key: "4",
-    },
-  ];
   const itemsLastDropdown: MenuProps["items"] = [
     {
       label: "ทั้งหมด",
@@ -71,11 +36,6 @@ export const CreateUserPage = () => {
       key: "3",
     },
   ];
-
-  const onChange = (e: RadioChangeEvent) => {
-    console.log("radio checked", e.target.value);
-    setValue(e.target.value);
-  };
 
   return (
     <div>
