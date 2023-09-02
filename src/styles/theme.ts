@@ -22,4 +22,7 @@ export const ThemeColors = {
   saveDraftColor: "#4CBFFF",
   lightYellowColor: "#fbffd1",
   lightGreenColor: "#d8e6d9",
+  darkorangeColor: "#E46F1B",
+  grayColor: "#727272",
+  blueColor: "#4CBFFF",
 };

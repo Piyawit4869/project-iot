@@ -202,7 +202,7 @@ export const IndexQuotationPage = () => {
           </Form.Item>
         </div>
         <div>
-          <Link to="/quotation/create">
+          <Link to="/create">
             <Button
               type="primary"
               icon={<PlusOutlined />}
