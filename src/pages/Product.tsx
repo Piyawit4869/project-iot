@@ -173,7 +173,7 @@ export const ProductPage = () => {
 
   return (
     <div>
-      {Title("ส้นค้า/บริการ")}
+      {Title("ส้นค้า/บริการ", false, "")}
       <Typography>
         ข้อมูลสินค้าและบริการขององค์กร และข้อมูลที่อยู่เพื่อใช้แสดงในหน้าเอกสาร
       </Typography>

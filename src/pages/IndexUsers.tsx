@@ -5,8 +5,6 @@ import {
   DownOutlined,
   PlusOutlined,
   SearchOutlined,
-  LeftOutlined,
-  RightOutlined,
   EyeOutlined,
   ControlFilled,
 } from "@ant-design/icons";
@@ -184,25 +182,6 @@ export const UsersPage = () => {
     },
   ];
 
-  const items: MenuProps["items"] = [
-    {
-      label: "5",
-      key: "1",
-    },
-    {
-      label: "10",
-      key: "2",
-    },
-    {
-      label: "15",
-      key: "3",
-    },
-    {
-      label: "20",
-      key: "4",
-    },
-  ];
-
   const itemdropdown: MenuProps["items"] = [
     {
       label: "ทั้งหมด",
@@ -230,18 +209,9 @@ export const UsersPage = () => {
     console.log("key", key);
   };
 
-  const handleMenuClick: MenuProps["onClick"] = ({ key }) => {
-    console.log("key", key);
-  };
-
-  const menuProps = {
-    items,
-    onClick: handleMenuClick,
-  };
-
   return (
     <div>
-      {Title("ตั้งค่าผู้ใช้งาน")}
+      {Title("ตั้งค่าผู้ใช้งาน", false, "")}
       <div style={{ display: "flex", marginBottom: "20px" }}>
         <Input
           style={{ width: "90%", marginRight: "10px" }}
