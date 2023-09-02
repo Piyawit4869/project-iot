@@ -81,3 +81,17 @@ code {
 .statusbar {
   grid-template-columns: repeat(12, 1fr);
 }
+
+table thead.ant-table-thead .ant-table-cell {
+  background-color: #ee9437;
+  color: #fff;
+  text-align: center;
+}
+
+.ant-table-tbody {
+  text-align: center;
+}
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #ee9437;
+  border-color: #ee9437;
+}
