@@ -33,7 +33,6 @@ export const router = createBrowserRouter([
         // action: LoginAction,
         element: <CreateQuotationPage />,
       },
-
       {
         path: "/quotation",
         element: <IndexQuotationPage />,
@@ -77,8 +76,5 @@ export const router = createBrowserRouter([
     // action: LoginAction,
     element: <LoginPage />,
   },
-
-  {
-    path: "",
-  },
+  
 ]);
