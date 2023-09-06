@@ -6,6 +6,9 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   SettingOutlined,
+  ShoppingCartOutlined,
+  ShoppingOutlined,
+  TeamOutlined,
   WalletOutlined,
 } from "@ant-design/icons";
 import { Content, Header } from "antd/es/layout/layout";
@@ -107,6 +110,24 @@ export const AppLayout = (props: any) => {
                     icon: <FileDoneOutlined />,
                   },
                 ],
+              },
+              {
+                style: { backgroundColor: ThemeColors.orangeColor },
+                label: "users",
+                key: "/users",
+                icon: <TeamOutlined />,
+              },
+              {
+                style: { backgroundColor: ThemeColors.orangeColor },
+                label: "organozation",
+                key: "/organozation",
+                icon: <ShoppingOutlined />,
+              },
+              {
+                style: { backgroundColor: ThemeColors.orangeColor },
+                label: "product",
+                key: "/product",
+                icon: <ShoppingCartOutlined />,
               },
               {
                 style: { backgroundColor: ThemeColors.brickOrangeColor },

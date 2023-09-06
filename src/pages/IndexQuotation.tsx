@@ -279,7 +279,7 @@ export const IndexQuotationPage = () => {
       <Table
           columns={columns}
           dataSource={dataSource}
-          style={{marginTop:"6px", border:"2px solid #EFAB3A", borderRadius:"12px", backgroundColor:"#EFAB3A"}}
+          style={{marginTop:"6px", borderRadius:"12px"}}
         />
     </div>
   );
