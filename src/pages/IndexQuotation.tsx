@@ -11,7 +11,12 @@ import {
   message,
 } from "antd";
 import { Link } from "react-router-dom";
-import { DownOutlined, FilterOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  DownOutlined,
+  FilterOutlined,
+  PlusOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import { ThemeColors } from "../styles/theme";
 import { Title } from "../components/global/Title";
 import { useState } from "react";
@@ -174,51 +179,62 @@ export const IndexQuotationPage = () => {
 
   return (
     <div>
-      {Title("Quotation", false, "" )}
+      {Title("Quotation", false, "")}
       <Row>
-      <Input 
-      prefix={<SearchOutlined />} 
-      placeholder="Search Doccument Number"
-      bordered={true}
-      style={{
-        paddingLeft: "10px",
-        fontSize: "16px",
-        color: ThemeColors.lightOrangeColor,
-        border:"2px solid #EFAB3A",
-        height:"50px",
-        width:"75vw"
-        }}/>
-      <Button
-        icon={<SearchOutlined />} 
-        style={{
-          marginLeft:"20px", 
-          width:"15vh", 
-          height:"5vh", 
-          backgroundColor:"#EFAB3A", 
-          fontSize:"16px",}}>
-            Search
-      </Button>
+        <Input
+          prefix={<SearchOutlined />}
+          placeholder="Search Doccument Number"
+          bordered={true}
+          style={{
+            paddingLeft: "10px",
+            fontSize: "16px",
+            color: ThemeColors.lightOrangeColor,
+            border: "2px solid #EFAB3A",
+            height: "50px",
+            width: "75vw",
+          }}
+        />
+        <Button
+          icon={<SearchOutlined />}
+          style={{
+            marginLeft: "20px",
+            width: "15vh",
+            height: "5vh",
+            backgroundColor: "#EFAB3A",
+            fontSize: "16px",
+          }}
+        >
+          Search
+        </Button>
       </Row>
-      <Row style={{marginTop:"20px"}}>
-        <Button 
-        onClick={() => setCollapsed(!collapsed)}
-        icon={collapsed ? <FilterOutlined/> : <FilterOutlined style={{color:"#EE9437"}}/>}
-        style={{
-          backgroundColor: collapsed ? "#E46F1B" : "#FFFFFF", 
-          width:"5vh", 
-          height:"5vh",
-          border:"0px",
-        }}/>
+      <Row style={{ marginTop: "20px" }}>
+        <Button
+          onClick={() => setCollapsed(!collapsed)}
+          icon={
+            collapsed ? (
+              <FilterOutlined />
+            ) : (
+              <FilterOutlined style={{ color: "#EE9437" }} />
+            )
+          }
+          style={{
+            backgroundColor: collapsed ? "#E46F1B" : "#FFFFFF",
+            width: "5vh",
+            height: "5vh",
+            border: "0px",
+          }}
+        />
         <div
           style={{
-            marginLeft:"15px",
-            width:"16vh", 
-            height:"5vh",
+            marginLeft: "15px",
+            width: "16vh",
+            height: "5vh",
             backgroundColor: "white",
             paddingTop: "10px",
             paddingLeft: "10px",
             borderRadius: "10px",
-          }}>
+          }}
+        >
           <Typography style={{ fontSize: "14px" }}>สถานะ</Typography>
           <Form.Item>
             <Dropdown menu={{ items: itemsCurrency, onClick: onClickCurrency }}>
@@ -229,9 +245,10 @@ export const IndexQuotationPage = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     color: ThemeColors.lightOrangeColor,
-                    fontSize:"10px",
-                    marginTop:"-17px"
-                  }}>
+                    fontSize: "10px",
+                    marginTop: "-17px",
+                  }}
+                >
                   -
                   <DownOutlined />
                 </Space>
@@ -239,48 +256,66 @@ export const IndexQuotationPage = () => {
             </Dropdown>
           </Form.Item>
         </div>
-        <div style={{marginLeft:"20px"}}>
+        <div>
           <Link to="/quotation/create">
             <Button
               type="primary"
               icon={<PlusOutlined />}
               style={{
-                width:"16vh", 
-                height:"5vh",
+                width: "16vh",
+                height: "5vh",
                 backgroundColor: "#E46F1B",
                 fontSize: "14px",
-              }}>
+              }}
+            >
               สร้างใบเสนอราคา
             </Button>
           </Link>
         </div>
       </Row>
-          {collapsed ? (
-          <div></div>) : 
-          (<div>
-            <Button style={{background:"white", border:"0px", height:"50px", marginTop:"10px", width:"150px"}}>
-              <Typography style={{fontSize:"14px"}}>
-                เลขที่เอกสาร
-                <Typography style={{color:"#EE9437",fontSize:"14px"}}>
-                  QO-23200107000
-                </Typography>
+      {collapsed ? (
+        <div></div>
+      ) : (
+        <div>
+          <Button
+            style={{
+              background: "white",
+              border: "0px",
+              height: "50px",
+              marginTop: "10px",
+              width: "150px",
+            }}
+          >
+            <Typography style={{ fontSize: "14px" }}>
+              เลขที่เอกสาร
+              <Typography style={{ color: "#EE9437", fontSize: "14px" }}>
+                QO-23200107000
               </Typography>
-            </Button>
-            <Button style={{marginLeft:"10px", background:"white", border:"0px", height:"50px", width:"100px"}}>
-              <Typography style={{fontSize:"14px"}}>
-                ลูกค้า
-                <Typography  style={{color:"#EE9437",fontSize:"14px"}}>
-                  Sim
-                </Typography>
+            </Typography>
+          </Button>
+          <Button
+            style={{
+              marginLeft: "10px",
+              background: "white",
+              border: "0px",
+              height: "50px",
+              width: "100px",
+            }}
+          >
+            <Typography style={{ fontSize: "14px" }}>
+              ลูกค้า
+              <Typography style={{ color: "#EE9437", fontSize: "14px" }}>
+                Sim
               </Typography>
-            </Button>
-          </div>
-          )}
+            </Typography>
+          </Button>
+        </div>
+      )}
       <Table
-          columns={columns}
-          dataSource={dataSource}
-          style={{marginTop:"6px", borderRadius:"12px"}}
-        />
+        columns={columns}
+        dataSource={dataSource}
+        style={{ marginTop: "6px", borderRadius: "12px" }}
+      />
     </div>
   );
 };
