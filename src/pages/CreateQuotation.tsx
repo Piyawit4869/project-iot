@@ -8,6 +8,8 @@ import {
   Form,
   Input,
   MenuProps,
+  Radio,
+  RadioChangeEvent,
   Row,
   Space,
   Typography,
@@ -20,8 +22,26 @@ import {
   PlusCircleOutlined,
 } from "@ant-design/icons";
 import { Preview } from "../components/global/Preview";
+import { useState } from "react";
 
 export const CreateQuotationPage = () => {
+  const [value, setValue] = useState(1);
+
+  const onChange = (e: RadioChangeEvent) => {
+    console.log("radio checked", e.target.value);
+    setValue(e.target.value);
+  };
+  const [listOfProductCard, setListOfProductCard] = useState([{}]);
+
+  console.log(listOfProductCard);
+  const onClickAddCard = () => {
+    setListOfProductCard((array) => [...array, {}]);
+  };
+
+  const onClickDeleteCard = () => {
+    setListOfProductCard((array) => array.splice(1));
+  };
+
   const onChangeDate: DatePickerProps["onChange"] = (date, dateString) => {
     console.log(date, dateString);
   };
@@ -394,280 +414,292 @@ export const CreateQuotationPage = () => {
             ข้อมูลราคาและภาษี
           </Typography>
         </Row>
-        <div
-          style={{
-            backgroundColor: "white",
-            paddingTop: "15px",
-            paddingLeft: "10px",
-            paddingRight: "10px",
-            borderRadius: "10px",
-            boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
-            marginBottom: "20px",
-          }}
-        >
-          <Row justify={"space-between"} wrap={false}>
+        {...listOfProductCard.map(() => {
+          return (
             <div
               style={{
-                width: "100%",
-                backgroundColor: ThemeColors.goldColor,
-                paddingTop: "10px",
+                backgroundColor: "white",
+                paddingTop: "15px",
                 paddingLeft: "10px",
                 paddingRight: "10px",
                 borderRadius: "10px",
-
-                marginBottom: "10px",
+                boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
+                marginBottom: "20px",
               }}
             >
-              <Typography style={{ fontSize: "18px" }}>
-                สินค้า/บริการ
-              </Typography>
-              <Form.Item
-                rules={[
-                  {
-                    required: true,
-                    message: "กรุณากรอกชื่อ",
-                  },
-                ]}
-              >
-                <Dropdown
-                  menu={{ items: itemsCurrency, onClick: onClickCurrency }}
+              <Row justify={"space-between"} wrap={false}>
+                <div
+                  style={{
+                    width: "100%",
+                    backgroundColor: ThemeColors.goldColor,
+                    paddingTop: "10px",
+                    paddingLeft: "10px",
+                    paddingRight: "10px",
+                    borderRadius: "10px",
+
+                    marginBottom: "10px",
+                  }}
                 >
-                  <a onClick={(e) => e.preventDefault()}>
-                    <Space
+                  <Typography style={{ fontSize: "18px" }}>
+                    สินค้า/บริการ
+                  </Typography>
+                  <Form.Item
+                    rules={[
+                      {
+                        required: true,
+                        message: "กรุณากรอกชื่อ",
+                      },
+                    ]}
+                  >
+                    <Dropdown
+                      menu={{ items: itemsCurrency, onClick: onClickCurrency }}
+                    >
+                      <a onClick={(e) => e.preventDefault()}>
+                        <Space
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            color: "white",
+                          }}
+                        >
+                          -
+                          <DownOutlined />
+                        </Space>
+                      </a>
+                    </Dropdown>
+                  </Form.Item>
+                </div>
+                <div
+                  style={{
+                    width: "100%",
+                    backgroundColor: ThemeColors.goldColor,
+                    paddingTop: "10px",
+                    paddingLeft: "10px",
+                    borderRadius: "10px",
+                    marginBottom: "10px",
+                    marginLeft: "10px",
+                    marginRight: "10px",
+                  }}
+                >
+                  <Typography style={{ fontSize: "18px" }}>บัญชี</Typography>
+                  <Form.Item>
+                    <Input
+                      placeholder="-"
+                      bordered={false}
                       style={{
-                        display: "flex",
-                        justifyContent: "space-between",
+                        padding: "0px",
+                        fontSize: "16px",
                         color: "white",
                       }}
-                    >
-                      -
-                      <DownOutlined />
-                    </Space>
-                  </a>
-                </Dropdown>
-              </Form.Item>
-            </div>
-            <div
-              style={{
-                width: "100%",
-                backgroundColor: ThemeColors.goldColor,
-                paddingTop: "10px",
-                paddingLeft: "10px",
-                borderRadius: "10px",
-                marginBottom: "10px",
-                marginLeft: "10px",
-                marginRight: "10px",
-              }}
-            >
-              <Typography style={{ fontSize: "18px" }}>บัญชี</Typography>
-              <Form.Item>
-                <Input
-                  placeholder="-"
-                  bordered={false}
+                    />
+                  </Form.Item>
+                </div>
+                <div
                   style={{
-                    padding: "0px",
-                    fontSize: "16px",
-                    color: "white",
+                    width: "100%",
+                    backgroundColor: ThemeColors.goldColor,
+                    paddingTop: "10px",
+                    paddingLeft: "10px",
+                    borderRadius: "10px",
+                    marginBottom: "10px",
                   }}
-                />
-              </Form.Item>
-            </div>
-            <div
-              style={{
-                width: "100%",
-                backgroundColor: ThemeColors.goldColor,
-                paddingTop: "10px",
-                paddingLeft: "10px",
-                borderRadius: "10px",
-                marginBottom: "10px",
-              }}
-            >
-              <Typography style={{ fontSize: "18px" }}>คำอธิบาย</Typography>
-              <Form.Item>
-                <Input
-                  placeholder="พิมพ์คำอธิบาย"
-                  bordered={false}
-                  style={{
-                    padding: "0px",
-                    fontSize: "16px",
-                    color: "white",
-                  }}
-                />
-              </Form.Item>
-            </div>
-          </Row>
-          <Row justify={"space-between"} align={"middle"} wrap={false}>
-            <Row style={{ width: "100%" }} wrap={false}>
-              <div
-                style={{
-                  width: "100%",
-                  backgroundColor: ThemeColors.goldColor,
-                  paddingTop: "10px",
-                  paddingLeft: "10px",
-                  borderRadius: "10px",
-                  marginBottom: "10px",
-                  marginRight: "10px",
-                }}
-              >
-                <Typography style={{ fontSize: "18px" }}>จำนวน</Typography>
-                <Form.Item>
-                  <Input
-                    placeholder="1"
-                    bordered={false}
-                    style={{
-                      padding: "0px",
-                      fontSize: "16px",
-                      color: "white",
-                    }}
-                  />
-                </Form.Item>
-              </div>
-              <div
-                style={{
-                  width: "100%",
-                  backgroundColor: ThemeColors.goldColor,
-                  paddingTop: "10px",
-                  paddingLeft: "10px",
-                  borderRadius: "10px",
-                  marginBottom: "10px",
-                  // marginRight: "10px",
-                }}
-              >
-                <Typography style={{ fontSize: "18px" }}>ราคา/หน่วย</Typography>
-                <Form.Item>
-                  <Input
-                    placeholder="0.00"
-                    bordered={false}
-                    style={{
-                      padding: "0px",
-                      fontSize: "16px",
-                      color: "white",
-                    }}
-                  />
-                </Form.Item>
-              </div>
-            </Row>
-            <Row style={{ width: "100%" }} wrap={false}>
-              {" "}
-              <div
-                style={{
-                  width: "100%",
-                  backgroundColor: ThemeColors.goldColor,
-                  paddingTop: "10px",
-                  paddingLeft: "10px",
-                  borderRadius: "10px",
-                  marginBottom: "10px",
-                  marginLeft: "10px",
-                  marginRight: "10px",
-                }}
-              >
-                <Typography style={{ fontSize: "18px" }}>
-                  ส่วนลด/หน่วย
-                </Typography>
-                <Form.Item>
-                  <Input
-                    placeholder="0.00"
-                    bordered={false}
-                    style={{
-                      padding: "0px",
-                      fontSize: "16px",
-                      color: "white",
-                    }}
-                  />
-                </Form.Item>
-              </div>
-              <div
-                style={{
-                  width: "100%",
-                  backgroundColor: ThemeColors.goldColor,
-                  paddingTop: "10px",
-                  paddingLeft: "10px",
-                  paddingRight: "10px",
-                  borderRadius: "10px",
-                  marginBottom: "10px",
-                }}
-              >
-                <Typography style={{ fontSize: "18px" }}>ภาษี </Typography>
-                <Form.Item
-                  rules={[
-                    {
-                      required: true,
-                      message: "กรุณากรอกชื่อ",
-                    },
-                  ]}
                 >
-                  <Dropdown
-                    menu={{ items: itemsCurrency, onClick: onClickCurrency }}
+                  <Typography style={{ fontSize: "18px" }}>คำอธิบาย</Typography>
+                  <Form.Item>
+                    <Input
+                      placeholder="พิมพ์คำอธิบาย"
+                      bordered={false}
+                      style={{
+                        padding: "0px",
+                        fontSize: "16px",
+                        color: "white",
+                      }}
+                    />
+                  </Form.Item>
+                </div>
+              </Row>
+              <Row justify={"space-between"} align={"middle"} wrap={false}>
+                <Row style={{ width: "100%" }} wrap={false}>
+                  <div
+                    style={{
+                      width: "100%",
+                      backgroundColor: ThemeColors.goldColor,
+                      paddingTop: "10px",
+                      paddingLeft: "10px",
+                      borderRadius: "10px",
+                      marginBottom: "10px",
+                      marginRight: "10px",
+                    }}
                   >
-                    <a onClick={(e) => e.preventDefault()}>
-                      <Space
+                    <Typography style={{ fontSize: "18px" }}>จำนวน</Typography>
+                    <Form.Item>
+                      <Input
+                        placeholder="1"
+                        bordered={false}
                         style={{
-                          display: "flex",
-                          justifyContent: "space-between",
+                          padding: "0px",
+                          fontSize: "16px",
                           color: "white",
                         }}
+                      />
+                    </Form.Item>
+                  </div>
+                  <div
+                    style={{
+                      width: "100%",
+                      backgroundColor: ThemeColors.goldColor,
+                      paddingTop: "10px",
+                      paddingLeft: "10px",
+                      borderRadius: "10px",
+                      marginBottom: "10px",
+                      // marginRight: "10px",
+                    }}
+                  >
+                    <Typography style={{ fontSize: "18px" }}>
+                      ราคา/หน่วย
+                    </Typography>
+                    <Form.Item>
+                      <Input
+                        placeholder="0.00"
+                        bordered={false}
+                        style={{
+                          padding: "0px",
+                          fontSize: "16px",
+                          color: "white",
+                        }}
+                      />
+                    </Form.Item>
+                  </div>
+                </Row>
+                <Row style={{ width: "100%" }} wrap={false}>
+                  {" "}
+                  <div
+                    style={{
+                      width: "100%",
+                      backgroundColor: ThemeColors.goldColor,
+                      paddingTop: "10px",
+                      paddingLeft: "10px",
+                      borderRadius: "10px",
+                      marginBottom: "10px",
+                      marginLeft: "10px",
+                      marginRight: "10px",
+                    }}
+                  >
+                    <Typography style={{ fontSize: "18px" }}>
+                      ส่วนลด/หน่วย
+                    </Typography>
+                    <Form.Item>
+                      <Input
+                        placeholder="0.00"
+                        bordered={false}
+                        style={{
+                          padding: "0px",
+                          fontSize: "16px",
+                          color: "white",
+                        }}
+                      />
+                    </Form.Item>
+                  </div>
+                  <div
+                    style={{
+                      width: "100%",
+                      backgroundColor: ThemeColors.goldColor,
+                      paddingTop: "10px",
+                      paddingLeft: "10px",
+                      paddingRight: "10px",
+                      borderRadius: "10px",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <Typography style={{ fontSize: "18px" }}>ภาษี </Typography>
+                    <Form.Item
+                      rules={[
+                        {
+                          required: true,
+                          message: "กรุณากรอกชื่อ",
+                        },
+                      ]}
+                    >
+                      <Dropdown
+                        menu={{
+                          items: itemsCurrency,
+                          onClick: onClickCurrency,
+                        }}
                       >
-                        ไม่มี
-                        <DownOutlined />
-                      </Space>
-                    </a>
-                  </Dropdown>
-                </Form.Item>
-              </div>
-            </Row>
-            <Row style={{ width: "100%" }} wrap={false}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "100%",
-                  backgroundColor: "white",
-                  borderRadius: "10px",
-                  marginBottom: "10px",
-                  marginLeft: "10px",
-                  textAlign: "center",
-                }}
-              >
-                <Typography style={{ fontSize: "18px" }}>ลบรายการ </Typography>
-              </div>
-              <Button
-                style={{
-                  width: "100%",
-                  height: "80px",
-                  backgroundColor: ThemeColors.orangeColor,
-                  borderRadius: "10px",
-                  marginBottom: "10px",
-                }}
-                onClick={() => {}}
-              >
-                <Row justify={"center"} align={"middle"}>
+                        <a onClick={(e) => e.preventDefault()}>
+                          <Space
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              color: "white",
+                            }}
+                          >
+                            ไม่มี
+                            <DownOutlined />
+                          </Space>
+                        </a>
+                      </Dropdown>
+                    </Form.Item>
+                  </div>
+                </Row>
+                <Row style={{ width: "100%" }} wrap={false}>
                   <div
                     style={{
                       display: "flex",
-                      width: "28px",
-                      height: "28px",
                       justifyContent: "center",
                       alignItems: "center",
+                      width: "100%",
                       backgroundColor: "white",
-                      borderRadius: "4px",
-                      marginRight: "5px",
+                      borderRadius: "10px",
+                      marginBottom: "10px",
+                      marginLeft: "10px",
+                      textAlign: "center",
                     }}
                   >
-                    <DeleteOutlined
-                      style={{
-                        color: ThemeColors.orangeColor,
-                        fontSize: "24px",
-                      }}
-                    />
+                    <Typography style={{ fontSize: "18px" }}>
+                      ลบรายการ{" "}
+                    </Typography>
                   </div>
+                  <Button
+                    style={{
+                      width: "100%",
+                      height: "80px",
+                      backgroundColor: ThemeColors.orangeColor,
+                      borderRadius: "10px",
+                      marginBottom: "10px",
+                    }}
+                    onClick={onClickDeleteCard}
+                  >
+                    <Row justify={"center"} align={"middle"}>
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "28px",
+                          height: "28px",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          backgroundColor: "white",
+                          borderRadius: "4px",
+                          marginRight: "5px",
+                        }}
+                      >
+                        <DeleteOutlined
+                          style={{
+                            color: ThemeColors.orangeColor,
+                            fontSize: "24px",
+                          }}
+                        />
+                      </div>
 
-                  <Typography style={{ fontSize: "18px" }}>ลบ </Typography>
+                      <Typography style={{ fontSize: "18px" }}>ลบ </Typography>
+                    </Row>
+                  </Button>
                 </Row>
-              </Button>
-            </Row>
-          </Row>
-        </div>
+              </Row>
+            </div>
+          );
+        })}
+
         <Typography
           style={{
             fontSize: "18px",
@@ -685,7 +717,7 @@ export const CreateQuotationPage = () => {
             borderRadius: "10px",
             marginBottom: "20px",
           }}
-          onClick={() => {}}
+          onClick={onClickAddCard}
         >
           <Row justify={"center"} align={"middle"}>
             <div
@@ -708,37 +740,15 @@ export const CreateQuotationPage = () => {
             <Typography style={{ fontSize: "18px" }}>เพิ่ม </Typography>
           </Row>
         </Button>
-        {/* <div
-          style={{
-            width: "16%",
-            height: "80px",
-            backgroundColor: ThemeColors.orangeColor,
-            borderRadius: "10px",
-            marginBottom: "20px",
-            paddingTop: "25px",
-          }}
-        >
-          <Row justify={"center"} align={"middle"}>
-            <div
-              style={{
-                display: "flex",
-                width: "28px",
-                height: "28px",
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "white",
-                borderRadius: "4px",
-                marginRight: "5px",
-              }}
-            >
-              <PlusCircleOutlined
-                style={{ color: ThemeColors.orangeColor, fontSize: "24px" }}
-              />
-            </div>
+        <div style={{ marginTop: "10px", marginBottom: "20px" }}>
+          <Radio.Group size="large" onChange={onChange} value={value}>
+            <Space direction="vertical">
+              <Radio value={1}>in vat 7% </Radio>
+              <Radio value={2}>out vat 7%</Radio>
+            </Space>
+          </Radio.Group>
+        </div>
 
-            <Typography style={{ fontSize: "18px" }}>เพิ่ม </Typography>
-          </Row>
-        </div> */}
         <div
           style={{
             backgroundColor: ThemeColors.goldColor,
