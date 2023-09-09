@@ -12,8 +12,8 @@ import {
 } from "antd";
 import { Link } from "react-router-dom";
 import {
+  ControlOutlined,
   DownOutlined,
-  FilterOutlined,
   PlusOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
@@ -180,9 +180,9 @@ export const IndexQuotationPage = () => {
   return (
     <div>
       {Title("Quotation", false, "")}
-      <Row>
+      <Row style={{ marginTop: "10px" }} wrap={false}>
         <Input
-          prefix={<SearchOutlined />}
+          prefix={<SearchOutlined style={{color:"black",fontSize:"25px"}}/>}
           placeholder="Search Doccument Number"
           bordered={true}
           style={{
@@ -191,51 +191,54 @@ export const IndexQuotationPage = () => {
             color: ThemeColors.lightOrangeColor,
             border: "2px solid #EFAB3A",
             height: "50px",
-            width: "75vw",
+            width: "87%",
           }}
         />
         <Button
-          icon={<SearchOutlined />}
+          icon={<SearchOutlined style={{fontSize:"25px"}}/>}
           style={{
-            marginLeft: "20px",
-            width: "15vh",
-            height: "5vh",
+            marginLeft: "10px",
+            width: "10%",
+            height: "50px",
             backgroundColor: "#EFAB3A",
             fontSize: "16px",
+            textOverflow:"ellipsis",
+            overflow:"hidden",
+            color:"white"
           }}
         >
           Search
         </Button>
       </Row>
-      <Row style={{ marginTop: "20px" }}>
+      <Row style={{ marginTop: "10px" }} wrap={false}>
         <Button
           onClick={() => setCollapsed(!collapsed)}
           icon={
             collapsed ? (
-              <FilterOutlined />
+              <ControlOutlined style={{fontSize:"30px"}}/>
             ) : (
-              <FilterOutlined style={{ color: "#EE9437" }} />
+              <ControlOutlined style={{ color: "#EE9437",fontSize:"30px" }} />
             )
           }
           style={{
             backgroundColor: collapsed ? "#E46F1B" : "#FFFFFF",
-            width: "5vh",
-            height: "5vh",
+            width: "5%",
+            height: "70px",
             border: "0px",
           }}
         />
         <div
           style={{
             marginLeft: "15px",
-            width: "16vh",
-            height: "5vh",
+            width: "15%",
+            height: "70px",
             backgroundColor: "white",
             paddingTop: "10px",
             paddingLeft: "10px",
             borderRadius: "10px",
           }}
         >
-          <Typography style={{ fontSize: "14px" }}>สถานะ</Typography>
+          <Typography style={{ fontSize: "16px" ,textOverflow:"ellipsis",overflow:"hidden"}}>สถานะ</Typography>
           <Form.Item>
             <Dropdown menu={{ items: itemsCurrency, onClick: onClickCurrency }}>
               <a onClick={(e) => e.preventDefault()}>
@@ -245,10 +248,10 @@ export const IndexQuotationPage = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     color: ThemeColors.lightOrangeColor,
-                    fontSize: "10px",
-                    marginTop: "-17px",
-                  }}
-                >
+                    textOverflow:"ellipsis",
+                    overflow:"hidden",
+                    marginTop:"-17px"
+                  }}>
                   -
                   <DownOutlined />
                 </Space>
@@ -256,39 +259,41 @@ export const IndexQuotationPage = () => {
             </Dropdown>
           </Form.Item>
         </div>
-        <div>
-          <Link to="/quotation/create">
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              style={{
-                width: "16vh",
-                height: "5vh",
-                backgroundColor: "#E46F1B",
-                fontSize: "14px",
-              }}
-            >
+        <Link to="/quotation/create" style={{width:"12%",}}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined style={{fontSize:"25px"}}/>}
+            style={{
+              width:"100%",
+              height: "70px",
+              backgroundColor: "#E46F1B",
+              fontSize: "16px",
+              marginLeft:"10px",
+              overflow:"hidden",
+              textOverflow:"ellipsis"
+            }}>
               สร้างใบเสนอราคา
-            </Button>
-          </Link>
-        </div>
+          </Button>
+        </Link>
       </Row>
       {collapsed ? (
         <div></div>
       ) : (
-        <div>
+        <div style={{height: "80px",}}>
           <Button
             style={{
               background: "white",
               border: "0px",
-              height: "50px",
+              height: "70px",
               marginTop: "10px",
-              width: "150px",
+              width: "10%",
+              overflow:"hidden",
+              textOverflow:"ellipsis"
             }}
           >
-            <Typography style={{ fontSize: "14px" }}>
+            <Typography style={{ fontSize: "14px", textAlign:"center" }}>
               เลขที่เอกสาร
-              <Typography style={{ color: "#EE9437", fontSize: "14px" }}>
+              <Typography style={{ color: "#EE9437", fontSize: "14px", textAlign:"center" }}>
                 QO-23200107000
               </Typography>
             </Typography>
@@ -298,13 +303,15 @@ export const IndexQuotationPage = () => {
               marginLeft: "10px",
               background: "white",
               border: "0px",
-              height: "50px",
-              width: "100px",
+              height: "70px",
+              width: "10%",
+              overflow:"hidden",
+              textOverflow:"ellipsis",
             }}
           >
-            <Typography style={{ fontSize: "14px" }}>
+            <Typography style={{ fontSize: "14px" ,textAlign:"center"}}>
               ลูกค้า
-              <Typography style={{ color: "#EE9437", fontSize: "14px" }}>
+              <Typography style={{ color: "#EE9437", fontSize: "14px", textAlign:"center" }}>
                 Sim
               </Typography>
             </Typography>
@@ -314,7 +321,7 @@ export const IndexQuotationPage = () => {
       <Table
         columns={columns}
         dataSource={dataSource}
-        style={{ marginTop: "6px", borderRadius: "12px" }}
+        style={{ marginTop: "10px", borderRadius: "12px" }}
       />
     </div>
   );
