@@ -24,32 +24,32 @@ import {
 import { ThemeColors } from "../../styles/theme";
 
 export const Organize = () => {
-  const persons = [
-    {
-      name: "เกียรติภูมิ พูลเขตร์กิจ",
-      role: "Programer",
-    },
-    {
-      name: "ภูวิศ วัฒนะ",
-      role: "Programer",
-    },
-    {
-      name: "น็อตโตะคุง วาตานาเบ้",
-      role: "Programer",
-    },
-    {
-      name: "เพชรชี่ สายบิด",
-      role: "Programer",
-    },
-    {
-      name: "ลูกพี่โอ้น สุดเจ๋ง",
-      role: "Programer",
-    },
-    {
-      name: "พี่โก้ คนจริง",
-      role: "Programer",
-    },
-  ];
+  // const persons = [
+  //   {
+  //     name: "เกียรติภูมิ พูลเขตร์กิจ",
+  //     role: "Programer",
+  //   },
+  //   {
+  //     name: "ภูวิศ วัฒนะ",
+  //     role: "Programer",
+  //   },
+  //   {
+  //     name: "น็อตโตะคุง วาตานาเบ้",
+  //     role: "Programer",
+  //   },
+  //   {
+  //     name: "เพชรชี่ สายบิด",
+  //     role: "Programer",
+  //   },
+  //   {
+  //     name: "ลูกพี่โอ้น สุดเจ๋ง",
+  //     role: "Programer",
+  //   },
+  //   {
+  //     name: "พี่โก้ คนจริง",
+  //     role: "Programer",
+  //   },
+  // ];
 
   const itemsCurrency: MenuProps["items"] = [
     {
