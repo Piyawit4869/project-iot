@@ -17,10 +17,11 @@ export const PartialPage = () => {
 
   return (
     <div>
+      {Title("การเงิน", true, "แก้ไข")}
+
+      <Typography style={{ color: ThemeColors.fontColor3 }} />
       {Title("คำนวณการชำระเงินกิจการ/องค์กร", false, "")}
-      {/* <Typography style={{ color: ThemeColors.fontColor3 }}>
-        ข้อมูลการเงินของกิจการ/องค์กร
-      </Typography> */}
+
       <Typography
         style={{
           fontSize: "22px",
