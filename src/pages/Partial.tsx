@@ -7,15 +7,6 @@ import { Employee } from "../components/partial/Employee";
 import { Organize } from "../components/partial/Organize";
 
 export const PartialPage = () => {
-  const testingConflict = "test";
-
-  const [slider, setSlider] = useState(0);
-
-  const employee = "เกียรติภูมิ พูลเขตร์กิจ";
-  const income = 1000000.0;
-  const pricePerUser = (income * slider) / 100;
-  const percentageRest = 100 - slider;
-
   const [sheet, setSheet] = useState(true);
 
   console.log("this is sheet :" + sheet);
@@ -27,12 +18,10 @@ export const PartialPage = () => {
   return (
     <div>
       {Title("การเงิน", true, "แก้ไข")}
-      <Typography>{testingConflict}</Typography>
+
       <Typography style={{ color: ThemeColors.fontColor3 }} />
       {Title("คำนวณการชำระเงินกิจการ/องค์กร", false, "")}
-      {/* <Typography style={{ color: ThemeColors.fontColor3 }}>
-        ข้อมูลการเงินของกิจการ/องค์กร
-      </Typography> */}
+
       <Typography
         style={{
           fontSize: "22px",
