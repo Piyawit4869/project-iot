@@ -1,261 +1,95 @@
-import {
-  Button,
-  Card,
-  Col,
-  DatePicker,
-  DatePickerProps,
-  Input,
-  Row,
-  Slider,
-  Typography,
-} from "antd";
+import { Radio, Row, Typography } from "antd";
 import { Title } from "../components/global/Title";
 import { useState } from "react";
-import {
-  CheckSquareOutlined,
-  DollarOutlined,
-  PlusCircleOutlined,
-  SearchOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+
 import { ThemeColors } from "../styles/theme";
+import { Employee } from "../components/partial/Employee";
+import { Organize } from "../components/partial/Organize";
 
 export const PartialPage = () => {
-  const [slider, setSlider] = useState(0);
+  const [sheet, setSheet] = useState(true);
 
-  const employee = "เกียรติภูมิ พูลเขตร์กิจ";
-  const income = 1000000.0;
-  const pricePerUser = (income * slider) / 100;
-  const percentageRest = 100 - slider;
+  console.log("this is sheet :" + sheet);
 
-  const onChange = (value: number) => {
-    setSlider(value);
-    console.log("onChange: ", value);
-  };
-
-  const onAfterChange = (value: number) => {
-    setSlider(value);
-    console.log("onAfterChange: ", value);
-  };
-
-  const onMonthChange: DatePickerProps["onChange"] = (date, dateString) => {
-    console.log(date, dateString);
+  const onSheetChange = () => {
+    setSheet(sheet == false);
   };
 
   return (
     <div>
-      {Title("การเงิน", true, "แก้ไข")}
-      <Typography style={{ color: ThemeColors.fontColor3 }}>
+      {Title("คำนวณการชำระเงินกิจการ/องค์กร", false, "")}
+      {/* <Typography style={{ color: ThemeColors.fontColor3 }}>
         ข้อมูลการเงินของกิจการ/องค์กร
-      </Typography>
+      </Typography> */}
       <Typography
         style={{
           fontSize: "22px",
           fontWeight: 500,
-          marginTop: "20px",
+          marginTop: "40px",
           marginBottom: "20px",
         }}
       >
-        ชื่อกิจการ/องค์กร : Utotech
+        ชื่อโครงการ : Stay-organize
       </Typography>
-      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} justify="space-between">
-        <Col className="gutter-row" span={6}>
-          <Typography>เลือกช่วงเวลาที่ต้องการแสดงข้อมูล</Typography>
-          <DatePicker
-            style={{
-              width: "100%",
-              backgroundColor: ThemeColors.orangeColor,
-            }}
-            onChange={onMonthChange}
-            picker="month"
-          />
-        </Col>
-        <Col className="gutter-row" span={6}>
-          <Typography>รายได้</Typography>
-          <Button
-            style={{ width: "100%", borderColor: ThemeColors.orangeColor }}
-          >
-            <Row wrap={false} align="middle" justify="center">
-              <DollarOutlined
-                style={{
-                  marginRight: "10px",
-                  color: ThemeColors.brickOrangeColor,
-                }}
-              />
-              <Typography>{income} บาท</Typography>
-            </Row>
-          </Button>
-        </Col>
-        <Col className="gutter-row" span={6}>
-          <Typography>ค่าใช้จ่าย</Typography>
-          <Button
-            style={{ width: "100%", borderColor: ThemeColors.orangeColor }}
-          >
-            <Row wrap={false} align="middle" justify="center">
-              <DollarOutlined
-                style={{
-                  marginRight: "10px",
-                  color: ThemeColors.brickOrangeColor,
-                }}
-              />
-              <Typography>390,000.00 บาท</Typography>
-            </Row>
-          </Button>
-        </Col>
-        <Col className="gutter-row" span={6}>
-          <Typography>เงินคงเหลือ</Typography>
-          <Button
-            style={{ width: "100%", borderColor: ThemeColors.orangeColor }}
-          >
-            <Row wrap={false} align="middle" justify="center">
-              <DollarOutlined
-                style={{
-                  marginRight: "10px",
-                  color: ThemeColors.brickOrangeColor,
-                }}
-              />
-              <Typography>610,000.00 บาท</Typography>
-            </Row>
-          </Button>
-        </Col>
-      </Row>
-      <Row align="middle" style={{ marginTop: "20px", marginBottom: "20px" }}>
-        <CheckSquareOutlined
+      <Row></Row>
+      <Radio.Group value={sheet} onChange={onSheetChange}>
+        <Radio.Button
+          value={true}
           style={{
-            color: ThemeColors.brickOrangeColor,
-            fontSize: "24px",
+            color: sheet ? ThemeColors.orangeColor : "white",
+            backgroundColor: sheet
+              ? ThemeColors.bgColor
+              : ThemeColors.orangeColor,
+            borderColor: ThemeColors.orangeColor,
+            borderTopLeftRadius: "20px",
+            borderTopRightRadius: "20px",
+            borderBottomLeftRadius: "0px",
+            borderBottomRightRadius: "0px",
+            borderBottomColor: sheet
+              ? ThemeColors.bgColor
+              : ThemeColors.orangeColor,
+
             marginRight: "5px",
           }}
-        />
-        <Typography style={{ fontSize: "18px" }}>
-          ผู้ใช้ในกิจการ/องค์กร
-        </Typography>
-      </Row>
-      <Row justify="space-between" wrap={false}>
-        <Input
-          width="100%"
+        >
+          คำนวณการชำระเงินกิจการ/องค์กร
+        </Radio.Button>
+        <Radio.Button
+          value={false}
           style={{
-            borderColor: ThemeColors.goldColor,
-            marginRight: "10px",
-            color: ThemeColors.goldColor,
-          }}
-          placeholder="ค้นหาชื่อผู้ใช้"
-        ></Input>
-        <Button
-          style={{
-            backgroundColor: ThemeColors.goldColor,
-            color: ThemeColors.fontColor1,
+            color: sheet ? "white" : ThemeColors.orangeColor,
+            backgroundColor: sheet
+              ? ThemeColors.orangeColor
+              : ThemeColors.bgColor,
+            borderColor: ThemeColors.orangeColor,
+            borderTopLeftRadius: "20px",
+            borderTopRightRadius: "20px",
+            borderBottomLeftRadius: "0px",
+            borderBottomRightRadius: "0px",
+            borderBottomColor: sheet
+              ? ThemeColors.orangeColor
+              : ThemeColors.bgColor,
           }}
         >
-          <Row style={{ width: "100%" }} align="middle" wrap={false}>
-            <SearchOutlined />
-            <Typography style={{ color: ThemeColors.fontColor1 }}>
-              ค้นหา
-            </Typography>
-          </Row>
-        </Button>
-      </Row>
-      <Row justify="space-between" wrap={false} style={{ marginTop: "20px" }}>
-        <div style={{ width: "100%" }}>
-          <Row align="middle" wrap={false}>
-            <div style={{ width: "100%" }}>
-              <Typography style={{ fontWeight: 600 }}>{employee}</Typography>
-              <Slider
-                trackStyle={{
-                  backgroundColor: ThemeColors.orangeColor,
-                }}
-                style={{
-                  width: "100%",
-                }}
-                defaultValue={0}
-                onChange={onChange}
-                onAfterChange={onAfterChange}
-              />
-              <Row justify="space-between">
-                <Typography style={{ color: ThemeColors.orangeColor }}>
-                  {slider}%
-                </Typography>
-                <Typography>{percentageRest} %</Typography>
-              </Row>
-            </div>
-
-            <Card
-              bodyStyle={{ padding: "4px" }}
-              style={{
-                borderColor: ThemeColors.goldColor,
-                marginLeft: "20px",
-                marginRight: "20px",
-                width: "40%",
-                height: "30px",
-                textAlign: "center",
-              }}
-            >
-              <Typography>{pricePerUser} บาท</Typography>
-            </Card>
-          </Row>
-        </div>
-
-        <Card style={{ width: "80%" }}>
-          <Row align="middle">
-            <UserOutlined
-              style={{
-                fontSize: "50px",
-                marginRight: "5px",
-              }}
-            />
-            <Col>
-              <Typography style={{ fontWeight: 600 }}>{employee}</Typography>
-              <Typography style={{ color: ThemeColors.orangeColor }}>
-                {slider}% | {pricePerUser} บาท
-              </Typography>
-            </Col>
-          </Row>
-          <div
-            style={{
-              background: ThemeColors.goldColor,
-              height: "3px",
-              marginTop: "10px",
-              marginBottom: "10px",
-            }}
-          />
-          <Typography style={{ fontWeight: 600 }}>
-            หักค่าใช้จ่ายอื่น ๆ
-          </Typography>
-          <Card
-            bodyStyle={{ padding: "4px" }}
-            style={{
-              borderColor: ThemeColors.orangeColor,
-              marginBottom: "10px",
-            }}
-          >
-            <Typography style={{ color: ThemeColors.orangeColor }}>
-              10,000.00
-            </Typography>
-          </Card>
-          <Typography>กรุณาใส่ชื่อรายการ</Typography>
-          <Input placeholder="-" style={{ marginBottom: "10px" }}></Input>
-          <Typography>เพิ่มรายการหักเงินคืนองค์กร</Typography>
-          <Button
-            style={{
-              width: "20%",
-              backgroundColor: ThemeColors.orangeColor,
-              borderRadius: "10px",
-              marginBottom: "20px",
-            }}
-            onClick={() => {}}
-          >
-            <Row justify={"center"} align={"middle"}>
-              <PlusCircleOutlined
-                style={{ color: ThemeColors.whiteColor, fontSize: "20px" }}
-              />
-
-              <Typography style={{ color: "white", marginLeft: "5px" }}>
-                text
-              </Typography>
-            </Row>
-          </Button>
-        </Card>
-      </Row>
+          คำนวณการชำระเงินพนักงาน
+        </Radio.Button>
+        <div
+          style={{
+            background: ThemeColors.bgColor,
+            marginBottom: "-2px",
+            height: "1px",
+          }}
+        />
+      </Radio.Group>
+      <div
+        style={{
+          background: ThemeColors.orangeColor,
+          marginBottom: "20px",
+          height: "1px",
+        }}
+      />
+      {sheet ? <Organize /> : <Employee />}
     </div>
+    //testing
   );
 };
