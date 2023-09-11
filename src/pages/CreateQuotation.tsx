@@ -2,6 +2,7 @@ import { ThemeColors } from "../styles/theme";
 import { Title } from "../components/global/Title";
 import {
   Button,
+  Card,
   DatePicker,
   DatePickerProps,
   Dropdown,
@@ -73,18 +74,20 @@ export const CreateQuotationPage = () => {
         <Row justify={"space-between"} wrap={false}>
           <div style={{ width: "55%" }}>
             <Row wrap={false}>
-              <div
+              <Card
+                bodyStyle={{ padding: "0px" }}
                 style={{
                   width: "100%",
+                  height: "70px",
                   backgroundColor: "white",
                   paddingTop: "10px",
                   paddingLeft: "10px",
                   borderRadius: "10px",
-                  boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
+                  boxShadow: "1px 1px 2.5px 1px" + ThemeColors.goldColor,
                   marginRight: "20px",
                 }}
               >
-                <Typography style={{ fontSize: "18px" }}>อ้างอิง</Typography>
+                <Typography style={{ fontSize: "16px" }}>อ้างอิง</Typography>
                 <Form.Item>
                   <Input
                     placeholder="ระบุถ้ามี"
@@ -96,18 +99,20 @@ export const CreateQuotationPage = () => {
                     }}
                   />
                 </Form.Item>
-              </div>
-              <div
+              </Card>
+              <Card
+                bodyStyle={{ padding: "0px" }}
                 style={{
                   width: "100%",
+                  height: "70px",
                   backgroundColor: "white",
                   paddingTop: "10px",
                   paddingLeft: "10px",
                   borderRadius: "10px",
-                  boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
+                  boxShadow: "1px 1px 2.5px 1px" + ThemeColors.goldColor,
                 }}
               >
-                <Typography style={{ fontSize: "18px" }}>
+                <Typography style={{ fontSize: "16px" }}>
                   เลขที่เอกสาร
                 </Typography>
                 <Form.Item>
@@ -121,7 +126,7 @@ export const CreateQuotationPage = () => {
                     }}
                   />
                 </Form.Item>
-              </div>
+              </Card>
             </Row>
             <Row
               align="middle"
@@ -137,18 +142,20 @@ export const CreateQuotationPage = () => {
               <Typography style={{ fontSize: "18px" }}>ข้อมูลลูกค้า</Typography>
             </Row>
             <Row wrap={false}>
-              <div
+              <Card
+                bodyStyle={{ padding: "0px" }}
                 style={{
                   width: "100%",
+                  height: "70px",
+                  boxShadow: "1px 1px 2.5px 1px" + ThemeColors.goldColor,
                   backgroundColor: "white",
                   paddingTop: "10px",
                   paddingLeft: "10px",
                   borderRadius: "10px",
-                  boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
                   marginRight: "20px",
                 }}
               >
-                <Typography style={{ fontSize: "18px" }}>ชื่อลูกค้า</Typography>
+                <Typography style={{ fontSize: "16px" }}>ชื่อลูกค้า</Typography>
                 <Form.Item
                   rules={[
                     {
@@ -168,18 +175,20 @@ export const CreateQuotationPage = () => {
                     }}
                   />
                 </Form.Item>
-              </div>
-              <div
+              </Card>
+              <Card
+                bodyStyle={{ padding: "0px" }}
                 style={{
                   width: "50%",
+                  height: "70px",
+                  boxShadow: "1px 1px 2.5px 1px" + ThemeColors.goldColor,
                   backgroundColor: "white",
                   paddingTop: "10px",
                   paddingLeft: "10px",
                   borderRadius: "10px",
-                  boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
                 }}
               >
-                <Typography style={{ fontSize: "18px" }}>เบอร์โทร</Typography>
+                <Typography style={{ fontSize: "16px" }}>เบอร์โทร</Typography>
                 <Form.Item
                   rules={[
                     {
@@ -199,23 +208,26 @@ export const CreateQuotationPage = () => {
                     }}
                   />
                 </Form.Item>
-              </div>
+              </Card>
             </Row>
-            <div
+            <Card
+              bodyStyle={{ padding: "0px" }}
               style={{
                 width: "100%",
+                height: "70px",
+                boxShadow: "1px 1px 2.5px 1px" + ThemeColors.goldColor,
                 backgroundColor: "white",
                 paddingTop: "10px",
                 paddingLeft: "10px",
                 paddingBottom: "1px",
                 borderRadius: "10px",
-                boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
+
                 marginTop: "20px",
                 marginRight: "20px",
                 marginBottom: "20px",
               }}
             >
-              <Typography style={{ fontSize: "18px" }}>ที่อยู่</Typography>
+              <Typography style={{ fontSize: "16px" }}>ที่อยู่</Typography>
               <Form.Item
                 rules={[
                   {
@@ -235,20 +247,22 @@ export const CreateQuotationPage = () => {
                   }}
                 />
               </Form.Item>
-            </div>
+            </Card>
             <Row wrap={false}>
-              <div
+              <Card
+                bodyStyle={{ padding: "0px" }}
                 style={{
                   width: "100%",
+                  height: "70px",
+                  boxShadow: "1px 1px 2.5px 1px" + ThemeColors.goldColor,
                   backgroundColor: "white",
                   paddingTop: "10px",
                   paddingLeft: "10px",
                   borderRadius: "10px",
-                  boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
                   marginRight: "20px",
                 }}
               >
-                <Typography style={{ fontSize: "18px" }}>วันที่ออก</Typography>
+                <Typography style={{ fontSize: "16px" }}>วันที่ออก</Typography>
                 <Form.Item
                   rules={[
                     {
@@ -268,18 +282,20 @@ export const CreateQuotationPage = () => {
                     onChange={onChangeDate}
                   />
                 </Form.Item>
-              </div>
-              <div
+              </Card>
+              <Card
+                bodyStyle={{ padding: "0px" }}
                 style={{
                   width: "100%",
+                  height: "70px",
+                  boxShadow: "1px 1px 2.5px 1px" + ThemeColors.goldColor,
                   backgroundColor: "white",
                   paddingTop: "10px",
                   paddingLeft: "10px",
                   borderRadius: "10px",
-                  boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
                 }}
               >
-                <Typography style={{ fontSize: "18px" }}>
+                <Typography style={{ fontSize: "16px" }}>
                   วันที่ใช้ได้ถึง
                 </Typography>
                 <Form.Item
@@ -301,7 +317,7 @@ export const CreateQuotationPage = () => {
                     onChange={onChangeDate}
                   />
                 </Form.Item>
-              </div>
+              </Card>
             </Row>
             <Row
               align="middle"
@@ -319,18 +335,20 @@ export const CreateQuotationPage = () => {
               </Typography>
             </Row>
             <Row wrap={false}>
-              <div
+              <Card
+                bodyStyle={{ padding: "0px" }}
                 style={{
                   width: "100%",
+                  height: "70px",
+                  boxShadow: "1px 1px 2.5px 1px" + ThemeColors.goldColor,
                   backgroundColor: "white",
                   paddingTop: "10px",
                   paddingLeft: "10px",
                   borderRadius: "10px",
-                  boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
                   marginRight: "20px",
                 }}
               >
-                <Typography style={{ fontSize: "18px" }}>ประเภทราคา</Typography>
+                <Typography style={{ fontSize: "16px" }}>ประเภทราคา</Typography>
                 <Form.Item
                   rules={[
                     {
@@ -357,18 +375,20 @@ export const CreateQuotationPage = () => {
                     </a>
                   </Dropdown>
                 </Form.Item>
-              </div>
-              <div
+              </Card>
+              <Card
+                bodyStyle={{ padding: "0px" }}
                 style={{
                   width: "100%",
+                  height: "70px",
+                  boxShadow: "1px 1px 2.5px 1px" + ThemeColors.goldColor,
                   backgroundColor: "white",
                   paddingTop: "10px",
                   paddingLeft: "10px",
                   borderRadius: "10px",
-                  boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
                 }}
               >
-                <Typography style={{ fontSize: "18px" }}>
+                <Typography style={{ fontSize: "16px" }}>
                   ราคานี้เป็นค่าเงิน
                 </Typography>
                 <Form.Item
@@ -397,7 +417,7 @@ export const CreateQuotationPage = () => {
                     </a>
                   </Dropdown>
                 </Form.Item>
-              </div>
+              </Card>
             </Row>
           </div>
           <Preview></Preview>
@@ -428,9 +448,11 @@ export const CreateQuotationPage = () => {
               }}
             >
               <Row justify={"space-between"} wrap={false}>
-                <div
+                <Card
+                  bodyStyle={{ padding: "0px" }}
                   style={{
                     width: "100%",
+                    height: "70px",
                     backgroundColor: ThemeColors.goldColor,
                     paddingTop: "10px",
                     paddingLeft: "10px",
@@ -440,7 +462,7 @@ export const CreateQuotationPage = () => {
                     marginBottom: "10px",
                   }}
                 >
-                  <Typography style={{ fontSize: "18px" }}>
+                  <Typography style={{ fontSize: "16px" }}>
                     สินค้า/บริการ
                   </Typography>
                   <Form.Item
@@ -468,10 +490,12 @@ export const CreateQuotationPage = () => {
                       </a>
                     </Dropdown>
                   </Form.Item>
-                </div>
-                <div
+                </Card>
+                <Card
+                  bodyStyle={{ padding: "0px" }}
                   style={{
                     width: "100%",
+                    height: "70px",
                     backgroundColor: ThemeColors.goldColor,
                     paddingTop: "10px",
                     paddingLeft: "10px",
@@ -481,7 +505,7 @@ export const CreateQuotationPage = () => {
                     marginRight: "10px",
                   }}
                 >
-                  <Typography style={{ fontSize: "18px" }}>บัญชี</Typography>
+                  <Typography style={{ fontSize: "16px" }}>บัญชี</Typography>
                   <Form.Item>
                     <Input
                       placeholder="-"
@@ -493,10 +517,12 @@ export const CreateQuotationPage = () => {
                       }}
                     />
                   </Form.Item>
-                </div>
-                <div
+                </Card>
+                <Card
+                  bodyStyle={{ padding: "0px" }}
                   style={{
                     width: "100%",
+                    height: "70px",
                     backgroundColor: ThemeColors.goldColor,
                     paddingTop: "10px",
                     paddingLeft: "10px",
@@ -504,7 +530,7 @@ export const CreateQuotationPage = () => {
                     marginBottom: "10px",
                   }}
                 >
-                  <Typography style={{ fontSize: "18px" }}>คำอธิบาย</Typography>
+                  <Typography style={{ fontSize: "16px" }}>คำอธิบาย</Typography>
                   <Form.Item>
                     <Input
                       placeholder="พิมพ์คำอธิบาย"
@@ -516,13 +542,15 @@ export const CreateQuotationPage = () => {
                       }}
                     />
                   </Form.Item>
-                </div>
+                </Card>
               </Row>
               <Row justify={"space-between"} align={"middle"} wrap={false}>
                 <Row style={{ width: "100%" }} wrap={false}>
-                  <div
+                  <Card
+                    bodyStyle={{ padding: "0px" }}
                     style={{
                       width: "100%",
+                      height: "70px",
                       backgroundColor: ThemeColors.goldColor,
                       paddingTop: "10px",
                       paddingLeft: "10px",
@@ -531,7 +559,7 @@ export const CreateQuotationPage = () => {
                       marginRight: "10px",
                     }}
                   >
-                    <Typography style={{ fontSize: "18px" }}>จำนวน</Typography>
+                    <Typography style={{ fontSize: "16px" }}>จำนวน</Typography>
                     <Form.Item>
                       <Input
                         placeholder="1"
@@ -543,19 +571,20 @@ export const CreateQuotationPage = () => {
                         }}
                       />
                     </Form.Item>
-                  </div>
-                  <div
+                  </Card>
+                  <Card
+                    bodyStyle={{ padding: "0px" }}
                     style={{
                       width: "100%",
+                      height: "70px",
                       backgroundColor: ThemeColors.goldColor,
                       paddingTop: "10px",
                       paddingLeft: "10px",
                       borderRadius: "10px",
                       marginBottom: "10px",
-                      // marginRight: "10px",
                     }}
                   >
-                    <Typography style={{ fontSize: "18px" }}>
+                    <Typography style={{ fontSize: "16px" }}>
                       ราคา/หน่วย
                     </Typography>
                     <Form.Item>
@@ -569,13 +598,14 @@ export const CreateQuotationPage = () => {
                         }}
                       />
                     </Form.Item>
-                  </div>
+                  </Card>
                 </Row>
                 <Row style={{ width: "100%" }} wrap={false}>
-                  {" "}
-                  <div
+                  <Card
+                    bodyStyle={{ padding: "0px" }}
                     style={{
                       width: "100%",
+                      height: "70px",
                       backgroundColor: ThemeColors.goldColor,
                       paddingTop: "10px",
                       paddingLeft: "10px",
@@ -585,7 +615,7 @@ export const CreateQuotationPage = () => {
                       marginRight: "10px",
                     }}
                   >
-                    <Typography style={{ fontSize: "18px" }}>
+                    <Typography style={{ fontSize: "16px" }}>
                       ส่วนลด/หน่วย
                     </Typography>
                     <Form.Item>
@@ -599,10 +629,12 @@ export const CreateQuotationPage = () => {
                         }}
                       />
                     </Form.Item>
-                  </div>
-                  <div
+                  </Card>
+                  <Card
+                    bodyStyle={{ padding: "0px" }}
                     style={{
                       width: "100%",
+                      height: "70px",
                       backgroundColor: ThemeColors.goldColor,
                       paddingTop: "10px",
                       paddingLeft: "10px",
@@ -611,7 +643,7 @@ export const CreateQuotationPage = () => {
                       marginBottom: "10px",
                     }}
                   >
-                    <Typography style={{ fontSize: "18px" }}>ภาษี </Typography>
+                    <Typography style={{ fontSize: "16px" }}>ภาษี </Typography>
                     <Form.Item
                       rules={[
                         {
@@ -640,15 +672,17 @@ export const CreateQuotationPage = () => {
                         </a>
                       </Dropdown>
                     </Form.Item>
-                  </div>
+                  </Card>
                 </Row>
                 <Row style={{ width: "100%" }} wrap={false}>
-                  <div
+                  <Card
+                    bodyStyle={{ padding: "0px" }}
                     style={{
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
                       width: "100%",
+                      height: "70px",
                       backgroundColor: "white",
                       borderRadius: "10px",
                       marginBottom: "10px",
@@ -656,14 +690,14 @@ export const CreateQuotationPage = () => {
                       textAlign: "center",
                     }}
                   >
-                    <Typography style={{ fontSize: "18px" }}>
-                      ลบรายการ{" "}
+                    <Typography style={{ fontSize: "16px" }}>
+                      ลบรายการ
                     </Typography>
-                  </div>
+                  </Card>
                   <Button
                     style={{
                       width: "100%",
-                      height: "80px",
+                      height: "70px",
                       backgroundColor: ThemeColors.orangeColor,
                       borderRadius: "10px",
                       marginBottom: "10px",
@@ -671,7 +705,8 @@ export const CreateQuotationPage = () => {
                     onClick={onClickDeleteCard}
                   >
                     <Row justify={"center"} align={"middle"}>
-                      <div
+                      <Card
+                        bodyStyle={{ padding: "0px" }}
                         style={{
                           display: "flex",
                           width: "28px",
@@ -689,9 +724,9 @@ export const CreateQuotationPage = () => {
                             fontSize: "24px",
                           }}
                         />
-                      </div>
+                      </Card>
 
-                      <Typography style={{ fontSize: "18px" }}>ลบ </Typography>
+                      <Typography style={{ fontSize: "16px" }}>ลบ </Typography>
                     </Row>
                   </Button>
                 </Row>
@@ -711,8 +746,8 @@ export const CreateQuotationPage = () => {
         </Typography>
         <Button
           style={{
-            width: "16%",
-            height: "80px",
+            width: "120px",
+            height: "70px",
             backgroundColor: ThemeColors.orangeColor,
             borderRadius: "10px",
             marginBottom: "20px",
@@ -720,7 +755,8 @@ export const CreateQuotationPage = () => {
           onClick={onClickAddCard}
         >
           <Row justify={"center"} align={"middle"}>
-            <div
+            <Card
+              bodyStyle={{ padding: "0px" }}
               style={{
                 display: "flex",
                 width: "28px",
@@ -735,9 +771,9 @@ export const CreateQuotationPage = () => {
               <PlusCircleOutlined
                 style={{ color: ThemeColors.orangeColor, fontSize: "24px" }}
               />
-            </div>
+            </Card>
 
-            <Typography style={{ fontSize: "18px" }}>เพิ่ม </Typography>
+            <Typography style={{ fontSize: "16px" }}>เพิ่ม </Typography>
           </Row>
         </Button>
         <div style={{ marginTop: "10px", marginBottom: "20px" }}>
@@ -749,7 +785,8 @@ export const CreateQuotationPage = () => {
           </Radio.Group>
         </div>
 
-        <div
+        <Card
+          bodyStyle={{ padding: "0px" }}
           style={{
             backgroundColor: ThemeColors.goldColor,
             borderRadius: "10px",
@@ -873,7 +910,8 @@ export const CreateQuotationPage = () => {
                 </Row>
               </Row>
             </div>
-            <div
+            <Card
+              bodyStyle={{ padding: "0px" }}
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -892,9 +930,9 @@ export const CreateQuotationPage = () => {
               <Typography style={{ fontSize: "18px", color: "white" }}>
                 0.00 บาท
               </Typography>
-            </div>
+            </Card>
           </Row>
-        </div>
+        </Card>
         <Row align="middle" style={{ marginTop: "20px", marginBottom: "20px" }}>
           <CheckSquareOutlined
             style={{
@@ -907,21 +945,24 @@ export const CreateQuotationPage = () => {
             หมายเหตุสำหรับลูกค้า
           </Typography>
         </Row>
-        <div
+        <Card
+          bodyStyle={{ padding: "0px" }}
           style={{
             width: "100%",
+            height: "70px",
+            boxShadow: "1px 1px 2.5px 1px" + ThemeColors.goldColor,
             backgroundColor: "white",
             paddingTop: "10px",
             paddingLeft: "10px",
             paddingBottom: "1px",
             borderRadius: "10px",
-            boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
+
             marginTop: "20px",
             marginRight: "20px",
             marginBottom: "20px",
           }}
         >
-          <Typography style={{ fontSize: "18px" }}>หมายเหตุ</Typography>
+          <Typography style={{ fontSize: "16px" }}>หมายเหตุ</Typography>
           <Form.Item>
             <Input
               placeholder="ระบุถ้ามี"
@@ -933,7 +974,7 @@ export const CreateQuotationPage = () => {
               }}
             />
           </Form.Item>
-        </div>
+        </Card>
         <Row style={{ marginBottom: "20px" }}>
           <Button
             style={{ height: "50px", backgroundColor: ThemeColors.greenColor }}
