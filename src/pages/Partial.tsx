@@ -21,6 +21,8 @@ import {
 import { ThemeColors } from "../styles/theme";
 
 export const PartialPage = () => {
+  const testingConflict = "test";
+
   const [slider, setSlider] = useState(0);
 
   const employee = "เกียรติภูมิ พูลเขตร์กิจ";
@@ -45,6 +47,7 @@ export const PartialPage = () => {
   return (
     <div>
       {Title("การเงิน", true, "แก้ไข")}
+      <Typography>{testingConflict}</Typography>
       <Typography style={{ color: ThemeColors.fontColor3 }}>
         ข้อมูลการเงินของกิจการ/องค์กร
       </Typography>
