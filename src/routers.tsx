@@ -14,6 +14,7 @@ import { CreateProductPage } from "./pages/CreateProduct";
 import { EditProductPage } from "./pages/EditProduct";
 
 import { PartialPage } from "./pages/Partial";
+import { IndexPartialPage } from "./pages/IndexPartial";
 
 export const router = createBrowserRouter([
   {
@@ -67,6 +68,10 @@ export const router = createBrowserRouter([
       },
       {
         path: "/partial",
+        element: <IndexPartialPage />,
+      },
+      {
+        path: "/partial/create",
         element: <PartialPage />,
       },
     ],
@@ -76,5 +81,4 @@ export const router = createBrowserRouter([
     // action: LoginAction,
     element: <LoginPage />,
   },
-  
 ]);

@@ -1,6 +1,7 @@
 import {
   ArrowRightOutlined,
   CheckSquareOutlined,
+  DollarOutlined,
   DownOutlined,
   FilterOutlined,
   FormOutlined,
@@ -246,82 +247,52 @@ export const Organize = () => {
                 ยอดเงินคงเหลือ (บาท)
               </Typography>
               <Card
-                bodyStyle={{ padding: "0px" }}
                 style={{
-                  width: "100%",
+                  width: "200px",
                   height: "70px",
                   backgroundColor: "white",
-                  paddingTop: "10px",
+                  marginTop: "10px",
                   paddingLeft: "10px",
+                  paddingRight: "10px",
                   borderRadius: "5px",
                   boxShadow: "1px 1px 2.5px 1px" + ThemeColors.goldColor,
-                  marginTop: "10px",
-                  marginRight: "20px",
                 }}
               >
-                <Form.Item>
-                  <Input
-                    placeholder="0.00"
-                    bordered={false}
-                    style={{
-                      padding: "12px",
-                      fontSize: "16px",
-                      color: ThemeColors.lightOrangeColor,
-                    }}
-                  />
-                </Form.Item>
+                <Typography style={{ fontSize: "16px", textAlign: "center" }}>
+                  0.00
+                </Typography>
               </Card>
               <Card
-                bodyStyle={{ padding: "0px" }}
                 style={{
-                  width: "100%",
+                  width: "200px",
                   height: "70px",
                   backgroundColor: "white",
-                  paddingTop: "10px",
+                  marginTop: "10px",
                   paddingLeft: "10px",
+                  paddingRight: "10px",
                   borderRadius: "5px",
                   boxShadow: "1px 1px 2.5px 1px" + ThemeColors.goldColor,
-                  marginTop: "10px",
-                  marginRight: "20px",
                 }}
               >
-                <Form.Item>
-                  <Input
-                    placeholder="0.00"
-                    bordered={false}
-                    style={{
-                      padding: "12px",
-                      fontSize: "16px",
-                      color: ThemeColors.lightOrangeColor,
-                    }}
-                  />
-                </Form.Item>
+                <Typography style={{ fontSize: "16px", textAlign: "center" }}>
+                  0.00
+                </Typography>
               </Card>
               <Card
-                bodyStyle={{ padding: "0px" }}
                 style={{
-                  width: "100%",
+                  width: "200px",
                   height: "70px",
                   backgroundColor: "white",
-                  paddingTop: "10px",
+                  marginTop: "10px",
                   paddingLeft: "10px",
+                  paddingRight: "10px",
                   borderRadius: "5px",
                   boxShadow: "1px 1px 2.5px 1px" + ThemeColors.goldColor,
-                  marginTop: "10px",
-                  marginRight: "20px",
                 }}
               >
-                <Form.Item>
-                  <Input
-                    placeholder="0.00"
-                    bordered={false}
-                    style={{
-                      padding: "12px",
-                      fontSize: "16px",
-                      color: ThemeColors.lightOrangeColor,
-                    }}
-                  />
-                </Form.Item>
+                <Typography style={{ fontSize: "16px", textAlign: "center" }}>
+                  0.00
+                </Typography>
               </Card>
             </Col>
           </Row>
@@ -609,6 +580,256 @@ export const Organize = () => {
           }}
         />
         <Typography style={{ fontSize: "18px" }}>สรุปผลลัพธ์</Typography>
+      </Row>
+      <Row>
+        <Card
+          bodyStyle={{ padding: "10px" }}
+          style={{
+            width: "200px",
+            backgroundColor: ThemeColors.lightOrangeColor,
+          }}
+        >
+          <Row justify="start" align="middle">
+            <DollarOutlined
+              style={{
+                color: ThemeColors.whiteColor,
+                fontSize: "28px",
+                marginRight: "10px",
+              }}
+            />
+            <Col>
+              <Typography style={{ fontSize: "16px" }}>เงินคงเหลือ</Typography>
+              <Typography style={{ fontSize: "16px", color: "white" }}>
+                0.00 บาท
+              </Typography>
+            </Col>
+          </Row>
+        </Card>
+        <Card
+          bodyStyle={{ padding: "10px" }}
+          style={{
+            width: "200px",
+            backgroundColor: ThemeColors.lightOrangeColor,
+            marginRight: "10px",
+            marginLeft: "10px",
+          }}
+        >
+          <Row justify="start" align="middle">
+            <DollarOutlined
+              style={{
+                color: ThemeColors.whiteColor,
+                fontSize: "28px",
+                marginRight: "10px",
+              }}
+            />
+            <Col>
+              <Typography style={{ fontSize: "16px" }}>
+                ผลลัพธ์รายได้ต่อคน
+              </Typography>
+              <Typography style={{ fontSize: "16px", color: "white" }}>
+                0.00 บาท
+              </Typography>
+            </Col>
+          </Row>
+        </Card>
+        <Card
+          bodyStyle={{ padding: "10px" }}
+          style={{
+            width: "200px",
+            backgroundColor: ThemeColors.lightOrangeColor,
+          }}
+        >
+          <Row justify="start" align="middle">
+            <DollarOutlined
+              style={{
+                color: ThemeColors.whiteColor,
+                fontSize: "28px",
+                marginRight: "10px",
+              }}
+            />
+            <Col>
+              <Typography style={{ fontSize: "16px" }}>โบนัสสุทธิ์</Typography>
+              <Typography style={{ fontSize: "16px", color: "white" }}>
+                0.00 บาท
+              </Typography>
+            </Col>
+          </Row>
+        </Card>
+      </Row>
+      <Typography
+        style={{
+          fontSize: "16px",
+          color: ThemeColors.orangeColor,
+          marginTop: "15px",
+          marginBottom: "15px",
+        }}
+      >
+        *หมายเหตุ* ถ้าติ๊กถูกจะเป็นเลือกให้โบนัสนั้นเป็น 100%
+      </Typography>
+      <Card bodyStyle={{ paddingRight: "20px" }} style={{ width: "50%" }}>
+        <Row justify="space-between">
+          <div></div>
+          <Typography style={{ width: "43%", fontSize: "16px" }}>
+            เปอร์เซ็นโบนัส
+          </Typography>
+          <Typography style={{ width: "39%", fontSize: "16px" }}>
+            จำนวนเงินโบนัส (บาท)
+          </Typography>
+        </Row>
+        <Row style={{ marginTop: "10px", marginBottom: "10px" }} wrap={false}>
+          <Checkbox
+            onChange={onCheckBoxChange}
+            style={{ transform: "scale(2)", marginRight: "20px" }}
+          />
+          <Card
+            bodyStyle={{ padding: "10px" }}
+            style={{
+              backgroundColor: ThemeColors.lightOrangeColor,
+              width: "300px",
+              marginRight: "10px",
+            }}
+          >
+            <Row justify="start" align="middle" wrap={false}>
+              <DollarOutlined
+                style={{
+                  color: ThemeColors.whiteColor,
+                  fontSize: "28px",
+                  marginRight: "10px",
+                }}
+              />
+              <Col>
+                <Typography style={{ fontSize: "16px" }}>
+                  โบนัสทีมโครงการ
+                </Typography>
+                <Typography style={{ fontSize: "16px", color: "white" }}>
+                  0%
+                </Typography>
+              </Col>
+            </Row>
+          </Card>
+          <Card
+            style={{
+              width: "200px",
+              height: "70px",
+              backgroundColor: "white",
+              paddingLeft: "10px",
+              paddingRight: "10px",
+              borderRadius: "5px",
+              boxShadow: "1px 1px 2.5px 1px" + ThemeColors.goldColor,
+            }}
+          >
+            <Typography style={{ fontSize: "16px", textAlign: "center" }}>
+              0.00
+            </Typography>
+          </Card>
+        </Row>
+        <Row wrap={false}>
+          <Checkbox
+            onChange={onCheckBoxChange}
+            style={{ transform: "scale(2)", marginRight: "20px" }}
+          />
+          <Card
+            bodyStyle={{ padding: "10px" }}
+            style={{
+              backgroundColor: ThemeColors.lightOrangeColor,
+              width: "300px",
+              marginRight: "10px",
+            }}
+          >
+            <Row justify="start" align="middle" wrap={false}>
+              <DollarOutlined
+                style={{
+                  color: ThemeColors.whiteColor,
+                  fontSize: "28px",
+                  marginRight: "10px",
+                }}
+              />
+              <Col>
+                <Typography style={{ fontSize: "16px" }}>
+                  โบนัสองค์กร/กิจการ
+                </Typography>
+                <Typography style={{ fontSize: "16px", color: "white" }}>
+                  100%
+                </Typography>
+              </Col>
+            </Row>
+          </Card>
+          <Card
+            style={{
+              width: "200px",
+              height: "70px",
+              backgroundColor: "white",
+              paddingLeft: "10px",
+              paddingRight: "10px",
+              borderRadius: "5px",
+              boxShadow: "1px 1px 2.5px 1px" + ThemeColors.goldColor,
+            }}
+          >
+            <Typography style={{ fontSize: "16px", textAlign: "center" }}>
+              0.00
+            </Typography>
+
+            {/* <Form.Item>
+              <Input
+                placeholder="0.00"
+                bordered={false}
+                style={{
+                  padding: "12px",
+                  fontSize: "16px",
+                  color: ThemeColors.lightOrangeColor,
+                }}
+              />
+            </Form.Item> */}
+          </Card>
+        </Row>
+      </Card>
+      <div
+        style={{
+          background: ThemeColors.lightOrangeColor,
+          marginTop: "30px",
+          marginBottom: "30px",
+          height: "1px",
+        }}
+      />
+      <Row style={{ marginBottom: "20px" }}>
+        <Button
+          style={{
+            width: "200px",
+            height: "70px",
+            backgroundColor: ThemeColors.greenColor,
+          }}
+        >
+          <Typography style={{ fontSize: "18px", color: "white" }}>
+            บันทึกข้อมูล
+          </Typography>
+        </Button>
+        <Button
+          style={{
+            width: "200px",
+            height: "70px",
+            backgroundColor: ThemeColors.saveDraftColor,
+            marginLeft: "10px",
+            marginRight: "10px",
+          }}
+        >
+          <Typography style={{ fontSize: "18px", color: "white" }}>
+            บันทึกข้อมูลและคำนวณ
+          </Typography>
+          <Typography style={{ fontSize: "18px", color: "white" }}>
+            การชำระเงินพนักงาน
+          </Typography>
+        </Button>
+        <Button
+          style={{
+            width: "200px",
+            height: "70px",
+            backgroundColor: ThemeColors.waringColor,
+          }}
+        >
+          <Typography style={{ fontSize: "18px", color: "white" }}>
+            ยกเลิก
+          </Typography>
+        </Button>
       </Row>
     </div>
   );
