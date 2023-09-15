@@ -11,6 +11,7 @@ import {
 import {
   Button,
   Card,
+  Checkbox,
   Col,
   Dropdown,
   Form,
@@ -22,34 +23,39 @@ import {
   message,
 } from "antd";
 import { ThemeColors } from "../../styles/theme";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
 
 export const Organize = () => {
-  // const persons = [
-  //   {
-  //     name: "เกียรติภูมิ พูลเขตร์กิจ",
-  //     role: "Programer",
-  //   },
-  //   {
-  //     name: "ภูวิศ วัฒนะ",
-  //     role: "Programer",
-  //   },
-  //   {
-  //     name: "น็อตโตะคุง วาตานาเบ้",
-  //     role: "Programer",
-  //   },
-  //   {
-  //     name: "เพชรชี่ สายบิด",
-  //     role: "Programer",
-  //   },
-  //   {
-  //     name: "ลูกพี่โอ้น สุดเจ๋ง",
-  //     role: "Programer",
-  //   },
-  //   {
-  //     name: "พี่โก้ คนจริง",
-  //     role: "Programer",
-  //   },
-  // ];
+  interface Employee {
+    name: string;
+    role: string;
+  }
+  const employee: Employee[] = [
+    {
+      name: "เกียรติภูมิ พูลเขตร์กิจ",
+      role: "Programer",
+    },
+    {
+      name: "ภูวิศ วัฒนะ",
+      role: "Programer",
+    },
+    {
+      name: "น็อตโตะคุง วาตานาเบ้",
+      role: "Programer",
+    },
+    {
+      name: "เพชรชี่ สายบิด",
+      role: "Programer",
+    },
+    {
+      name: "ลูกพี่โอ้น สุดเจ๋ง",
+      role: "Programer",
+    },
+    {
+      name: "พี่โก้ คนจริง",
+      role: "Programer",
+    },
+  ];
 
   const itemsCurrency: MenuProps["items"] = [
     {
@@ -68,6 +74,10 @@ export const Organize = () => {
 
   const onClickCurrency: MenuProps["onClick"] = ({ key }) => {
     message.info(`Click on item ${key}`);
+  };
+
+  const onCheckBoxChange = (e: CheckboxChangeEvent) => {
+    console.log(`checked = ${e.target.checked}`);
   };
   return (
     <div>
@@ -563,12 +573,42 @@ export const Organize = () => {
               style={{
                 background: ThemeColors.goldColor,
                 marginTop: "10px",
-                marginBottom: "10px",
+                marginBottom: "20px",
                 height: "1px",
               }}
             />
+            {...employee.map((employee) => {
+              return (
+                <Row
+                  justify="space-between"
+                  wrap={false}
+                  style={{ padding: "10px", marginBottom: "10px" }}
+                >
+                  <Checkbox
+                    onChange={onCheckBoxChange}
+                    style={{ transform: "scale(2)" }}
+                  />
+                  <div style={{ width: "50%" }}>
+                    <Typography>{employee.name}</Typography>
+                  </div>
+                  <div style={{ width: "25%" }}>
+                    <Typography>{employee.role}</Typography>
+                  </div>
+                </Row>
+              );
+            })}
           </Card>
         </Col>
+      </Row>
+      <Row align="middle" style={{ marginTop: "20px", marginBottom: "20px" }}>
+        <CheckSquareOutlined
+          style={{
+            color: ThemeColors.brickOrangeColor,
+            fontSize: "24px",
+            marginRight: "5px",
+          }}
+        />
+        <Typography style={{ fontSize: "18px" }}>สรุปผลลัพธ์</Typography>
       </Row>
     </div>
   );
