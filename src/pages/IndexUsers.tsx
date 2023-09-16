@@ -279,7 +279,7 @@ export const UsersPage = () => {
               </Dropdown>
             </Form.Item>
           </div>
-          <Link to="/createuser">
+          <Link to="/user/create">
             <Button
               style={{
                 border: "0",

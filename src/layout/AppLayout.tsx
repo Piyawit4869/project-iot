@@ -9,6 +9,7 @@ import {
   ShoppingCartOutlined,
   ShoppingOutlined,
   TeamOutlined,
+  UserAddOutlined,
   WalletOutlined,
 } from "@ant-design/icons";
 import { Content, Header } from "antd/es/layout/layout";
@@ -17,6 +18,7 @@ import { ThemeColors } from "../styles/theme";
 import Logo from "../assets/images/Logo-StayOrganized.png";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+
 
 export const AppLayout = (props: any) => {
   const { Sider } = Layout;
@@ -134,6 +136,12 @@ export const AppLayout = (props: any) => {
                 label: "Partial",
                 key: "/partial",
                 icon: <WalletOutlined />,
+              },
+              {
+                style: { backgroundColor: ThemeColors.brickOrangeColor },
+                label: "Customers",
+                key: "/customers",
+                icon: <UserAddOutlined />,
               },
             ]}
           ></Menu>

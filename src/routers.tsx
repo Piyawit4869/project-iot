@@ -12,9 +12,17 @@ import { EditOrganizationPage } from "./pages/EditQrganization";
 import { ProductPage } from "./pages/Product";
 import { CreateProductPage } from "./pages/CreateProduct";
 import { EditProductPage } from "./pages/EditProduct";
+import { CustomersPage } from "./pages/IndexCustomers";
+import { CreateCustomerPage } from "./pages/CreateCustomer";
+import { EditCustomerPage } from "./pages/EditCustomers"
+
 
 import { PartialPage } from "./pages/Partial";
+
+import { CustomersDetail } from "./pages/CustomersDetail";
+
 import { IndexPartialPage } from "./pages/IndexPartial";
+
 
 export const router = createBrowserRouter([
   {
@@ -43,7 +51,7 @@ export const router = createBrowserRouter([
         element: <UsersPage />,
       },
       {
-        path: "/createuser",
+        path: "/user/create",
         element: <CreateUserPage />,
       },
       {
@@ -51,7 +59,7 @@ export const router = createBrowserRouter([
         element: <IndexOrganizationPage />,
       },
       {
-        path: "/updateorganozation",
+        path: "/organozation/update",
         element: <EditOrganizationPage />,
       },
       {
@@ -59,11 +67,11 @@ export const router = createBrowserRouter([
         element: <ProductPage />,
       },
       {
-        path: "/createproduct",
+        path: "/product/create",
         element: <CreateProductPage />,
       },
       {
-        path: "/updateproduct",
+        path: "/product/update",
         element: <EditProductPage />,
       },
       {
@@ -74,6 +82,22 @@ export const router = createBrowserRouter([
         path: "/partial/create",
         element: <PartialPage />,
       },
+      {
+        path: "/customers",
+        element: <CustomersPage />,
+      },
+      {
+        path: "/customers/create",
+        element: <CreateCustomerPage />,
+      },
+      {
+        path: "/customers/update",
+        element: <EditCustomerPage />,
+      },
+      {
+        path: "/customers/detail",
+        element: <CustomersDetail />,
+      },
     ],
   },
   {
@@ -81,4 +105,5 @@ export const router = createBrowserRouter([
     // action: LoginAction,
     element: <LoginPage />,
   },
+
 ]);

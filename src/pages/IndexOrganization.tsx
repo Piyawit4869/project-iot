@@ -13,7 +13,7 @@ export const IndexOrganizationPage = () => {
             เพิ่มผู้ใช้งาน
           </Typography>
           <div style={{ marginBottom: "10px" }}>
-            <Link to={"/updateorganozation"}>
+            <Link to={"/organozation/update"}>
               <Button
                 style={{
                   border: "0",
