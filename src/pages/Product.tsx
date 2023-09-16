@@ -125,7 +125,7 @@ export const ProductPage = () => {
     },
     {
       render: (key: any) => (
-        <Link to={`/updateproduct`}>
+        <Link to={`/product/update`}>
           <Button
             onClick={() => console.log(key.key)}
             style={{
@@ -233,7 +233,7 @@ export const ProductPage = () => {
             </Dropdown>
           </Form.Item>
         </div>
-        <Link to="/createproduct">
+        <Link to="/product/create">
           <Button
             style={{
               border: "0",
