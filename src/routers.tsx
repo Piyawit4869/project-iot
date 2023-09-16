@@ -18,7 +18,11 @@ import { EditCustomerPage } from "./pages/EditCustomers"
 
 
 import { PartialPage } from "./pages/Partial";
+
 import { CustomersDetail } from "./pages/CustomersDetail";
+
+import { IndexPartialPage } from "./pages/IndexPartial";
+
 
 export const router = createBrowserRouter([
   {
@@ -72,6 +76,10 @@ export const router = createBrowserRouter([
       },
       {
         path: "/partial",
+        element: <IndexPartialPage />,
+      },
+      {
+        path: "/partial/create",
         element: <PartialPage />,
       },
       {

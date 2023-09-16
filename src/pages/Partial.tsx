@@ -1,4 +1,4 @@
-import { Radio, Row, Typography } from "antd";
+import { Radio, Typography } from "antd";
 import { Title } from "../components/global/Title";
 import { useState } from "react";
 
@@ -17,9 +17,6 @@ export const PartialPage = () => {
 
   return (
     <div>
-      {Title("การเงิน", true, "แก้ไข")}
-
-      <Typography style={{ color: ThemeColors.fontColor3 }} />
       {Title("คำนวณการชำระเงินกิจการ/องค์กร", false, "")}
 
       <Typography
@@ -32,7 +29,7 @@ export const PartialPage = () => {
       >
         ชื่อโครงการ : Stay-organize
       </Typography>
-      <Row></Row>
+
       <Radio.Group value={sheet} onChange={onSheetChange}>
         <Radio.Button
           value={true}
