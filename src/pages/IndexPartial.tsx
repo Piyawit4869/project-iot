@@ -302,7 +302,12 @@ export const IndexPartialPage = () => {
           </Button>
         </div>
       )}
-      <Table columns={columns} dataSource={data} />;
+      <Table
+        columns={columns}
+        dataSource={data}
+        style={{ marginTop: "15px" }}
+      />
+      ;
     </div>
   );
 };
