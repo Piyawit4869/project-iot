@@ -23,9 +23,39 @@ import {
   PlusCircleOutlined,
 } from "@ant-design/icons";
 import { Preview } from "../components/global/Preview";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const CreateQuotationPage = () => {
+    // const dataValues= (
+    //   refer:number, 
+    //   number:number, 
+    //   cusName:string, 
+    //   tell:number, 
+    //   address:string) => {
+    //   const obj= {
+    //     refer: refer,
+    //     number: number,
+    //     cusName: cusName,
+    //     tell: tell,
+    //     address: address,
+    //   };
+    //   localStorage.setItem('data',JSON.stringify({...obj}));
+    // };
+
+  const [data, setData] = useState (() => {
+    const savedData = localStorage.getItem("data") as string;
+    const parsedData = JSON.parse(savedData);
+    return parsedData || "";
+  })
+
+  const handleChange = (event:any) => {
+    setData(event.target.value);
+  }
+
+  useEffect (() => {
+    localStorage.setItem('data',JSON.stringify(data));
+  }, [data]);
+
   const [value, setValue] = useState(1);
 
   const onChange = (e: RadioChangeEvent) => {
@@ -90,13 +120,15 @@ export const CreateQuotationPage = () => {
                 <Typography style={{ fontSize: "16px" }}>อ้างอิง</Typography>
                 <Form.Item>
                   <Input
-                    placeholder="ระบุถ้ามี"
-                    bordered={false}
-                    style={{
-                      padding: "0px",
-                      fontSize: "16px",
-                      color: ThemeColors.lightOrangeColor,
-                    }}
+                  value={data}
+                  onChange={handleChange}
+                  placeholder="ระบุถ้ามี"
+                  bordered={false}
+                  style={{
+                    padding: "0px",
+                    fontSize: "16px",
+                    color: ThemeColors.lightOrangeColor,
+                  }}
                   />
                 </Form.Item>
               </Card>
@@ -117,6 +149,8 @@ export const CreateQuotationPage = () => {
                 </Typography>
                 <Form.Item>
                   <Input
+                  value={data}
+                  onChange={handleChange}
                     placeholder="เช่น QU999999999"
                     bordered={false}
                     style={{
@@ -165,6 +199,8 @@ export const CreateQuotationPage = () => {
                   ]}
                 >
                   <Input
+                  value={data}
+                  onChange={handleChange}
                     required
                     placeholder="ค้นหาผู้ติดต่อหรือสร้างผู้ติดต่อใหม่"
                     bordered={false}
@@ -198,6 +234,8 @@ export const CreateQuotationPage = () => {
                   ]}
                 >
                   <Input
+                  value={data}
+                  onChange={handleChange}
                     required
                     placeholder="โปรดระบุ"
                     bordered={false}
@@ -237,6 +275,8 @@ export const CreateQuotationPage = () => {
                 ]}
               >
                 <Input
+                value={data}
+                onChange={handleChange}
                   required
                   placeholder="โปรดระบุที่อยู่ของลูกค้า"
                   bordered={false}
@@ -420,7 +460,13 @@ export const CreateQuotationPage = () => {
               </Card>
             </Row>
           </div>
-          <Preview></Preview>
+          <Preview 
+            refer={data}
+            number={data}
+            cusName={data}
+            tell={data}
+            address={data}
+          ></Preview>
         </Row>
         <Row align="middle" style={{ marginTop: "20px", marginBottom: "20px" }}>
           <CheckSquareOutlined
