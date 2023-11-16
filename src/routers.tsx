@@ -23,80 +23,89 @@ import { CustomersDetail } from "./pages/CustomersDetail";
 import { IndexPartialPage } from "./pages/IndexPartial";
 
 import { UtotechRoot } from "./pages/utotech/UtotechRoot";
-import { Utotech } from "./pages/utotech";
+import { AboutUs, ContactUs, Utotech } from "./pages/utotech";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     id: "root",
+    element: <UtotechRoot />,
+    children: [
+      { path: "/", element: <Utotech /> },
+      { path: "/about", element: <AboutUs /> },
+      { path: "/contact", element: <ContactUs /> },
+    ],
+  },
+  {
+    path: "/admin",
     // loader: RootLoader, FIXME: loader in router is loadding state
     element: <Root />,
     children: [
       {
-        path: "/",
+        path: "/admin",
         // loader: deskIndexLoader,
         // action: deskIndexAction, // FIXME: action is defined to call api
         element: <DashboardPage />,
       },
       {
-        path: "quotation/create",
+        path: "/admin/quotation/create",
         // action: LoginAction,
         element: <CreateQuotationPage />,
       },
       {
-        path: "/quotation",
+        path: "/admin/quotation",
         element: <IndexQuotationPage />,
       },
       {
-        path: "/users",
+        path: "/admin/users",
         element: <UsersPage />,
       },
       {
-        path: "/user/create",
+        path: "/admin/user/create",
         element: <CreateUserPage />,
       },
       {
-        path: "/organozation",
+        path: "/admin/organozation",
         element: <IndexOrganizationPage />,
       },
       {
-        path: "/organozation/update",
+        path: "/admin/organozation/update",
         element: <EditOrganizationPage />,
       },
       {
-        path: "/product",
+        path: "/admin/product",
         element: <ProductPage />,
       },
       {
-        path: "/product/create",
+        path: "/admin/product/create",
         element: <CreateProductPage />,
       },
       {
-        path: "/product/update",
+        path: "/admin/product/update",
         element: <EditProductPage />,
       },
       {
-        path: "/partial",
+        path: "/admin/partial",
         element: <IndexPartialPage />,
       },
       {
-        path: "/partial/create",
+        path: "/admin/partial/create",
         element: <PartialPage />,
       },
       {
-        path: "/customers",
+        path: "/admin/customers",
         element: <CustomersPage />,
       },
       {
-        path: "/customers/create",
+        path: "/admin/customers/create",
         element: <CreateCustomerPage />,
       },
       {
-        path: "/customers/update",
+        path: "/admin/customers/update",
         element: <EditCustomerPage />,
       },
       {
-        path: "/customers/detail",
+        path: "/admin/customers/detail",
         element: <CustomersDetail />,
       },
     ],
@@ -105,11 +114,5 @@ export const router = createBrowserRouter([
     path: "/login",
     // action: LoginAction,
     element: <LoginPage />,
-  },
-  {
-    path: "/utotech",
-    element: <UtotechRoot />,
-
-    children: [{ path: "/utotech", element: <Utotech /> }],
   },
 ]);
