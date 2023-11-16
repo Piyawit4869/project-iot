@@ -14,8 +14,7 @@ import { CreateProductPage } from "./pages/CreateProduct";
 import { EditProductPage } from "./pages/EditProduct";
 import { CustomersPage } from "./pages/IndexCustomers";
 import { CreateCustomerPage } from "./pages/CreateCustomer";
-import { EditCustomerPage } from "./pages/EditCustomers"
-
+import { EditCustomerPage } from "./pages/EditCustomers";
 
 import { PartialPage } from "./pages/Partial";
 
@@ -23,6 +22,8 @@ import { CustomersDetail } from "./pages/CustomersDetail";
 
 import { IndexPartialPage } from "./pages/IndexPartial";
 
+import { UtotechRoot } from "./pages/utotech/UtotechRoot";
+import { Utotech } from "./pages/utotech";
 
 export const router = createBrowserRouter([
   {
@@ -105,5 +106,10 @@ export const router = createBrowserRouter([
     // action: LoginAction,
     element: <LoginPage />,
   },
+  {
+    path: "/utotech",
+    element: <UtotechRoot />,
 
+    children: [{ path: "/utotech", element: <Utotech /> }],
+  },
 ]);
