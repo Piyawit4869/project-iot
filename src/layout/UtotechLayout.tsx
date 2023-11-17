@@ -4,7 +4,6 @@ import { Content, Footer, Header } from "antd/es/layout/layout";
 import { ThemeColors } from "../styles/theme";
 import Logo from "../assets/images/utotech-logo.png";
 import { useLocation } from "react-router-dom";
-import Icon from "@ant-design/icons/lib/components/Icon";
 import {
   FacebookOutlined,
   InstagramOutlined,
@@ -81,7 +80,36 @@ export const UtotechLayout = (props: any) => {
             {props.children}
           </div>
         </Content>
+
+        {/* this one side minimal footer */}
+
         <Footer style={{ background: "#aaf0d1" }}>
+          <Row justify="start" align="middle">
+            <Col>
+              <Typography style={{ fontSize: "24px" }}>
+                Utotech co., ltd
+              </Typography>
+              <Row style={{ marginTop: "10px", marginBottom: "10px" }}>
+                <MailOutlined style={{ fontSize: "24px" }} />
+                <FacebookOutlined
+                  style={{
+                    fontSize: "24px",
+                    marginLeft: "10px",
+                    marginRight: "10px",
+                  }}
+                />
+                <InstagramOutlined style={{ fontSize: "24px" }} />
+              </Row>
+              <Typography style={{ fontSize: "18px" }}>
+                © Copyright Utotech Co., Ltd.. All Rights Reserved
+              </Typography>
+            </Col>
+          </Row>
+        </Footer>
+
+        {/* this minimal footer */}
+
+        {/* <Footer style={{ background: "#aaf0d1" }}>
           <Row justify="space-around" align="middle">
             <Col>
               <Typography style={{ fontSize: "24px" }}>
@@ -115,14 +143,10 @@ export const UtotechLayout = (props: any) => {
               <InstagramOutlined style={{ fontSize: "24px" }} />
             </Row>
           </Row>
-          {/* <Row justify="center" style={{ marginTop: "60px" }}>
-            <Col>
-              <Typography>
-                © Copyright Utotech Co., Ltd.. All Rights Reserved
-              </Typography>
-            </Col>
-          </Row> */}
-        </Footer>
+        </Footer> */}
+
+        {/* This full footer */}
+
         {/* <Footer style={{ background: "#61C2A2" }}>
           <Row justify="space-around" align="middle">
             <Col>
