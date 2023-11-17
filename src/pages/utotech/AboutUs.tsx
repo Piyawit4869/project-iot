@@ -33,21 +33,20 @@ export const AboutUs = () => {
     <div>
       <div
         style={{
+          paddingTop: 36,
           paddingLeft: "10%",
           paddingRight: "10%",
         }}
       >
-        <div style={{ width: "60%" }}>
-          <Typography style={{ fontSize: "36px" }}>
+        <Row justify="center">
+          <Typography style={{ fontSize: "36px", textAlign: "center" }}>
             About UTOTECH COMPANY LIMITED
           </Typography>
-        </div>
+        </Row>
         <Row
           justify="center"
           style={{
             paddingTop: "30px",
-            paddingLeft: "25%",
-            paddingRight: "25%",
             paddingBottom: "60px",
           }}
         >
@@ -100,8 +99,14 @@ export const AboutUs = () => {
                     <Image src={item.image} width="200px" preview={false} />
                     <h2>{item.title}</h2>
                   </div>
-                  <div style={{ width: "250px" }}>
-                    <Typography style={{ fontSize: "20px", color: "grey" }}>
+                  <div style={{ width: "250px", marginBottom: "20px" }}>
+                    <Typography
+                      style={{
+                        fontSize: "20px",
+                        color: "grey",
+                        textAlign: "center",
+                      }}
+                    >
                       {item.description}
                     </Typography>
                   </div>

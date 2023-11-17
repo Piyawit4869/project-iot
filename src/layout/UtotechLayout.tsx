@@ -4,6 +4,12 @@ import { Content, Footer, Header } from "antd/es/layout/layout";
 import { ThemeColors } from "../styles/theme";
 import Logo from "../assets/images/utotech-logo.png";
 import { useLocation } from "react-router-dom";
+import Icon from "@ant-design/icons/lib/components/Icon";
+import {
+  FacebookOutlined,
+  InstagramOutlined,
+  MailOutlined,
+} from "@ant-design/icons";
 
 export const UtotechLayout = (props: any) => {
   const location = useLocation();
@@ -37,9 +43,7 @@ export const UtotechLayout = (props: any) => {
               justifyContent: "start",
             }}
           >
-            <Button type="link">
-              <Image src={Logo} width={60} height={60} preview={false}></Image>
-            </Button>
+            <Image src={Logo} width={60} height={60} preview={false}></Image>
           </div>
           <Row align={"middle"}>
             <Button
@@ -48,7 +52,7 @@ export const UtotechLayout = (props: any) => {
               style={{ color: "black" }}
               href="/"
             >
-              Project
+              Home
             </Button>
             <Button
               size={"middle"}
@@ -68,19 +72,58 @@ export const UtotechLayout = (props: any) => {
             </Button>
           </Row>
         </Header>
-        <Content
-          style={{ backgroundColor: ThemeColors.bgColor, overflow: "auto" }}
-        >
+        <Content style={{ overflow: "auto" }}>
           <div
             style={{
-              paddingTop: 36,
               minHeight: 360,
             }}
           >
             {props.children}
           </div>
         </Content>
-        <Footer style={{ background: "#61C2A2" }}>
+        <Footer style={{ background: "#aaf0d1" }}>
+          <Row justify="space-around" align="middle">
+            <Col>
+              <Typography style={{ fontSize: "24px" }}>
+                Utotech co., ltd
+              </Typography>
+            </Col>
+            <Col>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <Image src={Logo} width={120} preview={false}></Image>
+                <Typography style={{ fontSize: "18px", textAlign: "center" }}>
+                  © Copyright Utotech Co., Ltd.. All Rights Reserved
+                </Typography>
+              </div>
+            </Col>
+            <Row>
+              <MailOutlined style={{ fontSize: "24px" }} />
+              <FacebookOutlined
+                style={{
+                  fontSize: "24px",
+                  marginLeft: "10px",
+                  marginRight: "10px",
+                }}
+              />
+              <InstagramOutlined style={{ fontSize: "24px" }} />
+            </Row>
+          </Row>
+          {/* <Row justify="center" style={{ marginTop: "60px" }}>
+            <Col>
+              <Typography>
+                © Copyright Utotech Co., Ltd.. All Rights Reserved
+              </Typography>
+            </Col>
+          </Row> */}
+        </Footer>
+        {/* <Footer style={{ background: "#61C2A2" }}>
           <Row justify="space-around" align="middle">
             <Col>
               <Typography style={{ fontSize: "24px" }}>
@@ -114,7 +157,7 @@ export const UtotechLayout = (props: any) => {
               </Typography>
             </Col>
           </Row>
-        </Footer>
+        </Footer> */}
       </Layout>
     </>
   );

@@ -23,7 +23,7 @@ import { CustomersDetail } from "./pages/CustomersDetail";
 import { IndexPartialPage } from "./pages/IndexPartial";
 
 import { UtotechRoot } from "./pages/utotech/UtotechRoot";
-import { AboutUs, ContactUs, Utotech } from "./pages/utotech";
+import { AboutUs, ContactUs, SingleOption, Utotech } from "./pages/utotech";
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +34,7 @@ export const router = createBrowserRouter([
       { path: "/", element: <Utotech /> },
       { path: "/about", element: <AboutUs /> },
       { path: "/contact", element: <ContactUs /> },
+      { path: "/option/:id", element: <SingleOption /> },
     ],
   },
   {
