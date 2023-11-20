@@ -19,7 +19,6 @@ import Logo from "../assets/images/Logo-StayOrganized.png";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
-
 export const AppLayout = (props: any) => {
   const { Sider } = Layout;
   const [collapsed, setCollapsed] = useState(false);
@@ -94,7 +93,7 @@ export const AppLayout = (props: any) => {
               {
                 style: { backgroundColor: ThemeColors.brickOrangeColor },
                 label: "Dashboard",
-                key: "/",
+                key: "/admin",
                 icon: <HomeOutlined />,
               },
               {
@@ -107,7 +106,7 @@ export const AppLayout = (props: any) => {
                 icon: <DollarOutlined />,
                 children: [
                   {
-                    key: "/quotation",
+                    key: "/admin/quotation",
                     label: "Quotaion",
                     icon: <FileDoneOutlined />,
                   },
@@ -116,31 +115,31 @@ export const AppLayout = (props: any) => {
               {
                 style: { backgroundColor: ThemeColors.brickOrangeColor },
                 label: "Users",
-                key: "/users",
+                key: "/admin/users",
                 icon: <TeamOutlined />,
               },
               {
                 style: { backgroundColor: ThemeColors.brickOrangeColor },
                 label: "Organozation",
-                key: "/organozation",
+                key: "/admin/organozation",
                 icon: <ShoppingOutlined />,
               },
               {
                 style: { backgroundColor: ThemeColors.brickOrangeColor },
                 label: "Product",
-                key: "/product",
+                key: "/admin/product",
                 icon: <ShoppingCartOutlined />,
               },
               {
                 style: { backgroundColor: ThemeColors.brickOrangeColor },
                 label: "Partial",
-                key: "/partial",
+                key: "/admin/partial",
                 icon: <WalletOutlined />,
               },
               {
                 style: { backgroundColor: ThemeColors.brickOrangeColor },
                 label: "Customers",
-                key: "/customers",
+                key: "/admin/customers",
                 icon: <UserAddOutlined />,
               },
             ]}
