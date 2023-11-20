@@ -1,6 +1,71 @@
-import { Typography, Row, Button, Col } from "antd";
+import {
+  Typography,
+  Row,
+  Button,
+  Col,
+  Card,
+  FormInstance,
+  Form,
+  Input,
+  Space,
+} from "antd";
+import React from "react";
 
-export const ContactUs = () => {
+const SubmitButton = ({
+  form,
+  style,
+}: {
+  form: FormInstance;
+  style: React.CSSProperties;
+}) => {
+  const [submittable, setSubmittable] = React.useState(false);
+
+  // Watch all values
+  const values = Form.useWatch([], form);
+
+  React.useEffect(() => {
+    form.validateFields({ validateOnly: true }).then(
+      () => {
+        setSubmittable(true);
+      },
+      () => {
+        setSubmittable(false);
+      }
+    );
+  }, [values]);
+
+  const handleButtonClick = async () => {
+    if (submittable) {
+      // Log the form values
+      console.log("Form Values:", values);
+
+      // Perform any additional actions if needed
+      // ...
+
+      // Submit the form
+      await form.submit();
+
+      // Clear the form values
+      form.resetFields();
+    }
+  };
+
+  return (
+    <Button
+      type="primary"
+      htmlType="submit"
+      disabled={!submittable}
+      onClick={handleButtonClick}
+      style={style}
+    >
+      Contact Us
+    </Button>
+  );
+};
+
+export const ContactUs: React.FC = () => {
+  const [form] = Form.useForm();
+
   const buttonStyle = {
     borderRadius: "0px",
     color: "white",
@@ -45,8 +110,64 @@ export const ContactUs = () => {
           align="top"
           style={{ marginBottom: "60px" }}
         >
+          <Card
+            style={{
+              backgroundColor: "#aaf0d1",
+              width: "400px",
+              marginBottom: "30px",
+            }}
+          >
+            <Typography
+              style={{
+                fontSize: "18px",
+                fontWeight: "bold",
+                color: "grey",
+                marginBottom: "20px",
+              }}
+            >
+              Message Us
+            </Typography>
+
+            <Form
+              form={form}
+              name="validateOnly"
+              layout="vertical"
+              autoComplete="off"
+            >
+              <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="email"
+                label="Email Address"
+                rules={[{ required: true }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="message"
+                label="Message"
+                rules={[{ required: true }]}
+              >
+                <Input.TextArea />
+              </Form.Item>
+              <Form.Item>
+                <Space>
+                  <SubmitButton
+                    form={form}
+                    style={{ ...buttonStyle, ...buttonHoverStyle }}
+                  />
+                </Space>
+              </Form.Item>
+            </Form>
+          </Card>
           <Col>
-            <div style={{ marginBottom: "60px" }}>
+            <Card
+              style={{
+                height: "200px",
+                marginBottom: "30px",
+              }}
+            >
               <Typography
                 style={{ fontSize: "18px", fontWeight: "bold", color: "grey" }}
               >
@@ -59,10 +180,13 @@ export const ContactUs = () => {
               <Typography style={{ fontSize: "18px" }}>
                 kiattiphoom@utotech.org
               </Typography>
-            </div>
-          </Col>
-          <Col>
-            <div>
+            </Card>
+
+            <Card
+              style={{
+                height: "200px",
+              }}
+            >
               <Typography
                 style={{ fontSize: "18px", fontWeight: "bold", color: "grey" }}
               >
@@ -74,7 +198,7 @@ export const ContactUs = () => {
                   61/723 Nakhon Chai Si District, Nakhon Pathom 73120
                 </Typography>
               </div>
-            </div>
+            </Card>
           </Col>
         </Row>
       </div>

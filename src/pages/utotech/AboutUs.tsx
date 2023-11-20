@@ -1,10 +1,10 @@
 import { Typography, Row, Image, Card, Col } from "antd";
+import { Parallax } from "react-parallax";
 
 const mockData = [
   {
     id: 1,
-    image:
-      "https://e7.pngegg.com/pngimages/420/821/png-clipart-computer-icons-scalable-graphics-icon-design-data-analysis-analysis-icon-text-logo.png",
+    image: "https://cdn-icons-png.flaticon.com/512/11933/11933889.png",
     title: "DESIGN AND ANALYSIS",
     description: "Description for Item 1",
     detail:
@@ -12,7 +12,7 @@ const mockData = [
   },
   {
     id: 2,
-    image: "https://cdn-icons-png.flaticon.com/512/8759/8759392.png",
+    image: "https://cdn-icons-png.flaticon.com/512/8759/8759045.png",
     title: "DEVELOPMENT",
     description: "Description for Item 2",
     detail:
@@ -20,7 +20,7 @@ const mockData = [
   },
   {
     id: 3,
-    image: "https://cdn-icons-png.flaticon.com/512/5269/5269933.png",
+    image: "https://cdn-icons-png.flaticon.com/512/10306/10306707.png",
     title: "SUPPORT",
     description: "Description for Item 3",
     detail:
@@ -57,11 +57,18 @@ export const AboutUs = () => {
           </Typography>
         </Row>
       </div>
-      <Image
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOxgXTO4Kc4XORUFvZembSzymC7B6RYupJLQ&usqp=CAU"
-        width="100%"
-        preview={false}
-      />
+      <Parallax
+        blur={{ min: -15, max: 15 }}
+        bgImage={
+          "https://i2.wp.com/catesthill.com/wp-content/uploads/2019/12/catesthill-shoreditch-loft-kasia-fiszer-32.jpg?fit=2400%2C1600&ssl=1"
+        }
+        strength={200}
+        bgImageStyle={{ objectFit: "cover" }}
+        style={{ width: "100%" }}
+      >
+        <div style={{ height: "80vh" }} />
+      </Parallax>
+
       <div
         style={{
           marginTop: "120px",

@@ -1,4 +1,4 @@
-import { Button, Col, Image, Layout, Row, Typography } from "antd";
+import { Button, Col, Image, Layout, Menu, Row, Typography } from "antd";
 
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import { ThemeColors } from "../styles/theme";
@@ -9,9 +9,57 @@ import {
   InstagramOutlined,
   MailOutlined,
 } from "@ant-design/icons";
+import { useState } from "react";
 
 export const UtotechLayout = (props: any) => {
   const location = useLocation();
+
+  const [isMobileMenuVisible, setMobileMenuVisibility] = useState(false);
+
+  const handleMenuClick = () => {
+    setMobileMenuVisibility(!isMobileMenuVisible);
+  };
+
+  const handleMenuItemClick = () => {
+    setMobileMenuVisibility(false);
+  };
+
+  const menuItems = [
+    { key: "home", label: "Home", href: "/" },
+    { key: "about", label: "About", href: "/about" },
+    { key: "contact", label: "Contact", href: "/contact" },
+  ];
+
+  const desktopMenu = (
+    <Row align="middle" justify="space-between" style={{ width: "220px" }}>
+      {menuItems.map((item) => (
+        <Button
+          key={item.key}
+          size="middle"
+          type="link"
+          style={{ color: "black" }}
+          href={item.href}
+        >
+          {item.label}
+        </Button>
+      ))}
+    </Row>
+  );
+
+  const mobileMenu = (
+    <Menu
+      theme="light"
+      mode="vertical"
+      onClick={handleMenuItemClick}
+      style={{ display: isMobileMenuVisible ? "block" : "none" }}
+    >
+      {menuItems.map((item) => (
+        <Menu.Item key={item.key}>
+          <a href={item.href}>{item.label}</a>
+        </Menu.Item>
+      ))}
+    </Menu>
+  );
 
   console.log(location);
 
@@ -44,7 +92,24 @@ export const UtotechLayout = (props: any) => {
           >
             <Image src={Logo} width={60} height={60} preview={false}></Image>
           </div>
-          <Row align={"middle"}>
+
+          <div>
+            <Col xs={{ span: 0 }} lg={{ span: 12 }}>
+              {desktopMenu}
+            </Col>
+            <Col xs={{ span: 24 }} lg={{ span: 0 }}>
+              <Button
+                type="link"
+                onClick={handleMenuClick}
+                style={{ color: "black" }}
+              >
+                Menu
+              </Button>
+              {mobileMenu}
+            </Col>
+          </div>
+
+          {/* <Row align={"middle"}>
             <Button
               size={"middle"}
               type="link"
@@ -69,7 +134,7 @@ export const UtotechLayout = (props: any) => {
             >
               Contact
             </Button>
-          </Row>
+          </Row> */}
         </Header>
         <Content style={{ overflow: "auto" }}>
           <div

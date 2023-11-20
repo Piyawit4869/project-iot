@@ -24,6 +24,7 @@ import { IndexPartialPage } from "./pages/IndexPartial";
 
 import { UtotechRoot } from "./pages/utotech/UtotechRoot";
 import { AboutUs, ContactUs, SingleOption, Utotech } from "./pages/utotech";
+import { SettingUtotech } from "./pages/SettingUtotech";
 
 export const router = createBrowserRouter([
   {
@@ -108,6 +109,10 @@ export const router = createBrowserRouter([
       {
         path: "/admin/customers/detail",
         element: <CustomersDetail />,
+      },
+      {
+        path: "/admin/utotech",
+        element: <SettingUtotech />,
       },
     ],
   },

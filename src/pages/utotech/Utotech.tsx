@@ -94,7 +94,7 @@ export const Utotech: React.FC = () => {
         >
           <Typography
             style={{
-              fontSize: "36px",
+              fontSize: "38px",
               marginBottom: "20px",
               textAlign: "center",
               color: "white",
@@ -106,7 +106,7 @@ export const Utotech: React.FC = () => {
             sequence={bannerTexts}
             speed={50}
             repeat={Infinity}
-            style={{ fontSize: "28px", color: "white", textAlign: "center" }}
+            style={{ fontSize: "20px", color: "white", textAlign: "center" }}
           />
         </div>
       </Parallax>
@@ -171,7 +171,7 @@ export const Utotech: React.FC = () => {
         <Row justify="center">
           <Typography
             style={{
-              fontSize: "38px",
+              fontSize: "4vw",
               marginBottom: "10px",
               textAlign: "center",
             }}
