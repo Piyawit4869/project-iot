@@ -1,133 +1,125 @@
-import { Typography, Row, Image, Card, Col } from "antd";
+import { Typography, Row, Image, Col } from "antd";
+import Title from "antd/es/typography/Title";
+import React from "react";
 import { Parallax } from "react-parallax";
 
-const mockData = [
-  {
-    id: 1,
-    image: "https://cdn-icons-png.flaticon.com/512/11933/11933889.png",
-    title: "DESIGN AND ANALYSIS",
-    description: "Description for Item 1",
-    detail:
-      "Planning and designing a backyard system Starting from designing flowchart, database system and schema and much more. according to the needs of the users that the mentor has assigned.",
-  },
-  {
-    id: 2,
-    image: "https://cdn-icons-png.flaticon.com/512/8759/8759045.png",
-    title: "DEVELOPMENT",
-    description: "Description for Item 2",
-    detail:
-      "The work involved in developing a website for the Internet or an intranet. Development can range from developing a simple single static page of plain text to complex web applications services.",
-  },
-  {
-    id: 3,
-    image: "https://cdn-icons-png.flaticon.com/512/10306/10306707.png",
-    title: "SUPPORT",
-    description: "Description for Item 3",
-    detail:
-      "Take care of the part that they created and helping customers such as fixing bugs, fixing or adding various features in the system and including helping customers to give advice on how to use it.",
-  },
-];
+import * as API from "../../apis";
+import { useLoaderData } from "react-router-dom";
+
+//this all text
+const aboutTitle = "About UTOTECH COMPANY LIMITED";
+const aboutSubtitle =
+  "Utotech is a web design & coding studio based in Bangkok. We help you create and enhance your brand through smart, distinct and meaningful digital experience design.";
+const infomation = "INFORMATION";
+const infomationSubtitle = "Details of work performed at the internship";
+
+//this all image
+const officeImage =
+  "https://i2.wp.com/catesthill.com/wp-content/uploads/2019/12/catesthill-shoreditch-loft-kasia-fiszer-32.jpg?fit=2400%2C1600&ssl=1";
+
+export async function optionIndexLoader() {
+  try {
+    const { data } = await API.options.getAll();
+
+    return { data: data };
+  } catch (error) {
+    return { data: null };
+  }
+}
 
 export const AboutUs = () => {
+  const { data } = useLoaderData() as any;
+
+  console.log(data);
+
   return (
     <div>
-      <div
-        style={{
-          paddingTop: 36,
-          paddingLeft: "10%",
-          paddingRight: "10%",
-        }}
-      >
+      <div style={styles.titleBox}>
         <Row justify="center">
-          <Typography style={{ fontSize: "36px", textAlign: "center" }}>
-            About UTOTECH COMPANY LIMITED
-          </Typography>
+          <Title level={4} style={{ textAlign: "center" }}>
+            {aboutTitle}
+          </Title>
         </Row>
-        <Row
-          justify="center"
-          style={{
-            paddingTop: "30px",
-            paddingBottom: "60px",
-          }}
-        >
-          <Typography style={{ fontSize: "20px", color: "grey" }}>
-            "Utotech is a web design & coding studio based in Bangkok. We help
-            you create and enhance your brand through smart, distinct and
-            meaningful digital experience design."
-          </Typography>
+        <Row justify="center" style={styles.spaceTitleBox}>
+          <Typography style={{ color: "grey" }}>{aboutSubtitle}</Typography>
         </Row>
       </div>
       <Parallax
         blur={{ min: -15, max: 15 }}
-        bgImage={
-          "https://i2.wp.com/catesthill.com/wp-content/uploads/2019/12/catesthill-shoreditch-loft-kasia-fiszer-32.jpg?fit=2400%2C1600&ssl=1"
-        }
+        bgImage={officeImage}
         strength={200}
         bgImageStyle={{ objectFit: "cover" }}
         style={{ width: "100%" }}
       >
         <div style={{ height: "80vh" }} />
       </Parallax>
-
-      <div
-        style={{
-          marginTop: "120px",
-          marginBottom: "120px",
-          paddingLeft: "10%",
-          paddingRight: "10%",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginBottom: "30px",
-          }}
-        >
-          <Typography style={{ fontSize: "36px" }}>INFORMATION</Typography>
-          <Typography style={{ fontSize: "20px", color: "grey" }}>
-            Details of work performed at the internship
+      <div style={styles.outOfContentBox}>
+        <div style={styles.contentsBox}>
+          <Title level={3}>{infomation}</Title>
+          <Typography style={{ color: "grey" }}>
+            {infomationSubtitle}
           </Typography>
         </div>
         <Row gutter={16}>
-          {mockData.map((item) => (
+          {data.map((item: any) => (
             <Col key={item.id} span={24}>
-              <Card>
+              <div>
                 <Row justify="space-around" align="middle">
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      width: "250px",
-                    }}
-                  >
-                    <Image src={item.image} width="200px" preview={false} />
-                    <h2>{item.title}</h2>
+                  <div style={styles.optionBox}>
+                    <Image src={item.imageUrl} width="200px" preview={false} />
+                    <Title level={5}>{item.title}</Title>
                   </div>
                   <div style={{ width: "250px", marginBottom: "20px" }}>
                     <Typography
                       style={{
-                        fontSize: "20px",
                         color: "grey",
                         textAlign: "center",
                       }}
                     >
-                      {item.description}
+                      {item.subTitle}
                     </Typography>
                   </div>
                   <div style={{ width: "300px" }}>
-                    <Typography style={{ fontSize: "20px", color: "grey" }}>
-                      {item.detail}
+                    <Typography style={{ color: "grey" }}>
+                      {item.description}
                     </Typography>
                   </div>
                 </Row>
-              </Card>
+              </div>
             </Col>
           ))}
         </Row>
       </div>
     </div>
   );
+};
+
+const styles = {
+  titleBox: {
+    paddingTop: 36,
+    paddingLeft: "10%",
+    paddingRight: "10%",
+  } as React.CSSProperties,
+  spaceTitleBox: {
+    paddingTop: "30px",
+    paddingBottom: "60px",
+  } as React.CSSProperties,
+  outOfContentBox: {
+    marginTop: "120px",
+    marginBottom: "120px",
+    paddingLeft: "10%",
+    paddingRight: "10%",
+  } as React.CSSProperties,
+  contentsBox: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    marginBottom: "30px",
+  } as React.CSSProperties,
+  optionBox: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "250px",
+  } as React.CSSProperties,
 };

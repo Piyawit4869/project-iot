@@ -23,7 +23,17 @@ import { CustomersDetail } from "./pages/CustomersDetail";
 import { IndexPartialPage } from "./pages/IndexPartial";
 
 import { UtotechRoot } from "./pages/utotech/UtotechRoot";
-import { AboutUs, ContactUs, SingleOption, Utotech } from "./pages/utotech";
+import {
+  AboutUs,
+  AllFeature,
+  ContactUs,
+  SingleFeature,
+  Utotech,
+  featureLoader,
+  featuresHomeIndexLoader,
+  featuresIndexLoader,
+  optionIndexLoader,
+} from "./pages/utotech";
 import { SettingUtotech } from "./pages/SettingUtotech";
 
 export const router = createBrowserRouter([
@@ -37,10 +47,19 @@ export const router = createBrowserRouter([
     id: "UtotechRoot",
     element: <UtotechRoot />,
     children: [
-      { path: "/", element: <Utotech /> },
-      { path: "/about", element: <AboutUs /> },
+      { path: "/", element: <Utotech />, loader: featuresHomeIndexLoader },
+      {
+        path: "/all-feature",
+        element: <AllFeature />,
+        loader: featuresIndexLoader,
+      },
+      { path: "/about", element: <AboutUs />, loader: optionIndexLoader },
       { path: "/contact", element: <ContactUs /> },
-      { path: "/option/:id", element: <SingleOption /> },
+      {
+        path: "/feature/:id",
+        element: <SingleFeature />,
+        loader: featureLoader,
+      },
     ],
   },
   {

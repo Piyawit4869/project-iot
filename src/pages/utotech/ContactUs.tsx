@@ -9,18 +9,29 @@ import {
   Input,
   Space,
 } from "antd";
+import Title from "antd/es/typography/Title";
 import React from "react";
+
+//this all text
+const consultTitle = "Let's come to consult!";
+const consultSubTitle =
+  "We're here to help you. Get in touch with us for expert advice and assistance.";
+const letChat = "Let's chat";
+const phoneNumber = "+66 080-423-7373";
+const email = "kiattiphoom@utotech.org";
+const addressTitle = "Address";
+const addressDescription =
+  "61/723 Nakhon Chai Si District, Nakhon Pathom 73120";
+const message = "Message Us";
+const contact = "Contact Us";
 
 const SubmitButton = ({
   form,
-  style,
 }: {
   form: FormInstance;
   style: React.CSSProperties;
 }) => {
   const [submittable, setSubmittable] = React.useState(false);
-
-  // Watch all values
   const values = Form.useWatch([], form);
 
   React.useEffect(() => {
@@ -36,16 +47,10 @@ const SubmitButton = ({
 
   const handleButtonClick = async () => {
     if (submittable) {
-      // Log the form values
       console.log("Form Values:", values);
 
-      // Perform any additional actions if needed
-      // ...
-
-      // Submit the form
       await form.submit();
 
-      // Clear the form values
       form.resetFields();
     }
   };
@@ -54,11 +59,10 @@ const SubmitButton = ({
     <Button
       type="primary"
       htmlType="submit"
-      disabled={!submittable}
       onClick={handleButtonClick}
-      style={style}
+      style={{}}
     >
-      Contact Us
+      {contact}
     </Button>
   );
 };
@@ -66,43 +70,26 @@ const SubmitButton = ({
 export const ContactUs: React.FC = () => {
   const [form] = Form.useForm();
 
-  const buttonStyle = {
-    borderRadius: "0px",
-    color: "white",
-    transition: "background-color 0.3s ease-in-out", // Optional: Add a smooth transition effect
-  };
-
-  const buttonHoverStyle = {
-    backgroundColor: "#1890ff",
-    // Change to the desired color on hover
-  };
-
   return (
     <div>
-      <div
-        style={{
-          paddingTop: 36,
-          paddingLeft: "10%",
-          paddingRight: "10%",
-        }}
-      >
+      <div style={styles.mainBox}>
         <Row
           justify="space-between"
           align="middle"
           style={{ marginBottom: "120px" }}
         >
           <div>
-            <Typography style={{ fontSize: "36px" }}>
-              Let's come to consult!
-            </Typography>
-
-            <Typography style={{ fontSize: "20px", color: "grey" }}>
-              We're here to help you. Get in touch with us for expert advice and
-              assistance.
-            </Typography>
+            <Title level={4}>{consultTitle}</Title>
+            <Typography style={{ color: "grey" }}>{consultSubTitle}</Typography>
           </div>
-          <Button style={{ ...buttonStyle, ...buttonHoverStyle }}>
-            Let's chat
+          <Button
+            type="primary"
+            style={{
+              marginTop: "20px",
+              transition: "background-color 0.3s ease-in-out",
+            }}
+          >
+            {letChat}
           </Button>
         </Row>
         <Row
@@ -110,29 +97,16 @@ export const ContactUs: React.FC = () => {
           align="top"
           style={{ marginBottom: "60px" }}
         >
-          <Card
-            style={{
-              backgroundColor: "#106965",
-              width: "400px",
-              marginBottom: "30px",
-            }}
-          >
-            <Typography
-              style={{
-                fontSize: "18px",
-                fontWeight: "bold",
-                color: "white",
-                marginBottom: "20px",
-              }}
-            >
-              Message Us
-            </Typography>
-
+          <Card style={styles.messageCard}>
+            <Title level={5} style={{ color: "white" }}>
+              {message}
+            </Title>
             <Form
               form={form}
               name="validateOnly"
               layout="vertical"
               autoComplete="off"
+              style={{ marginTop: "20px" }}
             >
               <Form.Item name="name" label="Name" rules={[{ required: true }]}>
                 <Input />
@@ -155,53 +129,46 @@ export const ContactUs: React.FC = () => {
                 <Space>
                   <SubmitButton
                     form={form}
-                    style={{ ...buttonStyle, ...buttonHoverStyle }}
+                    style={{
+                      marginTop: "20px",
+                      transition: "background-color 0.3s ease-in-out",
+                    }}
                   />
                 </Space>
               </Form.Item>
             </Form>
           </Card>
           <Col>
-            <Card
-              style={{
-                height: "200px",
-                marginBottom: "30px",
-              }}
-            >
-              <Typography
-                style={{ fontSize: "18px", fontWeight: "bold", color: "grey" }}
-              >
-                Contact us
-              </Typography>
+            <div style={styles.contactBox}>
+              <Title level={5} style={{ color: "grey" }}>
+                {contact}
+              </Title>
               <br />
-              <Typography style={{ fontSize: "18px" }}>
-                +66 080-423-7373
-              </Typography>
-              <Typography style={{ fontSize: "18px" }}>
-                kiattiphoom@utotech.org
-              </Typography>
-            </Card>
-
-            <Card
-              style={{
-                height: "200px",
-              }}
-            >
-              <Typography
-                style={{ fontSize: "18px", fontWeight: "bold", color: "grey" }}
-              >
-                Address
-              </Typography>
+              <Typography>{phoneNumber}</Typography>
+              <Typography>{email}</Typography>
+            </div>
+            <div style={styles.contactBox}>
+              <Title level={5} style={{ color: "grey" }}>
+                {addressTitle}
+              </Title>
               <br />
               <div style={{ width: "200px" }}>
-                <Typography style={{ fontSize: "18px" }}>
-                  61/723 Nakhon Chai Si District, Nakhon Pathom 73120
-                </Typography>
+                <Typography>{addressDescription}</Typography>
               </div>
-            </Card>
+            </div>
           </Col>
         </Row>
       </div>
     </div>
   );
+};
+
+const styles = {
+  mainBox: {
+    paddingTop: 36,
+    paddingLeft: "10%",
+    paddingRight: "10%",
+  } as React.CSSProperties,
+  messageCard: { width: "400px", marginBottom: "30px" } as React.CSSProperties,
+  contactBox: { height: "200px" } as React.CSSProperties,
 };

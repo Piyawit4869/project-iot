@@ -20,6 +20,7 @@
   "devDependencies": {
     "@ant-design/icons": "^5.1.4",
     "@ant-design/plots": "^1.2.5",
+    "@types/node": "^20.9.3",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
     "@typescript-eslint/eslint-plugin": "^5.59.0",

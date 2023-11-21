@@ -1,23 +1,20 @@
 import { Button, Col, Image, Layout, Menu, Row, Typography } from "antd";
-
 import { Content, Footer, Header } from "antd/es/layout/layout";
-import { ThemeColors } from "../styles/theme";
 import Logo from "../assets/images/utotech-logo.png";
-import { useLocation } from "react-router-dom";
 import {
   FacebookOutlined,
   InstagramOutlined,
   MailOutlined,
 } from "@ant-design/icons";
 import React, { useState } from "react";
+import Title from "antd/es/typography/Title";
 
+// this all text
 const menu = "Menu";
 const companyName = "Utotech co., ltd";
 const copyright = " © Copyright Utotech Co., Ltd.. All Rights Reserved";
 
 export const UtotechLayout = (props: any) => {
-  const location = useLocation();
-
   const [isMobileMenuVisible, setMobileMenuVisibility] = useState(false);
 
   const handleMenuClick = () => {
@@ -35,7 +32,7 @@ export const UtotechLayout = (props: any) => {
   ];
 
   const desktopMenu = (
-    <Row align="middle" justify="space-between" style={{ width: "220px" }}>
+    <Row align="middle" justify="space-between" wrap={false}>
       {menuItems.map((item) => (
         <Button
           key={item.key}
@@ -65,8 +62,6 @@ export const UtotechLayout = (props: any) => {
     </Menu>
   );
 
-  console.log(location);
-
   return (
     <>
       <Layout style={styles.layout}>
@@ -90,56 +85,52 @@ export const UtotechLayout = (props: any) => {
             </Col>
           </div>
         </Header>
-        <div>
-          <Content style={styles.content}>
-            <div
-              style={{
-                minHeight: 360,
-              }}
-            >
-              {props.children}
-            </div>
-          </Content>
-          <Footer style={styles.footer}>
-            <Row justify="start" align="middle">
-              <Col>
-                <Typography
-                  style={{
-                    fontSize: "22px",
-                    color: "white",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {companyName}
-                </Typography>
-                <Row
-                  justify="start"
-                  style={{ marginTop: "10px", marginBottom: "10px" }}
-                >
-                  <Col span={3}>
-                    <MailOutlined style={styles.icon} />
-                  </Col>
-                  <Col span={3}>
-                    <FacebookOutlined style={styles.icon} />
-                  </Col>
-                  <Col span={3}>
-                    <InstagramOutlined style={styles.icon} />
-                  </Col>
-                </Row>
-                <Typography style={{ fontSize: "16px", color: "white" }}>
-                  {copyright}
-                </Typography>
-              </Col>
-            </Row>
-          </Footer>
-        </div>
+
+        <Content style={styles.content}>
+          <div
+            style={{
+              minHeight: 360,
+            }}
+          >
+            {props.children}
+          </div>
+        </Content>
+        <Footer style={styles.footer}>
+          <Row justify="start" align="middle">
+            <Col>
+              <Title
+                level={4}
+                style={{
+                  color: "white",
+                }}
+              >
+                {companyName}
+              </Title>
+              <Row
+                justify="start"
+                style={{ marginTop: "10px", marginBottom: "10px" }}
+              >
+                <Col span={3}>
+                  <MailOutlined style={styles.icon} />
+                </Col>
+                <Col span={3}>
+                  <FacebookOutlined style={styles.icon} />
+                </Col>
+                <Col span={3}>
+                  <InstagramOutlined style={styles.icon} />
+                </Col>
+              </Row>
+              <Typography style={{ color: "white" }}>{copyright}</Typography>
+            </Col>
+          </Row>
+        </Footer>
       </Layout>
     </>
   );
 };
 
 const styles = {
-  layout: { height: "100vh" } as React.CSSProperties,
+  layout: { minHeight: "100vh" } as React.CSSProperties,
   header: {
     paddingLeft: "10%",
     paddingRight: "10%",
