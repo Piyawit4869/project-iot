@@ -112,7 +112,7 @@ export const ContactUs: React.FC = () => {
         >
           <Card
             style={{
-              backgroundColor: "#aaf0d1",
+              backgroundColor: "#106965",
               width: "400px",
               marginBottom: "30px",
             }}
@@ -121,7 +121,7 @@ export const ContactUs: React.FC = () => {
               style={{
                 fontSize: "18px",
                 fontWeight: "bold",
-                color: "grey",
+                color: "white",
                 marginBottom: "20px",
               }}
             >

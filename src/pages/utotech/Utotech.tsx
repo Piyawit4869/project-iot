@@ -131,15 +131,21 @@ export const Utotech: React.FC = () => {
           {mockData.map((item, id) => (
             <Col key={item.id} span={24} md={12} lg={12} xl={12}>
               <Link to={`option/${id}`}>
-                <Card style={{ backgroundColor: "#aaf0d1" }}>
+                <Card style={{ backgroundColor: "#106965" }}>
                   <Row justify="center">
                     <div style={{ width: "50%", objectFit: "cover" }}>
                       <Image preview={false} src={item.image} />
                     </div>
                   </Row>
 
-                  <h2>{item.title}</h2>
-                  <div style={{ height: "100px" }}>
+                  <h2 style={{ color: "white" }}>{item.title}</h2>
+                  <div
+                    style={{
+                      height: "100px",
+                      color: "white",
+                      fontSize: "16px",
+                    }}
+                  >
                     <p>{item.description}</p>
                   </div>
                 </Card>

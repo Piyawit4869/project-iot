@@ -148,24 +148,42 @@ export const UtotechLayout = (props: any) => {
 
         {/* this one side minimal footer */}
 
-        <Footer style={{ background: "#aaf0d1" }}>
+        <Footer style={{ background: "#106965" }}>
           <Row justify="start" align="middle">
             <Col>
-              <Typography style={{ fontSize: "24px" }}>
+              <Typography
+                style={{ fontSize: "22px", color: "white", fontWeight: "bold" }}
+              >
                 Utotech co., ltd
               </Typography>
               <Row style={{ marginTop: "10px", marginBottom: "10px" }}>
-                <MailOutlined style={{ fontSize: "24px" }} />
+                <MailOutlined
+                  style={{
+                    fontSize: "24px",
+                    color: "white",
+                    fontWeight: "bold",
+                  }}
+                />
                 <FacebookOutlined
                   style={{
                     fontSize: "24px",
                     marginLeft: "10px",
                     marginRight: "10px",
+                    color: "white",
+                    fontWeight: "bold",
                   }}
                 />
-                <InstagramOutlined style={{ fontSize: "24px" }} />
+                <InstagramOutlined
+                  style={{
+                    fontSize: "24px",
+                    color: "white",
+                    fontWeight: "bold",
+                  }}
+                />
               </Row>
-              <Typography style={{ fontSize: "18px" }}>
+              <Typography
+                style={{ fontSize: "16px", color: "white", fontWeight: "" }}
+              >
                 © Copyright Utotech Co., Ltd.. All Rights Reserved
               </Typography>
             </Col>
@@ -174,7 +192,7 @@ export const UtotechLayout = (props: any) => {
 
         {/* this minimal footer */}
 
-        {/* <Footer style={{ background: "#aaf0d1" }}>
+        {/* <Footer style={{ background: "#25B0AB" }}>
           <Row justify="space-around" align="middle">
             <Col>
               <Typography style={{ fontSize: "24px" }}>
