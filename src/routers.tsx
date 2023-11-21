@@ -34,13 +34,13 @@ export const router = createBrowserRouter([
   },
   {
     path: "/",
-    id: "utotechRoot",
+    id: "UtotechRoot",
     element: <UtotechRoot />,
     children: [
       { path: "/", element: <Utotech /> },
       { path: "/about", element: <AboutUs /> },
       { path: "/contact", element: <ContactUs /> },
-      { path: "/features/:id", element: <SingleOption /> },
+      { path: "/option/:id", element: <SingleOption /> },
     ],
   },
   {

@@ -7,8 +7,5 @@ export const theme = {
     Form: {
       labelColor: "#ffffff",
     },
-    Icon: {
-      fontSize: 24,
-    },
   },
 };

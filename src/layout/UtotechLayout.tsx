@@ -9,7 +9,11 @@ import {
   InstagramOutlined,
   MailOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
+import React, { useState } from "react";
+
+const menu = "Menu";
+const companyName = "Utotech co., ltd";
+const copyright = " © Copyright Utotech Co., Ltd.. All Rights Reserved";
 
 export const UtotechLayout = (props: any) => {
   const location = useLocation();
@@ -65,34 +69,11 @@ export const UtotechLayout = (props: any) => {
 
   return (
     <>
-      <Layout style={{ minHeight: "100vh" }}>
-        <Header
-          style={{
-            paddingLeft: "10%",
-            paddingRight: "10%",
-            display: "flex",
-            top: 0,
-            zIndex: 1,
-            width: "100%",
-            height: "100px",
-            position: "sticky",
-            backgroundColor: ThemeColors.whiteColor,
-            alignItems: "center",
-            justifyContent: "space-between",
-            boxShadow: "0.5px 0.5px 0.5px 0.5px grey",
-          }}
-        >
-          <div
-            style={{
-              width: "60px",
-              height: "60px",
-              display: "flex",
-              justifyContent: "start",
-            }}
-          >
-            <Image src={Logo} width={60} height={60} preview={false}></Image>
+      <Layout style={styles.layout}>
+        <Header style={styles.header}>
+          <div style={styles.image}>
+            <Image src={Logo} width={60} height={60} preview={false} />
           </div>
-
           <div>
             <Col xs={{ span: 0 }} lg={{ span: 12 }}>
               {desktopMenu}
@@ -103,169 +84,89 @@ export const UtotechLayout = (props: any) => {
                 onClick={handleMenuClick}
                 style={{ color: "black" }}
               >
-                Menu
+                {menu}
               </Button>
               {mobileMenu}
             </Col>
           </div>
-
-          {/* <Row align={"middle"}>
-            <Button
-              size={"middle"}
-              type="link"
-              style={{ color: "black" }}
-              href="/"
-            >
-              Home
-            </Button>
-            <Button
-              size={"middle"}
-              type="link"
-              style={{ color: "black" }}
-              href="about"
-            >
-              About
-            </Button>
-            <Button
-              size={"middle"}
-              type="link"
-              style={{ color: "black" }}
-              href="contact"
-            >
-              Contact
-            </Button>
-          </Row> */}
         </Header>
-        <Content style={{ overflow: "auto" }}>
-          <div
-            style={{
-              minHeight: 360,
-            }}
-          >
-            {props.children}
-          </div>
-        </Content>
-
-        {/* this one side minimal footer */}
-
-        <Footer style={{ background: "#106965" }}>
-          <Row justify="start" align="middle">
-            <Col>
-              <Typography
-                style={{ fontSize: "22px", color: "white", fontWeight: "bold" }}
-              >
-                Utotech co., ltd
-              </Typography>
-              <Row style={{ marginTop: "10px", marginBottom: "10px" }}>
-                <MailOutlined
+        <div>
+          <Content style={styles.content}>
+            <div
+              style={{
+                minHeight: 360,
+              }}
+            >
+              {props.children}
+            </div>
+          </Content>
+          <Footer style={styles.footer}>
+            <Row justify="start" align="middle">
+              <Col>
+                <Typography
                   style={{
-                    fontSize: "24px",
+                    fontSize: "22px",
                     color: "white",
                     fontWeight: "bold",
                   }}
-                />
-                <FacebookOutlined
-                  style={{
-                    fontSize: "24px",
-                    marginLeft: "10px",
-                    marginRight: "10px",
-                    color: "white",
-                    fontWeight: "bold",
-                  }}
-                />
-                <InstagramOutlined
-                  style={{
-                    fontSize: "24px",
-                    color: "white",
-                    fontWeight: "bold",
-                  }}
-                />
-              </Row>
-              <Typography
-                style={{ fontSize: "16px", color: "white", fontWeight: "" }}
-              >
-                © Copyright Utotech Co., Ltd.. All Rights Reserved
-              </Typography>
-            </Col>
-          </Row>
-        </Footer>
-
-        {/* this minimal footer */}
-
-        {/* <Footer style={{ background: "#25B0AB" }}>
-          <Row justify="space-around" align="middle">
-            <Col>
-              <Typography style={{ fontSize: "24px" }}>
-                Utotech co., ltd
-              </Typography>
-            </Col>
-            <Col>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  marginBottom: "20px",
-                }}
-              >
-                <Image src={Logo} width={120} preview={false}></Image>
-                <Typography style={{ fontSize: "18px", textAlign: "center" }}>
-                  © Copyright Utotech Co., Ltd.. All Rights Reserved
+                >
+                  {companyName}
                 </Typography>
-              </div>
-            </Col>
-            <Row>
-              <MailOutlined style={{ fontSize: "24px" }} />
-              <FacebookOutlined
-                style={{
-                  fontSize: "24px",
-                  marginLeft: "10px",
-                  marginRight: "10px",
-                }}
-              />
-              <InstagramOutlined style={{ fontSize: "24px" }} />
+                <Row
+                  justify="start"
+                  style={{ marginTop: "10px", marginBottom: "10px" }}
+                >
+                  <Col span={3}>
+                    <MailOutlined style={styles.icon} />
+                  </Col>
+                  <Col span={3}>
+                    <FacebookOutlined style={styles.icon} />
+                  </Col>
+                  <Col span={3}>
+                    <InstagramOutlined style={styles.icon} />
+                  </Col>
+                </Row>
+                <Typography style={{ fontSize: "16px", color: "white" }}>
+                  {copyright}
+                </Typography>
+              </Col>
             </Row>
-          </Row>
-        </Footer> */}
-
-        {/* This full footer */}
-
-        {/* <Footer style={{ background: "#61C2A2" }}>
-          <Row justify="space-around" align="middle">
-            <Col>
-              <Typography style={{ fontSize: "24px" }}>
-                Utotech co., ltd
-              </Typography>
-            </Col>
-            <Col>
-              <div>
-                <Typography>Contact us</Typography>
-                <br />
-                <Typography>+66 080-423-7373</Typography>
-                <Typography>kiattiphoom@utotech.org</Typography>
-              </div>
-            </Col>
-            <Col>
-              <div>
-                <Typography>Address</Typography>
-                <br />
-                <div style={{ width: "200px" }}>
-                  <Typography>
-                    61/723 Nakhon Chai Si District, Nakhon Pathom 73120
-                  </Typography>
-                </div>
-              </div>
-            </Col>
-          </Row>
-          <Row justify="center" style={{ marginTop: "60px" }}>
-            <Col>
-              <Typography>
-                © Copyright Utotech Co., Ltd.. All Rights Reserved
-              </Typography>
-            </Col>
-          </Row>
-        </Footer> */}
+          </Footer>
+        </div>
       </Layout>
     </>
   );
+};
+
+const styles = {
+  layout: { height: "100vh" } as React.CSSProperties,
+  header: {
+    paddingLeft: "10%",
+    paddingRight: "10%",
+    display: "flex",
+    top: 0,
+    zIndex: 1,
+    width: "100%",
+    height: "100px",
+    position: "sticky",
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "space-between",
+    boxShadow: "0.5px 0.5px 0.5px 0.5px grey",
+  } as React.CSSProperties,
+  content: { overflow: "auto" } as React.CSSProperties,
+  footer: {
+    background: "#106965",
+  } as React.CSSProperties,
+  image: {
+    width: "60px",
+    height: "60px",
+    display: "flex",
+    justifyContent: "start",
+  } as React.CSSProperties,
+  icon: {
+    fontSize: "24px",
+    color: "white",
+    fontWeight: "bold",
+  } as React.CSSProperties,
 };
