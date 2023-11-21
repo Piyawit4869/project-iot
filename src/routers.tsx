@@ -28,14 +28,19 @@ import { SettingUtotech } from "./pages/SettingUtotech";
 
 export const router = createBrowserRouter([
   {
+    path: "/login",
+    // action: LoginAction,
+    element: <LoginPage />,
+  },
+  {
     path: "/",
-    id: "root",
+    id: "utotechRoot",
     element: <UtotechRoot />,
     children: [
       { path: "/", element: <Utotech /> },
       { path: "/about", element: <AboutUs /> },
       { path: "/contact", element: <ContactUs /> },
-      { path: "/option/:id", element: <SingleOption /> },
+      { path: "/features/:id", element: <SingleOption /> },
     ],
   },
   {
@@ -115,10 +120,5 @@ export const router = createBrowserRouter([
         element: <SettingUtotech />,
       },
     ],
-  },
-  {
-    path: "/login",
-    // action: LoginAction,
-    element: <LoginPage />,
   },
 ]);

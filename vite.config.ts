@@ -12,4 +12,12 @@ export default defineConfig({
   define: {
     "process.env": {},
   },
+  // resolve: {
+  //   alias: {
+  //     src: "/src",
+  //     components: "/src/components",
+  //     assets: "/src/assets",
+  //     apis: "/src/apis",
+  //   },
+  // },
 });

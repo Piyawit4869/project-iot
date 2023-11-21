@@ -1,6 +1,7 @@
 import { Outlet, useNavigation } from "react-router-dom";
-import { Spin } from "antd";
+import { Button, ConfigProvider, Space, Spin, Form, Input } from "antd";
 import { UtotechLayout } from "../../layout/UtotechLayout";
+import { theme } from "../../components/utotech/theme";
 
 export async function RootLoader() {}
 
@@ -8,10 +9,12 @@ export const UtotechRoot = () => {
   const { state } = useNavigation();
 
   return (
-    <UtotechLayout>
-      <Spin spinning={state === "loading" || state === "submitting"}>
-        <Outlet />
-      </Spin>
-    </UtotechLayout>
+    <ConfigProvider theme={theme}>
+      <UtotechLayout>
+        <Spin spinning={state === "loading" || state === "submitting"}>
+          <Outlet />
+        </Spin>
+      </UtotechLayout>
+    </ConfigProvider>
   );
 };
