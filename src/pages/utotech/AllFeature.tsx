@@ -8,7 +8,7 @@ import { styles } from ".";
 
 const weCanDo = "What we can do";
 const subWeCanDo =
-  " I'd be happy to help once I have a better understanding of your request.";
+  "I'd be happy to help once I have a better understanding of your request.";
 const contact = " Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 const letChat = "Let's chat";
 
@@ -36,7 +36,7 @@ export const AllFeature = () => {
         <Row gutter={[16, 16]} style={styles.marginVertical}>
           {data.map((item: any) => (
             <Col key={item.id} span={24} md={12} lg={12} xl={12}>
-              <Link to={`/option/${item.id}`}>
+              <Link to={`/feature/${item.id}`}>
                 <Card style={{ height: "100%" }}>
                   <Row justify="center">
                     <div style={styles.featureImage}>

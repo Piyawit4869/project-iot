@@ -17,7 +17,6 @@ import { CreateCustomerPage } from "./pages/CreateCustomer";
 import { EditCustomerPage } from "./pages/EditCustomers";
 
 import { PartialPage } from "./pages/Partial";
-
 import { CustomersDetail } from "./pages/CustomersDetail";
 
 import { IndexPartialPage } from "./pages/IndexPartial";
@@ -34,7 +33,18 @@ import {
   featuresIndexLoader,
   optionIndexLoader,
 } from "./pages/utotech";
-import { SettingUtotech } from "./pages/SettingUtotech";
+import { SettingUtotech, featuresLoader } from "./pages/SettingUtotech";
+import {
+  SingleSettingFeature,
+  FeatureEditAction,
+} from "./pages/SettingFeature";
+import { CreateFeature, FeatureCreateAction } from "./pages/CreateFeature";
+import { CreateOption, OptionCreateAction } from "./pages/CreateOption";
+import {
+  OptionEditAction,
+  SingleSettingOption,
+  optionLoader,
+} from "./pages/SettingOption";
 
 export const router = createBrowserRouter([
   {
@@ -136,7 +146,30 @@ export const router = createBrowserRouter([
       },
       {
         path: "/admin/utotech",
+        loader: featuresLoader,
         element: <SettingUtotech />,
+      },
+      {
+        path: "/admin/create/feature",
+        action: FeatureCreateAction,
+        element: <CreateFeature />,
+      },
+      {
+        path: "/admin/feature/:id",
+        element: <SingleSettingFeature />,
+        loader: featureLoader,
+        action: FeatureEditAction,
+      },
+      {
+        path: "/admin/create/option",
+        action: OptionCreateAction,
+        element: <CreateOption />,
+      },
+      {
+        path: "/admin/option/:id",
+        element: <SingleSettingOption />,
+        loader: optionLoader,
+        action: OptionEditAction,
       },
     ],
   },

@@ -77,8 +77,8 @@ const bannerTexts = [
 export async function featuresHomeIndexLoader() {
   try {
     const { data } = await API.features.gets();
-
-    // console.log(data);
+    console.log("==================");
+    console.log(data);
 
     return { data: data };
   } catch (error) {
@@ -88,7 +88,7 @@ export async function featuresHomeIndexLoader() {
 
 export const Utotech: React.FC = () => {
   const { data } = useLoaderData() as any;
-  console.log(data);
+  // console.log(data);
 
   return (
     <div>
@@ -119,7 +119,7 @@ export const Utotech: React.FC = () => {
         <Row gutter={[16, 16]} style={styles.marginVertical}>
           {data.map((item: any) => (
             <Col key={item.id} span={24} md={12} lg={12} xl={12}>
-              <Link to={`option/${item.id}`}>
+              <Link to={`feature/${item.id}`}>
                 <Card
                   style={{
                     ...styles.card,

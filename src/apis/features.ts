@@ -22,3 +22,26 @@ export async function get(id: any) {
     url: `/api/crud/contents/preview/${id}`,
   });
 }
+
+export async function create(data: any) {
+  return client({
+    method: "POST",
+    url: `/api/crud/contents`,
+    data,
+  });
+}
+
+export async function update(data: any, id: any) {
+  return client({
+    method: "PUT",
+    url: `/api/crud/contents/${id}`,
+    data,
+  });
+}
+
+export async function deleted(id: any) {
+  return client({
+    method: "DELETE",
+    url: `/api/crud/contents/${id}`,
+  });
+}
