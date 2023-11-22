@@ -17,25 +17,59 @@ import { CreateCustomerPage } from "./pages/CreateCustomer";
 import { EditCustomerPage } from "./pages/EditCustomers";
 
 import { PartialPage } from "./pages/Partial";
-
 import { CustomersDetail } from "./pages/CustomersDetail";
 
 import { IndexPartialPage } from "./pages/IndexPartial";
 
 import { UtotechRoot } from "./pages/utotech/UtotechRoot";
-import { AboutUs, ContactUs, SingleOption, Utotech } from "./pages/utotech";
-import { SettingUtotech } from "./pages/SettingUtotech";
+import {
+  AboutUs,
+  AllFeature,
+  ContactUs,
+  SingleFeature,
+  Utotech,
+  featureLoader,
+  featuresHomeIndexLoader,
+  featuresIndexLoader,
+  optionIndexLoader,
+} from "./pages/utotech";
+import { SettingUtotech, featuresLoader } from "./pages/SettingUtotech";
+import {
+  SingleSettingFeature,
+  FeatureEditAction,
+} from "./pages/SettingFeature";
+import { CreateFeature, FeatureCreateAction } from "./pages/CreateFeature";
+import { CreateOption, OptionCreateAction } from "./pages/CreateOption";
+import {
+  OptionEditAction,
+  SingleSettingOption,
+  optionLoader,
+} from "./pages/SettingOption";
 
 export const router = createBrowserRouter([
   {
+    path: "/login",
+    // action: LoginAction,
+    element: <LoginPage />,
+  },
+  {
     path: "/",
-    id: "root",
+    id: "UtotechRoot",
     element: <UtotechRoot />,
     children: [
-      { path: "/", element: <Utotech /> },
-      { path: "/about", element: <AboutUs /> },
+      { path: "/", element: <Utotech />, loader: featuresHomeIndexLoader },
+      {
+        path: "/all-feature",
+        element: <AllFeature />,
+        loader: featuresIndexLoader,
+      },
+      { path: "/about", element: <AboutUs />, loader: optionIndexLoader },
       { path: "/contact", element: <ContactUs /> },
-      { path: "/option/:id", element: <SingleOption /> },
+      {
+        path: "/feature/:id",
+        element: <SingleFeature />,
+        loader: featureLoader,
+      },
     ],
   },
   {
@@ -112,13 +146,31 @@ export const router = createBrowserRouter([
       },
       {
         path: "/admin/utotech",
+        loader: featuresLoader,
         element: <SettingUtotech />,
       },
+      {
+        path: "/admin/create/feature",
+        action: FeatureCreateAction,
+        element: <CreateFeature />,
+      },
+      {
+        path: "/admin/feature/:id",
+        element: <SingleSettingFeature />,
+        loader: featureLoader,
+        action: FeatureEditAction,
+      },
+      {
+        path: "/admin/create/option",
+        action: OptionCreateAction,
+        element: <CreateOption />,
+      },
+      {
+        path: "/admin/option/:id",
+        element: <SingleSettingOption />,
+        loader: optionLoader,
+        action: OptionEditAction,
+      },
     ],
-  },
-  {
-    path: "/login",
-    // action: LoginAction,
-    element: <LoginPage />,
   },
 ]);

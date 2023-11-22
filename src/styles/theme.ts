@@ -1,11 +1,3 @@
-/* Color theme */
-
-/**
- * This function is a theme color of this project
- *
- * @returns {ThemeColors{}}
- */
-
 export const ThemeColors = {
   primaryColor: "#E46F1B",
   brickOrangeColor: "#EC8235",
