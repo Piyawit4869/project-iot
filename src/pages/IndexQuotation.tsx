@@ -182,7 +182,9 @@ export const IndexQuotationPage = () => {
       {Title("Quotation", false, "")}
       <Row style={{ marginTop: "10px" }} wrap={false}>
         <Input
-          prefix={<SearchOutlined style={{color:"black",fontSize:"25px"}}/>}
+          prefix={
+            <SearchOutlined style={{ color: "black", fontSize: "25px" }} />
+          }
           placeholder="Search Doccument Number"
           bordered={true}
           style={{
@@ -195,16 +197,16 @@ export const IndexQuotationPage = () => {
           }}
         />
         <Button
-          icon={<SearchOutlined style={{fontSize:"25px"}}/>}
+          icon={<SearchOutlined style={{ fontSize: "25px" }} />}
           style={{
             marginLeft: "10px",
             width: "10%",
             height: "50px",
             backgroundColor: "#EFAB3A",
             fontSize: "16px",
-            textOverflow:"ellipsis",
-            overflow:"hidden",
-            color:"white"
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+            color: "white",
           }}
         >
           Search
@@ -215,9 +217,9 @@ export const IndexQuotationPage = () => {
           onClick={() => setCollapsed(!collapsed)}
           icon={
             collapsed ? (
-              <ControlOutlined style={{fontSize:"30px"}}/>
+              <ControlOutlined style={{ fontSize: "30px" }} />
             ) : (
-              <ControlOutlined style={{ color: "#EE9437",fontSize:"30px" }} />
+              <ControlOutlined style={{ color: "#EE9437", fontSize: "30px" }} />
             )
           }
           style={{
@@ -238,7 +240,15 @@ export const IndexQuotationPage = () => {
             borderRadius: "10px",
           }}
         >
-          <Typography style={{ fontSize: "16px" ,textOverflow:"ellipsis",overflow:"hidden"}}>สถานะ</Typography>
+          <Typography
+            style={{
+              fontSize: "16px",
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+            }}
+          >
+            สถานะ
+          </Typography>
           <Form.Item>
             <Dropdown menu={{ items: itemsCurrency, onClick: onClickCurrency }}>
               <a onClick={(e) => e.preventDefault()}>
@@ -248,10 +258,11 @@ export const IndexQuotationPage = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     color: ThemeColors.lightOrangeColor,
-                    textOverflow:"ellipsis",
-                    overflow:"hidden",
-                    marginTop:"-17px"
-                  }}>
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    marginTop: "-17px",
+                  }}
+                >
                   -
                   <DownOutlined />
                 </Space>
@@ -259,27 +270,28 @@ export const IndexQuotationPage = () => {
             </Dropdown>
           </Form.Item>
         </div>
-        <Link to="/quotation/create" style={{width:"12%",}}>
+        <Link to="/admin/quotation/create" style={{ width: "12%" }}>
           <Button
             type="primary"
-            icon={<PlusOutlined style={{fontSize:"25px"}}/>}
+            icon={<PlusOutlined style={{ fontSize: "25px" }} />}
             style={{
-              width:"100%",
+              width: "100%",
               height: "70px",
               backgroundColor: "#E46F1B",
               fontSize: "16px",
-              marginLeft:"10px",
-              overflow:"hidden",
-              textOverflow:"ellipsis"
-            }}>
-              สร้างใบเสนอราคา
+              marginLeft: "10px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            สร้างใบเสนอราคา
           </Button>
         </Link>
       </Row>
       {collapsed ? (
         <div></div>
       ) : (
-        <div style={{height: "80px",}}>
+        <div style={{ height: "80px" }}>
           <Button
             style={{
               background: "white",
@@ -287,13 +299,19 @@ export const IndexQuotationPage = () => {
               height: "70px",
               marginTop: "10px",
               width: "10%",
-              overflow:"hidden",
-              textOverflow:"ellipsis"
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
           >
-            <Typography style={{ fontSize: "14px", textAlign:"center" }}>
+            <Typography style={{ fontSize: "14px", textAlign: "center" }}>
               เลขที่เอกสาร
-              <Typography style={{ color: "#EE9437", fontSize: "14px", textAlign:"center" }}>
+              <Typography
+                style={{
+                  color: "#EE9437",
+                  fontSize: "14px",
+                  textAlign: "center",
+                }}
+              >
                 QO-23200107000
               </Typography>
             </Typography>
@@ -305,13 +323,19 @@ export const IndexQuotationPage = () => {
               border: "0px",
               height: "70px",
               width: "10%",
-              overflow:"hidden",
-              textOverflow:"ellipsis",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
           >
-            <Typography style={{ fontSize: "14px" ,textAlign:"center"}}>
+            <Typography style={{ fontSize: "14px", textAlign: "center" }}>
               ลูกค้า
-              <Typography style={{ color: "#EE9437", fontSize: "14px", textAlign:"center" }}>
+              <Typography
+                style={{
+                  color: "#EE9437",
+                  fontSize: "14px",
+                  textAlign: "center",
+                }}
+              >
                 Sim
               </Typography>
             </Typography>

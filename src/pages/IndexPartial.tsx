@@ -65,7 +65,7 @@ export const IndexPartialPage = () => {
       dataIndex: "action",
       key: "action",
       render: () => (
-        <Link to="/partial/create">
+        <Link to="/admin/partial/create">
           <Button
             onClick={() => {}}
             style={{ backgroundColor: ThemeColors.orangeColor }}
@@ -228,7 +228,7 @@ export const IndexPartialPage = () => {
             </Dropdown>
           </Form.Item>
         </div>
-        <Link to="/partial/create">
+        <Link to="/admin/partial/create">
           <Button
             type="primary"
             style={{

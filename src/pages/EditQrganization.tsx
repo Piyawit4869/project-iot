@@ -85,7 +85,7 @@ export const EditOrganizationPage = () => {
                 บันทึก
               </Typography>
             </Button>
-            <Link to={"/organozation"}>
+            <Link to={"/admin/organozation"}>
               <Button
                 style={{
                   border: "0",
