@@ -18,8 +18,6 @@ const copyright = " © Copyright Utotech Co., Ltd.. All Rights Reserved";
 export const UtotechLayout = (props: any) => {
   const location = useLocation();
 
-  console.log({ location });
-
   const [isMobileMenuVisible, setMobileMenuVisibility] = useState(false);
 
   const handleMenuClick = () => {
