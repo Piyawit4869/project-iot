@@ -1,6 +1,6 @@
 import { Button, Card, Col, Image, Row, Typography } from "antd";
 import Title from "antd/es/typography/Title";
-import React from "react";
+import React, { useEffect } from "react";
 import { Parallax } from "react-parallax";
 import { Link, useLoaderData } from "react-router-dom";
 
@@ -13,10 +13,10 @@ const welcome = "Welcome to UTOTECH COMPANY LIMITED";
 const weCanDo = "What we can do";
 const subWeCanDo =
   " I'd be happy to help once I have a better understanding of your request.";
-const largeText =
-  "Contrary to popular belief, Lorem Ipsum is not simply random text.";
-const contact = " Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-const letChat = "Let's chat";
+const largeText = "The New Era Of TECH with UTOTECH";
+const contact =
+  "Thank you for considering us. We look forward to connecting with you!";
+// const letChat = "Let's chat";
 
 //this all image
 const welcomImage =
@@ -39,46 +39,10 @@ const bannerTexts = [
   "We're ready for Develop IOT",
   3000,
 ];
-// // Mock data
-// const mockData = [
-//   {
-//     id: 1,
-//     title: "Website",
-//     description: "Description for Item 1",
-//     image: "https://cdn-icons-png.flaticon.com/512/6471/6471842.png",
-//   },
-//   {
-//     id: 2,
-//     title: "Web Application",
-//     description: "Description for Item 2",
-//     image: "https://cdn-icons-png.flaticon.com/512/5447/5447882.png",
-//   },
-//   {
-//     id: 3,
-//     title: "Mobile Application",
-//     description: "Description for Item 3",
-//     image: "https://cdn-icons-png.flaticon.com/512/6213/6213889.png",
-//   },
-//   {
-//     id: 4,
-//     title: "Android and IOS",
-//     description: "Description for Item 4",
-//     image:
-//       "https://cdn0.iconfinder.com/data/icons/influencer-marketing-wildberry-volume-1/256/Cross_Platform-512.png",
-//   },
-//   {
-//     id: 5,
-//     title: "IOT",
-//     description: "Description for Item 5",
-//     image: "https://cdn-icons-png.flaticon.com/512/6091/6091352.png",
-//   },
-// ];
 
 export async function featuresHomeIndexLoader() {
   try {
     const { data } = await API.features.gets();
-    console.log("==================");
-    console.log(data);
 
     return { data: data };
   } catch (error) {
@@ -88,7 +52,10 @@ export async function featuresHomeIndexLoader() {
 
 export const Utotech: React.FC = () => {
   const { data } = useLoaderData() as any;
-  // console.log(data);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
 
   return (
     <div>
@@ -101,7 +68,7 @@ export const Utotech: React.FC = () => {
         style={styles.welcome}
       >
         <div style={styles.welcomeFlexBox}>
-          <Title level={2} style={{ color: "white" }}>
+          <Title level={2} style={{ color: "white", textAlign: "center" }}>
             {welcome}
           </Title>
           <TypeAnimation
@@ -147,9 +114,9 @@ export const Utotech: React.FC = () => {
           ))}
         </Row>
         <Row justify="center">
-          <Button type="primary" href="/all-feature">
-            See more
-          </Button>
+          <Link to="/all-feature">
+            <Button type="primary">See more</Button>
+          </Link>
         </Row>
       </div>
       <Parallax
@@ -186,7 +153,7 @@ export const Utotech: React.FC = () => {
           >
             {contact}
           </Typography>
-          <Button
+          {/* <Button
             type="primary"
             style={{
               marginTop: "20px",
@@ -194,7 +161,7 @@ export const Utotech: React.FC = () => {
             }}
           >
             {letChat}
-          </Button>
+          </Button> */}
         </div>
       </Parallax>
     </div>

@@ -1,16 +1,18 @@
-import { Button, Card, Col, Image, Row, Typography } from "antd";
+import { Card, Col, Image, Row, Typography } from "antd";
 
 import * as API from "../../apis";
 import { Link, useLoaderData } from "react-router-dom";
 import Title from "antd/es/typography/Title";
 import { Parallax } from "react-parallax";
 import { styles } from ".";
+import { useEffect } from "react";
 
 const weCanDo = "What we can do";
 const subWeCanDo =
   "I'd be happy to help once I have a better understanding of your request.";
-const contact = " Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-const letChat = "Let's chat";
+const contact =
+  "Thank you for considering us. We look forward to connecting with you!";
+// const letChat = "Let's chat";
 
 const letChatImage =
   "https://picjumbo.com/wp-content/uploads/black-styled-minimal-office-things-room-for-text-free-photo.jpg";
@@ -27,6 +29,10 @@ export async function featuresIndexLoader() {
 
 export const AllFeature = () => {
   const { data } = useLoaderData() as any;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
 
   return (
     <div>
@@ -74,7 +80,7 @@ export const AllFeature = () => {
           >
             {contact}
           </Typography>
-          <Button
+          {/* <Button
             type="primary"
             style={{
               marginTop: "20px",
@@ -82,7 +88,7 @@ export const AllFeature = () => {
             }}
           >
             {letChat}
-          </Button>
+          </Button> */}
         </div>
       </Parallax>
     </div>

@@ -1,6 +1,6 @@
 import { Typography, Row, Image, Col } from "antd";
 import Title from "antd/es/typography/Title";
-import React from "react";
+import React, { useEffect } from "react";
 import { Parallax } from "react-parallax";
 
 import * as API from "../../apis";
@@ -29,6 +29,10 @@ export async function optionIndexLoader() {
 
 export const AboutUs = () => {
   const { data } = useLoaderData() as any;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
 
   console.log(data);
 

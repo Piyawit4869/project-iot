@@ -1,6 +1,6 @@
 import { Image, Row, Typography } from "antd";
 import Title from "antd/es/typography/Title";
-import React from "react";
+import React, { useEffect } from "react";
 import { useLoaderData } from "react-router-dom";
 
 import * as API from "../../apis";
@@ -21,6 +21,10 @@ export async function featureLoader({ params }: any) {
 
 export const SingleFeature = () => {
   const { data } = useLoaderData() as any;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
 
   // console.log(data);
 

@@ -8,15 +8,16 @@ import {
   Form,
   Input,
   Space,
+  notification,
 } from "antd";
 import Title from "antd/es/typography/Title";
-import React from "react";
+import React, { useEffect } from "react";
 
 //this all text
 const consultTitle = "Let's come to consult!";
 const consultSubTitle =
   "We're here to help you. Get in touch with us for expert advice and assistance.";
-const letChat = "Let's chat";
+// const letChat = "Let's chat";
 const phoneNumber = "+66 080-423-7373";
 const email = "kiattiphoom@utotech.org";
 const addressTitle = "Address";
@@ -52,16 +53,17 @@ const SubmitButton = ({
       await form.submit();
 
       form.resetFields();
+      notification.info({
+        onClose() {},
+        message: "Updating soon",
+        description: "Messages cannot be sent. Currently under development",
+        duration: 3,
+      });
     }
   };
 
   return (
-    <Button
-      type="primary"
-      htmlType="submit"
-      onClick={handleButtonClick}
-      style={{}}
-    >
+    <Button type="primary" htmlType="submit" onClick={handleButtonClick}>
       {contact}
     </Button>
   );
@@ -69,6 +71,10 @@ const SubmitButton = ({
 
 export const ContactUs: React.FC = () => {
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
 
   return (
     <div>
@@ -82,7 +88,7 @@ export const ContactUs: React.FC = () => {
             <Title level={4}>{consultTitle}</Title>
             <Typography style={{ color: "grey" }}>{consultSubTitle}</Typography>
           </div>
-          <Button
+          {/* <Button
             type="primary"
             style={{
               marginTop: "20px",
@@ -90,7 +96,7 @@ export const ContactUs: React.FC = () => {
             }}
           >
             {letChat}
-          </Button>
+          </Button> */}
         </Row>
         <Row
           justify="space-around"
