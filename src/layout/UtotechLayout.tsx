@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import React, { useState } from "react";
 import Title from "antd/es/typography/Title";
+import { Link, useLocation } from "react-router-dom";
 
 // this all text
 const menu = "Menu";
@@ -15,6 +16,10 @@ const companyName = "Utotech co., ltd";
 const copyright = " © Copyright Utotech Co., Ltd.. All Rights Reserved";
 
 export const UtotechLayout = (props: any) => {
+  const location = useLocation();
+
+  console.log({ location });
+
   const [isMobileMenuVisible, setMobileMenuVisibility] = useState(false);
 
   const handleMenuClick = () => {
@@ -26,23 +31,27 @@ export const UtotechLayout = (props: any) => {
   };
 
   const menuItems = [
-    { key: "home", label: "Home", href: "/" },
-    { key: "about", label: "About", href: "/about" },
-    { key: "contact", label: "Contact", href: "/contact" },
+    { key: "home", label: "Home", path: "/" },
+    { key: "about", label: "About", path: "/about" },
+    { key: "contact", label: "Contact", path: "/contact" },
   ];
 
   const desktopMenu = (
     <Row align="middle" justify="space-between" wrap={false}>
       {menuItems.map((item) => (
-        <Button
-          key={item.key}
-          size="middle"
-          type="link"
-          style={{ color: "black" }}
-          href={item.href}
-        >
-          {item.label}
-        </Button>
+        <Link to={item.path} key={item.key}>
+          <Button
+            size="middle"
+            type="link"
+            style={{
+              fontWeight: "bold",
+              color:
+                location.pathname === item.path ? "rgb(10, 76, 75)" : "black",
+            }}
+          >
+            {item.label}
+          </Button>
+        </Link>
       ))}
     </Row>
   );
@@ -56,7 +65,9 @@ export const UtotechLayout = (props: any) => {
     >
       {menuItems.map((item) => (
         <Menu.Item key={item.key}>
-          <a href={item.href}>{item.label}</a>
+          <Link to={item.path} key={item.key}>
+            {item.label}
+          </Link>
         </Menu.Item>
       ))}
     </Menu>
@@ -67,7 +78,9 @@ export const UtotechLayout = (props: any) => {
       <Layout style={styles.layout}>
         <Header style={styles.header}>
           <div style={styles.image}>
-            <Image src={Logo} width={60} height={60} preview={false} />
+            <Link to="/">
+              <Image src={Logo} width={60} height={60} preview={false} />
+            </Link>
           </div>
           <div>
             <Col xs={{ span: 0 }} lg={{ span: 12 }}>
