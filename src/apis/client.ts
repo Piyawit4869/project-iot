@@ -2,6 +2,8 @@ import axios from "axios";
 const baseURL = import.meta.env.VITE_APP_API_BASE_URL;
 
 const client = () => {
+  console.log({ baseURL });
+
   let instance = axios.create({
     baseURL: baseURL,
     headers: {
