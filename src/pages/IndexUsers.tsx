@@ -186,28 +186,28 @@ export const UsersPage = () => {
 		},
 	];
 
-	const itemdropdown: MenuProps["items"] = [
-		{
-			label: "ทั้งหมด",
-			key: "1",
-		},
-		{
-			label: "ร่าง",
-			key: "2",
-		},
-		{
-			label: "รออนุมัติ",
-			key: "3",
-		},
-		{
-			label: "รอตอบรับ",
-			key: "4",
-		},
-		{
-			label: "ตอบรับแล้ว",
-			key: "5",
-		},
-	];
+	// const itemdropdown: MenuProps["items"] = [
+	// 	{
+	// 		label: "ทั้งหมด",
+	// 		key: "1",
+	// 	},
+	// 	{
+	// 		label: "ร่าง",
+	// 		key: "2",
+	// 	},
+	// 	{
+	// 		label: "รออนุมัติ",
+	// 		key: "3",
+	// 	},
+	// 	{
+	// 		label: "รอตอบรับ",
+	// 		key: "4",
+	// 	},
+	// 	{
+	// 		label: "ตอบรับแล้ว",
+	// 		key: "5",
+	// 	},
+	// ];
 
 	const itemsCurrency: MenuProps["items"] | any = [
 		{
