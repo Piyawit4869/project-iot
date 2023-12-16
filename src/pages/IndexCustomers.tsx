@@ -1,234 +1,279 @@
 import { ThemeColors } from "../styles/theme";
 import { Title } from "../components/global/Title";
 import {
-  Button,
-  Dropdown,
-  Form,
-  Input,
-  MenuProps,
-  Space,
-  Table,
-  Typography,
+	Button,
+	Dropdown,
+	Form,
+	Input,
+	MenuProps,
+	Space,
+	Table,
+	Typography,
+	Row,
+	message,
 } from "antd";
 import {
-  ControlFilled,
-  DownOutlined,
-  EyeOutlined,
-  PlusOutlined,
-  SearchOutlined,
+	ControlFilled,
+	DownOutlined,
+	EyeOutlined,
+	PlusOutlined,
+	SearchOutlined,
+	ControlOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { ColumnsType } from "antd/es/table";
+import { useState } from "react";
 
 interface Datatype {
-  key: String;
-  customerName: String;
-  ioNumber: String;
-  tell: String;
+	key: String;
+	customerName: String;
+	ioNumber: String;
+	tell: String;
 }
 
 export const CustomersPage = () => {
-  const dataTable: Datatype[] = [
-    {
-      key: "1",
-      customerName: "Pitoooo",
-      ioNumber: "01225471023214",
-      tell: "099 888 7712",
-    },
-    {
-      key: "2",
-      customerName: "Pitoooo",
-      ioNumber: "01225471023214",
-      tell: "099 888 7712",
-    },
-    {
-      key: "3",
-      customerName: "Pitoooo",
-      ioNumber: "01225471023214",
-      tell: "099 888 7712",
-    },
-    {
-      key: "4",
-      customerName: "Pitoooo",
-      ioNumber: "01225471023214",
-      tell: "099 888 7712",
-    },
-  ];
+	const dataTable: Datatype[] = [
+		{
+			key: "1",
+			customerName: "Pitoooo",
+			ioNumber: "01225471023214",
+			tell: "099 888 7712",
+		},
+		{
+			key: "2",
+			customerName: "Pitoooo",
+			ioNumber: "01225471023214",
+			tell: "099 888 7712",
+		},
+		{
+			key: "3",
+			customerName: "Pitoooo",
+			ioNumber: "01225471023214",
+			tell: "099 888 7712",
+		},
+		{
+			key: "4",
+			customerName: "Pitoooo",
+			ioNumber: "01225471023214",
+			tell: "099 888 7712",
+		},
+	];
 
-  const columns: ColumnsType<Datatype> = [
-    {
-      key: "key",
-      render: (key: any) => (
-        <EyeOutlined
-          style={{ fontSize: "26px", color: ThemeColors.grayColor }}
-          onClick={() => {
-            <Link to="/admin/customers/update/" />;
-            console.log("/admin/customers/update/" + key.key);
-          }}
-        />
-      ),
-      width: "80px",
-    },
+	const columns: ColumnsType<Datatype> = [
+		{
+			key: "key",
+			render: (key: any) => (
+				<EyeOutlined
+					style={{ fontSize: "26px", color: ThemeColors.grayColor }}
+					onClick={() => {
+						<Link to="/admin/customers/update/" />;
+						console.log("/admin/customers/update/" + key.key);
+					}}
+				/>
+			),
+			width: "80px",
+		},
 
-    {
-      dataIndex: "key",
-      key: "key",
-      render: (customerName: String) => (
-        <p style={{ color: ThemeColors.goldColor }}>{customerName}</p>
-      ),
-      width: "10px",
-    },
-    {
-      title: "ชื่อกิจการ",
-      dataIndex: "customerName",
-      key: "customerName",
-      render: (customerName: String) => (
-        <p style={{ color: ThemeColors.goldColor }}>{customerName}</p>
-      ),
-      align: "left",
-    },
-    {
-      title: "เลขนิติบุลคล/เลขผู้เสียภาษี",
-      dataIndex: "ioNumber",
-      key: "ioNumber",
-    },
-    {
-      title: "เบอร์โทร",
-      dataIndex: "tell",
-      key: "tell",
-    },
-  ];
+		{
+			dataIndex: "key",
+			key: "key",
+			render: (customerName: String) => (
+				<p style={{ color: ThemeColors.goldColor }}>{customerName}</p>
+			),
+			width: "10px",
+		},
+		{
+			title: "ชื่อกิจการ",
+			dataIndex: "customerName",
+			key: "customerName",
+			render: (customerName: String) => (
+				<p style={{ color: ThemeColors.goldColor }}>{customerName}</p>
+			),
+			align: "left",
+		},
+		{
+			title: "เลขนิติบุลคล/เลขผู้เสียภาษี",
+			dataIndex: "ioNumber",
+			key: "ioNumber",
+		},
+		{
+			title: "เบอร์โทร",
+			dataIndex: "tell",
+			key: "tell",
+		},
+	];
 
-  const itemdropdown: MenuProps["items"] = [
-    {
-      label: "ทั้งหมด",
-      key: "1",
-    },
-    {
-      label: "ร่าง",
-      key: "2",
-    },
-    {
-      label: "รออนุมัติ",
-      key: "3",
-    },
-    {
-      label: "รอตอบรับ",
-      key: "4",
-    },
-    {
-      label: "ตอบรับแล้ว",
-      key: "5",
-    },
-  ];
+	const itemdropdown: MenuProps["items"] = [
+		{
+			label: "ทั้งหมด",
+			key: "1",
+		},
+		{
+			label: "ร่าง",
+			key: "2",
+		},
+		{
+			label: "รออนุมัติ",
+			key: "3",
+		},
+		{
+			label: "รอตอบรับ",
+			key: "4",
+		},
+		{
+			label: "ตอบรับแล้ว",
+			key: "5",
+		},
+	];
 
-  const onClickItemDropdown: MenuProps["onClick"] = ({ key }) => {
-    console.log("key", key);
-  };
+	const onClickItemDropdown: MenuProps["onClick"] = ({ key }) => {
+		console.log("key", key);
+	};
 
-  return (
-    <div>
-      {Title("ตั้งค่าข้อมูลลูกค้า", false, "")}
-      <div style={{ display: "flex", marginBottom: "20px" }}>
-        <Input
-          style={{ width: "90%", marginRight: "10px" }}
-          size="large"
-          placeholder="ค้นหาชื่อผู้ใช้งาน"
-          prefix={<SearchOutlined />}
-        />
-        <Button
-          style={{
-            textAlign: "left",
-            width: "120px",
-            height: "38px",
-            color: ThemeColors.whiteColor,
-            backgroundColor: ThemeColors.orangeColor,
-          }}
-          icon={<SearchOutlined />}
-        >
-          ค้นหา
-        </Button>
-      </div>
-      <div className="statusbar" style={{ display: "grid", gap: "2rem" }}>
-        <div style={{ display: "flex" }}>
-          <div style={{ color: "red" }}>
-            <ControlFilled
-              onClick={() => console.log("Fillllltttteerrr")}
-              rotate={90}
-              style={{
-                color: ThemeColors.orangeColor,
-                fontSize: "50px",
-                margin: "20px 10px 15px 0px",
-              }}
-            />
-          </div>
-          <div
-            className="status"
-            style={{
-              width: "150px",
-              height: "75px",
-              backgroundColor: "white",
-              padding: "10px 0 0 10px",
-              marginRight: "20px",
-              borderRadius: "10px",
-              // boxShadow: "2px 2px 2px 3px",
-              boxShadow: "2px 2px 5px 2px" + ThemeColors.goldColor,
-            }}
-          >
-            <Typography style={{ fontSize: "1.3rem" }}>สถานะ</Typography>
-            <Form.Item>
-              <Dropdown
-                menu={{ items: itemdropdown, onClick: onClickItemDropdown }}
-              >
-                <a onClick={(e) => e.preventDefault()}>
-                  <Space
-                    style={{
-                      width: "85%",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      color: ThemeColors.lightOrangeColor,
-                    }}
-                  >
-                    ทั้งหมด
-                    <DownOutlined style={{ fontSize: "22px", width: "10px" }} />
-                  </Space>
-                </a>
-              </Dropdown>
-            </Form.Item>
-          </div>
-          <Link to="/admin/customers/create">
-            <Button
-              style={{
-                border: "0",
-                textAlign: "left",
-                width: "180px",
-                height: "75px",
-                fontSize: "18px",
-                color: ThemeColors.whiteColor,
-                backgroundColor: ThemeColors.darkorangeColor,
-                boxShadow: "2px 2px 5px 2px" + ThemeColors.grayColor,
-              }}
-              icon={<PlusOutlined style={{ fontSize: "28px" }} />}
-            >
-              เพิ่มลูกค้าใหม่
-            </Button>
-          </Link>
-        </div>
-      </div>
+	const itemsCurrency: MenuProps["items"] | any = [
+		{
+			label: "กำลังดำเนินการ",
+			key: "กำลังดำเนินการ",
+		},
+		{
+			label: "สำเร็จ",
+			key: "สำเร็จ",
+		},
+	];
 
-      <div>
-        <Table
-          size="middle"
-          columns={columns}
-          dataSource={dataTable}
-          style={{
-            marginTop: "40px",
-            textAlign: "center",
-            wordWrap: "normal",
-          }}
-        />
-      </div>
-      {/* <div
+	const [collapsed, setCollapsed] = useState(false);
+
+	let [status, setStatus] = useState<string>(itemsCurrency[0].label);
+	const setQuoStatus: MenuProps["onClick"] = ({ key }) => {
+		setStatus((status = key));
+		message.info(`เลือกสถาณะ ${key}`);
+	};
+
+	return (
+		<div>
+			{Title("ตั้งค่าข้อมูลลูกค้า", false, "")}
+			<Row style={{ marginTop: "10px" }} wrap={false}>
+				<Input
+					prefix={
+						<SearchOutlined style={{ color: "black", fontSize: "25px" }} />
+					}
+					placeholder="Search Doccument Number"
+					bordered={true}
+					style={{
+						paddingLeft: "10px",
+						fontSize: "16px",
+						color: ThemeColors.lightOrangeColor,
+						border: "2px solid #EFAB3A",
+						height: "50px",
+						width: "87%",
+					}}
+				/>
+				<Button
+					icon={<SearchOutlined style={{ fontSize: "25px" }} />}
+					style={{
+						marginLeft: "10px",
+						width: "10%",
+						height: "50px",
+						backgroundColor: "#EFAB3A",
+						fontSize: "16px",
+						textOverflow: "ellipsis",
+						overflow: "hidden",
+						color: "white",
+					}}
+				>
+					Search
+				</Button>
+			</Row>
+			<Row style={{ marginTop: "10px" }} wrap={false}>
+				<Button
+					onClick={() => setCollapsed(!collapsed)}
+					icon={
+						collapsed ? (
+							<ControlOutlined style={{ fontSize: "30px" }} />
+						) : (
+							<ControlOutlined style={{ color: "#EE9437", fontSize: "30px" }} />
+						)
+					}
+					style={{
+						backgroundColor: collapsed ? "#E46F1B" : "#FFFFFF",
+						width: "5%",
+						height: "70px",
+						border: "0px",
+					}}
+				/>
+				<div
+					style={{
+						marginLeft: "15px",
+						width: "15%",
+						height: "70px",
+						backgroundColor: "white",
+						paddingTop: "10px",
+						paddingLeft: "10px",
+						borderRadius: "10px",
+					}}
+				>
+					<Typography
+						style={{
+							fontSize: "16px",
+							textOverflow: "ellipsis",
+							overflow: "hidden",
+						}}
+					>
+						สถานะ
+					</Typography>
+					<Form.Item>
+						<Dropdown menu={{ items: itemsCurrency, onClick: setQuoStatus }}>
+							<a onClick={(e) => e.preventDefault()}>
+								<Space
+									style={{
+										width: "90%",
+										display: "flex",
+										justifyContent: "space-between",
+										color: ThemeColors.lightOrangeColor,
+										textOverflow: "ellipsis",
+										overflow: "hidden",
+										marginTop: "-17px",
+									}}
+								>
+									{status}
+									<DownOutlined />
+								</Space>
+							</a>
+						</Dropdown>
+					</Form.Item>
+				</div>
+				<Link to="/admin/customers/create" style={{ width: "12%" }}>
+					<Button
+						type="primary"
+						icon={<PlusOutlined style={{ fontSize: "25px" }} />}
+						style={{
+							width: "100%",
+							height: "70px",
+							backgroundColor: "#E46F1B",
+							fontSize: "16px",
+							marginLeft: "10px",
+							overflow: "hidden",
+							textOverflow: "ellipsis",
+						}}
+					>
+						เพิ่มลูกค้า
+					</Button>
+				</Link>
+			</Row>
+
+			<div>
+				<Table
+					size="middle"
+					columns={columns}
+					dataSource={dataTable}
+					style={{
+						marginTop: "40px",
+						textAlign: "center",
+						wordWrap: "normal",
+					}}
+				/>
+			</div>
+			{/* <div
         style={{
           marginTop: "20px",
           marginBottom: "20px",
@@ -304,6 +349,6 @@ export const CustomersPage = () => {
           icon={<RightOutlined />}
         />
       </div> */}
-    </div>
-  );
+		</div>
+	);
 };
