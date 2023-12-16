@@ -6,7 +6,7 @@ import { DashboardPage } from "./pages/Dashboard";
 import { IndexQuotationPage } from "./pages/IndexQuotation";
 import { CreateQuotationPage } from "./pages/CreateQuotation";
 
-import { UsersPage } from "./pages/IndexUsers";
+import { UsersPage, userIndexLoader } from "./pages/IndexUsers";
 import { CreateUserPage } from "./pages/CreateUser";
 import { IndexOrganizationPage } from "./pages/IndexOrganization";
 import { EditOrganizationPage } from "./pages/EditQrganization";
@@ -95,6 +95,7 @@ export const router = createBrowserRouter([
 			},
 			{
 				path: "/admin/users",
+				loader: userIndexLoader,
 				element: <UsersPage />,
 			},
 			{

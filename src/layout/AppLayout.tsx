@@ -1,8 +1,9 @@
-import { Button, Image, Layout, Menu, Row, Typography } from "antd";
+import { Button, Flex, Image, Layout, Menu, Row, Typography } from "antd";
 import {
 	DollarOutlined,
 	FileDoneOutlined,
 	HomeOutlined,
+	LogoutOutlined,
 	MenuFoldOutlined,
 	MenuUnfoldOutlined,
 	SettingOutlined,
@@ -12,12 +13,13 @@ import {
 	UserAddOutlined,
 	WalletOutlined,
 } from "@ant-design/icons";
-import { Content, Header } from "antd/es/layout/layout";
+import { Content, Footer, Header } from "antd/es/layout/layout";
 import { useNavigate } from "react-router";
 import { ThemeColors } from "../styles/theme";
 import Logo from "../assets/images/Logo-StayOrganized.png";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import UButton from "../components/admin/Button";
 
 export const AppLayout = (props: any) => {
 	const { Sider } = Layout;
@@ -110,6 +112,26 @@ export const AppLayout = (props: any) => {
 										label: "Quotaion",
 										icon: <FileDoneOutlined />,
 									},
+									{
+										key: "#",
+										label: "Receipt",
+										icon: <FileDoneOutlined />,
+									},
+									{
+										key: "#",
+										label: "Invoice",
+										icon: <FileDoneOutlined />,
+									},
+									{
+										key: "#",
+										label: "Tax Invoice",
+										icon: <FileDoneOutlined />,
+									},
+									{
+										key: "#",
+										label: "Contract",
+										icon: <FileDoneOutlined />,
+									},
 								],
 							},
 							{
@@ -132,7 +154,7 @@ export const AppLayout = (props: any) => {
 							},
 							{
 								style: { backgroundColor: ThemeColors.brickOrangeColor },
-								label: "Partial",
+								label: "Payroll",
 								key: "/admin/partial",
 								icon: <WalletOutlined />,
 							},
@@ -144,6 +166,9 @@ export const AppLayout = (props: any) => {
 							},
 						]}
 					></Menu>
+					<Footer style={{ position: "absolute", bottom: "0", width: "100%" }}>
+						{/* <Flex gap={"middle"} vertical></Flex> */}
+					</Footer>
 				</Sider>
 				<Layout style={{ minHeight: "100vh" }}>
 					<Header
@@ -171,7 +196,18 @@ export const AppLayout = (props: any) => {
 							}}
 						></Button>
 						<Row align={"middle"}>
-							<Typography style={{ fontSize: "24px", marginRight: "10px" }}>
+							<Button
+								type="primary"
+								icon={<LogoutOutlined />}
+								size="large"
+								style={{
+									backgroundColor: ThemeColors.orangeColor,
+									color: ThemeColors.fontColor1,
+								}}
+							>
+								Logout
+							</Button>
+							{/* <Typography style={{ fontSize: "24px", marginRight: "10px" }}>
 								User name
 							</Typography>
 							<Button
@@ -181,7 +217,7 @@ export const AppLayout = (props: any) => {
 									backgroundColor: ThemeColors.orangeColor,
 									color: "white",
 								}}
-							></Button>
+							></Button> */}
 						</Row>
 					</Header>
 

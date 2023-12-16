@@ -1,332 +1,356 @@
-// import { Card, Image, Row, Typography } from "antd";
-// import { ThemeColors } from "../../styles/theme";
-// import Logo from "../../assets/images/Logo-StayOrganized.png";
-// import ThaiParNich from "../../assets/images/thaiparnich.png";
-// import CommentOutlined from "@ant-design/icons/lib/icons/CommentOutlined";
-// import { DollarOutlined } from "@ant-design/icons";
-
 /**
  * this component is a box of title
  * @param title
  * @returns {Title("")} Box of title
  */
-export const Preview = (props: any) => {
-  const htmlString =`
-  <div>
-    <h1>
-      ${props.refer}
-    </h1>
-    <p>
-      ${props.number}
-    </p>
-    <p>
-      ${props.cusName}
-    </p>
-    <p>
-      ${props.tell}
-    </p>
-    <p>
-      ${props.address}
-    </p>
+
+import { Form } from "antd";
+import React from "react";
+import dayjs from "dayjs";
+
+interface PreviewProps {
+	values: any;
+}
+
+export const Preview = (props: PreviewProps) => {
+	const { values } = props;
+
+	const renderValue = (value: any) => {
+		return value ? value : "-";
+	};
+
+	const [form] = Form.useForm();
+
+	React.useEffect(() => {
+		form.setFieldsValue({
+			...values,
+			validDate: values.validDate ? dayjs(values.validDate) : "",
+		});
+	}, [form, values]);
+
+	const htmlString = values
+		? `
+    <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+    .header {
+      display: flex;
+      justify-content: space-between;
+      height: 240px;
+    }
+      
+    .headerLeft {
+      width: 400px;
+    }
+      
+    .headerRight {
+      width: auto;
+      text-align: right;
+    }
+    
+    .manuScript {
+      line-height: 0;
+      margin: 10px;
+    }
+      
+    .quotation {
+      font-size: 32px;
+      line-height: 0;
+      color: #E46F1B;
+    }
+      
+    .docNum-and-refer {
+      background-color: rgba(238, 148, 55, 0.64);
+      border-radius: 1rem;
+      text-align: justify;
+      line-height: 0.5;
+      padding: 2px;
+      padding-left: 30px;
+      width: 300px;
+      margin-top: 10px;
+    }
+      
+    .companyName {
+      font-size: 29px;
+      margin: 0;
+      display: inline;
+      margin-right: 5px;
+    }
+      
+    .logo {
+      width: 80px;
+      height: 80px;
+      background-color: #E46F1B;
+      margin-left: 10px;
+      border-radius: 1rem;
+      text-align: center;
+    }
+      
+    .taxpayerNumber, .tell, .email, .address {
+      line-height: 1.5;
+      margin: 0;
+    }
+      
+    .branchCmp {
+      display: inline;
+      margin-right: 10px;
+    }
+      
+    .detailsCompany {
+      margin-top: -15px;
+    }
+      
+    .listTable, th {
+      height: 50px;
+      border-spacing: 0px;
+    }
+    
+    .footer {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .note {
+      width: 400px;
+      line-height: 0;
+    }
+    
+    .total {
+      width: 300px;
+    }
+    
+    .amountToPay {
+      height: 50px;
+      background-color: rgba(238, 148, 55, 0.64);
+    }
+    
+    .summarize {
+      border-spacing: 0px;
+    }
+    
+    .amountSum {
+      font-size: 20px;
+      color: #E46F1B;
+    }
+    
+    .Payment {
+      width: 300px;
+      background-color: lightgrey;
+      float: right;
+    }
+    
+    .imgBank {
+      width: 100px; 
+      height: 100px;
+      float: left;
+      padding-bottom: 10px;
+    }
+    
+    .signature {
+      display: flex;
+      justify-content: space-evenly;
+    }
+    
+    .exportingCompany, .recipient {
+      text-align: center;
+      width: 180px;
+    }
+    </style>
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+  </head>
+  <body>
+  <div class="main-page">
+      <div class="sub-page">
+          <div class="header">
+              <div class="headerLeft">
+                  <div class="logo">
+                      <img src="../../assets/images/Logo-StayOrganized.png" style="width: 70px; height: 70px; margin-top: 8px;">
+                  </div>
+                  <p class="companyName"><b>บริษัท ยูโทเทค จำกัด</b><p class="branchCmp">(สำนักงานใหญ่)</p></p>
+                  <div class="detailsCompany">
+                      <p class="address">${renderValue(values.address)}</p>
+                      <p class="taxpayerNumber"><b>เลขที่ผู้เสียภาษี :</b></p>
+                      <p class="tell"><b>เบอร์โทรศัพท์ :</b></p>
+                      <p class="email"><b>E-mail :</b></p>
+                  </div>
+              </div>
+              <div class="headerRight">
+                  <p class="manuScript">(ต้นฉบับ)</p>
+                  <p class="quotation"><b>ใบเสนอราคา</b></p>
+                  <div class="docNum-and-refer">
+                      <p><b>เลขที่เอกสาร :</b> ${renderValue(
+												values.numberDoc
+											)}</p>
+                      <p><b>วันที่ออก :</b> ${renderValue(values.issueDate)}</p>
+                      <p><b>ใช้ได้ถึง :</b> ${renderValue(values.validDate)}</p>
+                      <p><b>อ้างอิง :</b> ${renderValue(values.refer)}</p>
+                  </div>
+              </div>
+          </div>
+          <hr>
+          <div class="detailIssueTo">
+              <table class="issueToTable" style="width: 100%">
+                  <tr style="width: 100px;">
+                      <td style="line-height: 0; margin: 0;"><p class="issueTo"><b>ออกให้กับ : </b>${renderValue(
+												values.cusName
+											)}</p></td>
+                      <td style="line-height: 0; margin: 0;"><p class="tellIssueTo"><b>เบอร์โทรศัพท์ : </b> ${renderValue(
+												values.tell
+											)}</p></td>
+                  </tr>
+                  <tr>
+                      <td style="line-height: 0; margin: 0;"><p class="addressIssueTo"><b>ที่อยู่ : </b>ไม่รู้</p></td>
+                      <td style="line-height: 0; margin: 0;"><p class="emailIssueTo"><b>E-mail : </b>-</p></td>
+                  </tr>
+                  <tr>
+                      <td style="line-height: 0; margin: 0;"><p class="taxpayerNumIssueTo"><b>เลขที่เสียภาษี : </b>-</p></td>
+                  </tr>
+              </table>
+          </div>
+          <div>
+              <table class="listTable" style="width: 100%">
+                  <tr style="background-color: rgba(238, 148, 55, 0.64);">
+                      <th style="text-align: start;">คำอธิบาย</th>
+                      <th>จำนวน</th>
+                      <th>ราคา/หน่วย</th>
+                      <th style="text-align: end; padding-right: 10px;">รวม</th>
+                  </tr>
+                  <tr>
+                      <td>
+                          <dl>
+                              <dt>1.Design Web app</dt>
+                              <dd>${renderValue(values.descriptions)}</dd>
+                          </dl>
+                          </td>
+                      <td style="text-align: center;">${renderValue(
+												values.quantity
+											)}</td>
+                      <td style="text-align: center;">${renderValue(
+												values.pricePerUnits
+											)}</td>
+                      <td style="text-align: center;">10,000.00</td>
+                  </tr>
+                  <tr>
+                      <td>
+                          <dl>
+                              <dt>2.Development Web app</dt>
+                              <dd>${renderValue(values.descriptions)}</dd>
+                          </dl>
+                      </td>
+                      <td style="text-align: center;">${renderValue(
+												values.quantity
+											)}</td>
+                      <td style="text-align: center;">${renderValue(
+												values.pricePerUnits
+											)}</td>
+                      <td style="text-align: center;">10,000.00</td>
+                  </tr>
+              </table> 
+          </div>
+          <hr>
+          <div class="footer">
+              <div class="note"><i class='far fa-comment-dots'></i><p><b>หมายเหตุ : </b>${renderValue(
+								values.noteForCus
+							)}</p></div>
+              <div class="total">
+                  <table style="width: 100%;" class="summarize">
+                      <tr>
+                          <td style="text-align: start;"><b>จำนวน</b></td>
+                          <td style="text-align: right">20,000.00</td>
+                          <td style="text-align: right">บาท</td>
+                      </tr>
+                      <tr>
+                          <td style="text-align: start;"><b>หัก ส่วนลด</b></td>
+                          <td style="text-align: right">${renderValue(
+														values.discountPerUnits
+													)}</td>
+                          <td style="text-align: right">บาท</td>
+                      </tr>
+                      <tr>
+                          <td style="text-align: start;"><b>หัก ภาษี ณ ที่จ่าย</b></td>
+                          <td style="text-align: right">0.00</td>
+                          <td style="text-align: right">บาท</td>
+                      </tr>
+                      <tr>
+                          <td style="text-align: start;"><b>จำนวนภาษีมูลค่าเพิ่ม</b></td>
+                          <td style="text-align: right">0.00</td>
+                          <td style="text-align: right">บาท</td>
+                      </tr>
+                      <tr class="amountToPay">
+                          <td style="text-align: start;"><b>จำนวนเงินที่ต้องชำระ</b></td>
+                          <td style="text-align: right"><p class="amountSum"><b>20,000.00</b></p></td>
+                          <td style="text-align: right"><b>บาท</b></td>
+                      </tr>
+                  </table>
+                  <p style="text-align: right; line-height: 0;">(สองหมื่นบาทถ้วน)</p>
+                  <div class="Payment">
+                      <p style="line-height: 0; padding-left: 10px; padding-top: 5px;">ช่องทางการชำระเงิน</p>
+                      <img src="../../assets/images/thaiparnich.png" class="imgBank">
+                      <div style="float: left;">
+                          <p style="line-height: 0.5;">ธนาคารไทยพาณิชย์</p>
+                          <p style="line-height: 0.5;">ออมทรัพย์ ${renderValue(
+														values.bankAccount
+													)}</p>
+                          <p style="line-height: 0.5;">ยูโทเทค</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <hr>
+          <div class="signature">
+              <div class="exportingCompany">
+                  <p style="line-height: 0;">บริษัท ยูโทเทค จำกัด</p>
+                  <hr style="margin-top: 80px;">
+                  <p>30/07/2566</p>
+              </div>
+              <div class="recipient">
+                  <p style="line-height: 0;">ผู้รับเอกสาร</p>
+                  <hr style="margin-top: 80px;">
+                  <p>30/07/2566</p>
+              </div>
+          </div>
+      </div>
   </div>
+  </body>
+  </html>
+    <p>
+      ${renderValue(values.refer)}
+    </p>
+    <p>
+      ${renderValue(values.numberDoc)}
+    </p>
+    <p>
+      ${renderValue(values.cusName)}
+    </p>
+    <p>
+      ${renderValue(values.tell)}
+    </p>
+    <p>
+      ${renderValue(values.address)}
+    </p>
+    <p>
+      ${renderValue(values.descriptions)}
+    </p>
+    <p>
+      ${renderValue(values.quantity)}
+    </p>
+    <p>
+      ${renderValue(values.bankAccount)}
+    </p>
+    <p>
+      ${renderValue(values.pricePerUnits)}
+    </p>
+    <p>
+      ${renderValue(values.discountPerUnits)}
+    </p>
+    <p>
+      ${renderValue(values.noteForCus)}
+    </p>
+    </div>
   `
-  return (
-    // <Card
-    //   style={{
-    //     width: "100%",
-    //     height: "100%",
-    //     borderRadius: "25px",
-    //     marginLeft: "30px",
-    //     backgroundColor: ThemeColors.lightOrangeColor,
-    //   }}
-    // >
-    //   <Card
-    //     style={{
-    //       height: "100%",
-    //       borderRadius: "25px",
-    //       backgroundColor: ThemeColors.whiteColor,
-    //     }}
-    //   >
-    //     <Row justify="space-between">
-    //       <div
-    //         style={{
-    //           display: "flex",
-    //           alignItems: "center",
-    //           justifyContent: "center",
-    //           width: "45px",
-    //           height: "45px",
-    //           borderRadius: "10px",
-    //           backgroundColor: ThemeColors.orangeColor,
-    //         }}
-    //       >
-    //         <Image width={35} src={Logo} preview={false} />
-    //       </div>
-    //       <div
-    //         style={{
-    //           display: "flex",
-    //           flexDirection: "column",
-    //           alignItems: "end",
-    //         }}
-    //       >
-    //         <Typography style={{ fontSize: "18px", fontWeight: "900" }}>
-    //           (ต้นฉบับ)
-    //         </Typography>
-    //         <Typography
-    //           style={{
-    //             fontSize: "24px",
-    //             fontWeight: "900",
-    //             color: ThemeColors.orangeColor,
-    //           }}
-    //         >
-    //           ใบเสนอราคา
-    //         </Typography>
-    //       </div>
-    //     </Row>
-    //     <Row justify="space-between" wrap={false}>
-    //       <div>
-    //         <Typography style={{ fontSize: "24px", fontWeight: "900" }}>
-    //           Company name
-    //         </Typography>
-    //         <Typography>
-    //           ห้องเลขที่ 1454/127 ถนน เทพรัตน แขวงบางนาใต้ เขตบางนา
-    //           กรุงเทพมหานคร 10260
-    //         </Typography>
-    //         <Typography>เลขที่ผู้เสียภาษี : 0105565119323</Typography>
-    //         <Typography>เบอร์โทรศัพท์ : 080-423-7373</Typography>
-    //         <Typography>E-mail : kiattiphoom@utotech.org</Typography>
-    //       </div>
-    //       <Card
-    //         bodyStyle={{ padding: "10px" }}
-    //         style={{ backgroundColor: ThemeColors.lightYellowColor }}
-    //       >
-    //         <Typography>เลขที่เอกสาร : QO-20230700001</Typography>
-    //         <Typography>วันที่ออก : -</Typography>
-    //         <Typography>ใช้ได้ถึง : -</Typography>
-    //         <Typography>อ้างอิง : -</Typography>
-    //       </Card>
-    //     </Row>
-    //     <div
-    //       style={{
-    //         background: ThemeColors.goldColor,
-    //         margin: "10px 0px 10px 0px",
-    //         height: "1px",
-    //       }}
-    //     />
-    //     <Row justify="space-between">
-    //       <div style={{ width: "33%" }}>
-    //         <Typography>ออกให้กับ : -</Typography>
-    //         <Typography>ที่อยู่ : -</Typography>
-    //         <Typography>เลขที่เสียภาษี : -</Typography>
-    //       </div>
-    //       <div style={{ width: "33%" }}>
-    //         <Typography>เบอร์โทรศัพท์ : -</Typography>
-    //         <Typography>E-mail : -</Typography>
-    //       </div>
-    //     </Row>
-    //     <Card
-    //       bodyStyle={{ padding: "10px" }}
-    //       style={{
-    //         backgroundColor: ThemeColors.lightYellowColor,
-    //         marginTop: "10px",
-    //       }}
-    //     >
-    //       <Row justify="space-between">
-    //         <Typography>คำอธิบาย</Typography>
-    //         <div
-    //           style={{
-    //             width: "30%",
-    //             display: "flex",
-    //             justifyContent: "space-between",
-    //           }}
-    //         >
-    //           <Typography>จำนวน</Typography>
-    //           <Typography>ราคา/ต่อหน่วย</Typography>
-    //           <Typography>รวม</Typography>
-    //         </div>
-    //       </Row>
-    //     </Card>
-    //     <div style={{ height: "300px" }}>
-    //       <Card bodyStyle={{ padding: "10px" }}>
-    //         <Row justify="space-between">
-    //           <Typography
-    //             style={{
-    //               fontSize: "14px",
-    //               fontWeight: "900",
-    //               color: ThemeColors.orangeColor,
-    //             }}
-    //           >
-    //             1.Topic
-    //           </Typography>
-    //           <div
-    //             style={{
-    //               width: "30%",
-    //               display: "flex",
-    //               justifyContent: "space-between",
-    //             }}
-    //           >
-    //             <Typography
-    //               style={{
-    //                 fontSize: "14px",
-    //                 fontWeight: "900",
-    //                 color: ThemeColors.orangeColor,
-    //               }}
-    //             >
-    //               0
-    //             </Typography>
-    //             <Typography
-    //               style={{
-    //                 fontSize: "14px",
-    //                 fontWeight: "900",
-    //                 color: ThemeColors.orangeColor,
-    //               }}
-    //             >
-    //               0
-    //             </Typography>
-    //             <Typography
-    //               style={{
-    //                 fontSize: "14px",
-    //                 fontWeight: "900",
-    //                 color: ThemeColors.orangeColor,
-    //               }}
-    //             >
-    //               0
-    //             </Typography>
-    //           </div>
-    //         </Row>
-    //       </Card>
-    //     </div>
-    //     <div
-    //       style={{
-    //         background: ThemeColors.goldColor,
-    //         margin: "10px 0px 10px 0px",
-    //         height: "1px",
-    //       }}
-    //     />
-    //     <Row justify="space-between">
-    //       <Row>
-    //         <CommentOutlined
-    //           style={{
-    //             marginRight: "5px",
-    //             fontSize: "20px",
-    //             color: ThemeColors.lightOrangeColor,
-    //           }}
-    //         />
-    //         <Typography>หมายเหตุ : </Typography>
-    //       </Row>
-
-    //       <div style={{ width: "30%" }}>
-    //         <div style={{ padding: "5px 5px 5px 5px" }}>
-    //           <Row justify="space-between">
-    //             <Typography>จำนวนเงินรวม</Typography>
-    //             <Row justify="space-between">
-    //               <Typography style={{ marginRight: "5px" }}>0.00</Typography>
-    //               <Typography>บาท</Typography>
-    //             </Row>
-    //           </Row>
-    //           <Row justify="space-between">
-    //             <Typography>หัก ส่วนร่วม</Typography>
-    //             <Row justify="space-between">
-    //               <Typography style={{ marginRight: "5px" }}>0.00</Typography>
-    //               <Typography>บาท</Typography>
-    //             </Row>
-    //           </Row>
-    //           <Row justify="space-between">
-    //             <Typography>หัก ภาษี ณ ที่จ่าย</Typography>
-    //             <Row justify="space-between">
-    //               <Typography style={{ marginRight: "5px" }}>0.00</Typography>
-    //               <Typography>บาท</Typography>
-    //             </Row>
-    //           </Row>
-    //           <Row justify="space-between">
-    //             <Typography>จำนวนภาษีมูลค่าเพิ่ม</Typography>
-    //             <Row>
-    //               <Typography style={{ marginRight: "5px" }}>0.00</Typography>
-    //               <Typography>บาท</Typography>
-    //             </Row>
-    //           </Row>
-    //         </div>
-
-    //         <Card
-    //           bodyStyle={{
-    //             padding: "5px",
-    //             borderRadius: "10px",
-    //             backgroundColor: ThemeColors.lightYellowColor,
-    //           }}
-    //         >
-    //           <Row justify="space-between">
-    //             <Typography>จำนวนเงินที่ต้องชำระ</Typography>
-    //             <Row>
-    //               <Typography style={{ marginRight: "5px" }}>0</Typography>
-    //               <Typography>บาท</Typography>
-    //             </Row>
-    //           </Row>
-    //         </Card>
-    //         <Row justify="end">
-    //           <Typography>(ศูนย์บาทถ้วน)</Typography>
-    //         </Row>
-    //         <Card
-    //           bodyStyle={{
-    //             padding: "5px",
-    //             borderRadius: "10px",
-    //             backgroundColor: ThemeColors.lightGreenColor,
-    //           }}
-    //         >
-    //           <Row>
-    //             <DollarOutlined
-    //               style={{
-    //                 marginRight: "5px",
-    //                 fontSize: "20px",
-    //                 color: ThemeColors.lightOrangeColor,
-    //               }}
-    //             />
-    //             <Typography>ช่องทางการชำระเงิน</Typography>
-    //           </Row>
-    //           <Row wrap={false} align="middle">
-    //             <Image width="150px" src={ThaiParNich}></Image>
-    //             <Typography>
-    //               ธนาคาร ไทยพาณิชย์ ออมทรัพย์ 4301609608 ยูโทเทค
-    //             </Typography>
-    //           </Row>
-    //         </Card>
-    //       </div>
-    //     </Row>
-    //     <div
-    //       style={{
-    //         background: ThemeColors.goldColor,
-    //         margin: "10px 0px 10px 0px",
-    //         height: "1px",
-    //       }}
-    //     />
-    //     <Row justify="space-around">
-    //       <div>
-    //         <Typography
-    //           style={{
-    //             marginBottom: "100px",
-    //             fontSize: "14px",
-    //             fontWeight: "900",
-    //             color: ThemeColors.orangeColor,
-    //           }}
-    //         >
-    //           Company name
-    //         </Typography>
-    //         <Typography>30/07/2566</Typography>
-    //       </div>
-    //       <div>
-    //         <Typography
-    //           style={{
-    //             marginBottom: "100px",
-    //             fontSize: "14px",
-    //             fontWeight: "900",
-    //             color: ThemeColors.orangeColor,
-    //           }}
-    //         >
-    //           ผู้รับเอกสาร
-    //         </Typography>
-    //         <Typography>30/07/2566</Typography>
-    //       </div>
-    //     </Row>
-    //   </Card>
-    // </Card>
-    <div dangerouslySetInnerHTML={{__html: htmlString}}></div>
-  );
+		: "";
+	return <div dangerouslySetInnerHTML={{ __html: htmlString }}></div>;
 };
