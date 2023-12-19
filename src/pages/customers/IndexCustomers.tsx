@@ -150,7 +150,7 @@ export const CustomersPage = () => {
 
 	return (
 		<div>
-			{Title("ตั้งค่าข้อมูลลูกค้า", false, "")}
+			<Title title="ตั้งค่าข้อมูลลูกค้า" textButton={""} button={false} />
 			<Row style={{ marginTop: "10px" }} wrap={false}>
 				<Input
 					prefix={

@@ -181,7 +181,7 @@ export const IndexQuotationPage = () => {
 
 	return (
 		<div>
-			{Title("Quotation", false, "")}
+			<Title title="Quotation" textButton={""} button={false} />
 			<Row style={{ marginTop: "10px" }} wrap={false}>
 				<Input
 					prefix={

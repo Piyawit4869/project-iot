@@ -18,20 +18,27 @@ import {
 	MenuUnfoldOutlined,
 	SettingOutlined,
 	ShoppingCartOutlined,
-	ShoppingOutlined,
-	TeamOutlined,
+	// ShoppingOutlined,
+	// TeamOutlined,
 	UserAddOutlined,
 	WalletOutlined,
 	UserOutlined,
 } from "@ant-design/icons";
-import { Content, Footer, Header } from "antd/es/layout/layout";
+import { 
+	Content, 
+	// Footer, 
+	Header 
+} from "antd/es/layout/layout";
 import { useNavigate } from "react-router";
 import { ThemeColors } from "../styles/theme";
 import Logo from "../assets/images/Logo-StayOrganized.png";
-import { JSXElementConstructor, useState } from "react";
+import { 
+	// JSXElementConstructor, 
+	useState 
+} from "react";
 import { Link, useLocation } from "react-router-dom";
-import UButton from "../components/admin/Button";
-import { styles } from "../pages/utotech";
+// import UButton from "../components/admin/Button";
+// import { styles } from "../pages/utotech";
 
 export const AppLayout = (props: any) => {
 	const { Sider } = Layout;

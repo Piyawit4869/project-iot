@@ -35,7 +35,7 @@ export const CreateProductPage = () => {
 
 	return (
 		<div>
-			{Title("จัดการสินค้าและบริการ", false, "")}
+			<Title title="จัดการสินค้าและบริการ" textButton={""} button={false} />
 			<div
 				style={{
 					marginBottom: "20px",

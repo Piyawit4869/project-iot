@@ -38,7 +38,7 @@ interface Datatype {
 	// status: any;
 }
 
-export async function userIndexLoader(params: any) {
+export async function userIndexLoader() {
 	// const url = new URL(params.request.url);
 	// const query = url.searchParams;
 	// const param = Object.fromEntries(query);
@@ -57,63 +57,63 @@ export const UsersPage = () => {
 	const { user } = useLoaderData() as any;
 	console.log(user);
 
-	const dataTable: Datatype[] = [
-		{
-			key: "1",
-			fname: "pitoo",
-			lname: "too too too too",
-			role: "ผู้ดูแลระบบสูงสุด",
-			phone: "099-0000000",
-			email: "pitoo@email.com",
-			createDate: "30/07/66",
-			lastActive: "01/08/66 21:31",
-			status: "Active",
-		},
-		{
-			key: "2",
-			fname: "เกียรติภูมิ",
-			lname: "พูลเขตร์กิจ",
-			role: "ผู้ดูแลระบบ",
-			phone: "088-8666666",
-			email: "kittiphoom@email.com",
-			createDate: "01/08/66",
-			lastActive: "01/08/66 21:31",
-			status: "Inactive",
-		},
-		{
-			key: "3",
-			fname: "ภัทรดา",
-			lname: "พร้อมกิจจานนท์",
-			role: "ผู้ดูแลระบบ",
-			phone: "088-8669966",
-			email: "padrada.ttpp@email.com",
-			createDate: "11/08/66",
-			lastActive: "01/08/66 21:31",
-			status: "Pending",
-		},
-		{
-			key: "4",
-			fname: "Taksin",
-			lname: "Shinnawat",
-			role: "ผู้ดูแลระบบสูงสุด",
-			phone: "088-0112365",
-			email: "Takky@email.com",
-			createDate: "04/06/66",
-			lastActive: "19/08/66 12:31",
-			status: "Inactive",
-		},
-		{
-			key: "5",
-			fname: "Tootoo",
-			lname: "Toomaleaw",
-			role: "ผู้ดูแลระบบสูงสุด",
-			phone: "088-4444444",
-			email: "M44ORM16?@email.com",
-			createDate: "30/07/66",
-			lastActive: "01/08/66 21:31",
-			status: "Active",
-		},
-	];
+	// const dataTable: Datatype[] = [
+	// 	{
+	// 		key: "1",
+	// 		fname: "pitoo",
+	// 		lname: "too too too too",
+	// 		role: "ผู้ดูแลระบบสูงสุด",
+	// 		phone: "099-0000000",
+	// 		email: "pitoo@email.com",
+	// 		createDate: "30/07/66",
+	// 		lastActive: "01/08/66 21:31",
+	// 		status: "Active",
+	// 	},
+	// 	{
+	// 		key: "2",
+	// 		fname: "เกียรติภูมิ",
+	// 		lname: "พูลเขตร์กิจ",
+	// 		role: "ผู้ดูแลระบบ",
+	// 		phone: "088-8666666",
+	// 		email: "kittiphoom@email.com",
+	// 		createDate: "01/08/66",
+	// 		lastActive: "01/08/66 21:31",
+	// 		status: "Inactive",
+	// 	},
+	// 	{
+	// 		key: "3",
+	// 		fname: "ภัทรดา",
+	// 		lname: "พร้อมกิจจานนท์",
+	// 		role: "ผู้ดูแลระบบ",
+	// 		phone: "088-8669966",
+	// 		email: "padrada.ttpp@email.com",
+	// 		createDate: "11/08/66",
+	// 		lastActive: "01/08/66 21:31",
+	// 		status: "Pending",
+	// 	},
+	// 	{
+	// 		key: "4",
+	// 		fname: "Taksin",
+	// 		lname: "Shinnawat",
+	// 		role: "ผู้ดูแลระบบสูงสุด",
+	// 		phone: "088-0112365",
+	// 		email: "Takky@email.com",
+	// 		createDate: "04/06/66",
+	// 		lastActive: "19/08/66 12:31",
+	// 		status: "Inactive",
+	// 	},
+	// 	{
+	// 		key: "5",
+	// 		fname: "Tootoo",
+	// 		lname: "Toomaleaw",
+	// 		role: "ผู้ดูแลระบบสูงสุด",
+	// 		phone: "088-4444444",
+	// 		email: "M44ORM16?@email.com",
+	// 		createDate: "30/07/66",
+	// 		lastActive: "01/08/66 21:31",
+	// 		status: "Active",
+	// 	},
+	// ];
 
 	const columns: ColumnsType<Datatype> = [
 		{
@@ -258,7 +258,7 @@ export const UsersPage = () => {
 
 	return (
 		<div>
-			{Title("ตั้งค่าผู้ใช้งาน", false, "")}
+			<Title title="ตั้งค่าผู้ใช้งาน" textButton={""} button={false} />
 			<Row style={{ marginTop: "10px" }} wrap={false}>
 				<Input
 					prefix={
