@@ -5,20 +5,19 @@ import {
 	Input,
 	MenuProps,
 	Radio,
+	RadioChangeEvent,
 	Row,
 	Space,
 	Typography,
-	Upload,
 } from "antd";
-import { ThemeColors } from "../styles/theme";
-import {
-	DeleteOutlined,
-	DownOutlined,
-	PlusCircleFilled,
-} from "@ant-design/icons";
+import { ThemeColors } from "../../styles/theme";
 import { Link } from "react-router-dom";
+import { DownOutlined } from "@ant-design/icons";
+import { useState } from "react";
 
-export const EditOrganizationPage = () => {
+export const CreateCustomerPage = () => {
+	const [value, setValue] = useState(1);
+
 	const items: MenuProps["items"] = [
 		{
 			label: "นิติบุลคล",
@@ -29,47 +28,21 @@ export const EditOrganizationPage = () => {
 			key: "2",
 		},
 	];
-	const itemsDropdown: MenuProps["items"] = [
-		{
-			label: "บริษัทจำกัด",
-			key: "1",
-		},
-		{
-			label: "บริษัทมหาชน",
-			key: "2",
-		},
-		{
-			label: "ห้างหุ้นส่วนจำกัด",
-			key: "3",
-		},
-		{
-			label: "มูลนิธิ",
-			key: "4",
-		},
-		{
-			label: "สมาคม",
-			key: "5",
-		},
-		{
-			label: "กิจการร่วมค้า",
-			key: "6",
-		},
-		{
-			label: "อื่น ๆ",
-			key: "7",
-		},
-	];
+
+	const onChange = (e: RadioChangeEvent) => {
+		console.log("radio checked", e.target.value);
+		setValue(e.target.value);
+	};
 
 	const onClickItemDropdown: MenuProps["onClick"] = ({ key }) => {
 		console.log("key", key);
 	};
-
 	return (
 		<div>
 			<div>
 				<div style={{ display: "flex", justifyContent: "space-between" }}>
 					<Typography style={{ fontSize: "34px", fontWeight: 500 }}>
-						แก้ไขข้อมูลกิจการ
+						เพิ่มข้อมูลลูกค้า
 					</Typography>
 					<div style={{ marginBottom: "10px" }}>
 						<Button
@@ -85,7 +58,7 @@ export const EditOrganizationPage = () => {
 								บันทึก
 							</Typography>
 						</Button>
-						<Link to={"/admin/organization"}>
+						<Link to={"/admin/customers"}>
 							<Button
 								style={{
 									border: "0",
@@ -118,51 +91,41 @@ export const EditOrganizationPage = () => {
 						justifyContent: "space-between",
 					}}
 				>
-					<div style={{ width: "50%" }}>
+					<div style={{ width: "100%" }}>
 						<Row style={{ marginBottom: "20px" }}>
 							<div
-								className="status"
 								style={{
-									width: "100%",
 									height: "80px",
+									width: "40%",
 									backgroundColor: "white",
-									padding: "10px 0 0 10px",
-
+									paddingTop: "10px",
+									paddingLeft: "10px",
 									borderRadius: "10px",
-									// boxShadow: "2px 2px 2px 3px",
-									boxShadow: "2px 2px 2px 2px" + ThemeColors.goldColor,
+									boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
 								}}
 							>
-								<Typography style={{ fontSize: "1.3rem" }}>
-									รูปแบบธุรกิจ
+								<Typography style={{ fontSize: "18px" }}>
+									เลขนิติบุคคล/เลขประจำตัวผู้เสียภาษี
 								</Typography>
 								<Form.Item>
-									<Dropdown
-										menu={{ items: items, onClick: onClickItemDropdown }}
-									>
-										<a onClick={(e) => e.preventDefault()}>
-											<Space
-												style={{
-													width: "80%",
-													display: "flex",
-													justifyContent: "space-between",
-													color: ThemeColors.lightOrangeColor,
-												}}
-											>
-												นิติบุลคล
-												<DownOutlined
-													style={{ fontSize: "22px", width: "10px" }}
-												/>
-											</Space>
-										</a>
-									</Dropdown>
+									<Input
+										type=""
+										placeholder="0733538001298"
+										bordered={false}
+										style={{
+											padding: "0px",
+											fontSize: "16px",
+											color: ThemeColors.orangeColor,
+										}}
+									/>
 								</Form.Item>
 							</div>
-						</Row>
-						<Row style={{ marginBottom: "20px" }}>
+
 							<div
 								style={{
-									width: "100%",
+									marginLeft: "20px",
+									height: "80px",
+									width: "40%",
 									backgroundColor: "white",
 									paddingTop: "10px",
 									paddingLeft: "10px",
@@ -176,7 +139,7 @@ export const EditOrganizationPage = () => {
 								<Form.Item>
 									<Input
 										type=""
-										placeholder="0100565119323"
+										placeholder="หจก.รวยมาก ทำไมอะ"
 										bordered={false}
 										style={{
 											padding: "0px",
@@ -187,156 +150,39 @@ export const EditOrganizationPage = () => {
 								</Form.Item>
 							</div>
 						</Row>
-						<Row style={{ marginBottom: "10px" }}>
-							<Radio>สำนักงานใหญ่</Radio>
-							<Radio>สาขา</Radio>
+						<Row style={{ marginBottom: "20px" }}>
+							<div
+								style={{
+									height: "80px",
+									width: "40%",
+									backgroundColor: "white",
+									paddingTop: "10px",
+									paddingLeft: "10px",
+									borderRadius: "10px",
+									boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
+								}}
+							>
+								<Typography style={{ fontSize: "18px" }}>
+									คำอธิบายธุรกิจ
+								</Typography>
+								<Form.Item>
+									<Input
+										type=""
+										placeholder="-"
+										bordered={false}
+										style={{
+											padding: "0px",
+											fontSize: "16px",
+											color: ThemeColors.orangeColor,
+										}}
+									/>
+								</Form.Item>
+							</div>
 						</Row>
 					</div>
-					<div
-						style={{
-							width: "50%",
-							margin: "0px 10px 0px 10px",
-							justifyContent: "space-between",
-							display: "flex",
-						}}
-					>
-						<div>
-							<div style={{ marginLeft: "90px" }}>
-								<Typography
-									style={{
-										color: ThemeColors.blackColor,
-										fontSize: "16px",
-										marginBottom: "10px",
-										marginTop: "10px",
-										fontWeight: "500",
-									}}
-								>
-									โลโก้องค์กร
-								</Typography>
-								<Upload
-									style={{ margin: "auto", alignItems: "center" }}
-									listType="picture"
-									accept=".png,.jpg.jpeg"
-								>
-									<Button
-										icon={
-											<PlusCircleFilled
-												style={{
-													color: ThemeColors.orangeColor,
-													fontSize: "65px",
-												}}
-											/>
-										}
-										style={{
-											border: "2px solid " + ThemeColors.orangeColor,
-											height: "150px",
-											width: "200px",
-											marginRight: "10px",
-											textAlign: "center",
-											backgroundColor: ThemeColors.bgColor,
-										}}
-									></Button>
-								</Upload>
-							</div>
-						</div>
-						<Space direction="vertical" size={10} style={{ margin: "auto" }}>
-							<Typography>รูปภาพควรจะเป็นอัตราส่วน 1:1</Typography>
-							<Typography>ขนาดไฟล์ที่รองรับสูงสุด 3 MB</Typography>
-							<Typography>รองรับไฟล์ประเภท .png, .jpg และ .jpeg</Typography>
-						</Space>
-					</div>
 				</div>
 			</div>
-			<div style={{ display: "flex", marginBottom: "20px" }}>
-				<div
-					className="status"
-					style={{
-						width: "50%",
-						height: "100px",
-						backgroundColor: "white",
-						padding: "10px 0 0 10px",
-						marginRight: "20px",
-						borderRadius: "10px",
-						// boxShadow: "2px 2px 2px 3px",
-						boxShadow: "2px 2px 2px 2px" + ThemeColors.goldColor,
-					}}
-				>
-					<Typography style={{ fontSize: "1.3rem" }}>นิติบุลคล</Typography>
-					<Form.Item>
-						<Dropdown
-							menu={{ items: itemsDropdown, onClick: onClickItemDropdown }}
-						>
-							<a onClick={(e) => e.preventDefault()}>
-								<Space
-									style={{
-										width: "80%",
-										display: "flex",
-										justifyContent: "space-between",
-										color: ThemeColors.lightOrangeColor,
-									}}
-								>
-									นิติบุลคล
-									<DownOutlined style={{ fontSize: "22px", width: "10px" }} />
-								</Space>
-							</a>
-						</Dropdown>
-					</Form.Item>
-				</div>
 
-				<div
-					style={{
-						width: "40%",
-						backgroundColor: "white",
-						paddingTop: "10px",
-						paddingLeft: "10px",
-						borderRadius: "10px",
-						boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
-						marginRight: "20px",
-					}}
-				>
-					<Typography style={{ fontSize: "18px" }}>ชื่อกิจการ</Typography>
-					<Form.Item>
-						<Input
-							type="ยูโทเทค"
-							placeholder="ยูโทเทค"
-							bordered={false}
-							style={{
-								padding: "0px",
-								fontSize: "16px",
-								color: ThemeColors.orangeColor,
-							}}
-						/>
-					</Form.Item>
-				</div>
-			</div>
-			<div
-				style={{
-					marginBottom: "50px",
-					width: "50%",
-					height: "80px",
-					backgroundColor: "white",
-					paddingTop: "10px",
-					paddingLeft: "10px",
-					borderRadius: "10px",
-					boxShadow: "2px 2px 2px 3px" + ThemeColors.goldColor,
-					marginRight: "20px",
-				}}
-			>
-				<Typography style={{ fontSize: "18px" }}>คำอธิบายธุรกิจ</Typography>
-				<Form.Item>
-					<Input
-						type="ยูโทเทค"
-						placeholder="software house"
-						bordered={false}
-						style={{
-							padding: "0px",
-							fontSize: "16px",
-							color: ThemeColors.orangeColor,
-						}}
-					/>
-				</Form.Item>
-				<Radio>จดทะเบียนภาษีมูลค่าเพิ่ม</Radio>
-			</div>
 			<div>
 				<div>
 					<Typography style={{ fontSize: "34px", fontWeight: 500 }}>
@@ -455,7 +301,7 @@ export const EditOrganizationPage = () => {
 							style={{
 								marginBottom: "10px",
 								width: "70%",
-								height: "100px",
+								height: "85px",
 								backgroundColor: "white",
 								paddingTop: "10px",
 								paddingLeft: "10px",
@@ -481,7 +327,7 @@ export const EditOrganizationPage = () => {
 							className="status"
 							style={{
 								width: "50%",
-								height: "100px",
+								height: "85px",
 								backgroundColor: "white",
 								padding: "10px 0 0 10px",
 								marginRight: "20px",
@@ -496,7 +342,7 @@ export const EditOrganizationPage = () => {
 									<a onClick={(e) => e.preventDefault()}>
 										<Space
 											style={{
-												width: "80%",
+												width: "90%",
 												display: "flex",
 												justifyContent: "space-between",
 												color: ThemeColors.lightOrangeColor,
@@ -518,7 +364,7 @@ export const EditOrganizationPage = () => {
 								style={{
 									marginBottom: "10px",
 									width: "33%",
-									height: "100px",
+									height: "85px",
 									backgroundColor: "white",
 									paddingTop: "10px",
 									paddingLeft: "10px",
@@ -544,7 +390,7 @@ export const EditOrganizationPage = () => {
 								style={{
 									marginBottom: "10px",
 									width: "32%",
-									height: "100px",
+									height: "85px",
 									backgroundColor: "white",
 									paddingTop: "10px",
 									paddingLeft: "10px",
@@ -569,8 +415,8 @@ export const EditOrganizationPage = () => {
 							<div
 								style={{
 									marginBottom: "10px",
-									width: "30%",
-									height: "100px",
+									width: "31%",
+									height: "85px",
 									backgroundColor: "white",
 									paddingTop: "10px",
 									paddingLeft: "10px",
@@ -597,7 +443,7 @@ export const EditOrganizationPage = () => {
 									marginTop: "10px",
 									marginBottom: "10px",
 									width: "33%",
-									height: "90px",
+									height: "80px",
 									backgroundColor: "white",
 									paddingTop: "10px",
 									paddingLeft: "10px",
@@ -628,8 +474,12 @@ export const EditOrganizationPage = () => {
 									<Typography style={{ fontWeight: "bold", fontSize: "16px" }}>
 										ที่อยู่ส่งเอกสาร
 									</Typography>
-									<Radio>ใช้ข้อมูลเดียวกันกับที่อยู่ตามทะเบียน</Radio>
-									<Radio>ใช้ข้อมูลใหม่</Radio>
+									<Radio.Group onChange={onChange} value={value}>
+										<Radio value={1}>
+											ใช้ข้อมูลเดียวกันกับที่อยู่ตามทะเบียน
+										</Radio>
+										<Radio value={2}>ใช้ข้อมูลใหม่</Radio>
+									</Radio.Group>
 								</Space>
 							</div>
 						</Row>
@@ -638,7 +488,7 @@ export const EditOrganizationPage = () => {
 								style={{
 									marginBottom: "10px",
 									width: "70%",
-									height: "100px",
+									height: "85px",
 									backgroundColor: "white",
 									paddingTop: "10px",
 									paddingLeft: "10px",
@@ -664,7 +514,7 @@ export const EditOrganizationPage = () => {
 								className="status"
 								style={{
 									width: "50%",
-									height: "100px",
+									height: "85px",
 									backgroundColor: "white",
 									padding: "10px 0 0 10px",
 									marginRight: "20px",
@@ -681,7 +531,7 @@ export const EditOrganizationPage = () => {
 										<a onClick={(e) => e.preventDefault()}>
 											<Space
 												style={{
-													width: "80%",
+													width: "90%",
 													display: "flex",
 													justifyContent: "space-between",
 													color: ThemeColors.lightOrangeColor,
@@ -703,7 +553,7 @@ export const EditOrganizationPage = () => {
 							style={{
 								marginBottom: "10px",
 								width: "33%",
-								height: "100px",
+								height: "85px",
 								backgroundColor: "white",
 								paddingTop: "10px",
 								paddingLeft: "10px",
@@ -729,7 +579,7 @@ export const EditOrganizationPage = () => {
 							style={{
 								marginBottom: "10px",
 								width: "32%",
-								height: "100px",
+								height: "85px",
 								backgroundColor: "white",
 								paddingTop: "10px",
 								paddingLeft: "10px",
@@ -754,8 +604,8 @@ export const EditOrganizationPage = () => {
 						<div
 							style={{
 								marginBottom: "10px",
-								width: "30%",
-								height: "100px",
+								width: "31%",
+								height: "85px",
 								backgroundColor: "white",
 								paddingTop: "10px",
 								paddingLeft: "10px",
@@ -781,7 +631,7 @@ export const EditOrganizationPage = () => {
 							style={{
 								marginTop: "10px",
 								width: "33%",
-								height: "100px",
+								height: "85px",
 								backgroundColor: "white",
 								paddingTop: "10px",
 								paddingLeft: "10px",
@@ -808,26 +658,12 @@ export const EditOrganizationPage = () => {
 			</div>
 			<div
 				style={{
-					marginTop: "30px",
+					marginTop: "80px",
 					background: ThemeColors.goldColor,
 					height: "3px",
 					marginBottom: "20px",
 				}}
 			/>
-			<Button
-				icon={<DeleteOutlined style={{ fontSize: "22px" }} />}
-				style={{
-					border: "0",
-					height: "50px",
-					width: "180px",
-					marginRight: "10px",
-					fontSize: "18px",
-					backgroundColor: ThemeColors.waringColor,
-					color: ThemeColors.whiteColor,
-				}}
-			>
-				ลบกิจการ
-			</Button>
 		</div>
 	);
 };
