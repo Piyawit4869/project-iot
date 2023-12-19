@@ -1,5 +1,5 @@
-import { ThemeColors } from "../styles/theme";
-import { Title } from "../components/global/Title";
+import { ThemeColors } from "../../styles/theme";
+import { Title } from "../../components/global/Title";
 
 import {
 	DownOutlined,

@@ -1,6 +1,6 @@
-import { ThemeColors } from "../styles/theme";
-import { Title } from "../components/global/Title";
-import * as API from "../apis";
+import { ThemeColors } from "../../styles/theme";
+import { Title } from "../../components/global/Title";
+import * as API from "../../apis";
 
 import {
 	DownOutlined,

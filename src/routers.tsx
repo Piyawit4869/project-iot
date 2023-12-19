@@ -6,16 +6,16 @@ import { DashboardPage } from "./pages/Dashboard";
 import { IndexQuotationPage } from "./pages/IndexQuotation";
 import { CreateQuotationPage } from "./pages/CreateQuotation";
 
-import { UsersPage, userIndexLoader } from "./pages/IndexUsers";
-import { CreateUserPage } from "./pages/CreateUser";
+import { UsersPage, userIndexLoader } from "./pages/users/IndexUsers";
+import { CreateUserPage } from "./pages/users/CreateUser";
 import { IndexOrganizationPage } from "./pages/IndexOrganization";
 import { EditOrganizationPage } from "./pages/EditQrganization";
-import { ProductPage } from "./pages/Product";
-import { CreateProductPage } from "./pages/CreateProduct";
-import { EditProductPage } from "./pages/EditProduct";
-import { CustomersPage } from "./pages/IndexCustomers";
-import { CreateCustomerPage } from "./pages/CreateCustomer";
-import { EditCustomerPage } from "./pages/EditCustomers";
+import { ProductPage } from "./pages/products/Product";
+import { CreateProductPage } from "./pages/products/CreateProduct";
+import { EditProductPage } from "./pages/products/EditProduct";
+import { CustomersPage } from "./pages/customers/IndexCustomers";
+import { CreateCustomerPage } from "./pages/customers/CreateCustomer";
+import { EditCustomerPage } from "./pages/customers/EditCustomers";
 
 import { PartialPage } from "./pages/Partial";
 import { CustomersDetail } from "./pages/CustomersDetail";
