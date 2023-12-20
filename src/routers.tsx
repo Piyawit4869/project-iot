@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import { LoginPage } from "./pages/Login";
-import { Root } from "./pages/Roots";
+import { LoginPage } from "./Login";
+import { Root, RootLoader } from "./pages/Roots";
 import { DashboardPage } from "./pages/Dashboard";
 import { IndexQuotationPage } from "./pages/IndexQuotation";
 import { CreateQuotationPage } from "./pages/CreateQuotation";
@@ -24,12 +24,13 @@ import {
   userIndexLoader,
   userLoader,
 } from "./pages/users";
+import { LoginAction } from "./Login";
 
 export const router = createBrowserRouter([
-  { path: "/login", element: <LoginPage /> },
+  { path: "/login", action: LoginAction, element: <LoginPage /> },
   {
     path: "/",
-    // loader: RootLoader, FIXME: loader in router is loadding state
+    loader: RootLoader, //FIXME: loader in router is loadding state
     element: <Root />,
     children: [
       {

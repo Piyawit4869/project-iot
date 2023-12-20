@@ -41,12 +41,17 @@ import { Link, useLocation } from "react-router-dom";
 // import { styles } from "../pages/utotech";
 
 export const AppLayout = (props: any) => {
+  const { user } = props;
   const { Sider } = Layout;
   const [collapsed, setCollapsed] = useState(false);
   // const [activekey, setActivekey] = useState("");
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  const onLogout = () => {
+    localStorage.removeItem("accessToken");
+  };
 
   console.log(location);
 
@@ -204,7 +209,7 @@ export const AppLayout = (props: any) => {
                     <p>
                       <UserOutlined />
                     </p>
-                    {collapsed ? <></> : <p>User Name</p>}
+                    {collapsed ? <></> : <p>{user.username}</p>}
                   </Space>
                 </Flex>
               </Link>
@@ -271,17 +276,19 @@ export const AppLayout = (props: any) => {
 								}}
 							></Button>
 						</Row> */}
-            <Button
-              type="primary"
-              icon={<LogoutOutlined />}
-              size="large"
-              style={{
-                backgroundColor: ThemeColors.orangeColor,
-                color: ThemeColors.fontColor1,
-              }}
-            >
-              Logout
-            </Button>
+            <Link to="/login" onClick={onLogout}>
+              <Button
+                type="primary"
+                icon={<LogoutOutlined />}
+                size="large"
+                style={{
+                  backgroundColor: ThemeColors.orangeColor,
+                  color: ThemeColors.fontColor1,
+                }}
+              >
+                Logout
+              </Button>
+            </Link>
           </Header>
 
           <Content

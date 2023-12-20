@@ -1,20 +1,24 @@
-import { Button, Card, Col, Form, Image, Input, Row, notification } from "antd";
-import * as API from "./apis";
-import React from "react";
+import {
+  Form,
+  Input,
+  Button,
+  Row,
+  Card,
+  Typography,
+  Image,
+  notification,
+} from "antd";
+import { ThemeColors } from "./styles/theme";
+import Logo from "./assets/images/Logo-StayOrganized.png";
 import {
   useActionData,
   useNavigate,
   useNavigation,
   useSubmit,
 } from "react-router-dom";
-import LoginImage from "./assets/images/login-graphic.png";
-import Clinical from "./assets/images/clinical.png";
-
-type FieldType = {
-  email?: string;
-  password?: string;
-  remember?: string;
-};
+import * as API from "./apis";
+import React from "react";
+// import axios from "axios";
 
 export async function LoginAction({ request }: any) {
   const formData = await request.formData();
@@ -24,7 +28,7 @@ export async function LoginAction({ request }: any) {
 
     localStorage.setItem("accessToken", data.accessToken);
     localStorage.setItem("refreshToken", data.refreshToken);
-    return { message: "Welcome to ChecKal Dashboard", status: "success" };
+    return { message: "Welcome to Stay Organize", status: "success" };
   } catch (e: any) {
     return { message: "Invalid email or password", status: "error" };
   }
@@ -51,7 +55,7 @@ export const LoginPage = () => {
       });
 
       if (action.status === "success") {
-        navigate("/users");
+        navigate("/");
       }
     }
   }, [action]);
@@ -59,19 +63,59 @@ export const LoginPage = () => {
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
+
   return (
-    <Row style={styles.background}>
-      <Row
-        justify="space-around"
-        align="middle"
-        wrap={false}
-        style={styles.row}
-      >
-        {/* <Image src={LoginImage} preview={false} width="35%"></Image> */}
-        <Col xs={0} sm={0} md={10} lg={16}>
-          <Image src={LoginImage} preview={false} />
-        </Col>
-        <Card style={styles.card}>
+    <div
+      style={{ backgroundColor: "#FFF5ED", width: "100vw", height: "100vh" }}
+    >
+      <Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
+        <Card
+          style={{
+            width: "35%",
+            minWidth: "365px",
+            justifyItems: "center",
+            borderRadius: "2rem",
+            boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
+          }}
+        >
+          <Row>
+            <div
+              style={{
+                backgroundColor: "#E46F1B",
+                width: "120px",
+                height: "135px",
+                borderRadius: "0px 0px 50px 0px",
+                marginTop: "-35px",
+              }}
+            >
+              <Image
+                width={100}
+                height={100}
+                src={Logo}
+                preview={false}
+                style={{
+                  margin: "auto",
+                  display: "flex",
+                  marginTop: "15px",
+                  marginLeft: "8px",
+                }}
+              />
+            </div>
+            <div style={{ marginLeft: "15px" }}>
+              <Typography style={{ fontSize: "32px" }}>
+                Stay Organize
+              </Typography>
+              <Typography style={{ fontSize: "27px" }}>เข้าสู่ระบบ</Typography>
+            </div>
+          </Row>
+          <div
+            style={{
+              borderBottom: "2px solid #EFAB3A",
+              margin: "auto",
+              marginTop: "20px",
+              marginBottom: "20px",
+            }}
+          ></div>
           <Form
             name="Login"
             layout="vertical"
@@ -79,85 +123,99 @@ export const LoginPage = () => {
             onFinish={onSubmit}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
+            style={{ marginTop: "10px" }}
           >
-            <div style={styles.divForm}>
-              <Row justify="center" style={{ marginBottom: "25px" }}>
-                <Image src={Clinical} preview={false} width="200px" />
-              </Row>
-              <Form.Item<FieldType>
-                label="Email"
+            <div
+              style={{
+                height: "69px",
+                backgroundColor: "white",
+                paddingTop: "10px",
+                paddingLeft: "10px",
+                borderRadius: "10px",
+                border: "1px solid #EE9437",
+                margin: "auto",
+              }}
+            >
+              <Typography style={{ fontSize: "18px" }}>อีเมล์</Typography>
+              <Form.Item
                 name="email"
-                style={styles.input}
                 rules={[
                   { required: true, message: "Please input your username!" },
                 ]}
               >
-                <Input />
-              </Form.Item>
-              <Form.Item<FieldType>
-                label="password"
-                name="password"
-                style={styles.input}
-                rules={[
-                  { required: true, message: "Please input your password!" },
-                ]}
-              >
-                <Input.Password />
-              </Form.Item>
-              <Form.Item style={styles.input}>
-                <Button
-                  type="primary"
-                  style={styles.button}
-                  htmlType="submit"
-                  loading={
-                    navigation.state === "loading" ||
-                    navigation.state === "submitting"
-                  }
-                  disabled={
-                    navigation.state === "loading" ||
-                    navigation.state === "submitting"
-                  }
-                >
-                  Login
-                </Button>
+                <Input
+                  type="email"
+                  placeholder="กรุณากรอกข้อมูลอีเมล์"
+                  bordered={false}
+                  style={{
+                    padding: "0px",
+                    fontSize: "16px",
+                    color: ThemeColors.lightOrangeColor,
+                  }}
+                />
               </Form.Item>
             </div>
+            <div
+              style={{
+                height: "69px",
+                backgroundColor: "white",
+                paddingTop: "10px",
+                paddingLeft: "10px",
+                borderRadius: "10px",
+                border: "1px solid #EE9437",
+                margin: "auto",
+                marginTop: "20px",
+              }}
+            >
+              <Typography style={{ fontSize: "18px" }}>รหัสผ่าน</Typography>
+              <Form.Item
+                name="password"
+                rules={[
+                  { required: true, message: "Please input your username!" },
+                ]}
+              >
+                <Input
+                  type="password"
+                  placeholder="กรุณากรอกข้อมูลรหัสผ่าน"
+                  bordered={false}
+                  style={{
+                    padding: "0px",
+                    fontSize: "16px",
+                    color: ThemeColors.lightOrangeColor,
+                  }}
+                />
+              </Form.Item>
+            </div>
+            <Form.Item
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{
+                  backgroundColor: "#F0BA3D",
+                  width: "180px",
+                  height: "50px",
+                  marginTop: "30px",
+                }}
+                loading={
+                  navigation.state === "loading" ||
+                  navigation.state === "submitting"
+                }
+                disabled={
+                  navigation.state === "loading" ||
+                  navigation.state === "submitting"
+                }
+              >
+                เข้าสู่ระบบ
+              </Button>
+            </Form.Item>
           </Form>
         </Card>
       </Row>
-    </Row>
+    </div>
   );
-};
-
-const styles: Record<string, React.CSSProperties> = {
-  card: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "80%", // Adjust the width for smaller screens
-    maxWidth: "400px", // Set maximum width for the card
-    height: "500px",
-    backgroundColor: "white",
-    borderRadius: "10%",
-    margin: "0px 15px",
-  },
-  logo: {
-    width: "150px",
-    height: "150px",
-    borderRadius: "50%",
-  },
-  background: {
-    width: "100%",
-    height: "100vh",
-    backgroundColor: "#4B6892",
-  },
-  row: { width: "100%" },
-  divForm: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    width: "100%",
-  },
-  input: { width: "100%" },
-  button: { width: "100%" },
 };
