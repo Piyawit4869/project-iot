@@ -20,7 +20,7 @@ import {
 	Row,
 	message,
 } from "antd";
-import { Translation, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { ColumnsType } from "antd/es/table";
 import { Link, useLoaderData } from "react-router-dom";
 import { useState } from "react";
