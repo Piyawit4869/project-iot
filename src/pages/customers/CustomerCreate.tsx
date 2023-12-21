@@ -9,11 +9,37 @@ import {
 	Row,
 	Space,
 	Typography,
+	notification,
 } from "antd";
 import { ThemeColors } from "../../styles/theme";
-import { Link } from "react-router-dom";
+import { Link, redirect, useSubmit } from "react-router-dom";
 import { DownOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import * as API from "../../apis";
+
+export async function CustomerCreateAction({ request }: any) {
+	const formData = await request.formData();
+	const submitData = Object.fromEntries(formData);
+
+	try {
+		const { data } = await API.customer.create(JSON.parse(submitData.data));
+		notification["success"]({
+			message: "Successfully create customer",
+			placement: "bottomLeft",
+			duration: 5,
+		});
+		return redirect(`/customers/${data.data.id}/edit`);
+	} catch (e: any) {
+		console.log("error", e);
+
+		notification["error"]({
+			message: e.response.data.error,
+			placement: "bottomLeft",
+			duration: 5,
+		});
+		return { message: "Can not Create!", status: "error" };
+	}
+}
 
 export const CreateCustomerPage = () => {
 	const [value, setValue] = useState(1);

@@ -1,9 +1,11 @@
 import { Card, Typography } from "antd";
 import { Column } from '@ant-design/plots';
 import  { useState } from 'react';
+import { useTranslation } from "react-i18next";
 
 
 export const DashboardPage = () => {
+  const {t} = useTranslation()
   const dataChart = [
   {
     "city": "ม.ค.",
@@ -199,7 +201,7 @@ export const DashboardPage = () => {
 
   return (
     <div>
-      <Typography style={{fontSize:"25px"}}>ภาพรวมรายรับรายจ่าย</Typography>
+      <Typography style={{fontSize:"25px"}}>{t("income and expense overview")}</Typography>
       <Card style={{borderColor:"#E46F1B",}}><Column {...config} /></Card>
     </div>
   );

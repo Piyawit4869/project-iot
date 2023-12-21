@@ -19,9 +19,11 @@ import {
 	SearchOutlined,
 	ControlOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Link, useLoaderData } from "react-router-dom";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
+import * as API from "../../apis";
 
 interface Datatype {
 	key: String;
@@ -30,7 +32,26 @@ interface Datatype {
 	tell: String;
 }
 
+export async function customerIndexLoader() {
+	// const url = new URL(params.request.url);
+	// const query = url.searchParams;
+	// const param = Object.fromEntries(query);
+
+	try {
+		// const search = { ...param, role: "user" };
+		const res = await API.customer.paginate();
+
+		return { customer: res.data };
+	} catch (error) {
+		return { data: null };
+	}
+}
+
 export const CustomersPage = () => {
+	const { t } = useTranslation();
+	const { customer } = useLoaderData() as any;
+	console.log(customer);
+
 	const dataTable: Datatype[] = [
 		{
 			key: "1",
@@ -82,7 +103,7 @@ export const CustomersPage = () => {
 			width: "10px",
 		},
 		{
-			title: "ชื่อกิจการ",
+			title: t("business name"),
 			dataIndex: "customerName",
 			key: "customerName",
 			render: (customerName: String) => (
@@ -91,12 +112,12 @@ export const CustomersPage = () => {
 			align: "left",
 		},
 		{
-			title: "เลขนิติบุลคล/เลขผู้เสียภาษี",
+			title: t("legal number and tax payer number"),
 			dataIndex: "ioNumber",
 			key: "ioNumber",
 		},
 		{
-			title: "เบอร์โทร",
+			title: t("phone number"),
 			dataIndex: "tell",
 			key: "tell",
 		},
@@ -150,7 +171,7 @@ export const CustomersPage = () => {
 
 	return (
 		<div>
-			<Title title="ตั้งค่าข้อมูลลูกค้า" textButton={""} button={false} />
+			<Title title={t("customer setting")} textButton={""} button={false} />
 			<Row style={{ marginTop: "10px" }} wrap={false}>
 				<Input
 					prefix={
@@ -218,7 +239,7 @@ export const CustomersPage = () => {
 							overflow: "hidden",
 						}}
 					>
-						สถานะ
+						{t("status")}
 					</Typography>
 					<Form.Item>
 						<Dropdown menu={{ items: itemsCurrency, onClick: setQuoStatus }}>
@@ -255,7 +276,7 @@ export const CustomersPage = () => {
 							textOverflow: "ellipsis",
 						}}
 					>
-						เพิ่มลูกค้า
+						{t("create customer")}
 					</Button>
 				</Link>
 			</Row>
