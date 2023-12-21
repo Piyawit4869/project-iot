@@ -12,7 +12,7 @@ import {
 	notification,
 } from "antd";
 import { DownOutlined } from "@ant-design/icons";
-import { Link, redirect, useSubmit } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 import * as API from "../../apis";
 
 export async function ProductCreateAction({ request }: any) {
