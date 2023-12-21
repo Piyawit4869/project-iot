@@ -9,9 +9,35 @@ import {
 	Dropdown,
 	Space,
 	Button,
+	notification,
 } from "antd";
 import { DownOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
+import * as API from "../../apis";
+
+export async function ProductCreateAction({ request }: any) {
+	const formData = await request.formData();
+	const submitData = Object.fromEntries(formData);
+
+	try {
+		const { data } = await API.product.create(JSON.parse(submitData.data));
+		notification["success"]({
+			message: "Successfully create customer",
+			placement: "bottomLeft",
+			duration: 5,
+		});
+		return redirect(`/customers/${data.data.id}/edit`);
+	} catch (e: any) {
+		console.log("error", e);
+
+		notification["error"]({
+			message: e.response.data.error,
+			placement: "bottomLeft",
+			duration: 5,
+		});
+		return { message: "Can not Create!", status: "error" };
+	}
+}
 
 export const CreateProductPage = () => {
 	const items: MenuProps["items"] = [
@@ -254,6 +280,7 @@ export const CreateProductPage = () => {
 							backgroundColor: ThemeColors.waringColor,
 							color: ThemeColors.whiteColor,
 						}}
+						htmlType="submit"
 					>
 						บันทึกข้อมูล
 					</Button>

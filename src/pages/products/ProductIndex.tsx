@@ -1,11 +1,11 @@
 import { ThemeColors } from "../../styles/theme";
 import { Title } from "../../components/global/Title";
+import * as API from "../../apis";
 
 import {
 	DownOutlined,
 	PlusOutlined,
 	SearchOutlined,
-	EditOutlined,
 	ControlOutlined,
 } from "@ant-design/icons";
 import {
@@ -20,8 +20,9 @@ import {
 	Row,
 	message,
 } from "antd";
+import { useTranslation } from "react-i18next";
 import { ColumnsType } from "antd/es/table";
-import { Link } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import { useState } from "react";
 
 interface Datatype {
@@ -35,68 +36,87 @@ interface Datatype {
 	// status: any;
 }
 
+export async function productIndexLoader() {
+	// const url = new URL(params.request.url);
+	// const query = url.searchParams;
+	// const param = Object.fromEntries(query);
+
+	try {
+		// const search = { ...param, role: "user" };
+		const res = await API.product.paginate();
+
+		return { product: res.data };
+	} catch (error) {
+		return { data: null };
+	}
+}
+
 export const ProductPage = () => {
-	const dataTable: Datatype[] = [
-		{
-			key: "1",
-			productname: "การออกแบบ",
-			description: "การออกแบบ Flow Chart และ User Journey ของระบบ",
-			type: "บริการ",
-			count: 4,
-			price: "10,000",
-		},
-		{
-			key: "2",
-			productname: "ถางหญ้าหน้าบ้านพระอิน",
-			description: "ถางหญ้าออก",
-			type: "บริการ",
-			count: 1,
-			price: "600,000",
-		},
-		{
-			key: "3",
-			productname: "ให้อาหารช้าง",
-			description: "ให้ช้างแดกข้าว",
-			type: "บริการ",
-			count: 1,
-			price: "10,000,000",
-		},
-		{
-			key: "4",
-			productname: "ขี่ช้างไล่จับไดโนเสาร์",
-			description: "พาช้างไปวิ่งเล่น",
-			type: "บริการ",
-			count: 6,
-			price: "60,711,452",
-		},
-		{
-			key: "5",
-			productname: "ออกแบบแอปพลิเคชั่นสำรวจดาวอังคาร",
-			description: "การออกแบบ Flow และ Agenda คร่าว ๆ ในการส่ง",
-			type: "บริการ",
-			count: 1,
-			price: "970,003,654",
-		},
-	];
+	const { t } = useTranslation();
+	const { product } = useLoaderData() as any;
+	console.log(product);
+
+	// const dataTable: Datatype[] = [
+	// 	{
+	// 		key: "1",
+	// 		productname: "การออกแบบ",
+	// 		description: "การออกแบบ Flow Chart และ User Journey ของระบบ",
+	// 		type: "บริการ",
+	// 		count: 4,
+	// 		price: "10,000",
+	// 	},
+	// 	{
+	// 		key: "2",
+	// 		productname: "ถางหญ้าหน้าบ้านพระอิน",
+	// 		description: "ถางหญ้าออก",
+	// 		type: "บริการ",
+	// 		count: 1,
+	// 		price: "600,000",
+	// 	},
+	// 	{
+	// 		key: "3",
+	// 		productname: "ให้อาหารช้าง",
+	// 		description: "ให้ช้างแดกข้าว",
+	// 		type: "บริการ",
+	// 		count: 1,
+	// 		price: "10,000,000",
+	// 	},
+	// 	{
+	// 		key: "4",
+	// 		productname: "ขี่ช้างไล่จับไดโนเสาร์",
+	// 		description: "พาช้างไปวิ่งเล่น",
+	// 		type: "บริการ",
+	// 		count: 6,
+	// 		price: "60,711,452",
+	// 	},
+	// 	{
+	// 		key: "5",
+	// 		productname: "ออกแบบแอปพลิเคชั่นสำรวจดาวอังคาร",
+	// 		description: "การออกแบบ Flow และ Agenda คร่าว ๆ ในการส่ง",
+	// 		type: "บริการ",
+	// 		count: 1,
+	// 		price: "970,003,654",
+	// 	},
+	// ];
 
 	const columns: ColumnsType<Datatype> = [
+		// {
+		// 	title: "",
+		// 	dataIndex: "key",
+		// 	render: (key: String) => (
+		// 		<p style={{ color: ThemeColors.orangeColor }}>{key}</p>
+		// 	),
+		// },
 		{
-			title: "",
-			dataIndex: "key",
-			render: (key: String) => (
-				<p style={{ color: ThemeColors.orangeColor }}>{key}</p>
-			),
-		},
-		{
-			title: "ชื่อสินค้า/บริการ",
-			dataIndex: "productname",
-			key: "productname",
+			title: t("product and service name"),
+			dataIndex: "title",
+			key: "title",
 			render: (productname: String) => (
 				<p style={{ color: ThemeColors.orangeColor }}>{productname}</p>
 			),
 		},
 		{
-			title: "คำอธิบาย",
+			title: t("description"),
 			dataIndex: "description",
 			key: "description",
 			render: (description: String) => (
@@ -104,23 +124,15 @@ export const ProductPage = () => {
 			),
 		},
 		{
-			title: "ประเภท",
-			dataIndex: "type",
-			key: "type",
-			render: (type: String) => (
-				<p style={{ color: ThemeColors.blackColor }}>{type}</p>
+			title: t("quantity"),
+			dataIndex: "quantity",
+			key: "quantity",
+			render: (quantity: String) => (
+				<p style={{ color: ThemeColors.blackColor }}>{quantity}</p>
 			),
 		},
 		{
-			title: "จำนวน",
-			dataIndex: "count",
-			key: "count",
-			render: (count: String) => (
-				<p style={{ color: ThemeColors.blackColor }}>{count}</p>
-			),
-		},
-		{
-			title: "ราคา",
+			title: t("price"),
 			dataIndex: "price",
 			key: "price",
 			render: (price: number) => (
@@ -128,24 +140,34 @@ export const ProductPage = () => {
 			),
 		},
 		{
-			render: (key: any) => (
-				<Link to={`/admin/product/update`}>
-					<Button
-						onClick={() => console.log(key.key)}
-						style={{
-							backgroundColor: ThemeColors.orangeColor,
-							color: ThemeColors.whiteColor,
-							border: "0px",
-							height: "40px",
-							width: "100px",
-						}}
-						icon={<EditOutlined style={{ fontSize: "18px" }} />}
-					>
-						แก้ไข
-					</Button>
-				</Link>
+			title: "Action",
+			dataIndex: "title",
+			key: "action",
+			render: (title: any) => (
+				<Button>
+					<Link to={`/products/${title}`}>View</Link>
+				</Button>
 			),
 		},
+		// {
+		// 	render: (key: any) => (
+		// 		<Link to={`/admin/product/update`}>
+		// 			<Button
+		// 				onClick={() => console.log(key.key)}
+		// 				style={{
+		// 					backgroundColor: ThemeColors.orangeColor,
+		// 					color: ThemeColors.whiteColor,
+		// 					border: "0px",
+		// 					height: "40px",
+		// 					width: "100px",
+		// 				}}
+		// 				icon={<EditOutlined style={{ fontSize: "18px" }} />}
+		// 			>
+		// 				แก้ไข
+		// 			</Button>
+		// 		</Link>
+		// 	),
+		// },
 	];
 
 	const itemsCurrency: MenuProps["items"] | any = [
@@ -192,10 +214,12 @@ export const ProductPage = () => {
 
 	return (
 		<div>
-			<Title title="ส้นค้า/บริการ" textButton={""} button={false} />
-			<Typography>
-				ข้อมูลสินค้าและบริการขององค์กร และข้อมูลที่อยู่เพื่อใช้แสดงในหน้าเอกสาร
-			</Typography>
+			<Title
+				title={t("product and service name")}
+				textButton={""}
+				button={false}
+			/>
+			<Typography>{t("information about products and services")}</Typography>
 			<Row style={{ marginTop: "10px" }} wrap={false}>
 				<Input
 					prefix={
@@ -264,7 +288,7 @@ export const ProductPage = () => {
 							overflow: "hidden",
 						}}
 					>
-						ประเภท
+						{t("type")}
 					</Typography>
 					<Form.Item>
 						<Dropdown menu={{ items: itemsCurrency, onClick: setQuoStatus }}>
@@ -301,7 +325,7 @@ export const ProductPage = () => {
 							textOverflow: "ellipsis",
 						}}
 					>
-						เพิ่มสินค้า
+						{t("add product")}
 					</Button>
 				</Link>
 			</Row>
@@ -310,7 +334,7 @@ export const ProductPage = () => {
 					size="middle"
 					pagination={false}
 					columns={columns}
-					dataSource={dataTable}
+					dataSource={product}
 					style={{ marginTop: "15px", textAlign: "center", width: "100%" }}
 				/>
 			</Row>
