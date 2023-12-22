@@ -19,7 +19,7 @@ import {
   message,
 } from "antd";
 
-import { ThemeColors } from "../../styles/theme";
+import { ThemeColors } from "@styles/theme";
 import { useState } from "react";
 
 export const Employee = () => {
