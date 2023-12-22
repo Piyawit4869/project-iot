@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import * as API from "../../apis";
+import * as API from "@src/apis";
 
 export async function userLoader({ params }: any) {
   try {

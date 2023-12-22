@@ -77,7 +77,7 @@ export const router = createBrowserRouter([
           {
             path: "edit",
             // action: UserUpdateAction,
-            element: <SingleUser />,
+            element: <SingleUser canEdit={true} />,
           },
         ],
       },

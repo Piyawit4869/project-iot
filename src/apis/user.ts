@@ -7,6 +7,14 @@ export async function getMe() {
   });
 }
 
+export async function paginate(params?: any) {
+  return client({
+    method: "GET",
+    url: `/api/crud/users`,
+    params,
+  });
+}
+
 export async function get(id: any) {
   return client({
     method: "GET",
@@ -14,10 +22,25 @@ export async function get(id: any) {
   });
 }
 
-export async function paginate(params?: any) {
+export async function create(data: any) {
   return client({
-    method: "GET",
-    url: `/api/crud/users`,
-    params,
+    method: "POST",
+    url: `/api/crud/users/create`,
+    data,
+  });
+}
+
+export async function edit(data: any, id?: any) {
+  return client({
+    method: "PUT",
+    url: `/api/crud/users/edit/${id}`,
+    data,
+  });
+}
+
+export async function deleted(id?: any) {
+  return client({
+    method: "DELETE",
+    url: `/api/crud/users/delete/${id}`,
   });
 }

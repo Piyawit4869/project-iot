@@ -7,32 +7,54 @@ import {
   Row,
   Input,
   Space,
-  Checkbox,
-  MenuProps,
-  Dropdown,
   Select,
+  notification,
 } from "antd";
-import { PlusOutlined, DownOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 import React from "react";
+import * as API from "@src/apis";
+
+export async function UserCreateAction({ request }: any) {
+  const formData = await request.formData();
+  const submitData = Object.fromEntries(formData);
+
+  try {
+    const { data } = await API.user.create(JSON.parse(submitData.data));
+    notification["success"]({
+      message: "Successfully create user",
+      placement: "bottomLeft",
+      duration: 5,
+    });
+    return redirect(`/users/${data.data.id}/edit`);
+  } catch (e: any) {
+    notification["error"]({
+      message: "Cannot create user",
+      placement: "bottomLeft",
+      duration: 5,
+    });
+    return { message: "Cannot Create", status: "error" };
+  }
+}
 
 export const CreateUserPage = () => {
+  // const submit = useSubmit();
   const { t } = useTranslation();
-  const itemsLastDropdown: MenuProps["items"] = [
-    {
-      label: "ทั้งหมด",
-      key: "1",
-    },
-    {
-      label: "ร่างเท่านั้น",
-      key: "2",
-    },
-    {
-      label: "อนุมัติเท่านั้น",
-      key: "3",
-    },
-  ];
+  // const itemsLastDropdown: MenuProps["items"] = [
+  //   {
+  //     label: "ทั้งหมด",
+  //     key: "1",
+  //   },
+  //   {
+  //     label: "ร่างเท่านั้น",
+  //     key: "2",
+  //   },
+  //   {
+  //     label: "อนุมัติเท่านั้น",
+  //     key: "3",
+  //   },
+  // ];
 
   const priceIsCurrency = [
     {
@@ -56,6 +78,20 @@ export const CreateUserPage = () => {
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
+
+  // const onSubmit = async (values: any) => {
+  //   const payload = Object.assign(values);
+  //   if (payload.file && payload.file.length > 0) {
+  //     payload.imageUrl = payload.file[0].response?.url;
+  //     delete payload.file;
+  //   } else {
+  //     delete payload.file;
+  //   }
+
+  //   payload.role = "user";
+
+  //   submit({ data: JSON.stringify(payload) }, { method: "post" });
+  // };
 
   return (
     <div>
@@ -272,7 +308,7 @@ export const CreateUserPage = () => {
 						</div>
 					</div>
 				</div> */}
-        <div style={{ marginTop: "30px" }}>
+        {/* <div style={{ marginTop: "30px" }}>
           <Typography
             style={{
               fontSize: "24px",
@@ -406,7 +442,7 @@ export const CreateUserPage = () => {
               เห็นได้เฉพาะเอกสารที่ตัวเองสร้าง
             </Checkbox>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
