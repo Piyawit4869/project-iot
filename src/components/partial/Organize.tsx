@@ -23,7 +23,7 @@ import {
   Typography,
   message,
 } from "antd";
-import { ThemeColors } from "../../styles/theme";
+import { ThemeColors } from "@styles/theme";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 
 export const Organize = () => {
