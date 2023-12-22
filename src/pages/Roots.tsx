@@ -5,10 +5,10 @@ import {
   useNavigation,
 } from "react-router-dom";
 import { Spin, notification } from "antd";
-import { AppLayout } from "../layout/AppLayout";
+import { AppLayout } from "@layout/AppLayout";
 
 import * as API from "../apis";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext } from "@contexts/AuthContext";
 
 type NotificationType = "success" | "info" | "warning" | "error";
 
@@ -29,7 +29,7 @@ export const Root = () => {
 
   // console.log("---------------------------------");
 
-  console.log(me);
+  // console.log(me);
 
   const onResponse = (status: NotificationType, message: string) => {
     notification[status]({

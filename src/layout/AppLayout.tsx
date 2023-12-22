@@ -31,7 +31,7 @@ import {
 } from "antd/es/layout/layout";
 import { useNavigate } from "react-router";
 import { ThemeColors } from "../styles/theme";
-import Logo from "../assets/images/Logo-StayOrganized.png";
+import Logo from "@assets/images/Logo-StayOrganized.png";
 import {
   // JSXElementConstructor,
   useState,
@@ -41,7 +41,7 @@ import { Link, useLocation } from "react-router-dom";
 // import { styles } from "../pages/utotech";
 
 export const AppLayout = (props: any) => {
-  const { user } = props;
+  // const { user } = props;
   const { Sider } = Layout;
   const [collapsed, setCollapsed] = useState(false);
   // const [activekey, setActivekey] = useState("");
@@ -209,7 +209,7 @@ export const AppLayout = (props: any) => {
                     <p>
                       <UserOutlined />
                     </p>
-                    {collapsed ? <></> : <p>{user.username}</p>}
+                    {/* {collapsed ? <></> : <p>{user.username}</p>} */}
                   </Space>
                 </Flex>
               </Link>
