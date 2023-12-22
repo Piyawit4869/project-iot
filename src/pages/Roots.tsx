@@ -12,20 +12,20 @@ import { AuthContext } from "@contexts/AuthContext";
 
 type NotificationType = "success" | "info" | "warning" | "error";
 
-// export async function RootLoader() {
-//   try {
-//     const me = await API.user.getMe();
-//     localStorage.setItem("me", JSON.stringify(me.data));
-//     return { me: me.data };
-//   } catch (e: any) {
-//     return redirect("/login");
-//   }
-// }
+export async function RootLoader() {
+  try {
+    const me = await API.user.getMe();
+    localStorage.setItem("me", JSON.stringify(me.data));
+    return { me: me.data };
+  } catch (e: any) {
+    return redirect("/login");
+  }
+}
 
 export const Root = () => {
   const { state } = useNavigation();
 
-  // const { me } = useLoaderData() as any;
+  const { me } = useLoaderData() as any;
 
   // console.log("---------------------------------");
 
@@ -41,8 +41,7 @@ export const Root = () => {
 
   return (
     <AuthContext.Provider value={{ onResponse }}>
-      {/* <AppLayout user={me}> */}
-      <AppLayout>
+      <AppLayout user={me}>
         <Spin spinning={state === "loading" || state === "submitting"}>
           <Outlet />
         </Spin>

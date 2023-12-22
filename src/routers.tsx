@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import { LoginPage } from "./Login";
-import { Root } from "./pages/Roots";
+import { Root, RootLoader } from "./pages/Roots";
 import { DashboardPage } from "./pages/Dashboard";
 import { IndexQuotationPage } from "./pages/IndexQuotation";
 import { CreateQuotationPage } from "./pages/CreateQuotation";
@@ -35,7 +35,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/",
-    //loader: RootLoader, //FIXME: loader in router is loadding state
+    loader: RootLoader, //FIXME: loader in router is loadding state
     element: <Root />,
     children: [
       {
