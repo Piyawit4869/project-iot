@@ -10,7 +10,7 @@ export async function get(id: any) {
 export async function paginate(params?: any) {
     return client({
         method: "GET",
-        url: `/api/crud/customers`,
+        url: "/api/crud/customers",
         params,
     });
 }

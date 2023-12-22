@@ -24,6 +24,7 @@ import {
 	userIndexLoader,
 	userLoader,
 } from "./pages/users";
+import { customerIndexLoader } from "./pages/customers";
 import { ProductCreateAction, productIndexLoader } from "./pages/products";
 import { LoginAction } from "./Login";
 
@@ -113,6 +114,7 @@ export const router = createBrowserRouter([
 			},
 			{
 				path: "/customers",
+				loader: customerIndexLoader,
 				element: <CustomersPage />,
 			},
 			{

@@ -52,74 +52,64 @@ export const CustomersPage = () => {
 	const { customer } = useLoaderData() as any;
 	console.log(customer);
 
-	const dataTable: Datatype[] = [
-		{
-			key: "1",
-			customerName: "Pitoooo",
-			ioNumber: "01225471023214",
-			tell: "099 888 7712",
-		},
-		{
-			key: "2",
-			customerName: "Pitoooo",
-			ioNumber: "01225471023214",
-			tell: "099 888 7712",
-		},
-		{
-			key: "3",
-			customerName: "Pitoooo",
-			ioNumber: "01225471023214",
-			tell: "099 888 7712",
-		},
-		{
-			key: "4",
-			customerName: "Pitoooo",
-			ioNumber: "01225471023214",
-			tell: "099 888 7712",
-		},
-	];
-
 	const columns: ColumnsType<Datatype> = [
 		{
-			key: "key",
-			render: (key: any) => (
-				<EyeOutlined
-					style={{ fontSize: "26px", color: ThemeColors.grayColor }}
-					onClick={() => {
-						<Link to="/admin/customers/update/" />;
-						console.log("/admin/customers/update/" + key.key);
-					}}
-				/>
+			title: "ID",
+			dataIndex: "id",
+			key: "id",
+			render: (id: String) => (
+				<p style={{ color: ThemeColors.goldColor }}>{id}</p>
 			),
-			width: "80px",
-		},
-
-		{
-			dataIndex: "key",
-			key: "key",
-			render: (customerName: String) => (
-				<p style={{ color: ThemeColors.goldColor }}>{customerName}</p>
-			),
-			width: "10px",
 		},
 		{
-			title: t("business name"),
-			dataIndex: "customerName",
-			key: "customerName",
-			render: (customerName: String) => (
-				<p style={{ color: ThemeColors.goldColor }}>{customerName}</p>
+			title: t("company name"),
+			dataIndex: "companyName",
+			key: "companyName",
+			render: (companyName: String) => (
+				<p style={{ color: ThemeColors.goldColor }}>{companyName}</p>
 			),
-			align: "left",
 		},
 		{
-			title: t("legal number and tax payer number"),
-			dataIndex: "ioNumber",
-			key: "ioNumber",
+			title: t("first name"),
+			dataIndex: "firstName",
+			key: "firstName",
+			render: (firstName: String) => (
+				<p style={{ color: ThemeColors.goldColor }}>{firstName}</p>
+			),
+		},
+		{
+			title: t("last name"),
+			dataIndex: "lastName",
+			key: "lastName",
+			render: (lastName: String) => (
+				<p style={{ color: ThemeColors.goldColor }}>{lastName}</p>
+			),
+		},
+		{
+			title: t("email"),
+			dataIndex: "email",
+			key: "email",
+			render: (email: String) => (
+				<p style={{ color: ThemeColors.goldColor }}>{email}</p>
+			),
 		},
 		{
 			title: t("phone number"),
-			dataIndex: "tell",
-			key: "tell",
+			dataIndex: "tel",
+			key: "tel",
+			render: (tel: String) => (
+				<p style={{ color: ThemeColors.goldColor }}>{tel}</p>
+			),
+		},
+		{
+			title: "Action",
+			dataIndex: "id",
+			key: "action",
+			render: (id: String) => (
+				<Button>
+					<Link to={`/customers/${id}`}>View</Link>
+				</Button>
+			),
 		},
 	];
 
@@ -285,7 +275,7 @@ export const CustomersPage = () => {
 				<Table
 					size="middle"
 					columns={columns}
-					dataSource={dataTable}
+					dataSource={customer}
 					style={{
 						marginTop: "40px",
 						textAlign: "center",
