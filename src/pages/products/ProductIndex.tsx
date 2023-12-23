@@ -1,7 +1,7 @@
 import { ThemeColors } from "@src/styles/theme";
 import { Title } from "@src/components/global/Title";
 import * as API from "@src/apis";
-import ProductTable from "@src/components/product/ProductsTable";
+// import ProductTable from "@src/components/product/ProductsTable";
 import {
 	DownOutlined,
 	PlusOutlined,
