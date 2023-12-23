@@ -15,7 +15,7 @@ import { CustomersPage } from "./pages/customers/CustomerIndex";
 import { CreateCustomerPage } from "./pages/customers/CustomerCreate";
 import { EditCustomerPage } from "./pages/customers/EditCustomers";
 import { PartialPage } from "./pages/Partial";
-import { CustomersDetail } from "./pages/CustomersDetail";
+// import { CustomersDetail } from "./pages/CustomersDetail";
 import { IndexPartialPage } from "./pages/IndexPartial";
 import {
 	SingleUser,
