@@ -91,7 +91,6 @@ export default function CustomerTable(props: CustomerTableProps) {
 					wordWrap: "normal",
 				}}
 			/>
-			;
 		</>
 	);
 }

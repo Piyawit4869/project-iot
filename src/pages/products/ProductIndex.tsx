@@ -1,7 +1,7 @@
-import { ThemeColors } from "../../styles/theme";
-import { Title } from "../../components/global/Title";
-import * as API from "../../apis";
-
+import { ThemeColors } from "@src/styles/theme";
+import { Title } from "@src/components/global/Title";
+import * as API from "@src/apis";
+import ProductTable from "@src/components/product/ProductsTable";
 import {
 	DownOutlined,
 	PlusOutlined,
@@ -55,49 +55,6 @@ export const ProductPage = () => {
 	const { t } = useTranslation();
 	const { product } = useLoaderData() as any;
 	console.log(product);
-
-	// const dataTable: Datatype[] = [
-	// 	{
-	// 		key: "1",
-	// 		productname: "การออกแบบ",
-	// 		description: "การออกแบบ Flow Chart และ User Journey ของระบบ",
-	// 		type: "บริการ",
-	// 		count: 4,
-	// 		price: "10,000",
-	// 	},
-	// 	{
-	// 		key: "2",
-	// 		productname: "ถางหญ้าหน้าบ้านพระอิน",
-	// 		description: "ถางหญ้าออก",
-	// 		type: "บริการ",
-	// 		count: 1,
-	// 		price: "600,000",
-	// 	},
-	// 	{
-	// 		key: "3",
-	// 		productname: "ให้อาหารช้าง",
-	// 		description: "ให้ช้างแดกข้าว",
-	// 		type: "บริการ",
-	// 		count: 1,
-	// 		price: "10,000,000",
-	// 	},
-	// 	{
-	// 		key: "4",
-	// 		productname: "ขี่ช้างไล่จับไดโนเสาร์",
-	// 		description: "พาช้างไปวิ่งเล่น",
-	// 		type: "บริการ",
-	// 		count: 6,
-	// 		price: "60,711,452",
-	// 	},
-	// 	{
-	// 		key: "5",
-	// 		productname: "ออกแบบแอปพลิเคชั่นสำรวจดาวอังคาร",
-	// 		description: "การออกแบบ Flow และ Agenda คร่าว ๆ ในการส่ง",
-	// 		type: "บริการ",
-	// 		count: 1,
-	// 		price: "970,003,654",
-	// 	},
-	// ];
 
 	const columns: ColumnsType<Datatype> = [
 		// {
