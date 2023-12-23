@@ -24,6 +24,9 @@ FROM nginx:stable-alpine as production-stage
 # You could add a custom nginx.conf if needed
 # COPY nginx.conf /etc/nginx/nginx.conf
 
+# Copy your custom nginx.conf to the container
+COPY default.conf /etc/nginx/conf.d/default.conf
+
 # Remove default nginx static assets
 RUN rm -rf /usr/share/nginx/html/*
 
