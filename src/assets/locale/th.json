@@ -30,6 +30,7 @@
 		"business name": "ชื่อกิจการ",
 		"legal number and tax payer number": "เลขนิติบุลคล/เลขผู้เสียภาษี",
 		"manage user": "จัดการผู้ใช้งาน",
-		"create delete and manage permission": "เพิ่ม/ลบ และกำหนดสิทธิ์ผู้ใช้งานอื่นได้"
+		"create delete and manage permission": "เพิ่ม/ลบ และกำหนดสิทธิ์ผู้ใช้งานอื่นได้",
+		"company name": "ชื่อบริษัท"
 	}
 }
