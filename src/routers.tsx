@@ -97,7 +97,7 @@ export const router = createBrowserRouter([
 				element: <ProductPage />,
 			},
 			{
-				path: "/product/create",
+				path: "/product/new",
 				action: ProductCreateAction,
 				element: <CreateProductPage />,
 			},

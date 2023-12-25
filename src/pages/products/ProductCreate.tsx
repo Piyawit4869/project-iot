@@ -284,7 +284,7 @@ export const CreateProductPage = () => {
 					>
 						บันทึกข้อมูล
 					</Button>
-					<Link to={"/admin/product"}>
+					<Link to={"/product"}>
 						<Button
 							style={{
 								border: "1px solid " + ThemeColors.blueColor,
