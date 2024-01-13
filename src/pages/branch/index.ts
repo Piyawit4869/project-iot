@@ -1,3 +1,5 @@
 export * from "./BranchIndex"
 export * from "./BranchCreate"
 export * from "./BranchEdit"
+export * from "./BranchLayout"
+export * from "./BranchSingle"

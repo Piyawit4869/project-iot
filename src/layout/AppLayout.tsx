@@ -24,6 +24,7 @@ import {
 	UserAddOutlined,
 	WalletOutlined,
 	UserOutlined,
+	ApartmentOutlined,
 } from "@ant-design/icons";
 import {
 	Content,
@@ -74,6 +75,12 @@ export const AppLayout = (props: any) => {
 			label: "Analytics",
 			key: "/",
 			icon: <HomeOutlined />,
+		},
+		{
+			style: { backgroundColor: ThemeColors.brickOrangeColor },
+			label: "Branchs",
+			key: "/branchs",
+			icon: <ApartmentOutlined />,
 		},
 		{
 			style: { backgroundColor: ThemeColors.brickOrangeColor },

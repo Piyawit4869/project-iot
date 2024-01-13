@@ -6,7 +6,7 @@ export const BranchTable = () => {
     const dataSource = [
 		{
 			key: "1",
-			documentName: "การออกแบบ",
+			documentNumber: "การออกแบบ",
 			name: "การออกแบบ Flow Chart และ User Journey ของระบบ",
 			issueDate: "บริการ",
 			validDate: "4",
@@ -15,7 +15,7 @@ export const BranchTable = () => {
 		},
 		{
 			key: "2",
-			documentName: "1235",
+			documentNumber: "1235",
 			name: "Po",
 			issueDate: "01/01/2566",
 			validDate: "01/01/2566",
@@ -24,7 +24,7 @@ export const BranchTable = () => {
 		},
 		{
 			key: "3",
-			documentName: "1235",
+			documentNumber: "1235",
 			name: "Po",
 			issueDate: "01/01/2566",
 			validDate: "01/01/2566",
@@ -35,8 +35,8 @@ export const BranchTable = () => {
     const columns = [
         {
             title: "ชื่อสินค้า/บริการ",
-            dataIndex: "documentName",
-            key: "documentName",
+            dataIndex: "documentNumber",
+            key: "documentNumber",
         },
         {
             title: "คำอธิบาย",
