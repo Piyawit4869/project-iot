@@ -77,20 +77,14 @@ export const AppLayout = (props: any) => {
 		},
 		{
 			style: { backgroundColor: ThemeColors.brickOrangeColor },
-			label: "Users",
-			key: "/users",
+			label: "Branches",
+			key: "/branches",
 			icon: <HomeOutlined />,
 		},
 		{
 			style: { backgroundColor: ThemeColors.brickOrangeColor },
-			label: "Customers",
-			key: "/customers",
-			icon: <UserAddOutlined />,
-		},
-		{
-			style: { backgroundColor: ThemeColors.brickOrangeColor },
-			label: "Product",
-			key: "/product",
+			label: "Products",
+			key: "/products",
 			icon: <ShoppingCartOutlined />,
 		},
 		{
@@ -98,7 +92,7 @@ export const AppLayout = (props: any) => {
 				backgroundColor: ThemeColors.brickOrangeColor,
 				margin: "4px",
 			},
-			label: "Income",
+			label: "Incomes",
 			key: "",
 			icon: <DollarOutlined />,
 			children: [
@@ -131,16 +125,28 @@ export const AppLayout = (props: any) => {
 		},
 		{
 			style: { backgroundColor: ThemeColors.brickOrangeColor },
-			label: "Payroll",
-			key: "/partial",
+			label: "Projects",
+			key: "/projects",
 			icon: <WalletOutlined />,
 		},
-		// {
-		// 	style: { backgroundColor: ThemeColors.brickOrangeColor },
-		// 	label: "Organization",
-		// 	key: "/admin/organization",
-		// 	icon: <ShoppingOutlined />,
-		// },
+		{
+			style: { backgroundColor: ThemeColors.brickOrangeColor },
+			label: "Users",
+			key: "/users",
+			icon: <WalletOutlined />,
+		},
+		{
+			style: { backgroundColor: ThemeColors.brickOrangeColor },
+			label: "Customers",
+			key: "/users",
+			icon: <WalletOutlined />,
+		},
+		{
+			style: { backgroundColor: ThemeColors.brickOrangeColor },
+			label: "Settings",
+			key: "/users",
+			icon: <WalletOutlined />,
+		},
 	];
 
 	return (
