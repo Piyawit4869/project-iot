@@ -1,4 +1,3 @@
-
 export const ThemeColors = {
 	primaryColor: "#E46F1B",
 	brickOrangeColor: "#EC8235",
@@ -21,4 +20,28 @@ export const ThemeColors = {
 	fontColor1: "#FFFFFF",
 	fontColor2: "#000000",
 	fontColor3: "#727272",
+};
+
+export const ThemeColorsV2 = {
+	token: {
+		colorPrimary: "#e46f1b",
+		colorInfo: "#000",
+	},
+	components: {
+		Card: {
+			colorBgContainer: "rgb(228, 111, 27)",
+		},
+		Menu: {
+			colorPrimary: "#000000",
+			itemSelectedBg: "rgb(228, 111, 27)",
+			itemSelectedColor: "rgb(255, 255, 255)",
+		},
+		Layout: {
+			siderBg: "#f2f2f2",
+			headerBg: "#ffffff",
+		},
+		Button: {
+			defaultBg: "#EFAB3A",
+		},
+	},
 };
