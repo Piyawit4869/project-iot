@@ -12,24 +12,24 @@ import { AuthContext } from "@contexts/AuthContext";
 
 type NotificationType = "success" | "info" | "warning" | "error";
 
-// export async function RootLoader() {
-//   try {
-//     const me = await API.user.getMe();
-//     localStorage.setItem("me", JSON.stringify(me.data));
-//     return { me: me.data };
-//   } catch (e: any) {
-//     return redirect("/login");
-//   }
-// }
+export async function RootLoader() {
+  try {
+    const me = await API.user.getMe();
+    localStorage.setItem("me", JSON.stringify(me.data));
+    return { me: me.data };
+  } catch (e: any) {
+    return redirect("/login");
+  }
+}
 
 export const Root = () => {
   const { state } = useNavigation();
 
-  // const { me } = useLoaderData() as any;
+  const { me } = useLoaderData() as any;
 
-  // console.log("---------------------------------");
+  console.log("---------------------------------");
 
-  // console.log(me);
+  console.log(me);
 
   const onResponse = (status: NotificationType, message: string) => {
     notification[status]({

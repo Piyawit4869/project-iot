@@ -1,11 +1,11 @@
 import { EditOutlined, TagFilled } from "@ant-design/icons"
 import  Image  from "@assets/images/image_logoV2.png"
 import { Button, Col, Flex, Row, Typography } from "antd"
-import { useTranslation } from "react-i18next"
+// import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 export const BranchSingle = ()=> {
     const { Title, Paragraph} = Typography;
-    const { t } = useTranslation();
+    // const { t } = useTranslation();
     return ( 
             <>  
                 <Flex justify="space-between" align="center">
