@@ -1,4 +1,4 @@
-import { EditOutlined, } from "@ant-design/icons";
+import { EyeOutlined, } from "@ant-design/icons";
 import { Button, Table } from "antd";
 import { Link } from "react-router-dom";
 
@@ -62,10 +62,10 @@ export const BranchTable = () => {
             title: '',
             dataIndex: '',
             key: 'x',
-            render: () => <Link to={"/branchs/update"}>
-            <Button icon={<EditOutlined />}
+            render: () => <Link to={"/branches/single"}>
+            <Button icon={<EyeOutlined/>}
             style={{backgroundColor:"#EE9437",color:"white"}}>
-            แก้ไข
+            View
             
           </Button>
           </Link>

@@ -1,6 +1,5 @@
 import {
 	Button,
-	Flex,
 	Image,
 	Layout,
 	Menu,
@@ -9,22 +8,27 @@ import {
 	Col,
 	Space,
 	Card,
+	Avatar,
+	Dropdown,
+	MenuProps,
 } from "antd";
 import {
-	DollarOutlined,
-	FileDoneOutlined,
-	HomeOutlined,
-	LogoutOutlined,
 	MenuFoldOutlined,
 	MenuUnfoldOutlined,
-	SettingOutlined,
-	ShoppingCartOutlined,
 	// ShoppingOutlined,
 	// TeamOutlined,
-	UserAddOutlined,
-	WalletOutlined,
 	UserOutlined,
+	CaretDownOutlined,
+	LogoutOutlined,
+	SettingOutlined,
+	PieChartOutlined,
+	RiseOutlined,
 	ApartmentOutlined,
+	IdcardFilled,
+	ProjectFilled,
+	ShoppingFilled,
+	FileFilled,
+	SmileFilled,
 } from "@ant-design/icons";
 import {
 	Content,
@@ -32,13 +36,12 @@ import {
 	Header,
 } from "antd/es/layout/layout";
 import { useNavigate } from "react-router";
-import { ThemeColors } from "../styles/theme";
 import Logo from "@assets/images/Logo-StayOrganized.png";
 import {
 	// JSXElementConstructor,
 	useState,
 } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 // import UButton from "../components/admin/Button";
 // import { styles } from "../pages/utotech";
 
@@ -51,12 +54,13 @@ export const AppLayout = (props: any) => {
 	const location = useLocation();
 	const navigate = useNavigate();
 
-	const onLogout = () => {
-		localStorage.removeItem("accessToken");
-	};
+	// const onLogout = () => {
+	// 	localStorage.removeItem("accessToken");
+	// };
 
 	console.log(location);
 
+	const { Paragraph } = Typography;
 	// React.useEffect(() => {
 	//   const key = location.pathname.split("/") as any[];
 
@@ -71,83 +75,85 @@ export const AppLayout = (props: any) => {
 
 	const siedMenu: Array<any> = [
 		{
-			style: { backgroundColor: ThemeColors.brickOrangeColor },
 			label: "Analytics",
 			key: "/",
-			icon: <HomeOutlined />,
+			icon: <PieChartOutlined />,
 		},
 		{
-			style: { backgroundColor: ThemeColors.brickOrangeColor },
-			label: "Branchs",
-			key: "/branchs",
+			label: "Branches",
+			key: "/branches",
 			icon: <ApartmentOutlined />,
 		},
 		{
-			style: { backgroundColor: ThemeColors.brickOrangeColor },
-			label: "Users",
-			key: "/users",
-			icon: <HomeOutlined />,
+			label: "Products/Services",
+			key: "/products",
+			icon: <ShoppingFilled />,
 		},
 		{
-			style: { backgroundColor: ThemeColors.brickOrangeColor },
-			label: "Customers",
-			key: "/customers",
-			icon: <UserAddOutlined />,
-		},
-		{
-			style: { backgroundColor: ThemeColors.brickOrangeColor },
-			label: "Product",
-			key: "/product",
-			icon: <ShoppingCartOutlined />,
-		},
-		{
-			style: {
-				backgroundColor: ThemeColors.brickOrangeColor,
-				margin: "4px",
-			},
-			label: "Income",
+			label: "Incomes",
 			key: "",
-			icon: <DollarOutlined />,
+			icon: <RiseOutlined />,
 			children: [
 				{
 					key: "/quotation",
 					label: "Quotaion",
-					icon: <FileDoneOutlined />,
+					icon: <FileFilled />,
 				},
 				{
 					key: "#",
 					label: "Receipt",
-					icon: <FileDoneOutlined />,
+					icon: <FileFilled />,
 				},
 				{
 					key: "#",
 					label: "Invoice",
-					icon: <FileDoneOutlined />,
+					icon: <FileFilled />,
 				},
 				{
 					key: "#",
 					label: "Tax Invoice",
-					icon: <FileDoneOutlined />,
+					icon: <FileFilled />,
 				},
 				{
 					key: "#",
 					label: "Contract",
-					icon: <FileDoneOutlined />,
+					icon: <FileFilled />,
 				},
 			],
 		},
 		{
-			style: { backgroundColor: ThemeColors.brickOrangeColor },
-			label: "Payroll",
-			key: "/partial",
-			icon: <WalletOutlined />,
+			label: "Projects",
+			key: "/projects",
+			icon: <ProjectFilled />,
 		},
-		// {
-		// 	style: { backgroundColor: ThemeColors.brickOrangeColor },
-		// 	label: "Organization",
-		// 	key: "/admin/organization",
-		// 	icon: <ShoppingOutlined />,
-		// },
+		{
+			label: "Users",
+			key: "/users",
+			icon: <IdcardFilled />,
+		},
+		{
+			label: "Customers",
+			key: "#",
+			icon: <SmileFilled />,
+		},
+	];
+
+	const headerMenuOptions: MenuProps["items"] | any = [
+		{
+			label: "โปรไฟล์",
+			key: "1",
+			icon: <UserOutlined />,
+		},
+		{
+			label: "ตั้งค่า",
+			key: "2",
+			icon: <SettingOutlined />,
+		},
+		{
+			label: "ออกจากระบบ",
+			key: "2",
+			icon: <LogoutOutlined />,
+		},
 	];
 
 	return (
@@ -156,7 +162,6 @@ export const AppLayout = (props: any) => {
 				<Card bodyStyle={{ padding: "0px" }}>
 					<Sider
 						style={{
-							backgroundColor: "transparent",
 							height: "100vh",
 						}}
 						width={230}
@@ -174,12 +179,12 @@ export const AppLayout = (props: any) => {
 								marginTop: "50px",
 							}}
 						>
-							<Image width={50} src={Logo} preview={false} />
+							<Image width={80} src={Logo} preview={false} />
 							{collapsed ? (
 								<div style={{ height: "100px" }}></div>
 							) : (
 								<div style={{ height: "100px" }}>
-									<Typography style={{ fontSize: "24px", color: "white" }}>
+									<Typography style={{ fontSize: "24px" }}>
 										Stay-Organize
 									</Typography>
 								</div>
@@ -194,58 +199,12 @@ export const AppLayout = (props: any) => {
 								width: "100%",
 								// height: "calc(100vh - 140px)",
 								top: "170px",
-								backgroundColor: ThemeColors.primaryColor,
-								color: "white",
 							}}
 							onClick={({ key }) => {
 								navigate(key);
 							}}
 							items={siedMenu}
 						></Menu>
-						<Row
-							style={{
-								alignSelf: "flex-end",
-								position: "absolute",
-								bottom: "0",
-								width: "100%",
-								padding: "8px 0 8px 0",
-								backgroundColor: ThemeColors.brickOrangeColor,
-							}}
-						>
-							<Col span={"18"} style={{ color: ThemeColors.fontColor1 }}>
-								<Link to={"#"} style={{ color: ThemeColors.fontColor1 }}>
-									<Flex style={{ marginLeft: "20px" }}>
-										<Space>
-											<p>
-												<UserOutlined />
-											</p>
-											{collapsed ? <></> : <p>username</p>}
-										</Space>
-									</Flex>
-								</Link>
-							</Col>
-							<Col
-								span={"6"}
-								style={{
-									display: "flex",
-									justifyContent: "center",
-									alignItems: "center",
-								}}
-							>
-								{collapsed ? (
-									<></>
-								) : (
-									<Button
-										type="primary"
-										icon={<SettingOutlined />}
-										style={{
-											backgroundColor: ThemeColors.orangeColor,
-											color: ThemeColors.fontColor1,
-										}}
-									></Button>
-								)}
-							</Col>
-						</Row>
 					</Sider>
 				</Card>
 				<Layout style={{ minHeight: "100vh" }}>
@@ -258,7 +217,6 @@ export const AppLayout = (props: any) => {
 							width: "100%",
 							height: "60px",
 							position: "sticky",
-							backgroundColor: ThemeColors.whiteColor,
 							alignItems: "center",
 							justifyContent: "space-between",
 							boxShadow: "0.5px 0.5px 0.5px 0.5px grey",
@@ -269,42 +227,57 @@ export const AppLayout = (props: any) => {
 							size={"middle"}
 							icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
 							onClick={() => setCollapsed(!collapsed)}
-							style={{
-								backgroundColor: ThemeColors.orangeColor,
-								color: ThemeColors.fontColor1,
-							}}
 						></Button>
-						{/* <Row align={"middle"}>					
-							<Typography style={{ fontSize: "24px", marginRight: "10px" }}>
-								User name
-							</Typography>
-							<Button
-								icon={<SettingOutlined />}
-								size={"middle"}
-								style={{
-									backgroundColor: ThemeColors.orangeColor,
-									color: "white",
-								}}
-							></Button>
-						</Row> */}
-						<Link to="/login" onClick={onLogout}>
-							<Button
-								type="primary"
-								icon={<LogoutOutlined />}
-								size="large"
-								style={{
-									backgroundColor: ThemeColors.orangeColor,
-									color: ThemeColors.fontColor1,
-								}}
-							>
-								Logout
-							</Button>
-						</Link>
+						<Row align="middle">
+							<Space>
+								<Col>
+									<Paragraph
+										style={{ margin: 0, padding: "-30px", textAlign: "end" }}
+									>
+										Cristiano Ronaldo
+									</Paragraph>
+									<Paragraph
+										style={{
+											margin: 0,
+											padding: "-30px",
+											textAlign: "end",
+											color: "#ffba3b",
+										}}
+									>
+										Admin
+									</Paragraph>
+								</Col>
+								<Col style={{ alignContent: "center" }}>
+									<Avatar
+										draggable="false"
+										size={"large"}
+										icon={<UserOutlined />}
+										style={{
+											alignContent: "center",
+											borderStyle: "solid",
+											borderWidth: "2px",
+											borderColor: "#ffba3b",
+										}}
+									></Avatar>
+								</Col>
+								<Col>
+									<Dropdown menu={{ items: headerMenuOptions }}>
+										<Button
+											icon={
+												<CaretDownOutlined
+													style={{
+														color: "#ffffff",
+													}}
+												/>
+											}
+										/>
+									</Dropdown>
+								</Col>
+							</Space>
+						</Row>
 					</Header>
 
-					<Content
-						style={{ backgroundColor: ThemeColors.bgColor, overflow: "auto" }}
-					>
+					<Content>
 						<div
 							style={{
 								padding: 24,
