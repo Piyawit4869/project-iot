@@ -5,14 +5,14 @@ import "@styles/index.css";
 import { ConfigProvider } from "antd";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { ThemeColorsV2 } from "@styles/theme.ts";
+import { ThemeConfig } from "@styles/theme.ts";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-	<React.StrictMode>
-		<DndProvider backend={HTML5Backend}>
-			<ConfigProvider theme={ThemeColorsV2}>
-				<App />
-			</ConfigProvider>
-		</DndProvider>
-	</React.StrictMode>
+  <React.StrictMode>
+    <DndProvider backend={HTML5Backend}>
+      <ConfigProvider theme={ThemeConfig.ThemeColorsV2}>
+        <App />
+      </ConfigProvider>
+    </DndProvider>
+  </React.StrictMode>
 );
