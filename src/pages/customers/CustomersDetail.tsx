@@ -1,4 +1,4 @@
-import { ThemeColors } from "../styles/theme";
+import { ThemeColors } from "../../styles/theme";
 import { Button, Typography } from "antd";
 import { Link } from "react-router-dom";
 
