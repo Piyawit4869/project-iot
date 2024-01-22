@@ -44,6 +44,10 @@ export const ThemeConfig = {
       Button: {
         defaultBg: "#EFAB3A",
       },
+      Breadcrumb: {
+        itemColor: "#EFAB3A",
+        lastItemColor: "#EFAB3A",
+      },
     },
   },
 };
