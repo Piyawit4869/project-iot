@@ -1,6 +1,6 @@
 import { Button, Flex, Pagination, Row, Table, Typography } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { Link, useLoaderData } from "react-router-dom";
+import { Link /*useLoaderData*/ } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ThemeColors } from "@src/styles/theme";
 import { EyeOutlined } from "@ant-design/icons";

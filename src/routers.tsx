@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import { LoginPage } from "./Login";
+import { LoginPage } from "./pages/Login";
 import { Root } from "./pages/Roots";
 import { DashboardPage } from "./pages/analytic/Dashboard";
 import { IndexQuotationPage } from "./pages/quotation/IndexQuotation";
@@ -24,7 +24,7 @@ import {
 } from "./pages/users";
 // import { CustomerSingle, customerIndexLoader } from "./pages/customers";
 import { ProductCreateAction, productIndexLoader } from "./pages/product";
-import { LoginAction } from "./Login";
+import { LoginAction } from "./pages/Login";
 import { BranchEdit, BranchIndex } from "./pages/branch";
 import { CustomersDetail } from "./pages/customers/CustomersDetail";
 import { BranchCreate } from "./pages/branch";

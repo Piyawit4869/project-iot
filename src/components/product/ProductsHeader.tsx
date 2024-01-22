@@ -64,7 +64,7 @@ export const ProductsHeader = () => {
             color: "#fff",
           }}
         >
-          ค้นหา
+          {t("search")}
         </Button>
       </Space>
     </>
