@@ -43,15 +43,9 @@ export const ProductPage = () => {
   //   message.info(`เลือกสถาณะ ${key}`);
   // };
 
-  const breadcrumbItem: Array<any> = [
-    {
-      title: "Product",
-    },
-  ];
-
   return (
     <>
-      <ProductsHeader breadcrumbItem={breadcrumbItem} />
+      <ProductsHeader />
       <ProductTable />
     </>
   );

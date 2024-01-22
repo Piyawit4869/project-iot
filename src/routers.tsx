@@ -2,34 +2,33 @@ import { createBrowserRouter } from "react-router-dom";
 
 import { LoginPage } from "./Login";
 import { Root } from "./pages/Roots";
-import { DashboardPage } from "./pages/Dashboard";
-import { IndexQuotationPage } from "./pages/IndexQuotation";
-import { CreateQuotationPage } from "./pages/CreateQuotation";
+import { DashboardPage } from "./pages/analytic/Dashboard";
+import { IndexQuotationPage } from "./pages/quotation/IndexQuotation";
+import { CreateQuotationPage } from "./pages/quotation/CreateQuotation";
 import { CreateUserPage } from "./pages/users/UserCreate";
-import { IndexOrganizationPage } from "./pages/IndexOrganization";
-import { EditOrganizationPage } from "./pages/EditQrganization";
-import { ProductPage } from "./pages/products/ProductIndex";
-import { CreateProductPage } from "./pages/products/ProductCreate";
-import { EditProductPage } from "./pages/products/ProductEdit";
+import { IndexOrganizationPage } from "./pages/organization/IndexOrganization";
+import { EditOrganizationPage } from "./pages/organization/EditQrganization";
+import { ProductPage } from "./pages/product/ProductIndex";
+import { CreateProductPage } from "./pages/product/ProductCreate";
+import { EditProductPage } from "./pages/product/ProductEdit";
 import { CustomersPage } from "./pages/customers/CustomerIndex";
 import { CreateCustomerPage } from "./pages/customers/CustomerCreate";
 import { EditCustomerPage } from "./pages/customers/EditCustomers";
-import { PartialPage } from "./pages/Partial";
 // import { CustomersDetail } from "./pages/CustomersDetail";
-import { IndexPartialPage } from "./pages/IndexPartial";
 import {
-	SingleUser,
-	UserLayout,
-	UsersPage,
-	userIndexLoader,
-	userLoader,
+  SingleUser,
+  UserLayout,
+  UsersPage,
+  userIndexLoader,
+  userLoader,
 } from "./pages/users";
 // import { CustomerSingle, customerIndexLoader } from "./pages/customers";
-import { ProductCreateAction, productIndexLoader } from "./pages/products";
+import { ProductCreateAction, productIndexLoader } from "./pages/product";
 import { LoginAction } from "./Login";
 import { BranchEdit, BranchIndex } from "./pages/branch";
-import { CustomersDetail } from "./pages/CustomersDetail";
+import { CustomersDetail } from "./pages/customers/CustomersDetail";
 import { BranchCreate } from "./pages/branch";
+import { ProductSingle } from "./pages/product/ProductSingle";
 
 export const router = createBrowserRouter([
   {
@@ -94,7 +93,7 @@ export const router = createBrowserRouter([
         element: <EditOrganizationPage />,
       },
       {
-        path: "/product",
+        path: "/products",
         loader: productIndexLoader,
         element: <ProductPage />,
       },
@@ -108,12 +107,8 @@ export const router = createBrowserRouter([
         element: <EditProductPage />,
       },
       {
-        path: "/partial",
-        element: <IndexPartialPage />,
-      },
-      {
-        path: "/partial/create",
-        element: <PartialPage />,
+        path: "/product/single",
+        element: <ProductSingle />,
       },
       {
         path: "/customers",
@@ -133,15 +128,15 @@ export const router = createBrowserRouter([
       },
       {
         path: "/branchs",
-        element:<BranchIndex/>,
+        element: <BranchIndex />,
       },
       {
         path: "/branchs/create",
-        element: <BranchCreate/>,
+        element: <BranchCreate />,
       },
       {
         path: "/branchs/update",
-        element: <BranchEdit/>,
+        element: <BranchEdit />,
       },
     ],
   },

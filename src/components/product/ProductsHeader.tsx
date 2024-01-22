@@ -1,14 +1,22 @@
 import { FilterFilled, PlusCircleFilled, TagFilled } from "@ant-design/icons";
-import { Breadcrumb, Button, Flex, Input, Space, Typography } from "antd";
+import { Button, Flex, Input, Space, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { BreadcrumbData, GlobalBreadcrumb } from "../global/GlobalBreadcrumb";
 
-export const ProductsHeader = (props: any) => {
+export const ProductsHeader = () => {
   const { Title, Paragraph } = Typography;
   const { t } = useTranslation();
+
+  const breadcrumbItem: BreadcrumbData[] = [
+    {
+      title: "Product",
+    },
+  ];
+
   return (
     <>
-      <Breadcrumb items={props.breadcrumbItem} />
+      <GlobalBreadcrumb breadcrumbItems={breadcrumbItem} />
       <Flex justify={"space-between"} align={"middle"}>
         <Title level={3} style={{ margin: "0" }}>
           {t("product and service name")}
