@@ -17,7 +17,7 @@ import {
   useSubmit,
 } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import * as API from "./apis";
+import * as API from "../apis";
 import React from "react";
 // import axios from "axios";
 

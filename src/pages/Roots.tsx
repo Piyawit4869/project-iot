@@ -1,13 +1,13 @@
 import {
   Outlet,
-  redirect,
-  useLoaderData,
+  // redirect,
+  // useLoaderData,
   useNavigation,
 } from "react-router-dom";
 import { Spin, notification } from "antd";
 import { AppLayout } from "@layout/AppLayout";
 
-import * as API from "../apis";
+// import * as API from "../apis";
 import { AuthContext } from "@contexts/AuthContext";
 
 type NotificationType = "success" | "info" | "warning" | "error";
@@ -41,7 +41,7 @@ export const Root = () => {
 
   return (
     <AuthContext.Provider value={{ onResponse }}>
-      <AppLayout >
+      <AppLayout>
         <Spin spinning={state === "loading" || state === "submitting"}>
           <Outlet />
         </Spin>

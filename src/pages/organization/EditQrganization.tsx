@@ -10,7 +10,7 @@ import {
 	Typography,
 	Upload,
 } from "antd";
-import { ThemeColors } from "../styles/theme";
+import { ThemeColors } from "../../styles/theme";
 import {
 	DeleteOutlined,
 	DownOutlined,
