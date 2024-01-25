@@ -28,7 +28,7 @@ import {
   ShoppingFilled,
   FileFilled,
   SmileFilled,
-  HomeOutlined,
+  PieChartFilled,
 } from "@ant-design/icons";
 import {
   Content,
@@ -77,7 +77,7 @@ export const AppLayout = (props: any) => {
     {
       label: "Analytics",
       key: "/",
-      icon: <HomeOutlined />,
+      icon: <PieChartFilled />,
     },
     {
       label: "Branches",
@@ -204,6 +204,7 @@ export const AppLayout = (props: any) => {
                 navigate(key);
               }}
               items={siedMenu}
+              className="stay-menu"
             ></Menu>
           </Sider>
         </Card>
