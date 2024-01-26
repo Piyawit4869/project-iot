@@ -2,24 +2,21 @@ import { FilterFilled, PlusCircleFilled, TagFilled } from "@ant-design/icons";
 import { Button, Flex, Input, Space, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { BreadcrumbData, GlobalBreadcrumb } from "../global/GlobalBreadcrumb";
 
-export const ProductsHeader = () => {
+interface Datatype {
+  title: string;
+  addItemsButton: string;
+  titleDescription: string;
+}
+
+export const GlobalIndexHeader = (props: Datatype) => {
   const { Title, Paragraph } = Typography;
   const { t } = useTranslation();
-
-  const breadcrumbItem: BreadcrumbData[] = [
-    {
-      title: "Product",
-    },
-  ];
-
   return (
     <>
-      <GlobalBreadcrumb breadcrumbItems={breadcrumbItem} />
       <Flex justify={"space-between"} align={"middle"}>
         <Title level={3} style={{ margin: "0" }}>
-          {t("product and service name")}
+          {props.title}
         </Title>
         <Link to={"/product/new"}>
           <Button
@@ -29,17 +26,17 @@ export const ProductsHeader = () => {
               alignItems: "center",
               fontSize: "large",
               color: "#fff",
-              padding: "18px 20px",
             }}
+            size="large"
             icon={<PlusCircleFilled />}
           >
-            เพิ่มสินค้า/บริการ
+            {props.addItemsButton}
           </Button>
         </Link>
       </Flex>
       <Paragraph style={{ fontSize: "16px" }}>
         <TagFilled style={{ fontSize: "20px", color: "#d36719" }} />{" "}
-        ค้นหาสินค้าและบริการ
+        {props.titleDescription}
       </Paragraph>
       <Space>
         <Button
@@ -49,7 +46,6 @@ export const ProductsHeader = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            padding: "20px",
             color: "#fff",
           }}
         />
@@ -57,7 +53,6 @@ export const ProductsHeader = () => {
         <Button
           size="large"
           style={{
-            padding: "16px 20px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",

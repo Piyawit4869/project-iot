@@ -1,56 +1,56 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;700&display=swap");
 
 body {
-	margin: 0;
+  margin: 0;
 }
 
 * {
-	font-family: "IBM Plex Sans Thai", sans-serif !important;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+  font-family: "IBM Plex Sans Thai", sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-		monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }
 
 .App {
-	text-align: center;
+  text-align: center;
 }
 
 .App-logo {
-	height: 40vmin;
-	pointer-events: none;
+  height: 40vmin;
+  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-	.App-logo {
-		animation: App-logo-spin infinite 20s linear;
-	}
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
 }
 
 .App-header {
-	background-color: #282c34;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	font-size: calc(10px + 2vmin);
-	color: white;
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
 }
 
 @keyframes App-logo-spin {
-	from {
-		transform: rotate(0deg);
-	}
-	to {
-		transform: rotate(360deg);
-	}
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 .add_new_quotation {
-	margin-top: 20px;
+  margin-top: 20px;
 }
 
 /* .ant-menu-item-selected {
@@ -71,19 +71,23 @@ code {
 } */
 
 .statusbar {
-	grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(12, 1fr);
 }
 
 table thead.ant-table-thead .ant-table-cell {
-	background-color: #ee9437;
-	color: #fff;
-	text-align: center;
+  background-color: #ee9437;
+  color: #fff;
+  text-align: center;
 }
 
 .ant-table-tbody {
-	text-align: center;
+  text-align: center;
 }
 .ant-checkbox-checked .ant-checkbox-inner {
-	background-color: #ee9437;
-	border-color: #ee9437;
+  background-color: #ee9437;
+  border-color: #ee9437;
+}
+
+.stay-menu .ant-menu-submenu-selected > .ant-menu-submenu-title {
+  color: #fa541c;
 }
