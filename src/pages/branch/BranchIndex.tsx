@@ -1,47 +1,99 @@
-import { BranchTitle } from "@src/components/branch/Title"
-import { SearchBox } from "@src/components/global/SearchBox"
-import { BranchTable } from "@src/components/branch/Table"
-import { FilterBar } from "@src/components/branch/FilterBar"
-import { ControlOutlined } from "@ant-design/icons"
-import { useState } from "react"
-import { MenuProps, message } from "antd"
+import { EyeOutlined } from "@ant-design/icons";
+import { BreadcrumbData, GlobalBreadcrumb } from "@src/components/global/GlobalBreadcrumb";
+import { GlobalIndexHeader } from "@src/components/global/GlobalIndexHeader";
+import { GlobalTable } from "@src/components/global/GlobalTable";
+import { ThemeColors } from "@src/styles/theme";
+import { Button, TableProps } from "antd";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
+interface Datatype {
+	title: string;
+	description: string;
+	quantity: string;
+	price: string;
+  }
 export const BranchIndex = () => {
-    const itemsCurrency: MenuProps["items"] | any = [
+	const { t } = useTranslation();
+	const columns: TableProps<Datatype>["columns"] = [
+	  {
+		title: t("productAndServiceName"),
+		dataIndex: "title",
+		key: "title",
+		render: (productname: String) => (
+		  <p style={{ color: ThemeColors.blackColor }}>{productname}</p>
+		),
+	  },
+	  {
+		title: t("description"),
+		dataIndex: "description",
+		key: "description",
+		render: (description: String) => (
+		  <p style={{ color: ThemeColors.blackColor }}>{description}</p>
+		),
+	  },
+	  {
+		title: t("quantity"),
+		dataIndex: "quantity",
+		key: "quantity",
+		render: (quantity: String) => (
+		  <p style={{ color: ThemeColors.blackColor }}>{quantity}</p>
+		),
+	  },
+	  {
+		title: t("price"),
+		dataIndex: "price",
+		key: "price",
+		render: (price: number) => (
+		  <p style={{ color: ThemeColors.blackColor }}>{price}</p>
+		),
+	  },
+	  {
+		title: "Action",
+		dataIndex: "title",
+		key: "action",
+		render: (title: any) => (
+		  <Link
+			to={`/products/${title}`}
+			style={{ display: "flex", justifyContent: "center" }}
+		  >
+			<Button
+			  icon={<EyeOutlined />}
+			  style={{
+				color: "#fff",
+				display: "flex",
+				alignItems: "center",
+			  }}
+			>
+			  {t("inspect")}
+			</Button>
+		  </Link>
+		),
+	  },
+	];
+	const dataSource: Datatype[] = [
 		{
-			label: "สินค้า",
-			key: "สินค้า",
-		},
-		{
-			label: "บริการ",
-			key: "บริการ",
+		  title: "Website",
+		  description: "This is Website",
+		  quantity: "1",
+		  price: "2000",
 		},
 	];
-
-    const [collapsed, setCollapsed] = useState(false);
-    let [status, setStatus] = useState<string>(itemsCurrency[0].label);
-    const setQuoStatus: MenuProps["onClick"] = ({ key }) => {
-		setStatus((status = key));
-		message.info(`เลือกสถาณะ ${key}`);
-	};
+	const breadcrumbItem: BreadcrumbData[] = [
+		{
+			title:"Branches",
+		},
+	];
     return (
         <>
-            <BranchTitle/>
-            <SearchBox placeHolder={"Search for User"} />
-            <FilterBar
-				onFilterClick={() => setCollapsed(!collapsed)}
-				filterIcon={
-					collapsed ? (
-						<ControlOutlined style={{ fontSize: "30px" }} />
-					) : (
-						<ControlOutlined style={{ color: "#EE9437", fontSize: "30px" }} />
-					)
-				}
-				filterCollapsed={collapsed}
-				role={status}
-				roleMenu={{ items: itemsCurrency, onClick: setQuoStatus }}
-			/>
-            <BranchTable/>
+        	<GlobalBreadcrumb breadcrumbItems={breadcrumbItem}/>
+			<GlobalIndexHeader
+       			title={t("branchesBusinessOrOrganization")}
+      			titleDescription={t("searchForBusinessOrOrganization")}
+        		addItemsButton={t("addBusinessOrOrganization")}
+				link={"/branches/create"}
+      		/>
+		  <GlobalTable dataSource={dataSource} columns={columns} />
         </>
     )
 }

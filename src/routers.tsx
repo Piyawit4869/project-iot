@@ -25,7 +25,7 @@ import {
 // import { CustomerSingle, customerIndexLoader } from "./pages/customers";
 import { ProductCreateAction, productIndexLoader } from "./pages/product";
 import { LoginAction } from "./pages/Login";
-import { BranchEdit, BranchIndex } from "./pages/branch";
+import { BranchEdit, BranchIndex, BranchSingle } from "./pages/branch";
 import { CustomersDetail } from "./pages/customers/CustomersDetail";
 import { BranchCreate } from "./pages/branch";
 import { ProductSingle } from "./pages/product/ProductSingle";
@@ -127,16 +127,20 @@ export const router = createBrowserRouter([
         element: <CustomersDetail />,
       },
       {
-        path: "/branchs",
-        element: <BranchIndex />,
+        path: "/branches",
+        element:<BranchIndex/>,
       },
       {
-        path: "/branchs/create",
-        element: <BranchCreate />,
+        path: "/branches/create",
+        element: <BranchCreate/>,
       },
       {
-        path: "/branchs/update",
-        element: <BranchEdit />,
+        path: "/branches/update",
+        element: <BranchEdit/>,
+      },
+      {
+        path: "/branches/single",
+        element: <BranchSingle/>,
       },
     ],
   },

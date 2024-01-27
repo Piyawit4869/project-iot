@@ -1,16 +1,16 @@
 import {
-  Button,
-  Image,
-  Layout,
-  Menu,
-  Row,
-  Typography,
-  Col,
-  Space,
-  Card,
-  Avatar,
-  Dropdown,
-  MenuProps,
+	Button,
+	Image,
+	Layout,
+	Menu,
+	Row,
+	Typography,
+	Col,
+	Space,
+	Card,
+	Avatar,
+	Dropdown,
+	MenuProps,
 } from "antd";
 import {
   MenuFoldOutlined,
@@ -31,47 +31,47 @@ import {
   PieChartFilled,
 } from "@ant-design/icons";
 import {
-  Content,
-  // Footer,
-  Header,
+	Content,
+	// Footer,
+	Header,
 } from "antd/es/layout/layout";
 import { useNavigate } from "react-router";
 import Logo from "@assets/images/Logo-StayOrganized.png";
 import {
-  // JSXElementConstructor,
-  useState,
+	// JSXElementConstructor,
+	useState,
 } from "react";
 import { useLocation } from "react-router-dom";
 // import UButton from "../components/admin/Button";
 // import { styles } from "../pages/utotech";
 
 export const AppLayout = (props: any) => {
-  // const { user } = props;
-  const { Sider } = Layout;
-  const [collapsed, setCollapsed] = useState(false);
-  // const [activekey, setActivekey] = useState("");
+	// const { user } = props;
+	const { Sider } = Layout;
+	const [collapsed, setCollapsed] = useState(false);
+	// const [activekey, setActivekey] = useState("");
 
-  const location = useLocation();
-  const navigate = useNavigate();
+	const location = useLocation();
+	const navigate = useNavigate();
 
-  // const onLogout = () => {
-  // 	localStorage.removeItem("accessToken");
-  // };
+	// const onLogout = () => {
+	// 	localStorage.removeItem("accessToken");
+	// };
 
-  console.log(location);
+	console.log(location);
 
-  const { Paragraph } = Typography;
-  // React.useEffect(() => {
-  //   const key = location.pathname.split("/") as any[];
+	const { Paragraph } = Typography;
+	// React.useEffect(() => {
+	//   const key = location.pathname.split("/") as any[];
 
-  //   if (key.length) {
-  //     if (Number(key[2]) > 0) {
-  //       setActivekey(key[1] ? `${key[1]}` : "");
-  //     } else {
-  //       setActivekey(`${key[1]}${key[2] ? `/${key[2]}` : ""} `);
-  //     }
-  //   }
-  // }, [location.pathname]);
+	//   if (key.length) {
+	//     if (Number(key[2]) > 0) {
+	//       setActivekey(key[1] ? `${key[1]}` : "");
+	//     } else {
+	//       setActivekey(`${key[1]}${key[2] ? `/${key[2]}` : ""} `);
+	//     }
+	//   }
+	// }, [location.pathname]);
 
   const siedMenu: Array<any> = [
     {
@@ -138,23 +138,23 @@ export const AppLayout = (props: any) => {
     },
   ];
 
-  const headerMenuOptions: MenuProps["items"] | any = [
-    {
-      label: "โปรไฟล์",
-      key: "1",
-      icon: <UserOutlined />,
-    },
-    {
-      label: "ตั้งค่า",
-      key: "2",
-      icon: <SettingOutlined />,
-    },
-    {
-      label: "ออกจากระบบ",
-      key: "2",
-      icon: <LogoutOutlined />,
-    },
-  ];
+	const headerMenuOptions: MenuProps["items"] | any = [
+		{
+			label: "โปรไฟล์",
+			key: "1",
+			icon: <UserOutlined />,
+		},
+		{
+			label: "ตั้งค่า",
+			key: "2",
+			icon: <SettingOutlined />,
+		},
+		{
+			label: "ออกจากระบบ",
+			key: "2",
+			icon: <LogoutOutlined />,
+		},
+	];
 
   return (
     <>
@@ -278,20 +278,19 @@ export const AppLayout = (props: any) => {
             </Row>
           </Header>
 
-          <Content>
-            <div
-              style={{
-                padding: 24,
-                minHeight: 360,
-              }}
-            >
-              {props.children}
-            </div>
-          </Content>
-        </Layout>
-      </Layout>
-      {/* FIXME: create new footer */}
-    </>
-  );
+					<Content>
+						<div
+							style={{
+								padding: 24,
+								minHeight: 360,
+							}}
+						>
+							{props.children}
+						</div>
+					</Content>
+				</Layout>
+			</Layout>
+			{/* FIXME: create new footer */}
+		</>
+	);
 };
-//FIXME Test

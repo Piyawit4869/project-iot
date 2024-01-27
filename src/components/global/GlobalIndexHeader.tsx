@@ -7,6 +7,7 @@ interface Datatype {
   title: string;
   addItemsButton: string;
   titleDescription: string;
+  link: string;
 }
 
 export const GlobalIndexHeader = (props: Datatype) => {
@@ -18,7 +19,7 @@ export const GlobalIndexHeader = (props: Datatype) => {
         <Title level={3} style={{ margin: "0" }}>
           {props.title}
         </Title>
-        <Link to={"/product/new"}>
+        <Link to={props.link}>
           <Button
             style={{
               display: "flex",

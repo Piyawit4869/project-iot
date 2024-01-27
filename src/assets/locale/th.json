@@ -1,5 +1,8 @@
 {
   "translation": {
+    "searchForBusinessOrOrganization":"ค้นหากิจการหรือองกรค์",
+    "branchesBusinessOrOrganization":"สาขาภายในกิจการ/องกรค์",
+    "addBusinessOrOrganization":"เพิ่มกิจการ/องกรค์",
     "productAndService": "สินค้าหรือบริการ",
     "addProductOrService": "เพิ่มสินค้าหรือบริการ",
     "productAndServiceName": "ชื่อสินค้าหรือบริการ",

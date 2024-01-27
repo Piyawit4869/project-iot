@@ -76,7 +76,7 @@ export const FilterBar = (props: FilterBarProps) => {
           </Dropdown>
         </Form.Item>
       </div>
-      <Link to="/branchs/create" style={{ width: "12%" }}>
+      <Link to="/branches/create" style={{ width: "12%" }}>
         <Button
           type="primary"
           icon={<PlusOutlined style={{ fontSize: "25px" }} />}
