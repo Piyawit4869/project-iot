@@ -114,6 +114,7 @@ export const ProductPage = () => {
         title={t("productAndService")}
         titleDescription={t("searchForProductOrService")}
         addItemsButton={t("addProductOrService")}
+        link="#"
       />
       <GlobalTable dataSource={dataSource} columns={columns} />
     </>

@@ -25,7 +25,7 @@ import {
 // import { CustomerSingle, customerIndexLoader } from "./pages/customers";
 import { ProductCreateAction, productIndexLoader } from "./pages/product";
 import { LoginAction } from "./pages/Login";
-import { BranchEdit, BranchIndex } from "./pages/branch";
+import { BranchEdit, BranchIndex, BranchSingle } from "./pages/branch";
 import { CustomersDetail } from "./pages/customers/CustomersDetail";
 import { BranchCreate } from "./pages/branch";
 import { ProductSingle } from "./pages/product/ProductSingle";
