@@ -1,4 +1,4 @@
-import * as API from "@apis";
+import * as API from "@src/apis";
 
 export async function LoginAction({ request }: any) {
   const formData = await request.formData();

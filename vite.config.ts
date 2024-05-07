@@ -16,7 +16,6 @@ export default () => {
         "@styles": "/src/styles",
         "@utils": "/src/utils",
         "@forms": "/src/forms",
-        "@apis": "./src/apis",
       },
     },
     plugins: [react()],
