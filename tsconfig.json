@@ -21,12 +21,11 @@
       "@src/*": ["./src/*"],
       "@components/*": ["./src/components/*"],
       "@assets/*": ["./src/assets/*"],
-      "@apis/*": ["./src/apis/*"],
-      "@forms/*": ["./src/forms/*"],
       "@contexts/*": ["./src/contexts/*"],
       "@layout/*": ["./src/layout/*"],
       "@styles/*": ["./src/styles/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@utils/*": ["./src/utils/*"],
+      "@forms": ["./src/forms"]
     }
   },
   "include": ["src"],
