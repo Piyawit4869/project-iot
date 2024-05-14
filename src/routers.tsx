@@ -5,9 +5,14 @@ import { AppLayout } from "./layout";
 
 import { routes as appRoutes } from "./pages/app";
 import { routes as publicRoutes } from "./pages/public";
+import { Login } from "./pages/Login";
 
 export const router = createBrowserRouter([
   // ...loginRouute,
+  {
+    path: "/login",
+    element: <Login />,
+  },
   {
     path: "/",
     element: <Root />,
@@ -28,6 +33,7 @@ export const router = createBrowserRouter([
         element: <AppLayout />,
         children: [...appRoutes],
       },
+      
     ],
   },
 ]);
