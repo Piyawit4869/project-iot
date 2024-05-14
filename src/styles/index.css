@@ -53,6 +53,20 @@ code {
   margin-top: 20px;
 }
 
+.app-background {
+  background: radial-gradient(
+      94.9% 159.36% at 0% -10.74%,
+      rgb(25, 42, 92, 0.1) 0%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    radial-gradient(
+      46.42% 134.49% at 93.97% -26.34%,
+      #ebddea 0%,
+      rgba(237, 225, 236, 0.721641) 30.17%,
+      rgba(239, 228, 238, 0.495834) 63.96%,
+      rgba(255, 255, 255, 0) 100%
+    );
+}
 /* .ant-menu-item-selected {
   background-color: #fff5ed !important;
   color: #ee9437 !important;

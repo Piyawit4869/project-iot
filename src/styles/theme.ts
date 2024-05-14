@@ -25,28 +25,21 @@ export const ThemeColors = {
 export const ThemeConfig = {
   ThemeColorsV2: {
     token: {
-      colorPrimary: "#e46f1b",
-      colorInfo: "#000",
+      colorPrimary: "#192A5C",
     },
     components: {
       Card: {
-        colorBgContainer: "rgb(228, 111, 27)",
+        colorBgContainer: "#192A5C",
       },
       Menu: {
-        colorPrimary: "#000000",
-        itemSelectedBg: "rgb(228, 111, 27)",
-        itemSelectedColor: "rgb(255, 255, 255)",
+        itemSelectedBg: "#192A5C",
+        itemSelectedColor: "#ffffff",
+        itemColor: "grey",
+        itemHoverColor: "lightGrey",
       },
       Layout: {
         siderBg: "#f2f2f2",
         headerBg: "#ffffff",
-      },
-      Button: {
-        defaultBg: "#EFAB3A",
-      },
-      Breadcrumb: {
-        itemColor: "#EFAB3A",
-        lastItemColor: "#EFAB3A",
       },
     },
   },
