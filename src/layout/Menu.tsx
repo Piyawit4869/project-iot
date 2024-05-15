@@ -1,0 +1,32 @@
+import { Link } from "react-router-dom";
+import * as Icon from "@ant-design/icons";
+interface MenusProps {
+  role: string;
+  action?: () => void;
+}
+
+export const Menus = (props: MenusProps) => {
+  const { role } = props;
+  const menus = [
+    {
+      label: <Link to="attendance">Attendance</Link>,
+      key: "attendance",
+      icon: <Icon.ScheduleOutlined />,
+      role: ["admin", "user"],
+    },
+    {
+      label: <Link to="notation">Notation</Link>,
+      key: "notation",
+      icon: <Icon.ReconciliationOutlined />,
+      role: ["admin", "user"],
+    },
+    {
+      label: <Link to="planning">Planing</Link>,
+      key: "planning",
+      icon: <Icon.DatabaseOutlined rotate={90} />,
+      role: ["admin", "user"],
+    },
+  ];
+
+  return menus.filter((m: any) => m.role.indexOf(role) > -1);
+};
