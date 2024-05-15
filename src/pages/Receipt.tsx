@@ -1,6 +1,6 @@
 import React from 'react';
 import { Breadcrumb, Card, Col, Row, Form, Input, DatePicker, Select } from 'antd';
-import LogoImage from './images/stog.png'; 
+import LogoImage from '../assets/images/stog.png'; 
 import { Image } from 'antd';
 const { Option } = Select;
 
