@@ -5,7 +5,7 @@ import { AppLayout } from "./layout";
 
 import { routes as appRoutes } from "./pages/app";
 import { routes as publicRoutes } from "./pages/public";
-import { Login } from "./pages/Login";
+import { Login, loginAction, loginLoader } from "./pages/Login";
 import { Receipt } from "./pages/Receipt";
 import { Organize } from "./pages/Organize";
 
@@ -14,6 +14,8 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+    loader: loginLoader,
+    action: loginAction,
   },
   {
     path: "/receipt",
@@ -43,7 +45,6 @@ export const router = createBrowserRouter([
         element: <AppLayout />,
         children: [...appRoutes],
       },
-      
     ],
   },
 ]);
