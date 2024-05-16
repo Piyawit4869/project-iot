@@ -41,6 +41,10 @@ export const ThemeConfig = {
         siderBg: "#f2f2f2",
         headerBg: "#ffffff",
       },
+      Table: {
+        headerBg: "rgb(28, 44, 92)",
+        headerColor: "rgba(255, 255, 255, 0.88)"
+      }
     },
   },
 };

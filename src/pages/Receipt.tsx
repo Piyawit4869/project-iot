@@ -1,11 +1,46 @@
 import React from 'react';
-import { Breadcrumb, Card, Col, Row, Form, Input, DatePicker, Select } from 'antd';
+import { Breadcrumb, Card, Col, Row, Form, Input, DatePicker, Select, Table } from 'antd';
 import LogoImage from '../assets/images/stog.png'; 
 import { Image } from 'antd';
+
+
 const { Option } = Select;
 
-export const Receipt: React.FC = () => (
-  <div>
+export const Receipt: React.FC = () => {
+    const dataSource = [
+        {
+          key: '1',
+          name: 'Mike',
+          age: 32,
+          address: '10 Downing Street',
+        },
+        {
+          key: '2',
+          name: 'John',
+          age: 42,
+          address: '10 Downing Street',
+        },
+      ];
+      
+      const columns = [
+        {
+          title: 'Name',
+          dataIndex: 'name',
+          key: 'name',
+        },
+        {
+          title: 'Age',
+          dataIndex: 'age',
+          key: 'age',
+        },
+        {
+          title: 'Address',
+          dataIndex: 'address',
+          key: 'address',
+        },
+      ];
+      
+    return <div>
     <Breadcrumb
       style={{ marginBottom: 16 }}
       items={[
@@ -134,5 +169,8 @@ export const Receipt: React.FC = () => (
         </Row>
       </Form>
     </Card>
+
+<Table dataSource={dataSource} columns={columns} />;
   </div>
-);
+ 
+};

@@ -7,6 +7,7 @@ import { routes as appRoutes } from "./pages/app";
 import { routes as publicRoutes } from "./pages/public";
 import { Login } from "./pages/Login";
 import { Receipt } from "./pages/Receipt";
+import { Organize } from "./pages/Organize";
 
 export const router = createBrowserRouter([
   // ...loginRouute,
@@ -17,6 +18,10 @@ export const router = createBrowserRouter([
   {
     path: "/receipt",
     element: <Receipt />,
+  },
+  {
+    path: "/organize",
+    element: <Organize />,
   },
   {
     path: "/",
