@@ -1,4 +1,5 @@
 import React from "react";
+import * as API from "@src/apis";
 import {
   HomeOutlined,
   TagOutlined,
@@ -8,12 +9,25 @@ import {
 } from "@ant-design/icons";
 import { Breadcrumb, Typography, Input, Button, Table } from "antd";
 import { SearchProps } from "antd/es/input";
+import { Link, useLoaderData } from "react-router-dom";
 
 const { Title } = Typography;
 
-export const Organize: React.FC = () => {
-  const [searchValue, setSearchValue] = React.useState<string>("");
+// get API loader 
+export async function organizeLoader() {
+    try {
+      const organize = await API.organize.getAll();
+      return {organize:organize.data};
+    } catch (error) {
+      return {error:"error",message:error}
+    }
+}
 
+
+export const OrganizeIndex: React.FC = () => {
+  const {organize} = useLoaderData()as any;
+  const [searchValue, setSearchValue] = React.useState<string>("");
+  console.log({organize});
   const onSearch: SearchProps["onSearch"] = (value) => {
     console.log(value);
   };
@@ -21,14 +35,14 @@ export const Organize: React.FC = () => {
   const columns = [
     {
       title: "ลำดับ",
-      dataIndex: "index",
-      key: "index",
+      dataIndex: "id",
+      key: "id",
     },
 
     {
       title: "ชื่อองค์กร",
-      dataIndex: "organizationName",
-      key: "organizationName",
+      dataIndex: "businessName",
+      key: "businessName",
     },
     {
       title: "เปิดใช้งานตั้งแต่วันที่",
@@ -106,6 +120,7 @@ export const Organize: React.FC = () => {
         }}
       >
         <div></div>
+        <Link to={"create"}>
         <Button
           type="primary"
           icon={<PlusCircleFilled />}
@@ -123,6 +138,7 @@ export const Organize: React.FC = () => {
         >
           เพิ่มข้อมูลลูกค้า
         </Button>
+        </Link> 
       </div>
 
       {/* Search bar with button */}
@@ -160,8 +176,9 @@ export const Organize: React.FC = () => {
         }}
       >
         <Table
+          
           columns={columns}
-          dataSource={data}
+          dataSource={organize?.items?organize?.items:[]}
           pagination={false}
           bordered
         />

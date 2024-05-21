@@ -16,72 +16,49 @@ import {
 } from "react-router-dom";
 import axios from "axios";
 
-export async function loginLoader({ request, params }: any) {
-  const formData = await request.formData();
-  const submitData = Object.fromEntries(formData);
-
-  return json({ data: "test" });
-}
-
+//here Action example
 export async function loginAction({ request, params }: any) {
   const formData = await request.formData();
   const submitData = Object.fromEntries(formData);
-
-  try {
-    const res = await API.auth.login(submitData);
-
-    notification.success({
-      message: "Login Success",
-      description: "You have successfully logged in",
-    });
-
-    return json({ status: "success", data: res });
-  } catch (error) {
-    notification.error({
-      message: "Login Failed",
-      description: "Invalid email or password",
-    });
-
-    return json({ status: "error", message: "Invalid email or password" });
+  // console.log({submitData});
+  switch (submitData.action) {
+    case "adminLogin": 
+    try {
+      const res = await API.auth.adminLogin(JSON.parse(submitData.data));
+      localStorage.setItem("accessToken",res.data.accessToken)
+      localStorage.setItem("refreshToken",res.data.refreshToken)
+      notification.success({
+        message: "Login Success",
+        description: "You have successfully logged in",
+      });
+  
+      return json({ status: "success", data: res });
+    } catch (error) {
+      notification.error({
+        message: "Login Failed",
+        description: "Invalid email or password",
+      });
+  
+      return json({ status: "error", message: "Invalid email or password" });
+    }   
+    default:
+      break;
   }
 }
 
 export const Login = () => {
-  const data = useLoaderData();
-
-  console.log({ data });
-
+  const { state } = useNavigation();
   const submit = useSubmit();
   const navigation = useNavigation();
-
-  console.log({ navigation });
-
+  const [form] = Form.useForm()
   const onFinish = async (values: any) => {
-    console.log("Received values of form: ", values);
+  const payload = {...values}
+    console.log({payload});
+    submit({action :"adminLogin" , data:JSON.stringify(payload)},{ method: "post" });
 
-    submit(values, { method: "post" });
   };
 
-  const disabledLoginButton =
-    navigation.formAction === "/login" && navigation.state === "submitting";
-
-  const disabledRegisterButton =
-    navigation.formAction === "/register" && navigation.state === "submitting";
-
-  React.useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/content", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [navigation.state]);
+  
 
   return (
     <div
@@ -93,11 +70,12 @@ export const Login = () => {
       }}
     >
       <Form
+        form={form}
         name="normal_login"
         className="login-form"
         initialValues={{ remember: true }}
         onFinish={onFinish}
-        style={{ maxWidth: "500px" }} // Adjust maxWidth to at least the width of the textboxes
+        style={{ maxWidth: "500px" }} 
       >
         <h1 style={{ textAlign: "left", fontSize: "50px" }}>Sign in</h1>
         <p style={{ textAlign: "left", fontSize: "25px", marginTop: "-40px" }}>
@@ -113,7 +91,7 @@ export const Login = () => {
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
             placeholder="Email"
-            style={{ width: "500px", height: "50px", fontSize: "16px" }} // Set width to 500px
+            style={{ width: "500px", height: "50px", fontSize: "16px" }} 
           />
         </Form.Item>
         <Form.Item
@@ -123,7 +101,7 @@ export const Login = () => {
           <Input.Password
             prefix={<LockOutlined className="site-form-item-icon" />}
             placeholder="Password"
-            style={{ width: "500px", height: "50px", fontSize: "16px" }} // Set width to 500px
+            style={{ width: "500px", height: "50px", fontSize: "16px" }}
             iconRender={(visible) =>
               visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
             }
@@ -138,9 +116,8 @@ export const Login = () => {
               fontSize: "18px",
               padding: "0 30px",
               width: "100%",
-            }} // Button width 100% of the form
-            loading={disabledLoginButton}
-            disabled={disabledLoginButton}
+            }} 
+            
           >
             Log in
           </Button>

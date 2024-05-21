@@ -5,3 +5,4 @@ export * as user from "./user";
 export * as auth from "./auth";
 export * as product from "./product";
 export * as customer from "./customer";
+export * as organize from "./organize";

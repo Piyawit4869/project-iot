@@ -5,25 +5,21 @@ import { AppLayout } from "./layout";
 
 import { routes as appRoutes } from "./pages/app";
 import { routes as publicRoutes } from "./pages/public";
-import { Login, loginAction, loginLoader } from "./pages/Login";
+import { routes as adminRoutes } from "./pages/admin";
+import { Login, loginAction } from "./pages/Login";
 import { Receipt } from "./pages/Receipt";
-import { Organize } from "./pages/Organize";
 
 export const router = createBrowserRouter([
   // ...loginRouute,
   {
     path: "/login",
     element: <Login />,
-    loader: loginLoader,
+    // loader: loginLoader,
     action: loginAction,
   },
   {
     path: "/receipt",
     element: <Receipt />,
-  },
-  {
-    path: "/organize",
-    element: <Organize />,
   },
   {
     path: "/",
@@ -36,8 +32,8 @@ export const router = createBrowserRouter([
       },
       {
         path: "/admin",
-        // element: <Root />,
-        children: [],
+        element: <AppLayout />,
+        children: [...adminRoutes],
       },
 
       {
