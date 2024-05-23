@@ -10,15 +10,6 @@ interface InputFormFieldProps {
   // options?: { value: string; label: string }[];
 }
 
-const styles: Record<string, CSSProperties> = {
-  input: {
-    borderRadius: "10px",
-    border: "1px solid #ccc",
-    padding: "10px",
-    // fontFamily: "Arial, sans-serif",
-  },
-};
-
 export const InputFormField: React.FC<InputFormFieldProps> = (
   props: InputFormFieldProps
 ) => {
@@ -37,4 +28,12 @@ export const InputFormField: React.FC<InputFormFieldProps> = (
       <Input placeholder={placeholder} style={styles.input} />
     </Form.Item>
   );
+};
+
+const styles: Record<string, CSSProperties> = {
+  input: {
+    borderRadius: "10px",
+    border: "1px solid #ccc",
+    padding: "10px",
+  },
 };
