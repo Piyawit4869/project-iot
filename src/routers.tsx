@@ -5,9 +5,22 @@ import { AppLayout } from "./layout";
 
 import { routes as appRoutes } from "./pages/app";
 import { routes as publicRoutes } from "./pages/public";
+import { routes as adminRoutes } from "./pages/admin";
+import { Login, loginAction } from "./pages/Login";
+import { Receipt } from "./pages/Receipt";
 
 export const router = createBrowserRouter([
   // ...loginRouute,
+  {
+    path: "/login",
+    element: <Login />,
+    // loader: loginLoader,
+    action: loginAction,
+  },
+  {
+    path: "/receipt",
+    element: <Receipt />,
+  },
   {
     path: "/",
     element: <Root />,
@@ -19,8 +32,8 @@ export const router = createBrowserRouter([
       },
       {
         path: "/admin",
-        // element: <Root />,
-        children: [],
+        element: <AppLayout />,
+        children: [...adminRoutes],
       },
 
       {

@@ -1,3 +1,5 @@
+import { CSSProperties } from "react";
+
 export const ThemeColors = {
   primaryColor: "#E46F1B",
   brickOrangeColor: "#EC8235",
@@ -22,6 +24,15 @@ export const ThemeColors = {
   fontColor3: "#727272",
 };
 
+export const styles: Record<string, CSSProperties> = {
+  input: {
+    borderRadius: "10px",
+    border: "1px solid #ccc",
+    padding: "10px",
+    // fontFamily: "Arial, sans-serif",
+  },
+};
+
 export const ThemeConfig = {
   ThemeColorsV2: {
     token: {
@@ -40,6 +51,10 @@ export const ThemeConfig = {
       Layout: {
         siderBg: "#f2f2f2",
         headerBg: "#ffffff",
+      },
+      Table: {
+        headerBg: "rgb(28, 44, 92)",
+        headerColor: "rgba(255, 255, 255, 0.88)",
       },
     },
   },
