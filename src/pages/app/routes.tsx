@@ -4,6 +4,7 @@ import { AppLandingPage } from "./indexpage";
 import { routes as planningRoute } from "./planning";
 import { routes as notationRoute } from "./notation";
 import { routes as attendanceRoute } from "./attendance";
+import { routes as userRoute  } from "./user";
 
 export const routes = [
   {
@@ -17,4 +18,5 @@ export const routes = [
   ...planningRoute,
   ...notationRoute,
   ...attendanceRoute,
+  ...userRoute
 ];
