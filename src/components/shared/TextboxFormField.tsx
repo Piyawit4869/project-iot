@@ -11,11 +11,7 @@ interface TextboxFormFieldProps {
 export const TextboxFormField: FC<TextboxFormFieldProps> = (
   props: TextboxFormFieldProps
 ) => {
-<<<<<<< HEAD
-  const { name, label, placeholder , type } = props;
-=======
   const { name, label, placeholder, type } = props;
->>>>>>> bbc74d0783083ffa6b20a98e4d81962ba81dfe78
 
   return (
     <Form.Item name={name} label={label}>
