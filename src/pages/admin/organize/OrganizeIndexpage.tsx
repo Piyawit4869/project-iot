@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-
+// import React, { useEffect, useState } from "react";
+import React from "react";
 import * as API from "@src/apis";
 import {
   HomeOutlined,
@@ -10,8 +10,10 @@ import {
 } from "@ant-design/icons";
 import { Breadcrumb, Typography, Input, Button, Table } from "antd";
 import { SearchProps } from "antd/es/input";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { Link, useLoaderData } from "react-router-dom";
+
+// import { render } from "react-dom";
+// // import axios from "axios";
 
 const { Title } = Typography;
 
@@ -26,50 +28,119 @@ export async function organizeLoader() {
 }
 
 export const OrganizeIndex: React.FC = () => {
-  const [products, setProducts] = React.useState([]);
-  const [columns, setColumns] = useState([]);
+  const { organize } = useLoaderData() as any;
+
+  //   const [products, setProducts] = React.useState([]);
+  //   const [columns, setColumns] = useState([]);
   // const axios = require("axios");
   // Fetch all products
-  useEffect(() => {
-    console.log("in use effect");
+  // useEffect(() => {
+  //   console.log("in use effect");
 
-    // Step 3: Fetch data using Axios
-    axios
-      .get("https://fakestoreapi.com/products")
-      .then((response) => {
-        if (response.data.length > 0) {
-          const dynamicColumns: any = Object.keys(response.data[0]).map(
-            (key) => ({
-              title: key.charAt(0).toUpperCase() + key.slice(1),
-              dataIndex: key,
-              key: key,
-            })
-          );
+  // Step 3: Fetch data using Axios
+  // axios
+  //   .get("https://fakestoreapi.com/products")
+  //   .then((response) => {
+  //     if (response.data.length > 0) {
+  //       const dynamicColumns: any = Object.keys(response.data[0]).map(
+  //         (key) => ({
+  //           title: key.charAt(0).toUpperCase() + key.slice(1),
+  //           dataIndex: key,
+  //           key: key,
+  //         })
+  //       );
+  const columns = [
+    {
+      title: "logo",
+      dataIndex: "logo",
+      key: "logo",
+    },
+    {
+      title: "ลำดับ",
+      dataIndex: "num",
+      key: "num",
+    },
+    {
+      title: "ชื่อองค์กร",
+      dataIndex: "businessName",
+      key: "businessName",
+    },
+    {
+      title: "คำอธิบายธุรกิจ",
+      dataIndex: "businessDescription",
+      key: "businessDescription",
+    },
+    {
+      title: "จดทะเบียน",
+      dataIndex: "businessRegister",
+      key: "businessRegister",
+    },
+    {
+      title: "เบอร์โทรศัพท์",
+      dataIndex: "businessPhone",
+      key: "businessPhone",
+    },
+    {
+      title: "Default User",
+      dataIndex: "default_user",
+      key: "default_user",
+    },
+    {
+      title: "ระยะเวลาการใช้งานระบบ",
+      dataIndex: "timeused",
+      key: "timeused",
+    },
+    {
+      title: "active",
+      dataIndex: "active",
+      key: "active",
+      render: (active: any) => (active ? "พร้อมใช้งาน" : "ไม่พร้อมใช้งาน"),
+    },
+    {
+      title: "รายละเอียด",
+      key: "details",
+      dataIndex: "id",
+      render: (id: number) => {
+        console.log(id);
+        return (
+          <Link to={`${id}`}>
+            <Button
+              style={{ fontSize: "16px", width: "180px" }}
+              type="primary"
+              icon={<EyeOutlined />}
+            >
+              ดูข้อมูล
+            </Button>
+          </Link>
+        );
+      },
+    },
+  ];
 
-          // Add a custom column for the details button
-          dynamicColumns.push({
-            title: "รายละเอียด",
-            key: "details",
-            render: () => (
-              <Button
-                style={{ fontSize: "16px", width: "180px" }}
-                type="primary"
-                icon={<EyeOutlined />}
-              >
-                ดูข้อมูล
-              </Button>
-            ),
-          });
+  // Add a custom column for the details button
+  // dynamicColumns.push({
+  //   title: "รายละเอียด",
+  //   key: "details",
+  //   render: () => (
+  //     <Button
+  //       style={{ fontSize: "16px", width: "180px" }}
+  //       type="primary"
+  //       icon={<EyeOutlined />}
+  //     >
+  //       ดูข้อมูล
+  //     </Button>
+  //   ),
+  // });
 
-          setColumns(dynamicColumns);
-          setProducts(response.data); // Update the state with the fetched data
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-      });
-  }, []); // Empty dependency array means this effect runs once after the initial render
-  console.log(products);
+  //     setColumns(dynamicColumns);
+  //     setProducts(response.data); // Update the state with the fetched data
+  //   }
+  // })
+  //     .catch((error) => {
+  //       console.error("Error fetching products:", error);
+  //     });
+  // }, []); // Empty dependency array means this effect runs once after the initial render
+  // console.log(products);
 
   // const { organize } = useLoaderData() as any;
   const [searchValue, setSearchValue] = React.useState<string>("");
@@ -161,8 +232,10 @@ export const OrganizeIndex: React.FC = () => {
       >
         <Table
           columns={columns}
-          dataSource={products}
-          // dataSource={organize?.items ? organize?.items : []}
+          // dataSource={dataSource}
+          // columns={columns}
+          // dataSource={products}
+          dataSource={organize?.items ? organize?.items : []}
           pagination={false}
           bordered
         />
