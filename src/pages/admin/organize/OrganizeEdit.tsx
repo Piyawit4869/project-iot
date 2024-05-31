@@ -1,6 +1,6 @@
 import React from "react";
 // import { Select } from "antd";
-import { OrganizeForm } from "@src/forms";
+import { OrganizeCreateForm } from "@src/forms";
 
 // const { Option } = Select;
 
@@ -58,7 +58,7 @@ export const OrganizeEdit: React.FC = () => {
 
   return (
     <div>
-      <OrganizeForm initialValues={organize} />
+      <OrganizeCreateForm initialValues={organize} />
     </div>
   );
 };
