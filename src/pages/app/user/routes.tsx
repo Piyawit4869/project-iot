@@ -1,6 +1,30 @@
+// import { UsersCreate } from "./createpage";
+// import { UsersIndex } from "./indexpage";
+// import { UsersSingle} from "./single";
+
+// export const routes = [
+//   {
+//     path: "/users",
+//     children: [
+//       {
+//         path: "",
+//         element: <UsersIndex/>
+//       },
+//       {
+//         path: "create",
+//         element: <UsersCreate/>
+//       },
+//       {
+//         path: "single",
+//         element: <UsersSingle/>
+//       }
+//     ],
+//   }
+// ];
+
 import { UsersCreate } from "./createpage";
 import { UsersIndex } from "./indexpage";
-import { UsersSingle} from "./single";
+import UsersSingle from "./single";
 
 export const routes = [
   {
@@ -15,7 +39,7 @@ export const routes = [
         element: <UsersCreate/>
       },
       {
-        path: "single",
+        path: "single", 
         element: <UsersSingle/>
       }
     ],

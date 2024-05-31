@@ -5,16 +5,17 @@ interface TextboxFormFieldProps {
   name: string;
   label: string;
   placeholder?: string;
+  type?: string;
 }
 
 export const TextboxFormField: FC<TextboxFormFieldProps> = (
   props: TextboxFormFieldProps
 ) => {
-  const { name, label, placeholder } = props;
+  const { name, label, placeholder , type } = props;
 
   return (
     <Form.Item name={name} label={label}>
-      <Input placeholder={placeholder} style={styles.input} />
+      <Input type={type} placeholder={placeholder} style={styles.input} />
     </Form.Item>
   );
 };

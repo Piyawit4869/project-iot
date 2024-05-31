@@ -29,7 +29,7 @@ const columns = [
     title: "รายละเอียดเพิ่มเติม",
     dataIndex: "details",
     key: "details",
-    render: () => <Button type="link">ดูข้อมูลผู้ใช้</Button>,
+    render: () => <Button type="link" onClick={() => ('/users/single')}>ดูข้อมูล</Button>,
   },
 ];
 
@@ -110,7 +110,7 @@ export const UsersIndex = () => {
   const navigate = useNavigate(); 
 
   return (
-    <div>
+    <>
       <Breadcrumb style={{ marginBottom: "20px" }}>
         <Breadcrumb.Item href="/">
           <HomeOutlined/>
@@ -144,6 +144,6 @@ export const UsersIndex = () => {
       >
         <Pagination defaultCurrent={1} total={50} />
       </div>
-    </div>
+    </>
   );
 };
