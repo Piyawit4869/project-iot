@@ -6,15 +6,35 @@ import { useNavigate } from "react-router-dom";
 
 
 const columns = [
-    {
-        title: 'ลำดับ',
-        dataIndex: 'nummer',
-        key: 'nummer',
-      },
+  {
+    title: 'ลำดับ',
+    dataIndex: 'nummer',
+    key: 'nummer',
+  },
   {
     title: 'ชื่อโปรเจต',
     dataIndex: 'name',
     key: 'name',
+  },
+  {
+    title: 'active',
+    dataIndex: 'active',
+    key: 'active',
+  },
+  {
+    title: 'สาขาหลัก',
+    dataIndex: 'isMainBranch',
+    key: 'isMainBranch',
+  },
+  {
+    title: 'เบอร์โทร',
+    dataIndex: 'tel',
+    key: 'tel',
+  },
+  {
+    title: 'ลิ้งค์รูปภาพ',
+    dataIndex: 'imageUrl',
+    key: 'imageUrl',
   },
   {
     title: 'อีเมล',
@@ -22,9 +42,9 @@ const columns = [
     key: 'email',
   },
   {
-    title: 'เบอร์โทร',
-    dataIndex: 'tel',
-    key: 'tel',
+    title: 'เว็ปไซต์',
+    dataIndex: 'website',
+    key: 'website',
   },
   {
     title: "รายละเอียดเพิ่มเติม",
@@ -39,23 +59,35 @@ const data = [
     key: '1',
     nummer:'1',
     name: 'Project 1',
-    email: 'abcdefg@gmailcom',
+    active: 'true',
+    isMainBranch: 'true',
     tel: '0123456789',
+    imageUrl: 'https://cdn.discordapp.com/attachments/123',
+    email: 'abcdefg@gmailcom',
+    website: 'https://123',
   },
   {
     key: '2',
     nummer:'1',
     name: 'Project 2',
-    email: 'abcdefg@gmailcom',
+    active: 'true',
+    isMainBranch: 'true',
     tel: '0123456789',
+    imageUrl: 'https://cdn.discordapp.com/attachments/123',
+    email: 'abcdefg@gmailcom',
+    website: 'https://123',
+    
   },
   {
     key: '3',
     nummer:'1',
     name: 'Project 3',
-    email: 'abcdefg@gmailcom',
+    active: 'true',
+    isMainBranch: 'true',
     tel: '0123456789',
-    
+    imageUrl: 'https://cdn.discordapp.com/attachments/123',
+    email: 'abcdefg@gmailcom',
+    website: 'https://123',
   },
 ];
 
