@@ -80,8 +80,7 @@ export const UsersCreate = () => {
       <Flex style={{ marginTop: '20px' }}>
         <Button type="default">ยกเลิก</Button>
         <Button type="primary">ยืนยัน</Button>
-        
-      </Flex>
+        </Flex>
     </div>
   );
 };
