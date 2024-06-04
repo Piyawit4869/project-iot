@@ -57,49 +57,49 @@ const UsersSingle = () => {
               <Row gutter={24}>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                   <TextboxFormField
-                    placeholder="-"
+                    placeholder="firstName"
                     name="firstName"
                     label="ชื่อจริง"
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                   <TextboxFormField
-                    placeholder="-"
+                    placeholder="lastName"
                     name="lastName"
                     label="นามสกุล"
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                   <TextboxFormField
-                    placeholder="-"
+                    placeholder="email"
                     name="email"
                     label="อีเมล"
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                   <TextboxFormField
-                    placeholder="-"
-                    name="username"
+                    placeholder="userName"
+                    name="userName"
                     label="ชื่อผู้ใช้"
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                   <TextboxFormField
-                    placeholder="-"
+                    placeholder="password"
                     name="password"
                     label="รหัสผ่าน"
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                   <TextboxFormField
-                    placeholder="-"
+                    placeholder="phoneNumber"
                     name="phoneNumber"
                     label="เบอร์โทรศัพท์"
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                   <TextboxFormField
-                    placeholder="-"
+                    placeholder="birthDate"
                     name="birthDate"
                     label="วันเกิด"
                     type="date"
@@ -113,7 +113,6 @@ const UsersSingle = () => {
                       { value: "female", label: "หญิง" },
                       { value: "other", label: "อื่นๆ" },
                     ]}
-                    // label="เพศ"
                   />
                 </Col>
                 <Flex style={{ marginTop: "20px" }}>

@@ -78,7 +78,7 @@ export const UsersCreate = () => {
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                   <TextboxFormField
                     placeholder="-"
-                    name="username"
+                    name="userName"
                     label="ชื่อผู้ใช้"
                   />
                 </Col>
@@ -112,7 +112,6 @@ export const UsersCreate = () => {
                       { value: "female", label: "หญิง" },
                       { value: "other", label: "อื่นๆ" },
                     ]}
-                    // label="เพศ"
                   />
                 </Col>
               </Row>
