@@ -4,6 +4,7 @@ import {
   SelectFormField,
   TextboxFormField,
 } from "@src/components/shared";
+import { TextAreaFormField } from "@src/components/shared/TextAreaFormField";
 interface BranchFormProps {
   initialValues?: OrganizeType;
 }
@@ -41,7 +42,6 @@ export const BranchForm: React.FC<BranchFormProps> = (
               label={"ชื่อกิจการ"}
             />
           </Col>
-
           <Col xs={24} sm={24} md={24} lg={24} xl={24}>
             <RadioFormField
               name="branchType"
@@ -49,7 +49,6 @@ export const BranchForm: React.FC<BranchFormProps> = (
                 { value: "headquarters", label: "สำนักงานใหญ่" },
                 { value: "branch", label: "สาขา" },
               ]}
-              label={""}
             />
           </Col>
 
@@ -65,19 +64,6 @@ export const BranchForm: React.FC<BranchFormProps> = (
               placeholder="-"
               name="businessType"
               label="รูปแบบธุรกิจ"
-              options={[
-                { value: "Single", label: "เดี่ยว" },
-                { value: "Duo", label: "คู่" },
-                { value: "Team", label: "ทีม" },
-              ]}
-            />
-          </Col>
-
-          <Col xs={24} sm={24} md={12} lg={24} xl={16}>
-            <SelectFormField
-              placeholder="-"
-              name="branchType"
-              label="ประเภทสาขา"
               options={[
                 { value: "Single", label: "เดี่ยว" },
                 { value: "Duo", label: "คู่" },
@@ -107,6 +93,61 @@ export const BranchForm: React.FC<BranchFormProps> = (
               placeholder="-"
               name={"websiteUrl"}
               label={"เว็บไซต์"}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={16}>
+            <TextboxFormField
+              placeholder="-"
+              name={"address"}
+              label={"ที่อยู่"}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={24} xl={8}>
+            <SelectFormField
+              placeholder="-"
+              name="addressType"
+              label="ประเภทที่อยู่"
+              options={[
+                { value: "Single", label: "Home" },
+                { value: "Duo", label: "Apartment" },
+                { value: "Team", label: "Detached House" },
+              ]}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={24}>
+            <TextAreaFormField
+              placeholder="-"
+              name={"descriptions"}
+              label={"คำอธิบายเกี่ยวกับที่อยู่"}
+            />
+          </Col>
+
+          <Col xs={24} sm={24} md={12} lg={12} xl={8}>
+            <TextboxFormField
+              placeholder="-"
+              name={"subDistrict"}
+              label={"แขวง/ตำบล"}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={8}>
+            <TextboxFormField
+              placeholder="-"
+              name={"district"}
+              label={"เขต/อำเภอ"}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={24} xl={8}>
+            <TextboxFormField
+              placeholder="-"
+              name={"province"}
+              label={"จังหวัด"}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={24} xl={8}>
+            <TextboxFormField
+              placeholder="-"
+              name={"postalCode"}
+              label={"รหัสไปรษณีย์"}
             />
           </Col>
         </Row>

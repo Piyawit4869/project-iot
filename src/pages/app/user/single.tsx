@@ -1,27 +1,37 @@
 import { HomeOutlined } from "@ant-design/icons";
-import { Breadcrumb, Form, Button, Row, Col, Timeline, Dropdown, Menu, Typography } from "antd";
+import {
+  Breadcrumb,
+  Form,
+  Button,
+  Row,
+  Col,
+  Timeline,
+  Dropdown,
+  Menu,
+  Typography,
+} from "antd";
 import { RadioFormField, TextboxFormField } from "@src/components/shared";
 import { useNavigate } from "react-router-dom";
 import { Flex } from "antd";
 
 const items = [
-  { key: '1', label: 'นาย' },
-  { key: '2', label: 'นาง' },
-  { key: '3', label: 'นางสาว' },
+  { key: "1", label: "นาย" },
+  { key: "2", label: "นาง" },
+  { key: "3", label: "นางสาว" },
 ];
 
 const UsersSingle = () => {
   const navigate = useNavigate();
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ padding: "20px" }}>
       <Row>
         <Col span={12}>
           <Breadcrumb style={{ marginBottom: "20px" }}>
-            <Breadcrumb.Item onClick={() => navigate('/')}>
+            <Breadcrumb.Item onClick={() => navigate("/")}>
               <HomeOutlined />
             </Breadcrumb.Item>
-            <Breadcrumb.Item onClick={() => navigate('/users')}>
+            <Breadcrumb.Item onClick={() => navigate("/users")}>
               ข้อมูลผู้ใช้
             </Breadcrumb.Item>
             <Breadcrumb.Item>แก้ไขข้อมูลผู้ใช้</Breadcrumb.Item>
@@ -35,98 +45,108 @@ const UsersSingle = () => {
             <Row gutter={24}>
               <Col xs={24} sm={24} md={12} lg={12} xl={8}>
                 <Form.Item label="คำนำหน้า">
-                  <Dropdown overlay={<Menu items={items} />} placement="bottomLeft" arrow>
+                  <Dropdown
+                    overlay={<Menu items={items} />}
+                    placement="bottomLeft"
+                    arrow
+                  >
                     <Button>เลือกคำนำหน้า</Button>
                   </Dropdown>
-                </Form.Item>   
+                </Form.Item>
               </Col>
               <Row gutter={24}>
-              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <TextboxFormField placeholder="-" name="firstName" label="ชื่อจริง" />
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <TextboxFormField placeholder="-" name="lastName" label="นามสกุล" />
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <TextboxFormField placeholder="-" name="email" label="อีเมล" />
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <TextboxFormField placeholder="-" name="username" label="ชื่อผู้ใช้" />
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <TextboxFormField placeholder="-" name="password" label="รหัสผ่าน" />
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <TextboxFormField placeholder="-" name="phoneNumber" label="เบอร์โทรศัพท์" />
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <TextboxFormField placeholder="-" name="birthDate" label="วันเกิด" type="date" />
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <RadioFormField
-                  name="gender"
-                  options={[
-                    { value: "male", label: "ชาย" },
-                    { value: "female", label: "หญิง" },
-                    { value: "other", label: "อื่นๆ" },
-                  ]}
-                  label="เพศ"
-                />
-              </Col>
-              <Flex style={{ marginTop: '20px' }}>
-        <Button type="primary">ยกเลิก</Button>
-        <Button type="primary">ยืนยัน</Button>
-        <Button type="primary">ลบ</Button>
-      </Flex>
-            </Row>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                  <TextboxFormField
+                    placeholder="-"
+                    name="firstName"
+                    label="ชื่อจริง"
+                  />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                  <TextboxFormField
+                    placeholder="-"
+                    name="lastName"
+                    label="นามสกุล"
+                  />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                  <TextboxFormField
+                    placeholder="-"
+                    name="email"
+                    label="อีเมล"
+                  />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                  <TextboxFormField
+                    placeholder="-"
+                    name="username"
+                    label="ชื่อผู้ใช้"
+                  />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                  <TextboxFormField
+                    placeholder="-"
+                    name="password"
+                    label="รหัสผ่าน"
+                  />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                  <TextboxFormField
+                    placeholder="-"
+                    name="phoneNumber"
+                    label="เบอร์โทรศัพท์"
+                  />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                  <TextboxFormField
+                    placeholder="-"
+                    name="birthDate"
+                    label="วันเกิด"
+                    type="date"
+                  />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                  <RadioFormField
+                    name="gender"
+                    options={[
+                      { value: "male", label: "ชาย" },
+                      { value: "female", label: "หญิง" },
+                      { value: "other", label: "อื่นๆ" },
+                    ]}
+                    // label="เพศ"
+                  />
+                </Col>
+                <Flex style={{ marginTop: "20px" }}>
+                  <Button type="primary">ยกเลิก</Button>
+                  <Button type="primary">ยืนยัน</Button>
+                  <Button type="primary">ลบ</Button>
+                </Flex>
+              </Row>
             </Row>
           </Form>
         </Col>
 
-         <Col
+        <Col
           xs={{ span: 24, order: 2 }}
           sm={{ span: 24, order: 2 }}
           md={{ span: 24, order: 2 }}
           lg={{ span: 12, order: 2 }}
           xl={{ span: 12, order: 1 }}
         >
-          <Flex style={{height: "300px"}} justify="center" align="center">
+          <Flex style={{ height: "300px" }} justify="center" align="center">
             <Timeline
               items={[
-                { children: 'Create a services site 2015-09-01' },
-                { children: 'Solve initial network problems 2015-09-01' },
-                { children: 'Technical testing 2015-09-01' },
-                { children: 'Network problems being solved 2015-09-01' },
+                { children: "Create a services site 2015-09-01" },
+                { children: "Solve initial network problems 2015-09-01" },
+                { children: "Technical testing 2015-09-01" },
+                { children: "Network problems being solved 2015-09-01" },
               ]}
             />
           </Flex>
         </Col>
-        
-      
       </Row>
-      
     </div>
   );
 };
 
 export default UsersSingle;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

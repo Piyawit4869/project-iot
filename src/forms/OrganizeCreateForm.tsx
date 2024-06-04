@@ -2,13 +2,14 @@ import { TagFilled } from "@ant-design/icons";
 import {
   CheckboxFormField,
   LabelForm,
+  RadioFormField,
   SelectFormField,
   TextboxFormField,
 } from "@src/components/shared";
 import { Button, Col, Row } from "antd";
-import { UserForm } from "./UserForm";
 
 import { DatePickerFormField } from "@src/components/shared/DatePicker";
+import { TextAreaFormField } from "@src/components/shared/TextAreaFormField";
 
 interface OrganizeCreateFormProps {
   initialValues?: OrganizeType;
@@ -67,7 +68,7 @@ export const OrganizeCreateForm: React.FC<OrganizeCreateFormProps> = () => {
           </Col>
 
           <Col xs={24} sm={24} md={12} lg={24} xl={16}>
-            <TextboxFormField
+            <TextAreaFormField
               placeholder="-"
               name={"businessDescription"}
               label={"คำอธิบายธุรกิจ"}
@@ -153,6 +154,25 @@ export const OrganizeCreateForm: React.FC<OrganizeCreateFormProps> = () => {
               label={"ที่อยู่"}
             />
           </Col>
+          <Col xs={24} sm={24} md={12} lg={24} xl={8}>
+            <SelectFormField
+              placeholder="-"
+              name="addressType"
+              label="ประเภทที่อยู่"
+              options={[
+                { value: "Single", label: "Home" },
+                { value: "Duo", label: "Apartment" },
+                { value: "Team", label: "Detached House" },
+              ]}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={24}>
+            <TextAreaFormField
+              placeholder="-"
+              name={"descriptions"}
+              label={"คำอธิบายเกี่ยวกับที่อยู่"}
+            />
+          </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={8}>
             <TextboxFormField
               placeholder="-"
@@ -181,7 +201,7 @@ export const OrganizeCreateForm: React.FC<OrganizeCreateFormProps> = () => {
               label={"จังหวัด"}
             />
           </Col>
-          <Col xs={24} sm={24} md={12} lg={24} xl={24}>
+          <Col xs={24} sm={24} md={12} lg={24} xl={8}>
             <TextboxFormField
               placeholder="-"
               name={"postalCode"}
@@ -192,42 +212,46 @@ export const OrganizeCreateForm: React.FC<OrganizeCreateFormProps> = () => {
           <Col xs={24} sm={24} md={12} lg={24} xl={12}>
             <LabelForm
               icon={<TagFilled />}
-              label={"ที่อยู่เอกสาร"}
+              label={"ที่อยู่ตามเอกสาร"}
               children={undefined}
             />
           </Col>
-          {/* <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <RadioFormField
-                name="branchType"
-                options={[
-                  { value: "same", label: "ใช้ข้อมูลที่อยู่ตามทะเบียน" },
-                  { value: "new", label: "ข้อมูลใหม่" },
-                ]}
-                label={""}
-              />
-            </Col> */}
-          <Col
-            style={{ marginTop: -30 }}
-            xs={24}
-            sm={24}
-            md={12}
-            lg={12}
-            xl={16}
-          >
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+            <RadioFormField
+              name="branchType"
+              options={[
+                { value: "same", label: "ใช้ข้อมูลที่อยู่ตามทะเบียน" },
+                { value: "new", label: "ข้อมูลใหม่" },
+              ]}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={16}>
             <TextboxFormField
               placeholder="-"
               name={"address"}
               label={"ที่อยู่"}
             />
           </Col>
-          <Col
-            style={{ marginTop: -30 }}
-            xs={24}
-            sm={24}
-            md={12}
-            lg={12}
-            xl={8}
-          >
+          <Col xs={24} sm={24} md={12} lg={24} xl={8}>
+            <SelectFormField
+              placeholder="-"
+              name="addressType"
+              label="ประเภทที่อยู่"
+              options={[
+                { value: "Single", label: "Home" },
+                { value: "Duo", label: "Apartment" },
+                { value: "Team", label: "Detached House" },
+              ]}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={24}>
+            <TextAreaFormField
+              placeholder="-"
+              name={"descriptions"}
+              label={"คำอธิบายเกี่ยวกับที่อยู่"}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={8}>
             <TextboxFormField
               placeholder="-"
               name={"country"}
@@ -255,7 +279,7 @@ export const OrganizeCreateForm: React.FC<OrganizeCreateFormProps> = () => {
               label={"จังหวัด"}
             />
           </Col>
-          <Col xs={24} sm={24} md={12} lg={24} xl={24}>
+          <Col xs={24} sm={24} md={12} lg={24} xl={8}>
             <TextboxFormField
               placeholder="-"
               name={"postalCode"}
@@ -271,9 +295,7 @@ export const OrganizeCreateForm: React.FC<OrganizeCreateFormProps> = () => {
         md={{ span: 24, order: 1 }}
         lg={{ span: 12, order: 2 }}
         xl={{ span: 12, order: 2 }}
-      >
-        <UserForm />
-      </Col>
+      ></Col>
     </Row>
   );
 };

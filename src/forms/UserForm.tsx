@@ -16,65 +16,45 @@ export const UserForm: React.FC = () => {
       <Col xs={24} sm={24} md={24} lg={12} xl={12}>
         <Row gutter={20}>
           <Col xs={24} sm={24} md={12} lg={12} xl={8}>
-            <TextboxFormField
-              placeholder="-"
-              name={"taxId"}
-              label={"คำนำหน้า"}
-            />
+            <TextboxFormField placeholder="-" name={""} label={"คำนำหน้า"} />
           </Col>
 
           <Col xs={24} sm={24} md={12} lg={12} xl={8}>
-            <TextboxFormField
-              placeholder="-"
-              name={"businessName"}
-              label={"ชื่อจริง"}
-            />
+            <TextboxFormField placeholder="-" name={""} label={"ชื่อจริง"} />
           </Col>
 
           <Col xs={24} sm={24} md={12} lg={12} xl={8}>
-            <TextboxFormField
-              placeholder="-"
-              name={"businessName"}
-              label={"นามสกุล"}
-            />
+            <TextboxFormField placeholder="-" name={""} label={"นามสกุล"} />
           </Col>
 
           <Col xs={24} sm={24} md={12} lg={12} xl={8}>
             <TextboxFormField placeholder="-" name={"email"} label={"อีเมล"} />
           </Col>
           <Col xs={24} sm={24} md={24} lg={8} xl={8}>
-            <TextboxFormField
-              placeholder="-"
-              name={"businessName"}
-              label={"ชื่อผู้ใช้"}
-            />
+            <TextboxFormField placeholder="-" name={""} label={"ชื่อผู้ใช้"} />
           </Col>
 
           <Col xs={24} sm={24} md={12} lg={12} xl={8}>
-            <TextboxFormField
-              placeholder="-"
-              name={"email"}
-              label={"รหัสผ่าน"}
-            />
+            <TextboxFormField placeholder="-" name={""} label={"รหัสผ่าน"} />
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={8}>
             <TextboxFormField
               placeholder="-"
-              name={"businessName"}
+              name={""}
               label={"ยืนยันรหัสผ่าน"}
             />
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={8}>
             <TextboxFormField
               placeholder="-"
-              name={"email"}
+              name={""}
               label={"เบอร์โทรศัพท์"}
             />
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={8}>
             <TextboxFormField
               placeholder="-"
-              name={"businessName"}
+              name={""}
               label={"วัน/เดือน/ปี เกิด"}
             />
           </Col>
@@ -84,21 +64,16 @@ export const UserForm: React.FC = () => {
 
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <RadioFormField
-              name="branchType"
+              name=""
               options={[
                 { value: "male", label: "ชาย" },
                 { value: "female", label: "หญิง" },
                 { value: "other", label: "อื่นๆ" },
               ]}
-              label={""}
             />
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-            <TextboxFormField
-              placeholder="-"
-              name={"email"}
-              label={"รูปโปรไฟล์"}
-            />
+            <TextboxFormField placeholder="-" name={""} label={"รูปโปรไฟล์"} />
           </Col>
         </Row>
       </Col>

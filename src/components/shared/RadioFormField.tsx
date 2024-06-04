@@ -4,7 +4,7 @@ import { CSSProperties } from "react";
 
 interface RadioFormFieldProps {
   name: string;
-  label: string;
+
   options: { value: string | number; label: string }[];
   value?: string | number;
 }
@@ -12,7 +12,7 @@ interface RadioFormFieldProps {
 export const RadioFormField: React.FC<RadioFormFieldProps> = (
   props: RadioFormFieldProps
 ) => {
-  const { options, name, label } = props;
+  const { options, name } = props;
   const [checkedValue, setCheckedValue] = useState<string | number | null>(
     null
   );
@@ -23,7 +23,7 @@ export const RadioFormField: React.FC<RadioFormFieldProps> = (
   };
 
   return (
-    <Form.Item name={name} label={label}>
+    <Form.Item name={name}>
       <Radio.Group
         style={styles.radioGroup}
         onChange={handleRadioChange}
