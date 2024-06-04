@@ -77,15 +77,14 @@ export const Login = () => {
           Stay Organize Login
         </p>
         <Form.Item
-          name="email"
+          name="user"
           rules={[
-            { required: true, message: "Please input your Email!" },
-            { type: "email", message: "The input is not valid E-mail!" },
+            { required: true, message: "Please input your Email or Username" },
           ]}
         >
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Email"
+            placeholder=""
             style={{ width: "500px", height: "50px", fontSize: "16px" }}
           />
         </Form.Item>
