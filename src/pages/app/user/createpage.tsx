@@ -50,7 +50,7 @@ export const UsersCreate = () => {
                 <TextboxFormField placeholder="-" name="email" label="อีเมล" />
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <TextboxFormField placeholder="-" name="username" label="ชื่อผู้ใช้" />
+                <TextboxFormField placeholder="-" name="userName" label="ชื่อผู้ใช้" />
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                 <TextboxFormField placeholder="-" name="password" label="รหัสผ่าน" />
@@ -80,8 +80,7 @@ export const UsersCreate = () => {
       <Flex style={{ marginTop: '20px' }}>
         <Button type="default">ยกเลิก</Button>
         <Button type="primary">ยืนยัน</Button>
-        
-      </Flex>
+        </Flex>
     </div>
   );
 };

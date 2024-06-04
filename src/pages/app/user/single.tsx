@@ -42,25 +42,25 @@ const UsersSingle = () => {
               </Col>
               <Row gutter={24}>
               <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <TextboxFormField placeholder="-" name="firstName" label="ชื่อจริง" />
+                <TextboxFormField placeholder="firstName" name="firstName" label="ชื่อจริง" />
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <TextboxFormField placeholder="-" name="lastName" label="นามสกุล" />
+                <TextboxFormField placeholder="lastName" name="lastName" label="นามสกุล" />
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <TextboxFormField placeholder="-" name="email" label="อีเมล" />
+                <TextboxFormField placeholder="email" name="email" label="อีเมล" />
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <TextboxFormField placeholder="-" name="username" label="ชื่อผู้ใช้" />
+                <TextboxFormField placeholder="userName" name="userName" label="ชื่อผู้ใช้" />
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <TextboxFormField placeholder="-" name="password" label="รหัสผ่าน" />
+                <TextboxFormField placeholder="password" name="password" label="รหัสผ่าน" />
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <TextboxFormField placeholder="-" name="phoneNumber" label="เบอร์โทรศัพท์" />
+                <TextboxFormField placeholder="phoneNumber" name="phoneNumber" label="เบอร์โทรศัพท์" />
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <TextboxFormField placeholder="-" name="birthDate" label="วันเกิด" type="date" />
+                <TextboxFormField placeholder="birthDate" name="birthDate" label="วันเกิด" type="date" />
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                 <RadioFormField
