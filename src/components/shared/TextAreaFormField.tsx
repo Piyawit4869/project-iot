@@ -8,16 +8,15 @@ interface TextAreaFormFieldProps {
   label: string;
   placeholder?: string;
   rows?: number;
+  rule?: any;
 }
 
-export const TextAreaFormField: FC<TextAreaFormFieldProps> = ({
-  name,
-  label,
-  placeholder = "",
-  rows = 4,
-}) => {
+export const TextAreaFormField: FC<TextAreaFormFieldProps> = (
+  props: TextAreaFormFieldProps
+) => {
+  const { name, label, placeholder, rows, rule } = props;
   return (
-    <Form.Item name={name} label={label}>
+    <Form.Item name={name} rules={rule} label={label}>
       <TextArea placeholder={placeholder} rows={rows} style={styles.textarea} />
     </Form.Item>
   );

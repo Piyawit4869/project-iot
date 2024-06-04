@@ -4,7 +4,7 @@ import { CSSProperties } from "react";
 
 interface RadioFormFieldProps {
   name: string;
-
+  // options: any;
   options: { value: string | number; label: string }[];
   value?: string | number;
 }
@@ -25,15 +25,16 @@ export const RadioFormField: React.FC<RadioFormFieldProps> = (
   return (
     <Form.Item name={name}>
       <Radio.Group
+        options={options}
         style={styles.radioGroup}
         onChange={handleRadioChange}
         value={checkedValue}
       >
-        {options.map((option) => (
+        {/* {options.map((option: any) => (
           <Radio key={option.value} value={option.value} style={styles.radio}>
             {option.label}
           </Radio>
-        ))}
+        ))} */}
       </Radio.Group>
     </Form.Item>
   );

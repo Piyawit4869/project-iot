@@ -5,8 +5,8 @@ import { Button, Col, Form, Row } from "antd";
 
 import { DynamicForm } from "@src/forms/Dynamic";
 import { TagFilled } from "@ant-design/icons";
+import { useSubmit } from "react-router-dom";
 
-//no intitial value
 export async function organizeCreateAction({ request }: any) {
   const formData = await request.formData();
   const submitData = Object.fromEntries(formData);
@@ -50,6 +50,8 @@ const renderForm = [
     placeholder: "เลขทะเบียน 13 หลัก",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
+    require: true,
+    message: "กรุณากรอกข้อมูลเลขทะเบียน 13 หลัก ( เช่น 0123456789101 ) ",
   },
   {
     name: "businessName",
@@ -57,6 +59,8 @@ const renderForm = [
     placeholder: "ชื่อกิจการ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
+    require: true,
+    message: "กรุณากรอกชื่อกิจการ",
   },
   {
     name: "businessDescription",
@@ -78,6 +82,7 @@ const renderForm = [
     placeholder: "จดทะเบียนภาษีมูลค่าเพิ่ม",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
     type: "CheckboxFormField",
+    // require: true,
   },
 
   {
@@ -92,6 +97,8 @@ const renderForm = [
     placeholder: "เบอร์โทรศัพท์สำนักงาน",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    require: true,
+    message: "กรุณากรอกเบอร์โทรศัพท์สำนักงาน  ",
   },
   {
     name: "businessEmail",
@@ -113,6 +120,8 @@ const renderForm = [
     placeholder: "เบอร์โทรศัพท์ติดต่อ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    require: true,
+    message: "กรุณากรอกเบอร์โทรศัพท์ติดต่อ  ",
   },
   {
     name: "contactEmail",
@@ -120,6 +129,8 @@ const renderForm = [
     placeholder: "อีเมลล์ติดต่อ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    require: true,
+    message: "กรุณากรอกอีเมลล์ติดต่อ  ",
   },
   {
     icon: <TagFilled />,
@@ -180,6 +191,8 @@ const renderForm = [
     placeholder: "จังหวัด",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    require: true,
+    message: "กรุณากรอกจังหวัด",
   },
   {
     name: "postalCode",
@@ -187,6 +200,8 @@ const renderForm = [
     placeholder: "รหัสไปรษณีย์",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    require: true,
+    message: "กรุณากรอกรหัสไปรษณีย์",
   },
   {
     icon: <TagFilled />,
@@ -273,14 +288,14 @@ const renderForm = [
     type: "LabelForm",
   },
   {
-    name: "taxId",
+    name: ["branch", "taxId"],
     label: "เลขทะเบียน 13 หลัก",
     placeholder: "เลขทะเบียน 13 หลัก",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
   },
   {
-    name: "businessName",
+    name: ["branch", "businessName"],
     label: "ชื่อกิจการ",
     placeholder: "ชื่อกิจการ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
@@ -303,7 +318,7 @@ const renderForm = [
     type: "TextboxFormField",
   },
   {
-    name: "businessType",
+    name: ["branch", "businessType"],
     label: "รูปแบบธุรกิจ",
     placeholder: "รูปแบบธุรกิจ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
@@ -315,7 +330,7 @@ const renderForm = [
     ],
   },
   {
-    name: "telephone",
+    name: "phone",
     label: "เบอร์โทรศัพท์",
     placeholder: "เบอร์โทรศัพท์",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
@@ -329,21 +344,21 @@ const renderForm = [
     type: "TextboxFormField",
   },
   {
-    name: "websiteUrl",
+    name: ["branch", "websiteUrl"],
     label: "เว็บไซต์",
     placeholder: "เว็บไซต์",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 16 },
     type: "TextboxFormField",
   },
   {
-    name: "address",
+    name: ["branch", "address"],
     label: "ที่อยู่",
     placeholder: "ที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 16 },
     type: "TextboxFormField",
   },
   {
-    name: "addressType",
+    name: ["branch", "addressType"],
     label: "ประเภทที่อยู่",
     placeholder: "ประเภทที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
@@ -355,42 +370,42 @@ const renderForm = [
     ],
   },
   {
-    name: "descriptions",
+    name: ["branch", "descriptions"],
     label: "คำอธิบายเกี่ยวกับที่อยู่",
     placeholder: "คำอธิบายเกี่ยวกับที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextAreaFormField",
   },
   {
-    name: "country",
+    name: ["branch", "country"],
     label: "ประเทศ",
     placeholder: "ประเทศ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
   },
   {
-    name: "subDistrict",
+    name: ["branch", "subDistrict"],
     label: "แขวง/ตำบล",
     placeholder: "แขวง/ตำบล",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
   },
   {
-    name: "district",
+    name: ["branch", "district"],
     label: "เขต/อำเภอ",
     placeholder: "เขต/อำเภอ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
   },
   {
-    name: "province",
+    name: ["branch", "province"],
     label: "จังหวัด",
     placeholder: "จังหวัด",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
   },
   {
-    name: "postalCode",
+    name: ["branch", "postalCode"],
     label: "รหัสไปรษณีย์",
     placeholder: "รหัสไปรษณีย์",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
@@ -403,7 +418,7 @@ const renderForm = [
     type: "LabelForm",
   },
   {
-    name: "email",
+    name: ["user", "email"],
     label: "อีเมลล์",
     placeholder: "อีเมลล์",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
@@ -431,7 +446,7 @@ const renderForm = [
     type: "TextboxFormField",
   },
   {
-    name: "profix",
+    name: ["user", "profix"],
     label: "คำนำหน้า",
     placeholder: "คำนำหน้า",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
@@ -443,42 +458,42 @@ const renderForm = [
     ],
   },
   {
-    name: "firstName",
+    name: ["user", "profile", "firstName"],
     label: "ชื่อ",
     placeholder: "ชื่อ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
   },
   {
-    name: "lastName",
+    name: ["user", "profile", "lastName"],
     label: "นามสกุล",
     placeholder: "นามสกุล",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
   },
   {
-    name: "birthDate",
+    name: ["user", "profile", "birthDate"],
     label: "วัน/เดือน/ปีเกิด",
     placeholder: "เลือก",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "DatePickerFormField",
   },
   {
-    name: "discordGuid",
+    name: ["user", "profile", "discordGuid"],
     label: "ดิสคอร์ดไอดี",
     placeholder: "ดิสคอร์ดไอดี",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
   },
   {
-    name: "deviceToken",
-    label: "ระยะเวลาใช้งาน",
-    placeholder: "ระยะเวลาใช้งาน",
+    name: ["user", "profile", "deviceToken"],
+    label: "Device Token",
+    placeholder: "Device Token",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
   },
   {
-    name: "phone",
+    name: ["user", "profile", "phone"],
     label: "โทรศัพท์",
     placeholder: "โทรศัพท์",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
@@ -500,8 +515,7 @@ const renderForm = [
 
 export const OrganizeCreate: React.FC = () => {
   const [form] = Form.useForm();
-
-  // const submit = useSubmit();
+  const submit = useSubmit();
   // const [imageSrc, setImageSrc] = React.useState("image-placeholder.png");
 
   // const previewImage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -516,7 +530,7 @@ export const OrganizeCreate: React.FC = () => {
   // };
   const onFinish = (values: any) => {
     const payload = Object.assign(values);
-    console.log(payload);
+    submit({ data: JSON.stringify(payload) }, { method: "post" });
   };
 
   // const formatDate = (isoDateString: any) => {
@@ -566,6 +580,7 @@ export const OrganizeCreate: React.FC = () => {
           {renderForm.map((item: any) => {
             return (
               <DynamicForm
+                key={item.value}
                 name={item.name}
                 label={item.label}
                 placeholder={item.placeholder}
@@ -574,6 +589,8 @@ export const OrganizeCreate: React.FC = () => {
                 option={item.option}
                 icon={item.icon}
                 value={item.value}
+                ruleMessage={item.message}
+                require={item.require}
               />
             );
           })}

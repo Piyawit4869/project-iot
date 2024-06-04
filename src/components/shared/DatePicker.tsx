@@ -6,14 +6,15 @@ interface DatePickerProps {
   name: string;
   label: string;
   placeholder?: string;
+  rule?: any;
 }
 export const DatePickerFormField: FC<DatePickerProps> = (
   props: DatePickerProps
 ) => {
-  const { name, label, placeholder } = props;
+  const { name, label, placeholder, rule } = props;
 
   return (
-    <Form.Item name={name} label={label}>
+    <Form.Item name={name} label={label} rules={rule}>
       <DatePicker placeholder={placeholder} style={styles.input} />
     </Form.Item>
   );

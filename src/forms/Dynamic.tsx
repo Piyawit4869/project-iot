@@ -15,10 +15,12 @@ interface DynamicFormProps {
   name: any;
   label: any;
   placeholder: any;
-  type: string;
+  type: any;
   col: any;
   option: any;
   icon: any;
+  ruleMessage: string;
+  require: boolean;
 }
 
 export const DynamicForm: React.FC<DynamicFormProps> = (
@@ -38,6 +40,13 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             placeholder={props.placeholder}
             name={props.name}
             label={props.label}
+            type={props.type}
+            rule={[
+              {
+                required: props.require ? true : false,
+                message: props.ruleMessage,
+              },
+            ]}
           />
         </Col>
       );
@@ -55,6 +64,12 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             name={props.name}
             label={props.label}
             options={props.option}
+            rule={[
+              {
+                required: props.require ? true : false,
+                message: props.ruleMessage,
+              },
+            ]}
           />
         </Col>
       );
@@ -87,6 +102,12 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             placeholder={props.placeholder}
             name={props.name}
             label={props.label}
+            rule={[
+              {
+                required: props.require ? true : false,
+                message: props.ruleMessage,
+              },
+            ]}
           />
         </Col>
       );
@@ -103,6 +124,12 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             placeholder={props.placeholder}
             name={props.name}
             label={props.label}
+            rule={[
+              {
+                required: props.require ? true : false,
+                message: props.ruleMessage,
+              },
+            ]}
           />
         </Col>
       );
@@ -119,9 +146,16 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             value={props.value}
             name={props.name}
             label={props.label}
+            rule={[
+              {
+                required: props.require ? true : false,
+                message: props.ruleMessage,
+              },
+            ]}
           />
         </Col>
       );
+
     case "RadioFormField":
       return (
         <Col
