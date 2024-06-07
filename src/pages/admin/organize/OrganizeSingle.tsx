@@ -1,5 +1,5 @@
 import { OrganizeEditForm } from "@src/forms";
-import { UserForm } from "@src/forms/UserForm";
+
 import * as API from "@src/apis";
 import { Link, redirect, useLoaderData } from "react-router-dom";
 import { Button, Input, Table, notification } from "antd";
@@ -212,7 +212,6 @@ export const OrganizeSingle: React.FC = () => {
         pagination={false}
         bordered
       />
-      <UserForm />
     </div>
   );
 };

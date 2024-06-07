@@ -35,7 +35,8 @@ export const Sidebar: React.FC = () => {
     }
   };
 
-  const menusWithOnClick = Menus({ role: "user" }).map((menu) => ({
+  const me = JSON.parse(localStorage.getItem("me") as any);
+  const menusWithOnClick = Menus({ role: me.role }).map((menu) => ({
     ...menu,
     onClick: handleMenuClick,
   }));

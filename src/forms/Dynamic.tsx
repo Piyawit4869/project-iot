@@ -2,7 +2,9 @@ import {
   CheckboxFormField,
   LabelForm,
   RadioFormField,
+  SectionLabelForm,
   SelectFormField,
+  SwitchFormField,
   TextboxFormField,
 } from "@src/components/shared";
 import { Col } from "antd";
@@ -165,7 +167,37 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
           lg={props.col.lg}
           xl={props.col.xl}
         >
-          <RadioFormField name={props.name} options={[props.option]} />
+          <RadioFormField
+            name={props.name}
+            options={props.option}
+            label={props.label}
+          />
+        </Col>
+      );
+
+    case "SwitchFormField":
+      return (
+        <Col
+          xs={props.col.xs}
+          sm={props.col.sm}
+          md={props.col.md}
+          lg={props.col.lg}
+          xl={props.col.xl}
+        >
+          <SwitchFormField name={props.name} label={props.label} />
+        </Col>
+      );
+
+    case "SectionLabelForm":
+      return (
+        <Col
+          xs={props.col.xs}
+          sm={props.col.sm}
+          md={props.col.md}
+          lg={props.col.lg}
+          xl={props.col.xl}
+        >
+          <SectionLabelForm label={props.label} />
         </Col>
       );
     default:
