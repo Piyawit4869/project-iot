@@ -105,14 +105,7 @@ export const UsersCreate = () => {
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                  <RadioFormField
-                    name="gender"
-                    options={[
-                      { value: "male", label: "ชาย" },
-                      { value: "female", label: "หญิง" },
-                      { value: "other", label: "อื่นๆ" },
-                    ]}
-                  />
+                  <RadioFormField name={""} label={""} options={[]} />
                 </Col>
               </Row>
             </Row>
