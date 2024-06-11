@@ -7,18 +7,20 @@ interface SelectFormFieldProps {
   options: Array<object>;
   placeholder?: string;
   rule?: any;
+  disabled: boolean;
 }
 
 export const SelectFormField: React.FC<SelectFormFieldProps> = (
   props: SelectFormFieldProps
 ) => {
-  const { options, placeholder, name, label, rule } = props;
+  const { options, placeholder, name, label, disabled, rule } = props;
   return (
     <Form.Item label={label} name={name} rules={rule}>
       <Select
         style={styles.input}
         placeholder={placeholder}
         options={options}
+        disabled={disabled}
       ></Select>
     </Form.Item>
   );

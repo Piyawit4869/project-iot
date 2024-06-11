@@ -239,6 +239,7 @@ const renderForm = [
     placeholder: "ที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    disabled: true,
   },
   {
     name: ["address", "addressType"],
@@ -251,6 +252,7 @@ const renderForm = [
       { value: "Duo", label: "Apartment" },
       { value: "Team", label: "Detached House" },
     ],
+    disabled: true,
   },
   {
     name: ["address", "descriptions"],
@@ -258,6 +260,7 @@ const renderForm = [
     placeholder: "คำอธิบายเกี่ยวกับที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
     type: "TextAreaFormField",
+    disabled: true,
   },
   {
     name: ["address", "country"],
@@ -265,6 +268,7 @@ const renderForm = [
     placeholder: "ประเทศ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    disabled: true,
   },
   {
     name: ["address", "subDistrict"],
@@ -272,6 +276,7 @@ const renderForm = [
     placeholder: "แขวง/ตำบล",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    disabled: true,
   },
   {
     name: ["address", "district"],
@@ -279,6 +284,7 @@ const renderForm = [
     placeholder: "เขต/อำเภอ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    disabled: true,
   },
   {
     name: ["address", "province"],
@@ -286,6 +292,7 @@ const renderForm = [
     placeholder: "จังหวัด",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    disabled: true,
   },
   {
     name: ["address", "postalCode"],
@@ -293,12 +300,15 @@ const renderForm = [
     placeholder: "รหัสไปรษณีย์",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    disabled: true,
   },
   {
     name: ["address", "active"],
     label: "เปิดใช้งาน",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 2 },
     type: "SwitchFormField",
+    disabled: true,
+    checked: true,
   },
   /*Branch Section*/
   {
@@ -564,18 +574,6 @@ export const OrganizeCreate: React.FC = () => {
     }
   }, []);
 
-  // const [imageSrc, setImageSrc] = React.useState("image-placeholder.png");
-
-  // const previewImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const input = event.target;
-  //   if (input.files && input.files[0]) {
-  //     const reader = new FileReader();
-  //     reader.onload = (e) => {
-  //       setImageSrc(e.target?.result as string);
-  //     };
-  //     reader.readAsDataURL(input.files[0]);
-  //   }
-  // };
   const onFinish = (values: any) => {
     const payload = Object.assign(values);
     payload.active = true;
@@ -591,32 +589,6 @@ export const OrganizeCreate: React.FC = () => {
 
     submit({ data: JSON.stringify(payload) }, { method: "post" });
   };
-
-  // const formatDate = (isoDateString: any) => {
-  //   return dayjs(isoDateString);
-  // };
-
-  // Loop through the keys of the JSON object
-  // for (const key in FormTitleJson) {
-  //   console.log(FormTitleJson.hasOwnProperty(key));
-
-  //   if (FormTitleJson.hasOwnProperty(key)) {
-  //     Forms.push(
-  // <DynamicForm
-  //   LabelFormIcon={<TagFilled />}
-  //   LabelFormStyle={undefined}
-  //   LabelFormLabel={key}
-  //   LabelFormChildren={undefined}
-  //   TextboxFormPlaceholder={key}
-  //   TextboxFormName={key}
-  //   TextboxFormLabel={key}
-  //   IsObject={false}
-  //   TextboxFormValue={key}
-  // />
-  //     );
-  //     // console.log(`Key: ${key}, Value: ${FormTitleJson[key]}`);
-  //   }
-  // }
 
   return (
     <div>
@@ -646,14 +618,13 @@ export const OrganizeCreate: React.FC = () => {
                 ruleMessage={item.message}
                 require={item.require}
                 option={item.options}
+                disabled={item.disabled}
+                checked={item.checked}
               />
             );
           })}
         </Row>
-
-        {/* <OrganizeCreateForm />
-        <BranchForm />
-        <UserForm /> */}
+        <Col></Col>
       </Form>
     </div>
   );

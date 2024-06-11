@@ -360,6 +360,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
                 value={item.value}
                 ruleMessage={item.message}
                 require={item.require}
+                disabled={false}
               />
             );
           })}

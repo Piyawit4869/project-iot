@@ -85,7 +85,7 @@ export const Login = () => {
         >
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder=""
+            placeholder="Email or Username"
             style={{ width: "500px", height: "50px", fontSize: "16px" }}
           />
         </Form.Item>

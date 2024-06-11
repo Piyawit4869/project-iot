@@ -23,6 +23,8 @@ interface DynamicFormProps {
   icon: any;
   ruleMessage: string;
   require: boolean;
+  disabled: boolean;
+  checked: boolean;
 }
 
 export const DynamicForm: React.FC<DynamicFormProps> = (
@@ -43,6 +45,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             name={props.name}
             label={props.label}
             type={props.type}
+            disabled={props.disabled}
             rule={[
               {
                 required: props.require ? true : false,
@@ -66,6 +69,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             name={props.name}
             label={props.label}
             options={props.option}
+            disabled={props.disabled}
             rule={[
               {
                 required: props.require ? true : false,
@@ -110,6 +114,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
                 message: props.ruleMessage,
               },
             ]}
+            disabled={props.disabled}
           />
         </Col>
       );
@@ -184,7 +189,12 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
           lg={props.col.lg}
           xl={props.col.xl}
         >
-          <SwitchFormField name={props.name} label={props.label} />
+          <SwitchFormField
+            name={props.name}
+            label={props.label}
+            disabled={props.disabled}
+            checked={props.checked}
+          />
         </Col>
       );
 
