@@ -361,6 +361,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
                 ruleMessage={item.message}
                 require={item.require}
                 disabled={false}
+                checked={false}
               />
             );
           })}
