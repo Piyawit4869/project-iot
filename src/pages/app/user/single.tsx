@@ -19,44 +19,42 @@ export const UsersSingle = () => {
     {
       name: ["user", "profile", "firstName"],
       label: "ชื่อจริง",
-      placeholder: "ชื่อ",
+      placeholder: "กรอกชื่อจริง",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
-
     {
       name: ["user", "profile", "lastName"],
       label: "นามสกุล",
-      placeholder: "นามสกุล",
+      placeholder: "กรอกนามสกุล",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
-
     {
       name: ["user", "email"],
       label: "อีเมลล์",
-      placeholder: "อีเมลล์",
+      placeholder: "กรอกอีเมลล์",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
     {
       name: "userName",
       label: "ชื่อผู้ใช้",
-      placeholder: "ชื่อผู้ใช้",
+      placeholder: "กรอกชื่อผู้ใช้",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
     {
       name: "password",
       label: "รหัสผ่าน",
-      placeholder: "รหัสผ่าน",
+      placeholder: "กรอกรหัสผ่าน",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
     {
       name: ["user", "profix"],
       label: "คำนำหน้า",
-      placeholder: "คำนำหน้า",
+      placeholder: "กรอกคำนำหน้า",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "SelectFormField",
       option: [
@@ -67,19 +65,18 @@ export const UsersSingle = () => {
     },
     {
       name: "active",
-      label: "active",
-      placeholder: "active",
+      label: "ทำงานอยู่",
+      placeholder: "เลือกทำงานอยู่",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
+      type: "CheckboxFormField",
     },
     {
-      name: "สถาน",
-      label: "status",
-      placeholder: "status",
+      name: "status",
+      label: "สถานะ",
+      placeholder: "เลือกสถานะ",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
+      type: "CheckboxFormField",
     },
-    ,
     {
       name: "roleId",
       label: "ตำแหน่ง ไอดี",
@@ -87,7 +84,6 @@ export const UsersSingle = () => {
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
-
     {
       label: "เพิ่มที่อยู่",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
@@ -136,16 +132,16 @@ export const UsersSingle = () => {
       type: "TextboxFormField",
     },
     {
+      name: "type",
+      label: "ที่อยู่ที่ลงทะเบียนไว้",
+      placeholder: "ที่อยู่ที่ลงทะเบียนไว้",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextboxFormField",
+    },
+    {
       label: "เพิ่มเติม",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
       type: "LabelForm",
-    },
-    {
-      name: "type",
-      label: "หมวด",
-      placeholder: "หมวด",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
     },
     {
       name: "description",
@@ -156,8 +152,8 @@ export const UsersSingle = () => {
     },
     {
       name: ["user", "profile", "phone"],
-      label: "โทรศัพท์",
-      placeholder: "กรอกโทรศัพท์",
+      label: "เบอร์โทรศัพท์",
+      placeholder: "กรอกเบอร์โทรศัพท์",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
@@ -178,72 +174,59 @@ export const UsersSingle = () => {
     {
       name: "startWork",
       label: "เริ่มงาน",
-      placeholder: "เริ่มงาน",
+      placeholder: "เลือกเริ่มงาน",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "DatePickerFormField",
     },
     {
       name: "endWork",
       label: "จบงาน",
-      placeholder: "จบงาน",
+      placeholder: "เลือกจบงาน",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "DatePickerFormField",
     },
-
   ];
-  
+
   return (
     <div style={{ padding: "20px" }}>
-        <Col span={24}>
-          <Breadcrumb style={{ marginBottom: "20px" }}>
-            <Breadcrumb.Item onClick={() => navigate("/")}>
-              <HomeOutlined />
-            </Breadcrumb.Item>
-            <Breadcrumb.Item onClick={() => navigate("/users")}>
-              ข้อมูลผู้ใช้
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>ลงทะเบียนผู้ใช้</Breadcrumb.Item>
-          </Breadcrumb>
-        </Col>
-        <Typography.Title level={2}>ลงทะเบียนผู้ใช้</Typography.Title>
-      <Col span={12}>
-        <Row gutter={24}>
+      <Col span={24}>
+        <Breadcrumb style={{ marginBottom: "20px" }}>
+          <Breadcrumb.Item onClick={() => navigate("/")}>
+            <HomeOutlined />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item onClick={() => navigate("/users")}>
+            ข้อมูลผู้ใช้
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>แก้ไขข้อมูลผู้ใช้</Breadcrumb.Item>
+        </Breadcrumb>
+      </Col>
+      <Typography.Title level={2}>แก้ไขข้อมูลผู้ใช้</Typography.Title>
+      <Row gutter={24}>
         <Col span={12}>
-        <Form layout="vertical">
-        <Row gutter={24}>         
-      {renderForm.map((item: any) => {
-            return (
-
-              <DynamicForm
-                key={item.value}
-                name={item.name}
-                label={item.label}
-                placeholder={item.placeholder}
-                type={item.type}
-                col={item.col}
-                option={item.option}
-                icon={item.icon}
-                value={item.value}
-                ruleMessage={item.message}
-                require={item.require}
-              />
-            );
-          })}
-          </Row>
-           </Form>   
-          </Col>
-          </Row>
-          </Col>
-          
-
-        <Col
-          xs={{ span: 24, order: 2 }}
-          sm={{ span: 24, order: 2 }}
-          md={{ span: 24, order: 2 }}
-          lg={{ span: 12, order: 2 }}
-          xl={{ span: 12, order: 1 }}
-        >
-          <Flex style={{ height: "300px" }} justify="center" align="center">
+          <Form layout="vertical">
+            <Row gutter={24}>
+              {renderForm.map((item: any) => {
+                return (
+                  <DynamicForm
+                    key={item.value}
+                    name={item.name}
+                    label={item.label}
+                    placeholder={item.placeholder}
+                    type={item.type}
+                    col={item.col}
+                    option={item.option}
+                    icon={item.icon}
+                    value={item.value}
+                    ruleMessage={item.message}
+                    require={item.require}
+                  />
+                );
+              })}
+            </Row>
+          </Form>
+        </Col>
+        <Col span={12}>
+          <Flex style={{ height: "10%" }} justify="center" align="center">
             <Timeline
               items={[
                 { children: "Create a services site 2015-09-01" },
@@ -254,14 +237,14 @@ export const UsersSingle = () => {
             />
           </Flex>
         </Col>
-        <Flex style={{ marginTop: "20px" }}>
-                  <Button type="primary">ยกเลิก</Button>
-                  <Button type="primary">ยืนยัน</Button>
-                  <Button type="primary">ลบ</Button>
-                </Flex>
+      </Row>
+      <Flex style={{ marginTop: "20px", gap: "10px" }}>
+        <Button type="primary">ยกเลิก</Button>
+        <Button type="primary">ยืนยัน</Button>
+        <Button type="primary" danger> ลบ</Button>
+      </Flex>
     </div>
   );
-
 };
 
 export default UsersSingle;

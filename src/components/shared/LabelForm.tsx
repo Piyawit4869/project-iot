@@ -13,8 +13,9 @@ interface LabelFormProps extends FormItemProps {
 export const LabelForm: FC<LabelFormProps> = ({
   label,
   icon,
-  labelFontSize = "22px",
-  labelMarginBottom = -20,
+  labelFontSize = "24px",
+  labelMarginBottom = -0,
+
 
   ...formItemProps
 }) => {

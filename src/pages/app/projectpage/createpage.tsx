@@ -19,32 +19,30 @@ export const ProjectCreate = () => {
     {
       name: "name",
       label: "ชื่อสาขา",
-      placeholder: "ชื่อสาขา",
+      placeholder: "กรอกชื่อสาขา",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
-    },
-
-    {
-      name: "active",
-      label: "active",
-      placeholder: "active",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-    },
-
-    {
-      name: "isMainBranch",
-      label: "เป็นสาขาหลัก",
-      placeholder: "เป็นสาขาหลัก",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-    },
+    }, 
     {
       name: "description",
       label: "อธิบาย",
       placeholder: "อธิบาย",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
+    },
+    {
+      name: "active",
+      label: "ทำงานอยู่",
+      placeholder: "ทำงานอยู่",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "CheckboxFormField",
+    },
+    {
+      name: "isMainBranch",
+      label: "เป็นสาขาหลัก",
+      placeholder: "เป็นสาขาหลัก",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "CheckboxFormField",
     },
     {
       name: "password",
@@ -130,8 +128,6 @@ export const ProjectCreate = () => {
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
-   
-    
   ];
   
   return (
@@ -141,12 +137,12 @@ export const ProjectCreate = () => {
             <Breadcrumb.Item onClick={() => navigate("/")}>
               <HomeOutlined />
             </Breadcrumb.Item>
-            <Breadcrumb.Item onClick={() => navigate("/users")}>ข้อมูลผู้ใช้</Breadcrumb.Item>
-            <Breadcrumb.Item>ลงทะเบียนผู้ใช้</Breadcrumb.Item>
+            <Breadcrumb.Item onClick={() => navigate("/project")}>โครงการ</Breadcrumb.Item>
+            <Breadcrumb.Item>สร้างโครงการ</Breadcrumb.Item>
           </Breadcrumb>
         </Col>
         <Typography.Title level={2}>สร้างโครงการ</Typography.Title>
-      <Col span={12}>
+      <Col span={24}>
         <Row gutter={24}>
         <Col span={12}>
         <Form layout="vertical">
@@ -174,12 +170,10 @@ export const ProjectCreate = () => {
           </Col>
           </Row>
           </Col>
-          
-        <Flex style={{ marginTop: "20px" }}>
-                  <Button type="primary">ยกเลิก</Button>
-                  <Button type="primary">ยืนยัน</Button>
-                  <Button type="primary">ลบ</Button>
-                </Flex>
+          <Flex style={{ marginTop: "20px", gap: "10px" }}>
+        <Button type="primary">ยกเลิก</Button>
+        <Button type="primary">ยืนยัน</Button>
+      </Flex>
     </div>
   );
 
