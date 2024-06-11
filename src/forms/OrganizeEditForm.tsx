@@ -19,8 +19,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
   props: OrganizeEditFormProps
 ) => {
   const { initialValues } = props;
-  console.log({ initialValues });
-
+  
   const [form] = Form.useForm();
   const submit = useSubmit();
 
