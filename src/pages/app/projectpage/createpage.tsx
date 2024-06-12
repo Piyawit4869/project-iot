@@ -1,28 +1,27 @@
-
 import { HomeOutlined } from "@ant-design/icons";
-import {
-  Breadcrumb,
-  Form,
-  Button,
-  Row,
-  Col,
-  Typography,
-  Flex,
-} from "antd";
+import { Breadcrumb, Form, Button, Row, Col,  Flex } from "antd";
 import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@src/forms/Dynamic";
 
 export const ProjectCreate = () => {
+  const [form] = Form.useForm();
   const navigate = useNavigate();
 
   const renderForm = [
     {
+      label: "เพิ่มข้อมูลโครงการ",
+      require: true,
+      col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
+      type: "LabelForm",
+    },
+    {
       name: "name",
       label: "ชื่อสาขา",
       placeholder: "กรอกชื่อสาขา",
+      require: true,
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
-    }, 
+    },
     {
       name: "description",
       label: "อธิบาย",
@@ -34,149 +33,106 @@ export const ProjectCreate = () => {
       name: "active",
       label: "ทำงานอยู่",
       placeholder: "ทำงานอยู่",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 6 },
       type: "CheckboxFormField",
     },
     {
       name: "isMainBranch",
-      label: "เป็นสาขาหลัก",
+      label: "สาขาหลัก",
       placeholder: "เป็นสาขาหลัก",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 6 },
       type: "CheckboxFormField",
     },
     {
-      name: "password",
-      label: "รหัสผ่าน",
-      placeholder: "รหัสผ่าน",
+      name: "email",
+      label: "อีเมล",
+      placeholder: "กรอกอีเมล",
+      require: true,
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
     {
       name: "tel",
-      label: "เบอร์ติดต่อ",
-      placeholder: "เบอร์ติดต่อ",
+      label: "เบอร์โทรติดต่อ",
+      placeholder: "กรอกเบอร์โทรติดต่อ",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
     {
       name: "imageUrl",
       label: "ลิ้งค์รูปภาพ",
-      placeholder: "active",
+      placeholder: "กรอกลิ้งค์รูปภาพ",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
-    {
-      name: "email",
-      label: "อีเมล",
-      placeholder: "อีเมล",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-    },
-    ,
+    
     {
       name: "website",
-      label: "เว็บไซต์",
-      placeholder: "เว็บไซต์",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-    },
-
-    {
-      label: "เพิ่มที่อยู่",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
-      type: "LabelForm",
-    },
-    {
-      name: "address",
-      label: "ที่อยู่",
-      placeholder: "กรอกที่อยู่",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-    },
-    {
-      name: "subdistrict",
-      label: "ตำบล",
-      placeholder: "ตำบล",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-    },
-    {
-      name: "district",
-      label: "เขต",
-      placeholder: "กรอกเขต",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-    },
-    {
-      name: "province",
-      label: "จังหวัด",
-      placeholder: "กรอกจังหวัด",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-    },
-    {
-      name: "country",
-      label: "ประเทศ",
-      placeholder: "กรอกประเทศ",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-    },
-    {
-      name: "postalCode",
-      label: "รหัสไปรษณีย์",
-      placeholder: "รหัสไปรษณีย์",
+      label: "ลิ้งค์เว็บไซต์",
+      placeholder: "กรอกลิ้งค์เว็บไซต์",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
   ];
-  
+
+  const onFinish = (values: any) => {
+    const payload = Object.assign(values);
+    console.log("Form Submitted", payload);
+    
+  };
+
   return (
     <div style={{ padding: "20px" }}>
-        <Col span={24}>
-          <Breadcrumb style={{ marginBottom: "20px" }}>
-            <Breadcrumb.Item onClick={() => navigate("/")}>
-              <HomeOutlined />
-            </Breadcrumb.Item>
-            <Breadcrumb.Item onClick={() => navigate("/project")}>โครงการ</Breadcrumb.Item>
-            <Breadcrumb.Item>สร้างโครงการ</Breadcrumb.Item>
-          </Breadcrumb>
-        </Col>
-        <Typography.Title level={2}>สร้างโครงการ</Typography.Title>
       <Col span={24}>
+        <Breadcrumb style={{ marginBottom: "20px" }}>
+          <Breadcrumb.Item onClick={() => navigate("/")}>
+            <HomeOutlined />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item onClick={() => navigate("/project")}>
+            ข้อมูลโครงการ
+          </Breadcrumb.Item>
+          <Breadcrumb.Item onClick={() => navigate("/project/createproject")}>
+            เพิ่มข้อมูลโครงการ
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      </Col>
+      <Form form={form} layout="vertical" onFinish={onFinish}>
         <Row gutter={24}>
-        <Col span={12}>
-        <Form layout="vertical">
-        <Row gutter={24}>         
-      {renderForm.map((item: any) => {
-            return (
-
-              <DynamicForm
-                key={item.value}
-                name={item.name}
-                label={item.label}
-                placeholder={item.placeholder}
-                type={item.type}
-                col={item.col}
-                option={item.option}
-                icon={item.icon}
-                value={item.value}
-                ruleMessage={item.message}
-                require={item.require}
-              />
-            );
-          })}
-          </Row>
-           </Form>   
+        <Col
+          xs={{ span: 24, order: 2 }}
+          sm={{ span: 24, order: 2 }}
+          md={{ span: 24, order: 2 }}
+          lg={{ span: 12, order: 1 }}
+          xl={{ span: 12, order: 1 }}
+        >
+            <Row gutter={24}>
+              {renderForm.map((item: any) => {
+                return (
+                  <DynamicForm
+                    key={item.name}
+                    name={item.name}
+                    label={item.label}
+                    placeholder={item.placeholder}
+                    type={item.type}
+                    col={item.col}
+                    option={item.option}
+                    icon={item.icon}
+                    value={item.value}
+                    ruleMessage={item.message}
+                    require={item.require}
+                  />
+                );
+              })}
+            </Row>
           </Col>
-          </Row>
-          </Col>
-          <Flex style={{ marginTop: "20px", gap: "10px" }}>
-        <Button type="primary">ยกเลิก</Button>
-        <Button type="primary">ยืนยัน</Button>
+        </Row>
+        <Flex style={{ marginTop: "20px", gap: "10px" }}>
+        <Form.Item><Button type="primary" onClick={() => navigate("/project")}>ยกเลิก</Button></Form.Item>
+        <Form.Item><Button type="primary" htmlType="submit">ยืนยัน</Button></Form.Item>
       </Flex>
+      </Form>
     </div>
   );
-
 };
 
 export default ProjectCreate;

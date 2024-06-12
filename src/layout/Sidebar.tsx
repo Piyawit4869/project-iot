@@ -76,7 +76,7 @@ export const Sidebar: React.FC = () => {
           position: isMobile ? "fixed" : "relative",
           zIndex: 10,
           height: "100vh",
-          backgroundColor: "#192A5C",
+          backgroundColor: "#19142A",
         }}
       >
         <div

@@ -115,7 +115,7 @@ export const UsersIndex = () => {
         <Breadcrumb.Item href="/">
           <HomeOutlined/>
         </Breadcrumb.Item>
-        <Breadcrumb.Item>ข้อมูล</Breadcrumb.Item>
+        <Breadcrumb.Item>ข้อมูลผู้ใช้</Breadcrumb.Item>
       </Breadcrumb>
       <h1>ข้อมูลผู้ใช้</h1>
       <div

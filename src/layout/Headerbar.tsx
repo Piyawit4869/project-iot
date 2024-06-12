@@ -19,7 +19,6 @@ export const Headerbar: React.FC = () => {
 
   return <div style={styles.menu} />;
 };
-
 const styles: Record<string, React.CSSProperties> = {
   menu: {
     display: "flex",
@@ -27,7 +26,7 @@ const styles: Record<string, React.CSSProperties> = {
     zIndex: 5,
     alignItems: "center",
     padding: "10px 20px 10px 20px",
-    backgroundColor: "#192A5C",
+    // backgroundColor: "#1A1A1A",
     height: "50px",
   },
   icon: {

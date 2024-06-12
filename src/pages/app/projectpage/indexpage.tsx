@@ -108,13 +108,13 @@ const onSearch = (value: any) => {
               <HomeOutlined />
             </Breadcrumb.Item>
             <Breadcrumb.Item onClick={() => navigate('/project')}>
-              โครงการ
+            ข้อมูลโครงการ
             </Breadcrumb.Item>
           </Breadcrumb>
         </Col>
       </Row>
 
-      <h1>โครงงาน</h1>
+      <h1>ข้อมูลโครงการ</h1>
       <div
         style={{
           display: "flex",
@@ -128,7 +128,7 @@ const onSearch = (value: any) => {
           onSearch={onSearch}
           style={{ width: 200 }}
         />
-        <Button type="primary" onClick={() => navigate('/project/createproject')}>เพิ่มโครงการ</Button>
+        <Button type="primary" onClick={() => navigate('/project/createproject')}>เพิ่มข้อมูลโครงการ</Button>
       </div>
       <Table columns={columns} dataSource={data} pagination={false} />
       <div

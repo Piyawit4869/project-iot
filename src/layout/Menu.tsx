@@ -26,6 +26,12 @@ export const Menus = (props: MenusProps) => {
       icon: <Icon.DatabaseOutlined rotate={90} />,
       role: ["admin", "user"],
     },
+    {
+      label: <Link to="Customes">Customes</Link>,
+      key: "Customes",
+      icon: <Icon.DatabaseOutlined rotate={90} />,
+      role: ["admin", "user"],
+    },
   ];
 
   return menus.filter((m: any) => m.role.indexOf(role) > -1);
