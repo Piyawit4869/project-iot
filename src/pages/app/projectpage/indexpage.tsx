@@ -101,20 +101,20 @@ const onSearch = (value: any) => {
 };
   return (
     <>
-      <Row> {/* Top Buttons */}
+      <Row>
         <Col span={12}>
           <Breadcrumb style={{ marginBottom: "20px" }}>
             <Breadcrumb.Item onClick={() => navigate('/')}>
               <HomeOutlined />
             </Breadcrumb.Item>
             <Breadcrumb.Item onClick={() => navigate('/project')}>
-              Project
+            ข้อมูลโครงการ
             </Breadcrumb.Item>
           </Breadcrumb>
         </Col>
-      </Row> {/* Top Buttons */}
+      </Row>
 
-      <h1>Project</h1>
+      <h1>ข้อมูลโครงการ</h1>
       <div
         style={{
           display: "flex",
@@ -128,7 +128,7 @@ const onSearch = (value: any) => {
           onSearch={onSearch}
           style={{ width: 200 }}
         />
-        <Button type="primary" onClick={() => navigate('/project/createproject')}>Add information</Button>
+        <Button type="primary" onClick={() => navigate('/project/createproject')}>เพิ่มข้อมูลโครงการ</Button>
       </div>
       <Table columns={columns} dataSource={data} pagination={false} />
       <div
