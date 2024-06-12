@@ -7,16 +7,22 @@ interface TextboxFormFieldProps {
   placeholder?: string;
   type?: string;
   rule?: any;
+  disabled: boolean;
 }
 
 export const TextboxFormField: FC<TextboxFormFieldProps> = (
   props: TextboxFormFieldProps
 ) => {
-  const { name, label, placeholder, type, rule } = props;
+  const { name, label, placeholder, type, rule, disabled } = props;
 
   return (
     <Form.Item name={name} label={label} rules={rule}>
-      <Input type={type} placeholder={placeholder} style={styles.input} />
+      <Input
+        type={type}
+        placeholder={placeholder}
+        disabled={disabled}
+        style={styles.input}
+      />
     </Form.Item>
   );
 };

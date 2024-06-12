@@ -5,3 +5,5 @@ export * from "./TextboxFormField";
 export * from "./LabelForm";
 export * from "./CheckboxFormField";
 export * from "./TextboxFormField";
+export * from "./SwitchFormField";
+export * from "./SectionLabelForm";

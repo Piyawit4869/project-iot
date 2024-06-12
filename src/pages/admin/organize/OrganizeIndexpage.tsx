@@ -10,8 +10,8 @@ import {
 } from "@ant-design/icons";
 import { Breadcrumb, Typography, Input, Button, Table } from "antd";
 import { SearchProps } from "antd/es/input";
-import { Link, useLoaderData } from "react-router-dom";
-
+import { Link, useLoaderData, useNavigate } from "react-router-dom";
+import { Image } from "antd";
 // import { render } from "react-dom";
 // // import axios from "axios";
 
@@ -29,6 +29,15 @@ export async function organizeLoader() {
 
 export const OrganizeIndex: React.FC = () => {
   const { organize } = useLoaderData() as any;
+
+  const me = JSON.parse(localStorage.getItem("me") as any);
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (me.role === "user" || me.role === "admin") {
+      navigate("/");
+    }
+  }, []);
 
   //   const [products, setProducts] = React.useState([]);
   //   const [columns, setColumns] = useState([]);
@@ -54,6 +63,14 @@ export const OrganizeIndex: React.FC = () => {
       title: "logo",
       dataIndex: "logo",
       key: "logo",
+      render: () => {
+        return (
+          <Image
+            width={200}
+            src="https://cdn.discordapp.com/attachments/1158071010340380882/1248174696025817109/64302040001.png?ex=6662b4c5&is=66616345&hm=397ec8db8eb9c2396cd511fe6e005b5a02cbd96f005f8ba19dd10fd592915d35&"
+          />
+        );
+      },
     },
     {
       title: "ลำดับ",

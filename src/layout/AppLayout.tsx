@@ -7,6 +7,9 @@ export const AppLayout = () => {
   const [loading, setLoading] = React.useState(true);
   const { state } = useNavigation();
 
+  const me = JSON.parse(localStorage.getItem("me") as any);
+  console.log(me);
+
   React.useEffect(() => {
     setTimeout(() => {
       setLoading(false);

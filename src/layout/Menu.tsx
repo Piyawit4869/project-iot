@@ -9,10 +9,16 @@ export const Menus = (props: MenusProps) => {
   const { role } = props;
   const menus = [
     {
+      label: <Link to="/admin/organize">Organize</Link>,
+      key: "organize",
+      icon: <Icon.DatabaseOutlined rotate={90} />,
+      role: ["super_admin"],
+    },
+    {
       label: <Link to="attendance">Attendance</Link>,
       key: "attendance",
       icon: <Icon.ScheduleOutlined />,
-      role: ["admin", "user"],
+      role: ["admin", "user", "super_admin"],
     },
     {
       label: <Link to="notation">Notation</Link>,

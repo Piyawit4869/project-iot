@@ -60,6 +60,7 @@ const UsersSingle = () => {
                     placeholder="firstName"
                     name="firstName"
                     label="ชื่อจริง"
+                    disabled={false}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
@@ -67,6 +68,7 @@ const UsersSingle = () => {
                     placeholder="lastName"
                     name="lastName"
                     label="นามสกุล"
+                    disabled={false}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
@@ -74,6 +76,7 @@ const UsersSingle = () => {
                     placeholder="email"
                     name="email"
                     label="อีเมล"
+                    disabled={false}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
@@ -81,6 +84,7 @@ const UsersSingle = () => {
                     placeholder="userName"
                     name="userName"
                     label="ชื่อผู้ใช้"
+                    disabled={false}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
@@ -88,6 +92,7 @@ const UsersSingle = () => {
                     placeholder="password"
                     name="password"
                     label="รหัสผ่าน"
+                    disabled={false}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
@@ -95,6 +100,7 @@ const UsersSingle = () => {
                     placeholder="phoneNumber"
                     name="phoneNumber"
                     label="เบอร์โทรศัพท์"
+                    disabled={false}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
@@ -103,17 +109,11 @@ const UsersSingle = () => {
                     name="birthDate"
                     label="วันเกิด"
                     type="date"
+                    disabled={false}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                  <RadioFormField
-                    name="gender"
-                    options={[
-                      { value: "male", label: "ชาย" },
-                      { value: "female", label: "หญิง" },
-                      { value: "other", label: "อื่นๆ" },
-                    ]}
-                  />
+                  <RadioFormField name={""} label={""} options={[]} />
                 </Col>
                 <Flex style={{ marginTop: "20px" }}>
                   <Button type="primary">ยกเลิก</Button>

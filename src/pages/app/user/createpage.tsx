@@ -59,6 +59,7 @@ export const UsersCreate = () => {
                     placeholder="-"
                     name="firstName"
                     label="ชื่อจริง"
+                    disabled={false}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
@@ -66,6 +67,7 @@ export const UsersCreate = () => {
                     placeholder="-"
                     name="lastName"
                     label="นามสกุล"
+                    disabled={false}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
@@ -73,6 +75,7 @@ export const UsersCreate = () => {
                     placeholder="-"
                     name="email"
                     label="อีเมล"
+                    disabled={false}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
@@ -80,6 +83,7 @@ export const UsersCreate = () => {
                     placeholder="-"
                     name="userName"
                     label="ชื่อผู้ใช้"
+                    disabled={false}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
@@ -87,6 +91,7 @@ export const UsersCreate = () => {
                     placeholder="-"
                     name="password"
                     label="รหัสผ่าน"
+                    disabled={false}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
@@ -94,6 +99,7 @@ export const UsersCreate = () => {
                     placeholder="-"
                     name="phoneNumber"
                     label="เบอร์โทรศัพท์"
+                    disabled={false}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
@@ -102,17 +108,11 @@ export const UsersCreate = () => {
                     name="birthDate"
                     label="วันเกิด"
                     type="date"
+                    disabled={false}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                  <RadioFormField
-                    name="gender"
-                    options={[
-                      { value: "male", label: "ชาย" },
-                      { value: "female", label: "หญิง" },
-                      { value: "other", label: "อื่นๆ" },
-                    ]}
-                  />
+                  <RadioFormField name={""} label={""} options={[]} />
                 </Col>
               </Row>
             </Row>

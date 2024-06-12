@@ -5,7 +5,7 @@ import { Button, Col, Form, Row } from "antd";
 
 import { DynamicForm } from "@src/forms/Dynamic";
 import { TagFilled } from "@ant-design/icons";
-import { useSubmit } from "react-router-dom";
+import { useNavigate, useSubmit } from "react-router-dom";
 
 export async function organizeCreateAction({ request }: any) {
   const formData = await request.formData();
@@ -33,12 +33,23 @@ export async function organizeCreateAction({ request }: any) {
 
 const renderForm = [
   {
+    label: " เพิ่มข้อมูลองค์กร",
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
+    type: "SectionLabelForm",
+  },
+  {
+    name: "active",
+    label: "เปิดใช้งาน",
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 2 },
+    type: "SwitchFormField",
+  },
+  {
     name: "businessType",
     label: "รูปแบบธุรกิจ",
     placeholder: "รูปแบบธุรกิจ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "SelectFormField",
-    option: [
+    options: [
       { value: "Single", label: "เดี่ยว" },
       { value: "Duo", label: "คู่" },
       { value: "Team", label: "ทีม" },
@@ -48,7 +59,7 @@ const renderForm = [
     name: "taxId",
     label: "เลขทะเบียน 13 หลัก",
     placeholder: "เลขทะเบียน 13 หลัก",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
     require: true,
     message: "กรุณากรอกข้อมูลเลขทะเบียน 13 หลัก ( เช่น 0123456789101 ) ",
@@ -68,6 +79,7 @@ const renderForm = [
     placeholder: "คำอธิบายธุรกิจ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextAreaFormField",
+    require: true,
   },
   {
     name: "businessRegister",
@@ -139,54 +151,54 @@ const renderForm = [
     type: "LabelForm",
   },
   {
-    name: "address",
+    name: ["address", "address"],
     label: "ที่อยู่",
     placeholder: "ที่อยู่",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
   },
   {
-    name: "addressType",
+    name: ["address", "addressType"],
     label: "ประเภทที่อยู่",
     placeholder: "ประเภทที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "SelectFormField",
-    option: [
+    options: [
       { value: "Single", label: "Home" },
       { value: "Duo", label: "Apartment" },
       { value: "Team", label: "Detached House" },
     ],
   },
   {
-    name: "descriptions",
+    name: ["address", "descriptions"],
     label: "คำอธิบายเกี่ยวกับที่อยู่",
     placeholder: "คำอธิบายเกี่ยวกับที่อยู่",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextAreaFormField",
   },
   {
-    name: "country",
+    name: ["address", "country"],
     label: "ประเทศ",
     placeholder: "ประเทศ",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
   },
   {
-    name: "subDistrict",
+    name: ["address", "subDistrict"],
     label: "แขวง/ตำบล",
     placeholder: "แขวง/ตำบล",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
   },
   {
-    name: "district",
+    name: ["address", "district"],
     label: "เขต/อำเภอ",
     placeholder: "เขต/อำเภอ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
   },
   {
-    name: "province",
+    name: ["address", "province"],
     label: "จังหวัด",
     placeholder: "จังหวัด",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
@@ -195,10 +207,10 @@ const renderForm = [
     message: "กรุณากรอกจังหวัด",
   },
   {
-    name: "postalCode",
+    name: ["address", "postalCode"],
     label: "รหัสไปรษณีย์",
     placeholder: "รหัสไปรษณีย์",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
     type: "TextboxFormField",
     require: true,
     message: "กรุณากรอกรหัสไปรษณีย์",
@@ -209,83 +221,100 @@ const renderForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "LabelForm",
   },
+
   {
     name: "branchType",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "RadioFormField",
-    option: [
-      { value: "same", label: "ใช้ข้อมูลที่อยู่ตามทะเบียน" },
+
+    options: [
+      { value: "same", label: "ใช้ข้อมูลที่อยู่ตามทะเบียน", checked: true },
       { value: "new", label: "ข้อมูลใหม่" },
     ],
   },
 
   {
-    name: "address",
+    name: ["address", "address"],
     label: "ที่อยู่",
     placeholder: "ที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    disabled: true,
   },
   {
-    name: "addressType",
+    name: ["address", "addressType"],
     label: "ประเภทที่อยู่",
     placeholder: "ประเภทที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "SelectFormField",
-    option: [
+    options: [
       { value: "Single", label: "Home" },
       { value: "Duo", label: "Apartment" },
       { value: "Team", label: "Detached House" },
     ],
+    disabled: true,
   },
   {
-    name: "descriptions",
+    name: ["address", "descriptions"],
     label: "คำอธิบายเกี่ยวกับที่อยู่",
     placeholder: "คำอธิบายเกี่ยวกับที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
     type: "TextAreaFormField",
+    disabled: true,
   },
   {
-    name: "country",
+    name: ["address", "country"],
     label: "ประเทศ",
     placeholder: "ประเทศ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    disabled: true,
   },
   {
-    name: "subDistrict",
+    name: ["address", "subDistrict"],
     label: "แขวง/ตำบล",
     placeholder: "แขวง/ตำบล",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    disabled: true,
   },
   {
-    name: "district",
+    name: ["address", "district"],
     label: "เขต/อำเภอ",
     placeholder: "เขต/อำเภอ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    disabled: true,
   },
   {
-    name: "province",
+    name: ["address", "province"],
     label: "จังหวัด",
     placeholder: "จังหวัด",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    disabled: true,
   },
   {
-    name: "postalCode",
+    name: ["address", "postalCode"],
     label: "รหัสไปรษณีย์",
     placeholder: "รหัสไปรษณีย์",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    disabled: true,
   },
-
-  //Branch Section
+  {
+    name: ["address", "active"],
+    label: "เปิดใช้งาน",
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 2 },
+    type: "SwitchFormField",
+    disabled: true,
+    checked: true,
+  },
+  /*Branch Section*/
   {
     label: "เพิ่มสาขา",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
-    type: "LabelForm",
+    type: "SectionLabelForm",
   },
   {
     name: ["branch", "taxId"],
@@ -302,16 +331,16 @@ const renderForm = [
     type: "TextboxFormField",
   },
   {
-    name: "branchType",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
+    name: ["branch", "branchType"],
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "RadioFormField",
-    option: [
-      { value: "headquarters", label: "สำนักงานใหญ่" },
+    options: [
+      { value: "headquarters", label: "สำนักงานใหญ่", checked: true },
       { value: "branch", label: "สาขา" },
     ],
   },
   {
-    name: "bussinessModel",
+    name: ["branch", "businessModel"],
     label: "โมเดล",
     placeholder: "โมเดล",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
@@ -323,21 +352,21 @@ const renderForm = [
     placeholder: "รูปแบบธุรกิจ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "SelectFormField",
-    option: [
+    options: [
       { value: "Single", label: "เดี่ยว" },
       { value: "Duo", label: "คู่" },
       { value: "Team", label: "ทีม" },
     ],
   },
   {
-    name: "phone",
+    name: ["branch", "phone"],
     label: "เบอร์โทรศัพท์",
     placeholder: "เบอร์โทรศัพท์",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
   },
   {
-    name: "email",
+    name: ["branch", "email"],
     label: "อีเมลล์",
     placeholder: "อีเมลล์",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
@@ -347,75 +376,85 @@ const renderForm = [
     name: ["branch", "websiteUrl"],
     label: "เว็บไซต์",
     placeholder: "เว็บไซต์",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 16 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
   },
   {
-    name: ["branch", "address"],
+    name: ["branch", "address", "address"],
     label: "ที่อยู่",
     placeholder: "ที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 16 },
     type: "TextboxFormField",
   },
   {
-    name: ["branch", "addressType"],
+    name: ["branch", "address", "addressType"],
     label: "ประเภทที่อยู่",
     placeholder: "ประเภทที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "SelectFormField",
-    option: [
+    options: [
       { value: "Single", label: "Home" },
       { value: "Duo", label: "Apartment" },
       { value: "Team", label: "Detached House" },
     ],
   },
   {
-    name: ["branch", "descriptions"],
+    name: ["branch", "address", "descriptions"],
     label: "คำอธิบายเกี่ยวกับที่อยู่",
     placeholder: "คำอธิบายเกี่ยวกับที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextAreaFormField",
   },
   {
-    name: ["branch", "country"],
+    name: ["branch", "address", "country"],
     label: "ประเทศ",
     placeholder: "ประเทศ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
   },
   {
-    name: ["branch", "subDistrict"],
+    name: ["branch", "address", "subDistrict"],
     label: "แขวง/ตำบล",
     placeholder: "แขวง/ตำบล",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
   },
   {
-    name: ["branch", "district"],
+    name: ["branch", "address", "district"],
     label: "เขต/อำเภอ",
     placeholder: "เขต/อำเภอ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
   },
   {
-    name: ["branch", "province"],
+    name: ["branch", "address", "province"],
     label: "จังหวัด",
     placeholder: "จังหวัด",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    require: true,
+    message: "กรุณากรอกจังหวัด",
   },
   {
-    name: ["branch", "postalCode"],
+    name: ["branch", "address", "postalCode"],
     label: "รหัสไปรษณีย์",
     placeholder: "รหัสไปรษณีย์",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    require: true,
+    message: "กรุณากรอกรหัสไปรษณีย์",
+  },
+  {
+    name: ["branch", "address", "active"],
+    label: "เปิดใช้งาน",
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: "SwitchFormField",
   },
   //User Section
   {
     label: "เพิ่มผู้ใช้",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
-    type: "LabelForm",
+    type: "SectionLabelForm",
   },
   {
     name: ["user", "email"],
@@ -423,6 +462,8 @@ const renderForm = [
     placeholder: "อีเมลล์",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    require: true,
+    message: "กรุณาอีเมลล์",
   },
   {
     name: "userName",
@@ -430,9 +471,11 @@ const renderForm = [
     placeholder: "ชื่อผู้ใช้",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    require: true,
+    message: "กรุณากรอกชื่อผู้ใช้",
   },
   {
-    name: "password",
+    name: ["user", "password"],
     label: "รหัสผ่าน",
     placeholder: "รหัสผ่าน",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
@@ -451,7 +494,7 @@ const renderForm = [
     placeholder: "คำนำหน้า",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "SelectFormField",
-    option: [
+    options: [
       { value: "Mr", label: "นาย" },
       { value: "Ms", label: "นาง" },
       { value: "Mrs", label: "นางสาว" },
@@ -463,6 +506,8 @@ const renderForm = [
     placeholder: "ชื่อ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    require: true,
+    message: "กรุณากรอกชื่อ",
   },
   {
     name: ["user", "profile", "lastName"],
@@ -470,6 +515,8 @@ const renderForm = [
     placeholder: "นามสกุล",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    require: true,
+    message: "กรุณากรอกนามสกุล",
   },
   {
     name: ["user", "profile", "birthDate"],
@@ -505,7 +552,7 @@ const renderForm = [
     placeholder: "เลือก",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "SelectFormField",
-    option: [
+    options: [
       { value: "SuperAdmin", label: "Super Admin" },
       { value: "Admin", label: "Admin" },
       { value: "User", label: "User" },
@@ -516,48 +563,32 @@ const renderForm = [
 export const OrganizeCreate: React.FC = () => {
   const [form] = Form.useForm();
   const submit = useSubmit();
-  // const [imageSrc, setImageSrc] = React.useState("image-placeholder.png");
 
-  // const previewImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const input = event.target;
-  //   if (input.files && input.files[0]) {
-  //     const reader = new FileReader();
-  //     reader.onload = (e) => {
-  //       setImageSrc(e.target?.result as string);
-  //     };
-  //     reader.readAsDataURL(input.files[0]);
-  //   }
-  // };
+  //get me from local Storage
+  const me = JSON.parse(localStorage.getItem("me") as any);
+  const navigate = useNavigate();
+  //check path by role
+  React.useEffect(() => {
+    if (me.role === "user" || me.role === "admin") {
+      navigate("/");
+    }
+  }, []);
+
   const onFinish = (values: any) => {
     const payload = Object.assign(values);
+    payload.active = true;
+    payload.user.active = true;
+    payload.branch.branchType = "branch";
+
+    payload.logoUrl =
+      "https://cdn.discordapp.com/attachments/1235856320280924213/1244954526155542598/575757.png?ex=6656fdc1&is=6655ac41&hm=96242e1d5d4f232411d9434a17f5053d4a7e6c788030f515e5da25d03813da86&";
+    payload.branch.logoUrl =
+      "https://cdn.discordapp.com/attachments/1235856320280924213/1244954526155542598/575757.png?ex=6656fdc1&is=6655ac41&hm=96242e1d5d4f232411d9434a17f5053d4a7e6c788030f515e5da25d03813da86&";
+
+    console.log(payload);
+
     submit({ data: JSON.stringify(payload) }, { method: "post" });
   };
-
-  // const formatDate = (isoDateString: any) => {
-  //   return dayjs(isoDateString);
-  // };
-
-  // Loop through the keys of the JSON object
-  // for (const key in FormTitleJson) {
-  //   console.log(FormTitleJson.hasOwnProperty(key));
-
-  //   if (FormTitleJson.hasOwnProperty(key)) {
-  //     Forms.push(
-  // <DynamicForm
-  //   LabelFormIcon={<TagFilled />}
-  //   LabelFormStyle={undefined}
-  //   LabelFormLabel={key}
-  //   LabelFormChildren={undefined}
-  //   TextboxFormPlaceholder={key}
-  //   TextboxFormName={key}
-  //   TextboxFormLabel={key}
-  //   IsObject={false}
-  //   TextboxFormValue={key}
-  // />
-  //     );
-  //     // console.log(`Key: ${key}, Value: ${FormTitleJson[key]}`);
-  //   }
-  // }
 
   return (
     <div>
@@ -571,11 +602,7 @@ export const OrganizeCreate: React.FC = () => {
           </Button>
         </Col>
         <Row gutter={20}>
-          <Col span={24} style={{ textAlign: "left", marginBottom: 16 }}>
-            <div style={{ fontSize: 22, fontWeight: "bold" }}>
-              เพิ่มข้อมูลองค์กร
-            </div>
-          </Col>
+          <Col span={24} style={{ textAlign: "left", marginBottom: 16 }}></Col>
 
           {renderForm.map((item: any) => {
             return (
@@ -586,19 +613,18 @@ export const OrganizeCreate: React.FC = () => {
                 placeholder={item.placeholder}
                 type={item.type}
                 col={item.col}
-                option={item.option}
                 icon={item.icon}
                 value={item.value}
                 ruleMessage={item.message}
                 require={item.require}
+                option={item.options}
+                disabled={item.disabled}
+                checked={item.checked}
               />
             );
           })}
         </Row>
-
-        {/* <OrganizeCreateForm />
-        <BranchForm />
-        <UserForm /> */}
+        <Col></Col>
       </Form>
     </div>
   );

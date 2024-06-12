@@ -1,52 +1,37 @@
-import React, { useState } from "react";
+import React from "react";
 import { Form, Radio } from "antd";
-import { CSSProperties } from "react";
+
+interface RadioOption {
+  label: string;
+  value: string;
+  checked: boolean;
+}
 
 interface RadioFormFieldProps {
   name: string;
-  // options: any;
-  options: { value: string | number; label: string }[];
-  value?: string | number;
+  label: string;
+  options: RadioOption[];
+  rules?: any[];
 }
 
-export const RadioFormField: React.FC<RadioFormFieldProps> = (
-  props: RadioFormFieldProps
-) => {
-  const { options, name } = props;
-  const [checkedValue, setCheckedValue] = useState<string | number | null>(
-    null
-  );
-
-  const handleRadioChange = (e: any) => {
-    const value = e.target.value;
-    setCheckedValue(checkedValue === value ? null : value);
-  };
+export const RadioFormField: React.FC<RadioFormFieldProps> = ({
+  name,
+  label,
+  options,
+  rules,
+}) => {
+  // Find the initially checked option
+  const defaultCheckedValue = options.find((option) => option.checked)?.value;
 
   return (
-    <Form.Item name={name}>
-      <Radio.Group
-        options={options}
-        style={styles.radioGroup}
-        onChange={handleRadioChange}
-        value={checkedValue}
-      >
-        {/* {options.map((option: any) => (
-          <Radio key={option.value} value={option.value} style={styles.radio}>
+    <Form.Item name={name} label={label} rules={rules}>
+      <Radio.Group defaultValue={defaultCheckedValue}>
+        {options.map((option) => (
+          <Radio value={option.value} key={option.value}>
             {option.label}
           </Radio>
-        ))} */}
+        ))}
       </Radio.Group>
     </Form.Item>
   );
-};
-
-const styles: Record<string, CSSProperties> = {
-  radioGroup: {
-    display: "flex",
-    flexDirection: "row",
-    marginTop: -10,
-  },
-  radio: {
-    margin: "5px 0",
-  },
 };
