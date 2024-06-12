@@ -8,7 +8,7 @@ import {
 // import React from "react";
 
 import * as API from "@src/apis";
-import { json, useSubmit } from "react-router-dom";
+import { json, redirect, useSubmit } from "react-router-dom";
 // import axios from "axios";
 
 //here Action example
@@ -27,7 +27,7 @@ export async function loginAction({ request }: any) {
           description: "You have successfully logged in",
         });
 
-        return json({ status: "success", data: res });
+        return redirect("/");
       } catch (error) {
         notification.error({
           message: "Login Failed",
@@ -36,6 +36,7 @@ export async function loginAction({ request }: any) {
 
         return json({ status: "error", message: "Invalid email or password" });
       }
+
     default:
       break;
   }
@@ -84,7 +85,7 @@ export const Login = () => {
         >
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder=""
+            placeholder="Email or Username"
             style={{ width: "500px", height: "50px", fontSize: "16px" }}
           />
         </Form.Item>

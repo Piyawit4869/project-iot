@@ -9,15 +9,21 @@ interface TextAreaFormFieldProps {
   placeholder?: string;
   rows?: number;
   rule?: any;
+  disabled: boolean;
 }
 
 export const TextAreaFormField: FC<TextAreaFormFieldProps> = (
   props: TextAreaFormFieldProps
 ) => {
-  const { name, label, placeholder, rows, rule } = props;
+  const { name, label, placeholder, rows, rule, disabled } = props;
   return (
     <Form.Item name={name} rules={rule} label={label}>
-      <TextArea placeholder={placeholder} rows={rows} style={styles.textarea} />
+      <TextArea
+        disabled={disabled}
+        placeholder={placeholder}
+        rows={rows}
+        style={styles.textarea}
+      />
     </Form.Item>
   );
 };

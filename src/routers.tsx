@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import { Root } from "./pages/Roots";
-import { AdminLayout, AppLayout } from "./layout";
+import { Root, RootLoader } from "./pages/Roots";
+import { AppLayout } from "./layout";
 
 import { routes as appRoutes } from "./pages/app";
 import { routes as publicRoutes } from "./pages/public";
@@ -24,6 +24,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+    loader: RootLoader,
     children: [
       {
         path: "/public",
@@ -32,7 +33,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/admin",
-        element: <AdminLayout />,
+        element: <AppLayout />,
         children: [...adminRoutes],
       },
 

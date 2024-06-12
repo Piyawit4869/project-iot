@@ -125,8 +125,7 @@ export const ProjectSingle = () => {
                   icon={item.icon}
                   value={item.value}
                   ruleMessage={item.message}
-                  require={item.require}
-                />
+                  require={item.require} disabled={false} checked={false}                />
               ))}
             </Row>
           </Col>
