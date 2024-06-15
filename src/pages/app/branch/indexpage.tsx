@@ -1,6 +1,7 @@
-import { HomeOutlined } from "@ant-design/icons";
-import { Breadcrumb, Col, Input, Pagination, Row, Table, Button } from "antd";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { HomeOutlined } from '@ant-design/icons';
+import { Breadcrumb, Col, Input, Pagination, Row, Table, Button } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const data = [
   {
@@ -38,7 +39,7 @@ const data = [
   },
 ];
 
-export const BranchIndex = () => {
+export const BranchIndex: React.FC = () => {
   const navigate = useNavigate();
 
   const columns = [
@@ -90,7 +91,7 @@ export const BranchIndex = () => {
     },
   ];
 
-  const onSearch = (value: any) => {
+  const onSearch = (value: string) => {
     console.log(value);
   };
 
@@ -103,7 +104,7 @@ export const BranchIndex = () => {
               <HomeOutlined />
             </Breadcrumb.Item>
             <Breadcrumb.Item onClick={() => navigate('/branch')}>
-            ข้อมูลสาขา
+              ข้อมูลสาขา
             </Breadcrumb.Item>
           </Breadcrumb>
         </Col>
@@ -123,7 +124,9 @@ export const BranchIndex = () => {
           onSearch={onSearch}
           style={{ width: 200 }}
         />
-        <Button type="primary" onClick={() => navigate('/branch/createbranch')}>เพิ่มข้อมูลสาขา</Button>
+        <Button type="primary" onClick={() => navigate('/branch/createbranch')}>
+          เพิ่มข้อมูลสาขา
+        </Button>
       </div>
       <Table columns={columns} dataSource={data} pagination={false} />
       <div

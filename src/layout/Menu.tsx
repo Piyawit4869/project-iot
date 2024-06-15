@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
-import * as Icon from "@ant-design/icons";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import * as Icon from '@ant-design/icons';
 
 interface MenusProps {
   role: string;
@@ -14,7 +15,7 @@ interface MenuItem {
   divider?: boolean;
 }
 
-export const Menus = (props: MenusProps) => {
+export const Menus: React.FC<MenusProps> = (props: MenusProps) => {
   const { role } = props;
 
   const menus: MenuItem[] = [
@@ -25,7 +26,7 @@ export const Menus = (props: MenusProps) => {
       role: ["super_admin"],
     },
     {
-      label: <Link to="attendance">Attendance</Link>,
+      label: <Link to="/attendance">Attendance</Link>,
       key: "attendance",
       icon: <Icon.ScheduleOutlined />,
       role: ["admin", "user", "super_admin"],
@@ -36,13 +37,13 @@ export const Menus = (props: MenusProps) => {
       divider: true,
     },
     {
-      label: <Link to="notation">Notation</Link>,
+      label: <Link to="/notation">Notation</Link>,
       key: "notation",
       icon: <Icon.ReconciliationOutlined />,
       role: ["admin", "user", "super_admin"],
     },
     {
-      label: <Link to="planning">Planning</Link>,
+      label: <Link to="/planning">Planning</Link>,
       key: "planning",
       icon: <Icon.DatabaseOutlined rotate={90} />,
       role: ["admin", "user", "super_admin"],
@@ -55,6 +56,22 @@ export const Menus = (props: MenusProps) => {
     },
   ];
 
-  return menus.filter((menu) => menu.role.includes(role));
+  const filteredMenus = menus.filter((menu) => menu.role.includes(role));
+
+  return (
+    <ul>
+      {filteredMenus.map((menu) => (
+        menu.divider ? (
+          <li key={menu.key} style={{ borderBottom: '1px solid #ccc', margin: '10px 0' }} />
+        ) : (
+          <li key={menu.key}>
+            {menu.icon}
+            {menu.label}
+          </li>
+        )
+      ))}
+    </ul>
+  );
 };
+
 
