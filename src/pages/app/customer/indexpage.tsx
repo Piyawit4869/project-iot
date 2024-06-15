@@ -2,103 +2,98 @@ import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb, Col, Input, Pagination, Row, Table, Button } from "antd";
 import { useNavigate } from "react-router-dom";
 
-
-
-
-const columns = [
-  {
-    title: 'ลำดับ',
-    dataIndex: 'nummer',
-    key: 'nummer',
-  },
-  {
-    title: 'ชื่อโปรเจต',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'active',
-    dataIndex: 'active',
-    key: 'active',
-  },
-  {
-    title: 'สาขาหลัก',
-    dataIndex: 'isMainBranch',
-    key: 'isMainBranch',
-  },
-  {
-    title: 'เบอร์โทร',
-    dataIndex: 'tel',
-    key: 'tel',
-  },
-  {
-    title: 'ลิ้งค์รูปภาพ',
-    dataIndex: 'imageUrl',
-    key: 'imageUrl',
-  },
-  {
-    title: 'อีเมล',
-    dataIndex: 'email',
-    key: 'email',
-  },
-  {
-    title: 'เว็ปไซต์',
-    dataIndex: 'website',
-    key: 'website',
-  },
-  {
-    title: "รายละเอียดเพิ่มเติม",
-    dataIndex: "details",
-    key: "details",
-    render: () => <Button type="link" onClick={() => ('/project/singleproject')}>ดูข้อมูล</Button>,
-  },
-];
-
 const data = [
   {
     key: '1',
-    nummer:'1',
+    nummer: '1',
     name: 'Project 1',
     active: 'true',
     isMainBranch: 'true',
     tel: '0123456789',
     imageUrl: 'https://cdn.discordapp.com/attachments/123',
-    email: 'abcdefg@gmailcom',
+    email: 'abcdefg@gmail.com',
     website: 'https://123',
   },
   {
     key: '2',
-    nummer:'1',
+    nummer: '1',
     name: 'Project 2',
     active: 'true',
     isMainBranch: 'true',
     tel: '0123456789',
     imageUrl: 'https://cdn.discordapp.com/attachments/123',
-    email: 'abcdefg@gmailcom',
+    email: 'abcdefg@gmail.com',
     website: 'https://123',
-    
   },
   {
     key: '3',
-    nummer:'1',
+    nummer: '1',
     name: 'Project 3',
     active: 'true',
     isMainBranch: 'true',
     tel: '0123456789',
     imageUrl: 'https://cdn.discordapp.com/attachments/123',
-    email: 'abcdefg@gmailcom',
+    email: 'abcdefg@gmail.com',
     website: 'https://123',
   },
 ];
 
-export const ProjectIndex = () => {
+export const CustomersIndex = () => {
   const navigate = useNavigate();
 
+  const columns = [
+    {
+      title: 'ลำดับ',
+      dataIndex: 'nummer',
+      key: 'nummer',
+    },
+    {
+      title: 'ชื่อลูก',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'active',
+      dataIndex: 'active',
+      key: 'active',
+    },
+    {
+      title: 'สาขาหลัก',
+      dataIndex: 'isMainBranch',
+      key: 'isMainBranch',
+    },
+    {
+      title: 'เบอร์โทร',
+      dataIndex: 'tel',
+      key: 'tel',
+    },
+    {
+      title: 'ลิ้งค์รูปภาพ',
+      dataIndex: 'imageUrl',
+      key: 'imageUrl',
+    },
+    {
+      title: 'อีเมล',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'เว็ปไซต์',
+      dataIndex: 'website',
+      key: 'website',
+    },
+    {
+      title: "รายละเอียดเพิ่มเติม",
+      dataIndex: "details",
+      key: "details",
+      render: () => <Button type="link" onClick={() => navigate('/customers/singlecustomers')}>ดูข้อมูล</Button>,
+    },
+  ];
 
+  const onSearch = (value: any) => {
+    console.log(value);
+  };
 
-const onSearch = (value: any) => {
-  console.log(value);
-};
   return (
     <>
       <Row>
@@ -107,14 +102,14 @@ const onSearch = (value: any) => {
             <Breadcrumb.Item onClick={() => navigate('/')}>
               <HomeOutlined />
             </Breadcrumb.Item>
-            <Breadcrumb.Item onClick={() => navigate('/project')}>
-            ข้อมูลโครงการ
+            <Breadcrumb.Item onClick={() => navigate('/customers')}>
+              ข้อมูลลูกค้า
             </Breadcrumb.Item>
           </Breadcrumb>
         </Col>
       </Row>
 
-      <h1>ข้อมูลโครงการ</h1>
+      <h1>ข้อมูลลูกค้า</h1>
       <div
         style={{
           display: "flex",
@@ -128,7 +123,7 @@ const onSearch = (value: any) => {
           onSearch={onSearch}
           style={{ width: 200 }}
         />
-        <Button type="primary" onClick={() => navigate('/project/createproject')}>เพิ่มข้อมูลโครงการ</Button>
+        <Button type="primary" onClick={() => navigate('/customers/createcustomers')}>เพิ่มข้อมูลลูกค้า</Button>
       </div>
       <Table columns={columns} dataSource={data} pagination={false} />
       <div
@@ -144,3 +139,5 @@ const onSearch = (value: any) => {
     </>
   );
 };
+
+export default CustomersIndex;

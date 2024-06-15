@@ -4,18 +4,18 @@ import { ProjectSingle } from "./singlepage";
 
 export const routes = [
   {
-    path: "/project",
+    path: "project",
     children: [
       {
         path: "",
         element: <ProjectIndex/>
       },
       {
-        path: "createproject",
+        path: "create",
         element: <ProjectCreate/>
       },
       {
-        path: "singleproject", 
+        path: ":id", 
         element: <ProjectSingle/>
       }
     ],

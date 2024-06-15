@@ -1,19 +1,13 @@
 import { HomeOutlined } from "@ant-design/icons";
-import {
-  Breadcrumb,
-  Form,
-  Button,
-  Row,
-  Col,
-  Timeline,
-  Affix,
-} from "antd";
+import { Breadcrumb, Form, Button, Row, Col, Timeline, Affix } from "antd";
 import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@src/forms/Dynamic";
+import { useState } from "react";
 
 export const ProjectSingle = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const [showMore, setShowMore] = useState(false);
 
   const renderForm = [
     {
@@ -72,7 +66,6 @@ export const ProjectSingle = () => {
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
-    
     {
       name: "website",
       label: "เว็บไซต์",
@@ -80,6 +73,26 @@ export const ProjectSingle = () => {
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
+  ];
+
+  const timelineItems = [
+    "Create a services site 2015-09-01",
+    "Solve initial network problems 2015-09-01",
+    "Technical testing 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
   ];
 
   const onFinish = (values: any) => {
@@ -95,23 +108,21 @@ export const ProjectSingle = () => {
             <HomeOutlined />
           </Breadcrumb.Item>
           <Breadcrumb.Item onClick={() => navigate("/project")}>
-          ข้อมูลโครงการ
+            ข้อมูลโครงการ
           </Breadcrumb.Item>
           <Breadcrumb.Item>แก้ไขข้อมูลโครงการ</Breadcrumb.Item>
         </Breadcrumb>
       </Col>
-      
-      <Form form={form} layout="vertical" onFinish={onFinish}>
-     
 
+      <Form form={form} layout="vertical" onFinish={onFinish}>
         <Row gutter={24}>
-        <Col
-          xs={{ span: 24, order: 2 }}
-          sm={{ span: 24, order: 2 }}
-          md={{ span: 24, order: 2 }}
-          lg={{ span: 12, order: 1 }}
-          xl={{ span: 12, order: 1 }}
-        >
+          <Col
+            xs={{ span: 24, order: 2 }}
+            sm={{ span: 24, order: 2 }}
+            md={{ span: 24, order: 2 }}
+            lg={{ span: 12, order: 1 }}
+            xl={{ span: 12, order: 1 }}
+          >
             <Row gutter={24}>
               {renderForm.map((item: any) => (
                 <DynamicForm
@@ -125,53 +136,67 @@ export const ProjectSingle = () => {
                   icon={item.icon}
                   value={item.value}
                   ruleMessage={item.message}
-                  require={item.require} disabled={false} checked={false}                />
+                  require={item.require}
+                  disabled={false}
+                  checked={false}
+                />
               ))}
             </Row>
           </Col>
           <Col
-          xs={{ span: 24, order: 2 }}
-          sm={{ span: 24, order: 2 }}
-          md={{ span: 24, order: 2 }}
-          lg={{ span: 12, order: 1 }}
-          xl={{ span: 12, order: 1 }}
-        >
-
-          <div style={{ height: "100px" }}  >
-          <h1>กิจกรรม</h1>
-          </div>
-            <Affix offsetTop={20}>
-              <div style={{ maxHeight: "450px", overflowY: "auto", padding: "40px", border: "5px solid #d9d9d9", borderRadius: "1px" }}>
-                
-                <Timeline>
-                  <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Solve initial network problems 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Technical testing 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                </Timeline>
-              </div>
-            </Affix>
+            xs={{ span: 24, order: 2 }}
+            sm={{ span: 24, order: 2 }}
+            md={{ span: 24, order: 2 }}
+            lg={{ span: 12, order: 1 }}
+            xl={{ span: 12, order: 1 }}
+          >
+            <div style={{ height: "100px" }}>
+              <h1>กิจกรรม</h1>
+            </div>
+            <div
+              style={{
+                maxHeight: "400px",
+                overflowY: "auto",
+                padding: "40px",
+                border: "1px solid #d9d9d9",
+                borderRadius: "4px",
+              }}
+            >
+              <Timeline>
+                {(showMore ? timelineItems : timelineItems.slice(0, 5)).map(
+                  (item, index) => (
+                    <Timeline.Item key={index}>{item}</Timeline.Item>
+                  )
+                )}
+              </Timeline>
+              {timelineItems.length > 5 && (
+                <Button type="link" onClick={() => setShowMore(!showMore)}>
+                  {showMore ? "See Less" : "See More"}
+                </Button>
+              )}
+            </div>
           </Col>
         </Row>
         <Row gutter={24} style={{ marginTop: "20px" }}>
-        <Form.Item><Button type="primary" onClick={() => navigate("/project")}>ยกเลิก</Button></Form.Item>
-        <Col>
-            <Form.Item><Button type="primary" htmlType="submit"> ยืนยัน</Button></Form.Item>
+          <Col>
+            <Form.Item>
+              <Button type="primary" onClick={() => navigate("/project")}>
+                ยกเลิก
+              </Button>
+            </Form.Item>
           </Col>
-          <Col><Button type="primary" danger>ลบ</Button></Col>
+          <Col>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                ยืนยัน
+              </Button>
+            </Form.Item>
+          </Col>
+          <Col>
+            <Button type="primary" danger>
+              ลบ
+            </Button>
+          </Col>
         </Row>
       </Form>
     </div>
@@ -179,4 +204,6 @@ export const ProjectSingle = () => {
 };
 
 export default ProjectSingle;
+
+
 

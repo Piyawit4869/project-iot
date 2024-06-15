@@ -54,7 +54,7 @@ code {
 }
 
 .app-background {
-  background: radial-gradient(
+  /* background: radial-gradient(
       94.9% 159.36% at 0% -10.74%,
       rgb(25, 42, 92, 0.1) 0%,
       rgba(255, 255, 255, 0) 100%
@@ -65,7 +65,8 @@ code {
       rgba(237, 225, 236, 0.721641) 30.17%,
       rgba(239, 228, 238, 0.495834) 63.96%,
       rgba(255, 255, 255, 0) 100%
-    );
+    ); */
+    background: #F2F1F8 ;
 }
 /* .ant-menu-item-selected {
   background-color: #fff5ed !important;

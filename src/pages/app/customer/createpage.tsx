@@ -1,18 +1,13 @@
-import { HomeOutlined } from "@ant-design/icons";
-import { Breadcrumb, Form, Button, Row, Col } from "antd";
+import { HomeOutlined, TagFilled } from "@ant-design/icons";
+import { Breadcrumb, Form, Button, Row, Col, Flex } from "antd";
 import { useNavigate } from "react-router-dom";
-import { DynamicForm } from "@src/forms/Dynamic";
+import { DynamicForm } from "@src/forms/Dynamic";  
 
-export const UsersCreate = () => {
+export const CustomersCreate = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
   const renderForm = [
-    {
-      label: "เพิ่มข้อมูลผู้ใช้",
-      col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
-      type: "LabelForm",
-    },
     {
       name: ["user", "profix"],
       label: "คำนำหน้า",
@@ -112,7 +107,6 @@ export const UsersCreate = () => {
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
-    
     {
       name: "deviceToken",
       label: "โทเค็นของอุปกรณ์",
@@ -127,6 +121,62 @@ export const UsersCreate = () => {
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
+    {
+      icon: <TagFilled />,
+      label: "ข้อมูลตามทะเบียน",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
+      type: "LabelForm",
+    },
+
+    {
+      name: "country",
+      label: "ประเทศ",
+      placeholder: "กรอกประเทศ",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextboxFormField",
+    },
+    {
+      name: "province",
+      label: "จังหวัด",
+      placeholder: "กรอกจังหวัด",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextboxFormField",
+    },
+    {
+      name: "district",
+      label: "เขต",
+      placeholder: "กรอกเขต",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextboxFormField",
+    },
+    {
+      name: "subdistrict",
+      label: "ตำบล",
+      placeholder: "กรอกตำบล",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextboxFormField",
+    },
+    {
+      name: "postalCode",
+      label: "รหัสไปรษณีย์",
+      placeholder: "รหัสไปรษณีย์",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextboxFormField",
+    },
+    {
+      name: "address",
+      label: "ที่อยู่",
+      placeholder: "กรอกที่อยู่",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextboxFormField",
+    },
+    {
+      name: "type",
+      label: "ที่อยู่ที่ลงทะเบียนไว้",
+      placeholder: "กรอกที่อยู่ที่ลงทะเบียนไว้",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextboxFormField",
+    },
   ];
 
   const onFinish = (values: any) => {
@@ -135,29 +185,23 @@ export const UsersCreate = () => {
   };
 
   return (
-    
-
-    
-
-
-
     <div style={{ padding: "20px", fontFamily: 'Prompt, sans-serif' }}>
       <Col span={24}>
         <Breadcrumb style={{ marginBottom: "20px" }}>
           <Breadcrumb.Item onClick={() => navigate("/")}>
             <HomeOutlined />
           </Breadcrumb.Item>
-          <Breadcrumb.Item onClick={() => navigate("/users")}>
-            ผู้ใช้งาน
+          <Breadcrumb.Item onClick={() => navigate("/customers")}>
+          ข้อมูลลูกค้า
           </Breadcrumb.Item>
-          <Breadcrumb.Item onClick={() => navigate("/users/create")}>
-          แก้ไขผู้ใช้งาน
+          <Breadcrumb.Item>
+          เพิ่มข้อมูลลูกค้า
           </Breadcrumb.Item>
         </Breadcrumb>
       </Col>
-      
+      <h1>เพิ่มข้อมูลลูกค้า</h1>
       <Form form={form} layout="vertical" onFinish={onFinish}>
-        <Row gutter={24}>  
+      <Row gutter={24}>
         <Col
           xs={{ span: 24, order: 2 }}
           sm={{ span: 24, order: 2 }}
@@ -166,30 +210,32 @@ export const UsersCreate = () => {
           xl={{ span: 12, order: 1 }}
         >
             <Row gutter={24}>
-              {renderForm.map((item: any) => (
-                <DynamicForm
-                  key={item.name}
-                  name={item.name}
-                  label={item.label}
-                  placeholder={item.placeholder}
-                  type={item.type}
-                  col={item.col}
-                  option={item.option}
-                  icon={item.icon}
-                  value={item.value}
-                  ruleMessage={item.message}
-                  require={item.require} disabled={false} checked={false}                />
-              ))}
+              {renderForm.map((item: any) => {
+                return (
+                  <DynamicForm
+                    key={item.name}
+                    name={item.name}
+                    label={item.label}
+                    placeholder={item.placeholder}
+                    type={item.type}
+                    col={item.col}
+                    option={item.option}
+                    icon={item.icon}
+                    value={item.value}
+                    ruleMessage={item.message}
+                    require={item.require} disabled={false} checked={false}                  />
+                );
+              })}
             </Row>
           </Col>
         </Row>
-        <Row style={{ marginTop: "20px", gap: "10px" }}>
-          <Col><Button  onClick={() => navigate("/users")}>ยกเลิก</Button></Col>
-          <Button type="primary" htmlType="submit" style={{ backgroundColor: '#19142A' }}>ยืนยัน</Button>
-        </Row>
+        <Flex style={{ marginTop: "20px", gap: "10px" }}>
+        <Form.Item><Button type="primary" onClick={() => navigate("/customers")}>ยกเลิก</Button></Form.Item>
+        <Form.Item><Button type="primary" htmlType="submit">ยืนยัน</Button></Form.Item>
+      </Flex>
       </Form>
     </div>
   );
 };
 
-export default UsersCreate;
+export default CustomersCreate;
