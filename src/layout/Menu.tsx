@@ -1,15 +1,23 @@
 import { Link } from "react-router-dom";
 import * as Icon from "@ant-design/icons";
-import { Menu } from "antd"; 
+
 interface MenusProps {
   role: string;
   action?: () => void;
 }
 
+interface MenuItem {
+  label?: JSX.Element;
+  key: string;
+  icon?: JSX.Element;
+  role: string[];
+  divider?: boolean;
+}
+
 export const Menus = (props: MenusProps) => {
   const { role } = props;
-  const menus = [
-    
+
+  const menus: MenuItem[] = [
     {
       label: <Link to="/admin/organize">Organize</Link>,
       key: "organize",
@@ -31,24 +39,22 @@ export const Menus = (props: MenusProps) => {
       label: <Link to="notation">Notation</Link>,
       key: "notation",
       icon: <Icon.ReconciliationOutlined />,
-      role: ["admin", "user","super_admin"],
+      role: ["admin", "user", "super_admin"],
     },
     {
-      label: <Link to="planning">Planing</Link>,
+      label: <Link to="planning">Planning</Link>,
       key: "planning",
       icon: <Icon.DatabaseOutlined rotate={90} />,
-      role: ["admin", "user","super_admin"],
+      role: ["admin", "user", "super_admin"],
     },
-    
     {
-      label: <Link to="/customers">Customes</Link>,
+      label: <Link to="/customers">Customers</Link>,
       key: "customers",
       icon: <Icon.DatabaseOutlined rotate={90} />,
-      role: ["admin","super_admin","super_admin"],
+      role: ["admin", "super_admin"],
     },
-    
-    
   ];
 
-  return menus.filter((m: any) => m.role.indexOf(role) > -1);
+  return menus.filter((menu) => menu.role.includes(role));
 };
+

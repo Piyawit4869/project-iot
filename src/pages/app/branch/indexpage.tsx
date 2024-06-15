@@ -1,4 +1,3 @@
-import React from 'react';
 import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb, Col, Input, Pagination, Row, Table, Button } from "antd";
 import { useNavigate } from "react-router-dom";
