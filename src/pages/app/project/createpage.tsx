@@ -10,7 +10,6 @@ export const ProjectCreate = () => {
   const renderForm = [
     {
       label: "เพิ่มข้อมูลโครงการ",
-      require: true,
       col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
       type: "LabelForm",
     },

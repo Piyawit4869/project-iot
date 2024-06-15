@@ -9,6 +9,7 @@ export const AppLandingPage = () => {
         <Link to="/attendance">Attendance</Link>
         <Link to="/notation">Notation</Link>
         <Link to="/planning">Planning</Link>
+        <Link to="/customers">Customers</Link>
       </Space>
     </Space>
   );

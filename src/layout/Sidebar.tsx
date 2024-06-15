@@ -1,25 +1,9 @@
 import React from "react";
-import {
-  Layout,
-  Menu,
-  Image,
-  Space,
-  Typography,
-  Row,
-  Col,
-  Card,
-  Button,
-} from "antd";
-import { Link, useLocation } from "react-router-dom";
-import logo from "../assets/images/stay_logo.png";
+import { Layout, Menu, Image, Typography, Row, Col, Card, Button } from "antd";
+import { useLocation } from "react-router-dom";
+import logo from "../assets/images/logoutotechV2.png";
 import sidebar from "../assets/images/abstract_sidebar.png";
-
 import { Menus } from ".";
-import {
-  ScheduleOutlined,
-  SettingFilled,
-  UserOutlined,
-} from "@ant-design/icons";
 
 export const Sidebar: React.FC = () => {
   const location = useLocation();
@@ -35,8 +19,8 @@ export const Sidebar: React.FC = () => {
     }
   };
 
-  const me = JSON.parse(localStorage.getItem("me") as any);
-  const menusWithOnClick = Menus({ role: me.role }).map((menu) => ({
+  const me = JSON.parse(localStorage.getItem("me") || "{}");
+  const menusWithOnClick = Menus({ role: me.role }).map((menu: any) => ({
     ...menu,
     onClick: handleMenuClick,
   }));
@@ -77,7 +61,7 @@ export const Sidebar: React.FC = () => {
           position: isMobile ? "fixed" : "relative",
           zIndex: 10,
           height: "100vh",
-          backgroundColor: "#19142A",
+          backgroundColor: "#FFFFFF",
         }}
       >
         <div
@@ -98,114 +82,71 @@ export const Sidebar: React.FC = () => {
           align="middle"
           gutter={[12, 12]}
           style={{
-            marginTop: "15px",
+            marginTop: "10px",
           }}
         >
           <Col>
-            <Image preview={false} src={logo} width={30} />
+            <Image preview={false} src={logo} width={70} />
           </Col>
           <Col>
-            <Typography style={{ color: "white", fontSize: "24px" }}>
-              StayOrganize
+            <Typography style={{ color: "#19142A", fontSize: "20px" }}>
+              บริษัท ยูโทเทค จำกัด
             </Typography>
           </Col>
         </Row>
+
         <Menu
           theme="light"
           mode="inline"
           selectedKeys={[activeKey]}
           defaultOpenKeys={["/"]}
           style={{
-            backgroundColor: "transparent",
+            backgroundColor: "fc",
             marginTop: "60px",
             overflow: "auto",
           }}
-          items={menusWithOnClick}
-        />
-
+        >
+          {menusWithOnClick.map((menu) =>
+            menu.divider ? (
+              <Menu.Divider key={menu.key} />
+            ) : (
+              <Menu.Item key={menu.key} icon={menu.icon}>
+                {menu.label}
+              </Menu.Item>
+            )
+          )}
+        </Menu>
         <Card
           style={{
             position: collapsed ? "relative" : "absolute",
             bottom: 0,
             margin: "5px",
-            background: "transparent",
-            borderColor: "transparent",
+            background: "#F7F7F7",
+            borderColor: "#F7F7F7",
+            width: "calc(100% - 10px)",
           }}
-          bodyStyle={{ padding: "5px" }}
+          bodyStyle={{ padding: "10px" }}
         >
-          <Typography style={{ color: "white" }}>General</Typography>
-          <div
-            style={{ margin: 10, height: "2px", backgroundColor: "#0293F1" }}
-          />
-          <div>
-            <Link to="/">
-              <Space>
-                <UserOutlined style={{ color: "white" }} />
-                <Typography style={{ color: "white" }}>Profile</Typography>
-              </Space>
-            </Link>
-          </div>
-          <div>
-            <Link to="/">
-              <Space>
-                <SettingFilled style={{ color: "white" }} />
-                <Typography style={{ color: "white" }}>Setting</Typography>
-              </Space>
-            </Link>
-          </div>
-
-          <Typography style={{ color: "white", marginTop: "20px" }}>
-            StayOrganize Feature
+          <Typography style={{ textAlign: "center", fontWeight: "bold" }}>
+            บริษัท ยูโทเทค จำกัด
           </Typography>
-          <div
-            style={{ margin: 10, height: "2px", backgroundColor: "#0293F1" }}
-          />
+          <Typography style={{ textAlign: "center", color: "#FFFFFF" }}>
+            STAY ORGANIZED
+          </Typography>
           <Button
-            size="small"
-            icon={<ScheduleOutlined />}
-            style={{ width: "100%" }}
+            type="primary"
+            block
+            style={{
+              marginTop: "10px",
+              backgroundColor: "#19142A",
+              borderColor: "#19142A",
+            }}
           >
-            Attendence
+            Upgrade
           </Button>
-          <Button
-            size="small"
-            icon={<ScheduleOutlined />}
-            style={{ width: "100%" }}
-          >
-            Notation report
-          </Button>
-          <Button
-            size="small"
-            icon={<ScheduleOutlined />}
-            style={{ width: "100%" }}
-          >
-            Kanban board
-          </Button>
-          <div
-            style={{ margin: 10, height: "2px", backgroundColor: "#0293F1" }}
-          />
-          <Card.Meta
-            avatar={
-              <Image
-                src="https://st3.depositphotos.com/13159112/17145/v/450/depositphotos_171453724-stock-illustration-default-avatar-profile-icon-grey.jpg"
-                preview={false}
-                width={40}
-                style={{ borderRadius: "20px", marginTop: 5 }}
-              />
-            }
-            // avatar="https://st3.depositphotos.com/13159112/17145/v/450/depositphotos_171453724-stock-illustration-default-avatar-profile-icon-grey.jpg"
-            title={
-              <Typography.Title style={{ color: "white", margin: 0 }} level={5}>
-                Super admin
-              </Typography.Title>
-            }
-            description={
-              <Typography style={{ color: "white" }}>Role : Admin</Typography>
-            }
-          />
         </Card>
       </Sider>
-      {isMobile && collapsed == false && (
+      {isMobile && collapsed === false && (
         <div
           style={{
             position: "fixed",
@@ -213,10 +154,10 @@ export const Sidebar: React.FC = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            background: "rgba(0, 0, 0, 0.5)",
+            background: "rgba(40, 16, 72, 0.7)",
             zIndex: 9,
           }}
-          onClick={() => setCollapsed(false)}
+          onClick={() => setCollapsed(true)}
         />
       )}
     </>

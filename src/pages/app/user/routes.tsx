@@ -1,10 +1,10 @@
 import { UsersCreate } from "./createpage";
 import { UsersIndex } from "./indexpage";
-import UsersSingle from "./single";
+import { UsersSingle } from "./singlepage";
 
 export const routes = [
   {
-    path: "/users",
+    path: "user",
     children: [
       {
         path: "",
@@ -15,7 +15,7 @@ export const routes = [
         element: <UsersCreate/>
       },
       {
-        path: "single", 
+        path: ":id", 
         element: <UsersSingle/>
       }
     ],

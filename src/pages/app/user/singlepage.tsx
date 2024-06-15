@@ -1,13 +1,14 @@
 import { HomeOutlined } from "@ant-design/icons";
-import { Breadcrumb, Form, Button, Row, Col, Timeline, Affix } from "antd";
+import { Breadcrumb, Form, Button, Row, Col, Timeline } from "antd";
 import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@src/forms/Dynamic";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 export const UsersSingle = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const containerRef = useRef(null);
+  const [showMore, setShowMore] = useState(false);
 
   const renderForm = [
     {
@@ -130,6 +131,26 @@ export const UsersSingle = () => {
     },
   ];
 
+  const timelineItems = [
+    "Create a services site 2015-09-01",
+    "Solve initial network problems 2015-09-01",
+    "Technical testing 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+    "Network problems being solved 2015-09-01",
+  ];
+
   const onFinish = (values: any) => {
     const payload = Object.assign(values);
     console.log("Form Submitted", payload);
@@ -143,22 +164,22 @@ export const UsersSingle = () => {
             <HomeOutlined />
           </Breadcrumb.Item>
           <Breadcrumb.Item onClick={() => navigate("/users")}>
-          ข้อมูลผู้ใช้
+            ข้อมูลผู้ใช้
           </Breadcrumb.Item>
           <Breadcrumb.Item onClick={() => navigate("/users/single")}>
-          แก้ไขข้อมูลผู้ใช้
+            แก้ไขข้อมูลผู้ใช้
           </Breadcrumb.Item>
         </Breadcrumb>
       </Col>
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Row gutter={24}>
-        <Col
-          xs={{ span: 24, order: 2 }}
-          sm={{ span: 24, order: 2 }}
-          md={{ span: 24, order: 2 }}
-          lg={{ span: 12, order: 1 }}
-          xl={{ span: 12, order: 1 }}
-        >
+          <Col
+            xs={{ span: 24, order: 2 }}
+            sm={{ span: 24, order: 2 }}
+            md={{ span: 24, order: 2 }}
+            lg={{ span: 12, order: 1 }}
+            xl={{ span: 12, order: 1 }}
+          >
             <Row gutter={24}>
               {renderForm.map((item: any) => (
                 <DynamicForm
@@ -172,53 +193,59 @@ export const UsersSingle = () => {
                   icon={item.icon}
                   value={item.value}
                   ruleMessage={item.message}
-                  require={item.require} disabled={false} checked={false}                />
+                  require={item.require}
+                  disabled={false}
+                  checked={false}
+                />
               ))}
             </Row>
           </Col>
           <Col
-          xs={{ span: 24, order: 2 }}
-          sm={{ span: 24, order: 2 }}
-          md={{ span: 24, order: 2 }}
-          lg={{ span: 12, order: 1 }}
-          xl={{ span: 12, order: 1 }}
-        >
-           <div style={{ height: "100px" }}  >
-          <h1>กิจกรรม</h1>
-          </div>
-            <Affix offsetTop={20} target={() => containerRef.current}>
-              <div style={{ maxHeight: "400px", overflowY: "auto", padding: "40px", border: "1px solid #d9d9d9", borderRadius: "4px" }}>
-               
-                <Timeline>
-                  <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Solve initial network problems 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Technical testing 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                  <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                </Timeline>
-              </div>
-            </Affix>
+            xs={{ span: 24, order: 2 }}
+            sm={{ span: 24, order: 2 }}
+            md={{ span: 24, order: 2 }}
+            lg={{ span: 12, order: 1 }}
+            xl={{ span: 12, order: 1 }}
+          >
+            <div style={{ height: "100px" }}>
+              <h1>กิจกรรม</h1>
+            </div>
+            <div
+              style={{
+                maxHeight: "400px",
+                overflowY: "auto",
+                padding: "40px",
+                border: "1px solid #d9d9d9",
+                borderRadius: "4px",
+              }}
+            >
+              <Timeline>
+                {(showMore ? timelineItems : timelineItems.slice(0, 5)).map(
+                  (item, index) => (
+                    <Timeline.Item key={index}>{item}</Timeline.Item>
+                  )
+                )}
+              </Timeline>
+              {timelineItems.length > 10 && (
+                <div style={{ textAlign: "right", marginTop: "10px" }}>
+                  <Button type="link" onClick={() => setShowMore(!showMore)}>
+                    {showMore ? "See Less" : "See More"}
+                  </Button>
+                </div>
+              )}
+            </div>
           </Col>
         </Row>
         <Row style={{ marginTop: "20px", gap: "10px" }}>
           <Col><Button type="primary" onClick={() => navigate("/users")}>ยกเลิก</Button></Col>
           <Col><Button type="primary" htmlType="submit">ยืนยัน</Button></Col>
-          <Col><Button type="primary" danger>ลบ</Button></Col></Row></Form>
+          <Col><Button type="primary" danger>ลบ</Button></Col>
+        </Row>
+      </Form>
     </div>
   );
 };
 
 export default UsersSingle;
+
 

@@ -1,13 +1,21 @@
-import { NotationLandingPage } from "./indexpage";
+import { NotationIndex } from "./indexpage";
 
 export const routes = [
   {
-    path: "/notation",
+    path: "notation",
     // element: <PlanningLandingPage />,
     children: [
       {
         path: "",
-        element: <NotationLandingPage />,
+        element: <NotationIndex />,
+      },
+      {
+        path: "create",
+        element: <>NotationCreate</>
+      },
+      {
+        path: ":id", 
+        element: <>NotationSingle</>
       },
     ],
   },

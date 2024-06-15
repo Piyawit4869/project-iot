@@ -1,35 +1,77 @@
-import React from "react";
+import React, { useState } from "react";
+import { UserOutlined } from "@ant-design/icons";
 
 export const Headerbar: React.FC = () => {
-  // const dropdownItems = [
-  //   {
-  //     key: "profile",
-  //     label: <Link to="profile">โปรไฟล์</Link>,
-  //   },
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  //   {
-  //     key: "/",
-  //     label: <Link to="/">{t("back to Homepage")}</Link>,
-  //   },
-  //   {
-  //     key: "signing-out",
-  //     label: <Link to="signing-out">ออกจากระบบ</Link>,
-  //   },
-  // ];
+  const handleDropdownToggle = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
-  return <div style={styles.menu} />;
+  return (
+    <div className="app-background" style={styles.menu}>
+      <div style={styles.navRight}>
+        <div style={styles.dropdown}>
+          <span onClick={handleDropdownToggle} style={styles.dropdownToggle}>
+            Bew2088 <UserOutlined style={styles.icon} />
+          </span>
+          {isDropdownOpen && (
+            <div style={styles.dropdownMenu}>
+              <div style={styles.dropdownItem}>โปรไฟล์</div>
+              <div style={styles.dropdownItem}>การตั้งค่า</div>
+              <div style={styles.dropdownItem}>ลงชื่อออก</div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 };
+
 const styles: Record<string, React.CSSProperties> = {
   menu: {
     display: "flex",
-    justifyContent: "end",
-    zIndex: 5,
+    justifyContent: "flex-end",
     alignItems: "center",
-    padding: "10px 20px 10px 20px",
-    // backgroundColor: "#1A1A1A",
+    padding: "10px 20px",
     height: "50px",
   },
+  navRight: {
+    display: "flex",
+    alignItems: "center",
+  },
+  dropdown: {
+    position: "relative",
+    display: "inline-block",
+  },
+  dropdownToggle: {
+    display: "flex",
+    alignItems: "center",
+    backgroundColor: "transparent",
+    borderRadius: "4px",
+    padding: "5px 10px",
+    cursor: "pointer",
+  },
   icon: {
-    fontSize: "16px",
+    marginLeft: "8px",
+  },
+  dropdownMenu: {
+    position: "absolute",
+    right: 0,
+    top: "100%",
+    backgroundColor: "#fff",
+    boxShadow: "0px 8px 16px rgba(0,0,0,0.2)",
+    zIndex: 1,
+    borderRadius: "4px",
+    marginTop: "5px",
+  },
+  dropdownItem: {
+    padding: "10px 20px",
+    cursor: "pointer",
+  },
+  dropdownItemHover: {
+    // backgroundColor: "#f1f1f1",
   },
 };
+
+

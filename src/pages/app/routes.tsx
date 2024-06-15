@@ -5,7 +5,10 @@ import { routes as planningRoute } from "./planning";
 import { routes as notationRoute } from "./notation";
 import { routes as attendanceRoute } from "./attendance";
 import { routes as userRoute } from "./user";
-import { routes as projectpageRoute } from "./projectpage";
+import { routes as projectpageRoute } from "./project";
+import { routes as customersRoute } from "./customer";
+import { routes as branchRoute } from "./branch";
+
 
 export const routes = [
   {
@@ -21,4 +24,6 @@ export const routes = [
   ...attendanceRoute,
   ...userRoute,
   ...projectpageRoute,
+  ...customersRoute,
+  ...branchRoute
 ];
