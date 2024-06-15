@@ -1,6 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import * as Icon from '@ant-design/icons';
+import { Link } from "react-router-dom";
+import * as Icon from "@ant-design/icons";
 
 interface MenusProps {
   role: string;
@@ -15,7 +14,7 @@ interface MenuItem {
   divider?: boolean;
 }
 
-export const Menus: React.FC<MenusProps> = (props: MenusProps) => {
+export const Menus = (props: MenusProps) => {
   const { role } = props;
 
   const menus: MenuItem[] = [
@@ -56,22 +55,5 @@ export const Menus: React.FC<MenusProps> = (props: MenusProps) => {
     },
   ];
 
-  const filteredMenus = menus.filter((menu) => menu.role.includes(role));
-
-  return (
-    <ul>
-      {filteredMenus.map((menu) => (
-        menu.divider ? (
-          <li key={menu.key} style={{ borderBottom: '1px solid #ccc', margin: '10px 0' }} />
-        ) : (
-          <li key={menu.key}>
-            {menu.icon}
-            {menu.label}
-          </li>
-        )
-      ))}
-    </ul>
-  );
+  return menus.filter((menu: any) => menu.role.includes(role) > -1);
 };
-
-

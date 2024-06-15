@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Layout,
-  Menu,
-  Image,
-  Typography,
-  Row,
-  Col,
-  Card,
-  Button,
-} from "antd";
+import { Layout, Menu, Image, Typography, Row, Col, Card, Button } from "antd";
 import { useLocation } from "react-router-dom";
 import logo from "../assets/images/logoutotechV2.png";
 import sidebar from "../assets/images/abstract_sidebar.png";
@@ -29,7 +20,7 @@ export const Sidebar: React.FC = () => {
   };
 
   const me = JSON.parse(localStorage.getItem("me") || "{}");
-  const menusWithOnClick = Menus({ role: me.role }).map((menu) => ({
+  const menusWithOnClick = Menus({ role: me.role }).map((menu: any) => ({
     ...menu,
     onClick: handleMenuClick,
   }));
@@ -104,7 +95,8 @@ export const Sidebar: React.FC = () => {
           </Col>
         </Row>
 
-        <Menu  theme="light"
+        <Menu
+          theme="light"
           mode="inline"
           selectedKeys={[activeKey]}
           defaultOpenKeys={["/"]}
@@ -113,20 +105,17 @@ export const Sidebar: React.FC = () => {
             marginTop: "60px",
             overflow: "auto",
           }}
-          // items={menusWithOnClick}
-          >
- {menusWithOnClick.map((menu) => 
-        menu.divider ? (
-          <Menu.Divider key={menu.key} />
-        ) : (
-          <Menu.Item key={menu.key} icon={menu.icon}>
-            {menu.label}
-          </Menu.Item>
-        )
-      )}
-         
-             
-          </Menu>
+        >
+          {menusWithOnClick.map((menu) =>
+            menu.divider ? (
+              <Menu.Divider key={menu.key} />
+            ) : (
+              <Menu.Item key={menu.key} icon={menu.icon}>
+                {menu.label}
+              </Menu.Item>
+            )
+          )}
+        </Menu>
         <Card
           style={{
             position: collapsed ? "relative" : "absolute",
@@ -174,4 +163,3 @@ export const Sidebar: React.FC = () => {
     </>
   );
 };
-

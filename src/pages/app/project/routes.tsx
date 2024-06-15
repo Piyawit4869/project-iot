@@ -8,16 +8,16 @@ export const routes = [
     children: [
       {
         path: "",
-        element: <ProjectIndex/>
+        element: <ProjectIndex />,
       },
       {
         path: "create",
-        element: <ProjectCreate/>
+        element: <ProjectCreate />,
       },
       {
-        path: ":id", 
-        element: <ProjectSingle/>
-      }
+        path: ":id",
+        element: <ProjectSingle />,
+      },
     ],
-  }
+  },
 ];
