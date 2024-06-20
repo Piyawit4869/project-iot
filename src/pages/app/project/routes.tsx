@@ -1,6 +1,7 @@
 import { ProjectCreate } from "./createpage";
 import { ProjectIndex } from "./indexpage";
-import { ProjectSingle } from "./singlepage";
+import ProjectSingle from "./singlepage";
+
 
 export const routes = [
   {

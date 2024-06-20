@@ -1,23 +1,28 @@
 import React, { useState } from "react";
 import { UserOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 export const Headerbar: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
-  };
 
+  };
+  const me = JSON.parse(localStorage.getItem("me") as any);
+    
   return (
     <div className="app-background" style={styles.menu}>
       <div style={styles.navRight}>
         <div style={styles.dropdown}>
           <span onClick={handleDropdownToggle} style={styles.dropdownToggle}>
-            Bew2088 <UserOutlined style={styles.icon} />
+          {me.profile.firstName+" " + me.profile.lastName} 
+           <UserOutlined style={styles.icon} />
           </span>
           {isDropdownOpen && (
             <div style={styles.dropdownMenu}>
-              <div style={styles.dropdownItem}>โปรไฟล์</div>
+              <div  style={styles.dropdownItem}>
+                <Link to="/profile">โปรไฟล์</Link></div>
               <div style={styles.dropdownItem}>การตั้งค่า</div>
               <div style={styles.dropdownItem}>ลงชื่อออก</div>
             </div>
