@@ -14,13 +14,14 @@ import logo from "../assets/images/logoutotechV2.png";
 import sidebar from "../assets/images/abstract_sidebar.png";
 import { Menus } from ".";
 
+const { Sider } = Layout;
+const { SubMenu } = Menu;
+
 export const Sidebar: React.FC = () => {
   const location = useLocation();
   const [collapsed, setCollapsed] = React.useState(false);
   const [activeKey, setActiveKey] = React.useState("");
   const [isMobile, setIsMobile] = React.useState(false);
-
-  const { Sider } = Layout;
 
   const handleMenuClick = () => {
     if (isMobile) {
@@ -29,10 +30,16 @@ export const Sidebar: React.FC = () => {
   };
 
   const me = JSON.parse(localStorage.getItem("me") || "{}");
-  const menusWithOnClick = Menus({ role: me.role }).map((menu) => ({
+  const menusWithOnClick = Menus({ role: me.role }).map((menu: any) => ({
     ...menu,
     onClick: handleMenuClick,
   }));
+
+  // Reorder menusWithOnClick to ensure "Organize" is always at the top
+  const reorderedMenus = [
+    ...menusWithOnClick.filter((menu) => menu.key === "organize"),
+    ...menusWithOnClick.filter((menu) => menu.key !== "organize"),
+  ];
 
   React.useEffect(() => {
     const key = location.pathname.split("/") as any[];
@@ -70,7 +77,6 @@ export const Sidebar: React.FC = () => {
           position: isMobile ? "fixed" : "relative",
           zIndex: 10,
           height: "100vh",
-          backgroundColor: "#FFFFFF",
         }}
       >
         <div
@@ -104,29 +110,33 @@ export const Sidebar: React.FC = () => {
           </Col>
         </Row>
 
-        <Menu  theme="light"
+        <Menu
+          theme="light"
           mode="inline"
           selectedKeys={[activeKey]}
           defaultOpenKeys={["/"]}
           style={{
-            backgroundColor: "fc",
+            backgroundColor: "#F7F7F7",
             marginTop: "60px",
             overflow: "auto",
           }}
-          // items={menusWithOnClick}
-          >
- {menusWithOnClick.map((menu) => 
-        menu.divider ? (
-          <Menu.Divider key={menu.key} />
-        ) : (
-          <Menu.Item key={menu.key} icon={menu.icon}>
-            {menu.label}
-          </Menu.Item>
-        )
-      )}
-         
-             
-          </Menu>
+        >
+          {reorderedMenus.map((menu) =>
+            menu.divider ? (
+              <Menu.Divider key={menu.key} />
+            ) : menu.children ? (
+              <SubMenu key={menu.key} icon={menu.icon} title={menu.label}>
+                {menu.children.map((subMenu: any) => (
+                  <Menu.Item key={subMenu.key}>{subMenu.label}</Menu.Item>
+                ))}
+              </SubMenu>
+            ) : (
+              <Menu.Item key={menu.key} icon={menu.icon}>
+                {menu.label}
+              </Menu.Item>
+            )
+          )}
+        </Menu>
         <Card
           style={{
             position: collapsed ? "relative" : "absolute",
@@ -141,7 +151,7 @@ export const Sidebar: React.FC = () => {
           <Typography style={{ textAlign: "center", fontWeight: "bold" }}>
             บริษัท ยูโทเทค จำกัด
           </Typography>
-          <Typography style={{ textAlign: "center", color: "#FFFFFF" }}>
+          <Typography style={{ textAlign: "center", color: "#19142A" }}>
             STAY ORGANIZED
           </Typography>
           <Button
@@ -175,3 +185,4 @@ export const Sidebar: React.FC = () => {
   );
 };
 
+export default Sidebar;

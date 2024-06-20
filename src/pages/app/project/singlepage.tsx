@@ -169,16 +169,12 @@ const ProjectSingle: React.FC = () => {
                 ยืนยัน
               </Button>
             </Form.Item>
-          </Col>
-          <Col>
-            <Button type="primary" danger>
-              ลบ
-            </Button>
-          </Col>
+            </Col>
+          <Col><Button type="primary" danger>ลบ</Button></Col>
         </Row>
       </Form>
     </div>
   );
 };
 
-export default ProjectSingle;
+export default ProjectSingle ;

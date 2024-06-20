@@ -1,8 +1,10 @@
+import * as API from "../../../apis"
+
 export async function userLoader() {
     try {
-    //   const organize = await API.organize.getAll();
-    //   return { organize: organize.data };
-    return {};
+      const user = await API.user.paginate();
+      return { user: user.data };
+    
     } catch (error) {
       return { error: "error", message: error };
     }

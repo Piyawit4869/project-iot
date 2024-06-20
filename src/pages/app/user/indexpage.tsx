@@ -1,7 +1,7 @@
 
 
 import { Button, Pagination, Input, Table, Breadcrumb } from "antd";
-import { useNavigate } from "react-router-dom"; // นำเข้า useNavigate
+import { useLoaderData, useNavigate } from "react-router-dom"; // นำเข้า useNavigate
 import { HomeOutlined } from "@ant-design/icons"; // นำเข้าไอคอน Home
 
 const columns = [
@@ -33,81 +33,11 @@ const columns = [
   },
 ];
 
-const data = [
-  {
-    key: "1",
-    index: "1",
-    name: "ผู้ใช้หนึ่ง",
-    email: "01@gmail.com",
-    phone: "0999999998",
-  },
-  {
-    key: "2",
-    index: "2",
-    name: "ผู้ใช้สอง",
-    email: "02@gmail.com",
-    phone: "0999999998",
-  },
-  {
-    key: "3",
-    index: "3",
-    name: "ผู้ใช้สาม",
-    email: "03@gmail.com",
-    phone: "0999999998",
-  },
-  {
-    key: "4",
-    index: "4",
-    name: "ผู้ใช้สี่",
-    email: "04@gmail.com",
-    phone: "0999999999",
-  },
-  {
-    key: "5",
-    index: "5",
-    name: "ผู้ใช้ห้า",
-    email: "05@gmail.com",
-    phone: "0999999999",
-  },
-  {
-    key: "6",
-    index: "6",
-    name: "ผู้ใช้หก",
-    email: "06@gmail.com",
-    phone: "0999999999",
-  },
-  {
-    key: "7",
-    index: "7",
-    name: "ผู้ใช้เจ็ด",
-    email: "07@gmail.com",
-    phone: "0999999999",
-  },
-  {
-    key: "8",
-    index: "8",
-    name: "ผู้ใช้แปด",
-    email: "08@gmail.com",
-    phone: "0999999999",
-  },
-  {
-    key: "9",
-    index: "9",
-    name: "ผู้ใช้เก้า",
-    email: "09@gmail.com",
-    phone: "0999999999",
-  },
-  {
-    key: "10",
-    index: "10",
-    name: "ผู้ใช้สิบ",
-    email: "10@gmail.com",
-    phone: "0999999999",
-  },
-];
 
 export const UsersIndex = () => {
   const navigate = useNavigate(); 
+ const {user}=useLoaderData() as any
+ console.log({user})
 
   return (
     <>
@@ -133,7 +63,7 @@ export const UsersIndex = () => {
         />
         <Button type="primary" onClick={() => navigate('/users/create')}>เพิ่มข้อมูลผู้ใช้</Button>
       </div>
-      <Table columns={columns} dataSource={data} pagination={false} />
+      <Table columns={columns} dataSource={[]} pagination={false} />
       <div
         style={{
           display: "flex",
