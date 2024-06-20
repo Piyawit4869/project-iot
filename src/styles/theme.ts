@@ -55,6 +55,7 @@ export const ThemeConfig = {
       Table: {
         headerBg: "rgb(28, 44, 92)",
         headerColor: "rgba(255, 255, 255, 0.88)",
+        headerSortHoverBg: "#00ff99",
       },
     },
   },
