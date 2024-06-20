@@ -8,10 +8,11 @@ import {
   PlusCircleFilled,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb, Typography, Input, Button, Table } from "antd";
+import { Breadcrumb, Typography, Input, Button } from "antd";
 import { SearchProps } from "antd/es/input";
 import { Link, useLoaderData, useNavigate } from "react-router-dom";
 import { Image } from "antd";
+import { TableComponent } from "@src/components/shared/TableComponent";
 // import { render } from "react-dom";
 // // import axios from "axios";
 
@@ -61,27 +62,38 @@ export const OrganizeIndex: React.FC = () => {
   const columns = [
     {
       title: "logo",
-      dataIndex: "logo",
-      key: "logo",
-      render: () => {
-        return (
-          <Image
-            width={200}
-            src="https://cdn.discordapp.com/attachments/1158071010340380882/1248174696025817109/64302040001.png?ex=6662b4c5&is=66616345&hm=397ec8db8eb9c2396cd511fe6e005b5a02cbd96f005f8ba19dd10fd592915d35&"
-          />
-        );
+      dataIndex: "logoUrl",
+      key: "logoUrl",
+      render: (logoUrl: any) => {
+        return <Image width={200} src={logoUrl} />;
       },
     },
     {
       title: "ลำดับ",
-      dataIndex: "num",
-      key: "num",
+      dataIndex: "id",
+      key: "id",
+      sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
     },
     {
       title: "ชื่อองค์กร",
-      dataIndex: "businessName",
-      key: "businessName",
+      dataIndex: "businessNameTH",
+      key: "businessNameTH",
+      filters: [
+        {
+          text: "Ney",
+          value: "Ney",
+        },
+        {
+          text: "Joe",
+          value: "Joe",
+        },
+      ],
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value: string, record: { name: string | string[] }) =>
+        record.name.includes(value as string),
     },
+
     {
       title: "คำอธิบายธุรกิจ",
       dataIndex: "businessDescription",
@@ -113,10 +125,12 @@ export const OrganizeIndex: React.FC = () => {
       key: "active",
       render: (active: any) => (active ? "พร้อมใช้งาน" : "ไม่พร้อมใช้งาน"),
     },
+
     {
       title: "รายละเอียด",
       key: "details",
       dataIndex: "id",
+
       render: (id: number) => {
         console.log(id);
         return (
@@ -247,7 +261,7 @@ export const OrganizeIndex: React.FC = () => {
           marginTop: 16,
         }}
       >
-        <Table
+        <TableComponent
           columns={columns}
           // dataSource={dataSource}
           // columns={columns}
