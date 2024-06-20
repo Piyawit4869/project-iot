@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Layout,
-  Menu,
-  Image,
-  Typography,
-  Row,
-  Col,
-  Card,
-  Button,
-} from "antd";
+import { Layout, Menu, Image, Typography, Row, Col, Card, Button } from "antd";
 import { useLocation } from "react-router-dom";
 import logo from "../assets/images/logoutotechV2.png";
 import sidebar from "../assets/images/abstract_sidebar.png";

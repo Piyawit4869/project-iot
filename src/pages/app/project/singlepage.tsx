@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { HomeOutlined } from '@ant-design/icons';
-import { Breadcrumb, Form, Button, Row, Col, Timeline } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { DynamicForm } from '@src/forms/Dynamic';
+import React, { useState } from "react";
+import { HomeOutlined } from "@ant-design/icons";
+import { Breadcrumb, Form, Button, Row, Col, Timeline } from "antd";
+import { useNavigate } from "react-router-dom";
+import { DynamicForm } from "@src/forms/Dynamic";
 
 const renderForm = [
   {
@@ -90,7 +90,7 @@ const timelineItems = [
   "Network problems being solved 2015-09-01",
 ];
 
-const ProjectSingle: React.FC = () => {
+export const ProjectSingle: React.FC = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
