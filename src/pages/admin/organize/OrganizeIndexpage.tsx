@@ -28,7 +28,7 @@ export async function organizeLoader() {
   }
 }
 
-export const OrganizeIndex: React.FC = () => {
+export const OrganizeIndexpage: React.FC = () => {
   const { organize } = useLoaderData() as any;
 
   const me = JSON.parse(localStorage.getItem("me") as any);

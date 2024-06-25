@@ -2,7 +2,6 @@ import { ProjectCreate } from "./createpage";
 import { ProjectIndex } from "./indexpage";
 import ProjectSingle from "./singlepage";
 
-
 export const routes = [
   {
     path: "project",

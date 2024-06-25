@@ -146,6 +146,7 @@ export const Sidebar: React.FC = () => {
             STAY ORGANIZED
           </Typography>
           <Button
+            href="/upgrade"
             type="primary"
             block
             style={{
