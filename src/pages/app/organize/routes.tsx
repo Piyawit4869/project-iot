@@ -1,6 +1,7 @@
-
-import { organizeSingleAction } from "./action";
-import { organizeSingleLoader } from "./loader";
+import {
+  organizeSingleAction,
+  organizeSingleLoader,
+} from "@src/pages/admin/organize";
 import { MyOrganize } from "./Singlepage";
 
 export const routes = [
@@ -8,11 +9,11 @@ export const routes = [
     path: "organize",
     children: [
       {
-        path: "", 
+        path: "",
         loader: organizeSingleLoader,
         action: organizeSingleAction,
-        element: <MyOrganize/>
-      }
+        element: <MyOrganize />,
+      },
     ],
-  }
+  },
 ];
