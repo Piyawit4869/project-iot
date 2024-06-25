@@ -7,7 +7,6 @@ export const Headerbar: React.FC = () => {
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
-
   };
   const me = JSON.parse(localStorage.getItem("me") as any);
   // console.log({me})
@@ -16,13 +15,14 @@ export const Headerbar: React.FC = () => {
       <div style={styles.navRight}>
         <div style={styles.dropdown}>
           <span onClick={handleDropdownToggle} style={styles.dropdownToggle}>
-          {me.role} 
-           <UserOutlined style={styles.icon} />
+            {me.role}
+            <UserOutlined style={styles.icon} />
           </span>
           {isDropdownOpen && (
             <div style={styles.dropdownMenu}>
-              <div  style={styles.dropdownItem}>
-                <Link to="/profile">โปรไฟล์</Link></div>
+              <div style={styles.dropdownItem}>
+                <Link to="/profile">โปรไฟล์</Link>
+              </div>
               <div style={styles.dropdownItem}>การตั้งค่า</div>
               <div style={styles.dropdownItem}>ลงชื่อออก</div>
             </div>
@@ -78,5 +78,3 @@ const styles: Record<string, React.CSSProperties> = {
     // backgroundColor: "#f1f1f1",
   },
 };
-
-
