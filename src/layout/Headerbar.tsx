@@ -9,15 +9,24 @@ export const Headerbar: React.FC = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
   const me = JSON.parse(localStorage.getItem("me") as any);
+<<<<<<< HEAD
   console.log(me);
 
+=======
+  // console.log({me})
+>>>>>>> c7073be392610c957bb66cc90773a2e2440d69bd
   return (
     <div className="app-background" style={styles.menu}>
       <div style={styles.navRight}>
         <div style={styles.dropdown}>
           <span onClick={handleDropdownToggle} style={styles.dropdownToggle}>
+<<<<<<< HEAD
             {me.role}
             <UserOutlined style={styles.icon} />
+=======
+          {me.role} 
+           <UserOutlined style={styles.icon} />
+>>>>>>> c7073be392610c957bb66cc90773a2e2440d69bd
           </span>
           {isDropdownOpen && (
             <div style={styles.dropdownMenu}>

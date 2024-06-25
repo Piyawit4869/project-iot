@@ -1,42 +1,7 @@
 import { HomeOutlined } from "@ant-design/icons";
-import { Breadcrumb, Col, Input, Pagination, Row, Table, Button } from "antd";
+import { Breadcrumb, Col, Input, Pagination, Row, Button } from "antd";
 import { useNavigate } from "react-router-dom";
-
-const data = [
-  {
-    key: '1',
-    nummer: '1',
-    name: 'Project 1',
-    active: 'true',
-    isMainBranch: 'true',
-    tel: '0123456789',
-    imageUrl: 'https://cdn.discordapp.com/attachments/123',
-    email: 'abcdefg@gmail.com',
-    website: 'https://123',
-  },
-  {
-    key: '2',
-    nummer: '1',
-    name: 'Project 2',
-    active: 'true',
-    isMainBranch: 'true',
-    tel: '0123456789',
-    imageUrl: 'https://cdn.discordapp.com/attachments/123',
-    email: 'abcdefg@gmail.com',
-    website: 'https://123',
-  },
-  {
-    key: '3',
-    nummer: '1',
-    name: 'Project 3',
-    active: 'true',
-    isMainBranch: 'true',
-    tel: '0123456789',
-    imageUrl: 'https://cdn.discordapp.com/attachments/123',
-    email: 'abcdefg@gmail.com',
-    website: 'https://123',
-  },
-];
+import { TableComponent } from "@src/components/shared/TableComponent";
 
 export const CustomersIndex = () => {
   const navigate = useNavigate();
@@ -46,6 +11,8 @@ export const CustomersIndex = () => {
       title: 'ลำดับ',
       dataIndex: 'nummer',
       key: 'nummer',
+      sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
+    
     },
     {
       title: 'ชื่อลูก',
@@ -125,7 +92,7 @@ export const CustomersIndex = () => {
         />
         <Button type="primary" onClick={() => navigate('/customers/createcustomers')}>เพิ่มข้อมูลลูกค้า</Button>
       </div>
-      <Table columns={columns} dataSource={data} pagination={false} />
+      <TableComponent columns={columns} pagination={false} bordered={false} dataSource={undefined} />
       <div
         style={{
           display: "flex",

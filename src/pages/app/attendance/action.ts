@@ -1,4 +1,4 @@
-export async function planningCreateAction() {
+export async function attendancCreateAction() {
     // const formData = await request.formData();
     // const submitData = Object.fromEntries(formData);
   

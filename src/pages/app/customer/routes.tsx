@@ -1,4 +1,4 @@
-import { CustomersCreate } from "./createpage";
+import { CustomersCreate } from "./Createpage";
 import { CustomersIndex } from "./indexpage";
 import { CustomersSingle } from "./singlepage";
 

@@ -8,122 +8,126 @@ interface MenusProps {
 export const Menus = (props: MenusProps) => {
   const { role } = props;
   const menus = [
+    // super_admin
+
     {
-      label: <Link to="/dashboard">Dashboard</Link>,
-      key: "dashboard",
-      icon: <Icon.DashboardOutlined />,
-      role: ["organize_admin", "user", "super_admin"],
+      label: <Link to="/admin/organize">จัดระเบียบ</Link>,
+      key: "organize",
+      icon: <Icon.ScheduleOutlined />,
+      role: ["super_admin"],
+    },
+
+    {
+      label: <Link to="/analytic">วิเคราะห์</Link>,
+      key: "analytic",
+      icon: <Icon.DatabaseOutlined rotate={90} />,
+      role: ["super_admin"],
     },
     {
-      label: <Link to="/branch">Branch</Link>,
+      label: <Link to="/user">ผู้ใช้</Link>,
+      key: "user",
+      icon: <Icon.DatabaseOutlined rotate={90} />,
+      role: ["super_admin"],
+    },
+
+    // Organize admin
+
+    {
+      label: <Link to="/dashboard">หน้ารวม</Link>,
+      key: "dashboard",
+      icon: <Icon.DashboardOutlined rotate={90} />,
+      role: ["organize_admin"],
+    },
+    {
+      label: <Link to="/branch">สาขา</Link>,
       key: "branch",
+      icon: <Icon.BranchesOutlined rotate={90} />,
+      role: ["organize_admin"],
+    },
+    {
+      label: <Link to="/user">ผู้ใช้</Link>,
+      key: "user",
+      icon: <Icon.UserOutlined rotate={90} />,
+      role: ["organize_admin"],
+    },
+    {
+      label: <Link to="/customers">ลูกค้า</Link>,
+      key: "customers",
       icon: <Icon.DatabaseOutlined rotate={90} />,
       role: ["organize_admin"],
     },
     {
-      label: <Link to="/user">User</Link>,
-      key: "user",
+      label: <Link to="/attendance ">เข้างานออกงาน</Link>,
+      key: "attendance ",
       icon: <Icon.DatabaseOutlined rotate={90} />,
-      role: ["organize_admin", "user"],
+      role: ["organize_admin"],
     },
     {
-      label: <Link to="/customers">Customers</Link>,
-      key: "customers",
-      icon: <Icon.DatabaseOutlined rotate={90} />,
-      role: ["organize_admin", "user"],
-    },
-
-    {
-      label: "Organize",
-      key: "Organize",
-      icon: (
-        <Icon.DatabaseOutlined rotate={90} style={{ color: "#28104878" }} />
-      ),
-      role: ["super_admin"],
-      children: [
-        {
-          label: <Link to="/admin/organize">Organize</Link>,
-          key: "organize",
-          icon: <Icon.ScheduleOutlined />,
-          role: ["super_admin"],
-        },
-        {
-          label: <Link to="/branch">Branch</Link>,
-          key: "branch",
-          icon: <Icon.DatabaseOutlined rotate={90} />,
-          role: ["super_admin"],
-        },
-        {
-          label: <Link to="/customers">Customers</Link>,
-          key: "customers",
-          icon: <Icon.DatabaseOutlined rotate={90} />,
-          role: ["super_admin"],
-        },
-        {
-          label: <Link to="/user">User</Link>,
-          key: "user",
-          icon: <Icon.DatabaseOutlined rotate={90} />,
-          role: ["super_admin"],
-        },
-      ],
-    },
-    {
-      label: "Attendance",
-      key: "attendance",
-      icon: (
-        <Icon.DatabaseOutlined rotate={90} style={{ color: "#28104878" }} />
-      ),
-      role: ["organize_admin", "user", "super_admin"],
-      children: [
-        {
-          label: <Link to="/work information">Work information</Link>,
-          key: "work information",
-          icon: <Icon.DatabaseOutlined rotate={90} />,
-          role: ["organize_admin", "super_admin"],
-        },
-        {
-          label: <Link to="/attendance ">Attendance </Link>,
-          key: "attendance ",
-          icon: <Icon.DatabaseOutlined rotate={90} />,
-          role: ["user", "organize_admin", "super_admin"],
-        },
-        {
-          label: <Link to="/approval">Approval</Link>,
-          key: "approval",
-          icon: <Icon.DatabaseOutlined rotate={90} />,
-          role: ["organize_admin", "user", "super_admin"],
-        },
-        {
-          label: <Link to="/timesheets">Timesheets</Link>,
-          key: "timesheets",
-          icon: <Icon.DatabaseOutlined rotate={90} />,
-          role: ["organize_admin", "user", "super_admin"],
-        },
-      ],
-    },
-    {
-      key: "divider1",
-      role: ["organize_admin", "user", "super_admin"],
-      divider: true,
-    },
-    {
-      label: <Link to="/notation">Notation</Link>,
+      label: <Link to="/notation">เอกสาร</Link>,
       key: "notation",
       icon: <Icon.ReconciliationOutlined />,
-      role: ["organize_admin", "user", "super_admin"],
+      role: ["organize_admin"],
     },
     {
-      label: <Link to="/project">Project</Link>,
-      key: "project",
+      label: <Link to="/upgrade">อัปเกรด</Link>,
+      key: "upgrade",
       icon: <Icon.DatabaseOutlined rotate={90} />,
-      role: ["organize_admin", "user", "super_admin"],
+      role: ["organize_admin"],
+    },
+    {
+      label: <Link to="/setting">ตั้งค่า</Link>,
+      key: "setting",
+      icon: <Icon.DatabaseOutlined rotate={90} />,
+      role: ["organize_admin"],
+    },
+
+    // branch_admin
+    {
+      label: <Link to="/dashboard">ภาพรวม</Link>,
+      key: "dashboard",
+      icon: <Icon.DatabaseOutlined rotate={90} />,
+      role: ["branch_admin"],
+    },
+    {
+      label: <Link to="/customer">สาขา</Link>,
+      key: "customer",
+      icon: <Icon.DatabaseOutlined rotate={90} />,
+      role: ["branch_admin"],
+    },
+    {
+      label: <Link to="/project">โปรเจ็ต</Link>,
+      key: "croject",
+      icon: <Icon.DatabaseOutlined rotate={90} />,
+      role: ["branch_admin"],
+    },
+    {
+      label: <Link to="/user">ผู้ใช้</Link>,
+      key: "user",
+      icon: <Icon.DatabaseOutlined rotate={90} />,
+      role: ["branch_admin"],
     },
     {
       label: <Link to="/setting">Setting</Link>,
       key: "setting",
-      icon: <Icon.SettingOutlined />,
-      role: ["organize_admin", "branch_admin"],
+      icon: <Icon.DatabaseOutlined rotate={90} />,
+      role: ["branch_admin"],
     },
+    {
+      label: <Link to="/attendance">เข้างาน ออกงาน</Link>,
+      key: "attendance",
+      icon: <Icon.DatabaseOutlined rotate={90} />,
+      role: ["branch_admin"],
+    },
+    // {
+
+    //   label:"Attendance",
+    //   key: "attendance",
+    //   icon: <Icon.DatabaseOutlined rotate={90} style={{ color: "#28104878" }} />,
+    //   role: [],
+    //   children: [
+    //   ],
+
+    // },
   ];
 
   return menus.filter((m) => m.role.includes(role));

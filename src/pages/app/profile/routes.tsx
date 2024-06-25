@@ -1,9 +1,8 @@
-import { ProfilePage } from "./profilepage";
+import { ProfilePage } from "./Indexpage";
 
 export const routes = [
   {
     path: "/profile",
-    // element: <PlanningLandingPage />,
     children: [
       {
         path: "",

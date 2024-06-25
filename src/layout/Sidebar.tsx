@@ -1,6 +1,7 @@
 import React from "react";
 import { Layout, Menu, Image, Typography, Row, Col, Card, Button } from "antd";
 import { useLocation } from "react-router-dom";
+import { CheckOutlined } from '@ant-design/icons'; // Import the icon you need
 import logo from "../assets/images/logoutotechV2.png";
 import sidebar from "../assets/images/abstract_sidebar.png";
 import { Menus } from ".";
@@ -33,7 +34,7 @@ export const Sidebar: React.FC = () => {
   ];
 
   React.useEffect(() => {
-    const key = location.pathname.split("/") as any[];
+    const key = location.pathname.split("/");
     if (key.length) {
       const newActiveKey =
         key[1] === "admin"
@@ -60,7 +61,7 @@ export const Sidebar: React.FC = () => {
         collapsed={collapsed}
         onCollapse={(collapsed) => setCollapsed(collapsed)}
         breakpoint="lg"
-        collapsedWidth="0"
+        collapsedWidth={80}
         onBreakpoint={(broken) => {
           setIsMobile(broken);
         }}
@@ -86,21 +87,16 @@ export const Sidebar: React.FC = () => {
         <Row
           justify="center"
           align="middle"
-          gutter={[12, 12]}
           style={{
             marginTop: "10px",
           }}
         >
           <Col>
-            <Image preview={false} src={logo} width={70} />
-          </Col>
-          <Col>
-            <Typography style={{ color: "#19142A", fontSize: "20px" }}>
-              บริษัท ยูโทเทค จำกัด
-            </Typography>
+            <Image preview={false} src={logo} width={collapsed ? 40 : 70} />
           </Col>
         </Row>
 
+<<<<<<< HEAD
         <Menu
           theme="light"
           mode="inline"
@@ -149,15 +145,111 @@ export const Sidebar: React.FC = () => {
             href="/upgrade"
             type="primary"
             block
+=======
+        {!collapsed && (
+          <Row
+            justify="center"
+            align="middle"
+            gutter={[12, 12]}
+>>>>>>> c7073be392610c957bb66cc90773a2e2440d69bd
             style={{
               marginTop: "10px",
-              backgroundColor: "#19142A",
-              borderColor: "#19142A",
+              marginBottom: "-10px", // Adjust this value to move the text up
             }}
           >
-            Upgrade
-          </Button>
-        </Card>
+            <Col>
+              <Typography style={{ color: "#19142A", fontSize: "20px" }}>
+                บริษัท ยูโทเทค จำกัด
+              </Typography>
+            </Col>
+          </Row>
+        )}
+
+        <div style={{ marginTop: collapsed ? "40px" : "0px" }}>
+          <Menu
+            theme="light"
+            mode="inline"
+            selectedKeys={[activeKey]}
+            defaultOpenKeys={["/"]}
+            style={{
+              backgroundColor: "#F7F7F7",
+              marginTop: collapsed ? "0px" : "60px",
+              overflow: "auto",
+            }}
+          >
+            {reorderedMenus.map((menu) =>
+              menu.divider ? (
+                <Menu.Divider key={menu.key} />
+              ) : menu.children ? (
+                <SubMenu key={menu.key} icon={menu.icon} title={menu.label}>
+                  {menu.children.map((subMenu: any) => (
+                    <Menu.Item key={subMenu.key}>{subMenu.label}</Menu.Item>
+                  ))}
+                </SubMenu>
+              ) : (
+                <Menu.Item key={menu.key} icon={menu.icon}>
+                  {menu.label}
+                </Menu.Item>
+              )
+            )}
+          </Menu>
+        </div>
+        {!collapsed && (
+          <Card
+            style={{
+              position: "absolute",
+              bottom: "50px",
+              margin: "5px",
+              background: "#F7F7F7",
+              borderColor: "#F7F7F7",
+              width: "calc(100% - 10px)",
+              borderRadius: "10px",
+            }}
+            bodyStyle={{ padding: "10px", textAlign: "center" }}
+          >
+            <Typography style={{ fontWeight: "bold", color: "#19142A" }}>
+              บริษัท ยูโทเทค จำกัด
+            </Typography>
+            <Typography style={{ color: "#19142A", opacity: 0.6 }}>
+              STAY ORGANIZED
+            </Typography>
+            <Button
+              type="primary"
+              block
+              style={{
+                marginTop: "10px",
+                backgroundColor: "#19142A",
+                borderColor: "#19142A",
+                borderRadius: "5px",
+              }}
+            >
+              Upgrade
+            </Button>
+          </Card>
+        )}
+<div
+  style={{
+    position: "absolute",
+    top: "122px", // Add some margin from the top
+    right: "-70px", // Adjust this value if needed
+    zIndex: 1000,
+    backgroundColor: "#f0f0f0",
+    borderRadius: "2px", // Rounded corners
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
+    width: "70px", // Adjust the width to fit your design
+    height: "40px", // Adjust the height to fit your design
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    cursor: "pointer"
+  }}
+  onClick={() => setCollapsed(!collapsed)}
+>
+  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%" }}>
+    <CheckOutlined style={{ fontSize: "16px", color: "#8C8C8C" }} />
+    <span style={{ marginLeft: "10px", fontSize: "5px", color: "#8C8C8C" }}>...</span>
+  </div>
+</div>
       </Sider>
       {isMobile && collapsed === false && (
         <div
@@ -176,5 +268,4 @@ export const Sidebar: React.FC = () => {
     </>
   );
 };
-
 export default Sidebar;

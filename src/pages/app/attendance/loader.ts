@@ -1,4 +1,4 @@
-export async function upgradeLoader() {
+export async function attendancLoader() {
     try {
     //   const organize = await API.organize.getAll();
     //   return { organize: organize.data };
