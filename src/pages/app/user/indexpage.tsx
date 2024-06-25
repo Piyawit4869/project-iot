@@ -1,14 +1,16 @@
 
 
-import { Button, Pagination, Input, Table, Breadcrumb } from "antd";
-import { useLoaderData, useNavigate } from "react-router-dom"; // นำเข้า useNavigate
-import { HomeOutlined } from "@ant-design/icons"; // นำเข้าไอคอน Home
+import { Button, Pagination, Input, Breadcrumb } from "antd";
+import { useLoaderData, useNavigate } from "react-router-dom";
+import { HomeOutlined } from "@ant-design/icons";
+import { TableComponent } from "@src/components/shared/TableComponent";
 
 const columns = [
   {
     title: "ลำดับ",
     dataIndex: "index",
     key: "index",
+    sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
   },
   {
     title: "ชื่อผู้ใช้",
@@ -63,7 +65,7 @@ export const UsersIndex = () => {
         />
         <Button type="primary" onClick={() => navigate('/users/create')}>เพิ่มข้อมูลผู้ใช้</Button>
       </div>
-      <Table columns={columns} dataSource={[]} pagination={false} />
+      <TableComponent columns={columns} dataSource={[]} pagination={false} bordered={false} />
       <div
         style={{
           display: "flex",

@@ -1,43 +1,9 @@
 import React from 'react';
 import { HomeOutlined } from '@ant-design/icons';
-import { Breadcrumb, Col, Input, Pagination, Row, Table, Button } from 'antd';
+import { Breadcrumb, Col, Input, Pagination, Row,  Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { TableComponent } from '@src/components/shared/TableComponent';
 
-const data = [
-  {
-    key: '1',
-    nummer: '1',
-    name: 'Project 1',
-    active: 'true',
-    isMainBranch: 'true',
-    tel: '0123456789',
-    imageUrl: 'https://cdn.discordapp.com/attachments/123',
-    email: 'abcdefg@gmail.com',
-    website: 'https://123',
-  },
-  {
-    key: '2',
-    nummer: '1',
-    name: 'Project 2',
-    active: 'true',
-    isMainBranch: 'true',
-    tel: '0123456789',
-    imageUrl: 'https://cdn.discordapp.com/attachments/123',
-    email: 'abcdefg@gmail.com',
-    website: 'https://123',
-  },
-  {
-    key: '3',
-    nummer: '1',
-    name: 'Project 3',
-    active: 'true',
-    isMainBranch: 'true',
-    tel: '0123456789',
-    imageUrl: 'https://cdn.discordapp.com/attachments/123',
-    email: 'abcdefg@gmail.com',
-    website: 'https://123',
-  },
-];
 
 export const BranchIndex: React.FC = () => {
   const navigate = useNavigate();
@@ -47,6 +13,7 @@ export const BranchIndex: React.FC = () => {
       title: 'ลำดับ',
       dataIndex: 'nummer',
       key: 'nummer',
+      sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
     },
     {
       title: 'ชื่อโปรเจต',
@@ -128,7 +95,7 @@ export const BranchIndex: React.FC = () => {
           เพิ่มข้อมูลสาขา
         </Button>
       </div>
-      <Table columns={columns} dataSource={data} pagination={false} />
+      <TableComponent columns={columns} pagination={false} bordered={false} dataSource={undefined} />
       <div
         style={{
           display: "flex",

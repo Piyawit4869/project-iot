@@ -1,4 +1,4 @@
-import { NotationIndex } from "./indexpage";
+import { NotationIndex } from "./Indexpage";
 
 export const routes = [
   {

@@ -1,4 +1,4 @@
 export * from "./routes";
-export * from "./createpage";
-export * from "./indexpage";
-export * from "./singlepage";
+export * from "./Createpage";
+export * from "./Indexpage";
+export * from "./Singlepage";
