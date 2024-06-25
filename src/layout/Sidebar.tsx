@@ -1,7 +1,7 @@
 import React from "react";
 import { Layout, Menu, Image, Typography, Row, Col, Card, Button } from "antd";
 import { useLocation } from "react-router-dom";
-import { CheckOutlined } from '@ant-design/icons'; // Import the icon you need
+import { CheckOutlined } from "@ant-design/icons"; // Import the icon you need
 import logo from "../assets/images/logoutotechV2.png";
 import sidebar from "../assets/images/abstract_sidebar.png";
 import { Menus } from ".";
@@ -96,62 +96,11 @@ export const Sidebar: React.FC = () => {
           </Col>
         </Row>
 
-<<<<<<< HEAD
-        <Menu
-          theme="light"
-          mode="inline"
-          selectedKeys={[activeKey]}
-          defaultOpenKeys={["/"]}
-          style={{
-            backgroundColor: "#F7F7F7",
-            marginTop: "60px",
-            overflow: "auto",
-          }}
-        >
-          {reorderedMenus.map((menu) =>
-            menu.divider ? (
-              <Menu.Divider key={menu.key} />
-            ) : menu.children ? (
-              <SubMenu key={menu.key} icon={menu.icon} title={menu.label}>
-                {menu.children.map((subMenu: any) => (
-                  <Menu.Item key={subMenu.key}>{subMenu.label}</Menu.Item>
-                ))}
-              </SubMenu>
-            ) : (
-              <Menu.Item key={menu.key} icon={menu.icon}>
-                {menu.label}
-              </Menu.Item>
-            )
-          )}
-        </Menu>
-        <Card
-          style={{
-            position: collapsed ? "relative" : "absolute",
-            bottom: 0,
-            margin: "5px",
-            background: "#F7F7F7",
-            borderColor: "#F7F7F7",
-            width: "calc(100% - 10px)",
-          }}
-          bodyStyle={{ padding: "10px" }}
-        >
-          <Typography style={{ textAlign: "center", fontWeight: "bold" }}>
-            บริษัท ยูโทเทค จำกัด
-          </Typography>
-          <Typography style={{ textAlign: "center", color: "#19142A" }}>
-            STAY ORGANIZED
-          </Typography>
-          <Button
-            href="/upgrade"
-            type="primary"
-            block
-=======
         {!collapsed && (
           <Row
             justify="center"
             align="middle"
             gutter={[12, 12]}
->>>>>>> c7073be392610c957bb66cc90773a2e2440d69bd
             style={{
               marginTop: "10px",
               marginBottom: "-10px", // Adjust this value to move the text up
@@ -227,29 +176,41 @@ export const Sidebar: React.FC = () => {
             </Button>
           </Card>
         )}
-<div
-  style={{
-    position: "absolute",
-    top: "122px", // Add some margin from the top
-    right: "-70px", // Adjust this value if needed
-    zIndex: 1000,
-    backgroundColor: "#f0f0f0",
-    borderRadius: "2px", // Rounded corners
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
-    width: "70px", // Adjust the width to fit your design
-    height: "40px", // Adjust the height to fit your design
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    cursor: "pointer"
-  }}
-  onClick={() => setCollapsed(!collapsed)}
->
-  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%" }}>
-    <CheckOutlined style={{ fontSize: "16px", color: "#8C8C8C" }} />
-    <span style={{ marginLeft: "10px", fontSize: "5px", color: "#8C8C8C" }}>...</span>
-  </div>
-</div>
+        <div
+          style={{
+            position: "absolute",
+            top: "122px", // Add some margin from the top
+            right: "-70px", // Adjust this value if needed
+            zIndex: 1000,
+            backgroundColor: "#f0f0f0",
+            borderRadius: "2px", // Rounded corners
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
+            width: "70px", // Adjust the width to fit your design
+            height: "40px", // Adjust the height to fit your design
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+          }}
+          onClick={() => setCollapsed(!collapsed)}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <CheckOutlined style={{ fontSize: "16px", color: "#8C8C8C" }} />
+            <span
+              style={{ marginLeft: "10px", fontSize: "5px", color: "#8C8C8C" }}
+            >
+              ...
+            </span>
+          </div>
+        </div>
       </Sider>
       {isMobile && collapsed === false && (
         <div
