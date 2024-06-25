@@ -10,13 +10,13 @@ export const Headerbar: React.FC = () => {
 
   };
   const me = JSON.parse(localStorage.getItem("me") as any);
-    
+  // console.log({me})
   return (
     <div className="app-background" style={styles.menu}>
       <div style={styles.navRight}>
         <div style={styles.dropdown}>
           <span onClick={handleDropdownToggle} style={styles.dropdownToggle}>
-          {me.profile.firstName+" " + me.profile.lastName} 
+          {me.role} 
            <UserOutlined style={styles.icon} />
           </span>
           {isDropdownOpen && (

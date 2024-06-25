@@ -1,5 +1,5 @@
-import { BranchCreate } from "./createpage";
-import { BranchIndex } from "./indexpage";
+import { BranchCreate } from "./Createpage";
+import { BranchIndex } from "./Indexpage";
 import { BranchSingle } from "./singlepage";
 
 export const routes = [

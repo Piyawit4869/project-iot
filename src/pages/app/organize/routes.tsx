@@ -1,7 +1,7 @@
 
 import { organizeSingleAction } from "./action";
 import { organizeSingleLoader } from "./loader";
-import { MyOrganize } from "./singlepage";
+import { MyOrganize } from "./Singlepage";
 
 export const routes = [
   {

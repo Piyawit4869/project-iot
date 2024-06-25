@@ -1,4 +1,4 @@
-import { PlanningIndex } from "./indexpage";
+import { PlanningIndex } from "./Indexpage";
 
 export const routes = [
   {

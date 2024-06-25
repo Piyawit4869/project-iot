@@ -1,13 +1,13 @@
-import { AttendanceLandingPage } from "./indexpage";
+import AttendanceIndex from "./Indexpage";
+
 
 export const routes = [
   {
-    path: "/attendance",
-    // element: <PlanningLandingPage />,
+    path: "attendance",
     children: [
       {
         path: "",
-        element: <AttendanceLandingPage />,
+        element: <AttendanceIndex />,
       },
     ],
   },
