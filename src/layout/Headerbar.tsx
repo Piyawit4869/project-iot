@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { UserOutlined } from "@ant-design/icons";
+import { LogoutOutlined, SettingOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
 export const Headerbar: React.FC = () => {
@@ -22,9 +22,9 @@ export const Headerbar: React.FC = () => {
           {isDropdownOpen && (
             <div style={styles.dropdownMenu}>
               <div  style={styles.dropdownItem}>
-                <Link to="/profile">โปรไฟล์</Link></div>
-              <div style={styles.dropdownItem}>การตั้งค่า</div>
-              <div style={styles.dropdownItem}><Link to="/login">ลงชื่อออก</Link></div>
+                <Link to="/profile"><UserOutlined />โปรไฟล์</Link></div>
+              <div style={styles.dropdownItem}><SettingOutlined />การตั้งค่า</div>
+              <div style={styles.dropdownItem}><LogoutOutlined /><Link to="/login">ลงชื่อออก</Link></div>
             </div>
           )}
         </div>

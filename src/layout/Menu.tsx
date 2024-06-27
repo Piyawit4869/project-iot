@@ -10,7 +10,7 @@ export const Menus = (props: MenusProps) => {
   const menus = [
     // super_admin
     {
-      label: <Link to="/admin/organize">จัดระเบียบ</Link>,
+      label: <Link to="/organize">จัดระเบียบ</Link>,
       key: "organize",
       icon: <Icon.ScheduleOutlined />,
       role: ["super_admin"],

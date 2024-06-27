@@ -11,6 +11,7 @@ import { routes as profileRoute } from "./profile";
 import { routes as settingRoute } from "./setting";
 import { routes as analyticRoute } from "./analytic";
 import { routes as upgradeRoute } from "./upgrade";
+import { routes as organizeRoute } from "./organize";
 
 export const routes = [
   {
@@ -32,6 +33,7 @@ export const routes = [
   ...branchRoute,
   ...settingRoute,
   ...analyticRoute,
+  ...organizeRoute,
   ...upgradeRoute
   
 ];
