@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout, Menu, Image, Typography, Row, Col, Card, Button } from "antd";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { CheckOutlined } from '@ant-design/icons'; // Import the icon you need
 import logo from "../assets/images/logoutotechV2.png";
 import sidebar from "../assets/images/abstract_sidebar.png";
@@ -160,7 +160,7 @@ export const Sidebar: React.FC = () => {
               บริษัท ยูโทเทค จำกัด
             </Typography>
             <Typography style={{ color: "#19142A", opacity: 0.6 }}>
-              STAY ORGANIZED
+            STAY ORGANIZED
             </Typography>
             <Button
               type="primary"
@@ -172,14 +172,14 @@ export const Sidebar: React.FC = () => {
                 borderRadius: "5px",
               }}
             >
-              Upgrade
+             <Link to="/upgrade"> Upgrade </Link> 
             </Button>
           </Card>
         )}
 <div
   style={{
     position: "absolute",
-    top: "122px", // Add some margin from the top
+    top: "25px", // Add some margin from the top
     right: "-70px", // Adjust this value if needed
     zIndex: 1000,
     backgroundColor: "#f0f0f0",

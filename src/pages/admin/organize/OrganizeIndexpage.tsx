@@ -2,17 +2,17 @@
 import React from "react";
 import * as API from "@src/apis";
 import {
-  HomeOutlined,
   TagOutlined,
   EyeOutlined,
   PlusCircleFilled,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb, Typography, Input, Button } from "antd";
+import {  Typography, Input, Button, Tag } from "antd";
 import { SearchProps } from "antd/es/input";
 import { Link, useLoaderData, useNavigate } from "react-router-dom";
 import { Image } from "antd";
 import { TableComponent } from "@src/components/shared/TableComponent";
+import dayjs from "dayjs";
 // import { render } from "react-dom";
 // // import axios from "axios";
 
@@ -61,6 +61,12 @@ export const OrganizeIndex: React.FC = () => {
   //       );
   const columns = [
     {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+      sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
+    },
+    {
       title: "logo",
       dataIndex: "logoUrl",
       key: "logoUrl",
@@ -69,15 +75,9 @@ export const OrganizeIndex: React.FC = () => {
       },
     },
     {
-      title: "ลำดับ",
-      dataIndex: "id",
-      key: "id",
-      sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
-    },
-    {
       title: "ชื่อองค์กร",
-      dataIndex: "businessNameTH",
-      key: "businessNameTH",
+      dataIndex: "businessName",
+      key: "businessName",
       filters: [
         {
           text: "Ney",
@@ -93,7 +93,6 @@ export const OrganizeIndex: React.FC = () => {
       onFilter: (value: string, record: { name: string | string[] }) =>
         record.name.includes(value as string),
     },
-
     {
       title: "คำอธิบายธุรกิจ",
       dataIndex: "businessDescription",
@@ -103,6 +102,9 @@ export const OrganizeIndex: React.FC = () => {
       title: "จดทะเบียน",
       dataIndex: "businessRegister",
       key: "businessRegister",
+      render: (date: any) => {
+        return <>{dayjs(date).format('DD/MM/YYYY')}</>;
+      },
     },
     {
       title: "เบอร์โทรศัพท์",
@@ -120,10 +122,10 @@ export const OrganizeIndex: React.FC = () => {
       key: "timeused",
     },
     {
-      title: "active",
+      title: "สถานะ",
       dataIndex: "active",
       key: "active",
-      render: (active: any) => (active ? "พร้อมใช้งาน" : "ไม่พร้อมใช้งาน"),
+      render: (active: any) => (active ?  <Tag color="success">พร้อมใช้งาน</Tag> :  <Tag color="error">ไม่พร้อมใช้งาน</Tag>),
     },
 
     {
@@ -148,30 +150,7 @@ export const OrganizeIndex: React.FC = () => {
     },
   ];
 
-  // Add a custom column for the details button
-  // dynamicColumns.push({
-  //   title: "รายละเอียด",
-  //   key: "details",
-  //   render: () => (
-  //     <Button
-  //       style={{ fontSize: "16px", width: "180px" }}
-  //       type="primary"
-  //       icon={<EyeOutlined />}
-  //     >
-  //       ดูข้อมูล
-  //     </Button>
-  //   ),
-  // });
 
-  //     setColumns(dynamicColumns);
-  //     setProducts(response.data); // Update the state with the fetched data
-  //   }
-  // })
-  //     .catch((error) => {
-  //       console.error("Error fetching products:", error);
-  //     });
-  // }, []); // Empty dependency array means this effect runs once after the initial render
-  // console.log(products);
 
   // const { organize } = useLoaderData() as any;
   const [searchValue, setSearchValue] = React.useState<string>("");
@@ -182,12 +161,12 @@ export const OrganizeIndex: React.FC = () => {
 
   return (
     <div>
-      <Breadcrumb style={{ marginBottom: 16 }}>
+      {/* <Breadcrumb style={{ marginBottom: 16 }}>
         <Breadcrumb.Item href="/">
           <HomeOutlined />
           <span>ตั้งค่าองค์กร</span>
         </Breadcrumb.Item>
-      </Breadcrumb>
+      </Breadcrumb> */}
 
       <Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
         ตั้งค่าองค์กร

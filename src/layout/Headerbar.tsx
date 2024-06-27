@@ -24,7 +24,7 @@ export const Headerbar: React.FC = () => {
               <div  style={styles.dropdownItem}>
                 <Link to="/profile">โปรไฟล์</Link></div>
               <div style={styles.dropdownItem}>การตั้งค่า</div>
-              <div style={styles.dropdownItem}>ลงชื่อออก</div>
+              <div style={styles.dropdownItem}><Link to="/login">ลงชื่อออก</Link></div>
             </div>
           )}
         </div>

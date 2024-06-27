@@ -63,7 +63,7 @@ export const UsersIndex = () => {
           onSearch={(value) => console.log(value)}
           style={{ width: 200 }}
         />
-        <Button type="primary" onClick={() => navigate('/users/create')}>เพิ่มข้อมูลผู้ใช้</Button>
+        <Button type="primary" onClick={() => navigate('/user/create')}>เพิ่มข้อมูลผู้ใช้</Button>
       </div>
       <TableComponent columns={columns} dataSource={[]} pagination={false} bordered={false} />
       <div

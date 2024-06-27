@@ -1,4 +1,4 @@
-import { SettingIndex } from "./Setting";
+import { SettingIndex } from "./Indexpage";
 
 export const routes = [
   {
