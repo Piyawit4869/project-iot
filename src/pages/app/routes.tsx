@@ -12,6 +12,7 @@ import { routes as profileRoute } from "./profile";
 import { routes as settingRoute } from "./setting";
 import { routes as analyticRoute } from "./analytic";
 import { routes as upgradeRoute } from "./upgrade";
+import { routes as dashboardRoute } from "./dashboard";
 export const routes = [
   {
     path: "",
@@ -21,7 +22,6 @@ export const routes = [
     path: "login",
     element: <LoginPage />,
   },
-
   ...profileRoute,
   ...settingRoute,
   ...planningRoute,
@@ -34,4 +34,5 @@ export const routes = [
   ...settingRoute,
   ...analyticRoute,
   ...upgradeRoute,
+  ...dashboardRoute,
 ];

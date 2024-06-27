@@ -11,11 +11,11 @@ export const routes = [
       },
       {
         path: "create",
-        element: <>NotationCreate</>
+        element: <>NotationCreate</>,
       },
       {
-        path: ":id", 
-        element: <>NotationSingle</>
+        path: ":id",
+        element: <>NotationSingle</>,
       },
     ],
   },

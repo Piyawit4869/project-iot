@@ -35,7 +35,7 @@ export const Menus = (props: MenusProps) => {
     {
       label: <Link to="/dashboard">หน้ารวม</Link>,
       key: "dashboard",
-      icon: <Icon.DashboardOutlined rotate={90} />,
+      icon: <Icon.DashboardOutlined />,
       role: ["organize_admin"],
     },
     {
@@ -56,10 +56,11 @@ export const Menus = (props: MenusProps) => {
       icon: <Icon.DatabaseOutlined rotate={90} />,
       role: ["organize_admin"],
     },
+
     {
-      label: <Link to="/attendance ">เข้างานออกงาน</Link>,
-      key: "attendance ",
-      icon: <Icon.DatabaseOutlined rotate={90} />,
+      label: <Link to="/attendance">เข้างานออกงาน</Link>,
+      key: "attendance",
+      icon: <Icon.DatabaseOutlined />,
       role: ["organize_admin"],
     },
     {

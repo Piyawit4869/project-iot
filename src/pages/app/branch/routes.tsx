@@ -8,16 +8,16 @@ export const routes = [
     children: [
       {
         path: "",
-        element: <BranchIndex/>
+        element: <BranchIndex />,
       },
       {
         path: "create",
-        element: <BranchCreate/>
+        element: <BranchCreate />,
       },
       {
-        path: ":id", 
-        element: <BranchSingle/>
-      }
+        path: ":id",
+        element: <BranchSingle />,
+      },
     ],
-  }
+  },
 ];
