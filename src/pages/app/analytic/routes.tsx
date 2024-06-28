@@ -1,4 +1,4 @@
-import { AnalyticIndex } from "./Analytic";
+import { AnalyticIndex } from "./Indexpage";
 
 export const routes = [
   {

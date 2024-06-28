@@ -1,15 +1,19 @@
-import { TagFilled } from "@ant-design/icons";
-import { Form, Button, Row, Col, Flex } from "antd";
+import {  TagFilled } from "@ant-design/icons";
+import {  Form, Button, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
-import { DynamicForm } from "@src/forms/Dynamic";  
+import { DynamicForm } from "@src/forms/Dynamic";
+import { useRef, useState } from "react";
 
-export const BranchCreate = () => {
+
+export const BranchSingle = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const containerRef = useRef(null);
+  const [] = useState(false);
 
   const renderForm = [
     {
-      label: "เพิ่มข้อมูลสาขา",
+      label: "แก้ไขข้อมูลสาขา",
       col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
       type: "LabelForm",
     },
@@ -24,7 +28,6 @@ export const BranchCreate = () => {
       name: "businessName",
       label: "ชื่อสาขา",
       placeholder: "กรอกชื่อสาขา",
-      require: true,
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 9 },
       type: "TextboxFormField",
     },
@@ -32,7 +35,7 @@ export const BranchCreate = () => {
       name: "logoUrl",
       label: "ลิ้งค์โลโก้",
       placeholder: "กรอกลิ้งค์โลโก้",
-      
+      require: true,
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
@@ -56,7 +59,6 @@ export const BranchCreate = () => {
       name: "email",
       label: "อีเมลล์",
       placeholder: "กรอกอีเมลล์",
-      require: true,
       col: { xs: 24, sm: 24, md: 12, lg: 6, xl: 6 },
       type: "TextboxFormField",
     },
@@ -136,8 +138,9 @@ export const BranchCreate = () => {
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
-    
   ];
+
+ 
 
   const onFinish = (values: any) => {
     const payload = Object.assign(values);
@@ -145,45 +148,55 @@ export const BranchCreate = () => {
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: 'Prompt, sans-serif' }}>
+    <div style={{ padding: "20px" }} ref={containerRef}>
       
       
       <Form form={form} layout="vertical" onFinish={onFinish}>
-      <Row gutter={24}>
-        <Col
-          xs={{ span: 24, order: 2 }}
-          sm={{ span: 24, order: 2 }}
-          md={{ span: 24, order: 2 }}
-          lg={{ span: 12, order: 1 }}
-          xl={{ span: 12, order: 1 }}
-        >
+        <Row gutter={24}>
+          <Col
+            xs={{ span: 24, order: 2 }}
+            sm={{ span: 24, order: 2 }}
+            md={{ span: 24, order: 2 }}
+            lg={{ span: 12, order: 1 }}
+            xl={{ span: 12, order: 1 }}
+          >
             <Row gutter={24}>
-              {renderForm.map((item: any) => {
-                return (
-                  <DynamicForm
-                    key={item.name}
-                    name={item.name}
-                    label={item.label}
-                    placeholder={item.placeholder}
-                    type={item.type}
-                    col={item.col}
-                    option={item.option}
-                    icon={item.icon}
-                    value={item.value}
-                    ruleMessage={item.message}
-                    require={item.require} disabled={false} checked={false}                  />
-                );
-              })}
+              {renderForm.map((item: any) => (
+                <DynamicForm
+                  key={item.name}
+                  name={item.name}
+                  label={item.label}
+                  placeholder={item.placeholder}
+                  type={item.type}
+                  col={item.col}
+                  option={item.option}
+                  icon={item.icon}
+                  value={item.value}
+                  ruleMessage={item.message}
+                  require={item.require}
+                  disabled={false}
+                  checked={false}
+                />
+              ))}
             </Row>
           </Col>
+          <Col
+            xs={{ span: 24, order: 2 }}
+            sm={{ span: 24, order: 2 }}
+            md={{ span: 24, order: 2 }}
+            lg={{ span: 12, order: 1 }}
+            xl={{ span: 12, order: 1 }}
+          >
+          </Col>
         </Row>
-        <Flex style={{ marginTop: "20px", gap: "10px" }}>
-        <Form.Item><Button type="primary" onClick={() => navigate("/branch")}>ยกเลิก</Button></Form.Item>
-        <Form.Item><Button type="primary" htmlType="submit">ยืนยัน</Button></Form.Item>
-      </Flex>
+        <Row style={{ marginTop: "20px", gap: "10px" }}>
+          <Col><Button type="primary" onClick={() => navigate("/branch")}>ยกเลิก</Button></Col>
+          <Col><Button type="primary" htmlType="submit">ยืนยัน</Button></Col>
+          <Col><Button type="primary" danger>ลบ</Button></Col>
+        </Row>
       </Form>
     </div>
   );
 };
 
-export default BranchCreate;
+export default BranchSingle;

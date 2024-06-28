@@ -21,28 +21,24 @@ export const Contents = (props: ContentProps) => {
         separator=""
         items={[
           {
-            title: "Location",
+            title: "",
           },
           {
             type: "separator",
-            separator: ":",
+            separator: "",
           },
           {
             href: "",
-            title: "Application Center",
+            title: "",
           },
-          {
-            type: "separator",
-          },
+          
           {
             href: "",
-            title: "Application List",
+            title: "",
           },
+          
           {
-            type: "separator",
-          },
-          {
-            title: "An Application",
+            title: "",
           },
         ]}
       />

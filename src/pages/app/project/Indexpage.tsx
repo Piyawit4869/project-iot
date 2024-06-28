@@ -1,6 +1,14 @@
-import { HomeOutlined } from "@ant-design/icons";
-import { Breadcrumb, Col, Input, Pagination, Row, Table, Button } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  TagOutlined,
+  EyeOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { Input, Button, Tag, Pagination, Typography } from "antd";
+import { SearchProps } from "antd/es/input";
+import { Link, useNavigate } from "react-router-dom";
+import { TableComponent } from "@src/components/shared/TableComponent";
+import { CreateButton } from "@src/components/shared/CreateButton";
 
 const data = [
   {
@@ -40,22 +48,26 @@ const data = [
 
 export const ProjectIndex = () => {
   const navigate = useNavigate();
+  const [searchValue, setSearchValue] = useState<string>("");
+
+  useEffect(() => {
+    const me = JSON.parse(localStorage.getItem("me") as any);
+    if (me.role === "user" || me.role === "admin") {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const columns = [
     {
       title: "ลำดับ",
-      dataIndex: "nummer",
-      key: "nummer",
+      dataIndex: "id",
+      key: "id",
+      sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
     },
     {
-      title: "ชื่อโปรเจต",
+      title: "ชื่อโครงการ",
       dataIndex: "name",
       key: "name",
-    },
-    {
-      title: "active",
-      dataIndex: "active",
-      key: "active",
     },
     {
       title: "สาขาหลัก",
@@ -83,69 +95,89 @@ export const ProjectIndex = () => {
       key: "website",
     },
     {
+      title: "สถานะ",
+      dataIndex: "active",
+      key: "active",
+      render: (active: any) => (active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>),
+    },
+    {
       title: "รายละเอียดเพิ่มเติม",
-      dataIndex: "details",
       key: "details",
-      render: () => (
-        <Button type="link" onClick={() => navigate("/project/singleproject")}>
-          ดูข้อมูล
-        </Button>
+      dataIndex: "id",
+      render: (id: number) => (
+        <Link to={`${id}`}>
+          <Button type="primary" icon={<EyeOutlined />}>
+            ดูข้อมูล
+          </Button>
+        </Link>
       ),
     },
   ];
 
-  const onSearch = (value: any) => {
+  const onSearch: SearchProps["onSearch"] = (value) => {
     console.log(value);
   };
 
   return (
-    <>
-      <Row>
-        <Col span={12}>
-          <Breadcrumb style={{ marginBottom: "20px" }}>
-            <Breadcrumb.Item onClick={() => navigate("/")}>
-              <HomeOutlined />
-            </Breadcrumb.Item>
-            <Breadcrumb.Item onClick={() => navigate("/project")}>
-              ข้อมูลโครงการ
-            </Breadcrumb.Item>
-          </Breadcrumb>
-        </Col>
-      </Row>
+    <div>
+      <Typography.Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
+        ข้อมูลโครงการ
+      </Typography.Title>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <TagOutlined style={{ marginBottom: -60, marginRight: 8 }} />
+        <span style={{ marginBottom: -60 }}>ค้นหาโครงการ</span>
+      </div>
 
-      <h1>ข้อมูลโครงการ</h1>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "20px",
-        }}
-      >
-        <Input.Search
-          placeholder="Search Project"
-          onSearch={onSearch}
-          style={{ width: 200 }}
+      <div>
+        <Link to={"create"}>
+        <CreateButton label={"เพิ่มข้อมูลโครงการ"}/>
+        </Link>
+      </div>
+     
+
+      {/* Search bar with button */}
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
+        <Input
+          addonBefore="ค้นหา"
+          allowClear
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          style={{ width: 304 }}
         />
-        <Button
+         <Button
+          icon={<SearchOutlined />}
           type="primary"
-          onClick={() => navigate("/project/createproject")}
+          onClick={() => onSearch(searchValue)}
+          style={{
+            backgroundColor: "#19142A",
+              borderColor: "#19142A",
+          }}
         >
-          เพิ่มข้อมูลโครงการ
+          ค้นหา
         </Button>
       </div>
-      <Table columns={columns} dataSource={data} pagination={false} />
+
+      {/* Table */}
       <div
         style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          marginTop: "20px",
+          boxShadow: "0 4px 8px rgba(0.25, 0.25, 0.25, 0.25)",
+          borderRadius: "25px",
+          overflow: "hidden",
+          marginTop: 16,
         }}
       >
+        <TableComponent
+          columns={columns}
+          dataSource={data}
+          // dataSource={projects?.items ? projects?.items : []}
+          pagination={false}
+          bordered
+        />
+      </div>
+      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
         <Pagination defaultCurrent={1} total={50} />
       </div>
-    </>
+    </div>
   );
 };
 

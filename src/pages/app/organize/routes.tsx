@@ -1,8 +1,7 @@
-import {
-  organizeSingleAction,
-  organizeSingleLoader,
-} from "@src/pages/admin/organize";
-import { MyOrganize } from "./Singlepage";
+import { OrganizeCreate, organizeCreateAction } from "./Createpage";
+import { OrganizeIndex, organizeLoader } from "./Indexpage";
+import {OrganizeSingle, organizeSingleAction, organizeSingleLoader} from "./Singlepage";
+
 
 export const routes = [
   {
@@ -10,9 +9,19 @@ export const routes = [
     children: [
       {
         path: "",
+        element: <OrganizeIndex />,
+        loader: organizeLoader,
+      },
+      {
+        path: "create",
+        element: <OrganizeCreate />,
+        action: organizeCreateAction,
+      },
+      {
+        path: ":id",
+        element: <OrganizeSingle />,
         loader: organizeSingleLoader,
-        action: organizeSingleAction,
-        element: <MyOrganize />,
+    action: organizeSingleAction,
       },
     ],
   },

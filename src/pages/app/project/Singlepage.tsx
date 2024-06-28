@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { HomeOutlined } from "@ant-design/icons";
-import { Breadcrumb, Form, Button, Row, Col, Timeline } from "antd";
+import {  Form, Button, Row, Col, Timeline } from "antd";
 import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@src/forms/Dynamic";
 
@@ -101,17 +100,7 @@ export const ProjectSingle: React.FC = () => {
 
   return (
     <div style={{ padding: "20px" }}>
-      <Col span={24}>
-        <Breadcrumb style={{ marginBottom: "20px" }}>
-          <Breadcrumb.Item onClick={() => navigate("/")}>
-            <HomeOutlined />
-          </Breadcrumb.Item>
-          <Breadcrumb.Item onClick={() => navigate("/project")}>
-            ข้อมูลโครงการ
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>แก้ไขข้อมูลโครงการ</Breadcrumb.Item>
-        </Breadcrumb>
-      </Col>
+      
 
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Row gutter={24}>

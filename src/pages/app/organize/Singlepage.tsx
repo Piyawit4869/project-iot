@@ -1,20 +1,81 @@
-import { DynamicForm } from "@src/forms";
+import { OrganizeEditForm } from "@src/forms";
 
-
-import { Link, useLoaderData, useSubmit } from "react-router-dom";
-import {  Form, Button, Col, Input, Row, Table } from "antd";
+import * as API from "@src/apis";
+import { Link, redirect, useLoaderData } from "react-router-dom";
+import { Button, Input, Table, notification } from "antd";
 import {
-  
   EyeOutlined,
   PlusCircleFilled,
   SearchOutlined,
   TagOutlined,
 } from "@ant-design/icons";
-import dayjs from "dayjs";
-import React from "react";
-import { renderForm } from "./Form";
 
+// get API loader
+export async function organizeSingleLoader({ params }: any) {
+  console.log(params);
 
+  try {
+    const organize = await API.organize.get(params.id);
+    return { organize: organize.data.data };
+  } catch (error) {
+    return { error: "error", message: error };
+  }
+}
+
+export async function organizeSingleAction({ request, params }: any) {
+  const formData = await request.formData();
+  const submitData = Object.fromEntries(formData);
+  switch (submitData.action) {
+    case "edit":
+      try {
+        await API.organize.update(params.id, JSON.parse(submitData.data));
+        notification["success"]({
+          message: "แก้ไขข้อมูลองค์กรเสร็จสิ้น",
+          placement: "top",
+          duration: 3,
+        });
+        return redirect(`/admin/organize/${params.id}`);
+      } catch (error) {
+        notification["error"]({
+          message: "แก้ไขข้อมูลองค์กรล้มเหลว",
+          placement: "top",
+          duration: 3,
+        });
+        return {
+          data: {
+            action: "create",
+            status: "error",
+            message: "Organize Created Failed !",
+          },
+        };
+      }
+    case "delete":
+      try {
+        await API.organize.deleted(params.id);
+        notification["success"]({
+          message: "ลบข้อมูลองค์กรเสร็จสิ้น",
+          placement: "top",
+          duration: 3,
+        });
+        return redirect("/admin/organize");
+      } catch (error) {
+        notification["error"]({
+          message: "ลบข้อมูลองค์กรล้มเหลว",
+          placement: "top",
+          duration: 3,
+        });
+        return {
+          data: {
+            action: "create",
+            status: "error",
+            message: "Organize Created Failed !",
+          },
+        };
+      }
+    default:
+      break;
+  }
+}
 const columns = [
   {
     title: "ลำดับ",
@@ -76,84 +137,12 @@ const columns = [
     },
   },
 ];
-export const MyOrganize: React.FC = () => {
+export const OrganizeSingle: React.FC = () => {
   const { organize } = useLoaderData() as any;
-  const [form] = Form.useForm();
-  const submit = useSubmit();
-
-  // const formatDate = (isoDateString: any) => {
-  //   return dayjs(isoDateString);
-  // };
-
-  const onFinish = (values: any) => {
-    const payload = Object.assign(values);
-   
-    submit(
-      { data: JSON.stringify(payload), action: "edit" },
-      { method: "put" }
-    );
-  };
-
-
-  React.useEffect(() => {
-    let businessRegister = null;
-    if (organize.businessRegister) {
-      const combinedDateTime = organize.businessRegister;
-      businessRegister = dayjs(combinedDateTime);
-    }
-    form.setFieldsValue({
-      ...organize,
-      businessRegister: businessRegister,
-    });
-  }, [form, organize]);
 
   return (
     <div>
-      <Form form={form} layout="vertical" onFinish={onFinish}>
-      <Col span={12} style={{ textAlign: "left", marginBottom: 16 }}>
-        <div style={{ fontSize: 22, fontWeight: "bold" }}>
-          แก้ไขข้อมูลองค์กร
-        </div>
-      </Col>
-      <Col span={12} style={{ textAlign: "right", marginBottom: 16 }}>
-        <Row justify={"end"} gutter={15}>
-          <Col>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Col>
-        </Row>
-      </Col>
-      <Col
-        xs={{ span: 24, order: 2 }}
-        sm={{ span: 24, order: 2 }}
-        md={{ span: 24, order: 2 }}
-        lg={{ span: 12, order: 2 }}
-        xl={{ span: 12, order: 1 }}
-      >
-        <Row gutter={20}>
-          {renderForm.map((item: any) => {
-            return (
-              <DynamicForm
-                key={item.value}
-                name={item.name}
-                label={item.label}
-                placeholder={item.placeholder}
-                type={item.type}
-                col={item.col}
-                option={item.option}
-                icon={item.icon}
-                value={item.value}
-                ruleMessage={item.message}
-                require={item.require}
-                disabled={false}
-                checked={false}
-              />
-            );
-          })}
-        </Row>
-      </Col>
-    </Form>
+      <OrganizeEditForm initialValues={organize} />
 
       <div style={{ display: "flex", alignItems: "center" }}>
         <TagOutlined style={{ marginBottom: -60, marginRight: 8 }} />
