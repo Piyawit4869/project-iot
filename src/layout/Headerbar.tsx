@@ -44,7 +44,6 @@ export const Headerbar: React.FC = () => {
       </Breadcrumb>
     );
   };
-
   return (
     <div style={styles.header}>
       {generateBreadcrumbs(location.pathname)}
