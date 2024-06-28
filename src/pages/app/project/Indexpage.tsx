@@ -1,145 +1,150 @@
-import { HomeOutlined } from "@ant-design/icons";
-import { Breadcrumb, Col, Input, Pagination, Row, Table, Button } from "antd";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  TagOutlined,
+  EyeOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { Typography, Input, Button, Tag, Pagination } from "antd";
+import { SearchProps } from "antd/es/input";
+import { Link, useLoaderData, useNavigate } from "react-router-dom";
+import { TableComponent } from "@src/components/shared/TableComponent";
+import { CreateButton } from "@src/components/shared/CreateButton";
 
+const { Title } = Typography;
 
-const data = [
-  {
-    key: '1',
-    nummer:'1',
-    name: 'Project 1',
-    active: 'true',
-    isMainBranch: 'true',
-    tel: '0123456789',
-    imageUrl: 'https://cdn.discordapp.com/attachments/123',
-    email: 'abcdefg@gmailcom',
-    website: 'https://123',
-  },
-  {
-    key: '2',
-    nummer:'1',
-    name: 'Project 2',
-    active: 'true',
-    isMainBranch: 'true',
-    tel: '0123456789',
-    imageUrl: 'https://cdn.discordapp.com/attachments/123',
-    email: 'abcdefg@gmailcom',
-    website: 'https://123',
-    
-  },
-  {
-    key: '3',
-    nummer:'1',
-    name: 'Project 3',
-    active: 'true',
-    isMainBranch: 'true',
-    tel: '0123456789',
-    imageUrl: 'https://cdn.discordapp.com/attachments/123',
-    email: 'abcdefg@gmailcom',
-    website: 'https://123',
-  },
-];
-
-export const ProjectIndex = () => {
+export const ProjectIndex: React.FC = () => {
+  const data = useLoaderData() as any;
+  const projects = data?.projects || { items: [] };
   const navigate = useNavigate();
+  const [searchValue, setSearchValue] = useState<string>("");
+
+  useEffect(() => {
+    const me = JSON.parse(localStorage.getItem("me") as any);
+    if (me.role === "user" || me.role === "admin") {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const columns = [
     {
-      title: 'ลำดับ',
-      dataIndex: 'nummer',
-      key: 'nummer',
+      title: "ลำดับ",
+      dataIndex: "id",
+      key: "id",
+      sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
     },
     {
-      title: 'ชื่อโปรเจต',
-      dataIndex: 'name',
-      key: 'name',
+      title: "ชื่อโครงการ",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: 'active',
-      dataIndex: 'active',
-      key: 'active',
+      title: "สาขาหลัก",
+      dataIndex: "isMainBranch",
+      key: "isMainBranch",
     },
     {
-      title: 'สาขาหลัก',
-      dataIndex: 'isMainBranch',
-      key: 'isMainBranch',
+      title: "เบอร์โทร",
+      dataIndex: "tel",
+      key: "tel",
     },
     {
-      title: 'เบอร์โทร',
-      dataIndex: 'tel',
-      key: 'tel',
+      title: "ลิ้งค์รูปภาพ",
+      dataIndex: "imageUrl",
+      key: "imageUrl",
     },
     {
-      title: 'ลิ้งค์รูปภาพ',
-      dataIndex: 'imageUrl',
-      key: 'imageUrl',
+      title: "อีเมล",
+      dataIndex: "email",
+      key: "email",
     },
     {
-      title: 'อีเมล',
-      dataIndex: 'email',
-      key: 'email',
+      title: "เว็ปไซต์",
+      dataIndex: "website",
+      key: "website",
     },
     {
-      title: 'เว็ปไซต์',
-      dataIndex: 'website',
-      key: 'website',
+      title: "สถานะ",
+      dataIndex: "active",
+      key: "active",
+      render: (active: any) => (active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>),
     },
     {
       title: "รายละเอียดเพิ่มเติม",
-      dataIndex: "details",
       key: "details",
-      render: () => <Button type="link" onClick={() => navigate('/project/singleproject')}>ดูข้อมูล</Button>,
+      dataIndex: "id",
+      render: (id: number) => (
+        <Link to={`${id}`}>
+          <Button type="primary" icon={<EyeOutlined />}>
+            ดูข้อมูล
+          </Button>
+        </Link>
+      ),
     },
   ];
 
-  const onSearch = (value: any) => {
+  const onSearch: SearchProps["onSearch"] = (value) => {
     console.log(value);
   };
 
   return (
-    <>
-      
-      <Row>
-        <Col span={12}>
-          <Breadcrumb style={{ marginBottom: "20px" }}>
-            <Breadcrumb.Item onClick={() => navigate('/')}>
-              <HomeOutlined />
-            </Breadcrumb.Item>
-            <Breadcrumb.Item onClick={() => navigate('/project')}>
-              ข้อมูลโครงการ
-            </Breadcrumb.Item>
-          </Breadcrumb>
-        </Col>
-      </Row>
-
-      <h1>ข้อมูลโครงการ</h1>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "20px",
-        }}
-      >
-        <Input.Search
-          placeholder="Search Project"
-          onSearch={onSearch}
-          style={{ width: 200 }}
-        />
-        <Button type="primary" onClick={() => navigate('/project/createproject')}>เพิ่มข้อมูลโครงการ</Button>
+    <div>
+      <Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
+        ข้อมูลโครงการ
+      </Title>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <TagOutlined style={{ marginBottom: -60, marginRight: 8 }} />
+        <span style={{ marginBottom: -60 }}>ค้นหาโครงการ</span>
       </div>
-      <Table columns={columns} dataSource={data} pagination={false} />
+
+      <div>
+        <Link to={"create"}>
+        <CreateButton label={"เพิ่มข้อมูลโครงการ"}/>
+        </Link>
+      </div>
+     
+
+      {/* Search bar with button */}
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
+        <Input
+          addonBefore="ค้นหา"
+          allowClear
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          style={{ width: 304 }}
+        />
+         <Button
+          icon={<SearchOutlined />}
+          type="primary"
+          onClick={() => onSearch(searchValue)}
+          style={{
+            backgroundColor: "#19142A",
+              borderColor: "#19142A",
+          }}
+        >
+          ค้นหา
+        </Button>
+      </div>
+
+      {/* Table */}
       <div
         style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          marginTop: "20px",
+          boxShadow: "0 4px 8px rgba(0.25, 0.25, 0.25, 0.25)",
+          borderRadius: "25px",
+          overflow: "hidden",
+          marginTop: 16,
         }}
       >
+        <TableComponent
+          columns={columns}
+          dataSource={projects?.items ? projects?.items : []}
+          pagination={false}
+          bordered
+        />
+      </div>
+      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
         <Pagination defaultCurrent={1} total={50} />
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,109 +1,128 @@
-import { HomeOutlined } from "@ant-design/icons";
-import { Breadcrumb, Col, Input, Pagination, Row, Button } from "antd";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Input, Pagination, Button, Tag, Typography, Image } from "antd";
+import { SearchOutlined, EyeOutlined, TagOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
+import { CreateButton } from "@src/components/shared/CreateButton";
 
-export const CustomersIndex = () => {
-  const navigate = useNavigate();
 
-  const columns = [
-    {
-      title: 'ลำดับ',
-      dataIndex: 'nummer',
-      key: 'nummer',
-      sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
-    
-    },
-    {
-      title: 'ชื่อลูก',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'active',
-      dataIndex: 'active',
-      key: 'active',
-    },
-    {
-      title: 'สาขาหลัก',
-      dataIndex: 'isMainBranch',
-      key: 'isMainBranch',
-    },
-    {
-      title: 'เบอร์โทร',
-      dataIndex: 'tel',
-      key: 'tel',
-    },
-    {
-      title: 'ลิ้งค์รูปภาพ',
-      dataIndex: 'imageUrl',
-      key: 'imageUrl',
-    },
-    {
-      title: 'อีเมล',
-      dataIndex: 'email',
-      key: 'email',
-    },
-    {
-      title: 'เว็ปไซต์',
-      dataIndex: 'website',
-      key: 'website',
-    },
-    {
-      title: "รายละเอียดเพิ่มเติม",
-      dataIndex: "details",
-      key: "details",
-      render: () => <Button type="link" onClick={() => navigate('/customers/singlecustomers')}>ดูข้อมูล</Button>,
-    },
-  ];
+const { Title } = Typography;
 
-  const onSearch = (value: any) => {
-    console.log(value);
+const columns = [
+  {
+    title: 'ลำดับ',
+    dataIndex: 'nummer',
+    key: 'nummer',
+    sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
+  },
+  {
+    title: 'ชื่อลูกค้า',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: 'สาขาหลัก',
+    dataIndex: 'isMainBranch',
+    key: 'isMainBranch',
+  },
+  {
+    title: 'เบอร์โทร',
+    dataIndex: 'tel',
+    key: 'tel',
+  },
+  {
+    title: 'ลิ้งค์รูปภาพ',
+    dataIndex: 'imageUrl',
+    key: 'imageUrl',
+    render: (imageUrl: string) => <Image width={100} src={imageUrl} alt="รูปภาพ" />,
+  },
+  {
+    title: 'อีเมล',
+    dataIndex: 'email',
+    key: 'email',
+  },
+  {
+    title: 'เว็ปไซต์',
+    dataIndex: 'website',
+    key: 'website',
+  },
+  {
+    title: 'สถานะ',
+    dataIndex: 'active',
+    key: 'active',
+    render: (active: boolean) => (active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>),
+  },
+  {
+    title: "รายละเอียดเพิ่มเติม",
+    key: "details",
+    dataIndex: "id",
+    render: (id: number) => (
+      <Link to={`/customers/singlecustomers/${id}`}>
+        <Button style={{ fontSize: "16px", width: "180px" }} type="primary" icon={<EyeOutlined />}>
+          ดูข้อมูล
+        </Button>
+      </Link>
+    ),
+  },
+];
+
+export const CustomersIndex: React.FC = () => {
+  const [searchValue, setSearchValue] = useState<string>("");
+
+  const onSearch = (value: string) => {
+    console.log("Search:", value);
+    // Implement search functionality here
   };
 
   return (
-    <>
-      <Row>
-        <Col span={12}>
-          <Breadcrumb style={{ marginBottom: "20px" }}>
-            <Breadcrumb.Item onClick={() => navigate('/')}>
-              <HomeOutlined />
-            </Breadcrumb.Item>
-            <Breadcrumb.Item onClick={() => navigate('/customers')}>
-              ข้อมูลลูกค้า
-            </Breadcrumb.Item>
-          </Breadcrumb>
-        </Col>
-      </Row>
-
-      <h1>ข้อมูลลูกค้า</h1>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "20px",
-        }}
-      >
-        <Input.Search
-          placeholder="Search Project"
-          onSearch={onSearch}
-          style={{ width: 200 }}
-        />
-        <Button type="primary" onClick={() => navigate('/customers/createcustomers')}>เพิ่มข้อมูลลูกค้า</Button>
+    <div>
+      <Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
+        ข้อมูลลูกค้า
+      </Title>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <TagOutlined style={{ marginBottom: -60, marginRight: 8 }} />
+        <span style={{ marginBottom: -60 }}>ค้นหาลูกค้า</span>
       </div>
-      <TableComponent columns={columns} pagination={false} bordered={false} dataSource={undefined} />
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          marginTop: "20px",
-        }}
-      >
+        <div>
+        <Link to={"create"}>
+        <CreateButton label={"เพิ่มข้อมูลลูกค้า"}/>
+        </Link>
+      </div>
+
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
+        <Input
+          addonBefore="ค้นหา"
+          allowClear
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          style={{ width: 304 }}
+        />
+         <Button
+          icon={<SearchOutlined />}
+          type="primary"
+          onClick={() => onSearch(searchValue)}
+          style={{
+            backgroundColor: "#19142A",
+              borderColor: "#19142A",
+          }}
+        >
+          ค้นหา
+        </Button>
+      </div>
+
+      <div style={{ boxShadow: "0 4px 8px rgba(0.25, 0.25, 0.25, 0.25)", borderRadius: "25px", overflow: "hidden", marginTop: 16 }}>
+        <TableComponent
+          columns={columns}
+          dataSource={[]}  // Replace with actual data source
+          pagination={false}
+          bordered
+        />
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
         <Pagination defaultCurrent={1} total={50} />
       </div>
-    </>
+    </div>
   );
 };
 

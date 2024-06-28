@@ -1,5 +1,5 @@
-import { HomeOutlined, TagFilled } from "@ant-design/icons";
-import { Breadcrumb, Form, Button, Row, Col, Timeline } from "antd";
+import {  TagFilled } from "@ant-design/icons";
+import {  Form, Button, Row, Col, Timeline } from "antd";
 import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@src/forms/Dynamic";
 import { useRef, useState } from "react";
@@ -167,19 +167,7 @@ export const BranchSingle = () => {
 
   return (
     <div style={{ padding: "20px" }} ref={containerRef}>
-      <Col span={24}>
-        <Breadcrumb style={{ marginBottom: "20px" }}>
-          <Breadcrumb.Item onClick={() => navigate("/")}>
-            <HomeOutlined />
-          </Breadcrumb.Item>
-          <Breadcrumb.Item onClick={() => navigate("/branch")}>
-            ข้อมูลลูกค้า
-          </Breadcrumb.Item>
-          <Breadcrumb.Item onClick={() => navigate("/branch/singlebranch")}>
-            แก้ไขข้อมูลลูกค้า
-          </Breadcrumb.Item>
-        </Breadcrumb>
-      </Col>
+      
       
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Row gutter={24}>

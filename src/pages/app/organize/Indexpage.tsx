@@ -5,17 +5,17 @@ import {
  
   TagOutlined,
   EyeOutlined,
-  PlusCircleFilled,
+
   SearchOutlined,
 } from "@ant-design/icons";
-import {  Typography, Input, Button, Tag } from "antd";
+import {  Typography, Input, Button, Tag, Pagination } from "antd";
 import { SearchProps } from "antd/es/input";
 import { Link, useLoaderData, useNavigate } from "react-router-dom";
 import { Image } from "antd";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import dayjs from "dayjs";
-// import { render } from "react-dom";
-// // import axios from "axios";
+import { CreateButton } from "@src/components/shared/CreateButton";
+
 
 const { Title } = Typography;
 
@@ -49,7 +49,7 @@ export const OrganizeIndex: React.FC = () => {
       sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
     },
     {
-      title: "logo",
+      title: "โลโก้",
       dataIndex: "logoUrl",
       key: "logoUrl",
       render: (logoUrl: any) => {
@@ -159,32 +159,9 @@ export const OrganizeIndex: React.FC = () => {
         <span style={{ marginBottom: -60 }}>ค้นหาองค์กร</span>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <div></div>
+      <div>
         <Link to={"create"}>
-          <Button
-            type="primary"
-            icon={<PlusCircleFilled />}
-            style={{
-              fontSize: "18px",
-              marginRight: "30",
-              backgroundColor: "#1c2c5c",
-              borderColor: "#1c2c5c",
-              borderRadius: "10px",
-              padding: "0 20px",
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-            }}
-          >
-            เพิ่มข้อมูลลูกค้า
-          </Button>
+        <CreateButton label={"เพิ่มข้อมูลลูกค้า"}/>
         </Link>
       </div>
 
@@ -204,10 +181,14 @@ export const OrganizeIndex: React.FC = () => {
           onChange={(e) => setSearchValue(e.target.value)}
           style={{ width: 304 }}
         />
-        <Button
+         <Button
           icon={<SearchOutlined />}
           type="primary"
           onClick={() => onSearch(searchValue)}
+          style={{
+            backgroundColor: "#19142A",
+              borderColor: "#19142A",
+          }}
         >
           ค้นหา
         </Button>
@@ -231,6 +212,9 @@ export const OrganizeIndex: React.FC = () => {
           pagination={false}
           bordered
         />
+      </div>
+      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
+        <Pagination defaultCurrent={1} total={50} />
       </div>
     </div>
   );
