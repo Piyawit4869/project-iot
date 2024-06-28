@@ -73,19 +73,17 @@ export const BranchCreate = () => {
       placeholder: "กรอกเบอร์โทร",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
+    },{
+      name: "active",
+      label: "พร้อมใช้งาน",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 6 },
+      type: "CheckboxFormField",
     },
     {
       icon: <TagFilled />,
-      label: "ข้อมูลตามทะเบียน",
+      label: "ข้อมูลที่อยู่",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
       type: "LabelForm",
-    },
-    {
-      name: "active",
-      label: "ทำงานอยู่",
-      placeholder: "ทำงานอยู่",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 6 },
-      type: "CheckboxFormField",
     },
     {
       name: "descriptions",
