@@ -23,7 +23,7 @@ export const routes = [
     path: "login",
     element: <LoginPage />,
   },
-  
+
   ...profileRoute,
   ...planningRoute,
   ...notationRoute,

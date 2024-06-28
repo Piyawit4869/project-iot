@@ -1,6 +1,6 @@
 import {
   OrganizeCreate,
-  OrganizeIndex,
+  OrganizeIndexpage,
   OrganizeSingle,
   organizeCreateAction,
   organizeLoader,
@@ -15,7 +15,7 @@ export const routes = [
     loader: organizeLoader,
     // for post , put , delete
     // action : organizeAction,
-    element: <OrganizeIndex />,
+    element: <OrganizeIndexpage />,
   },
   {
     path: "organize/create",

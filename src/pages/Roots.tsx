@@ -8,13 +8,10 @@ import {
 
 import { AuthContext } from "@contexts/AuthContext";
 import { Spin } from "antd";
-// import { log } from "console";
-
 export async function RootLoader() {
   try {
     const me = await API.user.getMe();
-    console.log(me)
-    // me.data.role="branch_admin"
+    // me.data.role="organize_admin"
     // console.log(me)
     localStorage.setItem("me", JSON.stringify(me.data));
     return { me: me.data };

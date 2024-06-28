@@ -1,20 +1,52 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   TagOutlined,
   EyeOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Typography, Input, Button, Tag, Pagination } from "antd";
+import { Input, Button, Tag, Pagination, Typography } from "antd";
 import { SearchProps } from "antd/es/input";
-import { Link, useLoaderData, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
 
-const { Title } = Typography;
+const data = [
+  {
+    key: "1",
+    nummer: "1",
+    name: "Project 1",
+    active: "true",
+    isMainBranch: "true",
+    tel: "0123456789",
+    imageUrl: "https://cdn.discordapp.com/attachments/123",
+    email: "abcdefg@gmailcom",
+    website: "https://123",
+  },
+  {
+    key: "2",
+    nummer: "1",
+    name: "Project 2",
+    active: "true",
+    isMainBranch: "true",
+    tel: "0123456789",
+    imageUrl: "https://cdn.discordapp.com/attachments/123",
+    email: "abcdefg@gmailcom",
+    website: "https://123",
+  },
+  {
+    key: "3",
+    nummer: "1",
+    name: "Project 3",
+    active: "true",
+    isMainBranch: "true",
+    tel: "0123456789",
+    imageUrl: "https://cdn.discordapp.com/attachments/123",
+    email: "abcdefg@gmailcom",
+    website: "https://123",
+  },
+];
 
-export const ProjectIndex: React.FC = () => {
-  const data = useLoaderData() as any;
-  const projects = data?.projects || { items: [] };
+export const ProjectIndex = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState<string>("");
 
@@ -88,9 +120,9 @@ export const ProjectIndex: React.FC = () => {
 
   return (
     <div>
-      <Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
+      <Typography.Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
         ข้อมูลโครงการ
-      </Title>
+      </Typography.Title>
       <div style={{ display: "flex", alignItems: "center" }}>
         <TagOutlined style={{ marginBottom: -60, marginRight: 8 }} />
         <span style={{ marginBottom: -60 }}>ค้นหาโครงการ</span>
@@ -136,7 +168,8 @@ export const ProjectIndex: React.FC = () => {
       >
         <TableComponent
           columns={columns}
-          dataSource={projects?.items ? projects?.items : []}
+          dataSource={data}
+          // dataSource={projects?.items ? projects?.items : []}
           pagination={false}
           bordered
         />
