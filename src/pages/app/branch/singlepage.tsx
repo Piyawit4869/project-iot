@@ -77,17 +77,17 @@ export const BranchSingle = () => {
       type: "TextboxFormField",
     },
     {
-      icon: <TagFilled />,
-      label: "ข้อมูลตามทะเบียน",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
-      type: "LabelForm",
-    },
-    {
       name: "active",
-      label: "ทำงานอยู่",
-      placeholder: "ทำงานอยู่",
+      label: "พร้อมใช้งาน",
+      placeholder: "พร้อมใช้งาน",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 6 },
       type: "CheckboxFormField",
+    },
+    {
+      icon: <TagFilled />,
+      label: "ข้อมูลที่อยู่",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
+      type: "LabelForm",
     },
     {
       name: "descriptions",
