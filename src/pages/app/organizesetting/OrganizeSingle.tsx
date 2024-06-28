@@ -1,14 +1,9 @@
 import { OrganizeEditForm } from "@src/forms";
 
 import * as API from "@src/apis";
-import { Link, redirect, useLoaderData } from "react-router-dom";
-import { Button, Input, Table, notification } from "antd";
-import {
-  EyeOutlined,
-  PlusCircleFilled,
-  SearchOutlined,
-  TagOutlined,
-} from "@ant-design/icons";
+import { Link, redirect } from "react-router-dom";
+import { Button, Table, notification } from "antd";
+import { EyeOutlined } from "@ant-design/icons";
 
 // get API loader
 export async function organizeSingleLoader({ params }: any) {
@@ -37,7 +32,7 @@ export async function organizeSingleAction({ request, params }: any) {
         return redirect(`/admin/organize/${params.id}`);
       } catch (error) {
         notification["error"]({
-          message: "แก้ไขข้อมูลองค์กรล้+มเหลว",
+          message: "แก้ไขข้อมูลองค์กรล้มเหลว",
           placement: "top",
           duration: 3,
         });
@@ -138,77 +133,18 @@ const columns = [
   },
 ];
 export const OrganizeSingle: React.FC = () => {
-  const { organize } = useLoaderData() as any;
+  // const { organize } = useLoaderData() as any;
 
   return (
     <div>
-      <OrganizeEditForm initialValues={organize} />
+      <OrganizeEditForm initialValues={API.organize} />
 
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <TagOutlined style={{ marginBottom: -60, marginRight: 8 }} />
-
-        <span style={{ marginBottom: -60 }}>ค้นหาองค์กร</span>
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <div></div>
-        <Link to={"create"}>
-          <Button
-            type="primary"
-            icon={<PlusCircleFilled />}
-            style={{
-              fontSize: "18px",
-              marginRight: "30",
-              backgroundColor: "#1c2c5c",
-              borderColor: "#1c2c5c",
-              borderRadius: "10px",
-              padding: "0 20px",
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-            }}
-          >
-            เพิ่มข้อมูลสาขา
-          </Button>
-        </Link>
-      </div>
-
-      {/* Search bar with button */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          marginTop: "16px",
-        }}
-      >
-        <Input
-          addonBefore="ค้นหา"
-          allowClear
-          // value={searchValue}
-          // onChange={(e) => setSearchValue(e.target.value)}
-          style={{ width: 304 }}
-        />
-        <Button
-          icon={<SearchOutlined />}
-          type="primary"
-          // onClick={() => onSearch(searchValue)}
-        >
-          ค้นหา
-        </Button>
-      </div>
       <Table
         columns={columns}
-        // dataSource={dataSource}
+        dataSource={[]}
         // columns={columns}
         // dataSource={products}
-        dataSource={organize?.items ? organize?.items : []}
+        // dataSource={organize?.items ? organize?.items : []}
         pagination={false}
         bordered
       />

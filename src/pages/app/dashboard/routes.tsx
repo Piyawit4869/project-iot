@@ -1,4 +1,4 @@
-import { Dashboard } from "./indexpage";
+import { Dashboard } from "./Dashboard";
 
 export const routes = [
   {

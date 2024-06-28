@@ -74,7 +74,7 @@ export const Dashboard = () => {
             <Countdown
               title="Million Seconds"
               value={deadline}
-              format="HH:mm:ss:SSS"
+              format="DD:MM:YY:HH:mm"
             />
           </Col>
           <Col span={24} style={{ marginTop: 32 }}>

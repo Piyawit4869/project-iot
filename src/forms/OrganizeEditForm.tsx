@@ -1,4 +1,5 @@
 import { DeleteOutlined, TagFilled } from "@ant-design/icons";
+import { Modal } from "antd";
 import { Button, Col, Form, Row } from "antd";
 import { useSubmit } from "react-router-dom";
 import dayjs from "dayjs";
@@ -13,7 +14,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
   props: OrganizeEditFormProps
 ) => {
   const { initialValues } = props;
-  
+
   const [form] = Form.useForm();
   const submit = useSubmit();
 
@@ -38,8 +39,22 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
     );
   };
 
+  const { confirm } = Modal;
+
   const onDelete = () => {
-    submit({ action: "delete" }, { method: "delete" });
+    confirm({
+      title: "ต้องการลบองค์กรนี้หรือไม่?",
+      content: "หากลบแล้ว จะไม่สามารถกู้คืนได้",
+      okText: "ยืนยัน",
+      okType: "danger",
+      cancelText: "ยกเลิก",
+      onOk() {
+        submit({ action: "delete" }, { method: "delete" });
+      },
+      onCancel() {
+        console.log("Delete action cancelled");
+      },
+    });
   };
 
   React.useEffect(() => {
@@ -332,7 +347,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
           </Col>
           <Col>
             <Button type="primary" htmlType="submit">
-              Submit
+              ยืนยัน
             </Button>
           </Col>
         </Row>

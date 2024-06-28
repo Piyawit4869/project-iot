@@ -9,7 +9,6 @@ import { CreateButton } from "@src/components/shared/CreateButton";
 const { Title } = Typography;
 
 export const BranchIndex: React.FC = () => {
-
   const columns = [
     {
       title: "ลำดับ",
@@ -34,7 +33,12 @@ export const BranchIndex: React.FC = () => {
       title: "active",
       dataIndex: "active",
       key: "active",
-      render: (active: any) => (active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>),
+      render: (active: any) =>
+        active ? (
+          <Tag color="success">พร้อมใช้งาน</Tag>
+        ) : (
+          <Tag color="error">ไม่พร้อมใช้งาน</Tag>
+        ),
     },
     {
       title: "สาขาหลัก",
@@ -62,7 +66,11 @@ export const BranchIndex: React.FC = () => {
       dataIndex: "id",
       render: (id: number) => (
         <Link to={`/branch/singlebranch/${id}`}>
-          <Button style={{ fontSize: "16px", width: "180px" }} type="primary" icon={<EyeOutlined />}>
+          <Button
+            style={{ fontSize: "16px", width: "180px" }}
+            type="primary"
+            icon={<EyeOutlined />}
+          >
             ดูข้อมูล
           </Button>
         </Link>
@@ -88,7 +96,7 @@ export const BranchIndex: React.FC = () => {
 
       <div>
         <Link to={"create"}>
-        <CreateButton label={"เพิ่มข้อมูลสาขา"}/>
+          <CreateButton label={"เพิ่มข้อมูลสาขา"} />
         </Link>
       </div>
       <div
@@ -127,9 +135,21 @@ export const BranchIndex: React.FC = () => {
           marginTop: 16,
         }}
       >
-        <TableComponent columns={columns} pagination={false} bordered dataSource={undefined} />
+        <TableComponent
+          columns={columns}
+          pagination={false}
+          bordered
+          dataSource={undefined}
+        />
       </div>
-      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          marginTop: "20px",
+        }}
+      >
         <Pagination defaultCurrent={1} total={50} />
       </div>
     </div>

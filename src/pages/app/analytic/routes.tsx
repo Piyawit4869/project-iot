@@ -1,4 +1,4 @@
-import { AnalyticIndex } from "./Indexpage";
+import Analytic from "./Indexpage";
 
 export const routes = [
   {
@@ -7,7 +7,7 @@ export const routes = [
     children: [
       {
         path: "",
-        element: <AnalyticIndex />,
+        element: <Analytic />,
       },
     ],
   },

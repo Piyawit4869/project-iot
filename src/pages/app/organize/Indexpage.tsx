@@ -1,21 +1,14 @@
 // import React, { useEffect, useState } from "react";
 import React from "react";
 import * as API from "@src/apis";
-import {
- 
-  TagOutlined,
-  EyeOutlined,
-
-  SearchOutlined,
-} from "@ant-design/icons";
-import {  Typography, Input, Button, Tag, Pagination } from "antd";
+import { TagOutlined, EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import { Typography, Input, Button, Tag, Pagination } from "antd";
 import { SearchProps } from "antd/es/input";
 import { Link, useLoaderData, useNavigate } from "react-router-dom";
 import { Image } from "antd";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import dayjs from "dayjs";
 import { CreateButton } from "@src/components/shared/CreateButton";
-
 
 const { Title } = Typography;
 
@@ -85,7 +78,7 @@ export const OrganizeIndex: React.FC = () => {
       dataIndex: "businessRegister",
       key: "businessRegister",
       render: (date: any) => {
-        return <>{dayjs(date).format('DD/MM/YYYY')}</>;
+        return <>{dayjs(date).format("DD/MM/YYYY")}</>;
       },
     },
     {
@@ -107,7 +100,12 @@ export const OrganizeIndex: React.FC = () => {
       title: "สถานะ",
       dataIndex: "active",
       key: "active",
-      render: (active: any) => (active ?  <Tag color="success">พร้อมใช้งาน</Tag> :  <Tag color="error">ไม่พร้อมใช้งาน</Tag>),
+      render: (active: any) =>
+        active ? (
+          <Tag color="success">พร้อมใช้งาน</Tag>
+        ) : (
+          <Tag color="error">ไม่พร้อมใช้งาน</Tag>
+        ),
     },
 
     {
@@ -131,8 +129,6 @@ export const OrganizeIndex: React.FC = () => {
       },
     },
   ];
-
-
 
   // const { organize } = useLoaderData() as any;
   const [searchValue, setSearchValue] = React.useState<string>("");
@@ -161,7 +157,7 @@ export const OrganizeIndex: React.FC = () => {
 
       <div>
         <Link to={"create"}>
-        <CreateButton label={"เพิ่มข้อมูลลูกค้า"}/>
+          <CreateButton label={"เพิ่มข้อมูลลูกค้า"} />
         </Link>
       </div>
 
@@ -181,13 +177,13 @@ export const OrganizeIndex: React.FC = () => {
           onChange={(e) => setSearchValue(e.target.value)}
           style={{ width: 304 }}
         />
-         <Button
+        <Button
           icon={<SearchOutlined />}
           type="primary"
           onClick={() => onSearch(searchValue)}
           style={{
             backgroundColor: "#19142A",
-              borderColor: "#19142A",
+            borderColor: "#19142A",
           }}
         >
           ค้นหา
@@ -213,7 +209,14 @@ export const OrganizeIndex: React.FC = () => {
           bordered
         />
       </div>
-      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          marginTop: "20px",
+        }}
+      >
         <Pagination defaultCurrent={1} total={50} />
       </div>
     </div>

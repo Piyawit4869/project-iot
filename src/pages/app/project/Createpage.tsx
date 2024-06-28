@@ -1,5 +1,4 @@
-
-import {  Form, Button, Row, Col,  Flex } from "antd";
+import { Form, Button, Row, Col, Flex } from "antd";
 import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@src/forms/Dynamic";
 
@@ -64,7 +63,7 @@ export const ProjectCreate = () => {
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
-    
+
     {
       name: "website",
       label: "ลิ้งค์เว็บไซต์",
@@ -77,20 +76,19 @@ export const ProjectCreate = () => {
   const onFinish = (values: any) => {
     const payload = Object.assign(values);
     console.log("Form Submitted", payload);
-    
   };
 
   return (
     <div style={{ padding: "20px" }}>
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Row gutter={24}>
-        <Col
-          xs={{ span: 24, order: 2 }}
-          sm={{ span: 24, order: 2 }}
-          md={{ span: 24, order: 2 }}
-          lg={{ span: 12, order: 1 }}
-          xl={{ span: 12, order: 1 }}
-        >
+          <Col
+            xs={{ span: 24, order: 2 }}
+            sm={{ span: 24, order: 2 }}
+            md={{ span: 24, order: 2 }}
+            lg={{ span: 12, order: 1 }}
+            xl={{ span: 12, order: 1 }}
+          >
             <Row gutter={24}>
               {renderForm.map((item: any) => {
                 return (
@@ -105,16 +103,27 @@ export const ProjectCreate = () => {
                     icon={item.icon}
                     value={item.value}
                     ruleMessage={item.message}
-                    require={item.require} disabled={false} checked={false}                  />
+                    require={item.require}
+                    disabled={false}
+                    checked={false}
+                  />
                 );
               })}
             </Row>
           </Col>
         </Row>
         <Flex style={{ marginTop: "20px", gap: "10px" }}>
-        <Form.Item><Button type="primary" onClick={() => navigate("/project")}>ยกเลิก</Button></Form.Item>
-        <Form.Item><Button type="primary" htmlType="submit">ยืนยัน</Button></Form.Item>
-      </Flex>
+          <Form.Item>
+            <Button type="primary" onClick={() => navigate("/project")}>
+              ยกเลิก
+            </Button>
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              ยืนยัน
+            </Button>
+          </Form.Item>
+        </Flex>
       </Form>
     </div>
   );
