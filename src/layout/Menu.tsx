@@ -74,7 +74,7 @@ export const Menus = (props: MenusProps) => {
     //   label: <Link to="/dashboard">หน้ารวม</Link>,
     //   key: "dashboard",
     //   icon: <Icon.DashboardOutlined />,
-    //   role: ["organize_admin","branch_admin"],
+    //   role: ["organize_admin", "branch_admin"],
     // },
 
     {
@@ -84,17 +84,18 @@ export const Menus = (props: MenusProps) => {
       role: ["super_admin"],
     },
     {
-      label: <Link to="/branch">สาขา</Link>,
-      key: "branch",
-      icon: <Icon.BranchesOutlined />,
-      role: ["organize_admin"],
-    },
-    {
       label: <Link to="/analytic">วิเคราะห์</Link>,
       key: "analytic",
       icon: <Icon.PieChartOutlined />,
       role: ["super_admin", "organize_admin", "branch_admin"],
     },
+    {
+      label: <Link to="/branch">สาขา</Link>,
+      key: "branch",
+      icon: <Icon.BranchesOutlined />,
+      role: ["organize_admin"],
+    },
+
     {
       label: <Link to="/attendance">เข้างานออกงาน</Link>,
       key: "attendance",
@@ -129,7 +130,13 @@ export const Menus = (props: MenusProps) => {
       label: <Link to="/information">ตั้งค่า</Link>,
       key: "information",
       icon: <Icon.SettingOutlined />,
-      role: ["super_admin", "organize_admin", "branch_admin"],
+      role: ["super_admin", "branch_admin"],
+    },
+    {
+      label: <Link to="/orginformation">ตั้งค่า</Link>,
+      key: "orginformation",
+      icon: <Icon.SettingOutlined />,
+      role: ["organize_admin"],
     },
   ];
   return menus.filter((m) => m.role.includes(role));

@@ -1,7 +1,8 @@
 import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb, Col, Input, Pagination, Row, Button } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
+import { CreateButton } from "@src/components/shared/CreateButton";
 
 export const NotationIndex = () => {
   const navigate = useNavigate();
@@ -96,12 +97,9 @@ export const NotationIndex = () => {
           onSearch={onSearch}
           style={{ width: 200 }}
         />
-        <Button
-          type="primary"
-          onClick={() => navigate("/customers/createcustomers")}
-        >
-          เพิ่มข้อมูลลูกค้า
-        </Button>
+        <Link to={""}>
+          <CreateButton label={"เพิ่มเอกสาร"}></CreateButton>
+        </Link>
       </div>
       <TableComponent
         columns={columns}

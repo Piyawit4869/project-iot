@@ -12,7 +12,8 @@ import { routes as settingRoute } from "./setting";
 import { routes as analyticRoute } from "./analytic";
 import { routes as upgradeRoute } from "./upgrade";
 import { routes as organizeRoute } from "./organize";
-import { routes as informationRoute } from "./Informationsetting";
+import { routes as informationRoute } from "./branchsetting";
+import { routes as orginformationRoute } from "./organizesetting";
 
 export const routes = [
   {
@@ -36,4 +37,5 @@ export const routes = [
   ...organizeRoute,
   ...upgradeRoute,
   ...informationRoute,
+  ...orginformationRoute,
 ];

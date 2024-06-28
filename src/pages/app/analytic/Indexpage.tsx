@@ -1,131 +1,236 @@
-import React, { useState } from 'react';
-import { Input, Pagination, Button, Typography, Tag } from 'antd';
-import {  SearchOutlined, EyeOutlined, TagOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
-import { TableComponent } from '@src/components/shared/TableComponent';
-import { CreateButton } from '@src/components/shared/CreateButton';
+import React from "react";
+import { Card, Row, Col, Button, Progress } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { CSSProperties } from "react";
 
+// Define the interface for card data
+interface CardData {
+  title: string;
+  value: number;
+  unit: string;
+}
 
-const { Title } = Typography;
-
-const columns = [
-  {
-    title: 'ลำดับ',
-    dataIndex: 'nummer',
-    key: 'nummer',
-    sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
-  },
-  {
-    title: 'ชื่อ',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'สถานะ',
-    dataIndex: 'active',
-    key: 'active',
-    render: (active: boolean) => (active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>),
-  },
-  {
-    title: 'สาขาหลัก',
-    dataIndex: 'isMainBranch',
-    key: 'isMainBranch',
-  },
-  {
-    title: 'เบอร์โทร',
-    dataIndex: 'tel',
-    key: 'tel',
-  },
-  {
-    title: 'ลิ้งค์รูปภาพ',
-    dataIndex: 'imageUrl',
-    key: 'imageUrl',
-    render: (imageUrl: string) => <img src={imageUrl} alt="รูปภาพ" style={{ width: 100 }} />,
-  },
-  {
-    title: 'อีเมล',
-    dataIndex: 'email',
-    key: 'email',
-  },
-  {
-    title: 'เว็ปไซต์',
-    dataIndex: 'website',
-    key: 'website',
-  },
-  {
-    title: "รายละเอียดเพิ่มเติม",
-    key: "details",
-    dataIndex: "id",
-    render: (id: number) => (
-      <Link to={`/analytic/${id}`}>
-        <Button style={{ fontSize: "16px", width: "180px" }} type="primary" icon={<EyeOutlined />}>
-          ดูข้อมูล
-        </Button>
-      </Link>
-    ),
-  },
+// Initial card data
+const cardData: CardData[] = [
+  { title: "จำนวนลูกค้า", value: 538, unit: "" },
+  { title: "จำนวนพนักงาน", value: 70, unit: "คน" },
+  { title: "จำนวนสาขา", value: 24, unit: "" },
 ];
 
-export const AnalyticIndex: React.FC = () => {
-  const [searchValue, setSearchValue] = useState<string>('');
+// Define styles
+const cardStyle: CSSProperties = {
+  textAlign: "center",
+  borderRadius: "16px",
+  backgroundColor: "#f8f9fa",
+  minHeight: "170px",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+};
 
-  const onSearch = (value: string) => {
-    console.log('Search:', value);
-    // Implement search functionality here
-  };
+const titleStyle: CSSProperties = {
+  fontSize: "18px", // Adjusted font size
+  fontWeight: "bold",
+  color: "#333",
+  marginBottom: "10px", // Added margin for spacing
+};
 
-  return (
-    <div>
-      <Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
-       วิเคราะห์
-      </Title>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <TagOutlined style={{ marginBottom: -60, marginRight: 8 }} />
-        <span style={{ marginBottom: -60 }}>ค้นหาวิเคราะห์</span>
-      </div>
+const valueStyle: CSSProperties = {
+  fontSize: "48px", // Adjusted font size
+  fontWeight: "bold",
+  color: "#000",
+};
 
-      <div>
-        <Link to={"create"}>
-        <CreateButton label={"เพิ่มข้อมูลวิเคราะห์"}/>
-        </Link>
-      </div>
-      
+const addWidgetCardStyle: CSSProperties = {
+  textAlign: "center",
+  borderRadius: "16px",
+  border: "2px dashed #d9d9d9",
+  backgroundColor: "#f8f9fa",
+  minHeight: "170px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+};
 
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
-        <Input
-          addonBefore="ค้นหา"
-          allowClear
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          style={{ width: 304 }}
+const documentCardStyle: CSSProperties = {
+  borderRadius: "16px",
+  backgroundColor: "#f8f9fa",
+  padding: "10px",
+  marginBottom: "20px",
+};
+
+const documentItemStyle: CSSProperties = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  padding: "5px 0",
+};
+
+const statusStyle = {
+  draft: {
+    color: "#999",
+    backgroundColor: "#e0e0e0",
+    padding: "2px 8px",
+    borderRadius: "4px",
+    fontSize: "12px",
+  },
+  sent: {
+    color: "#fff",
+    backgroundColor: "#4caf50",
+    padding: "2px 8px",
+    borderRadius: "4px",
+    fontSize: "12px",
+  },
+  cancelled: {
+    color: "#fff",
+    backgroundColor: "#f44336",
+    padding: "2px 8px",
+    borderRadius: "4px",
+    fontSize: "12px",
+  },
+};
+
+const progressData = [
+  { label: "วันนี้", value: 60 },
+  { label: "เมื่อวาน", value: 80 },
+  { label: "27 มิ.ย.", value: 80 },
+];
+
+// Document status component
+const DocumentStatusCard: React.FC = () => (
+  <Card style={documentCardStyle} bodyStyle={{ padding: "10px" }}>
+    <div style={{ fontSize: "14px", fontWeight: "bold", marginBottom: "5px" }}>
+      งานเอกสาร
+    </div>
+    <div style={documentItemStyle}>
+      <div style={{ fontSize: "12px" }}>#INO000012</div>
+      <div style={statusStyle.draft}>แบบร่าง</div>
+      <div style={{ fontSize: "12px" }}>7 พ.ย. โดย สุภัค</div>
+    </div>
+    <div style={documentItemStyle}>
+      <div style={{ fontSize: "12px" }}>#QU000012</div>
+      <div style={statusStyle.sent}>ส่งแล้ว</div>
+      <div style={{ fontSize: "12px" }}>5 พ.ย. โดย สุภัค</div>
+    </div>
+    <div style={documentItemStyle}>
+      <div style={{ fontSize: "12px" }}>#IN000012</div>
+      <div style={statusStyle.cancelled}>ยกเลิก</div>
+      <div style={{ fontSize: "12px" }}>4 พ.ย. โดย ประพักตร์</div>
+    </div>
+  </Card>
+);
+
+// Attendance card component
+const AttendanceCard: React.FC = () => (
+  <Card style={documentCardStyle} bodyStyle={{ padding: "10px" }}>
+    <div style={{ fontSize: "14px", fontWeight: "bold", marginBottom: "5px" }}>
+      การเข้าออกงาน
+    </div>
+    {progressData.map((item, index) => (
+      <div key={index} style={documentItemStyle}>
+        <div style={{ fontSize: "12px" }}>{item.label}</div>
+        <Progress
+          percent={item.value}
+          status="active"
+          style={{ width: "60%" }}
         />
-         <Button
-          icon={<SearchOutlined />}
-          type="primary"
-          onClick={() => onSearch(searchValue)}
+        <div style={{ fontSize: "12px" }}>{item.value}%</div>
+      </div>
+    ))}
+    <div style={{ textAlign: "right", fontSize: "12px", color: "#999" }}>
+      ดูเพิ่มเติม
+    </div>
+  </Card>
+);
+
+// Task card component
+const TaskCard: React.FC = () => (
+  <Card
+    style={{ ...documentCardStyle, width: "500px" }}
+    bodyStyle={{ padding: "10px" }}
+  >
+    <div style={{ fontSize: "14px", fontWeight: "bold", marginBottom: "5px" }}>
+      การทำงาน
+    </div>
+    <div style={documentItemStyle}>
+      <div style={{ fontSize: "12px", fontWeight: "bold" }}>To Do</div>
+    </div>
+    <div style={documentItemStyle}>
+      <div style={{ fontSize: "12px", fontWeight: "bold" }}>In Progress</div>
+    </div>
+    <div style={documentItemStyle}>
+      <div style={{ fontSize: "12px", fontWeight: "bold" }}>In Review</div>
+      <div
+        style={{
+          backgroundColor: "#fff",
+          padding: "5px",
+          borderRadius: "4px",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <div
           style={{
-            backgroundColor: "#19142A",
-              borderColor: "#19142A",
+            backgroundColor: "#f44336",
+            color: "#fff",
+            padding: "2px 8px",
+            borderRadius: "4px",
+            marginRight: "5px",
           }}
         >
-          ค้นหา
-        </Button>
+          Bug
+        </div>
+        <div style={{ fontSize: "12px" }}>Fixed payment components</div>
+        <div style={{ fontSize: "12px", marginLeft: "auto" }}>27 มิ.ย.</div>
       </div>
+    </div>
+  </Card>
+);
 
-      <div style={{ boxShadow: "0 4px 8px rgba(0.25, 0.25, 0.25, 0.25)", borderRadius: "25px", overflow: "hidden", marginTop: 16 }}>
-        <TableComponent
-          columns={columns}
-          dataSource={[]}  // Replace with actual data source
-          pagination={false}
-          bordered
-        />
-      </div>
+// Main Analytic component
+const Analytic: React.FC = () => {
+  return (
+    <div style={{ backgroundColor: "#FFFFFF", padding: "20px" }}>
+      <div style={{ fontSize: 30, marginTop: "20px" }}>ภาพรวม</div>
+      <div style={{ fontSize: 20 }}>สวัสดีตอนเที่ยง!</div>
 
-      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
-        <Pagination defaultCurrent={1} total={50} />
-      </div>
+      <Row gutter={16} justify="space-between">
+        {cardData.map((data, index) => (
+          <Col key={index} xs={24} sm={12} md={6}>
+            <Card style={cardStyle} bodyStyle={{ padding: "20px" }}>
+              <div style={titleStyle}>{data.title}</div>
+              <div style={valueStyle}>
+                {data.value} {data.unit}
+              </div>
+            </Card>
+          </Col>
+        ))}
+
+        {/* New document status card */}
+        <Col xs={24} sm={12} md={6}>
+          <DocumentStatusCard />
+        </Col>
+
+        {/* New attendance card */}
+        <Col xs={24} sm={12} md={6}>
+          <AttendanceCard />
+        </Col>
+
+        {/* New task card */}
+        <Col xs={24} sm={12} md={6}>
+          <TaskCard />
+        </Col>
+
+        <Col xs={24} sm={12} md={6}>
+          <Card style={addWidgetCardStyle} bodyStyle={{ padding: "20px" }}>
+            <Button type="dashed" shape="circle" icon={<PlusOutlined />} />
+            <div style={{ marginTop: "10px", color: "#999" }}>เพิ่มวิดเจ็ต</div>
+          </Card>
+        </Col>
+      </Row>
     </div>
   );
 };
 
-export default AnalyticIndex;
+export default Analytic;
