@@ -1,5 +1,5 @@
-import { HomeOutlined } from "@ant-design/icons";
-import { Breadcrumb, Form, Button, Row, Col,  Flex } from "antd";
+
+import {  Form, Button, Row, Col,  Flex } from "antd";
 import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@src/forms/Dynamic";
 
@@ -82,19 +82,6 @@ export const ProjectCreate = () => {
 
   return (
     <div style={{ padding: "20px" }}>
-      <Col span={24}>
-        <Breadcrumb style={{ marginBottom: "20px" }}>
-          <Breadcrumb.Item onClick={() => navigate("/")}>
-            <HomeOutlined />
-          </Breadcrumb.Item>
-          <Breadcrumb.Item onClick={() => navigate("/project")}>
-            ข้อมูลโครงการ
-          </Breadcrumb.Item>
-          <Breadcrumb.Item onClick={() => navigate("/project/createproject")}>
-            เพิ่มข้อมูลโครงการ
-          </Breadcrumb.Item>
-        </Breadcrumb>
-      </Col>
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Row gutter={24}>
         <Col

@@ -44,3 +44,7 @@ export async function deleted(id?: any) {
     url: `/api/crud/users/delete/${id}`,
   });
 }
+
+export function getAll() {
+  throw new Error('Function not implemented.');
+}

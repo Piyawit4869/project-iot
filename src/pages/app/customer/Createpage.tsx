@@ -1,5 +1,5 @@
-import { HomeOutlined, TagFilled } from "@ant-design/icons";
-import { Breadcrumb, Form, Button, Row, Col, Flex } from "antd";
+import {   TagFilled } from "@ant-design/icons";
+import {   Form, Button, Row, Col, Flex } from "antd";
 import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@src/forms/Dynamic";  
 
@@ -186,19 +186,6 @@ export const CustomersCreate = () => {
 
   return (
     <div style={{ padding: "20px", fontFamily: 'Prompt, sans-serif' }}>
-      <Col span={24}>
-        <Breadcrumb style={{ marginBottom: "20px" }}>
-          <Breadcrumb.Item onClick={() => navigate("/")}>
-            <HomeOutlined />
-          </Breadcrumb.Item>
-          <Breadcrumb.Item onClick={() => navigate("/customers")}>
-          ข้อมูลลูกค้า
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-          เพิ่มข้อมูลลูกค้า
-          </Breadcrumb.Item>
-        </Breadcrumb>
-      </Col>
       <h1>เพิ่มข้อมูลลูกค้า</h1>
       <Form form={form} layout="vertical" onFinish={onFinish}>
       <Row gutter={24}>

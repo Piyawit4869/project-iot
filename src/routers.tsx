@@ -5,7 +5,7 @@ import { AppLayout } from "./layout";
 
 import { routes as appRoutes } from "./pages/app";
 import { routes as publicRoutes } from "./pages/public";
-import { routes as adminRoutes } from "./pages/admin";
+import { routes as adminRoutes } from "./pages/superadmin";
 import { Login, loginAction } from "./pages/Login";
 import { Receipt } from "./pages/Receipt";
 

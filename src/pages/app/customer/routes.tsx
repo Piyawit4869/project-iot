@@ -1,6 +1,6 @@
 import { CustomersCreate } from "./Createpage";
-import { CustomersIndex } from "./indexpage";
-import { CustomersSingle } from "./singlepage";
+import { CustomersIndex } from "./Indexpage";
+import { CustomersSingle } from "./Singlepage";
 
 export const routes = [
   {

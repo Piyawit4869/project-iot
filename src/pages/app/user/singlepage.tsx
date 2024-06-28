@@ -1,5 +1,5 @@
-import { HomeOutlined } from "@ant-design/icons";
-import { Breadcrumb, Form, Button, Row, Col, Timeline } from "antd";
+ 
+import {  Form, Button, Row, Col, Timeline } from "antd";
 import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@src/forms/Dynamic";
 import { useRef, useState } from "react";
@@ -158,19 +158,6 @@ export const UsersSingle = () => {
 
   return (
     <div style={{ padding: "20px" }} ref={containerRef}>
-      <Col span={24}>
-        <Breadcrumb style={{ marginBottom: "20px" }}>
-          <Breadcrumb.Item onClick={() => navigate("/")}>
-            <HomeOutlined />
-          </Breadcrumb.Item>
-          <Breadcrumb.Item onClick={() => navigate("/users")}>
-            ข้อมูลผู้ใช้
-          </Breadcrumb.Item>
-          <Breadcrumb.Item onClick={() => navigate("/users/single")}>
-            แก้ไขข้อมูลผู้ใช้
-          </Breadcrumb.Item>
-        </Breadcrumb>
-      </Col>
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Row gutter={24}>
           <Col

@@ -1,7 +1,7 @@
 import React from "react";
 import { Layout, Menu, Image, Typography, Row, Col, Card, Button } from "antd";
-import { useLocation } from "react-router-dom";
-import { CheckOutlined } from "@ant-design/icons"; // Import the icon you need
+import { Link, useLocation } from "react-router-dom";
+import { CheckOutlined } from '@ant-design/icons';
 import logo from "../assets/images/logoutotechV2.png";
 import sidebar from "../assets/images/abstract_sidebar.png";
 import { Menus } from ".";
@@ -92,7 +92,9 @@ export const Sidebar: React.FC = () => {
           }}
         >
           <Col>
-            <Image preview={false} src={logo} width={collapsed ? 40 : 70} />
+            <Link to="http://localhost:8080/">
+              <Image preview={false} src={logo} width={collapsed ? 40 : 70} />
+            </Link>
           </Col>
         </Row>
 
@@ -103,7 +105,7 @@ export const Sidebar: React.FC = () => {
             gutter={[12, 12]}
             style={{
               marginTop: "10px",
-              marginBottom: "-10px", // Adjust this value to move the text up
+              marginBottom: "-10px",
             }}
           >
             <Col>
@@ -171,44 +173,32 @@ export const Sidebar: React.FC = () => {
                 borderColor: "#19142A",
                 borderRadius: "5px",
               }}
+              className="upgrade-button"
             >
-              Upgrade
+              <Link to="/upgrade"> Upgrade </Link>
             </Button>
           </Card>
         )}
         <div
           style={{
             position: "absolute",
-            top: "122px", // Add some margin from the top
-            right: "-70px", // Adjust this value if needed
+            top: "60px",
+            right: "-70px",
             zIndex: 1000,
-            backgroundColor: "#f0f0f0",
-            borderRadius: "2px", // Rounded corners
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
-            width: "70px", // Adjust the width to fit your design
-            height: "40px", // Adjust the height to fit your design
+            backgroundColor: "#F3F3F3",
+            borderRadius: "2px",
+            width: "70px",
+            height: "40px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            cursor: "pointer",
+            cursor: "pointer"
           }}
           onClick={() => setCollapsed(!collapsed)}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
-              height: "100%",
-            }}
-          >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%" }}>
             <CheckOutlined style={{ fontSize: "16px", color: "#8C8C8C" }} />
-            <span
-              style={{ marginLeft: "10px", fontSize: "5px", color: "#8C8C8C" }}
-            >
-              ...
-            </span>
+            <span style={{ marginLeft: "10px", fontSize: "5px", color: "#8C8C8C" }}>...</span>
           </div>
         </div>
       </Sider>
@@ -220,7 +210,7 @@ export const Sidebar: React.FC = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            background: "rgba(40, 16, 72, 0.7)",
+            background: "#19142A",
             zIndex: 9,
           }}
           onClick={() => setCollapsed(true)}

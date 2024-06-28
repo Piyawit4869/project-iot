@@ -43,7 +43,7 @@ export const ThemeConfig = {
         colorBgContainer: "#192A5C",
       },
       Menu: {
-        itemSelectedBg: "#192A5C",
+        itemSelectedBg: "#19142A",
         itemSelectedColor: "#ffffff",
         itemColor: "grey",
         itemHoverColor: "lightGrey",
@@ -53,9 +53,10 @@ export const ThemeConfig = {
         headerBg: "#ffffff",
       },
       Table: {
-        headerBg: "rgb(28, 44, 92)",
+        headerBg: "#19142A",
         headerColor: "rgba(255, 255, 255, 0.88)",
-        headerSortHoverBg: "#00ff99",
+
+        headerSortHoverBg: "#A79DB4",
       },
     },
   },
