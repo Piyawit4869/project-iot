@@ -2,22 +2,16 @@ import React from "react";
 import { Card, Row, Col, Button, Progress } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { CSSProperties } from "react";
-
-// Define the interface for card data
 interface CardData {
   title: string;
   value: number;
   unit: string;
 }
-
-// Initial card data
 const cardData: CardData[] = [
   { title: "จำนวนลูกค้า", value: 538, unit: "" },
   { title: "จำนวนพนักงาน", value: 70, unit: "คน" },
   { title: "จำนวนสาขา", value: 24, unit: "" },
 ];
-
-// Define styles
 const cardStyle: CSSProperties = {
   textAlign: "center",
   borderRadius: "16px",
@@ -28,20 +22,17 @@ const cardStyle: CSSProperties = {
   justifyContent: "center",
   alignItems: "center",
 };
-
 const titleStyle: CSSProperties = {
-  fontSize: "18px", // Adjusted font size
+  fontSize: "18px",
   fontWeight: "bold",
   color: "#333",
-  marginBottom: "10px", // Added margin for spacing
+  marginBottom: "10px",
 };
-
 const valueStyle: CSSProperties = {
-  fontSize: "48px", // Adjusted font size
+  fontSize: "48px", 
   fontWeight: "bold",
   color: "#000",
 };
-
 const addWidgetCardStyle: CSSProperties = {
   textAlign: "center",
   borderRadius: "16px",
@@ -52,21 +43,18 @@ const addWidgetCardStyle: CSSProperties = {
   justifyContent: "center",
   alignItems: "center",
 };
-
 const documentCardStyle: CSSProperties = {
   borderRadius: "16px",
   backgroundColor: "#f8f9fa",
   padding: "10px",
   marginBottom: "20px",
 };
-
 const documentItemStyle: CSSProperties = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
   padding: "5px 0",
 };
-
 const statusStyle = {
   draft: {
     color: "#999",
@@ -90,14 +78,11 @@ const statusStyle = {
     fontSize: "12px",
   },
 };
-
 const progressData = [
   { label: "วันนี้", value: 60 },
   { label: "เมื่อวาน", value: 80 },
   { label: "27 มิ.ย.", value: 80 },
 ];
-
-// Document status component
 const DocumentStatusCard: React.FC = () => (
   <Card style={documentCardStyle} bodyStyle={{ padding: "10px" }}>
     <div style={{ fontSize: "14px", fontWeight: "bold", marginBottom: "5px" }}>
@@ -120,8 +105,6 @@ const DocumentStatusCard: React.FC = () => (
     </div>
   </Card>
 );
-
-// Attendance card component
 const AttendanceCard: React.FC = () => (
   <Card style={documentCardStyle} bodyStyle={{ padding: "10px" }}>
     <div style={{ fontSize: "14px", fontWeight: "bold", marginBottom: "5px" }}>
@@ -143,8 +126,6 @@ const AttendanceCard: React.FC = () => (
     </div>
   </Card>
 );
-
-// Task card component
 const TaskCard: React.FC = () => (
   <Card
     style={{ ...documentCardStyle, width: "500px" }}
@@ -187,8 +168,6 @@ const TaskCard: React.FC = () => (
     </div>
   </Card>
 );
-
-// Main Analytic component
 const Analytic: React.FC = () => {
   return (
     <div style={{ backgroundColor: "#FFFFFF", padding: "20px" }}>
@@ -206,22 +185,15 @@ const Analytic: React.FC = () => {
             </Card>
           </Col>
         ))}
-
-        {/* New document status card */}
         <Col xs={24} sm={12} md={6}>
           <DocumentStatusCard />
         </Col>
-
-        {/* New attendance card */}
         <Col xs={24} sm={12} md={6}>
           <AttendanceCard />
         </Col>
-
-        {/* New task card */}
         <Col xs={24} sm={12} md={6}>
           <TaskCard />
         </Col>
-
         <Col xs={24} sm={12} md={6}>
           <Card style={addWidgetCardStyle} bodyStyle={{ padding: "20px" }}>
             <Button type="dashed" shape="circle" icon={<PlusOutlined />} />
@@ -232,5 +204,4 @@ const Analytic: React.FC = () => {
     </div>
   );
 };
-
 export default Analytic;

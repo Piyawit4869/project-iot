@@ -1,6 +1,7 @@
-import { OrganizeCreate, organizeCreateAction } from "./Createpage";
-import { OrganizeIndex, organizeLoader } from "./Indexpage";
+import { OrganizeCreate, organizeCreateAction} from "./Createpage";
+import { OrganizeIndex  } from "./Indexpage";
 import {OrganizeSingle, organizeSingleAction, organizeSingleLoader} from "./Singlepage";
+import { organizeLoader } from "./loader";
 
 
 export const routes = [

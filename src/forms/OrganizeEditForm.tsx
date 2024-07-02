@@ -1,6 +1,5 @@
 import { DeleteOutlined, TagFilled } from "@ant-design/icons";
-import { Modal } from "antd";
-import { Button, Col, Form, Row } from "antd";
+import { Modal, Button, Col, Form, Row } from "antd";
 import { useSubmit } from "react-router-dom";
 import dayjs from "dayjs";
 import React from "react";
@@ -23,7 +22,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
   };
 
   const onFinish = (values: any) => {
-    const payload = Object.assign(values);
+    const payload = { ...values };
     payload.businessRegister = formatDate(payload.businessRegister);
     payload.active = true;
     payload.addressData = [];
@@ -59,13 +58,12 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
 
   React.useEffect(() => {
     let businessRegister = null;
-    if (initialValues.businessRegister) {
-      const combinedDateTime = initialValues.businessRegister;
-      businessRegister = dayjs(combinedDateTime);
+    if (initialValues && initialValues.businessRegister) {
+      businessRegister = dayjs(initialValues.businessRegister);
     }
     form.setFieldsValue({
       ...initialValues,
-      businessRegister: businessRegister,
+      businessRegister,
     });
   }, [form, initialValues]);
 
@@ -263,7 +261,6 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
         { value: "new", label: "ข้อมูลใหม่" },
       ],
     },
-
     {
       name: ["address", "address"],
       label: "ที่อยู่",

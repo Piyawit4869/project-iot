@@ -92,7 +92,7 @@ export const Sidebar: React.FC = () => {
           }}
         >
           <Col>
-            <Link to="http://localhost:8080/">
+            <Link to="http://localhost:8080/analytic">
               <Image preview={false} src={logo} width={collapsed ? 40 : 70} />
             </Link>
           </Col>
