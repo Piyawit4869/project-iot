@@ -1,26 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Input, Pagination, Button, Tag, Typography, Image } from "antd";
 import { SearchOutlined, TagOutlined, EyeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
-
 import { CreateButton } from "@src/components/shared/CreateButton";
-
+import { branchData } from "./branchData";
 const { Title } = Typography;
-
 export const BranchIndex: React.FC = () => {
+  const [data, setData] = useState(branchData);
+  const [searchValue, setSearchValue] = useState<string>("");
+  useEffect(() => {
+    const fetchData = async () => {
+      try { 
+        setData(branchData); 
+      } catch (error) {
+        console.error("Failed to fetch branch data", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   const columns = [
     {
       title: "ลำดับ",
       dataIndex: "nummer",
       key: "nummer",
-      sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
+      sorter: (a: { nummer: number }, b: { nummer: number }) => a.nummer - b.nummer,
     },
     {
       title: "โลโก้",
       dataIndex: "imageUrl",
       key: "imageUrl",
-      render: (imageUrl: any) => {
+      render: (imageUrl: string) => {
         return <Image width={200} src={imageUrl} />;
       },
     },
@@ -28,17 +39,6 @@ export const BranchIndex: React.FC = () => {
       title: "ชื่อโปรเจค",
       dataIndex: "name",
       key: "name",
-    },
-    {
-      title: "active",
-      dataIndex: "active",
-      key: "active",
-      render: (active: any) =>
-        active ? (
-          <Tag color="success">พร้อมใช้งาน</Tag>
-        ) : (
-          <Tag color="error">ไม่พร้อมใช้งาน</Tag>
-        ),
     },
     {
       title: "สาขาหลัก",
@@ -61,29 +61,28 @@ export const BranchIndex: React.FC = () => {
       key: "website",
     },
     {
+      title: "active",
+      dataIndex: "active",
+      key: "active",
+      render: (active: boolean) =>
+        active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>,
+    },
+    {
       title: "รายละเอียดเพิ่มเติม",
       key: "details",
       dataIndex: "id",
       render: (id: number) => (
         <Link to={`/branch/singlebranch/${id}`}>
-          <Button
-            style={{ fontSize: "16px", width: "180px" }}
-            type="primary"
-            icon={<EyeOutlined />}
-          >
+          <Button style={{ fontSize: "16px", width: "180px" }} type="primary" icon={<EyeOutlined />}>
             ดูข้อมูล
           </Button>
         </Link>
       ),
     },
   ];
-
-  const [searchValue, setSearchValue] = React.useState<string>("");
-
   const onSearch = (value: string) => {
     console.log(value);
   };
-
   return (
     <div>
       <Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
@@ -93,20 +92,12 @@ export const BranchIndex: React.FC = () => {
         <TagOutlined style={{ marginBottom: -60, marginRight: 8 }} />
         <span style={{ marginBottom: -60 }}>ค้นหาสาขา</span>
       </div>
-
       <div>
         <Link to={"create"}>
           <CreateButton label={"เพิ่มข้อมูลสาขา"} />
         </Link>
       </div>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          marginTop: "16px",
-        }}
-      >
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
         <Input
           addonBefore="ค้นหา"
           allowClear
@@ -126,7 +117,6 @@ export const BranchIndex: React.FC = () => {
           ค้นหา
         </Button>
       </div>
-
       <div
         style={{
           boxShadow: "0 4px 8px rgba(0.25, 0.25, 0.25, 0.25)",
@@ -135,22 +125,10 @@ export const BranchIndex: React.FC = () => {
           marginTop: 16,
         }}
       >
-        <TableComponent
-          columns={columns}
-          pagination={false}
-          bordered
-          dataSource={undefined}
-        />
+        <TableComponent columns={columns} pagination={false} bordered dataSource={data} />
       </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          marginTop: "20px",
-        }}
-      >
-        <Pagination defaultCurrent={1} total={50} />
+      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
+        <Pagination defaultCurrent={1} total={data.length} />
       </div>
     </div>
   );

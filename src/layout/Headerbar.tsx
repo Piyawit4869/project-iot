@@ -1,29 +1,36 @@
-import React, { useState } from "react";
+import React from "react";
 import { LogoutOutlined, SettingOutlined, UserOutlined, HomeOutlined } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
-import { Breadcrumb, Col, Row, Segmented } from "antd";
+import { Breadcrumb, Col, Dropdown,  MenuProps, Row, Space } from "antd";
 import { useTranslation } from "react-i18next";
 
 export const Headerbar: React.FC = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation();
-  const { i18n } = useTranslation();
   const { t } = useTranslation();
 
-  const handleDropdownToggle = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
 
   const me = JSON.parse(localStorage.getItem("me") as any);
+  
 
-  const changeLanguageHandler = (lng: string | number) => {
-    i18n.changeLanguage(`${lng}`.toLowerCase());
-  };
-
+  const items: MenuProps['items'] = [
+    {
+      label:<Link to="/profile"><UserOutlined /> {t("Profile")}</Link>,
+      key: '0',
+    },
+    {
+      label: <Link to="/setting"><SettingOutlined /> {t("Settings")}</Link>,
+      key: '1',
+    },
+    
+    {
+      label: <Link to="/login"><LogoutOutlined /> {t("Logout")}</Link>,
+      key: '2',
+    },
+  ];
   const generateBreadcrumbs = (path: string) => {
     const pathnames = path.split("/").filter((x) => x);
-    return (
 
+    return (
       <Breadcrumb style={styles.breadcrumb}>
         <Breadcrumb.Item>
           <Link to="/">
@@ -33,11 +40,10 @@ export const Headerbar: React.FC = () => {
         {pathnames.map((name, index) => {
           const routeTo = `/${pathnames.slice(0, index + 1).join("/")}`;
           const isLast = index === pathnames.length - 1;
-          console.log("is pathnames",name)
+          console.log("is pathnames", name);
           return (
             <Breadcrumb.Item key={name}>
               {isLast ? t(name) : <Link to={routeTo}>{t(name)}</Link>}
-              
             </Breadcrumb.Item>
           );
         })}
@@ -47,42 +53,28 @@ export const Headerbar: React.FC = () => {
   return (
     <div style={styles.header}>
       {generateBreadcrumbs(location.pathname)}
-      <Row gutter={[12,12]}
-      align="middle"><Col> <div style={styles.menu}>
-        <div style={styles.navRight}>
-          <div style={styles.dropdown}>
-            <span onClick={handleDropdownToggle} style={styles.dropdownToggle}>
-              {me.role}
-              <UserOutlined style={styles.icon} />
-            </span>
-            {isDropdownOpen && (
-              <div style={styles.dropdownMenu}>
-                <div style={styles.dropdownItem}>
-                  <Link to="/profile"><UserOutlined /> โปรไฟล์</Link>
-                </div>
-                <div style={styles.dropdownItem}>
-                 <Link to="/setting"><SettingOutlined /> การตั้งค่า</Link>
-                 </div>
-                <div style={styles.dropdownItem}>
-                  <Link to="/login"><LogoutOutlined /> ลงชื่อออก</Link>
-                </div>
+      <Row gutter={[12, 12]} align="middle">
+        <Col>
+          <div style={styles.menu}>
+            <div style={styles.navRight}>
+                 <Dropdown menu={{ items }} trigger={['click']}>
+               <a onClick={(e) => e.preventDefault()}>
+              <Space>
+              <div style={styles.userInfo}>
+                    <div style={styles.email}>{me.email}</div>
+                    <div style={styles.role}>{me.role}</div>
+                  </div>
+                  <img src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" alt="User Icon" style={styles.icon} />
+               </Space>
+               </a>
+               </Dropdown>
               </div>
-            )}
-          </div>
-        </div>
-      </div></Col>
-      <Col><Segmented
-        defaultValue="EN"
-        options={["EN", "TH"]}
-        size="small"
-        onChange={changeLanguageHandler}
-      /></Col></Row>
-     
-      
+            </div>
+        </Col>
+      </Row>
     </div>
   );
 };
-
 const styles: Record<string, React.CSSProperties> = {
   header: {
     display: "flex",
@@ -90,6 +82,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     padding: "10px 20px",
     height: "50px",
+    color: "#19142A",
   },
   menu: {
     display: "flex",
@@ -97,14 +90,17 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     padding: "10px 0px",
     height: "50px",
+    color: "#19142A",
   },
   navRight: {
     display: "flex",
     alignItems: "center",
+    color: "#19142A",
   },
   dropdown: {
     position: "relative",
     display: "inline-block",
+    color: "#19142A",
   },
   dropdownToggle: {
     display: "flex",
@@ -113,9 +109,28 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: "4px",
     padding: "5px 10px",
     cursor: "pointer",
+    color: "#19142A",
+  },
+  userInfo: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    marginRight: "8px",
+    textAlign: "right",
+    color: "#19142A",
+  },
+  email: {
+    marginBottom: "4px",
+    color: "#19142A",
+  },
+  role: {
+    width: "100%",
+    color: "#AAA7AD",
   },
   icon: {
     marginLeft: "8px",
+    width: "16px",
+    height: "16px",
   },
   dropdownMenu: {
     position: "absolute",
@@ -130,9 +145,11 @@ const styles: Record<string, React.CSSProperties> = {
   dropdownItem: {
     padding: "10px 20px",
     cursor: "pointer",
+    color: "#19142A",
   },
   breadcrumb: {
     margin: "16px 0",
+    color: "#19142A",
   },
   dropdownItemHover: {
     // backgroundColor: "#f1f1f1",

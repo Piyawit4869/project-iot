@@ -4,7 +4,7 @@ import { SearchOutlined, EyeOutlined, TagOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
-
+import { customerData } from './customerData'; // Import the customer data
 
 const { Title } = Typography;
 
@@ -13,7 +13,13 @@ const columns = [
     title: 'ลำดับ',
     dataIndex: 'nummer',
     key: 'nummer',
-    sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
+    sorter: (a: { nummer: number }, b: { nummer: number }) => a.nummer - b.nummer,
+  },
+  {
+    title: 'รูปภาพ',
+    dataIndex: 'imageUrl',
+    key: 'imageUrl',
+    render: (imageUrl: string) => <Image width={100} src={imageUrl} alt="รูปภาพ" />,
   },
   {
     title: 'ชื่อลูกค้า',
@@ -30,12 +36,7 @@ const columns = [
     dataIndex: 'tel',
     key: 'tel',
   },
-  {
-    title: 'ลิ้งค์รูปภาพ',
-    dataIndex: 'imageUrl',
-    key: 'imageUrl',
-    render: (imageUrl: string) => <Image width={100} src={imageUrl} alt="รูปภาพ" />,
-  },
+  
   {
     title: 'อีเมล',
     dataIndex: 'email',
@@ -83,9 +84,9 @@ export const CustomersIndex: React.FC = () => {
         <TagOutlined style={{ marginBottom: -60, marginRight: 8 }} />
         <span style={{ marginBottom: -60 }}>ค้นหาลูกค้า</span>
       </div>
-        <div>
+      <div>
         <Link to={"create"}>
-        <CreateButton label={"เพิ่มข้อมูลลูกค้า"}/>
+          <CreateButton label={"เพิ่มข้อมูลลูกค้า"}/>
         </Link>
       </div>
 
@@ -113,14 +114,14 @@ export const CustomersIndex: React.FC = () => {
       <div style={{ boxShadow: "0 4px 8px rgba(0.25, 0.25, 0.25, 0.25)", borderRadius: "25px", overflow: "hidden", marginTop: 16 }}>
         <TableComponent
           columns={columns}
-          dataSource={[]}  // Replace with actual data source
+          dataSource={customerData}  // Use the imported customer data
           pagination={false}
           bordered
         />
       </div>
 
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
-        <Pagination defaultCurrent={1} total={50} />
+        <Pagination defaultCurrent={1} total={customerData.length} />
       </div>
     </div>
   );

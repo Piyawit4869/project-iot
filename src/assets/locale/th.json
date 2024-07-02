@@ -1,5 +1,17 @@
 {
   "translation": {
-    "user": "ผู้ใช้งาน"
+    "user": "ผู้ใช้งาน",
+    "organize": "องค์กร",
+    "analytic": "วิเคราะห์",
+    "attendance": "เข้างานออกงาน",
+    "notation": "เอกสาร",
+    "project": "โครงการ",
+    "information": "สารสนเทศ",
+    "customers": "ลูกค้า",
+    "branch": "สาขา",
+    "orginformation": "ข้อมูลองค์กร",
+    "create": "สร้าง",
+    "setting": "ตั้งค่า"
+   
   }
 }

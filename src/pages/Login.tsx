@@ -27,7 +27,7 @@ export async function loginAction({ request }: any) {
           description: "You have successfully logged in",
         });
 
-        return redirect("/");
+        return redirect("/analytic");
       } catch (error) {
         notification.error({
           message: "Login Failed",
