@@ -48,6 +48,14 @@ export const ProjectCreate = () => {
       require: true,
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return Promise.reject("");
+        }
+        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+          return Promise.reject("อีเมลล์ติดต่อไม่ถูกต้อง");
+        }
+      }
     },
     {
       name: "tel",
@@ -55,6 +63,15 @@ export const ProjectCreate = () => {
       placeholder: "กรอกเบอร์โทรติดต่อ",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
+      maxLength: 10,
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return undefined;
+        }
+        if (!/^(06|08)[0-9]{8}$/.test(value)) {
+          return Promise.reject("เบอร์โทรศัพท์ติดต่อไม่ถูกต้อง");
+        }
+      }
     },
     {
       name: "imageUrl",
@@ -70,6 +87,14 @@ export const ProjectCreate = () => {
       placeholder: "กรอกลิ้งค์เว็บไซต์",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return undefined;
+        }
+        if (!/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(value)) {
+          return Promise.reject("เว็บไซต์สำนักงานไม่ถูกต้อง");
+        }
+      }
     },
   ];
 
@@ -90,10 +115,10 @@ export const ProjectCreate = () => {
             xl={{ span: 12, order: 1 }}
           >
             <Row gutter={24}>
-              {renderForm.map((item: any) => {
+              {renderForm.map((item: any, index: number) => {
                 return (
                   <DynamicForm
-                    key={item.name}
+                    key={index}
                     name={item.name}
                     label={item.label}
                     placeholder={item.placeholder}
@@ -106,6 +131,8 @@ export const ProjectCreate = () => {
                     require={item.require}
                     disabled={false}
                     checked={false}
+                    maxLength={item.maxLength}
+                    validator={item.validator}
                   />
                 );
               })}

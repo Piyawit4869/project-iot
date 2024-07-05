@@ -63,6 +63,15 @@ const renderForm = [
     type: "TextboxFormField",
     require: true,
     message: "กรุณากรอกข้อมูลเลขทะเบียน 13 หลัก ( เช่น 0123456789101 ) ",
+    maxLength: 13,
+    validator: (_: any, value: any) => {
+      if (!value) {
+        return Promise.reject("");
+      }
+      if (!/^\d{13}$/.test(value)) {
+        return Promise.reject("เลขทะเบียน 13 หลักไม่ถูกต้อง");
+      }
+    }
   },
   {
     name: "businessName",
@@ -118,6 +127,11 @@ const renderForm = [
     placeholder: "อีเมลล์สำนักงาน",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    validator: (_: any, value: any) => {
+      if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+        return Promise.reject("อีเมลล์สำนักงานไม่ถูกต้อง");
+      }
+    }
   },
   {
     name: "websiteUrl",
@@ -125,6 +139,11 @@ const renderForm = [
     placeholder: "เว็บไซต์สำนักงาน",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    validator: (_: any, value: any) => {
+      if (!/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(value)) {
+        return Promise.reject("เว็บไซต์สำนักงานไม่ถูกต้อง");
+      }
+    }
   },
   {
     name: "contactPhone",
@@ -134,6 +153,16 @@ const renderForm = [
     type: "TextboxFormField",
     require: true,
     message: "กรุณากรอกเบอร์โทรศัพท์ติดต่อ  ",
+    maxLength: 10,
+    validator: (_: any, value: any) => {
+      if (value === undefined || value === "") {
+        return Promise.reject("");
+      }
+      // if (!/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]{10}$/.test(value)) {
+      if (!/^(06|08)[0-9]{8}$/.test(value)) {
+        return Promise.reject("เบอร์โทรศัพท์ติดต่อไม่ถูกต้อง");
+      }
+    }
   },
   {
     name: "contactEmail",
@@ -143,6 +172,14 @@ const renderForm = [
     type: "TextboxFormField",
     require: true,
     message: "กรุณากรอกอีเมลล์ติดต่อ  ",
+    validator: (_: any, value: any) => {
+      if (value === undefined || value === "") {
+        return Promise.reject("");
+      }
+      if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+        return Promise.reject("อีเมลล์ติดต่อไม่ถูกต้อง");
+      }
+    }
   },
   {
     icon: <TagFilled />,
@@ -214,6 +251,15 @@ const renderForm = [
     type: "TextboxFormField",
     require: true,
     message: "กรุณากรอกรหัสไปรษณีย์",
+    maxLength: 5,
+    validator: (_: any, value: any) => {
+      if (value === undefined || value === "") {
+        return Promise.reject("");
+      }
+      if (!/^[0-9]{5}$/i.test(value)) {
+        return Promise.reject("รหัสไปรษณีย์ไม่ถูกต้อง");
+      }
+    },
   },
   {
     icon: <TagFilled />,
@@ -322,6 +368,15 @@ const renderForm = [
     placeholder: "เลขทะเบียน 13 หลัก",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
+    maxLength: 13,
+    validator: (_: any, value: any) => {
+      if (!value) {
+        return undefined;
+      }
+      if (!/^\d{13}$/.test(value)) {
+        return Promise.reject("เลขทะเบียน 13 หลักไม่ถูกต้อง");
+      }
+    }
   },
   {
     name: ["branch", "businessName"],
@@ -364,6 +419,15 @@ const renderForm = [
     placeholder: "เบอร์โทรศัพท์",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    maxLength: 10,
+    validator: (_: any, value: any) => {
+      if (value === undefined || value === "") {
+        return undefined;
+      }
+      if (!/^(06|08)[0-9]{8}$/.test(value)) {
+        return Promise.reject("เบอร์โทรศัพท์ติดต่อไม่ถูกต้อง");
+      }
+    }
   },
   {
     name: ["branch", "email"],
@@ -378,6 +442,14 @@ const renderForm = [
     placeholder: "เว็บไซต์",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    validator: (_: any, value: any) => {
+      if (value === undefined || value === "") {
+        return undefined;
+      }
+      if (!/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(value)) {
+        return Promise.reject("เว็บไซต์สำนักงานไม่ถูกต้อง");
+      }
+    }
   },
   {
     name: ["branch", "address", "address"],
@@ -443,6 +515,15 @@ const renderForm = [
     type: "TextboxFormField",
     require: true,
     message: "กรุณากรอกรหัสไปรษณีย์",
+    maxLength: 5,
+    validator: (_: any, value: any) => {
+      if (value === undefined || value === "") {
+        return undefined;
+      }
+      if (!/^[0-9]{5}$/i.test(value)) {
+        return Promise.reject("รหัสไปรษณีย์ไม่ถูกต้อง");
+      }
+    },
   },
   {
     name: ["branch", "address", "active"],
@@ -463,7 +544,15 @@ const renderForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
     require: true,
-    message: "กรุณาอีเมลล์",
+    message: "กรุณากรอกอีเมลล์",
+    validator: (_: any, value: any) => {
+      if (value === undefined || value === "") {
+        return Promise.reject("");
+      }
+      if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+        return Promise.reject("อีเมลล์ติดต่อไม่ถูกต้อง");
+      }
+    }
   },
   {
     name: "userName",
@@ -604,10 +693,10 @@ export const OrganizeCreate: React.FC = () => {
         <Row gutter={20}>
           <Col span={24} style={{ textAlign: "left", marginBottom: 16 }}></Col>
 
-          {renderForm.map((item: any) => {
+          {renderForm.map((item: any, index: number) => {
             return (
               <DynamicForm
-                key={item.value}
+                key={index}
                 name={item.name}
                 label={item.label}
                 placeholder={item.placeholder}
@@ -620,6 +709,8 @@ export const OrganizeCreate: React.FC = () => {
                 option={item.options}
                 disabled={item.disabled}
                 checked={item.checked}
+                maxLength={item.maxLength}
+                validator={item.validator}
               />
             );
           })}

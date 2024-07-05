@@ -45,6 +45,14 @@ const renderForm = [
     require: true,
     col: { xs: 24, md: 12 },
     type: "TextboxFormField",
+    validator: (_: any, value: any) => {
+      if (value === undefined || value === "") {
+        return Promise.reject("");
+      }
+      if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+        return Promise.reject("อีเมลล์ติดต่อไม่ถูกต้อง");
+      }
+    }
   },
   {
     name: "tel",
@@ -52,6 +60,15 @@ const renderForm = [
     placeholder: "tel",
     col: { xs: 24, md: 12 },
     type: "TextboxFormField",
+    maxLength: 10,
+    validator: (_: any, value: any) => {
+      if (value === undefined || value === "") {
+        return undefined;
+      }
+      if (!/^(06|08)[0-9]{8}$/.test(value)) {
+        return Promise.reject("เบอร์โทรศัพท์ติดต่อไม่ถูกต้อง");
+      }
+    }
   },
   {
     name: "imageUrl",
@@ -66,33 +83,20 @@ const renderForm = [
     placeholder: "website",
     col: { xs: 24, md: 12 },
     type: "TextboxFormField",
+    validator: (_: any, value: any) => {
+      if (value === undefined || value === "") {
+        return undefined;
+      }
+      if (!/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(value)) {
+        return Promise.reject("เว็บไซต์สำนักงานไม่ถูกต้อง");
+      }
+    }
   },
-];
-
-const timelineItems = [
-  "Create a services site 2015-09-01",
-  "Solve initial network problems 2015-09-01",
-  "Technical testing 2015-09-01",
-  "Network problems being solved 2015-09-01",
-  "Network problems being solved 2015-09-01",
-  "Network problems being solved 2015-09-01",
-  "Network problems being solved 2015-09-01",
-  "Network problems being solved 2015-09-01",
-  "Network problems being solved 2015-09-01",
-  "Network problems being solved 2015-09-01",
-  "Network problems being solved 2015-09-01",
-  "Network problems being solved 2015-09-01",
-  "Network problems being solved 2015-09-01",
-  "Network problems being solved 2015-09-01",
-  "Network problems being solved 2015-09-01",
-  "Network problems being solved 2015-09-01",
-  "Network problems being solved 2015-09-01",
 ];
 
 export const ProjectSingle: React.FC = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const [showMore, setShowMore] = useState(false);
 
   const onFinish = (values: any) => {
     console.log("Form Submitted", values);
@@ -106,42 +110,17 @@ export const ProjectSingle: React.FC = () => {
         <Row gutter={24}>
           <Col xs={{ span: 24, order: 2 }} lg={{ span: 12, order: 1 }}>
             <Row gutter={24}>
-              {renderForm.map((item: any) => (
+              {renderForm.map((item: any, index: number) => (
                 <DynamicForm
-                  key={item.name}
+                  key={index}
                   {...item}
                   disabled={false}
                   checked={false}
+                  maxLength={item.maxLength}
+                  validator={item.validator}
                 />
               ))}
             </Row>
-          </Col>
-          <Col xs={{ span: 24, order: 2 }} lg={{ span: 12, order: 1 }}>
-            <div style={{ height: "100px" }}>
-              <h1>กิจกรรม</h1>
-            </div>
-            <div
-              style={{
-                maxHeight: "400px",
-                overflowY: "auto",
-                padding: "40px",
-                border: "1px solid #d9d9d9",
-                borderRadius: "4px",
-              }}
-            >
-              <Timeline>
-                {(showMore ? timelineItems : timelineItems.slice(0, 5)).map(
-                  (item, index) => (
-                    <Timeline.Item key={index}>{item}</Timeline.Item>
-                  )
-                )}
-              </Timeline>
-              {timelineItems.length > 5 && (
-                <Button type="link" onClick={() => setShowMore(!showMore)}>
-                  {showMore ? "See Less" : "See More"}
-                </Button>
-              )}
-            </div>
           </Col>
         </Row>
         <Row gutter={24} style={{ marginTop: "20px" }}>

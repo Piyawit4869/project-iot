@@ -25,6 +25,8 @@ interface DynamicFormProps {
   require: boolean;
   disabled: boolean;
   checked: boolean;
+  maxLength?: number;
+  validator?: any;
 }
 
 export const DynamicForm: React.FC<DynamicFormProps> = (
@@ -46,11 +48,15 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             label={props.label}
             type={props.type}
             disabled={props.disabled}
+            maxLength={props.maxLength}
             rule={[
               {
                 required: props.require ? true : false,
                 message: props.ruleMessage,
               },
+              {
+                validator: props.validator,
+              }
             ]}
           />
         </Col>
