@@ -94,6 +94,15 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       type: "TextboxFormField",
       require: true,
       message: "กรุณากรอกข้อมูลเลขทะเบียน 13 หลัก ( เช่น 0123456789101 ) ",
+      maxLength: 13,
+      validator: (_: any, value: any) => {
+        if (!value) {
+          return Promise.reject("");
+        }
+        if (!/^\d{13}$/.test(value)) {
+          return Promise.reject("เลขทะเบียน 13 หลักไม่ถูกต้อง");
+        }
+      }
     },
     {
       name: "businessName",
@@ -142,6 +151,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       type: "TextboxFormField",
       require: true,
       message: "กรุณากรอกเบอร์โทรศัพท์สำนักงาน  ",
+      maxLength: 10,
     },
     {
       name: "businessEmail",
@@ -149,6 +159,11 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       placeholder: "อีเมลล์สำนักงาน",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
       type: "TextboxFormField",
+      validator: (_: any, value: any) => {
+        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+          return Promise.reject("อีเมลล์สำนักงานไม่ถูกต้อง");
+        }
+      }
     },
     {
       name: "websiteUrl",
@@ -156,6 +171,11 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       placeholder: "เว็บไซต์สำนักงาน",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
       type: "TextboxFormField",
+      validator: (_: any, value: any) => {
+        if (!/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(value)) {
+          return Promise.reject("เว็บไซต์สำนักงานไม่ถูกต้อง");
+        }
+      }
     },
     {
       name: "contactPhone",
@@ -165,6 +185,15 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       type: "TextboxFormField",
       require: true,
       message: "กรุณากรอกเบอร์โทรศัพท์ติดต่อ  ",
+      maxLength: 10,
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return Promise.reject("");
+        }
+        if (!/^(06|08)[0-9]{8}$/.test(value)) {
+          return Promise.reject("เบอร์โทรศัพท์ติดต่อไม่ถูกต้อง");
+        }
+      }
     },
     {
       name: "contactEmail",
@@ -245,6 +274,15 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       type: "TextboxFormField",
       require: true,
       message: "กรุณากรอกรหัสไปรษณีย์",
+      maxLength: 5,
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return undefined;
+        }
+        if (!/^[0-9]{5}$/i.test(value)) {
+          return Promise.reject("รหัสไปรษณีย์ไม่ถูกต้อง");
+        }
+      },
     },
     {
       icon: <TagFilled />,
@@ -321,6 +359,15 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       placeholder: "รหัสไปรษณีย์",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
       type: "TextboxFormField",
+      maxLength: 5,
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return undefined;
+        }
+        if (!/^[0-9]{5}$/i.test(value)) {
+          return Promise.reject("รหัสไปรษณีย์ไม่ถูกต้อง");
+        }
+      },
     },
     {
       name: ["address", "active"],
@@ -373,7 +420,9 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
                 require={item.require}
                 disabled={false}
                 checked={false}
-              />
+                maxLength={item.maxLength}
+                validator={item.validator}
+                />
             );
           })}
         </Row>
