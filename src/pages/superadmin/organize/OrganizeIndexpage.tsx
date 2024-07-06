@@ -3,7 +3,7 @@ import * as API from "@src/apis";
 import { TagOutlined, EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { Typography, Input, Button, Tag, Pagination, Image } from "antd";
 import { SearchProps } from "antd/es/input";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useNavigation } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import dayjs from "dayjs";
 import { CreateButton } from "@src/components/shared/CreateButton";
@@ -22,9 +22,17 @@ export async function organizeLoader() {
 }
 
 export const OrganizeIndexpage: React.FC = () => {
-
   const me = JSON.parse(localStorage.getItem("me") as any);
   const navigate = useNavigate();
+
+  const [loading, setLoading] = React.useState(true);
+  const { state } = useNavigation();
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, []);
 
   React.useEffect(() => {
     if (me.role === "user" || me.role === "admin") {
@@ -186,6 +194,7 @@ export const OrganizeIndexpage: React.FC = () => {
         }}
       >
         <TableComponent
+          loading={loading || state === "loading" || state === "submitting"}
           columns={columns}
           dataSource={organizeData.items}
           pagination={false}

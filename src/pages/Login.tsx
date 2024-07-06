@@ -8,7 +8,7 @@ import {
 // import React from "react";
 
 import * as API from "@src/apis";
-import { json, redirect, useSubmit } from "react-router-dom";
+import { json, redirect, useNavigation, useSubmit } from "react-router-dom";
 // import axios from "axios";
 
 //here Action example
@@ -45,7 +45,7 @@ export async function loginAction({ request }: any) {
 export const Login = () => {
   // const { state } = useNavigation();
   const submit = useSubmit();
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
   const [form] = Form.useForm();
   const onFinish = async (values: any) => {
     const payload = { ...values };
@@ -106,6 +106,14 @@ export const Login = () => {
           <Button
             type="primary"
             htmlType="submit"
+            loading={
+              navigation.state === "loading" ||
+              navigation.state === "submitting"
+            }
+            disabled={
+              navigation.state === "loading" ||
+              navigation.state === "submitting"
+            }
             style={{
               height: "50px",
               fontSize: "18px",

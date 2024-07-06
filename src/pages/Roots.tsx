@@ -1,13 +1,7 @@
 import * as API from "@src/apis";
-import {
-  Outlet,
-  redirect,
-  useLoaderData,
-  useNavigation,
-} from "react-router-dom";
+import { Outlet, redirect, useLoaderData } from "react-router-dom";
 
 import { AuthContext } from "@contexts/AuthContext";
-import { Spin } from "antd";
 export async function RootLoader() {
   try {
     const me = await API.user.getMe();
@@ -21,14 +15,11 @@ export async function RootLoader() {
 }
 
 export const Root = () => {
-  const { state } = useNavigation();
   const { me } = useLoaderData() as any;
 
   return (
     <AuthContext.Provider value={{ user: me }}>
-      <Spin spinning={state === "loading" || state === "submitting"}>
-        <Outlet />
-      </Spin>
+      <Outlet />
     </AuthContext.Provider>
   );
 };
