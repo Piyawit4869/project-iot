@@ -1,11 +1,11 @@
 import {  Input, Pagination,Button, Image } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
 import { data } from "./notationData";
+import { EyeOutlined } from "@ant-design/icons";
 
 export const NotationIndex = () => {
-  const navigate = useNavigate();
 
   const columns = [
     {
@@ -52,17 +52,16 @@ export const NotationIndex = () => {
     },
     {
       title: "รายละเอียดเพิ่มเติม",
-      dataIndex: "details",
       key: "details",
+      dataIndex: "id",
       render: () => (
-        <Button
-          type="link"
-          onClick={() => navigate("/customers/singlecustomers")}
-        >
-          ดูข้อมูล
-        </Button>
+        <Link to={`/notation`}>
+          <Button style={{ fontSize: "16px", width: "180px" }} type="primary" icon={<EyeOutlined />}>
+            ดูข้อมูล
+          </Button>
+        </Link>
       ),
-    },
+    }
   ];
 
   const onSearch = (value: any) => {

@@ -31,7 +31,7 @@ export const Menus = (props: MenusProps) => {
       label: <Link to="/attendance">เข้างานออกงาน</Link>,
       key: "attendance",
       icon: <Icon.FieldTimeOutlined />,
-      role: ["super_admin", "organize_admin", "branch_admin", "user"],
+      role: ["organize_admin", "branch_admin", "user"],
     },
     {
       label: <Link to="/user">ผู้ใช้</Link>,
@@ -43,10 +43,10 @@ export const Menus = (props: MenusProps) => {
       label: <Link to="/notation">เอกสาร</Link>,
       key: "notation",
       icon: <Icon.ReconciliationOutlined />,
-      role: ["super_admin", "organize_admin", "branch_admin"],
+      role: ["organize_admin", "branch_admin"],
     },
     {
-      label: <Link to="/customers">ลูกค้า</Link>,
+      label: <Link to="/customer">ลูกค้า</Link>,
       key: "customers",
       icon: <Icon.CustomerServiceOutlined />,
       role: ["organize_admin", "branch_admin"],
@@ -55,14 +55,14 @@ export const Menus = (props: MenusProps) => {
       label: <Link to="/project">โครงการ</Link>,
       key: "project",
       icon: <Icon.ProjectOutlined />,
-      role: ["super_admin", "organize_admin", "branch_admin"],
+      role: ["organize_admin", "branch_admin"],
     },
-    {
-      label: <Link to="/setting">ตั้งค่า</Link>,
-      key: "setting",
-      icon: <Icon.SettingOutlined />,
-      role: ["super_admin","branch_admin","organize_admin"],
-    },
+    // {
+    //   label: <Link to="/setting">ตั้งค่า</Link>,
+    //   key: "setting",
+    //   icon: <Icon.SettingOutlined />,
+    //   role: ["branch_admin","organize_admin"],
+    // },
     {
       label: <Link to="/information">ข้อมูลสาขา</Link>,
       key: "information",

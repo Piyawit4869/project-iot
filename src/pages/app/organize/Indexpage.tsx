@@ -1,32 +1,101 @@
-import React, { useEffect, useState } from "react";
-import { TagOutlined, EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import {
+  TagOutlined,
+  EyeOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import { Typography, Input, Button, Tag, Pagination, Image } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
-import { organizeData } from './organizeData'; // Import the organization data
-import * as API from "@src/apis";
+import organizeData from './organizeData'; 
+// import * as API from "@src/apis";
 
 const { Title } = Typography;
+
+const columns = [
+  {
+    title: "ID",
+    dataIndex: "id",
+    key: "id",
+    sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
+  },
+  {
+    title: "โลโก้",
+    dataIndex: "logoUrl",
+    key: "logoUrl",
+    render: (logoUrl: string) => <Image width={100} src={logoUrl} alt="โลโก้" />,
+  },
+  {
+    title: "ชื่อองค์กร",
+    dataIndex: "businessName",
+    key: "businessName",
+  },
+  {
+    title: "คำอธิบายธุรกิจ",
+    dataIndex: "businessDescription",
+    key: "businessDescription",
+  },
+  {
+    title: "จดทะเบียน",
+    dataIndex: "businessRegister",
+    key: "businessRegister",
+    render: (date: string) => <>{dayjs(date).format("DD/MM/YYYY")}</>,
+  },
+  {
+    title: "เบอร์โทรศัพท์",
+    dataIndex: "businessPhone",
+    key: "businessPhone",
+  },
+  {
+    title: "Default User",
+    dataIndex: "default_user",
+    key: "default_user",
+  },
+  {
+    title: "ระยะเวลาการใช้งานระบบ",
+    dataIndex: "timeused",
+    key: "timeused",
+  },
+  {
+    title: "สถานะ",
+    dataIndex: "active",
+    key: "active",
+    render: (active: boolean) =>
+      active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>,
+  },
+  {
+    title: "รายละเอียด",
+    key: "details",
+    dataIndex: "id",
+    render: (id: number) => (
+      <Link to={`${id}`}>
+        <Button type="primary" icon={<EyeOutlined />}>
+          ดูข้อมูล
+        </Button>
+      </Link>
+    ),
+  },
+];
 
 export const OrganizeIndex: React.FC = () => {
   const [organize, setOrganize] = useState(organizeData);
   const [searchValue, setSearchValue] = useState<string>("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchOrganize = async () => {
-      try {
-        const response = await API.organize.getAll();
-        setOrganize(response.data.items);
-      } catch (error) {
-        console.error("Failed to fetch organize data", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchOrganize = async () => {
+  //     try {
+  //       const response = await API.organize.getAll();
+  //       setOrganize(response.data.items);
+  //     } catch (error) {
+  //       console.error("Failed to fetch organize data", error);
+  //     }
+  //   };
 
-    fetchOrganize();
-  }, []);
+  //   fetchOrganize();
+  // }, []);
 
   useEffect(() => {
     const me = JSON.parse(localStorage.getItem("me") as any);
@@ -34,85 +103,6 @@ export const OrganizeIndex: React.FC = () => {
       navigate("/");
     }
   }, [navigate]);
-
-  const columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-      sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
-    },
-    {
-      title: "โลโก้",
-      dataIndex: "logoUrl",
-      key: "logoUrl",
-      render: (logoUrl: string) => {
-        return <Image width={200} src={logoUrl} />;
-      },
-    },
-    {
-      title: "ชื่อองค์กร",
-      dataIndex: "businessName",
-      key: "businessName",
-    },
-    {
-      title: "คำอธิบายธุรกิจ",
-      dataIndex: "businessDescription",
-      key: "businessDescription",
-    },
-    {
-      title: "จดทะเบียน",
-      dataIndex: "businessRegister",
-      key: "businessRegister",
-      render: (date: string) => {
-        return <>{dayjs(date).format("DD/MM/YYYY")}</>;
-      },
-    },
-    {
-      title: "เบอร์โทรศัพท์",
-      dataIndex: "businessPhone",
-      key: "businessPhone",
-    },
-    {
-      title: "Default User",
-      dataIndex: "default_user",
-      key: "default_user",
-    },
-    {
-      title: "ระยะเวลาการใช้งานระบบ",
-      dataIndex: "timeused",
-      key: "timeused",
-    },
-    {
-      title: "สถานะ",
-      dataIndex: "active",
-      key: "active",
-      render: (active: boolean) =>
-        active ? (
-          <Tag color="success">พร้อมใช้งาน</Tag>
-        ) : (
-          <Tag color="error">ไม่พร้อมใช้งาน</Tag>
-        ),
-    },
-    {
-      title: "รายละเอียด",
-      key: "details",
-      dataIndex: "id",
-      render: (id: number) => {
-        return (
-          <Link to={`${id}`}>
-            <Button
-              style={{ fontSize: "16px", width: "180px" }}
-              type="primary"
-              icon={<EyeOutlined />}
-            >
-              ดูข้อมูล
-            </Button>
-          </Link>
-        );
-      },
-    },
-  ];
 
   const onSearch = (value: string) => {
     const filteredData = organizeData.filter(item =>
@@ -131,21 +121,13 @@ export const OrganizeIndex: React.FC = () => {
         <TagOutlined style={{ marginBottom: -60, marginRight: 8 }} />
         <span style={{ marginBottom: -60 }}>ค้นหาองค์กร</span>
       </div>
-
       <div>
         <Link to={"create"}>
-          <CreateButton label={"เพิ่มข้อมูลลูกค้า"} />
+          <CreateButton label={"เพิ่มข้อมูลลูกค้า"}/>
         </Link>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          marginTop: "16px",
-        }}
-      >
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
         <Input
           addonBefore="ค้นหา"
           allowClear
@@ -154,7 +136,7 @@ export const OrganizeIndex: React.FC = () => {
           onPressEnter={() => onSearch(searchValue)}
           style={{ width: 304 }}
         />
-        <Button
+         <Button
           icon={<SearchOutlined />}
           type="primary"
           onClick={() => onSearch(searchValue)}
@@ -162,9 +144,7 @@ export const OrganizeIndex: React.FC = () => {
             backgroundColor: "#19142A",
             borderColor: "#19142A",
           }}
-        >
-          ค้นหา
-        </Button>
+          >ค้นหา </Button>
       </div>
 
       <div
@@ -177,19 +157,12 @@ export const OrganizeIndex: React.FC = () => {
       >
         <TableComponent
           columns={columns}
-          dataSource={organize}
+          dataSource={organizeData}
           pagination={false}
           bordered
         />
       </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          marginTop: "20px",
-        }}
-      >
+      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
         <Pagination defaultCurrent={1} total={organize.length} />
       </div>
     </div>
