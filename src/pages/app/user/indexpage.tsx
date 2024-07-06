@@ -4,7 +4,7 @@ import { SearchOutlined, EyeOutlined, TagOutlined } from '@ant-design/icons';
 import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import { TableComponent } from '@src/components/shared/TableComponent';
 import { CreateButton } from '@src/components/shared/CreateButton';
-import { userData } from './userData'; // Import the user data
+import { userData } from './userData';
 
 const { Title } = Typography;
 
@@ -41,7 +41,7 @@ const columns = [
     dataIndex: 'details',
     key: 'details',
     render: (_: any, record: any) => (
-      <Link to={`/users/single/${record.id}`}>
+      <Link to={`/user/${record.id}`}>
         <Button style={{ fontSize: '16px', width: '180px' }} type="primary" icon={<EyeOutlined />}>
           ดูข้อมูล
         </Button>
@@ -68,7 +68,7 @@ export const UsersIndex: React.FC = () => {
 
   const onSearch = (value: string) => {
     console.log('Search:', value);
-    // Implement search functionality here
+ 
   };
 
   const handlePageChange = (page: number, pageSize?: number) => {

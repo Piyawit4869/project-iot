@@ -3,6 +3,7 @@ import {  Form, Button, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@src/forms/Dynamic";
 import { useRef, useState } from "react";
+import { FormButtonsEdit } from "@src/components/shared/FormButtons";
 
 
 export const BranchSingle = () => {
@@ -147,7 +148,14 @@ export const BranchSingle = () => {
     console.log("Form Submitted", payload);
   };
 
+  function handleFinish(_values: any): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
+    <>
+    <FormButtonsEdit form={form} onFinish={handleFinish} />
+  
     <div style={{ padding: "20px" }} ref={containerRef}>
       
       
@@ -174,8 +182,8 @@ export const BranchSingle = () => {
                   value={item.value}
                   ruleMessage={item.message}
                   require={item.require}
-                  disabled={false}
-                  checked={false}
+                  disabled={item.disabled}
+                  checked={item.checked}    
                 />
               ))}
             </Row>
@@ -196,6 +204,7 @@ export const BranchSingle = () => {
         </Row>
       </Form>
     </div>
+    </>
   );
 };
 

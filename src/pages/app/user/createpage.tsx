@@ -1,43 +1,15 @@
 
-import {  Form, Button, Row, Col } from "antd";
-import { useNavigate } from "react-router-dom";
+import {  Form, Row, Col } from "antd";
 import { DynamicForm } from "@src/forms/Dynamic";
+import { FormButtonsCreate } from "@src/components/shared/FormButtons";
 
 export const UsersCreate = () => {
   const [form] = Form.useForm();
-  const navigate = useNavigate();
-
   const renderForm = [
     {
       label: "เพิ่มข้อมูลผู้ใช้",
       col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
       type: "LabelForm",
-    },
-    {
-      name: ["user", "profix"],
-      label: "คำนำหน้า",
-      placeholder: "กรอกคำนำหน้า",
-      col: { xs: 24, sm: 24, md: 24, lg: 6, xl: 6 },
-      type: "SelectFormField",
-      option: [
-        { value: "Mr", label: "นาย" },
-        { value: "Ms", label: "นาง" },
-        { value: "Mrs", label: "นางสาว" },
-      ],
-    },
-    {
-      name: ["user", "profile", "firstName"],
-      label: "ชื่อจริง",
-      placeholder: "กรอกชื่อจริง",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 9 },
-      type: "TextboxFormField",
-    },
-    {
-      name: ["user", "profile", "lastName"],
-      label: "นามสกุล",
-      placeholder: "กรอกนามสกุล",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 9 },
-      type: "TextboxFormField",
     },
     {
       name: "userName",
@@ -64,18 +36,44 @@ export const UsersCreate = () => {
       type: "TextboxFormField",
     },
     {
+      name: ["user", "profix"],
+      label: "คำนำหน้า",
+      placeholder: "กรอกคำนำหน้า",
+      col: { xs: 24, sm: 24, md: 24, lg: 12, xl: 12 },
+      type: "SelectFormField",
+      option: [
+        { value: "Mr", label: "นาย" },
+        { value: "Ms", label: "นาง" },
+        { value: "Mrs", label: "นางสาว" },
+      ],
+    },
+    {
+      name: ["user", "profile", "firstName"],
+      label: "ชื่อจริง",
+      placeholder: "กรอกชื่อจริง",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextboxFormField",
+    },
+    {
+      name: ["user", "profile", "lastName"],
+      label: "นามสกุล",
+      placeholder: "กรอกนามสกุล",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextboxFormField",
+    },
+    {
       name: "active",
       label: "ทำงานอยู่",
       placeholder: "เลือกทำงานอยู่",
       col: { xs: 24, sm: 24, md: 12, lg: 6, xl: 6 },
-      type: "CheckboxFormField",
+      type: "SwitchFormField",
     },
     {
       name: "isMobile",
-      label: "คือมือถือ",
-      placeholder: "คือมือถือ",
+      label: "ใช้งานบนมือถือ",
+      placeholder: "ใช้งานบนมือถือ",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 6 },
-      type: "CheckboxFormField",
+      type: "SwitchFormField",
     },
     {
       name: "organizationId",
@@ -134,15 +132,15 @@ export const UsersCreate = () => {
     console.log("Form Submitted", payload);
   };
 
+  function handleFinish(_values: any): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
-    
-
-    
-
-
-
-    <div style={{ padding: "20px", fontFamily: 'Prompt, sans-serif' }}>
-      
+    <>
+      <div><FormButtonsCreate form={form} onFinish={handleFinish} /></div>
+   
+    <div style={{ padding: "20px", fontFamily: 'Prompt, sans-serif' }}>  
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Row gutter={24}>  
         <Col
@@ -165,17 +163,17 @@ export const UsersCreate = () => {
                   icon={item.icon}
                   value={item.value}
                   ruleMessage={item.message}
-                  require={item.require} disabled={false} checked={false}                />
+                  require={item.require} 
+                  disabled={item.disabled}
+                  checked={item.checked}                       
+                  />
               ))}
             </Row>
           </Col>
         </Row>
-        <Row style={{ marginTop: "20px", gap: "10px" }}>
-          <Col><Button  onClick={() => navigate("/users")}>ยกเลิก</Button></Col>
-          <Button type="primary" htmlType="submit" style={{ backgroundColor: '#19142A' }}>ยืนยัน</Button>
-        </Row>
       </Form>
     </div>
+    </>
   );
 };
 

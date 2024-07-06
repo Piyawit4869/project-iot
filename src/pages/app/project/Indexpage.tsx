@@ -8,7 +8,7 @@ import { Input, Button, Tag, Pagination, Typography, Image } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
-import { projectData } from './projectData'; // Import the project data
+import { projectData } from './projectData';
 
 const { Title } = Typography;
 
@@ -83,7 +83,6 @@ export const ProjectIndex = () => {
 
   const onSearch = (value: string) => {
     console.log("Search:", value);
-    // Implement search functionality here
   };
 
   return (
@@ -132,7 +131,7 @@ export const ProjectIndex = () => {
       >
         <TableComponent
           columns={columns}
-          dataSource={projectData}  // Use the imported project data
+          dataSource={projectData}  
           pagination={false}
           bordered
         />

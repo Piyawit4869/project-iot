@@ -1,17 +1,25 @@
-import {   TagFilled } from "@ant-design/icons";
-import {   Form, Button, Row, Col, Flex } from "antd";
-import { useNavigate } from "react-router-dom";
-import { DynamicForm } from "@src/forms/Dynamic";  
+import { TagFilled } from "@ant-design/icons";
+import { Form, Row, Col } from "antd";
+import { DynamicForm } from "@src/forms/Dynamic";
+import { FormButtonsCreate } from "@src/components/shared/FormButtons";
 
-export const CustomersCreate = () => {
+export const CustomerCreate = () => {
   const [form] = Form.useForm();
-  const navigate = useNavigate();
 
   const renderForm = [
+    
     {
-      label: "แก้ไขข้อมูลลูกค้า",
+      label: "เพิ่มข้อมูลลูกค้า",
       col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
       type: "LabelForm",
+    },
+    {
+      name: ["user", "email"],
+      label: "อีเมลล์",
+      placeholder: "กรอกอีเมลล์",
+      require: true,
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextboxFormField",
     },
     {
       name: "companyName",
@@ -35,22 +43,6 @@ export const CustomersCreate = () => {
       type: "TextboxFormField",
     },
     {
-      name: "userName",
-      label: "ชื่อผู้ใช้",
-      placeholder: "กรอกชื่อผู้ใช้",
-      require: true,
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-    },
-    {
-      name: ["user", "email"],
-      label: "อีเมลล์",
-      placeholder: "กรอกอีเมลล์",
-      require: true,
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-    },
-    {
       name: "tel",
       label: "เบอร์โทร",
       placeholder: "กรอกเบอร์โทร",
@@ -60,13 +52,28 @@ export const CustomersCreate = () => {
     {
       icon: <TagFilled />,
       label: "ข้อมูลที่อยู่",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
+      col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
       type: "LabelForm",
     },
     {
-      name: "country",
-      label: "ประเทศ",
-      placeholder: "กรอกประเทศ",
+      name: "address",
+      label: "ที่อยู่",
+      require: true,
+      placeholder: "กรอกที่อยู่",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextAreaFormField",
+    },
+    {
+      name: "subdistrict",
+      label: "แขวง/ตำบล",
+      placeholder: "กรอกแขวง/ตำบล",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextboxFormField",
+    },
+    {
+      name: "district",
+      label: "เขต/อำเภอ",
+      placeholder: "กรอกเขต/อำเภอ",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
@@ -78,20 +85,6 @@ export const CustomersCreate = () => {
       type: "TextboxFormField",
     },
     {
-      name: "district",
-      label: "เขต",
-      placeholder: "กรอกเขต",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-    },
-    {
-      name: "subdistrict",
-      label: "ตำบล",
-      placeholder: "กรอกตำบล",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-    },
-    {
       name: "postalCode",
       label: "รหัสไปรษณีย์",
       placeholder: "รหัสไปรษณีย์",
@@ -99,9 +92,9 @@ export const CustomersCreate = () => {
       type: "TextboxFormField",
     },
     {
-      name: "address",
-      label: "ที่อยู่",
-      placeholder: "กรอกที่อยู่",
+      name: "country",
+      label: "ประเทศ",
+      placeholder: "กรอกประเทศ",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
@@ -110,8 +103,10 @@ export const CustomersCreate = () => {
       label: "ที่อยู่ที่ลงทะเบียนไว้",
       placeholder: "กรอกที่อยู่ที่ลงทะเบียนไว้",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
+      type: "TextAreaFormField",
     },
+    
+   
   ];
 
   const onFinish = (values: any) => {
@@ -119,44 +114,52 @@ export const CustomersCreate = () => {
     console.log("Form Submitted", payload);
   };
 
+  function handleFinish(_values: any): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
-    <div style={{ padding: "20px", fontFamily: 'Prompt, sans-serif' }}>
-      <Form form={form} layout="vertical" onFinish={onFinish}>
-      <Row gutter={24}>
-        <Col
-          xs={{ span: 24, order: 2 }}
-          sm={{ span: 24, order: 2 }}
-          md={{ span: 24, order: 2 }}
-          lg={{ span: 12, order: 1 }}
-          xl={{ span: 12, order: 1 }}
-        >
-            <Row gutter={24}>
-              {renderForm.map((item: any) => {
-                return (
-                  <DynamicForm
-                    key={item.name}
-                    name={item.name}
-                    label={item.label}
-                    placeholder={item.placeholder}
-                    type={item.type}
-                    col={item.col}
-                    option={item.option}
-                    icon={item.icon}
-                    value={item.value}
-                    ruleMessage={item.message}
-                    require={item.require} disabled={false} checked={false}                  />
-                );
-              })}
-            </Row>
-          </Col>
-        </Row>
-        <Flex style={{ marginTop: "20px", gap: "10px" }}>
-        <Form.Item><Button type="primary" onClick={() => navigate("/customers")}>ยกเลิก</Button></Form.Item>
-        <Form.Item><Button type="primary" htmlType="submit">ยืนยัน</Button></Form.Item>
-      </Flex>
-      </Form>
-    </div>
+    <>
+      <div>
+        <FormButtonsCreate form={form} onFinish={handleFinish} />
+      </div>
+      <div style={{ padding: "20px", fontFamily: 'Prompt, sans-serif' }}>
+        <Form form={form} layout="vertical" onFinish={onFinish}>
+          <Row gutter={24}>
+            <Col
+              xs={{ span: 24, order: 2 }}
+              sm={{ span: 24, order: 2 }}
+              md={{ span: 24, order: 2 }}
+              lg={{ span: 12, order: 1 }}
+              xl={{ span: 12, order: 1 }}
+            >
+              <Row gutter={24}>
+                {renderForm.map((item: any) => {
+                  return (
+                    <DynamicForm
+                      key={item.name}
+                      name={item.name}
+                      label={item.label}
+                      placeholder={item.placeholder}
+                      type={item.type}
+                      col={item.col}
+                      option={item.option}
+                      icon={item.icon}
+                      value={item.value}
+                      ruleMessage={item.message}
+                      require={item.require}
+                      disabled={item.disabled}
+                      checked={item.checked}
+                    />
+                  );
+                })}
+              </Row>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+    </>
   );
 };
 
-export default CustomersCreate;
+export default CustomerCreate;

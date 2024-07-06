@@ -4,7 +4,7 @@ import { SearchOutlined, EyeOutlined, TagOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
-import { customerData } from './customerData'; // Import the customer data
+import { customerData } from './customerData'; 
 
 const { Title } = Typography;
 
@@ -58,7 +58,7 @@ const columns = [
     key: "details",
     dataIndex: "id",
     render: (id: number) => (
-      <Link to={`/customers/singlecustomers/${id}`}>
+      <Link to={`/customer/${id}`}>
         <Button style={{ fontSize: "16px", width: "180px" }} type="primary" icon={<EyeOutlined />}>
           ดูข้อมูล
         </Button>
@@ -67,12 +67,11 @@ const columns = [
   },
 ];
 
-export const CustomersIndex: React.FC = () => {
+export const CustomerIndex: React.FC = () => {
   const [searchValue, setSearchValue] = useState<string>("");
 
   const onSearch = (value: string) => {
     console.log("Search:", value);
-    // Implement search functionality here
   };
 
   return (
@@ -114,7 +113,7 @@ export const CustomersIndex: React.FC = () => {
       <div style={{ boxShadow: "0 4px 8px rgba(0.25, 0.25, 0.25, 0.25)", borderRadius: "25px", overflow: "hidden", marginTop: 16 }}>
         <TableComponent
           columns={columns}
-          dataSource={customerData}  // Use the imported customer data
+          dataSource={customerData}
           pagination={false}
           bordered
         />
@@ -127,4 +126,4 @@ export const CustomersIndex: React.FC = () => {
   );
 };
 
-export default CustomersIndex;
+export default CustomerIndex;

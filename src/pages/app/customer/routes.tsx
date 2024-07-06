@@ -1,22 +1,22 @@
-import { CustomersCreate } from "./Createpage";
-import { CustomersIndex } from "./Indexpage";
-import { CustomersSingle } from "./Singlepage";
+import { CustomerCreate } from "./Createpage";
+import { CustomerIndex } from "./Indexpage";
+import { CustomerSingle } from "./Singlepage";
 
 export const routes = [
   {
-    path: "customers",
+    path: "customer",
     children: [
       {
         path: "",
-        element: <CustomersIndex/>
+        element: <CustomerIndex/>
       },
       {
         path: "create",
-        element: <CustomersCreate/>
+        element: <CustomerCreate/>
       },
       {
         path: ":id", 
-        element: <CustomersSingle/>
+        element: <CustomerSingle/>
       }
     ],
   }

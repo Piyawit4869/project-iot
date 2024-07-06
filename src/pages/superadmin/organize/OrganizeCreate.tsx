@@ -1,11 +1,11 @@
 import React from "react";
 
 import * as API from "@src/apis";
-import { Button, Col, Form, Row } from "antd";
+import {  Col, Form, Row } from "antd";
 
 import { DynamicForm } from "@src/forms/Dynamic";
 import { TagFilled } from "@ant-design/icons";
-import { useNavigate, useSubmit } from "react-router-dom";
+import { useNavigate  } from "react-router-dom";
 
 export async function organizeCreateAction({ request }: any) {
   const formData = await request.formData();
@@ -561,8 +561,7 @@ const renderForm = [
 ];
 
 export const OrganizeCreate: React.FC = () => {
-  const [form] = Form.useForm();
-  const submit = useSubmit();
+  const [] = Form.useForm();
 
   //get me from local Storage
   const me = JSON.parse(localStorage.getItem("me") as any);
@@ -573,34 +572,24 @@ export const OrganizeCreate: React.FC = () => {
       navigate("/");
     }
   }, []);
+  // const onFinish = (values: any) => {
+  //   const payload = Object.assign(values);
+  //   payload.active = true;
+  //   payload.user.active = true;
+  //   payload.branch.branchType = "branch";
 
-  const onFinish = (values: any) => {
-    const payload = Object.assign(values);
-    payload.active = true;
-    payload.user.active = true;
-    payload.branch.branchType = "branch";
+  //   payload.logoUrl =
+  //     "https://cdn.discordapp.com/attachments/1235856320280924213/1244954526155542598/575757.png?ex=6656fdc1&is=6655ac41&hm=96242e1d5d4f232411d9434a17f5053d4a7e6c788030f515e5da25d03813da86&";
+  //   payload.branch.logoUrl =
+  //     "https://cdn.discordapp.com/attachments/1235856320280924213/1244954526155542598/575757.png?ex=6656fdc1&is=6655ac41&hm=96242e1d5d4f232411d9434a17f5053d4a7e6c788030f515e5da25d03813da86&";
 
-    payload.logoUrl =
-      "https://cdn.discordapp.com/attachments/1235856320280924213/1244954526155542598/575757.png?ex=6656fdc1&is=6655ac41&hm=96242e1d5d4f232411d9434a17f5053d4a7e6c788030f515e5da25d03813da86&";
-    payload.branch.logoUrl =
-      "https://cdn.discordapp.com/attachments/1235856320280924213/1244954526155542598/575757.png?ex=6656fdc1&is=6655ac41&hm=96242e1d5d4f232411d9434a17f5053d4a7e6c788030f515e5da25d03813da86&";
+  //   console.log(payload);
 
-    console.log(payload);
-
-    submit({ data: JSON.stringify(payload) }, { method: "post" });
-  };
+  //   submit({ data: JSON.stringify(payload) }, { method: "post" });
+  // };
 
   return (
     <div>
-      <Form form={form} layout="vertical" onFinish={onFinish}>
-        <Col span={24} style={{ textAlign: "right", marginBottom: 16 }}>
-          <Button style={{ margin: "10px" }} htmlType="reset">
-            Cancel
-          </Button>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Col>
         <Row gutter={20}>
           <Col span={24} style={{ textAlign: "left", marginBottom: 16 }}></Col>
 
@@ -625,7 +614,6 @@ export const OrganizeCreate: React.FC = () => {
           })}
         </Row>
         <Col></Col>
-      </Form>
     </div>
   );
 };

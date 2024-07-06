@@ -72,7 +72,7 @@ export const BranchIndex: React.FC = () => {
       key: "details",
       dataIndex: "id",
       render: (id: number) => (
-        <Link to={`/branch/singlebranch/${id}`}>
+        <Link to={`/branch/${id}`}>
           <Button style={{ fontSize: "16px", width: "180px" }} type="primary" icon={<EyeOutlined />}>
             ดูข้อมูล
           </Button>
