@@ -12,10 +12,10 @@ export const DatePickerFormField: FC<DatePickerProps> = (
   props: DatePickerProps
 ) => {
   const { name, label, placeholder, rule } = props;
-
+  const dateFormat = 'DD/MM/YYYY';
   return (
     <Form.Item name={name} label={label} rules={rule}>
-      <DatePicker placeholder={placeholder} style={styles.input} />
+      <DatePicker placeholder={placeholder} style={styles.input} format={dateFormat}/>
     </Form.Item>
   );
 };
