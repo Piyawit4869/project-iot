@@ -34,6 +34,15 @@ export const CustomerCreate = () => {
       placeholder: "กรอกชื่อจริง",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return undefined;
+        }
+        if (!/^([a-zA-Zก-๙]+)$/.test(value)) {
+          return Promise.reject("กรุณากรอกตัวอักษรเท่านั้น");
+        }
+        return Promise.resolve();
+      }
     },
     {
       name: ["user", "profile", "lastName"],
@@ -41,6 +50,39 @@ export const CustomerCreate = () => {
       placeholder: "กรอกนามสกุล",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return undefined;
+        }
+        if (!/^([a-zA-Zก-๙]+)$/.test(value)) {
+          return Promise.reject("กรุณากรอกตัวอักษรเท่านั้น");
+        }
+        return Promise.resolve();
+      }
+    },
+    {
+      name: "userName",
+      label: "ชื่อผู้ใช้",
+      placeholder: "กรอกชื่อผู้ใช้",
+      require: true,
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextboxFormField",
+    },
+    {
+      name: ["user", "email"],
+      label: "อีเมลล์",
+      placeholder: "กรอกอีเมลล์",
+      require: true,
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextboxFormField",
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return Promise.reject("");
+        }
+        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+          return Promise.reject("อีเมลล์ติดต่อไม่ถูกต้อง");
+        }
+      }
     },
     {
       name: "tel",
@@ -48,6 +90,15 @@ export const CustomerCreate = () => {
       placeholder: "กรอกเบอร์โทร",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
+      maxLength: 10,
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return undefined;
+        }
+        if (!/^(06|08)[0-9]{8}$/.test(value)) {
+          return Promise.reject("เบอร์โทรศัพท์ติดต่อไม่ถูกต้อง");
+        }
+      }
     },
     {
       icon: <TagFilled />,
@@ -90,6 +141,15 @@ export const CustomerCreate = () => {
       placeholder: "รหัสไปรษณีย์",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
+      maxLength: 5,
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return undefined;
+        }
+        if (!/^[0-9]{5}$/i.test(value)) {
+          return Promise.reject("รหัสไปรษณีย์ไม่ถูกต้อง");
+        }
+      },
     },
     {
       name: "country",
@@ -150,6 +210,8 @@ export const CustomerCreate = () => {
                       require={item.require}
                       disabled={item.disabled}
                       checked={item.checked}
+                      maxLength={item.maxLength} 
+                      validator={item.validator}   
                     />
                   );
                 })}

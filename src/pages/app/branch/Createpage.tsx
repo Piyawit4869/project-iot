@@ -60,6 +60,14 @@ export const BranchCreate = () => {
       require: true,
       col: { xs: 24, sm: 24, md: 12, lg: 6, xl: 6 },
       type: "TextboxFormField",
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return Promise.reject("");
+        }
+        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+          return Promise.reject("อีเมลล์ติดต่อไม่ถูกต้อง");
+        }
+      }
     },
     {
       name: "websiteUrl",
@@ -67,6 +75,14 @@ export const BranchCreate = () => {
       placeholder: "กรอกลิ้งค์เว็ปไซต์",
       col: { xs: 24, sm: 24, md: 12, lg: 6, xl: 6 },
       type: "TextboxFormField",
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return undefined;
+        }
+        if (!/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(value)) {
+          return Promise.reject("ลิ้งค์เว็ปไซต์ติดต่อไม่ถูกต้อง");
+        }
+      }
     },
     {
       name: "phone",
@@ -74,7 +90,17 @@ export const BranchCreate = () => {
       placeholder: "กรอกเบอร์โทร",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
-    },{
+      maxLength: 10,
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return undefined;
+        }
+        if (!/^(06|08)[0-9]{8}$/.test(value)) {
+          return Promise.reject("เบอร์โทรศัพท์ติดต่อไม่ถูกต้อง");
+        }
+      }
+    },
+    {
       name: "active",
       label: "พร้อมใช้งาน",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 6 },
@@ -134,8 +160,16 @@ export const BranchCreate = () => {
       placeholder: "รหัสไปรษณีย์",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
+      maxLength: 5,
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return undefined;
+        }
+        if (!/^[0-9]{5}$/i.test(value)) {
+          return Promise.reject("รหัสไปรษณีย์ไม่ถูกต้อง");
+        }
+      },
     },
-    
   ];
 
   const onFinish = (values: any) => {
@@ -152,6 +186,43 @@ export const BranchCreate = () => {
     <div>
     
     <FormButtonsCreate form={form} onFinish={handleFinish} />
+    </div>
+    <div style={{ padding: "20px", fontFamily: 'Prompt, sans-serif' }}>
+      
+      
+      <Form form={form} layout="vertical" onFinish={onFinish}>
+      <Row gutter={24}>
+        <Col
+          xs={{ span: 24, order: 2 }}
+          sm={{ span: 24, order: 2 }}
+          md={{ span: 24, order: 2 }}
+          lg={{ span: 12, order: 1 }}
+          xl={{ span: 12, order: 1 }}
+        >
+            <Row gutter={24}>
+              {renderForm.map((item: any, index: number) => {
+                return (
+                  <DynamicForm
+                    key={index}
+                    name={item.name}
+                    label={item.label}
+                    placeholder={item.placeholder}
+                    type={item.type}
+                    col={item.col}
+                    option={item.option}
+                    icon={item.icon}
+                    value={item.value}
+                    ruleMessage={item.message}
+                    require={item.require} disabled={false} checked={false}
+                    maxLength={item.maxLength}
+                    validator={item.validator}                  
+                    />
+                );
+              })}
+            </Row>
+          </Col>
+        </Row>
+      </Form>
     </div>
     <div style={{ padding: "20px", fontFamily: 'Prompt, sans-serif' }}>
         <Form form={form} layout="vertical" onFinish={onFinish}>

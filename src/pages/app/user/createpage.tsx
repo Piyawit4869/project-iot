@@ -26,6 +26,14 @@ export const UsersCreate = () => {
       require: true,
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return Promise.reject("");
+        }
+        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+          return Promise.reject("อีเมลล์ติดต่อไม่ถูกต้อง");
+        }
+      }
     },
     {
       name: "password",
@@ -53,6 +61,15 @@ export const UsersCreate = () => {
       placeholder: "กรอกชื่อจริง",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return undefined;
+        }
+        if (!/^([a-zA-Zก-๙]+)$/.test(value)) {
+          return Promise.reject("กรุณากรอกตัวอักษรเท่านั้น");
+        }
+        return Promise.resolve();
+      }
     },
     {
       name: ["user", "profile", "lastName"],
@@ -60,6 +77,15 @@ export const UsersCreate = () => {
       placeholder: "กรอกนามสกุล",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return undefined;
+        }
+        if (!/^([a-zA-Zก-๙]+)$/.test(value)) {
+          return Promise.reject("กรุณากรอกตัวอักษรเท่านั้น");
+        }
+        return Promise.resolve();
+      }
     },
     {
       name: "active",
@@ -124,6 +150,15 @@ export const UsersCreate = () => {
       placeholder: "กรอกเบอร์โทร",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
+      maxLength: 10,
+      validator: (_: any, value: any) => {
+        if (value === undefined || value === "") {
+          return undefined;
+        }
+        if (!/^(06|08)[0-9]{8}$/.test(value)) {
+          return Promise.reject("เบอร์โทรศัพท์ติดต่อไม่ถูกต้อง");
+        }
+      }
     },
   ];
 
@@ -151,9 +186,9 @@ export const UsersCreate = () => {
           xl={{ span: 12, order: 1 }}
         >
             <Row gutter={24}>
-              {renderForm.map((item: any) => (
+              {renderForm.map((item: any, index: number) => (
                 <DynamicForm
-                  key={item.name}
+                  key={index}
                   name={item.name}
                   label={item.label}
                   placeholder={item.placeholder}
@@ -165,7 +200,9 @@ export const UsersCreate = () => {
                   ruleMessage={item.message}
                   require={item.require} 
                   disabled={item.disabled}
-                  checked={item.checked}                       
+                  checked={item.checked}  
+                  maxLength={item.maxLength}
+                  validator={item.validator}                          
                   />
               ))}
             </Row>
