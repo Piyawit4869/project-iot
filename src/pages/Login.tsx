@@ -43,9 +43,7 @@ export async function loginAction({ request }: any) {
 }
 
 export const Login = () => {
-  // const { state } = useNavigation();
   const submit = useSubmit();
-  // const navigation = useNavigation();
   const [form] = Form.useForm();
   const onFinish = async (values: any) => {
     const payload = { ...values };
