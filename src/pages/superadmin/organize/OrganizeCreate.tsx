@@ -156,6 +156,7 @@ const renderForm = [
     placeholder: "ที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
+    require: true,
   },
   {
     name: ["address", "addressType"],
@@ -163,6 +164,7 @@ const renderForm = [
     placeholder: "ประเภทที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "SelectFormField",
+    require: true,
     options: [
       { value: "Single", label: "Home" },
       { value: "Duo", label: "Apartment" },
@@ -175,6 +177,7 @@ const renderForm = [
     placeholder: "คำอธิบายเกี่ยวกับที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextAreaFormField",
+    require: true,
   },
   {
     name: ["address", "country"],
@@ -182,6 +185,7 @@ const renderForm = [
     placeholder: "ประเทศ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
+    require: true,
   },
   {
     name: ["address", "subDistrict"],
@@ -189,6 +193,7 @@ const renderForm = [
     placeholder: "แขวง/ตำบล",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    require: true,
   },
   {
     name: ["address", "district"],
@@ -196,6 +201,7 @@ const renderForm = [
     placeholder: "เขต/อำเภอ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    require: true,
   },
   {
     name: ["address", "province"],
@@ -360,7 +366,7 @@ const renderForm = [
   },
   {
     name: ["branch", "phone"],
-    label: "เบอร์โทรศัพท์",
+    label: "เบอร์โทรศัพท์ติดต่อ",
     placeholder: "เบอร์โทรศัพท์",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
@@ -385,6 +391,7 @@ const renderForm = [
     placeholder: "ที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 16 },
     type: "TextboxFormField",
+    require: true,
   },
   {
     name: ["branch", "address", "addressType"],
@@ -392,6 +399,7 @@ const renderForm = [
     placeholder: "ประเภทที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "SelectFormField",
+    require: true,
     options: [
       { value: "Single", label: "Home" },
       { value: "Duo", label: "Apartment" },
@@ -404,6 +412,7 @@ const renderForm = [
     placeholder: "คำอธิบายเกี่ยวกับที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextAreaFormField",
+    require: true,
   },
   {
     name: ["branch", "address", "country"],
@@ -411,6 +420,7 @@ const renderForm = [
     placeholder: "ประเทศ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    require: true,
   },
   {
     name: ["branch", "address", "subDistrict"],
@@ -418,6 +428,7 @@ const renderForm = [
     placeholder: "แขวง/ตำบล",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    require: true,
   },
   {
     name: ["branch", "address", "district"],
@@ -425,6 +436,7 @@ const renderForm = [
     placeholder: "เขต/อำเภอ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
+    require: true,
   },
   {
     name: ["branch", "address", "province"],
@@ -541,8 +553,8 @@ const renderForm = [
   },
   {
     name: ["user", "profile", "phone"],
-    label: "โทรศัพท์",
-    placeholder: "โทรศัพท์",
+    label: "เบอร์โทรศัพท์ติดต่อ",
+    placeholder: "เบอร์โทรศัพท์ติดต่อ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
     type: "TextboxFormField",
   },

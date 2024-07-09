@@ -1,25 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { Input, Pagination, Button, Tag, Typography, Image } from "antd";
+import { Input, Pagination, Button, Tag, Typography, Image, Spin } from "antd";
 import { SearchOutlined, TagOutlined, EyeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
-import { branchData } from "./branchData";
+import { branchData as initialBranchData } from "./branchData"; 
+
 const { Title } = Typography;
+
 export const BranchIndex: React.FC = () => {
-  const [data, setData] = useState(branchData);
+  const [data, setData] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
     const fetchData = async () => {
-      try { 
-        setData(branchData); 
+      try {
+        setLoading(true);
+        setTimeout(() => {
+          setData(initialBranchData);
+          setLoading(false);
+        }, 1000);
       } catch (error) {
         console.error("Failed to fetch branch data", error);
+        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
+
   const columns = [
     {
       title: "ลำดับ",
@@ -80,9 +90,11 @@ export const BranchIndex: React.FC = () => {
       ),
     },
   ];
+
   const onSearch = (value: string) => {
     console.log(value);
   };
+
   return (
     <div>
       <Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
@@ -125,7 +137,13 @@ export const BranchIndex: React.FC = () => {
           marginTop: 16,
         }}
       >
-        <TableComponent columns={columns} pagination={false} bordered dataSource={data} />
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+            <Spin size="large" />
+          </div>
+        ) : (
+          <TableComponent columns={columns} pagination={false} bordered dataSource={data} />
+        )}
       </div>
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
         <Pagination defaultCurrent={1} total={data.length} />

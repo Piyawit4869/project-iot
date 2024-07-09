@@ -1,7 +1,7 @@
 import * as API from "@src/apis";
 import { Outlet, redirect, useLoaderData } from "react-router-dom";
 
-import { AuthContext } from "@contexts/AuthContext";
+// import { AuthContext } from "@contexts/AuthContext";
 export async function RootLoader() {
   try {
     const me = await API.user.getMe();
@@ -15,11 +15,11 @@ export async function RootLoader() {
 }
 
 export const Root = () => {
-  const { me } = useLoaderData() as any;
-
+  const {  } = useLoaderData() as any;
+// me
   return (
-    <AuthContext.Provider value={{ user: me }}>
+    // <AuthContext.Provider value={{ user: me }}>
       <Outlet />
-    </AuthContext.Provider>
+    // </AuthContext.Provider>
   );
 };

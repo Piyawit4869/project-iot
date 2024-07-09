@@ -1,14 +1,14 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   TagOutlined,
   EyeOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Input, Button, Tag, Pagination, Typography, Image } from "antd";
+import { Input, Button, Tag, Pagination, Typography, Image, Spin } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
-import { projectData } from './projectData';
+import { projectData as initialProjectData } from './projectData';
 
 const { Title } = Typography;
 
@@ -73,6 +73,8 @@ const columns = [
 export const ProjectIndex = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState<string>("");
+  const [projectData, setProjectData] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const me = JSON.parse(localStorage.getItem("me") as any);
@@ -80,6 +82,14 @@ export const ProjectIndex = () => {
       navigate("/");
     }
   }, [navigate]);
+
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setProjectData(initialProjectData); 
+      setLoading(false);
+    }, 1000); 
+  }, []);
 
   const onSearch = (value: string) => {
     console.log("Search:", value);
@@ -108,7 +118,7 @@ export const ProjectIndex = () => {
           onChange={(e) => setSearchValue(e.target.value)}
           style={{ width: 304 }}
         />
-         <Button
+        <Button
           icon={<SearchOutlined />}
           type="primary"
           onClick={() => onSearch(searchValue)}
@@ -129,12 +139,18 @@ export const ProjectIndex = () => {
           marginTop: 16,
         }}
       >
-        <TableComponent
-          columns={columns}
-          dataSource={projectData}  
-          pagination={false}
-          bordered
-        />
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+            <Spin size="large" />
+          </div>
+        ) : (
+          <TableComponent
+            columns={columns}
+            dataSource={projectData}
+            pagination={false}
+            bordered
+          />
+        )}
       </div>
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
         <Pagination defaultCurrent={1} total={projectData.length} />

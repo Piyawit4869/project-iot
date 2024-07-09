@@ -108,7 +108,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       name: "taxId",
       label: "เลขทะเบียน 13 หลัก",
       placeholder: "เลขทะเบียน 13 หลัก",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
       require: true,
       message: "กรุณากรอกข้อมูลเลขทะเบียน 13 หลัก ( เช่น 0123456789101 ) ",
@@ -151,14 +151,14 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       label: "จดทะเบียนภาษีมูลค่าเพิ่ม",
       placeholder: "จดทะเบียนภาษีมูลค่าเพิ่ม",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "CheckboxFormField",
+      type: "SwitchFormField",
       // require: true,
     },
 
     {
       icon: <TagFilled />,
       label: "ข้อมูลช่องทางการติดต่อ",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
+      col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
       type: "LabelForm",
     },
     {
@@ -169,7 +169,6 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       type: "TextboxFormField",
       require: true,
       message: "กรุณากรอกเบอร์โทรศัพท์สำนักงาน  ",
-      maxLength: 10,
     },
     {
       name: "contactPhone",
@@ -184,7 +183,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       name: "contactEmail",
       label: "อีเมลล์ติดต่อ",
       placeholder: "อีเมลล์ติดต่อ",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
       require: true,
       message: "กรุณากรอกอีเมลล์ติดต่อ  ",
@@ -193,7 +192,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       name: "businessEmail",
       label: "อีเมลล์สำนักงาน",
       placeholder: "อีเมลล์สำนักงาน",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
       validator: (_: any, value: any) => {
         if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
@@ -205,7 +204,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       name: "websiteUrl",
       label: "เว็บไซต์สำนักงาน",
       placeholder: "เว็บไซต์สำนักงาน",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
       validator: (_: any, value: any) => {
         if (!/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(value)) {
@@ -217,7 +216,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       name: "contactPhone",
       label: "เบอร์โทรศัพท์ติดต่อ",
       placeholder: "เบอร์โทรศัพท์ติดต่อ",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
       require: true,
       message: "กรุณากรอกเบอร์โทรศัพท์ติดต่อ  ",
@@ -226,6 +225,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
         if (value === undefined || value === "") {
           return Promise.reject("");
         }
+        // if (!/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]{10}$/.test(value)) {
         if (!/^(06|08)[0-9]{8}$/.test(value)) {
           return Promise.reject("เบอร์โทรศัพท์ติดต่อไม่ถูกต้อง");
         }
@@ -235,89 +235,23 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       name: "contactEmail",
       label: "อีเมลล์ติดต่อ",
       placeholder: "อีเมลล์ติดต่อ",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
       require: true,
       message: "กรุณากรอกอีเมลล์ติดต่อ  ",
-    },
-    {
-      icon: <TagFilled />,
-      label: "ข้อมูลตามทะเบียน",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
-      type: "LabelForm",
-    },
-    {
-      name: ["address", "address"],
-      label: "ที่อยู่",
-      placeholder: "ที่อยู่",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-    },
-    {
-      name: ["address", "addressType"],
-      label: "ประเภทที่อยู่",
-      placeholder: "ประเภทที่อยู่",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "SelectFormField",
-      option: [
-        { value: "Single", label: "Home" },
-        { value: "Duo", label: "Apartment" },
-        { value: "Team", label: "Detached House" },
-      ],
-    },
-    
-    {
-      name: ["address", "subDistrict"],
-      label: "แขวง/ตำบล",
-      placeholder: "แขวง/ตำบล",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-    },
-    {
-      name: ["address", "district"],
-      label: "เขต/อำเภอ",
-      placeholder: "เขต/อำเภอ",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-    },
-    {
-      name: ["address", "province"],
-      label: "จังหวัด",
-      placeholder: "จังหวัด",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
-      type: "TextboxFormField",
-      require: true,
-      message: "กรุณากรอกจังหวัด",
-    },
-    {
-      name: ["address", "postalCode"],
-      label: "รหัสไปรษณีย์",
-      placeholder: "รหัสไปรษณีย์",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
-      type: "TextboxFormField",
-      require: true,
-      message: "กรุณากรอกรหัสไปรษณีย์",
-      maxLength: 5,
       validator: (_: any, value: any) => {
         if (value === undefined || value === "") {
-          return undefined;
+          return Promise.reject("");
         }
-        if (!/^[0-9]{5}$/i.test(value)) {
-          return Promise.reject("รหัสไปรษณีย์ไม่ถูกต้อง");
+        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+          return Promise.reject("อีเมลล์ติดต่อไม่ถูกต้อง");
         }
-      },
-    },
-    {
-      name: "country",
-      label: "ประเทศ",
-      placeholder: "ประเทศ",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
-      type: "TextboxFormField",
+      }
     },
     {
       icon: <TagFilled />,
       label: "ที่อยู่ตามเอกสาร",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
       type: "LabelForm",
     },
     {
