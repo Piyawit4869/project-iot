@@ -5,7 +5,7 @@ import { Link, redirect } from "react-router-dom";
 import { Button, Table, notification } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 
-// get API loader
+
 export async function organizeSingleLoader({ params }: any) {
   console.log(params);
 

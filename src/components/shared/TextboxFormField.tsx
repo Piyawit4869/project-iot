@@ -8,12 +8,13 @@ interface TextboxFormFieldProps {
   type?: string;
   rule?: any;
   disabled: boolean;
+  maxLength?: number;
 }
 
 export const TextboxFormField: FC<TextboxFormFieldProps> = (
   props: TextboxFormFieldProps
 ) => {
-  const { name, label, placeholder, type, rule, disabled } = props;
+  const { name, label, placeholder, type, rule, disabled, maxLength } = props;
 
   return (
     <Form.Item name={name} label={label} rules={rule}>
@@ -22,6 +23,7 @@ export const TextboxFormField: FC<TextboxFormFieldProps> = (
         placeholder={placeholder}
         disabled={disabled}
         style={styles.input}
+        maxLength={maxLength}
       />
     </Form.Item>
   );

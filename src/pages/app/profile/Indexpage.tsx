@@ -1,4 +1,9 @@
+import { useNavigate } from 'react-router-dom';
+import { Row, Col, Button } from 'antd';
+import { LeftOutlined } from '@ant-design/icons';
+
 export const ProfilePage = () => {
+  const navigate = useNavigate();
   const styles = {
       container: {
           padding: '20px',
@@ -46,12 +51,18 @@ export const ProfilePage = () => {
           marginBottom: '8px',
       },
   };
-
   return (
       <div style={styles.container}>
+          <Row gutter={20}>
+              <Col span={24} style={{ textAlign: 'left' }}>
+                  <Button type="primary" onClick={() => navigate(-1)}>
+                      <LeftOutlined /> Back
+                  </Button>
+              </Col>
+          </Row>
           <div style={styles.section}>
               <div style={styles.header}>
-                  <img src="profile-pic-url" alt="Profile" style={styles.profilePic}/>
+                  <img src="profile-pic-url" alt="Profile" style={styles.profilePic} />
                   <div style={styles.info}>
                       <h2>Jack Adams</h2>
                       <p>Product Designer</p>
@@ -100,3 +111,4 @@ export const ProfilePage = () => {
       </div>
   );
 };
+

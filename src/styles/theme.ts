@@ -22,6 +22,8 @@ export const ThemeColors = {
   fontColor1: "#ffffff",
   fontColor2: "#000000",
   fontColor3: "#727272",
+  fontColor4: "#19142A",
+  VerydarkmostlyblackblueColor: "#19142A",
 };
 
 export const styles: Record<string, CSSProperties> = {
@@ -36,11 +38,15 @@ export const styles: Record<string, CSSProperties> = {
 export const ThemeConfig = {
   ThemeColorsV2: {
     token: {
-      colorPrimary: "#192A5C",
+    colorPrimary: "#19142a",
+    colorInfo: "#19142a",
+    colorSuccess: "#52c41a",
+    colorWarning: "rgb(226, 49, 54)",
+    colorTextBase: "#19142a"
     },
     components: {
       Card: {
-        colorBgContainer: "#192A5C",
+        colorBgContainer: "#19142A",
       },
       Menu: {
         itemSelectedBg: "#19142A",
@@ -60,5 +66,24 @@ export const ThemeConfig = {
         colorPrimary: "#ffffff",
       },
     },
+    Button: {
+     defaultColor: "rgb(25, 20, 42)",
+    colorPrimaryHover: "rgb(25, 20, 42)",
+      colorPrimaryBorder: "rgb(25, 20, 42)",
+      colorPrimaryActive: "rgb(25, 20, 42)",
+      colorLinkHover: "rgb(25, 20, 42)",
+      colorLinkActive: "rgb(25, 20, 42)",
+      colorText: "rgb(25, 20, 42)",
+      defaultActiveBorderColor: "rgb(25, 20, 42)",
+      defaultActiveColor: "rgb(25, 20, 42)",
+      defaultHoverBorderColor: "rgb(25, 20, 42)",
+      defaultHoverColor: "rgb(25, 20, 42)",
+      groupBorderColor: "rgb(25, 20, 42)",
+      colorPrimary: "rgb(25, 20, 42)",
+      colorErrorHover: "rgb(226, 49, 54)",
+      colorErrorActive: "rgb(226, 49, 54)",
+      colorError: "rgb(226, 49, 54)"
+    }
   },
 };
+
