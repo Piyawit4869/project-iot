@@ -15,11 +15,11 @@ export async function RootLoader() {
 }
 
 export const Root = () => {
-  const {  } = useLoaderData() as any;
-// me
+  const {} = useLoaderData() as any;
+  // me
   return (
     // <AuthContext.Provider value={{ user: me }}>
-      <Outlet />
+    <Outlet />
     // </AuthContext.Provider>
   );
 };

@@ -1,13 +1,12 @@
 import React from "react";
 
 import * as API from "@src/apis";
-import {  Col, Form, Row } from "antd";
+import { Col, Form, Row } from "antd";
 
 import { DynamicForm } from "@src/forms/Dynamic";
-import {  TagFilled } from "@ant-design/icons";
+import { TagFilled } from "@ant-design/icons";
 import { useNavigate, useSubmit } from "react-router-dom";
 import { FormButtonsCreate } from "@src/components/shared/FormButtons";
-
 
 export async function organizeCreateAction({ request }: any) {
   const formData = await request.formData();
@@ -63,7 +62,7 @@ const renderForm = [
     require: true,
     message: "กรุณากรอกข้อมูลเลขทะเบียน 13 หลัก ( เช่น 0123456789101 ) ",
   },
-  
+
   {
     name: "businessDescription",
     label: "คำอธิบายธุรกิจ",
@@ -100,7 +99,7 @@ const renderForm = [
       if (!/^\d{13}$/.test(value)) {
         return Promise.reject("เลขทะเบียน 13 หลักไม่ถูกต้อง");
       }
-    }
+    },
   },
   {
     name: "businessName",
@@ -134,7 +133,6 @@ const renderForm = [
     type: "SwitchFormField",
     // require: true,
   },
-
 
   {
     icon: <TagFilled />,
@@ -179,7 +177,7 @@ const renderForm = [
       if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
         return Promise.reject("อีเมลล์สำนักงานไม่ถูกต้อง");
       }
-    }
+    },
   },
   {
     name: "websiteUrl",
@@ -188,10 +186,14 @@ const renderForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
     validator: (_: any, value: any) => {
-      if (!/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(value)) {
+      if (
+        !/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(
+          value
+        )
+      ) {
         return Promise.reject("เว็บไซต์สำนักงานไม่ถูกต้อง");
       }
-    }
+    },
   },
   {
     name: "contactPhone",
@@ -210,7 +212,7 @@ const renderForm = [
       if (!/^(06|08)[0-9]{8}$/.test(value)) {
         return Promise.reject("เบอร์โทรศัพท์ติดต่อไม่ถูกต้อง");
       }
-    }
+    },
   },
   {
     name: "contactEmail",
@@ -227,7 +229,7 @@ const renderForm = [
       if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
         return Promise.reject("อีเมลล์ติดต่อไม่ถูกต้อง");
       }
-    }
+    },
   },
   {
     icon: <TagFilled />,
@@ -256,7 +258,7 @@ const renderForm = [
       { value: "Team", label: "Detached House" },
     ],
   },
-  
+
   {
     name: ["address", "subDistrict"],
     label: "แขวง/ตำบล",
@@ -423,7 +425,7 @@ const renderForm = [
       if (!/^\d{13}$/.test(value)) {
         return Promise.reject("เลขทะเบียน 13 หลักไม่ถูกต้อง");
       }
-    }
+    },
   },
   {
     name: ["branch", "businessName"],
@@ -474,7 +476,7 @@ const renderForm = [
       if (!/^(06|08)[0-9]{8}$/.test(value)) {
         return Promise.reject("เบอร์โทรศัพท์ติดต่อไม่ถูกต้อง");
       }
-    }
+    },
   },
   {
     name: ["branch", "email"],
@@ -500,10 +502,14 @@ const renderForm = [
       if (value === undefined || value === "") {
         return undefined;
       }
-      if (!/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(value)) {
+      if (
+        !/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(
+          value
+        )
+      ) {
         return Promise.reject("เว็บไซต์สำนักงานไม่ถูกต้อง");
       }
-    }
+    },
   },
   {
     icon: <TagFilled />,
@@ -648,7 +654,7 @@ const renderForm = [
       if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
         return Promise.reject("อีเมลล์ติดต่อไม่ถูกต้อง");
       }
-    }
+    },
   },
   {
     name: "userName",
@@ -668,7 +674,7 @@ const renderForm = [
     require: true,
     message: "กรุณาอีเมลล์",
   },
-  
+
   {
     name: ["user", "password"],
     label: "รหัสผ่าน",
@@ -723,7 +729,6 @@ const renderForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "DatePickerFormField",
   },
-  
 ];
 
 export const OrganizeCreate: React.FC = () => {
@@ -760,48 +765,50 @@ export const OrganizeCreate: React.FC = () => {
   }
   return (
     <>
-    <FormButtonsCreate form={form} onFinish={handleFinish} />
+      <FormButtonsCreate form={form} onFinish={handleFinish} />
       <Form form={form} layout="vertical" onFinish={onFinish}>
-      <div style={{ padding: "20px" }}>
-    <Form form={form} layout="vertical" onFinish={onFinish}>
-      <div style={{ fontSize: 22, fontWeight: "bold" }}></div>
-      <Col
-        xs={{ span: 24, order: 2 }}
-        sm={{ span: 24, order: 2 }}
-        md={{ span: 24, order: 2 }}
-        lg={{ span: 12, order: 2 }}
-        xl={{ span: 12, order: 1 }}
-      >
-        <Row gutter={20}>
-          
-          <Col span={24} style={{ textAlign: "left", marginBottom: 16 }}></Col>
+        <div style={{ padding: "20px" }}>
+          <Form form={form} layout="vertical" onFinish={onFinish}>
+            <div style={{ fontSize: 22, fontWeight: "bold" }}></div>
+            <Col
+              xs={{ span: 24, order: 2 }}
+              sm={{ span: 24, order: 2 }}
+              md={{ span: 24, order: 2 }}
+              lg={{ span: 12, order: 2 }}
+              xl={{ span: 12, order: 1 }}
+            >
+              <Row gutter={20}>
+                <Col
+                  span={24}
+                  style={{ textAlign: "left", marginBottom: 16 }}
+                ></Col>
 
-          {renderForm.map((item: any, index: number) => {
-            return (
-              <DynamicForm
-                key={index}
-                name={item.name}
-                label={item.label}
-                placeholder={item.placeholder}
-                type={item.type}
-                col={item.col}
-                icon={item.icon}
-                value={item.value}
-                ruleMessage={item.message}
-                require={item.require}
-                option={item.options}
-                disabled={item.disabled}
-                checked={item.checked}
-                maxLength={item.maxLength}
-                validator={item.validator}
-              />
-            );
-          })}
-         </Row>
-      </Col>
+                {renderForm.map((item: any, index: number) => {
+                  return (
+                    <DynamicForm
+                      key={index}
+                      name={item.name}
+                      label={item.label}
+                      placeholder={item.placeholder}
+                      type={item.type}
+                      col={item.col}
+                      icon={item.icon}
+                      value={item.value}
+                      ruleMessage={item.message}
+                      require={item.require}
+                      option={item.options}
+                      disabled={item.disabled}
+                      checked={item.checked}
+                      maxLength={item.maxLength}
+                      validator={item.validator}
+                    />
+                  );
+                })}
+              </Row>
+            </Col>
+          </Form>
+        </div>
       </Form>
-    </div>
-    </Form>
     </>
   );
 };

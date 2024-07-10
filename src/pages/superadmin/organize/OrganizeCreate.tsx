@@ -33,7 +33,7 @@ export async function organizeCreateAction({ request }: any) {
 
 const renderForm = [
   {
-    label: " เพิ่มข้อมูลองค์กร",
+    label: " ข้อมูลองค์กร",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
     type: "SectionLabelForm",
   },

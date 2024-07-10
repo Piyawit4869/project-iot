@@ -19,7 +19,7 @@ export const ThemeColors = {
   darkorangeColor: "#E46F1B",
   grayColor: "#727272",
   blueColor: "#4CBFFF",
-  fontColor1: "#FFFFFF",
+  fontColor1: "#ffffff",
   fontColor2: "#000000",
   fontColor3: "#727272",
   fontColor4: "#19142A",
@@ -61,8 +61,9 @@ export const ThemeConfig = {
       Table: {
         headerBg: "#19142A",
         headerColor: "rgba(255, 255, 255, 0.88)",
-
         headerSortHoverBg: "#A79DB4",
+        headerSortActiveBg: "#19142A",
+        colorPrimary: "#ffffff",
       },
     },
     Button: {
