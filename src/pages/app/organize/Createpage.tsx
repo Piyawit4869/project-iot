@@ -35,7 +35,7 @@ export async function organizeCreateAction({ request }: any) {
 
 const renderForm = [
   {
-    label: "เพิ่มข้อมูลองค์กร",
+    label: "ข้อมูลองค์กร",
     col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
     type: "LabelForm",
   },
@@ -44,36 +44,6 @@ const renderForm = [
     label: "เปิดใช้งาน",
     col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
     type: "SwitchFormField",
-  },
-  {
-    name: "businessType",
-    label: "รูปแบบธุรกิจ",
-    placeholder: "รูปแบบธุรกิจ",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: "SelectFormField",
-    options: [
-      { value: "Single", label: "เดี่ยว" },
-      { value: "Duo", label: "คู่" },
-      { value: "Team", label: "ทีม" },
-    ],
-  },
-  {
-    name: "taxId",
-    label: "เลขทะเบียน 13 หลัก",
-    placeholder: "เลขทะเบียน 13 หลัก",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
-    type: "TextboxFormField",
-    require: true,
-    message: "กรุณากรอกข้อมูลเลขทะเบียน 13 หลัก ( เช่น 0123456789101 ) ",
-    maxLength: 13,
-    validator: (_: any, value: any) => {
-      if (!value) {
-        return Promise.reject("");
-      }
-      if (!/^\d{13}$/.test(value)) {
-        return Promise.reject("เลขทะเบียน 13 หลักไม่ถูกต้อง");
-      }
-    }
   },
   {
     name: "businessName",
@@ -115,6 +85,41 @@ const renderForm = [
     ],
   },
   {
+    name: "taxId",
+    label: "เลขทะเบียน 13 หลัก",
+    placeholder: "เลขทะเบียน 13 หลัก",
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: "TextboxFormField",
+    require: true,
+    message: "กรุณากรอกข้อมูลเลขทะเบียน 13 หลัก ( เช่น 0123456789101 ) ",
+    maxLength: 13,
+    validator: (_: any, value: any) => {
+      if (!value) {
+        return Promise.reject("");
+      }
+      if (!/^\d{13}$/.test(value)) {
+        return Promise.reject("เลขทะเบียน 13 หลักไม่ถูกต้อง");
+      }
+    }
+  },
+  {
+    name: "businessName",
+    label: "ชื่อกิจการ",
+    placeholder: "ชื่อกิจการ",
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: "TextboxFormField",
+    require: true,
+    message: "กรุณากรอกชื่อกิจการ",
+  },
+  {
+    name: "businessDescription",
+    label: "คำอธิบายธุรกิจ",
+    placeholder: "คำอธิบายธุรกิจ",
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: "TextAreaFormField",
+    require: true,
+  },
+  {
     name: "businessRegister",
     label: "วันที่จดทะเบียน",
     placeholder: "วันที่จดทะเบียน",
@@ -126,7 +131,7 @@ const renderForm = [
     label: "จดทะเบียนภาษีมูลค่าเพิ่ม",
     placeholder: "จดทะเบียนภาษีมูลค่าเพิ่ม",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: "CheckboxFormField",
+    type: "SwitchFormField",
     // require: true,
   },
 
@@ -134,7 +139,7 @@ const renderForm = [
   {
     icon: <TagFilled />,
     label: "ข้อมูลช่องทางการติดต่อ",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
+    col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
     type: "LabelForm",
   },
   {
@@ -159,7 +164,7 @@ const renderForm = [
     name: "contactEmail",
     label: "อีเมลล์ติดต่อ",
     placeholder: "อีเมลล์ติดต่อ",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
     require: true,
     message: "กรุณากรอกอีเมลล์ติดต่อ  ",
@@ -168,7 +173,7 @@ const renderForm = [
     name: "businessEmail",
     label: "อีเมลล์สำนักงาน",
     placeholder: "อีเมลล์สำนักงาน",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
     validator: (_: any, value: any) => {
       if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
@@ -180,7 +185,7 @@ const renderForm = [
     name: "websiteUrl",
     label: "เว็บไซต์สำนักงาน",
     placeholder: "เว็บไซต์สำนักงาน",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
     validator: (_: any, value: any) => {
       if (!/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(value)) {
@@ -192,7 +197,7 @@ const renderForm = [
     name: "contactPhone",
     label: "เบอร์โทรศัพท์ติดต่อ",
     placeholder: "เบอร์โทรศัพท์ติดต่อ",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
     require: true,
     message: "กรุณากรอกเบอร์โทรศัพท์ติดต่อ  ",
@@ -211,7 +216,7 @@ const renderForm = [
     name: "contactEmail",
     label: "อีเมลล์ติดต่อ",
     placeholder: "อีเมลล์ติดต่อ",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
     require: true,
     message: "กรุณากรอกอีเมลล์ติดต่อ  ",
@@ -227,7 +232,7 @@ const renderForm = [
   {
     icon: <TagFilled />,
     label: "ข้อมูลที่อยู่ตามทะเบียน",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
+    col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
     type: "LabelForm",
   },
   {
@@ -236,6 +241,7 @@ const renderForm = [
     placeholder: "ที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
+    require: true,
   },
   {
     name: ["address", "addressType"],
@@ -243,6 +249,7 @@ const renderForm = [
     placeholder: "ประเภทที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "SelectFormField",
+    require: true,
     option: [
       { value: "Single", label: "Home" },
       { value: "Duo", label: "Apartment" },
@@ -256,6 +263,7 @@ const renderForm = [
     placeholder: "แขวง/ตำบล",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
+    require: true,
   },
   {
     name: ["address", "district"],
@@ -263,12 +271,13 @@ const renderForm = [
     placeholder: "เขต/อำเภอ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
+    require: true,
   },
   {
     name: ["address", "province"],
     label: "จังหวัด",
     placeholder: "จังหวัด",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
     require: true,
     message: "กรุณากรอกจังหวัด",
@@ -277,7 +286,7 @@ const renderForm = [
     name: ["address", "postalCode"],
     label: "รหัสไปรษณีย์",
     placeholder: "รหัสไปรษณีย์",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
     require: true,
     message: "กรุณากรอกรหัสไปรษณีย์",
@@ -295,13 +304,14 @@ const renderForm = [
     name: "country",
     label: "ประเทศ",
     placeholder: "ประเทศ",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
+    require: true,
   },
   {
     icon: <TagFilled />,
     label: "ข้อมูลที่อยู่ตามเอกสาร",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
     type: "LabelForm",
   },
 
@@ -431,7 +441,7 @@ const renderForm = [
   },
   {
     name: ["branch", "branchType"],
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 6 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "RadioFormField",
     options: [
       { value: "headquarters", label: "สำนักงานใหญ่", checked: true },
@@ -442,7 +452,7 @@ const renderForm = [
     name: ["branch", "businessType"],
     label: "รูปแบบธุรกิจ",
     placeholder: "รูปแบบธุรกิจ",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 6 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "SelectFormField",
     options: [
       { value: "Single", label: "เดี่ยว" },
@@ -470,21 +480,21 @@ const renderForm = [
     name: ["branch", "email"],
     label: "อีเมลล์",
     placeholder: "อีเมลล์",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
   },
   {
     name: ["branch", "phone"],
-    label: "เบอร์โทรศัพท์",
-    placeholder: "เบอร์โทรศัพท์",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+    label: "เบอร์โทรศัพท์ติดต่อ",
+    placeholder: "เบอร์โทรศัพท์ติดต่อ",
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
   },
   {
     name: ["branch", "websiteUrl"],
     label: "เว็บไซต์",
     placeholder: "เว็บไซต์",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
     validator: (_: any, value: any) => {
       if (value === undefined || value === "") {
@@ -498,7 +508,7 @@ const renderForm = [
   {
     icon: <TagFilled />,
     label: "ข้อมูลที่อยู่",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
+    col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
     type: "LabelForm",
   },
   {
@@ -507,6 +517,7 @@ const renderForm = [
     placeholder: "ที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
+    require: true,
   },
   {
     name: ["branch", "address", "descriptions"],
@@ -514,6 +525,7 @@ const renderForm = [
     placeholder: "คำอธิบายเกี่ยวกับที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextAreaFormField",
+    require: true,
   },
   {
     name: ["branch", "address", "country"],
@@ -521,6 +533,7 @@ const renderForm = [
     placeholder: "ประเทศ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
+    require: true,
   },
   {
     name: ["branch", "address", "addressType"],
@@ -528,6 +541,7 @@ const renderForm = [
     placeholder: "ประเภทที่อยู่",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "SelectFormField",
+    require: true,
     options: [
       { value: "Single", label: "Home" },
       { value: "Duo", label: "Apartment" },
@@ -540,6 +554,7 @@ const renderForm = [
     placeholder: "แขวง/ตำบล",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
+    require: true,
   },
   {
     name: ["branch", "address", "district"],
@@ -547,6 +562,7 @@ const renderForm = [
     placeholder: "เขต/อำเภอ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
+    require: true,
   },
   {
     name: ["branch", "address", "province"],
@@ -588,10 +604,40 @@ const renderForm = [
     type: "SectionLabelForm",
   },
   {
+    name: ["user", "profix"],
+    label: "คำนำหน้า",
+    placeholder: "คำนำหน้า",
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: "SelectFormField",
+    options: [
+      { value: "Mr", label: "นาย" },
+      { value: "Ms", label: "นาง" },
+      { value: "Mrs", label: "นางสาว" },
+    ],
+  },
+  {
+    name: ["user", "profile", "firstName"],
+    label: "ชื่อ",
+    placeholder: "ชื่อ",
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: "TextboxFormField",
+    require: true,
+    message: "กรุณากรอกชื่อ",
+  },
+  {
+    name: ["user", "profile", "lastName"],
+    label: "นามสกุล",
+    placeholder: "นามสกุล",
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: "TextboxFormField",
+    require: true,
+    message: "กรุณากรอกนามสกุล",
+  },
+  {
     name: ["user", "email"],
     label: "อีเมลล์",
     placeholder: "อีเมลล์",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
     require: true,
     message: "กรุณากรอกอีเมลล์",
@@ -638,36 +684,6 @@ const renderForm = [
     type: "TextboxFormField",
   },
   {
-    name: ["user", "profix"],
-    label: "คำนำหน้า",
-    placeholder: "คำนำหน้า",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 4 },
-    type: "SelectFormField",
-    options: [
-      { value: "Mr", label: "นาย" },
-      { value: "Ms", label: "นาง" },
-      { value: "Mrs", label: "นางสาว" },
-    ],
-  },
-  {
-    name: ["user", "profile", "firstName"],
-    label: "ชื่อ",
-    placeholder: "ชื่อ",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 },
-    type: "TextboxFormField",
-    require: true,
-    message: "กรุณากรอกชื่อ",
-  },
-  {
-    name: ["user", "profile", "lastName"],
-    label: "นามสกุล",
-    placeholder: "นามสกุล",
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: "TextboxFormField",
-    require: true,
-    message: "กรุณากรอกนามสกุล",
-  },
-  {
     name: "role",
     label: "ตำแหน่ง",
     placeholder: "เลือก",
@@ -695,8 +711,8 @@ const renderForm = [
   },
   {
     name: ["user", "profile", "phone"],
-    label: "โทรศัพท์",
-    placeholder: "โทรศัพท์",
+    label: "เบอร์โทรศัพท์ติดต่อ",
+    placeholder: "เบอร์โทรศัพท์ติดต่อ ",
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: "TextboxFormField",
   },

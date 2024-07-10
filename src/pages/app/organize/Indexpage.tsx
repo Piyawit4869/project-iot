@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TagOutlined,
   EyeOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Typography, Input, Button, Tag, Pagination, Image } from "antd";
+import { Typography, Input, Button, Tag, Pagination, Image, Spin } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { TableComponent } from "@src/components/shared/TableComponent";
@@ -80,8 +80,9 @@ const columns = [
 ];
 
 export const OrganizeIndex: React.FC = () => {
-  const [organize, setOrganize] = useState(organizeData);
+  const [organize, setOrganize] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   // useEffect(() => {
@@ -103,6 +104,14 @@ export const OrganizeIndex: React.FC = () => {
       navigate("/");
     }
   }, [navigate]);
+
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setOrganize(organizeData);
+      setLoading(false);
+    }, 1000); 
+  }, []);
 
   const onSearch = (value: string) => {
     const filteredData = organizeData.filter(item =>
@@ -155,12 +164,18 @@ export const OrganizeIndex: React.FC = () => {
           marginTop: 16,
         }}
       >
-        <TableComponent
-          columns={columns}
-          dataSource={organizeData}
-          pagination={false}
-          bordered
-        />
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+            <Spin size="large" />
+          </div>
+        ) : (
+          <TableComponent
+            columns={columns}
+            dataSource={organize}
+            pagination={false}
+            bordered
+          />
+        )}
       </div>
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
         <Pagination defaultCurrent={1} total={organize.length} />
@@ -170,3 +185,13 @@ export const OrganizeIndex: React.FC = () => {
 };
 
 export default OrganizeIndex;
+
+export async function organizeLoader() {
+    try {
+    //   const organize = await API.organize.getAll();
+    //   return { organize: organize.data };
+    return {};
+    } catch (error) {
+      return { error: "error", message: error };
+    }
+  }

@@ -41,7 +41,7 @@ export const ThemeConfig = {
     colorPrimary: "#19142a",
     colorInfo: "#19142a",
     colorSuccess: "#52c41a",
-    colorWarning: "#19142a",
+    colorWarning: "rgb(226, 49, 54)",
     colorTextBase: "#19142a"
     },
     components: {

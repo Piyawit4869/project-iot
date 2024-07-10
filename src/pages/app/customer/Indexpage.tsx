@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Input, Pagination, Button, Tag, Typography, Image } from "antd";
+import React, { useEffect, useState } from "react";
+import { Input, Pagination, Button, Tag, Typography, Image, Spin } from "antd";
 import { SearchOutlined, EyeOutlined, TagOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
-import { customerData } from './customerData'; 
+import { customerData as initialCustomerData } from './customerData'; 
 
 const { Title } = Typography;
 
@@ -68,10 +68,29 @@ const columns = [
 ];
 
 export const CustomerIndex: React.FC = () => {
-  const [searchValue, setSearchValue] = useState<string>("");
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [customers, setCustomers] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setCustomers(initialCustomerData);
+      setLoading(false);
+    }, 1000);
+  }, []);
 
   const onSearch = (value: string) => {
     console.log("Search:", value);
+  };
+
+  const handlePageChange = (page: number, pageSize?: number) => {
+    setCurrentPage(page);
+    if (pageSize) {
+      setPageSize(pageSize);
+    }
   };
 
   return (
@@ -111,16 +130,27 @@ export const CustomerIndex: React.FC = () => {
       </div>
 
       <div style={{ boxShadow: "0 4px 8px rgba(0.25, 0.25, 0.25, 0.25)", borderRadius: "25px", overflow: "hidden", marginTop: 16 }}>
-        <TableComponent
-          columns={columns}
-          dataSource={customerData}
-          pagination={false}
-          bordered
-        />
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+            <Spin size="large" />
+          </div>
+        ) : (
+          <TableComponent
+            columns={columns}
+            dataSource={customers.slice((currentPage - 1) * pageSize, currentPage * pageSize)} // Slice data for pagination
+            pagination={false}
+            bordered
+          />
+        )}
       </div>
 
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
-        <Pagination defaultCurrent={1} total={customerData.length} />
+        <Pagination
+          current={currentPage}
+          total={customers.length}
+          pageSize={pageSize}
+          onChange={handlePageChange}
+        />
       </div>
     </div>
   );
