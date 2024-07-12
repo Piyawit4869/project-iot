@@ -39,9 +39,6 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
     );
   };
 
-
- 
-
   React.useEffect(() => {
     let businessRegister = null;
     if (initialValues && initialValues.businessRegister) {
@@ -66,7 +63,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       type: "SwitchFormField",
     },
     {
-      name: "businessName",
+      name: "businessNameTH",
       label: "ชื่อกิจการ",
       placeholder: "ชื่อกิจการ",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
@@ -85,7 +82,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
     },
     
     {
-      name: "businessDescription",
+      name: "businessDescriptionTH",
       label: "คำอธิบายธุรกิจ",
       placeholder: "คำอธิบายธุรกิจ",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
@@ -93,7 +90,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       require: true,
     },
     {
-      name: "businessType",
+      name: "businessTypeTH",
       label: "รูปแบบธุรกิจ",
       placeholder: "รูปแบบธุรกิจ",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
@@ -121,23 +118,6 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
           return Promise.reject("เลขทะเบียน 13 หลักไม่ถูกต้อง");
         }
       }
-    },
-    {
-      name: "businessName",
-      label: "ชื่อกิจการ",
-      placeholder: "ชื่อกิจการ",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-      require: true,
-      message: "กรุณากรอกชื่อกิจการ",
-    },
-    {
-      name: "businessDescription",
-      label: "คำอธิบายธุรกิจ",
-      placeholder: "คำอธิบายธุรกิจ",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextAreaFormField",
-      require: true,
     },
     {
       name: "businessRegister",
@@ -213,42 +193,6 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       }
     },
     {
-      name: "contactPhone",
-      label: "เบอร์โทรศัพท์ติดต่อ",
-      placeholder: "เบอร์โทรศัพท์ติดต่อ",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-      require: true,
-      message: "กรุณากรอกเบอร์โทรศัพท์ติดต่อ  ",
-      maxLength: 10,
-      validator: (_: any, value: any) => {
-        if (value === undefined || value === "") {
-          return Promise.reject("");
-        }
-        // if (!/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]{10}$/.test(value)) {
-        if (!/^(06|08)[0-9]{8}$/.test(value)) {
-          return Promise.reject("เบอร์โทรศัพท์ติดต่อไม่ถูกต้อง");
-        }
-      }
-    },
-    {
-      name: "contactEmail",
-      label: "อีเมลล์ติดต่อ",
-      placeholder: "อีเมลล์ติดต่อ",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-      type: "TextboxFormField",
-      require: true,
-      message: "กรุณากรอกอีเมลล์ติดต่อ  ",
-      validator: (_: any, value: any) => {
-        if (value === undefined || value === "") {
-          return Promise.reject("");
-        }
-        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-          return Promise.reject("อีเมลล์ติดต่อไม่ถูกต้อง");
-        }
-      }
-    },
-    {
       icon: <TagFilled />,
       label: "ที่อยู่ตามเอกสาร",
       col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
@@ -264,7 +208,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       ],
     },
     {
-      name: ["address", "address"],
+      name: ["addresses", "address"],
       label: "ที่อยู่",
       placeholder: "ที่อยู่",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
@@ -278,14 +222,14 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       type: "TextAreaFormField",
     },
     {
-      name: ["address", "country"],
+      name: ["addresses", "country"],
       label: "ประเทศ",
       placeholder: "ประเทศ",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
     {
-      name: ["address", "addressType"],
+      name: ["addresses", "addressType"],
       label: "ประเภทที่อยู่",
       placeholder: "ประเภทที่อยู่",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
@@ -297,28 +241,28 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       ],
     },
     {
-      name: ["address", "subDistrict"],
+      name: ["addresses", "subDistrict"],
       label: "แขวง/ตำบล",
       placeholder: "แขวง/ตำบล",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
     {
-      name: ["address", "district"],
+      name: ["addresses", "district"],
       label: "เขต/อำเภอ",
       placeholder: "เขต/อำเภอ",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
     {
-      name: ["address", "province"],
+      name: ["addresses", "province"],
       label: "จังหวัด",
       placeholder: "จังหวัด",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
     {
-      name: ["address", "postalCode"],
+      name: ["addresses", "postalCode"],
       label: "รหัสไปรษณีย์",
       placeholder: "รหัสไปรษณีย์",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
@@ -334,7 +278,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       },
     },
     {
-      name: ["address", "active"],
+      name: ["addresses", "active"],
       label: "เปิดใช้งาน",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
       type: "SwitchFormField",

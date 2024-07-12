@@ -84,12 +84,12 @@ const columns = [
   },
   {
     title: "ชื่อองค์กร",
-    dataIndex: "businessName",
+    dataIndex: "nameTh",
     key: "businessName",
   },
   {
     title: "ประเภทธุรกิจ",
-    dataIndex: "businessType",
+    dataIndex: "type",
     key: "businessType",
   },
   {
@@ -99,12 +99,12 @@ const columns = [
   },
   {
     title: "ประเภทสาขา",
-    dataIndex: "branchType",
+    dataIndex: "type",
     key: "branchType",
   },
   {
     title: "โทรศัพท์",
-    dataIndex: "telephone",
+    dataIndex: "phone",
     key: "telephone",
   },
   {
@@ -208,7 +208,7 @@ export const OrganizeSingle: React.FC = () => {
         // dataSource={dataSource}
         // columns={columns}
         // dataSource={products}
-        dataSource={organize?.items ? organize?.items : []}
+        dataSource={organize?.branches ? organize?.branches : []}
         pagination={false}
         bordered
       />
