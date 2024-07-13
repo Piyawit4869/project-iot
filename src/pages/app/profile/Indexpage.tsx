@@ -1,114 +1,123 @@
-import { useNavigate } from 'react-router-dom';
-import { Row, Col, Button } from 'antd';
-import { LeftOutlined } from '@ant-design/icons';
+import { LeftOutlined, UploadOutlined } from "@ant-design/icons";
+import { Form, Button, Row, Col, Typography, Image, Input, Upload } from "antd";
+import { useNavigate } from "react-router-dom";
+import { useRef, useState } from "react";
+
+const profileImageSrc = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+const bannerImageSrc = 'https://via.placeholder.com/800x200'; 
+
+const styles = {
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '20px',
+  },
+  content: {
+    maxWidth: '800px',
+    width: '100%',
+    background: '#fff',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+    padding: '20px',
+    marginTop: '40px',  // Added margin top to move the form down
+  },
+  bannerImage: {
+    width: '100%',
+    height: '200px',
+    objectFit: 'cover',
+    borderRadius: '8px 8px 0 0',
+    position: 'relative',
+  },
+  profileImageContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '-50px',  // Adjusted to position profile image on top of the banner
+    marginBottom: '20px',
+  },
+  profileImage: {
+    borderRadius: '50%',
+    border: '4px solid white',
+  },
+  formItem: {
+    marginBottom: '15px',
+  },
+  title: {
+    marginBottom: '20px',
+  },
+  buttons: {
+    marginTop: '20px',
+  },
+  userInfo: {
+    padding: '20px',
+  }
+};
 
 export const ProfilePage = () => {
+  const [form] = Form.useForm();
   const navigate = useNavigate();
-  const styles = {
-      container: {
-          padding: '20px',
-          maxWidth: '600px',
-          margin: 'auto',
-      },
-      section: {
-          marginBottom: '20px',
-          padding: '20px',
-          border: '1px solid #e0e0e0',
-          borderRadius: '8px',
-          backgroundColor: '#fff',
-      },
-      header: {
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-      },
-      profilePic: {
-          width: '80px',
-          height: '80px',
-          borderRadius: '50%',
-      },
-      info: {
-          flexGrow: 1,
-          marginLeft: '20px',
-      },
-      editButton: {
-          backgroundColor: '#007bff',
-          color: '#fff',
-          border: 'none',
-          padding: '8px 12px',
-          borderRadius: '4px',
-          cursor: 'pointer',
-      },
-      editButtonHover: {
-          backgroundColor: '#0056b3',
-      },
-      content: {
-          marginTop: '10px',
-      },
-      item: {
-          display: 'flex',
-          justifyContent: 'space-between',
-          marginBottom: '8px',
-      },
+  const containerRef = useRef(null);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const onFinish = (values: any) => {
+    const payload = Object.assign(values);
+    // console.log("Form Submitted", payload);
+    localStorage.setItem("me", JSON.stringify(payload));
+    setIsEditing(false);
   };
+
+  const me = JSON.parse(localStorage.getItem("me") as any);
+  const { Title, Text } = Typography;
+
   return (
-      <div style={styles.container}>
-          <Row gutter={20}>
-              <Col span={24} style={{ textAlign: 'left' }}>
-                  <Button type="primary" onClick={() => navigate(-1)}>
-                      <LeftOutlined /> Back
-                  </Button>
-              </Col>
-          </Row>
-          <div style={styles.section}>
-              <div style={styles.header}>
-                  <img src="profile-pic-url" alt="Profile" style={styles.profilePic} />
-                  <div style={styles.info}>
-                      <h2>Jack Adams</h2>
-                      <p>Product Designer</p>
-                      <p>Los Angeles, California, USA</p>
-                  </div>
-                  <button style={styles.editButton}>Edit</button>
-              </div>
-              <h3>Personal Information</h3>
-              <div style={styles.content}>
-                  <div style={styles.item}>
-                      <span>First Name:</span> <span>Jack</span>
-                  </div>
-                  <div style={styles.item}>
-                      <span>Last Name:</span> <span>Adams</span>
-                  </div>
-                  <div style={styles.item}>
-                      <span>Email address:</span> <span>jackadams@gmail.com</span>
-                  </div>
-                  <div style={styles.item}>
-                      <span>Phone:</span> <span>(213) 555-1234</span>
-                  </div>
-                  <div style={styles.item}>
-                      <span>Bio:</span> <span>Product Designer</span>
-                  </div>
-              </div>
-              <button style={styles.editButton}>Edit</button>
+    <>
+      <Col span={24} style={{ textAlign: 'left', marginBottom: '20px' }}>
+        <Button type="primary" onClick={() => navigate(-1)}>
+          <LeftOutlined /> Back
+        </Button>
+      </Col>
+      <div style={styles.container} ref={containerRef}>
+        <div style={styles.content}>
+          <Image src={bannerImageSrc}  />
+          <div style={styles.profileImageContainer}>
+            <Image width={100} src={profileImageSrc} style={styles.profileImage} />
           </div>
-          <div style={styles.section}>
-              <h3>Address</h3>
-              <div style={styles.content}>
-                  <div style={styles.item}>
-                      <span>Country:</span> <span>United States of America</span>
-                  </div>
-                  <div style={styles.item}>
-                      <span>City/State:</span> <span>California, USA</span>
-                  </div>
-                  <div style={styles.item}>
-                      <span>Postal Code:</span> <span>ERT 62574</span>
-                  </div>
-                  <div style={styles.item}>
-                      <span>TAX ID:</span> <span>AS564178969</span>
-                  </div>
-              </div>
-              <button style={styles.editButton}>Edit</button>
-          </div>
+          <Form form={form} layout="vertical" onFinish={onFinish} initialValues={me}>
+            <div style={styles.userInfo}>
+              <Title level={2} style={styles.title}>Profile</Title>
+                <div>
+                  <Title level={4}>Personal Information</Title>
+                  <Row gutter={[16, 16]}>
+                    <Col span={12}><Text strong>คำนำหน้า:</Text> <Text>{me.profix}</Text></Col>
+                    <Col span={12}><Text strong>ชื่อ:</Text> <Text>{me.firstName}</Text></Col>
+                    <Col span={12}><Text strong>นามสกุล:</Text> <Text>{me.lastName}</Text></Col>
+                    <Col span={12}><Text strong>อีเมลล์:</Text> <Text>{me.email}</Text></Col>
+                    <Col span={12}><Text strong>เบอร์โทรศัพท์ติดต่อ:</Text> <Text>{me.phone}</Text></Col>
+                    <Col span={12}><Text strong>วัน/เดือน/ปีเกิด:</Text> <Text>{me.birthDate}</Text></Col>
+                  </Row>
+                  <Title level={4} style={{ marginTop: '20px' }}>Address</Title>
+                  <Row gutter={[16, 16]}>
+                    <Col span={12}><Text strong>ที่อยู่:</Text> <Text>{me.country}</Text></Col>
+                    <Col span={12}><Text strong>แขวง/ตำบล:</Text> <Text>{me.cityState}</Text></Col>
+                    <Col span={12}><Text strong>เขต/อำเภอ:</Text> <Text>{me.postalCode}</Text></Col>
+                    <Col span={12}><Text strong>จังหวัด:</Text> <Text>{me.taxId}</Text></Col>
+                    <Col span={12}><Text strong>รหัสไปรษณีย์:</Text> <Text>{me.taxId}</Text></Col>
+                    <Col span={12}><Text strong>ประเทศ:</Text> <Text>{me.taxId}</Text></Col>
+                  </Row>
+                </div>
+       
+            </div>
+            <div style={styles.buttons}>
+                <>
+                  <Button type="primary" onClick={() => setIsEditing(true)}>Edit</Button>
+                </>
+           
+            </div>
+          </Form>
+        </div>
       </div>
+    </>
   );
 };
 
+export default ProfilePage;
