@@ -1,5 +1,5 @@
-import { LeftOutlined, UploadOutlined } from "@ant-design/icons";
-import { Form, Button, Row, Col, Typography, Image, Input, Upload } from "antd";
+import { LeftOutlined } from "@ant-design/icons";
+import { Form, Button, Row, Col, Typography, Image } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 
@@ -57,11 +57,11 @@ export const ProfilePage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const containerRef = useRef(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [, setIsEditing] = useState(false);
 
   const onFinish = (values: any) => {
     const payload = Object.assign(values);
-    // console.log("Form Submitted", payload);
+    console.log("Form Submitted", payload);
     localStorage.setItem("me", JSON.stringify(payload));
     setIsEditing(false);
   };
