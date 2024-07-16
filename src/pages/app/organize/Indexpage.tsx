@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  TagOutlined,
-  EyeOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { TagOutlined, EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { Typography, Input, Button, Tag, Pagination, Image, Spin } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
-import organizeData from './organizeData'; 
+import organizeData from "./organizeData";
 // import * as API from "@src/apis";
 
 const { Title } = Typography;
@@ -25,7 +21,9 @@ const columns = [
     title: "โลโก้",
     dataIndex: "logoUrl",
     key: "logoUrl",
-    render: (logoUrl: string) => <Image width={100} src={logoUrl} alt="โลโก้" />,
+    render: (logoUrl: string) => (
+      <Image width={100} src={logoUrl} alt="โลโก้" />
+    ),
   },
   {
     title: "ชื่อองค์กร",
@@ -63,7 +61,11 @@ const columns = [
     dataIndex: "active",
     key: "active",
     render: (active: boolean) =>
-      active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>,
+      active ? (
+        <Tag color="success">พร้อมใช้งาน</Tag>
+      ) : (
+        <Tag color="error">ไม่พร้อมใช้งาน</Tag>
+      ),
   },
   {
     title: "รายละเอียด",
@@ -110,13 +112,14 @@ export const OrganizeIndex: React.FC = () => {
     setTimeout(() => {
       setOrganize(organizeData);
       setLoading(false);
-    }, 1000); 
+    }, 1000);
   }, []);
 
   const onSearch = (value: string) => {
-    const filteredData = organizeData.filter(item =>
-      item.businessName.toLowerCase().includes(value.toLowerCase()) ||
-      item.businessDescription.toLowerCase().includes(value.toLowerCase())
+    const filteredData = organizeData.filter(
+      (item) =>
+        item.businessName.toLowerCase().includes(value.toLowerCase()) ||
+        item.businessDescription.toLowerCase().includes(value.toLowerCase())
     );
     setOrganize(filteredData);
   };
@@ -132,11 +135,18 @@ export const OrganizeIndex: React.FC = () => {
       </div>
       <div>
         <Link to={"create"}>
-          <CreateButton label={"เพิ่มข้อมูลลูกค้า"}/>
+          <CreateButton label={"เพิ่มข้อมูลลูกค้า"} />
         </Link>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          marginTop: "16px",
+        }}
+      >
         <Input
           addonBefore="ค้นหา"
           allowClear
@@ -145,7 +155,7 @@ export const OrganizeIndex: React.FC = () => {
           onPressEnter={() => onSearch(searchValue)}
           style={{ width: 304 }}
         />
-         <Button
+        <Button
           icon={<SearchOutlined />}
           type="primary"
           onClick={() => onSearch(searchValue)}
@@ -153,7 +163,9 @@ export const OrganizeIndex: React.FC = () => {
             backgroundColor: "#19142A",
             borderColor: "#19142A",
           }}
-          >ค้นหา </Button>
+        >
+          ค้นหา{" "}
+        </Button>
       </div>
 
       <div
@@ -165,7 +177,14 @@ export const OrganizeIndex: React.FC = () => {
         }}
       >
         {loading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "200px",
+            }}
+          >
             <Spin size="large" />
           </div>
         ) : (
@@ -177,7 +196,14 @@ export const OrganizeIndex: React.FC = () => {
           />
         )}
       </div>
-      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          marginTop: "20px",
+        }}
+      >
         <Pagination defaultCurrent={1} total={organize.length} />
       </div>
     </div>
@@ -187,11 +213,11 @@ export const OrganizeIndex: React.FC = () => {
 export default OrganizeIndex;
 
 export async function organizeLoader() {
-    try {
+  try {
     //   const organize = await API.organize.getAll();
     //   return { organize: organize.data };
     return {};
-    } catch (error) {
-      return { error: "error", message: error };
-    }
+  } catch (error) {
+    return { error: "error", message: error };
   }
+}
