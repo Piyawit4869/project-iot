@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { TagOutlined, EyeOutlined, SearchOutlined } from "@ant-design/icons";
-import { Typography, Input, Button, Tag, Pagination, Image, Spin } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  TagOutlined,
+  EyeOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { Typography, Input, Button, Tag, Pagination, Image } from "antd";
+import { Link, useLoaderData, useNavigate, useNavigation } from "react-router-dom";
 import dayjs from "dayjs";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
-import organizeData from "./organizeData";
+// import organizeData from "./organizeData";
 // import * as API from "@src/apis";
 
 const { Title } = Typography;
@@ -27,13 +31,13 @@ const columns = [
   },
   {
     title: "ชื่อองค์กร",
-    dataIndex: "businessName",
-    key: "businessName",
+    dataIndex: "businessNameEN",
+    key: "businessNameEN",
   },
   {
     title: "คำอธิบายธุรกิจ",
-    dataIndex: "businessDescription",
-    key: "businessDescription",
+    dataIndex: "businessDescriptionEN",
+    key: "businessDescriptionEN",
   },
   {
     title: "จดทะเบียน",
@@ -82,10 +86,11 @@ const columns = [
 ];
 
 export const OrganizeIndex: React.FC = () => {
-  const [organize, setOrganize] = useState<any[]>([]);
-  const [searchValue, setSearchValue] = useState<string>("");
+  // const [searchValue, setSearchValue] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  const { organize } = useLoaderData() as any
+  const { state } = useNavigation()
 
   // useEffect(() => {
   //   const fetchOrganize = async () => {
@@ -110,19 +115,18 @@ export const OrganizeIndex: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
-      setOrganize(organizeData);
       setLoading(false);
     }, 1000);
   }, []);
 
-  const onSearch = (value: string) => {
-    const filteredData = organizeData.filter(
-      (item) =>
-        item.businessName.toLowerCase().includes(value.toLowerCase()) ||
-        item.businessDescription.toLowerCase().includes(value.toLowerCase())
-    );
-    setOrganize(filteredData);
-  };
+  // const onSearch = (value: string) => {
+  //   const filteredData = organizeData.filter(
+  //     (item) =>
+  //       item.businessName.toLowerCase().includes(value.toLowerCase()) ||
+  //       item.businessDescription.toLowerCase().includes(value.toLowerCase())
+  //   );
+  //   // setOrganize(filteredData);
+  // };
 
   return (
     <div>
@@ -150,15 +154,15 @@ export const OrganizeIndex: React.FC = () => {
         <Input
           addonBefore="ค้นหา"
           allowClear
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          onPressEnter={() => onSearch(searchValue)}
+          // value={searchValue}
+          // onChange={(e) => setSearchValue(e.target.value)}
+          // onPressEnter={() => onSearch(searchValue)}
           style={{ width: 304 }}
         />
         <Button
           icon={<SearchOutlined />}
           type="primary"
-          onClick={() => onSearch(searchValue)}
+          // onClick={() => onSearch(searchValue)}
           style={{
             backgroundColor: "#19142A",
             borderColor: "#19142A",
@@ -176,25 +180,13 @@ export const OrganizeIndex: React.FC = () => {
           marginTop: 16,
         }}
       >
-        {loading ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "200px",
-            }}
-          >
-            <Spin size="large" />
-          </div>
-        ) : (
-          <TableComponent
-            columns={columns}
-            dataSource={organize}
-            pagination={false}
-            bordered
-          />
-        )}
+        <TableComponent
+          columns={columns}
+          dataSource={organize}
+          pagination={false}
+          bordered
+          loading={loading || state === "loading" || state === "submitting"}
+        />
       </div>
       <div
         style={{

@@ -1,18 +1,7 @@
 import { Layout } from "antd";
-import { useNavigation } from "react-router-dom";
 import { Contents, Headerbar, Sidebar } from ".";
-import React from "react";
 
 export const AdminLayout = () => {
-  const [loading, setLoading] = React.useState(true);
-  const { state } = useNavigation();
-
-  React.useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
-
   return (
     <>
       <Layout
@@ -21,8 +10,7 @@ export const AdminLayout = () => {
         <Sidebar />
         <Layout>
           <Headerbar />
-
-          <Contents loading={loading || state === "submitting"} />
+          <Contents/>
         </Layout>
       </Layout>
     </>

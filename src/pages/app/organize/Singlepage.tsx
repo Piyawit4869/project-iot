@@ -12,8 +12,6 @@ import {
 
 // get API loader
 export async function organizeSingleLoader({ params }: any) {
-  console.log(params);
-
   try {
     const organize = await API.organize.get(params.id);
     return { organize: organize.data.data };
@@ -84,12 +82,12 @@ const columns = [
   },
   {
     title: "ชื่อองค์กร",
-    dataIndex: "businessName",
+    dataIndex: "nameTh",
     key: "businessName",
   },
   {
     title: "ประเภทธุรกิจ",
-    dataIndex: "businessType",
+    dataIndex: "type",
     key: "businessType",
   },
   {
@@ -99,12 +97,12 @@ const columns = [
   },
   {
     title: "ประเภทสาขา",
-    dataIndex: "branchType",
+    dataIndex: "type",
     key: "branchType",
   },
   {
     title: "โทรศัพท์",
-    dataIndex: "telephone",
+    dataIndex: "phone",
     key: "telephone",
   },
   {
@@ -122,7 +120,6 @@ const columns = [
     key: "details",
     dataIndex: "id",
     render: (id: number) => {
-      console.log(id);
       return (
         <Link to={`${id}`}>
           <Button
@@ -137,6 +134,7 @@ const columns = [
     },
   },
 ];
+
 export const OrganizeSingle: React.FC = () => {
   const { organize } = useLoaderData() as any;
 
@@ -208,7 +206,7 @@ export const OrganizeSingle: React.FC = () => {
         // dataSource={dataSource}
         // columns={columns}
         // dataSource={products}
-        dataSource={organize?.items ? organize?.items : []}
+        dataSource={organize?.branches ? organize?.branches : []}
         pagination={false}
         bordered
       />
