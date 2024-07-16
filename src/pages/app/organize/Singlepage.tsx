@@ -12,8 +12,6 @@ import {
 
 // get API loader
 export async function organizeSingleLoader({ params }: any) {
-  console.log(params);
-
   try {
     const organize = await API.organize.get(params.id);
     return { organize: organize.data.data };
@@ -122,7 +120,6 @@ const columns = [
     key: "details",
     dataIndex: "id",
     render: (id: number) => {
-      console.log(id);
       return (
         <Link to={`${id}`}>
           <Button
@@ -137,6 +134,7 @@ const columns = [
     },
   },
 ];
+
 export const OrganizeSingle: React.FC = () => {
   const { organize } = useLoaderData() as any;
 
