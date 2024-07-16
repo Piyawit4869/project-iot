@@ -1,13 +1,8 @@
-import { Breadcrumb, Card, Layout, Spin } from "antd";
+import { Breadcrumb, Card, Layout } from "antd";
 import { Outlet } from "react-router-dom";
 
-interface ContentProps {
-  loading: boolean;
-}
-
-export const Contents = (props: ContentProps) => {
+export const Contents = () => {
   const { Content } = Layout;
-  const { loading } = props;
   return (
     <Content
       className="app-background"
@@ -43,22 +38,7 @@ export const Contents = (props: ContentProps) => {
         ]}
       />
       <Card style={{ backgroundColor: "white" }}>
-        <Spin
-          spinning={loading}
-          style={{
-            height: "100%",
-          }}
-        >
-          {loading ? (
-            <div
-              style={{
-                height: "50vh",
-              }}
-            />
-          ) : (
-            <Outlet />
-          )}
-        </Spin>
+        <Outlet />
       </Card>
     </Content>
   );

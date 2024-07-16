@@ -4,8 +4,8 @@ import {
   EyeOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Typography, Input, Button, Tag, Pagination, Image, Spin } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Typography, Input, Button, Tag, Pagination, Image } from "antd";
+import { Link, useLoaderData, useNavigate, useNavigation } from "react-router-dom";
 import dayjs from "dayjs";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
@@ -29,13 +29,13 @@ const columns = [
   },
   {
     title: "ชื่อองค์กร",
-    dataIndex: "businessName",
-    key: "businessName",
+    dataIndex: "businessNameEN",
+    key: "businessNameEN",
   },
   {
     title: "คำอธิบายธุรกิจ",
-    dataIndex: "businessDescription",
-    key: "businessDescription",
+    dataIndex: "businessDescriptionEN",
+    key: "businessDescriptionEN",
   },
   {
     title: "จดทะเบียน",
@@ -80,10 +80,11 @@ const columns = [
 ];
 
 export const OrganizeIndex: React.FC = () => {
-  const [organize, setOrganize] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  const { organize } = useLoaderData() as any
+  const { state } = useNavigation()
 
   // useEffect(() => {
   //   const fetchOrganize = async () => {
@@ -108,7 +109,6 @@ export const OrganizeIndex: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
-      setOrganize(organizeData);
       setLoading(false);
     }, 1000); 
   }, []);
@@ -118,7 +118,7 @@ export const OrganizeIndex: React.FC = () => {
       item.businessName.toLowerCase().includes(value.toLowerCase()) ||
       item.businessDescription.toLowerCase().includes(value.toLowerCase())
     );
-    setOrganize(filteredData);
+    // setOrganize(filteredData);
   };
 
   return (
@@ -164,18 +164,13 @@ export const OrganizeIndex: React.FC = () => {
           marginTop: 16,
         }}
       >
-        {loading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
-            <Spin size="large" />
-          </div>
-        ) : (
-          <TableComponent
-            columns={columns}
-            dataSource={organize}
-            pagination={false}
-            bordered
-          />
-        )}
+        <TableComponent
+          columns={columns}
+          dataSource={organize}
+          pagination={false}
+          bordered
+          loading={loading || state === "loading" || state === "submitting"}
+        />
       </div>
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
         <Pagination defaultCurrent={1} total={organize.length} />
