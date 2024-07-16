@@ -9,7 +9,7 @@ import { Link, useLoaderData, useNavigate, useNavigation } from "react-router-do
 import dayjs from "dayjs";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
-import organizeData from './organizeData'; 
+// import organizeData from "./organizeData";
 // import * as API from "@src/apis";
 
 const { Title } = Typography;
@@ -25,7 +25,9 @@ const columns = [
     title: "โลโก้",
     dataIndex: "logoUrl",
     key: "logoUrl",
-    render: (logoUrl: string) => <Image width={100} src={logoUrl} alt="โลโก้" />,
+    render: (logoUrl: string) => (
+      <Image width={100} src={logoUrl} alt="โลโก้" />
+    ),
   },
   {
     title: "ชื่อองค์กร",
@@ -63,7 +65,11 @@ const columns = [
     dataIndex: "active",
     key: "active",
     render: (active: boolean) =>
-      active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>,
+      active ? (
+        <Tag color="success">พร้อมใช้งาน</Tag>
+      ) : (
+        <Tag color="error">ไม่พร้อมใช้งาน</Tag>
+      ),
   },
   {
     title: "รายละเอียด",
@@ -80,7 +86,7 @@ const columns = [
 ];
 
 export const OrganizeIndex: React.FC = () => {
-  const [searchValue, setSearchValue] = useState<string>("");
+  // const [searchValue, setSearchValue] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const { organize } = useLoaderData() as any
@@ -110,16 +116,17 @@ export const OrganizeIndex: React.FC = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 1000); 
+    }, 1000);
   }, []);
 
-  const onSearch = (value: string) => {
-    const filteredData = organizeData.filter(item =>
-      item.businessName.toLowerCase().includes(value.toLowerCase()) ||
-      item.businessDescription.toLowerCase().includes(value.toLowerCase())
-    );
-    // setOrganize(filteredData);
-  };
+  // const onSearch = (value: string) => {
+  //   const filteredData = organizeData.filter(
+  //     (item) =>
+  //       item.businessName.toLowerCase().includes(value.toLowerCase()) ||
+  //       item.businessDescription.toLowerCase().includes(value.toLowerCase())
+  //   );
+  //   // setOrganize(filteredData);
+  // };
 
   return (
     <div>
@@ -132,28 +139,37 @@ export const OrganizeIndex: React.FC = () => {
       </div>
       <div>
         <Link to={"create"}>
-          <CreateButton label={"เพิ่มข้อมูลลูกค้า"}/>
+          <CreateButton label={"เพิ่มข้อมูลลูกค้า"} />
         </Link>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          marginTop: "16px",
+        }}
+      >
         <Input
           addonBefore="ค้นหา"
           allowClear
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          onPressEnter={() => onSearch(searchValue)}
+          // value={searchValue}
+          // onChange={(e) => setSearchValue(e.target.value)}
+          // onPressEnter={() => onSearch(searchValue)}
           style={{ width: 304 }}
         />
-         <Button
+        <Button
           icon={<SearchOutlined />}
           type="primary"
-          onClick={() => onSearch(searchValue)}
+          // onClick={() => onSearch(searchValue)}
           style={{
             backgroundColor: "#19142A",
             borderColor: "#19142A",
           }}
-          >ค้นหา </Button>
+        >
+          ค้นหา{" "}
+        </Button>
       </div>
 
       <div
@@ -172,7 +188,14 @@ export const OrganizeIndex: React.FC = () => {
           loading={loading || state === "loading" || state === "submitting"}
         />
       </div>
-      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          marginTop: "20px",
+        }}
+      >
         <Pagination defaultCurrent={1} total={organize.length} />
       </div>
     </div>
@@ -182,11 +205,11 @@ export const OrganizeIndex: React.FC = () => {
 export default OrganizeIndex;
 
 export async function organizeLoader() {
-    try {
+  try {
     //   const organize = await API.organize.getAll();
     //   return { organize: organize.data };
     return {};
-    } catch (error) {
-      return { error: "error", message: error };
-    }
+  } catch (error) {
+    return { error: "error", message: error };
   }
+}

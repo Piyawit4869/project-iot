@@ -4,7 +4,7 @@ import { SearchOutlined, TagOutlined, EyeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
-import { branchData as initialBranchData } from "./branchData"; 
+import { branchData as initialBranchData } from "./branchData";
 
 const { Title } = Typography;
 
@@ -35,7 +35,8 @@ export const BranchIndex: React.FC = () => {
       title: "ลำดับ",
       dataIndex: "nummer",
       key: "nummer",
-      sorter: (a: { nummer: number }, b: { nummer: number }) => a.nummer - b.nummer,
+      sorter: (a: { nummer: number }, b: { nummer: number }) =>
+        a.nummer - b.nummer,
     },
     {
       title: "โลโก้",
@@ -75,7 +76,11 @@ export const BranchIndex: React.FC = () => {
       dataIndex: "active",
       key: "active",
       render: (active: boolean) =>
-        active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>,
+        active ? (
+          <Tag color="success">พร้อมใช้งาน</Tag>
+        ) : (
+          <Tag color="error">ไม่พร้อมใช้งาน</Tag>
+        ),
     },
     {
       title: "รายละเอียดเพิ่มเติม",
@@ -83,7 +88,11 @@ export const BranchIndex: React.FC = () => {
       dataIndex: "id",
       render: (id: number) => (
         <Link to={`/branch/${id}`}>
-          <Button style={{ fontSize: "16px", width: "180px" }} type="primary" icon={<EyeOutlined />}>
+          <Button
+            style={{ fontSize: "16px", width: "180px" }}
+            type="primary"
+            icon={<EyeOutlined />}
+          >
             ดูข้อมูล
           </Button>
         </Link>
@@ -109,7 +118,14 @@ export const BranchIndex: React.FC = () => {
           <CreateButton label={"เพิ่มข้อมูลสาขา"} />
         </Link>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          marginTop: "16px",
+        }}
+      >
         <Input
           addonBefore="ค้นหา"
           allowClear
@@ -138,14 +154,33 @@ export const BranchIndex: React.FC = () => {
         }}
       >
         {loading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "200px",
+            }}
+          >
             <Spin size="large" />
           </div>
         ) : (
-          <TableComponent columns={columns} pagination={false} bordered dataSource={data} />
+          <TableComponent
+            columns={columns}
+            pagination={false}
+            bordered
+            dataSource={data}
+          />
         )}
       </div>
-      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          marginTop: "20px",
+        }}
+      >
         <Pagination defaultCurrent={1} total={data.length} />
       </div>
     </div>
