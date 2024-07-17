@@ -172,10 +172,11 @@ export const UsersCreate = () => {
   }
 
   return (
-    <>
-      <div><FormButtonsCreate form={form} onFinish={handleFinish} /></div>
+
+      <div><FormButtonsCreate form={form} onFinish={handleFinish} />
    
-    <div style={{ padding: "20px", fontFamily: 'Prompt, sans-serif' }}>  
+   <div style={{fontFamily: "Prompt, sans-serif" }}>
+   <div style={{ padding: "20px", marginTop: "10px" }}>
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Row gutter={24}>  
         <Col
@@ -209,8 +210,10 @@ export const UsersCreate = () => {
           </Col>
         </Row>
       </Form>
+      </div>
+      </div>
     </div>
-    </>
+
   );
 };
 

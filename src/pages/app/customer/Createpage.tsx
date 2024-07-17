@@ -179,11 +179,11 @@ export const CustomerCreate = () => {
   }
 
   return (
-    <>
+    
       <div>
         <FormButtonsCreate form={form} onFinish={handleFinish} />
-      </div>
-      <div style={{ padding: "20px", fontFamily: 'Prompt, sans-serif' }}>
+      <div style={{fontFamily: "Prompt, sans-serif" }}>
+      <div style={{ padding: "20px", marginTop: "10px" }} >
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Row gutter={24}>
             <Col
@@ -220,7 +220,8 @@ export const CustomerCreate = () => {
           </Row>
         </Form>
       </div>
-    </>
+      </div>
+      </div>
   );
 };
 

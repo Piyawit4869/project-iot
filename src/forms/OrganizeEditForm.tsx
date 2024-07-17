@@ -55,9 +55,11 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
   }
 
   return (
-    <>
-      <div><FormButtonsEdit form={form} onFinish={handleFinish} /></div>
-      <div style={{ padding: "20px" }}>
+  
+      <div>
+        <FormButtonsEdit form={form} onFinish={handleFinish} />
+      <div style={{fontFamily: "Prompt, sans-serif" }}>
+      <div style={{ padding: "20px", marginTop: "10px" }}>
     <Form form={form} layout="vertical" onFinish={onFinish}>
       <div style={{ fontSize: 22, fontWeight: "bold" }}></div>
       <Col
@@ -93,6 +95,7 @@ export const OrganizeEditForm: React.FC<OrganizeEditFormProps> = (
       </Col>
     </Form>
     </div>
-    </>
+    </div>
+    </div>
   );
 };

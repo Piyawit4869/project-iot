@@ -1,10 +1,9 @@
-import {  TagFilled } from "@ant-design/icons";
-import {  Form, Button, Row, Col } from "antd";
+import { TagFilled } from "@ant-design/icons";
+import { Form, Button, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@src/forms/Dynamic";
 import { useRef, useState } from "react";
 import { FormButtonsEdit } from "@src/components/shared/FormButtons";
-
 
 export const BranchSingle = () => {
   const [form] = Form.useForm();
@@ -141,8 +140,6 @@ export const BranchSingle = () => {
     },
   ];
 
- 
-
   const onFinish = (values: any) => {
     const payload = Object.assign(values);
     console.log("Form Submitted", payload);
@@ -153,58 +150,69 @@ export const BranchSingle = () => {
   }
 
   return (
-    <>
-    <FormButtonsEdit form={form} onFinish={handleFinish} />
-  
-    <div style={{ padding: "20px" }} ref={containerRef}>
-      
-      
-      <Form form={form} layout="vertical" onFinish={onFinish}>
-        <Row gutter={24}>
-          <Col
-            xs={{ span: 24, order: 2 }}
-            sm={{ span: 24, order: 2 }}
-            md={{ span: 24, order: 2 }}
-            lg={{ span: 12, order: 1 }}
-            xl={{ span: 12, order: 1 }}
-          >
-            <Row gutter={24}>
-              {renderForm.map((item: any) => (
-                <DynamicForm
-                  key={item.name}
-                  name={item.name}
-                  label={item.label}
-                  placeholder={item.placeholder}
-                  type={item.type}
-                  col={item.col}
-                  option={item.option}
-                  icon={item.icon}
-                  value={item.value}
-                  ruleMessage={item.message}
-                  require={item.require}
-                  disabled={item.disabled}
-                  checked={item.checked}    
-                />
-              ))}
-            </Row>
-          </Col>
-          <Col
-            xs={{ span: 24, order: 2 }}
-            sm={{ span: 24, order: 2 }}
-            md={{ span: 24, order: 2 }}
-            lg={{ span: 12, order: 1 }}
-            xl={{ span: 12, order: 1 }}
-          >
-          </Col>
-        </Row>
-        <Row style={{ marginTop: "20px", gap: "10px" }}>
-          <Col><Button type="primary" onClick={() => navigate("/branch")}>ยกเลิก</Button></Col>
-          <Col><Button type="primary" htmlType="submit">ยืนยัน</Button></Col>
-          <Col><Button type="primary" danger>ลบ</Button></Col>
-        </Row>
-      </Form>
+    <div>
+      <FormButtonsEdit form={form} onFinish={handleFinish} />
+      <div style={{fontFamily: "Prompt, sans-serif" }}>
+      <div style={{ padding: "20px", marginTop: "10px" }} ref={containerRef}>
+        <Form form={form} layout="vertical" onFinish={onFinish}>
+          <Row gutter={24}>
+            <Col
+              xs={{ span: 24, order: 2 }}
+              sm={{ span: 24, order: 2 }}
+              md={{ span: 24, order: 2 }}
+              lg={{ span: 12, order: 1 }}
+              xl={{ span: 12, order: 1 }}
+            >
+              <Row gutter={24}>
+                {renderForm.map((item: any) => (
+                  <DynamicForm
+                    key={item.name}
+                    name={item.name}
+                    label={item.label}
+                    placeholder={item.placeholder}
+                    type={item.type}
+                    col={item.col}
+                    option={item.option}
+                    icon={item.icon}
+                    value={item.value}
+                    ruleMessage={item.message}
+                    require={item.require}
+                    disabled={item.disabled}
+                    checked={item.checked}
+                  />
+                ))}
+              </Row>
+            </Col>
+            <Col
+              xs={{ span: 24, order: 2 }}
+              sm={{ span: 24, order: 2 }}
+              md={{ span: 24, order: 2 }}
+              lg={{ span: 12, order: 1 }}
+              xl={{ span: 12, order: 1 }}
+            ></Col>
+          </Row>
+          <Row style={{ marginTop: "20px", gap: "10px" }}>
+            <Col>
+              <Button type="primary" onClick={() => navigate("/branch")}>
+                ยกเลิก
+              </Button>
+            </Col>
+            <Col>
+              <Button type="primary" htmlType="submit">
+                ยืนยัน
+              </Button>
+            </Col>
+            <Col>
+              <Button type="primary" danger>
+                ลบ
+              </Button>
+            </Col>
+          </Row>
+        </Form>
+        </div>
+        
+      </div>
     </div>
-    </>
   );
 };
 
