@@ -26,13 +26,12 @@ const styles: Record<string, CSSProperties> = {
   container: {
     display: "flex",
     justifyContent: "flex-end",
-    width: "100%", // Ensures the container takes the full width of its parent
+    width: "100%",
   },
   button: {
     fontSize: "18px",
-    marginRight: 30,
     backgroundColor: "#19142a",
-    borderColor: "#1c2c5c",
+    borderColor: "#19142a",
     borderRadius: "10px",
     padding: "0 20px",
     display: "flex",

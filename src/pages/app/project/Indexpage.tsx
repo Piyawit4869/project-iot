@@ -97,19 +97,19 @@ export const ProjectIndex = () => {
 
   return (
     <div>
-      <Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
-        ข้อมูลโครงการ
-      </Title>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <TagOutlined style={{ marginBottom: -60, marginRight: 8 }} />
-        <span style={{ marginBottom: -60 }}>ค้นหาโครงการ</span>
-      </div>
-      <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
+          ข้อมูลโครงการ
+        </Title>
         <Link to={"create"}>
-          <CreateButton label={"เพิ่มข้อมูลโครงการ"}/>
+          <CreateButton label={"เพิ่มข้อมูลโครงการ"} />
         </Link>
       </div>
-
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <TagOutlined />
+        <span >ค้นหาโครงการ</span>
+      </div>
+      
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
         <Input
           addonBefore="ค้นหา"

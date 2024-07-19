@@ -87,18 +87,19 @@ export const UsersIndex: React.FC = () => {
 
   return (
     <div>
-      <Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
         ข้อมูลผู้ใช้
-      </Title>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <TagOutlined style={{ marginBottom: -60, marginRight: 8 }} />
-        <span style={{ marginBottom: -60 }}>ค้นหาผู้ใช้</span>
-      </div>
-      <div>
+        </Title>
         <Link to={"create"}>
           <CreateButton label={"เพิ่มข้อมูลผู้ใช้"} />
         </Link>
       </div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <TagOutlined />
+        <span >ค้นหาผู้ใช้</span>
+      </div>
+      
       <div
         style={{
           display: 'flex',

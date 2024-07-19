@@ -130,18 +130,22 @@ export const OrganizeIndex: React.FC = () => {
 
   return (
     <div>
-      <Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
+      
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
         ตั้งค่าองค์กร
-      </Title>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <TagOutlined style={{ marginBottom: -60, marginRight: 8 }} />
-        <span style={{ marginBottom: -60 }}>ค้นหาองค์กร</span>
-      </div>
-      <div>
+        </Title>
         <Link to={"create"}>
-          <CreateButton label={"เพิ่มข้อมูลลูกค้า"} />
+          <CreateButton label={"เพิ่มข้อมูลองค์กร"} />
         </Link>
       </div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <TagOutlined />
+        <span >ค้นหาองค์กร</span>
+      </div>
+
+
+
 
       <div
         style={{

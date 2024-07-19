@@ -1,7 +1,6 @@
 import React from "react";
 import { Layout, Menu, Image, Typography, Row, Col, Card, Button } from "antd";
 import { Link, useLocation } from "react-router-dom";
-import { CheckOutlined } from '@ant-design/icons';
 import logo from "../assets/images/logoutotechV2.png";
 import sidebar from "../assets/images/abstract_sidebar.png";
 import { Menus } from ".";
@@ -35,7 +34,13 @@ export const Sidebar: React.FC = () => {
 
   React.useEffect(() => {
     const key = location.pathname.split("/");
-    if (key.length) {
+    const [_firstPart, ...rest] = location.pathname.split('/'); 
+    const remainingPath = rest.join('/');
+  
+    if (key.length && rest.length > 1){ 
+      setActiveKey(remainingPath);
+    }
+    else  {
       const newActiveKey =
         key[1] === "admin"
           ? key[2]
@@ -55,13 +60,13 @@ export const Sidebar: React.FC = () => {
   return (
     <>
       <Sider
-        width={200}
+        width={isMobile && collapsed ? 0 : 200}
         theme="light"
         collapsible={true}
         collapsed={collapsed}
         onCollapse={(collapsed) => setCollapsed(collapsed)}
         breakpoint="lg"
-        collapsedWidth={80}
+        collapsedWidth={isMobile ? 0 : 80}
         onBreakpoint={(broken) => {
           setIsMobile(broken);
         }}
@@ -69,6 +74,7 @@ export const Sidebar: React.FC = () => {
           position: isMobile ? "fixed" : "relative",
           zIndex: 10,
           height: "100vh",
+          transition: "width 0.2s",
         }}
       >
         <div
@@ -179,28 +185,6 @@ export const Sidebar: React.FC = () => {
             </Button>
           </Card>
         )}
-        <div
-          style={{
-            position: "absolute",
-            top: "60px",
-            right: "-70px",
-            zIndex: 1000,
-            backgroundColor: "#F3F3F3",
-            borderRadius: "2px",
-            width: "70px",
-            height: "40px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            cursor: "pointer"
-          }}
-          onClick={() => setCollapsed(!collapsed)}
-        >
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%" }}>
-            <CheckOutlined style={{ fontSize: "16px", color: "#8C8C8C" }} />
-            <span style={{ marginLeft: "10px", fontSize: "5px", color: "#8C8C8C" }}>...</span>
-          </div>
-        </div>
       </Sider>
       {isMobile && collapsed === false && (
         <div
@@ -210,7 +194,7 @@ export const Sidebar: React.FC = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            background: "#19142A",
+            background: "rgba(25, 20, 42, 0.8)", // RGBA color for transparency
             zIndex: 9,
           }}
           onClick={() => setCollapsed(true)}
@@ -219,4 +203,5 @@ export const Sidebar: React.FC = () => {
     </>
   );
 };
+
 export default Sidebar;
