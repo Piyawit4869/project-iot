@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import {
   TagOutlined,
   EyeOutlined,
-  SearchOutlined,
+  CheckOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
-import { Input, Button, Tag, Pagination, Typography, Image, Spin } from "antd";
+import { Button, Tag, Pagination, Typography, Image, Spin } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
 import { projectData as initialProjectData } from './projectData';
+import { SearchBar } from "@src/components/shared/SearchBar";
 
 const { Title } = Typography;
 
@@ -23,7 +25,7 @@ const columns = [
     title: "รูปภาพ",
     dataIndex: "imageUrl",
     key: "imageUrl",
-    render: (imageUrl: string) => <Image width={100} src={imageUrl} alt="รูปภาพ" />,
+    render: (imageUrl: string) => <Image width={60} src={imageUrl} alt="รูปภาพ" />,
   },
   {
     title: "ชื่อโครงการ",
@@ -34,6 +36,12 @@ const columns = [
     title: "สาขาหลัก",
     dataIndex: "isMainBranch",
     key: "isMainBranch",
+    render: (isMainBranch: string) => {
+      if (isMainBranch) {
+        return <CheckOutlined style={{ color: "green", fontSize: "15px"  }} />;
+      }
+      return <CloseOutlined style={{ color: "red", fontSize: "15px" }}/>;
+    }
   },
   {
     title: "เบอร์โทร",
@@ -49,6 +57,8 @@ const columns = [
     title: "เว็ปไซต์",
     dataIndex: "website",
     key: "website",
+    render: (websiteUrl: string) => <a href={websiteUrl} target="_blank">{websiteUrl}</a>,
+    width: '15%',
   },
   {
     title: "สถานะ",
@@ -57,7 +67,7 @@ const columns = [
     render: (active: boolean) => (active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>),
   },
   {
-    title: "รายละเอียดเพิ่มเติม",
+    title: "รายละเอียด",
     key: "details",
     dataIndex: "id",
     render: (id: number) => (
@@ -72,7 +82,7 @@ const columns = [
 
 export const ProjectIndex = () => {
   const navigate = useNavigate();
-  const [searchValue, setSearchValue] = useState<string>("");
+  // const [searchValue, setSearchValue] = useState<string>("");
   const [projectData, setProjectData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -91,9 +101,9 @@ export const ProjectIndex = () => {
     }, 1000); 
   }, []);
 
-  const onSearch = (value: string) => {
-    console.log("Search:", value);
-  };
+  // const onSearch = (value: string) => {
+  //   console.log("Search:", value);
+  // };
 
   return (
     <div>
@@ -111,24 +121,7 @@ export const ProjectIndex = () => {
       </div>
       
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
-        <Input
-          addonBefore="ค้นหา"
-          allowClear
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          style={{ width: 304 }}
-        />
-        <Button
-          icon={<SearchOutlined />}
-          type="primary"
-          onClick={() => onSearch(searchValue)}
-          style={{
-            backgroundColor: "#19142A",
-            borderColor: "#19142A",
-          }}
-        >
-          ค้นหา
-        </Button>
+        <SearchBar />
       </div>
 
       <div

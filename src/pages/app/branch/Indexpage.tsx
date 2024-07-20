@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Input, Pagination, Button, Tag, Typography, Image, Spin } from "antd";
-import { SearchOutlined, TagOutlined, EyeOutlined } from "@ant-design/icons";
+import { Pagination, Button, Tag, Typography, Image, Spin } from "antd";
+import { TagOutlined, EyeOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
 import { branchData as initialBranchData } from "./branchData";
+import { SearchBar } from "@src/components/shared/SearchBar";
 
 const { Title } = Typography;
 
 export const BranchIndex: React.FC = () => {
   const [data, setData] = useState<any[]>([]);
-  const [searchValue, setSearchValue] = useState<string>("");
+  // const [searchValue, setSearchValue] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export const BranchIndex: React.FC = () => {
       dataIndex: "imageUrl",
       key: "imageUrl",
       render: (imageUrl: string) => {
-        return <Image width={200} src={imageUrl} />;
+        return <Image width={60} src={imageUrl} />;
       },
     },
     {
@@ -55,6 +56,12 @@ export const BranchIndex: React.FC = () => {
       title: "สาขาหลัก",
       dataIndex: "isMainBranch",
       key: "isMainBranch",
+      render: (isMainBranch: string) => {
+        if (isMainBranch == "Yes") {
+          return <CheckOutlined style={{ color: "green", fontSize: "15px"  }} />;
+        }
+        return <CloseOutlined style={{ color: "red", fontSize: "15px" }}/>;
+      }
     },
     {
       title: "เบอร์โทร",
@@ -83,7 +90,7 @@ export const BranchIndex: React.FC = () => {
         ),
     },
     {
-      title: "รายละเอียดเพิ่มเติม",
+      title: "รายละเอียด",
       key: "details",
       dataIndex: "id",
       render: (id: number) => (
@@ -100,9 +107,9 @@ export const BranchIndex: React.FC = () => {
     },
   ];
 
-  const onSearch = (value: string) => {
-    console.log(value);
-  };
+  // const onSearch = (value: string) => {
+  //   console.log(value);
+  // };
 
   return (
     <div>
@@ -126,24 +133,7 @@ export const BranchIndex: React.FC = () => {
           marginTop: "16px",
         }}
       >
-        <Input
-          addonBefore="ค้นหา"
-          allowClear
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          style={{ width: 304 }}
-        />
-        <Button
-          icon={<SearchOutlined />}
-          type="primary"
-          onClick={() => onSearch(searchValue)}
-          style={{
-            backgroundColor: "#19142A",
-            borderColor: "#19142A",
-          }}
-        >
-          ค้นหา
-        </Button>
+        <SearchBar />
       </div>
       <div
         style={{

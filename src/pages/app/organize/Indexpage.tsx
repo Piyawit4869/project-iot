@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
   TagOutlined,
   EyeOutlined,
-  SearchOutlined,
 } from "@ant-design/icons";
-import { Typography, Input, Button, Tag, Pagination, Image } from "antd";
+import { Typography, Button, Tag, Pagination, Image } from "antd";
 import { Link, useLoaderData, useNavigate, useNavigation } from "react-router-dom";
 import dayjs from "dayjs";
 import { TableComponent } from "@src/components/shared/TableComponent";
