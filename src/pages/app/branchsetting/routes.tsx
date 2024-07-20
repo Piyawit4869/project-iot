@@ -3,7 +3,7 @@ import { BranchSingle } from "./singlepage";
 
 export const routes = [
   {
-    path: "information",
+    path: "information/branch",
     children: [
       {
         path: "", 

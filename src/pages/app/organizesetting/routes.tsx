@@ -2,7 +2,7 @@ import { OrganizeSingle } from "./OrganizeSingle";
 
 export const routes = [
   {
-    path: "orginformation",
+    path: "information",
     children: [
       {
         path: "",

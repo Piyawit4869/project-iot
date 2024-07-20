@@ -51,7 +51,7 @@ const FormButtonsEdit: React.FC<FormButtonsProps> = ({ form }) => {
         <LeftOutlined /> กลับ
       </Button>
       <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-        <Button style={{ marginRight: "10px" }} onClick={onReset}>
+      <Button style={{ marginRight: "10px", backgroundColor: "#A79DB4", borderColor: "#A79DB4", color: "#fff" }} onClick={onReset}>
           ยกเลิก
         </Button>
         <Button type="primary" htmlType="submit" onClick={() => form.submit()}>
@@ -90,7 +90,7 @@ const FormButtonsCreate: React.FC<FormButtonsProps> = ({ form }) => {
         <LeftOutlined /> กลับ
       </Button>
       <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-        <Button style={{ marginRight: "10px" }} onClick={onReset}>
+      <Button style={{ marginRight: "10px", backgroundColor: "#A79DB4", borderColor: "#A79DB4", color: "#fff" }} onClick={onReset}>
           ยกเลิก
         </Button>
         <Button type="primary" htmlType="submit" onClick={() => form.submit()}>

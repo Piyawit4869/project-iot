@@ -764,10 +764,10 @@ export const OrganizeCreate: React.FC = () => {
     throw new Error("Function not implemented.");
   }
   return (
-    <>
+    <div>
       <FormButtonsCreate form={form} onFinish={handleFinish} />
-      <Form form={form} layout="vertical" onFinish={onFinish}>
-        <div style={{ padding: "20px" }}>
+      <div style={{fontFamily: "Prompt, sans-serif" }}>
+      <div style={{ padding: "20px", marginTop: "10px" }} >
           <Form form={form} layout="vertical" onFinish={onFinish}>
             <div style={{ fontSize: 22, fontWeight: "bold" }}></div>
             <Col
@@ -808,7 +808,7 @@ export const OrganizeCreate: React.FC = () => {
             </Col>
           </Form>
         </div>
-      </Form>
-    </>
+      </div>
+    </div>
   );
 };

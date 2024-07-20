@@ -161,11 +161,10 @@ export const UsersSingle = () => {
   }
 
   return (
-    <div>
       <div>
       <FormButtonsEdit form={form} onFinish={handleFinish} />
-        </div>
-    <div style={{ padding: "20px" }} ref={containerRef}>
+      <div style={{fontFamily: "Prompt, sans-serif" }}>
+      <div style={{ padding: "20px", marginTop: "10px" }} ref={containerRef}>
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Row gutter={24}>
           <Col
@@ -232,6 +231,7 @@ export const UsersSingle = () => {
           </Col>
         </Row>
       </Form>
+      </div>
     </div>
     </div>
   );
