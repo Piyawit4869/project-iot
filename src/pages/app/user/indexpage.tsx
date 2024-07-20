@@ -37,7 +37,7 @@ const columns = [
     render: (active: any) => (active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>),
   },
   {
-    title: 'รายละเอียดเพิ่มเติม',
+    title: 'รายละเอียด',
     dataIndex: 'details',
     key: 'details',
     render: (_: any, record: any) => (

@@ -16,7 +16,7 @@ const { Title } = Typography;
 
 const columns = [
   {
-    title: "ID",
+    title: "ลำดับ",
     dataIndex: "id",
     key: "id",
     sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
@@ -26,18 +26,20 @@ const columns = [
     dataIndex: "logoUrl",
     key: "logoUrl",
     render: (logoUrl: string) => (
-      <Image width={100} src={logoUrl} alt="โลโก้" />
+      <Image width={60} src={logoUrl} alt="โลโก้" />
     ),
   },
   {
     title: "ชื่อองค์กร",
     dataIndex: "businessNameEN",
     key: "businessNameEN",
+    width: "10%",
   },
   {
     title: "คำอธิบายธุรกิจ",
     dataIndex: "businessDescriptionEN",
     key: "businessDescriptionEN",
+    width: '30%',
   },
   {
     title: "จดทะเบียน",
@@ -51,14 +53,11 @@ const columns = [
     key: "businessPhone",
   },
   {
-    title: "Default User",
-    dataIndex: "default_user",
-    key: "default_user",
-  },
-  {
-    title: "ระยะเวลาการใช้งานระบบ",
-    dataIndex: "timeused",
-    key: "timeused",
+    title: "เว็บไซต์",
+    dataIndex: "websiteUrl",
+    key: "websiteUrl",
+    render: (websiteUrl: string) => <a href={websiteUrl} target="_blank">{websiteUrl}</a>,
+    width: '15%',
   },
   {
     title: "สถานะ",
@@ -143,10 +142,6 @@ export const OrganizeIndex: React.FC = () => {
         <TagOutlined />
         <span >ค้นหาองค์กร</span>
       </div>
-
-
-
-
       <div
         style={{
           display: "flex",
@@ -172,7 +167,6 @@ export const OrganizeIndex: React.FC = () => {
             borderColor: "#19142A",
           }}
         >
-          ค้นหา{" "}
         </Button>
       </div>
 
