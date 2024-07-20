@@ -5,6 +5,7 @@ import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import { TableComponent } from '@src/components/shared/TableComponent';
 import { CreateButton } from '@src/components/shared/CreateButton';
 import { userData as initialUserData } from './userData';
+import { SearchBar } from '@src/components/shared/SearchBar';
 
 const { Title } = Typography;
 
@@ -108,24 +109,7 @@ export const UsersIndex: React.FC = () => {
           marginTop: '16px',
         }}
       >
-        <Input
-          addonBefore="ค้นหา"
-          allowClear
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          style={{ width: 304 }}
-        />
-        <Button
-          icon={<SearchOutlined />}
-          type="primary"
-          onClick={() => onSearch(searchValue)}
-          style={{
-            backgroundColor: "#19142A",
-            borderColor: "#19142A",
-          }}
-        >
-          ค้นหา
-        </Button>
+        <SearchBar />
       </div>
 
       <div

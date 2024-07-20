@@ -9,6 +9,7 @@ import { Link, useLoaderData, useNavigate, useNavigation } from "react-router-do
 import dayjs from "dayjs";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
+import { SearchBar } from "@src/components/shared/SearchBar";
 // import organizeData from "./organizeData";
 // import * as API from "@src/apis";
 
@@ -150,24 +151,7 @@ export const OrganizeIndex: React.FC = () => {
           marginTop: "16px",
         }}
       >
-        <Input
-          addonBefore="ค้นหา"
-          allowClear
-          // value={searchValue}
-          // onChange={(e) => setSearchValue(e.target.value)}
-          // onPressEnter={() => onSearch(searchValue)}
-          style={{ width: 304 }}
-        />
-        <Button
-          icon={<SearchOutlined />}
-          type="primary"
-          // onClick={() => onSearch(searchValue)}
-          style={{
-            backgroundColor: "#19142A",
-            borderColor: "#19142A",
-          }}
-        >
-        </Button>
+        <SearchBar />
       </div>
 
       <div
