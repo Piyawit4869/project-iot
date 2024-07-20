@@ -1,10 +1,11 @@
-import { Input, Pagination, Button, Image, Tag } from "antd";
+import { Pagination, Button, Image, Tag } from "antd";
 import { Link } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
 import { data } from "./notationData";
-import { EyeOutlined, SearchOutlined, TagOutlined,  } from "@ant-design/icons";
+import { EyeOutlined, TagOutlined,  } from "@ant-design/icons";
 import Title from "antd/es/typography/Title"; 
+import { SearchBar } from "@src/components/shared/SearchBar";
 
 export const NotationIndex = () => {
   const columns = [
@@ -18,7 +19,7 @@ export const NotationIndex = () => {
       title: "รูปภาพ",
       dataIndex: "imageUrl",
       key: "imageUrl",
-      render: (imageUrl: string) => <Image width={100} src={imageUrl} alt="รูปภาพ" />,
+      render: (imageUrl: string) => <Image width={60} src={imageUrl} alt="รูปภาพ" />,
     },
     {
       title: "ชื่อเอกสาร",
@@ -47,7 +48,7 @@ export const NotationIndex = () => {
       render: (active: boolean) => (active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>),
     },
     {
-      title: "รายละเอียดเพิ่มเติม",
+      title: "รายละเอียด",
       key: "details",
       dataIndex: "id",
       render: (id: number) => (
@@ -83,21 +84,7 @@ export const NotationIndex = () => {
           marginTop: "16px",
         }}
       >
-        <Input
-          addonBefore="ค้นหา"
-          allowClear
-          style={{ width: 304 }}
-        />
-        <Button
-          icon={<SearchOutlined />}
-          type="primary"
-          style={{
-            backgroundColor: "#19142A",
-            borderColor: "#19142A",
-          }}
-        >
-          ค้นหา{" "}
-        </Button>
+        <SearchBar />
       </div>
       <div
         style={{

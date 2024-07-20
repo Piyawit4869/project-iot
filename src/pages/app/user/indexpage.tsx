@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Input, Pagination, Tag, Typography, Spin } from 'antd';
-import { SearchOutlined, EyeOutlined, TagOutlined } from '@ant-design/icons';
+import { Button, Pagination, Tag, Typography, Spin } from 'antd';
+import { EyeOutlined, TagOutlined } from '@ant-design/icons';
 import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import { TableComponent } from '@src/components/shared/TableComponent';
 import { CreateButton } from '@src/components/shared/CreateButton';
 import { userData as initialUserData } from './userData';
+import { SearchBar } from '@src/components/shared/SearchBar';
 
 const { Title } = Typography;
 
@@ -37,7 +38,7 @@ const columns = [
     render: (active: any) => (active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>),
   },
   {
-    title: 'รายละเอียดเพิ่มเติม',
+    title: 'รายละเอียด',
     dataIndex: 'details',
     key: 'details',
     render: (_: any, record: any) => (
@@ -53,7 +54,7 @@ const columns = [
 export const UsersIndex: React.FC = () => {
   const loaderData = useLoaderData() as any;
   const navigate = useNavigate();
-  const [searchValue, setSearchValue] = useState<string>('');
+  // const [searchValue, setSearchValue] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [users, setUsers] = useState<any[]>([]);
@@ -74,9 +75,9 @@ export const UsersIndex: React.FC = () => {
     }, 1000); 
   }, [loaderData]);
 
-  const onSearch = (value: string) => {
-    console.log('Search:', value);
-  };
+  // const onSearch = (value: string) => {
+  //   console.log('Search:', value);
+  // };
 
   const handlePageChange = (page: number, pageSize?: number) => {
     setCurrentPage(page);
@@ -108,24 +109,7 @@ export const UsersIndex: React.FC = () => {
           marginTop: '16px',
         }}
       >
-        <Input
-          addonBefore="ค้นหา"
-          allowClear
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          style={{ width: 304 }}
-        />
-        <Button
-          icon={<SearchOutlined />}
-          type="primary"
-          onClick={() => onSearch(searchValue)}
-          style={{
-            backgroundColor: "#19142A",
-            borderColor: "#19142A",
-          }}
-        >
-          ค้นหา
-        </Button>
+        <SearchBar />
       </div>
 
       <div

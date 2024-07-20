@@ -20,6 +20,8 @@ export const TableComponent: FC<TableComponentProps> = (
       pagination={pagination}
       dataSource={dataSource}
       columns={columns}
+      locale={{ emptyText: "ไม่พบข้อมูล" }}
+      size="small"
     ></Table>
   );
 };

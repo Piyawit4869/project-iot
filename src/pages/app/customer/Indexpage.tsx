@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Input, Pagination, Button, Tag, Typography, Image, Spin } from "antd";
-import { SearchOutlined, EyeOutlined, TagOutlined } from "@ant-design/icons";
+import { Pagination, Button, Tag, Typography, Image, Spin } from "antd";
+import { EyeOutlined, TagOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
 import { customerData as initialCustomerData } from './customerData'; 
+import { SearchBar } from "@src/components/shared/SearchBar";
 
 const { Title } = Typography;
 
@@ -19,7 +20,7 @@ const columns = [
     title: 'รูปภาพ',
     dataIndex: 'imageUrl',
     key: 'imageUrl',
-    render: (imageUrl: string) => <Image width={100} src={imageUrl} alt="รูปภาพ" />,
+    render: (imageUrl: string) => <Image width={60} src={imageUrl} alt="รูปภาพ" />,
   },
   {
     title: 'ชื่อลูกค้า',
@@ -30,6 +31,12 @@ const columns = [
     title: 'สาขาหลัก',
     dataIndex: 'isMainBranch',
     key: 'isMainBranch',
+    render: (isMainBranch: string) => {
+      if (isMainBranch == "Yes") {
+        return <CheckOutlined style={{ color: "green", fontSize: "15px"  }} />;
+      }
+      return <CloseOutlined style={{ color: "red", fontSize: "15px" }}/>;
+    }
   },
   {
     title: 'เบอร์โทร',
@@ -46,6 +53,8 @@ const columns = [
     title: 'เว็ปไซต์',
     dataIndex: 'website',
     key: 'website',
+    render: (website: string) => <a href={website} target="_blank">{website}</a>,
+    width: '15%',
   },
   {
     title: 'สถานะ',
@@ -54,7 +63,7 @@ const columns = [
     render: (active: boolean) => (active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>),
   },
   {
-    title: "รายละเอียดเพิ่มเติม",
+    title: "รายละเอียด",
     key: "details",
     dataIndex: "id",
     render: (id: number) => (
@@ -68,7 +77,7 @@ const columns = [
 ];
 
 export const CustomerIndex: React.FC = () => {
-  const [searchValue, setSearchValue] = useState<string>('');
+  // const [searchValue, setSearchValue] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [customers, setCustomers] = useState<any[]>([]);
@@ -82,9 +91,9 @@ export const CustomerIndex: React.FC = () => {
     }, 1000);
   }, []);
 
-  const onSearch = (value: string) => {
-    console.log("Search:", value);
-  };
+  // const onSearch = (value: string) => {
+  //   console.log("Search:", value);
+  // };
 
   const handlePageChange = (page: number, pageSize?: number) => {
     setCurrentPage(page);
@@ -110,24 +119,7 @@ export const CustomerIndex: React.FC = () => {
 
 
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
-        <Input
-          addonBefore="ค้นหา"
-          allowClear
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          style={{ width: 304 }}
-        />
-         <Button
-          icon={<SearchOutlined />}
-          type="primary"
-          onClick={() => onSearch(searchValue)}
-          style={{
-            backgroundColor: "#19142A",
-              borderColor: "#19142A",
-          }}
-        >
-          ค้นหา
-        </Button>
+        <SearchBar />
       </div>
 
       <div style={{ boxShadow: "0 4px 8px rgba(0.25, 0.25, 0.25, 0.25)", borderRadius: "25px", overflow: "hidden", marginTop: 16 }}>

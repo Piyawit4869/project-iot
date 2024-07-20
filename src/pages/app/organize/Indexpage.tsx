@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import {
   TagOutlined,
   EyeOutlined,
-  SearchOutlined,
 } from "@ant-design/icons";
-import { Typography, Input, Button, Tag, Pagination, Image } from "antd";
+import { Typography, Button, Tag, Pagination, Image } from "antd";
 import { Link, useLoaderData, useNavigate, useNavigation } from "react-router-dom";
 import dayjs from "dayjs";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
+import { SearchBar } from "@src/components/shared/SearchBar";
 // import organizeData from "./organizeData";
 // import * as API from "@src/apis";
 
@@ -16,7 +16,7 @@ const { Title } = Typography;
 
 const columns = [
   {
-    title: "ID",
+    title: "ลำดับ",
     dataIndex: "id",
     key: "id",
     sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
@@ -26,18 +26,20 @@ const columns = [
     dataIndex: "logoUrl",
     key: "logoUrl",
     render: (logoUrl: string) => (
-      <Image width={100} src={logoUrl} alt="โลโก้" />
+      <Image width={60} src={logoUrl} alt="โลโก้" />
     ),
   },
   {
     title: "ชื่อองค์กร",
     dataIndex: "businessNameEN",
     key: "businessNameEN",
+    width: "10%",
   },
   {
     title: "คำอธิบายธุรกิจ",
     dataIndex: "businessDescriptionEN",
     key: "businessDescriptionEN",
+    width: '30%',
   },
   {
     title: "จดทะเบียน",
@@ -51,14 +53,11 @@ const columns = [
     key: "businessPhone",
   },
   {
-    title: "Default User",
-    dataIndex: "default_user",
-    key: "default_user",
-  },
-  {
-    title: "ระยะเวลาการใช้งานระบบ",
-    dataIndex: "timeused",
-    key: "timeused",
+    title: "เว็บไซต์",
+    dataIndex: "websiteUrl",
+    key: "websiteUrl",
+    render: (websiteUrl: string) => <a href={websiteUrl} target="_blank">{websiteUrl}</a>,
+    width: '15%',
   },
   {
     title: "สถานะ",
@@ -143,10 +142,6 @@ export const OrganizeIndex: React.FC = () => {
         <TagOutlined />
         <span >ค้นหาองค์กร</span>
       </div>
-
-
-
-
       <div
         style={{
           display: "flex",
@@ -155,25 +150,7 @@ export const OrganizeIndex: React.FC = () => {
           marginTop: "16px",
         }}
       >
-        <Input
-          addonBefore="ค้นหา"
-          allowClear
-          // value={searchValue}
-          // onChange={(e) => setSearchValue(e.target.value)}
-          // onPressEnter={() => onSearch(searchValue)}
-          style={{ width: 304 }}
-        />
-        <Button
-          icon={<SearchOutlined />}
-          type="primary"
-          // onClick={() => onSearch(searchValue)}
-          style={{
-            backgroundColor: "#19142A",
-            borderColor: "#19142A",
-          }}
-        >
-          ค้นหา{" "}
-        </Button>
+        <SearchBar />
       </div>
 
       <div
