@@ -1,5 +1,5 @@
-import { Form, Input } from "antd";
-import { CSSProperties, FC } from "react";
+import { Form, Input } from 'antd';
+import { CSSProperties, FC } from 'react';
 
 const { TextArea } = Input;
 
@@ -13,7 +13,7 @@ interface TextAreaFormFieldProps {
 }
 
 export const TextAreaFormField: FC<TextAreaFormFieldProps> = (
-  props: TextAreaFormFieldProps
+  props: TextAreaFormFieldProps,
 ) => {
   const { name, label, placeholder, rows, rule, disabled } = props;
   return (
@@ -30,8 +30,8 @@ export const TextAreaFormField: FC<TextAreaFormFieldProps> = (
 
 const styles: Record<string, CSSProperties> = {
   textarea: {
-    width: "100%",
-    margin: "5px 0",
+    width: '100%',
+    margin: '5px 0',
     marginTop: -10,
   },
 };

@@ -1,25 +1,25 @@
-import { UsersCreate } from "./createpage";
-import { UsersIndex } from "./indexpage";
-import { userLoader } from "./loader";
-import { UsersSingle } from "./singlepage";
+import { UsersCreate } from './createpage';
+import { UsersIndex } from './indexpage';
+import { userLoader } from './loader';
+import { UsersSingle } from './singlepage';
 
 export const routes = [
   {
-    path: "user",
+    path: 'user',
     children: [
       {
-        path: "",
-        loader:userLoader,
-        element: <UsersIndex/>
+        path: '',
+        loader: userLoader,
+        element: <UsersIndex />,
       },
       {
-        path: "create",
-        element: <UsersCreate/>
+        path: 'create',
+        element: <UsersCreate />,
       },
       {
-        path: ":id", 
-        element: <UsersSingle/>
-      }
+        path: ':id',
+        element: <UsersSingle />,
+      },
     ],
-  }
+  },
 ];

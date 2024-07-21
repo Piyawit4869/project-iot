@@ -1,16 +1,16 @@
-import { SpinProps, Table, TablePaginationConfig } from "antd";
-import { FC } from "react";
+import { SpinProps, Table, TablePaginationConfig, TableProps } from 'antd';
+import { FC } from 'react';
 
 interface TableComponentProps {
-  columns: any;
+  columns: TableProps['columns'];
   dataSource: any;
-  pagination: false | TablePaginationConfig | undefined;
-  bordered: boolean;
+  pagination?: false | TablePaginationConfig | undefined;
+  bordered?: boolean;
   loading?: boolean | SpinProps | undefined;
 }
 
 export const TableComponent: FC<TableComponentProps> = (
-  props: TableComponentProps
+  props: TableComponentProps,
 ) => {
   const { columns, bordered, pagination, dataSource, loading } = props;
   return (
@@ -19,9 +19,10 @@ export const TableComponent: FC<TableComponentProps> = (
       bordered={bordered}
       pagination={pagination}
       dataSource={dataSource}
+      scroll={{ x: 'max-content' }}
       columns={columns}
-      locale={{ emptyText: "ไม่พบข้อมูล" }}
+      locale={{ emptyText: 'ไม่พบข้อมูล' }}
       size="small"
-    ></Table>
+    />
   );
 };

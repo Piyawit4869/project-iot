@@ -1,12 +1,12 @@
-import { UpgradeIndex } from "./Indexpage";
+import { UpgradeIndex } from './Indexpage';
 
 export const routes = [
   {
-    path: "upgrade",
+    path: 'upgrade',
 
     children: [
       {
-        path: "",
+        path: '',
         element: <UpgradeIndex />,
       },
     ],

@@ -1,12 +1,12 @@
-import Analytic from "./Indexpage";
+import Analytic from './Indexpage';
 
 export const routes = [
   {
-    path: "analytic",
+    path: 'analytic',
     // element: <PlanningLandingPage />,
     children: [
       {
-        path: "",
+        path: '',
         element: <Analytic />,
       },
     ],

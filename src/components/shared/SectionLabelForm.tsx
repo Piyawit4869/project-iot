@@ -1,5 +1,5 @@
-import { Form, FormItemProps } from "antd";
-import { CSSProperties, FC, ReactNode } from "react";
+import { Form, FormItemProps } from 'antd';
+import { CSSProperties, FC, ReactNode } from 'react';
 
 interface SectionLabelFormProps extends FormItemProps {
   label: string;
@@ -13,16 +13,16 @@ interface SectionLabelFormProps extends FormItemProps {
 export const SectionLabelForm: FC<SectionLabelFormProps> = ({
   label,
   icon,
-  labelFontSize = "22px",
+  labelFontSize = '22px',
   labelMarginBottom = -20,
-  lineThickness = "2px",
+  lineThickness = '2px',
   showLine = false,
   ...formItemProps
 }) => {
   const labelStyle: CSSProperties = {
     fontSize: labelFontSize,
     marginBottom: labelMarginBottom,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     borderBottom: `${lineThickness} solid #010101`,
   };
 
@@ -30,9 +30,9 @@ export const SectionLabelForm: FC<SectionLabelFormProps> = ({
     <Form.Item
       label={
         <div
-          style={{ display: "flex", flexDirection: "column", width: "100%" }}
+          style={{ display: 'flex', flexDirection: 'column', width: '100%' }}
         >
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             {icon && <span style={{ marginRight: 8 }}>{icon}</span>}
             <span style={labelStyle}>{label}</span>
           </div>

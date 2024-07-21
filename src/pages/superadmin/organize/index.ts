@@ -1,3 +1,4 @@
-export * from "./OrganizeIndexpage";
-export * from "./OrganizeCreate";
-export * from "./OrganizeSingle";
+export * from './routes';
+export * from './Indexpage';
+export * from './Createpage';
+export * from './Singlepage';

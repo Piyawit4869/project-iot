@@ -1,44 +1,44 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter } from 'react-router-dom';
 
-import { Root, RootLoader } from "./pages/Roots";
-import { AppLayout } from "./layout";
+import { Root, RootLoader } from './pages/Roots';
+import { AppLayout } from './layout';
 
-import { routes as appRoutes } from "./pages/app";
-import { routes as publicRoutes } from "./pages/public";
-import { routes as adminRoutes } from "./pages/superadmin";
-import { Login, loginAction } from "./pages/Login";
-import { Receipt } from "./pages/Receipt";
+import { routes as appRoutes } from './pages/app';
+import { routes as publicRoutes } from './pages/public';
+import { routes as adminRoutes } from './pages/superadmin';
+import { Login, loginAction } from './pages/Login';
+import { Receipt } from './pages/Receipt';
 
 export const router = createBrowserRouter([
   // ...loginRouute,
   {
-    path: "/login",
+    path: '/login',
     element: <Login />,
     // loader: loginLoader,
     action: loginAction,
   },
   {
-    path: "/receipt",
+    path: '/receipt',
     element: <Receipt />,
   },
   {
-    path: "/",
+    path: '/',
     element: <Root />,
     loader: RootLoader,
     children: [
       {
-        path: "/public",
+        path: '/public',
         // element: <Root />,
         children: [...publicRoutes],
       },
       {
-        path: "/admin",
+        path: '/admin',
         element: <AppLayout />,
         children: [...adminRoutes],
       },
 
       {
-        path: "",
+        path: '',
         element: <AppLayout />,
         children: [...appRoutes],
       },

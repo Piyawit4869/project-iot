@@ -1,5 +1,5 @@
-import { Form, Input } from "antd";
-import { CSSProperties, FC } from "react";
+import { Form, Input } from 'antd';
+import { CSSProperties, FC } from 'react';
 
 interface TextboxFormFieldProps {
   name: string;
@@ -12,7 +12,7 @@ interface TextboxFormFieldProps {
 }
 
 export const TextboxFormField: FC<TextboxFormFieldProps> = (
-  props: TextboxFormFieldProps
+  props: TextboxFormFieldProps,
 ) => {
   const { name, label, placeholder, type, rule, disabled, maxLength } = props;
 
@@ -31,8 +31,8 @@ export const TextboxFormField: FC<TextboxFormFieldProps> = (
 
 const styles: Record<string, CSSProperties> = {
   input: {
-    width: "100%",
-    margin: "5px 0",
+    width: '100%',
+    margin: '5px 0',
     marginTop: -10,
   },
 };

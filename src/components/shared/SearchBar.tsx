@@ -1,25 +1,22 @@
-import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input } from "antd";
+import { SearchOutlined } from '@ant-design/icons';
+import { Button, Col, Input, Row } from 'antd';
 
-interface SearchBarProps {}
-
-export const SearchBar: React.FC<SearchBarProps> = (props: SearchBarProps) => {
-  const {} = props;
+export const SearchBar: React.FC = () => {
   return (
-    <>
-      <Input
-        addonBefore="ค้นหา"
-        allowClear
-        style={{ width: 304 }}
-      />
-      <Button
-        icon={<SearchOutlined />}
-        type="primary"
-        style={{
-          backgroundColor: "#19142A",
-          borderColor: "#19142A",
-        }}
-      ></Button>
-    </>
+    <Row gutter={6} align="middle">
+      <Col>
+        <Input addonBefore="ค้นหา" allowClear style={{ width: 304 }} />
+      </Col>
+      <Col>
+        <Button
+          icon={<SearchOutlined />}
+          type="primary"
+          style={{
+            backgroundColor: '#19142A',
+            borderColor: '#19142A',
+          }}
+        />
+      </Col>
+    </Row>
   );
 };

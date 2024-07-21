@@ -1,9 +1,9 @@
-import React from "react";
-import { Layout, Menu, Image, Typography, Row, Col, Card, Button } from "antd";
-import { Link, useLocation } from "react-router-dom";
-import logo from "../assets/images/logoutotechV2.png";
-import sidebar from "../assets/images/abstract_sidebar.png";
-import { Menus } from ".";
+import React from 'react';
+import { Layout, Menu, Image, Typography, Row, Col, Card } from 'antd';
+import { Link, useLocation } from 'react-router-dom';
+import logo from '../assets/images/logoutotechV2.png';
+import sidebar from '../assets/images/abstract_sidebar.png';
+import { Menus } from '.';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -11,7 +11,7 @@ const { SubMenu } = Menu;
 export const Sidebar: React.FC = () => {
   const location = useLocation();
   const [collapsed, setCollapsed] = React.useState(false);
-  const [activeKey, setActiveKey] = React.useState("");
+  const [activeKey, setActiveKey] = React.useState('');
   const [isMobile, setIsMobile] = React.useState(false);
 
   const handleMenuClick = () => {
@@ -20,38 +20,29 @@ export const Sidebar: React.FC = () => {
     }
   };
 
-  const me = JSON.parse(localStorage.getItem("me") || "{}");
+  const me = JSON.parse(localStorage.getItem('me') || '{}');
   const menusWithOnClick = Menus({ role: me.role }).map((menu: any) => ({
     ...menu,
     onClick: handleMenuClick,
   }));
 
-  // Reorder menusWithOnClick to ensure "Organize" is always at the top
   const reorderedMenus = [
-    ...menusWithOnClick.filter((menu) => menu.key === "organize"),
-    ...menusWithOnClick.filter((menu) => menu.key !== "organize"),
+    ...menusWithOnClick.filter((menu) => menu.key === 'organize'),
+    ...menusWithOnClick.filter((menu) => menu.key !== 'organize'),
   ];
 
   React.useEffect(() => {
-    const key = location.pathname.split("/");
-    const [_firstPart, ...rest] = location.pathname.split('/'); 
-    const remainingPath = rest.join('/');
-  
-    if (key.length && rest.length > 1){ 
-      setActiveKey(remainingPath);
+    const pathSegments = location.pathname.split('/').filter(Boolean);
+
+    let newActiveKey = '';
+
+    if (pathSegments.length > 1) {
+      newActiveKey = pathSegments.join('/');
+    } else if (pathSegments.length === 1) {
+      newActiveKey = pathSegments[0] === 'admin' ? '' : pathSegments[0];
     }
-    else  {
-      const newActiveKey =
-        key[1] === "admin"
-          ? key[2]
-            ? `${key[2]}`
-            : ""
-          : key[1]
-          ? `${key[1]}`
-          : "";
-      setActiveKey(newActiveKey);
-    }
-  }, [location.pathname]);
+    setActiveKey(newActiveKey);
+  }, [location.pathname, setActiveKey]);
 
   React.useEffect(() => {
     setCollapsed(isMobile);
@@ -71,21 +62,21 @@ export const Sidebar: React.FC = () => {
           setIsMobile(broken);
         }}
         style={{
-          position: isMobile ? "fixed" : "relative",
+          position: isMobile ? 'fixed' : 'relative',
           zIndex: 10,
-          height: "100vh",
-          transition: "width 0.2s",
+          height: '100vh',
+          transition: 'width 0.2s',
         }}
       >
         <div
           style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
             backgroundImage: `url(${sidebar})`,
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
             opacity: 0.1,
           }}
         />
@@ -94,7 +85,7 @@ export const Sidebar: React.FC = () => {
           justify="center"
           align="middle"
           style={{
-            marginTop: "10px",
+            marginTop: '10px',
           }}
         >
           <Col>
@@ -110,28 +101,28 @@ export const Sidebar: React.FC = () => {
             align="middle"
             gutter={[12, 12]}
             style={{
-              marginTop: "10px",
-              marginBottom: "-10px",
+              marginTop: '10px',
+              marginBottom: '-10px',
             }}
           >
             <Col>
-              <Typography style={{ color: "#19142A", fontSize: "20px" }}>
+              <Typography style={{ color: '#19142A', fontSize: '20px' }}>
                 บริษัท ยูโทเทค จำกัด
               </Typography>
             </Col>
           </Row>
         )}
 
-        <div style={{ marginTop: collapsed ? "40px" : "0px" }}>
+        <div style={{ marginTop: collapsed ? '40px' : '0px' }}>
           <Menu
             theme="light"
             mode="inline"
             selectedKeys={[activeKey]}
-            defaultOpenKeys={["/"]}
+            defaultOpenKeys={['/']}
             style={{
-              backgroundColor: "#F7F7F7",
-              marginTop: collapsed ? "0px" : "60px",
-              overflow: "auto",
+              backgroundColor: '#F7F7F7',
+              marginTop: collapsed ? '0px' : '60px',
+              overflow: 'auto',
             }}
           >
             {reorderedMenus.map((menu) =>
@@ -147,54 +138,56 @@ export const Sidebar: React.FC = () => {
                 <Menu.Item key={menu.key} icon={menu.icon}>
                   {menu.label}
                 </Menu.Item>
-              )
+              ),
             )}
           </Menu>
         </div>
         {!collapsed && (
           <Card
             style={{
-              position: "absolute",
-              bottom: "50px",
-              margin: "5px",
-              background: "#F7F7F7",
-              borderColor: "#F7F7F7",
-              width: "calc(100% - 10px)",
-              borderRadius: "10px",
+              position: 'absolute',
+              bottom: '50px',
+              margin: '5px',
+              background: '#F7F7F7',
+              borderColor: '#F7F7F7',
+              width: 'calc(100% - 10px)',
+              borderRadius: '10px',
             }}
-            bodyStyle={{ padding: "10px", textAlign: "center" }}
+            bodyStyle={{ padding: '10px', textAlign: 'center' }}
           >
-            <Typography style={{ fontWeight: "bold", color: "#19142A" }}>
+            <Typography style={{ fontWeight: 'bold', color: '#19142A' }}>
               บริษัท ยูโทเทค จำกัด
             </Typography>
-            <Typography style={{ color: "#19142A", opacity: 0.6 }}>
+            <Typography style={{ color: '#19142A', opacity: 0.6 }}>
               STAY ORGANIZED
             </Typography>
-            <Button
+
+            {/* FIXME: Reopen me in soon ...  */}
+            {/* <Button
               type="primary"
               block
               style={{
-                marginTop: "10px",
-                backgroundColor: "#19142A",
-                borderColor: "#19142A",
-                borderRadius: "5px",
+                marginTop: '10px',
+                backgroundColor: '#19142A',
+                borderColor: '#19142A',
+                borderRadius: '5px',
               }}
               className="upgrade-button"
             >
               <Link to="/upgrade"> Upgrade </Link>
-            </Button>
+            </Button> */}
           </Card>
         )}
       </Sider>
       {isMobile && collapsed === false && (
         <div
           style={{
-            position: "fixed",
+            position: 'fixed',
             top: 0,
             left: 0,
-            width: "100%",
-            height: "100%",
-            background: "rgba(25, 20, 42, 0.8)", // RGBA color for transparency
+            width: '100%',
+            height: '100%',
+            background: 'rgba(25, 20, 42, 0.8)', // RGBA color for transparency
             zIndex: 9,
           }}
           onClick={() => setCollapsed(true)}

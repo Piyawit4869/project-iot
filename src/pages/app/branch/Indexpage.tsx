@@ -1,11 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { Pagination, Button, Tag, Typography, Image, Spin } from "antd";
-import { TagOutlined, EyeOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import { TableComponent } from "@src/components/shared/TableComponent";
-import { CreateButton } from "@src/components/shared/CreateButton";
-import { branchData as initialBranchData } from "./branchData";
-import { SearchBar } from "@src/components/shared/SearchBar";
+import React, { useEffect, useState } from 'react';
+import { Pagination, Button, Tag, Typography, Image, Spin } from 'antd';
+import {
+  TagOutlined,
+  EyeOutlined,
+  CheckOutlined,
+  CloseOutlined,
+} from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+import { TableComponent } from '@src/components/shared/TableComponent';
+import { CreateButton } from '@src/components/shared/CreateButton';
+import { branchData as initialBranchData } from './branchData';
+import { SearchBar } from '@src/components/shared/SearchBar';
 
 const { Title } = Typography;
 
@@ -23,7 +28,7 @@ export const BranchIndex: React.FC = () => {
           setLoading(false);
         }, 1000);
       } catch (error) {
-        console.error("Failed to fetch branch data", error);
+        console.error('Failed to fetch branch data', error);
         setLoading(false);
       }
     };
@@ -33,55 +38,55 @@ export const BranchIndex: React.FC = () => {
 
   const columns = [
     {
-      title: "ลำดับ",
-      dataIndex: "nummer",
-      key: "nummer",
+      title: 'ลำดับ',
+      dataIndex: 'nummer',
+      key: 'nummer',
       sorter: (a: { nummer: number }, b: { nummer: number }) =>
         a.nummer - b.nummer,
     },
     {
-      title: "โลโก้",
-      dataIndex: "imageUrl",
-      key: "imageUrl",
+      title: 'โลโก้',
+      dataIndex: 'imageUrl',
+      key: 'imageUrl',
       render: (imageUrl: string) => {
         return <Image width={60} src={imageUrl} />;
       },
     },
     {
-      title: "ชื่อโปรเจค",
-      dataIndex: "name",
-      key: "name",
+      title: 'ชื่อโปรเจค',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: "สาขาหลัก",
-      dataIndex: "isMainBranch",
-      key: "isMainBranch",
+      title: 'สาขาหลัก',
+      dataIndex: 'isMainBranch',
+      key: 'isMainBranch',
       render: (isMainBranch: string) => {
-        if (isMainBranch == "Yes") {
-          return <CheckOutlined style={{ color: "green", fontSize: "15px"  }} />;
+        if (isMainBranch == 'Yes') {
+          return <CheckOutlined style={{ color: 'green', fontSize: '15px' }} />;
         }
-        return <CloseOutlined style={{ color: "red", fontSize: "15px" }}/>;
-      }
+        return <CloseOutlined style={{ color: 'red', fontSize: '15px' }} />;
+      },
     },
     {
-      title: "เบอร์โทร",
-      dataIndex: "tel",
-      key: "tel",
+      title: 'เบอร์โทร',
+      dataIndex: 'tel',
+      key: 'tel',
     },
     {
-      title: "อีเมล",
-      dataIndex: "email",
-      key: "email",
+      title: 'อีเมล',
+      dataIndex: 'email',
+      key: 'email',
     },
     {
-      title: "เว็ปไซต์",
-      dataIndex: "website",
-      key: "website",
+      title: 'เว็ปไซต์',
+      dataIndex: 'website',
+      key: 'website',
     },
     {
-      title: "active",
-      dataIndex: "active",
-      key: "active",
+      title: 'active',
+      dataIndex: 'active',
+      key: 'active',
       render: (active: boolean) =>
         active ? (
           <Tag color="success">พร้อมใช้งาน</Tag>
@@ -90,13 +95,13 @@ export const BranchIndex: React.FC = () => {
         ),
     },
     {
-      title: "รายละเอียด",
-      key: "details",
-      dataIndex: "id",
+      title: 'รายละเอียด',
+      key: 'details',
+      dataIndex: 'id',
       render: (id: number) => (
         <Link to={`/branch/${id}`}>
           <Button
-            style={{ fontSize: "16px", width: "180px" }}
+            style={{ fontSize: '16px', width: '180px' }}
             type="primary"
             icon={<EyeOutlined />}
           >
@@ -113,43 +118,49 @@ export const BranchIndex: React.FC = () => {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
         <Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
           ข้อมูลสาขา
         </Title>
-        <Link to={"create"}>
-          <CreateButton label={"เพิ่มข้อมูลสาขา"} />
+        <Link to={'create'}>
+          <CreateButton label={'เพิ่มข้อมูลสาขา'} />
         </Link>
       </div>
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <TagOutlined />
-        <span >ค้นหาสาขา</span>
+        <span>ค้นหาสาขา</span>
       </div>
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          marginTop: "16px",
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          marginTop: '16px',
         }}
       >
         <SearchBar />
       </div>
       <div
         style={{
-          boxShadow: "0 4px 8px rgba(0.25, 0.25, 0.25, 0.25)",
-          borderRadius: "25px",
-          overflow: "hidden",
+          boxShadow: '0 4px 8px rgba(0.25, 0.25, 0.25, 0.25)',
+          borderRadius: '25px',
+          overflow: 'hidden',
           marginTop: 16,
         }}
       >
         {loading ? (
           <div
             style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "200px",
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '200px',
             }}
           >
             <Spin size="large" />
@@ -165,10 +176,10 @@ export const BranchIndex: React.FC = () => {
       </div>
       <div
         style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          marginTop: "20px",
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          marginTop: '20px',
         }}
       >
         <Pagination defaultCurrent={1} total={data.length} />

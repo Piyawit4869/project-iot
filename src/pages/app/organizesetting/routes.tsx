@@ -1,11 +1,11 @@
-import { OrganizeSingle } from "./OrganizeSingle";
+import { OrganizeSingle } from './OrganizeSingle';
 
 export const routes = [
   {
-    path: "information",
+    path: 'information',
     children: [
       {
-        path: "",
+        path: '',
         element: <OrganizeSingle />,
       },
     ],

@@ -1,15 +1,21 @@
 {
-    "translation": {
-      "user": "user",
-    "organize": "organize",
-    "analytic": "analytic",
-    "attendance": "attendance",
-    "notation": "notation",
-    "project": "project",
-    "information": "information",
-    "customers": "customers",
-    "branch": "branch",
-    "orginformation": "orginformation"
-    }
+  "translation": {
+    "user": "User",
+    "organize": "Organize",
+    "analytic": "Analytic",
+    "attendance": "Attendance",
+    "notation": "Notation",
+    "project": "Project",
+    "information": "Information",
+    "customers": "Customers",
+    "branch": "Branch",
+    "orginformation": "Orginformation",
+    "create": "Create",
+    "setting": "Setting",
+    "super_admin": "Super Admin",
+    "owner": "Owner",
+    "manager": "Managae",
+    "developer": "Developer",
+    "employee": "Employee"
   }
-  
+}

@@ -1,5 +1,5 @@
-import { Form, FormItemProps } from "antd";
-import { CSSProperties, FC, ReactNode } from "react";
+import { Form, FormItemProps } from 'antd';
+import { CSSProperties, FC, ReactNode } from 'react';
 
 interface LabelFormProps extends FormItemProps {
   label: string;
@@ -7,35 +7,32 @@ interface LabelFormProps extends FormItemProps {
   lineThickness?: string;
   labelFontSize?: string;
   labelMarginBottom?: number;
- 
 }
 
 export const LabelForm: FC<LabelFormProps> = ({
   label,
   icon,
-  labelFontSize = "24px",
+  labelFontSize = '24px',
   labelMarginBottom = -0,
-
 
   ...formItemProps
 }) => {
   const labelStyle: CSSProperties = {
     fontSize: labelFontSize,
     marginBottom: labelMarginBottom,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   };
 
   return (
     <Form.Item
       label={
         <div
-          style={{ display: "flex", flexDirection: "column", width: "100%" }}
+          style={{ display: 'flex', flexDirection: 'column', width: '100%' }}
         >
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             {icon && <span style={{ marginRight: 8 }}>{icon}</span>}
             <span style={labelStyle}>{label}</span>
           </div>
-
         </div>
       }
       {...formItemProps}

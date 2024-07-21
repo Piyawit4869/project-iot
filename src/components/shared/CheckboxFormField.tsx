@@ -1,5 +1,5 @@
-import { Form, Checkbox } from "antd";
-import { FC } from "react";
+import { Form, Checkbox } from 'antd';
+import { FC } from 'react';
 
 interface CheckboxFormFieldProps {
   name: string;

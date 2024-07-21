@@ -1,14 +1,14 @@
-import { Form, Input, Button, notification } from "antd";
+import { Form, Input, Button, notification } from 'antd';
 import {
   UserOutlined,
   LockOutlined,
   EyeInvisibleOutlined,
   EyeOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 // import React from "react";
 
-import * as API from "@src/apis";
-import { json, redirect, useNavigation, useSubmit } from "react-router-dom";
+import * as API from '@src/apis';
+import { json, redirect, useNavigation, useSubmit } from 'react-router-dom';
 // import axios from "axios";
 
 //here Action example
@@ -17,24 +17,24 @@ export async function loginAction({ request }: any) {
   const submitData = Object.fromEntries(formData);
   // console.log({submitData});
   switch (submitData.action) {
-    case "adminLogin":
+    case 'adminLogin':
       try {
         const res = await API.auth.adminLogin(JSON.parse(submitData.data));
-        localStorage.setItem("accessToken", res.data.accessToken);
-        localStorage.setItem("refreshToken", res.data.refreshToken);
+        localStorage.setItem('accessToken', res.data.accessToken);
+        localStorage.setItem('refreshToken', res.data.refreshToken);
         notification.success({
-          message: "Login Success",
-          description: "You have successfully logged in",
+          message: 'Login Success',
+          description: 'You have successfully logged in',
         });
 
-        return redirect("/analytic");
+        return redirect('/analytic');
       } catch (error) {
         notification.error({
-          message: "Login Failed",
-          description: "Invalid email or password",
+          message: 'Login Failed',
+          description: 'Invalid email or password',
         });
 
-        return json({ status: "error", message: "Invalid email or password" });
+        return json({ status: 'error', message: 'Invalid email or password' });
       }
 
     default:
@@ -50,18 +50,18 @@ export const Login = () => {
     const payload = { ...values };
     console.log({ payload });
     submit(
-      { action: "adminLogin", data: JSON.stringify(payload) },
-      { method: "post" }
+      { action: 'adminLogin', data: JSON.stringify(payload) },
+      { method: 'post' },
     );
   };
 
   return (
     <div
       style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
       }}
     >
       <Form
@@ -70,32 +70,32 @@ export const Login = () => {
         className="login-form"
         initialValues={{ remember: true }}
         onFinish={onFinish}
-        style={{ maxWidth: "500px" }}
+        style={{ maxWidth: '500px' }}
       >
-        <h1 style={{ textAlign: "left", fontSize: "50px" }}>Sign in</h1>
-        <p style={{ textAlign: "left", fontSize: "25px", marginTop: "-40px" }}>
+        <h1 style={{ textAlign: 'left', fontSize: '50px' }}>Sign in</h1>
+        <p style={{ textAlign: 'left', fontSize: '25px', marginTop: '-40px' }}>
           Stay Organize Login
         </p>
         <Form.Item
           name="user"
           rules={[
-            { required: true, message: "Please input your Email or Username" },
+            { required: true, message: 'Please input your Email or Username' },
           ]}
         >
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
             placeholder="Email or Username"
-            style={{ width: "500px", height: "50px", fontSize: "16px" }}
+            style={{ width: '500px', height: '50px', fontSize: '16px' }}
           />
         </Form.Item>
         <Form.Item
           name="password"
-          rules={[{ required: true, message: "Please input your Password!" }]}
+          rules={[{ required: true, message: 'Please input your Password!' }]}
         >
           <Input.Password
             prefix={<LockOutlined className="site-form-item-icon" />}
             placeholder="Password"
-            style={{ width: "500px", height: "50px", fontSize: "16px" }}
+            style={{ width: '500px', height: '50px', fontSize: '16px' }}
             iconRender={(visible) =>
               visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
             }
@@ -106,18 +106,18 @@ export const Login = () => {
             type="primary"
             htmlType="submit"
             loading={
-              navigation.state === "loading" ||
-              navigation.state === "submitting"
+              navigation.state === 'loading' ||
+              navigation.state === 'submitting'
             }
             disabled={
-              navigation.state === "loading" ||
-              navigation.state === "submitting"
+              navigation.state === 'loading' ||
+              navigation.state === 'submitting'
             }
             style={{
-              height: "50px",
-              fontSize: "18px",
-              padding: "0 30px",
-              width: "100%",
+              height: '50px',
+              fontSize: '18px',
+              padding: '0 30px',
+              width: '100%',
             }}
           >
             Log in

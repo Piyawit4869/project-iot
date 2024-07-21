@@ -1,7 +1,7 @@
-import React from "react";
-import { Form, Switch } from "antd";
-import { FormItemProps } from "antd/lib/form";
-import { SwitchProps } from "antd/lib/switch";
+import React from 'react';
+import { Form, Switch } from 'antd';
+import { FormItemProps } from 'antd/lib/form';
+import { SwitchProps } from 'antd/lib/switch';
 
 interface SwitchFormFieldProps extends FormItemProps {
   label?: string;
@@ -12,7 +12,7 @@ interface SwitchFormFieldProps extends FormItemProps {
 }
 
 export const SwitchFormField: React.FC<SwitchFormFieldProps> = (
-  props: SwitchFormFieldProps
+  props: SwitchFormFieldProps,
 ) => {
   const { label, disabled, name, switchProps, checked, ...formItemProps } =
     props;

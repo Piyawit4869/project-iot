@@ -32,10 +32,15 @@ const columns = [
     key: 'phone',
   },
   {
-    title: "สถานะ",
-    dataIndex: "active",
-    key: "active",
-    render: (active: any) => (active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>),
+    title: 'สถานะ',
+    dataIndex: 'active',
+    key: 'active',
+    render: (active: any) =>
+      active ? (
+        <Tag color="success">พร้อมใช้งาน</Tag>
+      ) : (
+        <Tag color="error">ไม่พร้อมใช้งาน</Tag>
+      ),
   },
   {
     title: 'รายละเอียด',
@@ -43,7 +48,11 @@ const columns = [
     key: 'details',
     render: (_: any, record: any) => (
       <Link to={`/user/${record.id}`}>
-        <Button style={{ fontSize: '16px', width: '180px' }} type="primary" icon={<EyeOutlined />}>
+        <Button
+          style={{ fontSize: '16px', width: '180px' }}
+          type="primary"
+          icon={<EyeOutlined />}
+        >
           ดูข้อมูล
         </Button>
       </Link>
@@ -72,7 +81,7 @@ export const UsersIndex: React.FC = () => {
     setTimeout(() => {
       setUsers(loaderData?.user?.items || initialUserData);
       setLoading(false);
-    }, 1000); 
+    }, 1000);
   }, [loaderData]);
 
   // const onSearch = (value: string) => {
@@ -88,19 +97,25 @@ export const UsersIndex: React.FC = () => {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
         <Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
-        ข้อมูลผู้ใช้
+          ข้อมูลผู้ใช้
         </Title>
-        <Link to={"create"}>
-          <CreateButton label={"เพิ่มข้อมูลผู้ใช้"} />
+        <Link to={'create'}>
+          <CreateButton label={'เพิ่มข้อมูลผู้ใช้'} />
         </Link>
       </div>
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <TagOutlined />
-        <span >ค้นหาผู้ใช้</span>
+        <span>ค้นหาผู้ใช้</span>
       </div>
-      
+
       <div
         style={{
           display: 'flex',
@@ -121,19 +136,36 @@ export const UsersIndex: React.FC = () => {
         }}
       >
         {loading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '200px',
+            }}
+          >
             <Spin size="large" />
           </div>
         ) : (
           <TableComponent
             columns={columns}
-            dataSource={users.slice((currentPage - 1) * pageSize, currentPage * pageSize)} // Slice data for pagination
+            dataSource={users.slice(
+              (currentPage - 1) * pageSize,
+              currentPage * pageSize,
+            )} // Slice data for pagination
             pagination={false}
             bordered
           />
         )}
       </div>
-      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          marginTop: '20px',
+        }}
+      >
         <Pagination
           current={currentPage}
           total={users.length}

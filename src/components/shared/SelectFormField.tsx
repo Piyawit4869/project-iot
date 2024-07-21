@@ -1,5 +1,5 @@
-import { Form, Select } from "antd";
-import { CSSProperties } from "react";
+import { Form, Select } from 'antd';
+import { CSSProperties } from 'react';
 
 interface SelectFormFieldProps {
   label: string;
@@ -11,7 +11,7 @@ interface SelectFormFieldProps {
 }
 
 export const SelectFormField: React.FC<SelectFormFieldProps> = (
-  props: SelectFormFieldProps
+  props: SelectFormFieldProps,
 ) => {
   const { options, placeholder, name, label, disabled, rule } = props;
   return (
@@ -27,8 +27,8 @@ export const SelectFormField: React.FC<SelectFormFieldProps> = (
 };
 const styles: Record<string, CSSProperties> = {
   input: {
-    width: "100%",
-    margin: "5px 0",
+    width: '100%',
+    margin: '5px 0',
     marginTop: -10,
   },
 };

@@ -1,14 +1,14 @@
-0
-import { BranchSingle } from "./singlepage";
+0;
+import { BranchSingle } from './singlepage';
 
 export const routes = [
   {
-    path: "information/branch",
+    path: 'information/branch',
     children: [
       {
-        path: "", 
-        element: <BranchSingle/>
-      }
+        path: '',
+        element: <BranchSingle />,
+      },
     ],
-  }
+  },
 ];

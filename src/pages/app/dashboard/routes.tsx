@@ -1,11 +1,11 @@
-import { Dashboard } from "./Dashboard";
+import { Dashboard } from './Dashboard';
 
 export const routes = [
   {
-    path: "dashboard",
+    path: 'dashboard',
     children: [
       {
-        path: "",
+        path: '',
         element: <Dashboard />,
       },
     ],

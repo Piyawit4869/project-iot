@@ -1,17 +1,17 @@
-import axios from "axios";
+import axios from 'axios';
 // import * as API from "./auth";
 const baseURL = import.meta.env.VITE_APP_API_BASE_URL;
 
 const client = () => {
-  let instance = axios.create({
+  const instance = axios.create({
     baseURL: baseURL,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   });
 
   instance.interceptors.request.use(function (config) {
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem('accessToken');
 
     config.headers.Authorization = `Bearer ${accessToken}`;
     return config;
@@ -41,7 +41,7 @@ const client = () => {
       // 	return instance(originalRequest);
       // }
       return Promise.reject(error);
-    }
+    },
   );
 
   return instance;
