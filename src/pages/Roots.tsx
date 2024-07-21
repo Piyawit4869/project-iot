@@ -5,9 +5,9 @@ import { Outlet, redirect, useLoaderData } from 'react-router-dom';
 export async function RootLoader() {
   try {
     const me = await API.user.getMe();
-    me.data.role = 'super_admin';
-    console.log(me);
-    localStorage.setItem('me', JSON.stringify(me.data));
+    me.data.role = "owner";
+    // console.log(me);
+    localStorage.setItem("me", JSON.stringify(me.data));
     return { me: me.data };
   } catch (e: any) {
     return redirect('/login');

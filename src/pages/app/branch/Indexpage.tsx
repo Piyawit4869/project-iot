@@ -6,7 +6,7 @@ import {
   CheckOutlined,
   CloseOutlined,
 } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigation } from 'react-router-dom';
 import { TableComponent } from '@src/components/shared/TableComponent';
 import { CreateButton } from '@src/components/shared/CreateButton';
 import { branchData as initialBranchData } from './branchData';
@@ -16,8 +16,10 @@ const { Title } = Typography;
 
 export const BranchIndex: React.FC = () => {
   const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(true);
+    const { state } = useNavigation();
   // const [searchValue, setSearchValue] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
+ 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -166,7 +168,8 @@ export const BranchIndex: React.FC = () => {
             <Spin size="large" />
           </div>
         ) : (
-          <TableComponent
+            <TableComponent
+              loading={loading || state === 'loading' || state === 'submitting'}
             columns={columns}
             pagination={false}
             bordered
