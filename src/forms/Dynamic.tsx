@@ -116,6 +116,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             placeholder={props.placeholder}
             name={props.name}
             label={props.label}
+            rows={3}
             rule={[
               {
                 required: props.require ? true : false,
@@ -179,6 +180,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
           md={props.col.md}
           lg={props.col.lg}
           xl={props.col.xl}
+          style={{ display: 'flex', alignItems: 'center' }}
         >
           <RadioFormField
             name={props.name}

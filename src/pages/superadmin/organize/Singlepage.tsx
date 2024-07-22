@@ -15,6 +15,7 @@ import React from 'react';
 import { renderEditForm } from './renderForm';
 import { TitleBar } from '@src/components/shared';
 import { CreateButton } from '@src/components/shared/CreateButton';
+import { SearchBar } from '@src/components/shared/SearchBar';
 
 export const OrganizeSingle: React.FC = () => {
   const { organize, branches, param } = useLoaderData() as any;
@@ -32,13 +33,6 @@ export const OrganizeSingle: React.FC = () => {
   const onFinish = (values: any) => {
     const payload = { ...values };
     payload.openingDate = formatDate(payload.openingDate);
-    payload.active = true;
-    payload.addressData = [];
-    payload.branchesData = [];
-    payload.userData = [];
-    payload.descriptions = '-';
-    payload.logoUrl =
-      'https://cdn.discordapp.com/attachments/1235856320280924213/1244954526155542598/575757.png?ex=6656fdc1&is=6655ac41&hm=96242e1d5d4f232411d9434a17f5053d4a7e6c788030f515e5da25d03813da86&';
 
     submit(
       { data: JSON.stringify(payload), action: 'edit' },
@@ -94,20 +88,20 @@ export const OrganizeSingle: React.FC = () => {
         </Row>
       </Form>
 
-      <Flex vertical gap={'small'}>
+      <Flex vertical gap={'small'} style={{ marginTop: '20px' }}>
         {/* Title section from title component */}
         <TitleBar
           title={'ตั้งค่าสาขา'}
           buttons={[
             <Link to={'#'}>
-              <CreateButton label={'เพิ่มข้อมูลสาขา'} />
+              <CreateButton disable label={'เพิ่มข้อมูลสาขา'} />
             </Link>,
           ]}
         />
 
         {/* Filter section from search bar component */}
-        {/* <div style={{ height: '25px' }} />
-        <SearchBar /> */}
+        <div style={{ height: '5px' }} />
+        <SearchBar />
 
         {/* Index data from table component */}
         <TableComponent
