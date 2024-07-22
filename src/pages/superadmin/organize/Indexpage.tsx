@@ -15,7 +15,7 @@ export const OrganizeIndex: React.FC = () => {
 
   React.useEffect(() => {
     const me = JSON.parse(localStorage.getItem('me') as any);
-    if (me.role !== 'super_admin') {
+    if (me.role.name !== 'super_admin') {
       redirect('/');
     }
   }, []);

@@ -78,7 +78,7 @@ export const Headerbar: React.FC = () => {
                   <Space>
                     <div style={styles.userInfo}>
                       <div style={styles.email}>{me.email}</div>
-                      <div style={styles.role}>{t(`${me.role}`)}</div>
+                      <div style={styles.role}>{t(`${me.role.name}`)}</div>
                     </div>
                     <img
                       src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"

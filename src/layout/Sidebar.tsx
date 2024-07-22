@@ -11,7 +11,7 @@ const { SubMenu } = Menu;
 export const Sidebar: React.FC = () => {
   const location = useLocation();
   const [collapsed, setCollapsed] = React.useState(false);
-  const [activeKey, setActiveKey] = React.useState('');
+  const [activeKey, setActiveKey] = React.useState<any[]>([]);
   const [isMobile, setIsMobile] = React.useState(false);
 
   const handleMenuClick = () => {
@@ -21,27 +21,18 @@ export const Sidebar: React.FC = () => {
   };
 
   const me = JSON.parse(localStorage.getItem('me') || '{}');
-  const menusWithOnClick = Menus({ role: me.role }).map((menu: any) => ({
+  const menusWithOnClick = Menus({ role: me.role.name }).map((menu: any) => ({
     ...menu,
     onClick: handleMenuClick,
   }));
 
-  const reorderedMenus = [
-    ...menusWithOnClick.filter((menu) => menu.key === 'organize'),
-    ...menusWithOnClick.filter((menu) => menu.key !== 'organize'),
-  ];
-
   React.useEffect(() => {
-    const pathSegments = location.pathname.split('/').filter(Boolean);
+    const currentPathname = location.pathname;
+    const resultPath = Menus({ role: me.role.name })
+      .filter((menu: any) => currentPathname.includes(menu.key))
+      .map((item: any) => item.key);
 
-    let newActiveKey = '';
-
-    if (pathSegments.length > 1) {
-      newActiveKey = pathSegments.join('/');
-    } else if (pathSegments.length === 1) {
-      newActiveKey = pathSegments[0] === 'admin' ? '' : pathSegments[0];
-    }
-    setActiveKey(newActiveKey);
+    setActiveKey(resultPath);
   }, [location.pathname, setActiveKey]);
 
   React.useEffect(() => {
@@ -117,7 +108,7 @@ export const Sidebar: React.FC = () => {
           <Menu
             theme="light"
             mode="inline"
-            selectedKeys={[activeKey]}
+            selectedKeys={activeKey}
             defaultOpenKeys={['/']}
             style={{
               backgroundColor: '#F7F7F7',
@@ -125,7 +116,7 @@ export const Sidebar: React.FC = () => {
               overflow: 'auto',
             }}
           >
-            {reorderedMenus.map((menu) =>
+            {menusWithOnClick.map((menu) =>
               menu.divider ? (
                 <Menu.Divider key={menu.key} />
               ) : menu.children ? (
