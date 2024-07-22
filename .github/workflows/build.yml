@@ -1,23 +1,99 @@
-name: build
+name: Build
 
-on: [push]
+on:
+  push:
+    branches:
+      - '**'
+
+env:
+  GCP_PROJECT_ID: stay-organize
+  GCP_IDENTITY_PROVIDER: projects/928486735220/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-oidc
+  GCP_SERVICE_ACCOUNT: stay-organize-deploy-sa@stay-organize.iam.gserviceaccount.com
+  GCP_IMAGE_REGISTRY: asia-southeast1-docker.pkg.dev
 
 jobs:
-  test:
+  code-check:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Node.js
-        uses: actions/setup-node@v1
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm install -g yarn
-      - name: yarn install, build and test
-        run: |
-          yarn install
-          yarn build
-      - uses: sarisia/actions-status-discord@v1
+          node-version: '18.20'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build project
+        run: yarn build
+
+      - name: Run lint
+        run: yarn lint
+
+      # - name: Run tests
+      #   run: yarn test
+
+      - name: Notify Discord (Code Check)
+        uses: sarisia/actions-status-discord@v1
         if: always()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          title: "Build by ${{ github.actor }}"
+          status: ${{ job.status }}
+          title: '${{ job.status }} check by ${{ github.actor }}'
+          description: 'build ${{ job.status }} please check in github before pull request'
+          url: 'https://github.com/Utotech-organize/stay-organize-dashboard'
+
+  build:
+    needs: code-check
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
+    permissions:
+      actions: read
+      contents: read
+      id-token: write # Ensure this permission is set for the job
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0.4.0
+        with:
+          workload_identity_provider: ${{ env.GCP_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GCP_SERVICE_ACCOUNT }}
+
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+
+      - name: Build Docker Image
+        env:
+          APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
+          APP_IMAGE: ${{ env.GCP_IMAGE_REGISTRY }}/${{ env.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}
+        run: docker build -t ${{ env.APP_IMAGE }}:${{ env.APP_VERSION }} .
+
+      - name: Configure Docker Client
+        run: |-
+          gcloud auth configure-docker --quiet
+          gcloud auth configure-docker ${{ env.GCP_IMAGE_REGISTRY }} --quiet
+
+      - name: Push Docker Image to Artifact Registry
+        env:
+          APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
+          APP_IMAGE: ${{ env.GCP_IMAGE_REGISTRY }}/${{ env.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}
+        run: |-
+          docker push ${{ env.APP_IMAGE }}:${{ env.APP_VERSION }}
+
+      - name: Notify Discord (Build)
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: 'Build and Deploy by ${{ github.actor }}'
+          content: 'build ${{ github.event.repository.name }}' # FIXME make this to env
+          description: 'Prepared to deploy'
+          url: 'https://github.com/Utotech-organize/stay-organize-dashboard'
