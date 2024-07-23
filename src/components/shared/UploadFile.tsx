@@ -15,10 +15,11 @@ interface FormInterface {
   form: any;
   name: string;
   disabled?: boolean;
+  require: boolean;
 }
 
 export const UploadFiles: React.FC<FormInterface> = (props: FormInterface) => {
-  const { form, name, disabled } = props;
+  const { form, name, disabled, require } = props;
   const file = Form.useWatch(name, form);
 
   const [fileList, setFileList] = React.useState<any[]>([]);
@@ -77,6 +78,7 @@ export const UploadFiles: React.FC<FormInterface> = (props: FormInterface) => {
       name={name}
       valuePropName="fileList"
       getValueFromEvent={normFile}
+      required={require}
     >
       <Upload {...uploadProps}>
         {uploading || fileList.length ? null : uploadButton}

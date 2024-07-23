@@ -16,6 +16,7 @@ import { renderEditForm } from './renderForm';
 import { TitleBar } from '@src/components/shared';
 import { CreateButton } from '@src/components/shared/CreateButton';
 import { SearchBar } from '@src/components/shared/SearchBar';
+import vine, { errors, SimpleMessagesProvider } from '@vinejs/vine';
 
 export const OrganizeSingle: React.FC = () => {
   const { organize, branches, param } = useLoaderData() as any;
@@ -26,18 +27,84 @@ export const OrganizeSingle: React.FC = () => {
   const [loading, setLoading] = React.useState<boolean>(true);
   const { state } = useNavigation();
 
-  const formatDate = (isoDateString: any) => {
-    return dayjs(isoDateString).format('DD/MM/YYYY');
+  const formatDate = (dateString: string) => {
+    // Assuming the input date format is DD/MM/YY
+    return dayjs(dateString, 'DD/MM/YY').toISOString();
   };
 
-  const onFinish = (values: any) => {
-    const payload = { ...values };
-    payload.openingDate = formatDate(payload.openingDate);
+  const schema = vine.object({
+    nameTh: vine.string(),
+    nameEn: vine.string(),
+    taxId: vine.string(),
+    active: vine.boolean(),
+    status: vine.enum([
+      'newly_registered',
+      'active_user',
+      'loyal_customer',
+      'at_risk',
+      'churned',
+    ]),
+    fromType: vine.enum(['ordinary_person', 'juristic_person']),
+    type: vine.enum([
+      'human',
+      'ordinary_partnership',
+      'shop',
+      'bop',
+      'company_limited',
+      'public_company_limited',
+      'limited_partnership',
+      'foundation',
+      'association',
+      'joint_venture',
+      'others',
+    ]),
+    descriptionsTh: vine.string().optional(),
+    descriptionsEn: vine.string().optional(),
+    registerVat: vine.boolean(),
+    openingDate: vine.string().optional(),
+    websiteUrl: vine.string().optional(),
+    contactEmail: vine.string().email(),
+    contactPhone: vine.string().maxLength(10),
+    contactWebsite: vine.string().optional(),
+    businessEmail: vine.string().email().optional(),
+    contactFacebook: vine.string().optional(),
+    contactLine: vine.string().optional(),
+    contactWhatsapp: vine.string().optional(),
+    contactNote: vine.string().optional(),
+  });
 
-    submit(
-      { data: JSON.stringify(payload), action: 'edit' },
-      { method: 'put' },
-    );
+  vine.messagesProvider = new SimpleMessagesProvider({
+    // Applicable for all fields
+    required: 'The {{ field }} field is required',
+    string: 'The value of {{ field }} field must be a string',
+    email: 'The value is not a valid email address',
+
+    // Error message for the username field
+    'username.required': 'Please choose a username for your account',
+  });
+
+  const onFinish = async (values: any) => {
+    const validator = vine.compile(schema);
+    try {
+      const payload = { ...values };
+      payload.openingDate = formatDate(payload.openingDate);
+
+      await validator.validate(payload);
+
+      submit(
+        { data: JSON.stringify(payload), action: 'edit' },
+        { method: 'put' },
+      );
+    } catch (error) {
+      if (error instanceof errors.E_VALIDATION_ERROR) {
+        const fieldErrors = error.messages.map((err: any) => ({
+          name: err.field,
+          errors: [err.message],
+        }));
+
+        form.setFields(fieldErrors);
+      }
+    }
   };
 
   React.useEffect(() => {

@@ -8,14 +8,15 @@ interface SelectFormFieldProps {
   placeholder?: string;
   rule?: any;
   disabled: boolean;
+  require: boolean;
 }
 
 export const SelectFormField: React.FC<SelectFormFieldProps> = (
   props: SelectFormFieldProps,
 ) => {
-  const { options, placeholder, name, label, disabled, rule } = props;
+  const { options, placeholder, name, label, disabled, rule, require } = props;
   return (
-    <Form.Item label={label} name={name} rules={rule}>
+    <Form.Item required={require} label={label} name={name} rules={rule}>
       <Select
         style={styles.input}
         placeholder={placeholder}

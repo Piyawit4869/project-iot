@@ -7,14 +7,15 @@ interface DatePickerProps {
   label: string;
   placeholder?: string;
   rule?: any;
+  require: boolean;
 }
 export const DatePickerFormField: FC<DatePickerProps> = (
   props: DatePickerProps,
 ) => {
-  const { name, label, placeholder, rule } = props;
+  const { name, label, placeholder, rule, require } = props;
   const dateFormat = 'DD/MM/YYYY';
   return (
-    <Form.Item name={name} label={label} rules={rule}>
+    <Form.Item required={require} name={name} label={label} rules={rule}>
       <DatePicker
         placeholder={placeholder}
         style={styles.input}

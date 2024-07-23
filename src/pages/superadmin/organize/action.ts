@@ -2,20 +2,26 @@ import * as API from '@src/apis';
 import { notification } from 'antd';
 import { redirect } from 'react-router-dom';
 
-export async function organizeCreateAction({ request }: any) {
+export async function organizeCreateAction({ request, params }: any) {
   const formData = await request.formData();
   const submitData = Object.fromEntries(formData);
 
   try {
     await API.organize.create(JSON.parse(submitData.data));
-    return {
-      data: {
-        action: 'create',
-        status: 'success',
-        message: 'Organize Created Successfully !',
-      },
-    };
+
+    notification['success']({
+      message: 'สร้างข้อมูลองค์กรเสร็จสิ้น',
+      placement: 'top',
+      duration: 3,
+    });
+
+    return redirect(`/admin/organize/${params.id}`);
   } catch (error) {
+    notification['error']({
+      message: 'สร้างข้อมูลองค์กรล้มเหลว',
+      placement: 'top',
+      duration: 3,
+    });
     return {
       data: {
         action: 'create',
@@ -41,7 +47,7 @@ export async function organizeSingleAction({ request, params }: any) {
         return redirect(`/admin/organize/${params.id}`);
       } catch (error) {
         notification['error']({
-          message: 'แก้ไขข้อมูลองค์กรล้+มเหลว',
+          message: 'แก้ไขข้อมูลองค์กรล้มเหลว',
           placement: 'top',
           duration: 3,
         });

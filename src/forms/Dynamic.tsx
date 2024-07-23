@@ -51,15 +51,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             type={props.type}
             disabled={props.disabled}
             maxLength={props.maxLength}
-            rule={[
-              {
-                required: props.require ? true : false,
-                message: props.ruleMessage,
-              },
-              {
-                validator: props.validator,
-              },
-            ]}
+            require={props.require}
           />
         </Col>
       );
@@ -78,12 +70,13 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             label={props.label}
             options={props.option}
             disabled={props.disabled}
-            rule={[
-              {
-                required: props.require ? true : false,
-                message: props.ruleMessage,
-              },
-            ]}
+            require={props.require}
+            // rule={[
+            //   {
+            //     required: props.require ? true : false,
+            //     message: props.ruleMessage,
+            //   },
+            // ]}
           />
         </Col>
       );
@@ -117,12 +110,13 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             name={props.name}
             label={props.label}
             rows={3}
-            rule={[
-              {
-                required: props.require ? true : false,
-                message: props.ruleMessage,
-              },
-            ]}
+            require={props.require}
+            // rule={[
+            //   {
+            //     required: props.require ? true : false,
+            //     message: props.ruleMessage,
+            //   },
+            // ]}
             disabled={props.disabled}
           />
         </Col>
@@ -140,12 +134,13 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             placeholder={props.placeholder}
             name={props.name}
             label={props.label}
-            rule={[
-              {
-                required: props.require ? true : false,
-                message: props.ruleMessage,
-              },
-            ]}
+            require={props.require}
+            // rule={[
+            //   {
+            //     required: props.require ? true : false,
+            //     message: props.ruleMessage,
+            //   },
+            // ]}
           />
         </Col>
       );
@@ -162,12 +157,13 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             value={props.value}
             name={props.name}
             label={props.label}
-            rule={[
-              {
-                required: props.require ? true : false,
-                message: props.ruleMessage,
-              },
-            ]}
+            require={props.require}
+            // rule={[
+            //   {
+            //     required: props.require ? true : false,
+            //     message: props.ruleMessage,
+            //   },
+            // ]}
           />
         </Col>
       );
@@ -186,6 +182,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             name={props.name}
             options={props.option}
             label={props.label}
+            require={props.require}
           />
         </Col>
       );
@@ -204,6 +201,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             label={props.label}
             disabled={props.disabled}
             checked={props.checked}
+            require={props.require}
           />
         </Col>
       );
@@ -229,7 +227,11 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
           lg={props.col.lg}
           xl={props.col.xl}
         >
-          <UploadFiles form={props.form} name={props.name} />
+          <UploadFiles
+            form={props.form}
+            name={props.name}
+            require={props.require}
+          />
         </Col>
       );
     default:
