@@ -146,10 +146,10 @@ export const organizeColumns: TableProps['columns'] = [
   {
     title: 'รายละเอียด',
     key: 'details',
-    dataIndex: 'id',
+    dataIndex: 'slug',
     align: 'center',
-    render: (id: number) => (
-      <Link to={`${id}`}>
+    render: (slug: string) => (
+      <Link to={`${slug}`}>
         <Button type="primary" icon={<EyeOutlined />}>
           ดูข้อมูล
         </Button>
@@ -248,18 +248,5 @@ export const branchColumns: TableProps['columns'] = [
       ) : (
         <Tag color="error">ไม่พร้อมใช้งาน</Tag>
       ),
-  },
-  {
-    title: 'รายละเอียด',
-    key: 'details',
-    dataIndex: 'id',
-    align: 'center',
-    render: (id: number) => (
-      <Link to={`${id}`}>
-        <Button type="primary" disabled icon={<EyeOutlined />}>
-          ดูข้อมูล
-        </Button>
-      </Link>
-    ),
   },
 ];

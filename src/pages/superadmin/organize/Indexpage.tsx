@@ -50,7 +50,7 @@ export const OrganizeIndex: React.FC = () => {
       />
 
       {/* Filter section from search bar component */}
-      <div style={{ height: '25px' }} />
+      <div style={{ height: '5px' }} />
       <SearchBar />
 
       {/* Index data from table component */}

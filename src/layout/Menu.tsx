@@ -15,16 +15,28 @@ export const Menus = (props: MenusProps) => {
       role: ['super_admin'],
     },
     {
-      label: <Link to="/admin/analytic">วิเคราะห์ระบบ</Link>,
+      //<Link to="/admin/analytic" >วิเคราะห์ระบบ</Link>
+      label: (
+        <Link to="#" style={{ cursor: 'not-allowed' }}>
+          วิเคราะห์ระบบ
+        </Link>
+      ),
       key: '/admin/analytic',
       icon: <Icon.PieChartOutlined />,
       role: ['super_admin'],
+      disable: true,
     },
     {
-      label: <Link to="/admin/employee">พนักงาน</Link>,
+      //<Link to="/admin/employee">พนักงาน</Link>,
+      label: (
+        <Link to="#" style={{ cursor: 'not-allowed' }}>
+          พนักงาน
+        </Link>
+      ),
       key: '/admin/employee',
       icon: <Icon.UserOutlined />,
       role: ['super_admin'],
+      disable: true,
     },
     {
       label: <Link to="/analytic">วิเคราะห์</Link>,
