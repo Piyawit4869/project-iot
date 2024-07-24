@@ -126,10 +126,10 @@ export const branchColumn: TableProps['columns'] = [
   {
     title: 'รายละเอียด',
     key: 'details',
-    dataIndex: 'id',
+    dataIndex: 'slug',
     align: 'center',
-    render: (id: number) => (
-      <Link to={`${id}`}>
+    render: (slug: string) => (
+      <Link to={`${slug}`}>
         <Button type="primary" icon={<EyeOutlined />}>
           ดูข้อมูล
         </Button>

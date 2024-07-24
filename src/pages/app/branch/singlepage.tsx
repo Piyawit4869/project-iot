@@ -36,9 +36,13 @@ export const BranchSingle = () => {
   ];
 
   const schema = vine.object({
-    nameTh: vine.string(),
-    taxId: vine.string(),
     active: vine.boolean(),
+    fromType: vine.enum(['ordinary_person', 'juristic_person']),
+    nameTh: vine.string(),
+    nameEn: vine.string(),
+    taxId: vine.string().maxLength(13),
+    logoUrl: vine.string(),
+    isMain: vine.boolean(),
     type: vine.enum([
       'human',
       'ordinary_partnership',
@@ -52,18 +56,31 @@ export const BranchSingle = () => {
       'joint_venture',
       'others',
     ]),
-    isMain: vine.boolean(),
-    descriptionsTh: vine.string().optional(),
-    websiteUrl: vine.string().optional(),
+    openingDate: vine.string(),
+    branchCode: vine.string(),
     contactEmail: vine.string().email(),
+    websiteUrl: vine.string().optional(),
     contactPhone: vine.string().maxLength(10),
-    contactWebsite: vine.string().optional(),
-    businessEmail: vine.string().email().optional(),
     contactFacebook: vine.string().optional(),
     contactLine: vine.string().optional(),
     contactWhatsapp: vine.string().optional(),
+    contactWebsite: vine.string().optional(),
     contactNote: vine.string().optional(),
+    registerVat: vine.boolean(),
+    descriptionsTh: vine.string().optional(),
+    descriptionsEn: vine.string().optional(),
+    address: vine.object({
+      descriptions: vine.string().optional(),
+      active: vine.boolean(),
+      addresType: vine.string().optional(),
+      province: vine.string().optional(),
+      district: vine.string().optional(),
+      subDistrict: vine.string().optional(),
+      address: vine.string().optional(),
+      postalCode: vine.string().maxLength(5).optional(),
+    })
   });
+
 
   vine.messagesProvider = new SimpleMessagesProvider({
     // Applicable for all fields
@@ -75,16 +92,12 @@ export const BranchSingle = () => {
     'username.required': 'Please choose a username for your account',
   });
   
-  const formatDate = (dateString: string) => {
-    // Assuming the input date format is DD/MM/YY
-    return dayjs(dateString, 'DD/MM/YY').toISOString();
-  };
 
   const onFinish = async (values: any) => {
     const validator = vine.compile(schema);
     try {
       const payload = { ...values };
-      payload.openingDate = formatDate(payload.openingDate);
+      payload.openingDate = dayjs(payload.openingDate).toISOString();
 
       await validator.validate(payload);
 
@@ -120,21 +133,23 @@ export const BranchSingle = () => {
                 xl={{ span: 12, order: 1 }}
               >
                 <Row gutter={24}>
-                  {renderEditForm.map((item: any) => (
+                  {renderEditForm.map((item: any, index: number) => (
                     <DynamicForm
-                      key={item.name}
+                      key={index}
                       name={item.name}
                       label={item.label}
                       placeholder={item.placeholder}
                       type={item.type}
                       col={item.col}
-                      option={item.option}
                       icon={item.icon}
                       value={item.value}
                       ruleMessage={item.message}
                       require={item.require}
+                      option={item.options}
                       disabled={item.disabled}
                       checked={item.checked}
+                      maxLength={item.maxLength}
+                      validator={item.validator}
                     />
                   ))}
                 </Row>

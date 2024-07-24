@@ -22,6 +22,7 @@ export const routes = [
         path: ':id',
         element: <BranchSingle />,
         loader: branchSingleLoader,
+        action: branchCreateAction
       },
     ],
   },
