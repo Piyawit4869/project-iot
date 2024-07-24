@@ -16,6 +16,8 @@
     "owner": "Owner",
     "manager": "Managae",
     "developer": "Developer",
-    "employee": "Employee"
+    "employee": "Employee",
+    "profile": "Profile",
+    "logout": "Logout"
   }
 }

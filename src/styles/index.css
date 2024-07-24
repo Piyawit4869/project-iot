@@ -88,3 +88,18 @@ code {
 .statusbar {
   grid-template-columns: repeat(12, 1fr);
 }
+
+/* Custom styles for the Ant Design sidebar bottom trigger button */
+.custom-sider-trigger {
+  background-color: transparent !important; /* Make background transparent */
+  border: none !important; /* Remove top border if any */
+}
+
+.custom-sider-trigger:hover {
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.1
+  ) !important; /* Optional: Add a hover effect */
+}

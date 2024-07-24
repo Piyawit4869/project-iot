@@ -4,9 +4,21 @@ import {
   SettingOutlined,
   UserOutlined,
   HomeOutlined,
+  BellOutlined,
 } from '@ant-design/icons';
 import { Link, useLocation } from 'react-router-dom';
-import { Breadcrumb, Col, Dropdown, MenuProps, Row, Space } from 'antd';
+import {
+  Breadcrumb,
+  Col,
+  Dropdown,
+  Empty,
+  Flex,
+  Image,
+  Menu,
+  MenuProps,
+  Row,
+  Space,
+} from 'antd';
 import { useTranslation } from 'react-i18next';
 
 export const Headerbar: React.FC = () => {
@@ -15,11 +27,43 @@ export const Headerbar: React.FC = () => {
 
   const me = JSON.parse(localStorage.getItem('me') as any);
 
+  console.log({ me });
+
+  const notifications: MenuProps['items'] = [
+    {
+      label: <Empty description={'ไม่มีการแจ้งเตือนในขนาดนี้'} />,
+      key: 'empty',
+    },
+  ];
   const items: MenuProps['items'] = [
     {
       label: (
+        <Flex gap="12px" align="center">
+          <Image
+            src={
+              me?.profile?.photoUrl
+                ? me.profile.photoUrl
+                : 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'
+            }
+            alt="User Icon"
+            preview={false}
+            style={styles.icon}
+          />
+          <Flex vertical>
+            <div style={styles.email}>
+              {me.profile.firstName + ' ' + me.profile.lastName}
+            </div>
+            <div style={styles.email}>{me.email}</div>
+            <div style={styles.role}>{t(`${me.role.name}`)}</div>
+          </Flex>
+        </Flex>
+      ),
+      key: 'user',
+    },
+    {
+      label: (
         <Link to="/profile">
-          <UserOutlined /> {t('Profile')}
+          <UserOutlined /> {t('profile')}
         </Link>
       ),
       key: '0',
@@ -27,7 +71,7 @@ export const Headerbar: React.FC = () => {
     {
       label: (
         <Link to="/setting">
-          <SettingOutlined /> {t('Settings')}
+          <SettingOutlined /> {t('setting')}
         </Link>
       ),
       key: '1',
@@ -36,12 +80,13 @@ export const Headerbar: React.FC = () => {
     {
       label: (
         <Link to="/login">
-          <LogoutOutlined /> {t('Logout')}
+          <LogoutOutlined /> {t('logout')}
         </Link>
       ),
       key: '2',
     },
   ];
+
   const generateBreadcrumbs = (path: string) => {
     const pathnames = path.split('/').filter((x) => x);
     const modifiedPathnames =
@@ -50,7 +95,9 @@ export const Headerbar: React.FC = () => {
     return (
       <Breadcrumb style={styles.breadcrumb}>
         <Breadcrumb.Item>
-          <Link to="/">
+          <Link
+            to={location.pathname.includes('/admin') ? '/admin/organize' : '/'}
+          >
             <HomeOutlined />
           </Link>
         </Breadcrumb.Item>
@@ -59,7 +106,19 @@ export const Headerbar: React.FC = () => {
           const isLast = index === modifiedPathnames.length - 1;
           return (
             <Breadcrumb.Item key={name}>
-              {isLast ? t(name) : <Link to={routeTo}>{t(name)}</Link>}
+              {isLast ? (
+                t(name)
+              ) : (
+                <Link
+                  to={
+                    location.pathname.includes('/admin')
+                      ? `/admin${routeTo}`
+                      : routeTo
+                  }
+                >
+                  {t(name)}
+                </Link>
+              )}
             </Breadcrumb.Item>
           );
         })}
@@ -73,15 +132,27 @@ export const Headerbar: React.FC = () => {
         <Col>
           <div style={styles.menu}>
             <div style={styles.navRight}>
-              <Dropdown menu={{ items }} trigger={['click']}>
+              <Dropdown
+                overlay={<Menu items={notifications} />}
+                trigger={['hover', 'click']}
+              >
                 <a onClick={(e) => e.preventDefault()}>
                   <Space>
-                    <div style={styles.userInfo}>
-                      <div style={styles.email}>{me.email}</div>
-                      <div style={styles.role}>{t(`${me.role.name}`)}</div>
-                    </div>
+                    <BellOutlined
+                      style={{ ...styles.icon, fontSize: '24px' }}
+                    />
+                  </Space>
+                </a>
+              </Dropdown>
+              <Dropdown menu={{ items }} trigger={['hover', 'click']}>
+                <a onClick={(e) => e.preventDefault()}>
+                  <Space>
                     <img
-                      src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
+                      src={
+                        me?.profile?.photoUrl
+                          ? me.profile.photoUrl
+                          : 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'
+                      }
                       alt="User Icon"
                       style={styles.icon}
                     />
@@ -149,8 +220,9 @@ const styles: Record<string, React.CSSProperties> = {
   },
   icon: {
     marginLeft: '8px',
-    width: '16px',
-    height: '16px',
+    width: '45px',
+    height: '45px',
+    borderRadius: '50%',
   },
   dropdownMenu: {
     position: 'absolute',

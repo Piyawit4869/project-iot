@@ -19,7 +19,7 @@ import { SearchBar } from '@src/components/shared/SearchBar';
 import vine, { errors, SimpleMessagesProvider } from '@vinejs/vine';
 
 export const OrganizeSingle: React.FC = () => {
-  const { organize, branches, param } = useLoaderData() as any;
+  const { organize, param } = useLoaderData() as any;
 
   const [form] = Form.useForm();
   const submit = useSubmit();
@@ -173,7 +173,7 @@ export const OrganizeSingle: React.FC = () => {
         {/* Index data from table component */}
         <TableComponent
           columns={branchColumns}
-          dataSource={branches}
+          dataSource={organize.branches}
           loading={loading || state === 'loading' || state === 'submitting'}
           pagination={{
             current: param && param.page ? Number(param?.page) : 1,
