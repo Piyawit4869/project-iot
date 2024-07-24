@@ -1,6 +1,6 @@
 # Step 1: Build the React application using Vite
 # Use a specific version of Node
-FROM node:16.20.2 as build-stage
+FROM node:18.18.2 as build-stage
 
 # Set the working directory
 WORKDIR /app

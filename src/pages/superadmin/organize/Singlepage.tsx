@@ -15,9 +15,11 @@ import React from 'react';
 import { renderEditForm } from './renderForm';
 import { TitleBar } from '@src/components/shared';
 import { CreateButton } from '@src/components/shared/CreateButton';
+import { SearchBar } from '@src/components/shared/SearchBar';
+import vine, { errors, SimpleMessagesProvider } from '@vinejs/vine';
 
 export const OrganizeSingle: React.FC = () => {
-  const { organize, branches, param } = useLoaderData() as any;
+  const { organize, param } = useLoaderData() as any;
 
   const [form] = Form.useForm();
   const submit = useSubmit();
@@ -25,25 +27,84 @@ export const OrganizeSingle: React.FC = () => {
   const [loading, setLoading] = React.useState<boolean>(true);
   const { state } = useNavigation();
 
-  const formatDate = (isoDateString: any) => {
-    return dayjs(isoDateString).format('DD/MM/YYYY');
+  const formatDate = (dateString: string) => {
+    // Assuming the input date format is DD/MM/YY
+    return dayjs(dateString, 'DD/MM/YY').toISOString();
   };
 
-  const onFinish = (values: any) => {
-    const payload = { ...values };
-    payload.openingDate = formatDate(payload.openingDate);
-    payload.active = true;
-    payload.addressData = [];
-    payload.branchesData = [];
-    payload.userData = [];
-    payload.descriptions = '-';
-    payload.logoUrl =
-      'https://cdn.discordapp.com/attachments/1235856320280924213/1244954526155542598/575757.png?ex=6656fdc1&is=6655ac41&hm=96242e1d5d4f232411d9434a17f5053d4a7e6c788030f515e5da25d03813da86&';
+  const schema = vine.object({
+    nameTh: vine.string(),
+    nameEn: vine.string(),
+    taxId: vine.string(),
+    active: vine.boolean(),
+    status: vine.enum([
+      'newly_registered',
+      'active_user',
+      'loyal_customer',
+      'at_risk',
+      'churned',
+    ]),
+    fromType: vine.enum(['ordinary_person', 'juristic_person']),
+    type: vine.enum([
+      'human',
+      'ordinary_partnership',
+      'shop',
+      'bop',
+      'company_limited',
+      'public_company_limited',
+      'limited_partnership',
+      'foundation',
+      'association',
+      'joint_venture',
+      'others',
+    ]),
+    descriptionsTh: vine.string().optional(),
+    descriptionsEn: vine.string().optional(),
+    registerVat: vine.boolean(),
+    openingDate: vine.string().optional(),
+    websiteUrl: vine.string().optional(),
+    contactEmail: vine.string().email(),
+    contactPhone: vine.string().maxLength(10),
+    contactWebsite: vine.string().optional(),
+    businessEmail: vine.string().email().optional(),
+    contactFacebook: vine.string().optional(),
+    contactLine: vine.string().optional(),
+    contactWhatsapp: vine.string().optional(),
+    contactNote: vine.string().optional(),
+  });
 
-    submit(
-      { data: JSON.stringify(payload), action: 'edit' },
-      { method: 'put' },
-    );
+  vine.messagesProvider = new SimpleMessagesProvider({
+    // Applicable for all fields
+    required: 'The {{ field }} field is required',
+    string: 'The value of {{ field }} field must be a string',
+    email: 'The value is not a valid email address',
+
+    // Error message for the username field
+    'username.required': 'Please choose a username for your account',
+  });
+
+  const onFinish = async (values: any) => {
+    const validator = vine.compile(schema);
+    try {
+      const payload = { ...values };
+      payload.openingDate = formatDate(payload.openingDate);
+
+      await validator.validate(payload);
+
+      submit(
+        { data: JSON.stringify(payload), action: 'edit' },
+        { method: 'put' },
+      );
+    } catch (error) {
+      if (error instanceof errors.E_VALIDATION_ERROR) {
+        const fieldErrors = error.messages.map((err: any) => ({
+          name: err.field,
+          errors: [err.message],
+        }));
+
+        form.setFields(fieldErrors);
+      }
+    }
   };
 
   React.useEffect(() => {
@@ -94,25 +155,25 @@ export const OrganizeSingle: React.FC = () => {
         </Row>
       </Form>
 
-      <Flex vertical gap={'small'}>
+      <Flex vertical gap={'small'} style={{ marginTop: '20px' }}>
         {/* Title section from title component */}
         <TitleBar
           title={'ตั้งค่าสาขา'}
           buttons={[
             <Link to={'#'}>
-              <CreateButton label={'เพิ่มข้อมูลสาขา'} />
+              <CreateButton disable label={'เพิ่มข้อมูลสาขา'} />
             </Link>,
           ]}
         />
 
         {/* Filter section from search bar component */}
-        {/* <div style={{ height: '25px' }} />
-        <SearchBar /> */}
+        <div style={{ height: '5px' }} />
+        <SearchBar />
 
         {/* Index data from table component */}
         <TableComponent
           columns={branchColumns}
-          dataSource={branches}
+          dataSource={organize.branches}
           loading={loading || state === 'loading' || state === 'submitting'}
           pagination={{
             current: param && param.page ? Number(param?.page) : 1,

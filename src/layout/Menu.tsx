@@ -10,62 +10,74 @@ export const Menus = (props: MenusProps) => {
   const menus = [
     {
       label: <Link to="/admin/organize">องค์กร</Link>,
-      key: 'admin/organize',
+      key: '/admin/organize',
       icon: <Icon.ScheduleOutlined />,
       role: ['super_admin'],
     },
     {
-      label: <Link to="/admin/analytic">วิเคราะห์ระบบ</Link>,
-      key: 'admin/analytic',
+      //<Link to="/admin/analytic" >วิเคราะห์ระบบ</Link>
+      label: (
+        <Link to="#" style={{ cursor: 'not-allowed' }}>
+          วิเคราะห์ระบบ
+        </Link>
+      ),
+      key: '/admin/analytic',
       icon: <Icon.PieChartOutlined />,
       role: ['super_admin'],
+      disable: true,
     },
     {
-      label: <Link to="/admin/employee">พนักงาน</Link>,
-      key: 'admin/employee',
+      //<Link to="/admin/employee">พนักงาน</Link>,
+      label: (
+        <Link to="#" style={{ cursor: 'not-allowed' }}>
+          พนักงาน
+        </Link>
+      ),
+      key: '/admin/employee',
       icon: <Icon.UserOutlined />,
       role: ['super_admin'],
+      disable: true,
     },
     {
       label: <Link to="/analytic">วิเคราะห์</Link>,
-      key: 'analytic',
+      key: '/analytic',
       icon: <Icon.PieChartOutlined />,
       role: ['owner', 'manager'],
     },
     {
       label: <Link to="/branch">สาขา</Link>,
-      key: 'branch',
+      key: '/branch',
       icon: <Icon.BranchesOutlined />,
       role: ['owner'],
     },
 
     {
       label: <Link to="/attendance">เข้างานออกงาน</Link>,
-      key: 'attendance',
+      key: '/attendance',
       icon: <Icon.FieldTimeOutlined />,
       role: ['owner', 'manager', 'employee'],
     },
     {
       label: <Link to="/user">ผู้ใช้</Link>,
-      key: 'user',
+      key: '/user',
       icon: <Icon.UserOutlined />,
       role: ['owner', 'manager'],
     },
     {
       label: <Link to="/notation">เอกสาร</Link>,
-      key: 'notation',
+      key: '/notation',
       icon: <Icon.ReconciliationOutlined />,
       role: ['owner', 'manager'],
     },
     {
       label: <Link to="/customer">ลูกค้า</Link>,
-      key: 'customer',
+      key: '/customer',
       icon: <Icon.CustomerServiceOutlined />,
       role: ['owner', 'manager'],
     },
     {
       label: <Link to="/project">โครงการ</Link>,
-      key: 'project',
+      key: '/project',
       icon: <Icon.ProjectOutlined />,
       role: ['owner', 'manager'],
     },
@@ -76,14 +88,14 @@ export const Menus = (props: MenusProps) => {
     //   role: ["branch_admin","organize_admin"],
     // },
     {
-      label: <Link to="/information/branch">ข้อมูลสาขา</Link>,
-      key: 'information/branch',
+      label: <Link to="/information-branch">ข้อมูลสาขา</Link>,
+      key: '/information-branch',
       icon: <Icon.SettingOutlined />,
       role: ['manager'],
     },
     {
       label: <Link to="/information">ข้อมูลองค์กร</Link>,
-      key: 'information',
+      key: '/information',
       icon: <Icon.SettingOutlined />,
       role: ['owner'],
     },

@@ -1,45 +1,51 @@
 import React from 'react';
-import { Button, Modal } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Button, FormInstance, Modal } from 'antd';
+import { useNavigate, useSubmit } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
 
 const { confirm } = Modal;
 
 interface FormButtonsProps {
-  form: any;
+  form: FormInstance<any>;
 }
 
 const FormButtonsEdit: React.FC<FormButtonsProps> = ({ form }) => {
   const navigate = useNavigate();
+  const submit = useSubmit();
 
   const onDelete = () => {
     confirm({
-      title: 'ต้องการลบองค์กรนี้หรือไม่?',
-      content: 'หากลบแล้ว จะไม่สามารถกู้คืนได้',
+      title: 'คุณต้องการลบข้อมูล ใช่หรือไม่?',
+      content: 'ข้อมูลของคุณจะถูกลบหากกดยืนยัน',
       okText: 'ยืนยัน',
       okType: 'danger',
       cancelText: 'ยกเลิก',
       onOk() {
-        console.log('Deleted');
-      },
-      onCancel() {
-        console.log('Delete action cancelled');
+        submit({ action: 'delete' }, { method: 'delete' });
       },
     });
   };
 
   const onReset = () => {
     confirm({
-      title: 'คุณต้องการยกเลิกการแก้ไขหรือไม่?',
-      content: 'ข้อมูลที่คุณกรอกจะไม่ถูกบันทึก',
+      title: 'คุณต้องการเคลียร์ข้อมูล ใช่หรือไม่?',
+      content: 'ข้อมูลที่คุณกรอกจะถูกเคลียร์',
       okText: 'ยืนยัน',
       cancelText: 'ยกเลิก',
       onOk() {
         form.resetFields();
-        navigate(-1);
       },
-      onCancel() {
-        console.log('Reset action cancelled');
+    });
+  };
+
+  const onSubmit = () => {
+    confirm({
+      title: 'คุณต้องการสร้างองค์กร ใช่หรือไม่?',
+      content: 'ข้อมูลที่คุณกรอกจะถูกบันทึก',
+      okText: 'ยืนยัน',
+      cancelText: 'ยกเลิก',
+      onOk() {
+        form.submit();
       },
     });
   };
@@ -78,7 +84,7 @@ const FormButtonsEdit: React.FC<FormButtonsProps> = ({ form }) => {
         >
           ยกเลิก
         </Button>
-        <Button type="primary" htmlType="submit" onClick={() => form.submit()}>
+        <Button type="primary" onClick={onSubmit}>
           ยืนยัน
         </Button>
         <Button danger onClick={onDelete} style={{ marginLeft: '10px' }}>
@@ -94,16 +100,24 @@ const FormButtonsCreate: React.FC<FormButtonsProps> = ({ form }) => {
 
   const onReset = () => {
     confirm({
-      title: 'คุณต้องการยกเลิกการแก้ไขหรือไม่?',
-      content: 'ข้อมูลที่คุณกรอกจะไม่ถูกบันทึก',
+      title: 'คุณต้องการเคลียร์ข้อมูล ใช่หรือไม่?',
+      content: 'ข้อมูลที่คุณกรอกจะถูกเคลียร์',
       okText: 'ยืนยัน',
       cancelText: 'ยกเลิก',
       onOk() {
         form.resetFields();
-        navigate(-1);
       },
-      onCancel() {
-        console.log('Reset action cancelled');
+    });
+  };
+
+  const onSubmit = () => {
+    confirm({
+      title: 'คุณต้องการสร้างองค์กร ใช่หรือไม่?',
+      content: 'ข้อมูลที่คุณกรอกจะถูกบันทึก',
+      okText: 'ยืนยัน',
+      cancelText: 'ยกเลิก',
+      onOk() {
+        form.submit();
       },
     });
   };
@@ -142,7 +156,7 @@ const FormButtonsCreate: React.FC<FormButtonsProps> = ({ form }) => {
         >
           ยกเลิก
         </Button>
-        <Button type="primary" htmlType="submit" onClick={() => form.submit()}>
+        <Button type="primary" onClick={onSubmit}>
           บันทึก
         </Button>
       </div>

@@ -15,7 +15,7 @@ export const OrganizeIndex: React.FC = () => {
 
   React.useEffect(() => {
     const me = JSON.parse(localStorage.getItem('me') as any);
-    if (me.role !== 'super_admin') {
+    if (me.role.name !== 'super_admin') {
       redirect('/');
     }
   }, []);
@@ -50,7 +50,7 @@ export const OrganizeIndex: React.FC = () => {
       />
 
       {/* Filter section from search bar component */}
-      <div style={{ height: '25px' }} />
+      <div style={{ height: '5px' }} />
       <SearchBar />
 
       {/* Index data from table component */}

@@ -127,48 +127,48 @@ const AttendanceCard: React.FC = () => (
     </div>
   </Card>
 );
-const TaskCard: React.FC = () => (
-  <Card
-    style={{ ...documentCardStyle, width: '500px' }}
-    bodyStyle={{ padding: '10px' }}
-  >
-    <div style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '5px' }}>
-      การทำงาน
-    </div>
-    <div style={documentItemStyle}>
-      <div style={{ fontSize: '12px', fontWeight: 'bold' }}>To Do</div>
-    </div>
-    <div style={documentItemStyle}>
-      <div style={{ fontSize: '12px', fontWeight: 'bold' }}>In Progress</div>
-    </div>
-    <div style={documentItemStyle}>
-      <div style={{ fontSize: '12px', fontWeight: 'bold' }}>In Review</div>
-      <div
-        style={{
-          backgroundColor: '#fff',
-          padding: '5px',
-          borderRadius: '4px',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: '#f44336',
-            color: '#fff',
-            padding: '2px 8px',
-            borderRadius: '4px',
-            marginRight: '5px',
-          }}
-        >
-          Bug
-        </div>
-        <div style={{ fontSize: '12px' }}>Fixed payment components</div>
-        <div style={{ fontSize: '12px', marginLeft: 'auto' }}>27 มิ.ย.</div>
-      </div>
-    </div>
-  </Card>
-);
+// const TaskCard: React.FC = () => (
+//   <Card
+//     style={{ ...documentCardStyle, width: '500px' }}
+//     bodyStyle={{ padding: '10px' }}
+//   >
+//     <div style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '5px' }}>
+//       การทำงาน
+//     </div>
+//     <div style={documentItemStyle}>
+//       <div style={{ fontSize: '12px', fontWeight: 'bold' }}>To Do</div>
+//     </div>
+//     <div style={documentItemStyle}>
+//       <div style={{ fontSize: '12px', fontWeight: 'bold' }}>In Progress</div>
+//     </div>
+//     <div style={documentItemStyle}>
+//       <div style={{ fontSize: '12px', fontWeight: 'bold' }}>In Review</div>
+//       <div
+//         style={{
+//           backgroundColor: '#fff',
+//           padding: '5px',
+//           borderRadius: '4px',
+//           display: 'flex',
+//           alignItems: 'center',
+//         }}
+//       >
+//         <div
+//           style={{
+//             backgroundColor: '#f44336',
+//             color: '#fff',
+//             padding: '2px 8px',
+//             borderRadius: '4px',
+//             marginRight: '5px',
+//           }}
+//         >
+//           Bug
+//         </div>
+//         <div style={{ fontSize: '12px' }}>Fixed payment components</div>
+//         <div style={{ fontSize: '12px', marginLeft: 'auto' }}>27 มิ.ย.</div>
+//       </div>
+//     </div>
+//   </Card>
+// );
 const Analytic: React.FC = () => {
   return (
     <Flex vertical>
@@ -191,9 +191,9 @@ const Analytic: React.FC = () => {
         <Col xs={24} sm={12} md={6}>
           <AttendanceCard />
         </Col>
-        <Col xs={24} sm={12} md={6}>
+        {/* <Col xs={24} sm={12} md={6}>
           <TaskCard />
-        </Col>
+        </Col> */}
         <Col xs={24} sm={12} md={6}>
           <Card style={addWidgetCardStyle} bodyStyle={{ padding: '20px' }}>
             <Button type="dashed" shape="circle" icon={<PlusOutlined />} />
