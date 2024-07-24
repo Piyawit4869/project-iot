@@ -19,11 +19,6 @@ export const OrganizeCreate: React.FC = () => {
     }
   }, []);
 
-  const formatDate = (dateString: string) => {
-    // Assuming the input date format is DD/MM/YY
-    return dayjs(dateString, 'DD/MM/YY').toISOString();
-  };
-
   const schema = vine.object({
     nameTh: vine.string(),
     nameEn: vine.string(),
@@ -133,12 +128,16 @@ export const OrganizeCreate: React.FC = () => {
   const onFinish = async (values: any) => {
     const validator = vine.compile(schema);
     try {
+      console.log('in try');
+
       const payload = { ...values };
-      payload.openingDate = formatDate(values.openingDate);
-      payload.branch.openingDate = formatDate(values.branch.openingDate);
-      payload.user.profile.birthDate = formatDate(
+      payload.openingDate = dayjs(values.openingDate).toISOString();
+      payload.branch.openingDate = dayjs(
+        values.branch.openingDate,
+      ).toISOString();
+      payload.user.profile.birthDate = dayjs(
         values.user.profile.birthDate,
-      );
+      ).toISOString();
       await validator.validate(payload);
 
       submit({ data: JSON.stringify(payload) }, { method: 'post' });
@@ -157,7 +156,13 @@ export const OrganizeCreate: React.FC = () => {
   return (
     <div>
       <Form form={form} layout="vertical" onFinish={onFinish}>
-        <FormButtonsCreate form={form} />
+        <FormButtonsCreate
+          form={form}
+          titleModalReset="คุณต้องการเคลียร์ข้อมูลองค์กร ใช่หรือไม่?"
+          contentModalReset="ข้อมูลที่คุณกรอกจะถูกเคลียร์"
+          titleModalSubmit="คุณต้องการสร้างข้อมูลองค์กร ใช่หรือไม่?"
+          contentModalSubmit="ข้อมูลที่คุณกรอกจะถูกบันทึก"
+        />
         <Row gutter={20} style={{ paddingTop: '20px' }}>
           {renderForm.map((item: any, index: number) => {
             return (

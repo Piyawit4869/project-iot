@@ -19,18 +19,13 @@ import { SearchBar } from '@src/components/shared/SearchBar';
 import vine, { errors, SimpleMessagesProvider } from '@vinejs/vine';
 
 export const OrganizeSingle: React.FC = () => {
-  const { organize, branches, param } = useLoaderData() as any;
+  const { organize, param } = useLoaderData() as any;
 
   const [form] = Form.useForm();
   const submit = useSubmit();
 
   const [loading, setLoading] = React.useState<boolean>(true);
   const { state } = useNavigation();
-
-  const formatDate = (dateString: string) => {
-    // Assuming the input date format is DD/MM/YY
-    return dayjs(dateString, 'DD/MM/YY').toISOString();
-  };
 
   const schema = vine.object({
     nameTh: vine.string(),
@@ -87,7 +82,7 @@ export const OrganizeSingle: React.FC = () => {
     const validator = vine.compile(schema);
     try {
       const payload = { ...values };
-      payload.openingDate = formatDate(payload.openingDate);
+      payload.openingDate = dayjs(payload.openingDate).toISOString();
 
       await validator.validate(payload);
 
@@ -128,7 +123,15 @@ export const OrganizeSingle: React.FC = () => {
   return (
     <div>
       <Form form={form} layout="vertical" onFinish={onFinish}>
-        <FormButtonsEdit form={form} />
+        <FormButtonsEdit
+          form={form}
+          titleModalSubmit="คุณต้องการแก้ไขข้อมูลองค์กร ใช่หรือไม่?"
+          contentModalSubmit="ข้อมูลที่คุณกรอกจะถูกบันทึก"
+          titleModalReset="คุณต้องการเคลียร์ข้อมูลองค์กร ใช่หรือไม่?"
+          contentModalReset="ข้อมูลที่คุณกรอกจะถูกเคลียร์"
+          titleModalDelete="คุณต้องการลบข้อมูลองค์กร ใช่หรือไม่?"
+          contentModalDelete="ข้อมูลของคุณจะถูกลบหากกดยืนยัน"
+        />
         <Row gutter={20} style={{ paddingTop: '20px' }}>
           {renderEditForm.map((item: any, index: number) => {
             return (
@@ -173,7 +176,7 @@ export const OrganizeSingle: React.FC = () => {
         {/* Index data from table component */}
         <TableComponent
           columns={branchColumns}
-          dataSource={branches}
+          dataSource={organize.branches}
           loading={loading || state === 'loading' || state === 'submitting'}
           pagination={{
             current: param && param.page ? Number(param?.page) : 1,

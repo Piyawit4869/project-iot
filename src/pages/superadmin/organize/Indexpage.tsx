@@ -31,7 +31,7 @@ export const OrganizeIndex: React.FC = () => {
     <Flex vertical gap={'small'}>
       {/* Title section from title component */}
       <TitleBar
-        title={'ตั้งค่าองค์กร'}
+        title={'องค์กรทั้งหมด'}
         subTitle={
           <Row gutter={6} align="middle">
             <Col>
@@ -50,7 +50,7 @@ export const OrganizeIndex: React.FC = () => {
       />
 
       {/* Filter section from search bar component */}
-      <div style={{ height: '25px' }} />
+      <div style={{ height: '5px' }} />
       <SearchBar />
 
       {/* Index data from table component */}
