@@ -1,5 +1,6 @@
 import { BranchCreate } from './Createpage';
 import { BranchIndex } from './Indexpage';
+import { branchLoader } from './loader';
 import { BranchSingle } from './singlepage';
 
 export const routes = [
@@ -9,6 +10,7 @@ export const routes = [
       {
         path: '',
         element: <BranchIndex />,
+        loader: branchLoader,
       },
       {
         path: 'create',
