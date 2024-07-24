@@ -1,90 +1,129 @@
-import { Form, Input, Button, Row, Card } from "antd";
-import axios from "axios";
+import { Form, Input, Button, notification } from 'antd';
+import {
+  UserOutlined,
+  LockOutlined,
+  EyeInvisibleOutlined,
+  EyeOutlined,
+} from '@ant-design/icons';
+// import React from "react";
 
-export const LoginPage = () => {
-  const onSubmit = (value: any) => {
-    const newData = {
-      username: value.username,
-      password: value.password,
-    };
-    axios
-      .post("http://rhome29.thddns.net:7578/api/login", newData)
-      .then((res) => {
-        if (res.status === 200) {
-          console.log(res.data.token);
-          localStorage.setItem("Token", res.data.token);
-          window.location.assign("/");
-        }
+import * as API from '@src/apis';
+import { json, redirect, useNavigation, useSubmit } from 'react-router-dom';
+// import axios from "axios";
 
-        if (res.status === 203) {
-          window.alert(res.data.message);
-        }
-      });
-  };
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+//here Action example
+export async function loginAction({ request }: any) {
+  const formData = await request.formData();
+  const submitData = Object.fromEntries(formData);
+  // console.log({submitData});
+  switch (submitData.action) {
+    case 'adminLogin':
+      try {
+        const res = await API.auth.adminLogin(JSON.parse(submitData.data));
+        localStorage.setItem('accessToken', res.data.accessToken);
+        localStorage.setItem('refreshToken', res.data.refreshToken);
+        notification.success({
+          message: 'Login Success',
+          description: 'You have successfully logged in',
+        });
+
+        return redirect('/analytic');
+      } catch (error) {
+        notification.error({
+          message: 'Login Failed',
+          description: 'Invalid email or password',
+        });
+
+        return json({ status: 'error', message: 'Invalid email or password' });
+      }
+
+    default:
+      break;
+  }
+}
+
+export const Login = () => {
+  const submit = useSubmit();
+  const navigation = useNavigation();
+  const [form] = Form.useForm();
+  const onFinish = async (values: any) => {
+    const payload = { ...values };
+    console.log({ payload });
+    submit(
+      { action: 'adminLogin', data: JSON.stringify(payload) },
+      { method: 'post' },
+    );
   };
 
   return (
-    <div>
-      <Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
-        <Card title="โปรดลงชื่อเข้าใช้">
-          <Form
-            name="basic"
-            labelCol={{
-              span: 8,
-            }}
-            wrapperCol={{
-              span: 16,
-            }}
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+      }}
+    >
+      <Form
+        form={form}
+        name="normal_login"
+        className="login-form"
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+        style={{ maxWidth: '500px' }}
+      >
+        <h1 style={{ textAlign: 'left', fontSize: '50px' }}>Sign in</h1>
+        <p style={{ textAlign: 'left', fontSize: '25px', marginTop: '-40px' }}>
+          Stay Organize Login
+        </p>
+        <Form.Item
+          name="user"
+          rules={[
+            { required: true, message: 'Please input your Email or Username' },
+          ]}
+        >
+          <Input
+            prefix={<UserOutlined className="site-form-item-icon" />}
+            placeholder="Email or Username"
+            style={{ width: '500px', height: '50px', fontSize: '16px' }}
+          />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[{ required: true, message: 'Please input your Password!' }]}
+        >
+          <Input.Password
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            placeholder="Password"
+            style={{ width: '500px', height: '50px', fontSize: '16px' }}
+            iconRender={(visible) =>
+              visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
+            }
+          />
+        </Form.Item>
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={
+              navigation.state === 'loading' ||
+              navigation.state === 'submitting'
+            }
+            disabled={
+              navigation.state === 'loading' ||
+              navigation.state === 'submitting'
+            }
             style={{
-              maxWidth: 600,
+              height: '50px',
+              fontSize: '18px',
+              padding: '0 30px',
+              width: '100%',
             }}
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={onSubmit}
-            onFinishFailed={onFinishFailed}
-            autoComplete="off"
           >
-            <Form.Item
-              label="ชื่อผู้ใช้"
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: "โปรดกรอกชื่อผู้ใช้",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="รหัสผ่าน"
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "โปรดกรอกรหัสผ่าน",
-                },
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
-
-            <Form.Item
-              wrapperCol={{
-                offset: 8,
-                span: 16,
-              }}
-            >
-              <Button type="primary" htmlType="submit">
-                ลงชื่อเข้าใช้
-              </Button>
-            </Form.Item>
-          </Form>
-        </Card>
-      </Row>
+            Log in
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 };

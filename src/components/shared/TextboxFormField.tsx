@@ -1,0 +1,40 @@
+import { Form, Input } from 'antd';
+import { CSSProperties, FC } from 'react';
+
+interface TextboxFormFieldProps {
+  name: string;
+  label: string;
+  placeholder?: string;
+  type?: string;
+  rule?: any;
+  disabled: boolean;
+  maxLength?: number;
+  require: boolean;
+}
+
+export const TextboxFormField: FC<TextboxFormFieldProps> = (
+  props: TextboxFormFieldProps,
+) => {
+  const { name, label, placeholder, type, rule, disabled, maxLength, require } =
+    props;
+
+  return (
+    <Form.Item required={require} name={name} label={label} rules={rule}>
+      <Input
+        type={type}
+        placeholder={placeholder}
+        disabled={disabled}
+        style={styles.input}
+        maxLength={maxLength}
+      />
+    </Form.Item>
+  );
+};
+
+const styles: Record<string, CSSProperties> = {
+  input: {
+    width: '100%',
+    margin: '5px 0',
+    marginTop: -10,
+  },
+};

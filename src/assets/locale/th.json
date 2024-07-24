@@ -1,0 +1,21 @@
+{
+  "translation": {
+    "user": "ผู้ใช้งาน",
+    "organize": "องค์กร",
+    "analytic": "วิเคราะห์",
+    "attendance": "เข้างานออกงาน",
+    "notation": "เอกสาร",
+    "project": "โครงการ",
+    "information": "สารสนเทศ",
+    "customers": "ลูกค้า",
+    "branch": "สาขา",
+    "orginformation": "ข้อมูลองค์กร",
+    "create": "สร้าง",
+    "setting": "ตั้งค่า",
+    "super_admin": "แอดมินสูงสุด",
+    "owner": "เจ้าของธุรกิจ",
+    "manager": "ผู้จัดการสาขา",
+    "developer": "นักพัฒนา",
+    "employee": "พนักงาน"
+  }
+}

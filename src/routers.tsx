@@ -1,37 +1,47 @@
-import { createBrowserRouter } from "react-router-dom";
-import { Root } from "./pages/Roots";
-import { DashboardPage } from "./pages/Dashboard";
-import { LoginPage } from "./pages/Login";
-import { QuotationPage } from "./components/dashboard/Quotation";
-import { IndexQuotationPage } from "./pages/IndexQuotation";
+import { createBrowserRouter } from 'react-router-dom';
+
+import { Root, RootLoader } from './pages/Roots';
+import { AppLayout } from './layout';
+
+import { routes as appRoutes } from './pages/app';
+import { routes as publicRoutes } from './pages/public';
+import { routes as adminRoutes } from './pages/superadmin';
+import { Login, loginAction } from './pages/Login';
+import { Receipt } from './pages/Receipt';
 
 export const router = createBrowserRouter([
+  // ...loginRouute,
   {
-    path: "/",
-    id: "root",
-    // loader: RootLoader, FIXME: loader in router is loadding state
+    path: '/login',
+    element: <Login />,
+    // loader: loginLoader,
+    action: loginAction,
+  },
+  {
+    path: '/receipt',
+    element: <Receipt />,
+  },
+  {
+    path: '/',
     element: <Root />,
+    loader: RootLoader,
     children: [
       {
-        path: "/",
-        // loader: deskIndexLoader,
-        // action: deskIndexAction, // FIXME: action is defined to call api
-        element: <DashboardPage />,
+        path: '/public',
+        // element: <Root />,
+        children: [...publicRoutes],
+      },
+      {
+        path: '/admin',
+        element: <AppLayout />,
+        children: [...adminRoutes],
+      },
+
+      {
+        path: '',
+        element: <AppLayout />,
+        children: [...appRoutes],
       },
     ],
   },
-  {
-    path: "/login",
-    // action: LoginAction,
-    element: <LoginPage />,
-  },
-  {
-    path: "/quotation",
-    // action: LoginAction,
-    element: <QuotationPage />,
-  },
-  {
-    path: "/indexquotationpage",
-    element: <IndexQuotationPage/>,
-  }
 ]);

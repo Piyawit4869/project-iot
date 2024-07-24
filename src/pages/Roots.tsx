@@ -1,17 +1,25 @@
-import { Outlet, useNavigation } from "react-router-dom";
-import { Spin } from "antd";
-import { AppLayout } from "../layout/AppLayout";
+import * as API from '@src/apis';
+import { Outlet, redirect, useLoaderData } from 'react-router-dom';
 
-export async function RootLoader() {}
+// import { AuthContext } from "@contexts/AuthContext";
+export async function RootLoader() {
+  try {
+    const me = await API.user.getMe();
+    // me.data.role.name = 'owner';
+    console.log(me);
+    localStorage.setItem('me', JSON.stringify(me.data));
+    return { me: me.data };
+  } catch (e: any) {
+    return redirect('/login');
+  }
+}
 
 export const Root = () => {
-  const { state } = useNavigation();
-
+  const {} = useLoaderData() as any;
+  // me
   return (
-    <AppLayout>
-      <Spin spinning={state === "loading" || state === "submitting"}>
-        <Outlet />
-      </Spin>
-    </AppLayout>
+    // <AuthContext.Provider value={{ user: me }}>
+    <Outlet />
+    // </AuthContext.Provider>
   );
 };

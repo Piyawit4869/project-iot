@@ -1,14 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap');
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+}
+
+* {
+  font-family: 'Prompt', sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
@@ -38,10 +41,6 @@ code {
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -50,6 +49,42 @@ code {
     transform: rotate(360deg);
   }
 }
-.add_new_quotation{
+.add_new_quotation {
   margin-top: 20px;
+}
+
+.app-background {
+  /* background: radial-gradient(
+      94.9% 159.36% at 0% -10.74%,
+      rgb(25, 42, 92, 0.1) 0%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    radial-gradient(
+      46.42% 134.49% at 93.97% -26.34%,
+      #ebddea 0%,
+      rgba(237, 225, 236, 0.721641) 30.17%,
+      rgba(239, 228, 238, 0.495834) 63.96%,
+      rgba(255, 255, 255, 0) 100%
+    ); */
+  background: #f2f1f8;
+}
+/* .ant-menu-item-selected {
+  background-color: #fff5ed !important;
+  color: #ee9437 !important;
+}
+
+.ant-menu-item:hover {
+  background-color: #f0ba3d !important;
+  color: white !important;
+  opacity: 0.5;
+}
+
+.ant-menu-submenu-title:hover {
+  background-color: #f0ba3d !important;
+  color: white !important;
+  opacity: 0.5;
+} */
+
+.statusbar {
+  grid-template-columns: repeat(12, 1fr);
 }
