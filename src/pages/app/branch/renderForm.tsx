@@ -52,7 +52,7 @@ export const renderForm = [
     placeholder: 'กรอกลิ้งค์โลโก้',
     require: true,
     col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-    type: 'TextboxFormField',
+    type: 'UploadFile',
   },
   {
     name: 'isMain',
@@ -291,7 +291,7 @@ export const renderEditForm = [
     placeholder: 'กรอกลิ้งค์โลโก้',
     require: true,
     col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-    type: 'TextboxFormField',
+    type: 'UploadFile',
   },
   {
     name: 'isMain',
@@ -340,14 +340,14 @@ export const renderEditForm = [
     name: 'contactEmail',
     label: 'อีเมลล์',
     placeholder: 'กรอกอีเมลล์',
-    col: { xs: 24, sm: 12, md: 12, lg: 6, xl: 12 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
   },
   {
     name: 'websiteUrl',
     label: 'ลิ้งค์เว็ปไซต์',
     placeholder: 'กรอกลิ้งค์เว็ปไซต์',
-    col: { xs: 24, sm: 12, md: 12, lg: 6, xl: 12 },
+    col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
   },
   {
@@ -396,7 +396,7 @@ export const renderEditForm = [
     name: 'registerVat',
     label: 'จดทะเบียนภาษีมูลค่าเพิ่ม',
     placeholder: 'จดทะเบียนภาษีมูลค่าเพิ่ม',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 24 },
+    col: { xs: 24, sm: 24, md: 12, lg: 24, xl: 24 },
     type: 'SwitchFormField',
     require: true,
   },
@@ -417,7 +417,7 @@ export const renderEditForm = [
   {
     icon: <TagFilled />,
     label: 'ข้อมูลตามทะเบียน',
-    col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 24 },
+    col: { xs: 24, sm: 12, md: 24, lg: 24, xl: 24 },
     type: 'SectionLabelForm',
   },
   {
