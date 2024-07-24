@@ -10,7 +10,7 @@ export async function branchCreateAction({ request, params }: any) {
       await API.branch.create(JSON.parse(submitData.data));
       notification['success']({
         message: 'สร้างข้อมูลสาขาเสร็จสิ้น',
-        placement: 'top',
+        placement: 'bottomRight',
         duration: 3,
       });
   

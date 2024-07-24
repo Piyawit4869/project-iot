@@ -5,6 +5,7 @@ import { renderForm } from './renderForm';
 import { redirect, useSubmit } from 'react-router-dom';
 import React from 'react';
 import vine, { errors, SimpleMessagesProvider } from '@vinejs/vine';
+import dayjs from 'dayjs';
 export const BranchCreate = () => {
   const [form] = Form.useForm();
   const submit = useSubmit();
@@ -17,19 +18,41 @@ export const BranchCreate = () => {
   }, []);
 
   const schema = vine.object({
+    active: vine.boolean(),
+    fromType: vine.enum(['ordinary_person', 'juristic_person']),
     nameTh: vine.string(),
-    // nameEn: vine.string(),
-    taxId: vine.string(),
+    nameEn: vine.string(),
+    taxId: vine.string().maxLength(13),
     logoUrl: vine.string(),
-    type: vine.string(),
-    fromType: vine.string(),
+    isMain: vine.boolean(),
+    type: vine.enum([
+      'human',
+      'ordinary_partnership',
+      'shop',
+      'bop',
+      'company_limited',
+      'public_company_limited',
+      'limited_partnership',
+      'foundation',
+      'association',
+      'joint_venture',
+      'others',
+    ]),
+    openingDate: vine.string(),
+    branchCode: vine.string(),
     contactEmail: vine.string().email(),
     websiteUrl: vine.string().optional(),
-    // contactWebsite: vine.string().optional(),
     contactPhone: vine.string().maxLength(10),
+    contactFacebook: vine.string().optional(),
+    contactLine: vine.string().optional(),
+    contactWhatsapp: vine.string().optional(),
+    contactWebsite: vine.string().optional(),
+    contactNote: vine.string().optional(),
+    registerVat: vine.boolean(),
     descriptionsTh: vine.string().optional(),
-    // descriptionsEn: vine.string().optional(),
+    descriptionsEn: vine.string().optional(),
     address: vine.object({
+      descriptions: vine.string().optional(),
       active: vine.boolean(),
       addresType: vine.string().optional(),
       province: vine.string().optional(),
@@ -54,6 +77,7 @@ export const BranchCreate = () => {
     
     try {
       const payload = Object.assign(values);
+      payload.openingDate = dayjs(values.openingDate, 'DD/MM/YY').toISOString();
       await validator.validate(payload);
 
       submit({ data: JSON.stringify(payload) }, { method: 'post' });

@@ -4,8 +4,7 @@ import { DynamicForm } from '@src/forms/Dynamic';
 import { useRef, useState } from 'react';
 import { FormButtonsEdit } from '@src/components/shared/FormButtons';
 import { renderEditForm } from './renderForm';
-import { useLoaderData, useNavigation, useSubmit } from 'react-router-dom';
-import React from 'react';
+import { useSubmit } from 'react-router-dom';
 import vine, { errors, SimpleMessagesProvider } from '@vinejs/vine';
 import dayjs from 'dayjs';
 
@@ -53,6 +52,7 @@ export const BranchSingle = () => {
       'joint_venture',
       'others',
     ]),
+    isMain: vine.boolean(),
     descriptionsTh: vine.string().optional(),
     websiteUrl: vine.string().optional(),
     contactEmail: vine.string().email(),
