@@ -10,6 +10,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   Breadcrumb,
   Col,
+  Divider,
   Dropdown,
   Empty,
   Flex,
@@ -27,8 +28,6 @@ export const Headerbar: React.FC = () => {
 
   const me = JSON.parse(localStorage.getItem('me') as any);
 
-  console.log({ me });
-
   const notifications: MenuProps['items'] = [
     {
       label: <Empty description={'ไม่มีการแจ้งเตือนในขนาดนี้'} />,
@@ -38,25 +37,27 @@ export const Headerbar: React.FC = () => {
   const items: MenuProps['items'] = [
     {
       label: (
-        <Flex gap="12px" align="center">
-          <Image
-            src={
-              me?.profile?.photoUrl
-                ? me.profile.photoUrl
-                : 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'
-            }
-            alt="User Icon"
-            preview={false}
-            style={styles.icon}
-          />
-          <Flex vertical>
-            <div style={styles.email}>
-              {me.profile.firstName + ' ' + me.profile.lastName}
-            </div>
-            <div style={styles.email}>{me.email}</div>
-            <div style={styles.role}>{t(`${me.role.name}`)}</div>
+        <>
+          <Flex gap="12px" align="center">
+            <Image
+              src={
+                me?.profile?.photoUrl
+                  ? me.profile.photoUrl
+                  : 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'
+              }
+              alt="User Icon"
+              preview={false}
+              style={styles.icon}
+            />
+            <Flex vertical>
+              <div style={styles.email}>
+                {me.profile.firstName + ' ' + me.profile.lastName}
+              </div>
+              <div style={styles.email}>{me.email}</div>
+              <div style={styles.role}>{t(`${me.role.name}`)}</div>
+            </Flex>
           </Flex>
-        </Flex>
+        </>
       ),
       key: 'user',
     },
@@ -131,7 +132,7 @@ export const Headerbar: React.FC = () => {
       <Row gutter={[12, 12]} align="middle">
         <Col>
           <div style={styles.menu}>
-            <div style={styles.navRight}>
+            <Flex>
               <Dropdown
                 overlay={<Menu items={notifications} />}
                 trigger={['hover', 'click']}
@@ -139,12 +140,15 @@ export const Headerbar: React.FC = () => {
                 <a onClick={(e) => e.preventDefault()}>
                   <Space>
                     <BellOutlined
-                      style={{ ...styles.icon, fontSize: '24px' }}
+                      style={{ ...styles.icon, fontSize: '18px' }}
                     />
                   </Space>
                 </a>
               </Dropdown>
-              <Dropdown menu={{ items }} trigger={['hover', 'click']}>
+              <Dropdown
+                overlay={<Menu items={items} />}
+                trigger={['hover', 'click']}
+              >
                 <a onClick={(e) => e.preventDefault()}>
                   <Space>
                     <img
@@ -159,7 +163,7 @@ export const Headerbar: React.FC = () => {
                   </Space>
                 </a>
               </Dropdown>
-            </div>
+            </Flex>
           </div>
         </Col>
       </Row>
@@ -183,11 +187,7 @@ const styles: Record<string, React.CSSProperties> = {
     height: '50px',
     color: '#19142A',
   },
-  navRight: {
-    display: 'flex',
-    alignItems: 'center',
-    color: '#19142A',
-  },
+
   dropdown: {
     position: 'relative',
     display: 'inline-block',
@@ -220,8 +220,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
   icon: {
     marginLeft: '8px',
-    width: '45px',
-    height: '45px',
+    width: '30px',
+    height: '30px',
     borderRadius: '50%',
   },
   dropdownMenu: {
