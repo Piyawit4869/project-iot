@@ -1,144 +1,20 @@
-import { TagFilled } from '@ant-design/icons';
 import { Form, Button, Row, Col, Timeline } from 'antd';
 
 import { DynamicForm } from '@src/forms/Dynamic';
 import { useRef, useState } from 'react';
 import { FormButtonsEdit } from '@src/components/shared/FormButtons';
+import { renderEditForm } from './renderForm';
+import { useSubmit } from 'react-router-dom';
+import vine, { errors, SimpleMessagesProvider } from '@vinejs/vine';
+import dayjs from 'dayjs';
 
 export const BranchSingle = () => {
   const [form] = Form.useForm();
+  const submit = useSubmit();
+  
   const containerRef = useRef(null);
   const [showMore, setShowMore] = useState(false);
-
-  const renderForm = [
-    {
-      label: 'แก้ไขข้อมูลสาขา',
-      col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
-      type: 'LabelForm',
-    },
-    {
-      name: 'taxId',
-      label: 'เลขไอดี',
-      placeholder: 'กรอกเลขไอดี',
-      col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-      type: 'TextboxFormField',
-    },
-    {
-      name: 'businessName',
-      label: 'ชื่อสาขา',
-      placeholder: 'กรอกชื่อสาขา',
-      col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-      type: 'TextboxFormField',
-    },
-    {
-      name: 'logoUrl',
-      label: 'ลิ้งค์โลโก้',
-      placeholder: 'กรอกลิ้งค์โลโก้',
-      require: true,
-      col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-      type: 'TextboxFormField',
-    },
-    {
-      name: 'businessType',
-      label: 'ประเภทสาขา',
-      placeholder: 'กรอกประเภทสาขา',
-      require: true,
-      col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-      type: 'TextboxFormField',
-    },
-    {
-      name: 'businessModel',
-      label: 'รูปแบบสาขา',
-      placeholder: 'กรอกรูปแบบสาขา',
-      require: true,
-      col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-      type: 'TextboxFormField',
-    },
-    {
-      name: 'email',
-      label: 'อีเมลล์',
-      placeholder: 'กรอกอีเมลล์',
-      col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-      type: 'TextboxFormField',
-    },
-    {
-      name: 'websiteUrl',
-      label: 'ลิ้งค์เว็ปไซต์',
-      placeholder: 'กรอกลิ้งค์เว็ปไซต์',
-      col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-      type: 'TextboxFormField',
-    },
-    {
-      name: 'phone',
-      label: 'เบอร์โทรติดต่อ',
-      placeholder: 'กรอกเบอร์โทร',
-      col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-      type: 'TextboxFormField',
-    },
-    {
-      name: 'active',
-      label: 'พร้อมใช้งาน',
-      placeholder: 'พร้อมใช้งาน',
-      col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-      type: 'CheckboxFormField',
-    },
-    {
-      icon: <TagFilled />,
-      label: 'ข้อมูลที่อยู่',
-      col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
-      type: 'LabelForm',
-    },
-    {
-      name: 'descriptions',
-      label: 'คำอธิบาย',
-      placeholder: 'กรอกคำอธิบาย',
-      col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-      type: 'TextboxFormField',
-    },
-    {
-      name: 'addressType',
-      label: 'ประเภทที่อยู่',
-      placeholder: 'กรอกประเภทที่อยู่',
-      col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-      type: 'TextboxFormField',
-    },
-    {
-      name: 'province',
-      label: 'จังหวัด',
-      placeholder: 'กรอกจังหวัด',
-      col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-      type: 'TextboxFormField',
-    },
-    {
-      name: 'district',
-      label: 'เขต',
-      placeholder: 'กรอกเขต',
-      col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-      type: 'TextboxFormField',
-    },
-    {
-      name: 'subdistrict',
-      label: 'ตำบล',
-      placeholder: 'กรอกตำบล',
-      col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-      type: 'TextboxFormField',
-    },
-    {
-      name: 'address',
-      label: 'ที่อยู่',
-      placeholder: 'กรอกที่อยู่',
-      col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-      type: 'TextboxFormField',
-    },
-    {
-      name: 'postalCode',
-      label: 'รหัสไปรษณีย์',
-      placeholder: 'รหัสไปรษณีย์',
-      col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
-      type: 'TextboxFormField',
-    },
-  ];
-
+  
   const timelineItems = [
     'Create a services site 2015-09-01',
     'Solve initial network problems 2015-09-01',
@@ -159,10 +35,94 @@ export const BranchSingle = () => {
     'Network problems being solved 2015-09-01',
   ];
 
-  const onFinish = (values: any) => {
-    const payload = Object.assign(values);
-    console.log('Form Submitted', payload);
+  const schema = vine.object({
+    active: vine.boolean(),
+    fromType: vine.enum(['ordinary_person', 'juristic_person']),
+    nameTh: vine.string(),
+    nameEn: vine.string(),
+    status: vine.string(),
+    taxId: vine.string().maxLength(13),
+    logoUrl: vine.string(),
+    isMain: vine.boolean(),
+    type: vine.enum([
+      'human',
+      'ordinary_partnership',
+      'shop',
+      'bop',
+      'company_limited',
+      'public_company_limited',
+      'limited_partnership',
+      'foundation',
+      'association',
+      'joint_venture',
+      'others',
+    ]),
+    openingDate: vine.string(),
+    branchCode: vine.string(),
+    contactEmail: vine.string().email(),
+    websiteUrl: vine.string().optional(),
+    contactPhone: vine.string().maxLength(10),
+    contactFacebook: vine.string().optional(),
+    contactLine: vine.string().optional(),
+    contactWhatsapp: vine.string().optional(),
+    contactWebsite: vine.string().optional(),
+    contactNote: vine.string().optional(),
+    registerVat: vine.boolean(),
+    descriptionsTh: vine.string().optional(),
+    descriptionsEn: vine.string().optional(),
+    address: vine.object({
+      descriptions: vine.string().optional(),
+      active: vine.boolean(),
+      status: vine.string(),
+      language: vine.string(),
+      isMain: vine.boolean(),
+      name: vine.string(),
+      addresType: vine.string().optional(),
+      province: vine.string().optional(),
+      district: vine.string().optional(),
+      subDistrict: vine.string().optional(),
+      address: vine.string().optional(),
+      postalCode: vine.string().maxLength(5).optional(),
+    })
+  });
+
+
+  vine.messagesProvider = new SimpleMessagesProvider({
+    // Applicable for all fields
+    required: 'The {{ field }} field is required',
+    string: 'The value of {{ field }} field must be a string',
+    email: 'The value is not a valid email address',
+
+    // Error message for the username field
+    'username.required': 'Please choose a username for your account',
+  });
+  
+
+  const onFinish = async (values: any) => {
+    const validator = vine.compile(schema);
+    try {
+      const payload = { ...values };
+      payload.logoUrl = values.logoUrl[0].response?.url
+      payload.openingDate = dayjs(payload.openingDate).toISOString();
+
+      await validator.validate(payload);
+
+      submit(
+        { data: JSON.stringify(payload), action: 'edit' },
+        { method: 'put' },
+      );
+    } catch (error) {
+      if (error instanceof errors.E_VALIDATION_ERROR) {
+        const fieldErrors = error.messages.map((err: any) => ({
+          name: err.field,
+          errors: [err.message],
+        }));
+
+        form.setFields(fieldErrors);
+      }
+    }
   };
+
 
   return (
     <div>
@@ -179,21 +139,23 @@ export const BranchSingle = () => {
                 xl={{ span: 12, order: 1 }}
               >
                 <Row gutter={24}>
-                  {renderForm.map((item: any) => (
+                  {renderEditForm.map((item: any, index: number) => (
                     <DynamicForm
-                      key={item.name}
+                      key={index}
                       name={item.name}
                       label={item.label}
                       placeholder={item.placeholder}
                       type={item.type}
                       col={item.col}
-                      option={item.option}
                       icon={item.icon}
                       value={item.value}
                       ruleMessage={item.message}
                       require={item.require}
+                      option={item.options}
                       disabled={item.disabled}
                       checked={item.checked}
+                      maxLength={item.maxLength}
+                      validator={item.validator}
                     />
                   ))}
                 </Row>
