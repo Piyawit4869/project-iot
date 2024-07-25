@@ -1,6 +1,6 @@
-import { CheckOutlined, CloseOutlined, EyeOutlined } from "@ant-design/icons";
-import { Button, TableProps, Tag, Image, Typography } from "antd";
-import { Link } from "react-router-dom";
+import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons';
+import { Button, TableProps, Tag, Image, Typography } from 'antd';
+import { Link } from 'react-router-dom';
 
 export const branchData = [
   {
@@ -44,7 +44,6 @@ export const branchData = [
   },
 ];
 
-
 export const branchColumn: TableProps['columns'] = [
   {
     title: 'ลำดับ',
@@ -60,7 +59,7 @@ export const branchColumn: TableProps['columns'] = [
     width: '65px',
     align: 'center',
     key: 'logoUrl',
-    render: (logoUrl: string) => <Image width={60} src={logoUrl} />
+    render: (logoUrl: string) => <Image width={60} src={logoUrl} />,
   },
   // {
   //   title: 'ชื่อโปรเจค',
