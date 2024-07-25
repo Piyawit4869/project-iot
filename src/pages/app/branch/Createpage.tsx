@@ -22,6 +22,7 @@ export const BranchCreate = () => {
     fromType: vine.enum(['ordinary_person', 'juristic_person']),
     nameTh: vine.string(),
     nameEn: vine.string(),
+    status: vine.string(),
     taxId: vine.string().maxLength(13),
     logoUrl: vine.string(),
     isMain: vine.boolean(),
@@ -54,6 +55,10 @@ export const BranchCreate = () => {
     address: vine.object({
       descriptions: vine.string().optional(),
       active: vine.boolean(),
+      status: vine.string(),
+      language: vine.string(),
+      isMain: vine.boolean(),
+      name: vine.string(),
       addresType: vine.string().optional(),
       province: vine.string().optional(),
       district: vine.string().optional(),
@@ -74,10 +79,12 @@ export const BranchCreate = () => {
 
   const onFinish = async (values: any) => {
     const validator = vine.compile(schema);
-    
+
     try {
       const payload = Object.assign(values);
+      
       payload.openingDate = dayjs(values.openingDate, 'DD/MM/YY').toISOString();
+      payload.logoUrl = values.logoUrl[0].response?.url
       await validator.validate(payload);
 
       submit({ data: JSON.stringify(payload) }, { method: 'post' });

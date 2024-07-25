@@ -55,11 +55,11 @@ export const UploadFiles: React.FC<FormInterface> = (props: FormInterface) => {
   const uploadProps: UploadProps = {
     disabled: disabled,
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
     },
     multiple: false,
     maxCount: 1,
-    action: `${baseURL}/upload`,
+    action: `${baseURL}api/upload`,
     listType: 'picture-card',
     accept: `image/*`,
     onChange: handleChange,

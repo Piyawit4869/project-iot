@@ -40,6 +40,7 @@ export const BranchSingle = () => {
     fromType: vine.enum(['ordinary_person', 'juristic_person']),
     nameTh: vine.string(),
     nameEn: vine.string(),
+    status: vine.string(),
     taxId: vine.string().maxLength(13),
     logoUrl: vine.string(),
     isMain: vine.boolean(),
@@ -72,6 +73,10 @@ export const BranchSingle = () => {
     address: vine.object({
       descriptions: vine.string().optional(),
       active: vine.boolean(),
+      status: vine.string(),
+      language: vine.string(),
+      isMain: vine.boolean(),
+      name: vine.string(),
       addresType: vine.string().optional(),
       province: vine.string().optional(),
       district: vine.string().optional(),
@@ -97,6 +102,7 @@ export const BranchSingle = () => {
     const validator = vine.compile(schema);
     try {
       const payload = { ...values };
+      payload.logoUrl = values.logoUrl[0].response?.url
       payload.openingDate = dayjs(payload.openingDate).toISOString();
 
       await validator.validate(payload);
