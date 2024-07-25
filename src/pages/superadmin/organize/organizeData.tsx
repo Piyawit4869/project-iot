@@ -49,36 +49,36 @@ export const organizeColumns: TableProps['columns'] = [
   },
   {
     title: 'ชื่อองค์กร',
-    width: '200px',
+    width: '400px',
     align: 'start',
     key: 'nameTh',
     render: (data: any) => {
       return <Typography>{data.nameTh + ` (${data.nameEn})`}</Typography>;
     },
   },
-  {
-    title: 'คำอธิบายธุรกิจ',
-    dataIndex: 'descriptionsTh',
-    width: '300px',
-    align: 'start',
-    key: 'descriptionsTh',
-    render: (description: string) => (
-      <Typography.Paragraph
-        style={{ margin: 0 }}
-        ellipsis={{ rows: 2, expandable: false }}
-      >
-        {description}
-      </Typography.Paragraph>
-    ),
-  },
-  {
-    title: 'วันที่จดทะเบียน',
-    dataIndex: 'businessRegister',
-    width: '120px',
-    align: 'center',
-    key: 'businessRegister',
-    render: (date: string) => <>{dayjs(date).format('DD/MM/YYYY')}</>,
-  },
+  // {
+  //   title: 'คำอธิบายธุรกิจ',
+  //   dataIndex: 'descriptionsTh',
+  //   width: '300px',
+  //   align: 'start',
+  //   key: 'descriptionsTh',
+  //   render: (description: string) => (
+  //     <Typography.Paragraph
+  //       style={{ margin: 0 }}
+  //       ellipsis={{ rows: 2, expandable: false }}
+  //     >
+  //       {description}
+  //     </Typography.Paragraph>
+  //   ),
+  // },
+  // {
+  //   title: 'วันที่จดทะเบียน',
+  //   dataIndex: 'businessRegister',
+  //   width: '120px',
+  //   align: 'center',
+  //   key: 'businessRegister',
+  //   render: (date: string) => <>{dayjs(date).format('DD/MM/YYYY')}</>,
+  // },
   {
     title: 'เบอร์โทรศัพท์',
     dataIndex: 'contactPhone',

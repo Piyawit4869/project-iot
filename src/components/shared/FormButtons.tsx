@@ -1,22 +1,38 @@
-import React from 'react';
 import { Button, FormInstance, Modal } from 'antd';
 import { useNavigate, useSubmit } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
 
 const { confirm } = Modal;
 
-interface FormButtonsProps {
-  form: FormInstance<any>;
+interface FormButtonEdit {
+  form: FormInstance;
+  titleModalReset?: string;
+  contentModalReset?: string;
+
+  titleModalSubmit?: string;
+  contentModalSubmit?: string;
+
+  titleModalDelete?: string;
+  contentModalDelete?: string;
 }
 
-const FormButtonsEdit: React.FC<FormButtonsProps> = ({ form }) => {
+const FormButtonsEdit = (props: FormButtonEdit) => {
+  const {
+    form,
+    titleModalReset,
+    contentModalReset,
+    titleModalSubmit,
+    contentModalSubmit,
+    titleModalDelete,
+    contentModalDelete,
+  } = props;
   const navigate = useNavigate();
   const submit = useSubmit();
 
   const onDelete = () => {
     confirm({
-      title: 'คุณต้องการลบข้อมูล ใช่หรือไม่?',
-      content: 'ข้อมูลของคุณจะถูกลบหากกดยืนยัน',
+      title: titleModalDelete ? titleModalDelete : 'title',
+      content: contentModalDelete ? contentModalDelete : 'content',
       okText: 'ยืนยัน',
       okType: 'danger',
       cancelText: 'ยกเลิก',
@@ -28,8 +44,8 @@ const FormButtonsEdit: React.FC<FormButtonsProps> = ({ form }) => {
 
   const onReset = () => {
     confirm({
-      title: 'คุณต้องการเคลียร์ข้อมูล ใช่หรือไม่?',
-      content: 'ข้อมูลที่คุณกรอกจะถูกเคลียร์',
+      title: titleModalReset ? titleModalReset : 'title',
+      content: contentModalReset ? contentModalReset : 'content',
       okText: 'ยืนยัน',
       cancelText: 'ยกเลิก',
       onOk() {
@@ -40,8 +56,8 @@ const FormButtonsEdit: React.FC<FormButtonsProps> = ({ form }) => {
 
   const onSubmit = () => {
     confirm({
-      title: 'คุณต้องการสร้างองค์กร ใช่หรือไม่?',
-      content: 'ข้อมูลที่คุณกรอกจะถูกบันทึก',
+      title: titleModalSubmit ? titleModalSubmit : 'title',
+      content: contentModalSubmit ? contentModalSubmit : 'content',
       okText: 'ยืนยัน',
       cancelText: 'ยกเลิก',
       onOk() {
@@ -95,13 +111,29 @@ const FormButtonsEdit: React.FC<FormButtonsProps> = ({ form }) => {
   );
 };
 
-const FormButtonsCreate: React.FC<FormButtonsProps> = ({ form }) => {
+interface FormButtonCreate {
+  form: FormInstance;
+  titleModalReset?: string;
+  contentModalReset?: string;
+
+  titleModalSubmit?: string;
+  contentModalSubmit?: string;
+}
+
+const FormButtonsCreate = (props: FormButtonCreate) => {
+  const {
+    form,
+    titleModalReset,
+    contentModalReset,
+    titleModalSubmit,
+    contentModalSubmit,
+  } = props;
   const navigate = useNavigate();
 
   const onReset = () => {
     confirm({
-      title: 'คุณต้องการเคลียร์ข้อมูล ใช่หรือไม่?',
-      content: 'ข้อมูลที่คุณกรอกจะถูกเคลียร์',
+      title: titleModalReset ? titleModalReset : 'title',
+      content: contentModalReset ? contentModalReset : 'content',
       okText: 'ยืนยัน',
       cancelText: 'ยกเลิก',
       onOk() {
@@ -112,8 +144,8 @@ const FormButtonsCreate: React.FC<FormButtonsProps> = ({ form }) => {
 
   const onSubmit = () => {
     confirm({
-      title: 'คุณต้องการสร้างองค์กร ใช่หรือไม่?',
-      content: 'ข้อมูลที่คุณกรอกจะถูกบันทึก',
+      title: titleModalSubmit ? titleModalSubmit : 'title',
+      content: contentModalSubmit ? contentModalSubmit : 'content',
       okText: 'ยืนยัน',
       cancelText: 'ยกเลิก',
       onOk() {
