@@ -1,4 +1,4 @@
-import { TagFilled } from "@ant-design/icons";
+import { TagFilled } from '@ant-design/icons';
 
 export const renderForm = [
   {
@@ -192,7 +192,7 @@ export const renderForm = [
   },
   {
     icon: <TagFilled />,
-    label: 'ข้อมูลตามทะเบียน',
+    label: 'ข้อมูลที่อยู่สาขา',
     col: { xs: 24, sm: 12, md: 12, lg: 24, xl: 24 },
     type: 'SectionLabelForm',
   },
@@ -590,4 +590,4 @@ export const renderEditForm = [
     col: { xs: 24, sm: 12, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
   },
-]
+];

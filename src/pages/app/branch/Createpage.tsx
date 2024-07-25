@@ -65,7 +65,7 @@ export const BranchCreate = () => {
       subDistrict: vine.string().optional(),
       address: vine.string().optional(),
       postalCode: vine.string().maxLength(5).optional(),
-    })
+    }),
   });
 
   vine.messagesProvider = new SimpleMessagesProvider({
@@ -82,16 +82,16 @@ export const BranchCreate = () => {
 
     try {
       const payload = Object.assign(values);
-      
+
       payload.openingDate = dayjs(values.openingDate, 'DD/MM/YY').toISOString();
-      payload.logoUrl = values.logoUrl[0].response?.url
+      payload.logoUrl = values.logoUrl[0].response?.url;
       await validator.validate(payload);
 
       submit({ data: JSON.stringify(payload) }, { method: 'post' });
     } catch (error) {
       if (error instanceof errors.E_VALIDATION_ERROR) {
         console.log(error);
-        
+
         const fieldErrors = error.messages.map((err: any) => ({
           name: err.field,
           errors: [err.message],
@@ -105,7 +105,13 @@ export const BranchCreate = () => {
   return (
     <div>
       <Form form={form} layout="vertical" onFinish={onFinish}>
-        <FormButtonsCreate form={form} />
+        <FormButtonsCreate
+          form={form}
+          titleModalReset="คุณต้องการเคลียร์ข้อมูลสาขา ใช่หรือไม่?"
+          contentModalReset="ข้อมูลที่คุณกรอกจะถูกเคลียร์"
+          titleModalSubmit="คุณต้องการสร้างข้อมูลสาขา ใช่หรือไม่?"
+          contentModalSubmit="ข้อมูลที่คุณกรอกจะถูกบันทึก"
+        />
         <Row gutter={20} style={{ paddingTop: '20px' }}>
           {renderForm.map((item: any, index: number) => {
             return (

@@ -45,7 +45,7 @@ export const organizeColumns: TableProps['columns'] = [
     width: '65px',
     align: 'center',
     key: 'logoUrl',
-    render: (logoUrl: string) => <Image width={60} src={logoUrl} alt="โลโก้" />,
+    render: (logoUrl: string) => <Image width={60} src={logoUrl} />,
   },
   {
     title: 'ชื่อองค์กร',

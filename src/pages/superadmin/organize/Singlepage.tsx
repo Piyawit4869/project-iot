@@ -82,6 +82,13 @@ export const OrganizeSingle: React.FC = () => {
     const validator = vine.compile(schema);
     try {
       const payload = { ...values };
+      if (payload.file && payload.file.length > 0) {
+        payload.logoUrl = payload.file[0].response?.url;
+        delete payload.file;
+      } else {
+        payload.logoUrl = '';
+        delete payload.file;
+      }
       payload.openingDate = dayjs(payload.openingDate).toISOString();
 
       await validator.validate(payload);
@@ -132,6 +139,7 @@ export const OrganizeSingle: React.FC = () => {
           titleModalDelete="คุณต้องการลบข้อมูลองค์กร ใช่หรือไม่?"
           contentModalDelete="ข้อมูลของคุณจะถูกลบหากกดยืนยัน"
         />
+
         <Row gutter={20} style={{ paddingTop: '20px' }}>
           {renderEditForm.map((item: any, index: number) => {
             return (

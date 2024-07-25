@@ -1,39 +1,17 @@
-import { Form, Button, Row, Col, Timeline } from 'antd';
+import { Form, Row } from 'antd';
 
 import { DynamicForm } from '@src/forms/Dynamic';
-import { useRef, useState } from 'react';
 import { FormButtonsEdit } from '@src/components/shared/FormButtons';
 import { renderEditForm } from './renderForm';
-import { useSubmit } from 'react-router-dom';
+import { useLoaderData, useSubmit } from 'react-router-dom';
 import vine, { errors, SimpleMessagesProvider } from '@vinejs/vine';
 import dayjs from 'dayjs';
+import React from 'react';
 
 export const BranchSingle = () => {
+  const { branch } = useLoaderData() as any;
   const [form] = Form.useForm();
   const submit = useSubmit();
-  
-  const containerRef = useRef(null);
-  const [showMore, setShowMore] = useState(false);
-  
-  const timelineItems = [
-    'Create a services site 2015-09-01',
-    'Solve initial network problems 2015-09-01',
-    'Technical testing 2015-09-01',
-    'Network problems being solved 2015-09-01',
-    'Network problems being solved 2015-09-01',
-    'Network problems being solved 2015-09-01',
-    'Network problems being solved 2015-09-01',
-    'Network problems being solved 2015-09-01',
-    'Network problems being solved 2015-09-01',
-    'Network problems being solved 2015-09-01',
-    'Network problems being solved 2015-09-01',
-    'Network problems being solved 2015-09-01',
-    'Network problems being solved 2015-09-01',
-    'Network problems being solved 2015-09-01',
-    'Network problems being solved 2015-09-01',
-    'Network problems being solved 2015-09-01',
-    'Network problems being solved 2015-09-01',
-  ];
 
   const schema = vine.object({
     active: vine.boolean(),
@@ -83,9 +61,8 @@ export const BranchSingle = () => {
       subDistrict: vine.string().optional(),
       address: vine.string().optional(),
       postalCode: vine.string().maxLength(5).optional(),
-    })
+    }),
   });
-
 
   vine.messagesProvider = new SimpleMessagesProvider({
     // Applicable for all fields
@@ -96,13 +73,12 @@ export const BranchSingle = () => {
     // Error message for the username field
     'username.required': 'Please choose a username for your account',
   });
-  
 
   const onFinish = async (values: any) => {
     const validator = vine.compile(schema);
     try {
       const payload = { ...values };
-      payload.logoUrl = values.logoUrl[0].response?.url
+      payload.logoUrl = values.logoUrl[0].response?.url;
       payload.openingDate = dayjs(payload.openingDate).toISOString();
 
       await validator.validate(payload);
@@ -123,85 +99,51 @@ export const BranchSingle = () => {
     }
   };
 
+  React.useEffect(() => {
+    let businessRegister = null;
+    if (branch && branch.openingDate) {
+      businessRegister = dayjs(branch.openingDate);
+    }
+    form.setFieldsValue({
+      ...branch,
+      openingDate: businessRegister,
+    });
+  }, [form, branch]);
 
   return (
     <div>
-      <FormButtonsEdit form={form} />
-      <div style={{ fontFamily: 'Prompt, sans-serif' }}>
-        <div style={{ padding: '20px', marginTop: '10px' }} ref={containerRef}>
-          <Form form={form} layout="vertical" onFinish={onFinish}>
-            <Row gutter={24}>
-              <Col
-                xs={{ span: 24, order: 2 }}
-                sm={{ span: 24, order: 2 }}
-                md={{ span: 24, order: 2 }}
-                lg={{ span: 12, order: 1 }}
-                xl={{ span: 12, order: 1 }}
-              >
-                <Row gutter={24}>
-                  {renderEditForm.map((item: any, index: number) => (
-                    <DynamicForm
-                      key={index}
-                      name={item.name}
-                      label={item.label}
-                      placeholder={item.placeholder}
-                      type={item.type}
-                      col={item.col}
-                      icon={item.icon}
-                      value={item.value}
-                      ruleMessage={item.message}
-                      require={item.require}
-                      option={item.options}
-                      disabled={item.disabled}
-                      checked={item.checked}
-                      maxLength={item.maxLength}
-                      validator={item.validator}
-                    />
-                  ))}
-                </Row>
-              </Col>
-              <Col
-                xs={{ span: 24, order: 2 }}
-                sm={{ span: 24, order: 2 }}
-                md={{ span: 24, order: 2 }}
-                lg={{ span: 12, order: 1 }}
-                xl={{ span: 12, order: 1 }}
-              >
-                <div style={{ height: '100px' }}>
-                  <h1>กิจกรรม</h1>
-                </div>
-                <div
-                  style={{
-                    maxHeight: '400px',
-                    overflowY: 'auto',
-                    padding: '40px',
-                    border: '1px solid #d9d9d9',
-                    borderRadius: '4px',
-                  }}
-                >
-                  <Timeline>
-                    {(showMore ? timelineItems : timelineItems.slice(0, 5)).map(
-                      (item, index) => (
-                        <Timeline.Item key={index}>{item}</Timeline.Item>
-                      ),
-                    )}
-                  </Timeline>
-                  {timelineItems.length > 10 && (
-                    <div style={{ textAlign: 'right', marginTop: '10px' }}>
-                      <Button
-                        type="link"
-                        onClick={() => setShowMore(!showMore)}
-                      >
-                        {showMore ? 'See Less' : 'See More'}
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </Col>
-            </Row>
-          </Form>
-        </div>
-      </div>
+      <Form form={form} layout="vertical" onFinish={onFinish}>
+        <FormButtonsEdit
+          form={form}
+          titleModalSubmit="คุณต้องการแก้ไขข้อมูลสาขา ใช่หรือไม่?"
+          contentModalSubmit="ข้อมูลที่คุณกรอกจะถูกบันทึก"
+          titleModalReset="คุณต้องการเคลียร์ข้อมูลสาขา ใช่หรือไม่?"
+          contentModalReset="ข้อมูลที่คุณกรอกจะถูกเคลียร์"
+          titleModalDelete="คุณต้องการลบข้อมูลสาขา ใช่หรือไม่?"
+          contentModalDelete="ข้อมูลของคุณจะถูกลบหากกดยืนยัน"
+        />
+        <Row gutter={24}>
+          {renderEditForm.map((item: any, index: number) => (
+            <DynamicForm
+              key={index}
+              name={item.name}
+              label={item.label}
+              placeholder={item.placeholder}
+              type={item.type}
+              col={item.col}
+              icon={item.icon}
+              value={item.value}
+              ruleMessage={item.message}
+              require={item.require}
+              option={item.options}
+              disabled={item.disabled}
+              checked={item.checked}
+              maxLength={item.maxLength}
+              validator={item.validator}
+            />
+          ))}
+        </Row>
+      </Form>
     </div>
   );
 };

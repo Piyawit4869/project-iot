@@ -46,7 +46,7 @@ export const Headerbar: React.FC = () => {
               }
               alt="User Icon"
               preview={false}
-              style={styles.icon}
+              style={{ fontSize: '24px' }}
             />
             <Flex vertical>
               <div style={styles.email}>
@@ -241,8 +241,5 @@ const styles: Record<string, React.CSSProperties> = {
   breadcrumb: {
     margin: '16px 0',
     color: '#19142A',
-  },
-  dropdownItemHover: {
-    // backgroundColor: "#f1f1f1",
   },
 };

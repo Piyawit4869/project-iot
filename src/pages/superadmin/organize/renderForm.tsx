@@ -505,10 +505,17 @@ export const renderForm = [
 
 export const renderEditForm = [
   //FIXME:add upload logo url
+
   {
     label: 'ข้อมูลองค์กร',
     col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
     type: 'SectionLabelForm',
+  },
+  {
+    name: 'logoUrl',
+    label: 'รูปโลโก้',
+    col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
+    type: 'UploadFile',
   },
   {
     name: 'active',

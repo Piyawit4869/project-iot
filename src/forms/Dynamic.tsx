@@ -230,7 +230,8 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
           <UploadFiles
             form={props.form}
             name={props.name}
-            require={props.require}
+            required={props.require}
+            label={props.label}
           />
         </Col>
       );
