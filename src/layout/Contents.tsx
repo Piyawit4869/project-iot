@@ -1,65 +1,28 @@
-import { Breadcrumb, Card, Layout, Spin } from "antd";
-import { Outlet } from "react-router-dom";
+import { Card, Flex, Layout } from 'antd';
+import { Outlet } from 'react-router-dom';
 
-interface ContentProps {
-  loading: boolean;
-}
-
-export const Contents = (props: ContentProps) => {
+export const Contents = () => {
   const { Content } = Layout;
-  const { loading } = props;
   return (
     <Content
       className="app-background"
       style={{
-        overflow: "auto",
-        padding: "20px",
+        overflow: 'auto',
+        padding: '20px',
       }}
     >
-      <Breadcrumb
-        style={{ margin: "0px 0px 20px 40px" }}
-        separator=""
-        items={[
-          {
-            title: "",
-          },
-          {
-            type: "separator",
-            separator: "",
-          },
-          {
-            href: "",
-            title: "",
-          },
-          
-          {
-            href: "",
-            title: "",
-          },
-          
-          {
-            title: "",
-          },
-        ]}
-      />
-      <Card style={{ backgroundColor: "white" }}>
-        <Spin
-          spinning={loading}
+      <Flex justify="center">
+        <Card
           style={{
-            height: "100%",
+            backgroundColor: 'white',
+            width: '100%',
+            maxWidth: '1200px',
+            minWidth: '320px',
           }}
         >
-          {loading ? (
-            <div
-              style={{
-                height: "50vh",
-              }}
-            />
-          ) : (
-            <Outlet />
-          )}
-        </Spin>
-      </Card>
+          <Outlet />
+        </Card>
+      </Flex>
     </Content>
   );
 };

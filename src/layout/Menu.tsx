@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import * as Icon from "@ant-design/icons";
+import { Link } from 'react-router-dom';
+import * as Icon from '@ant-design/icons';
 
 interface MenusProps {
   role: string;
@@ -9,53 +9,87 @@ export const Menus = (props: MenusProps) => {
   const { role } = props;
   const menus = [
     {
-      label: <Link to="/organize">องค์กร</Link>,
-      key: "organize",
+      //<Link to="/admin/analytic" >วิเคราะห์ระบบ</Link>
+      label: <Link to="/admin/analytic">วิเคราะห์ระบบ</Link>,
+      key: '/admin/analytic',
+      icon: <Icon.PieChartOutlined />,
+      role: ['super_admin'],
+      // disable: true,
+    },
+    {
+      label: <Link to="/admin/organize">องค์กร</Link>,
+      key: '/admin/organize',
       icon: <Icon.ScheduleOutlined />,
-      role: ["super_admin"],
+      role: ['super_admin'],
+    },
+    {
+      //<Link to="/admin/employee">พนักงาน</Link>,
+      label: <Link to="/admin/employee">พนักงาน</Link>,
+      key: '/admin/employee',
+      icon: <Icon.UserOutlined />,
+      role: ['super_admin'],
+      // disable: true,
     },
     {
       label: <Link to="/analytic">วิเคราะห์</Link>,
-      key: "analytic",
+      key: '/analytic',
       icon: <Icon.PieChartOutlined />,
-      role: ["super_admin", "owner", "manager"],
+      role: ['owner', 'manager'],
     },
     {
       label: <Link to="/branch">สาขา</Link>,
-      key: "branch",
+      key: '/branch',
       icon: <Icon.BranchesOutlined />,
-      role: ["owner"],
+      role: ['owner'],
     },
 
     {
       label: <Link to="/attendance">เข้างานออกงาน</Link>,
-      key: "attendance",
+      key: '/attendance',
       icon: <Icon.FieldTimeOutlined />,
-      role: ["owner", "manager", "employee"],
+      role: ['owner', 'manager', 'supervisor', 'employee'],
     },
     {
       label: <Link to="/user">ผู้ใช้</Link>,
-      key: "user",
+      key: '/user',
       icon: <Icon.UserOutlined />,
-      role: ["super_admin", "owner", "manager"],
+      role: ['owner', 'manager'],
     },
     {
-      label: <Link to="/notation">เอกสาร</Link>,
-      key: "notation",
+      //<Link to="/notation">
+      label: (
+        <Link to="#" style={{ cursor: 'not-allowed' }}>
+          เอกสาร
+        </Link>
+      ),
+      key: '/notation',
       icon: <Icon.ReconciliationOutlined />,
-      role: ["owner", "manager"],
+      role: ['owner', 'manager'],
+      disable: true,
     },
     {
-      label: <Link to="/customer">ลูกค้า</Link>,
-      key: "customers",
+      //  <Link to="/customer">
+      label: (
+        <Link to="#" style={{ cursor: 'not-allowed' }}>
+          ลูกค้า
+        </Link>
+      ),
+      key: '/customer',
       icon: <Icon.CustomerServiceOutlined />,
-      role: ["owner", "manager"],
+      role: ['owner', 'manager'],
+      disable: true,
     },
     {
-      label: <Link to="/project">โครงการ</Link>,
-      key: "project",
+      //<Link to="/project">
+      label: (
+        <Link to="#" style={{ cursor: 'not-allowed' }}>
+          โครงการ
+        </Link>
+      ),
+      key: '/project',
       icon: <Icon.ProjectOutlined />,
-      role: ["owner", "manager"],
+      role: ['owner', 'manager'],
+      disable: true,
     },
     // {
     //   label: <Link to="/setting">ตั้งค่า</Link>,
@@ -64,16 +98,28 @@ export const Menus = (props: MenusProps) => {
     //   role: ["branch_admin","organize_admin"],
     // },
     {
-      label: <Link to="/information">ข้อมูลสาขา</Link>,
-      key: "information",
+      //<Link to="/information-branch">
+      label: (
+        <Link to="#" style={{ cursor: 'not-allowed' }}>
+          ข้อมูลสาขา
+        </Link>
+      ),
+      key: '/information-branch',
       icon: <Icon.SettingOutlined />,
-      role: ["manager"],
+      role: ['manager'],
+      disable: true,
     },
     {
-      label: <Link to="/orginformation">ข้อมูลองค์กร</Link>,
-      key: "orginformation",
+      // <Link to="/information">
+      label: (
+        <Link to="#" style={{ cursor: 'not-allowed' }}>
+          ข้อมูลองค์กร
+        </Link>
+      ),
+      key: '/information',
       icon: <Icon.SettingOutlined />,
-      role: ["owner"],
+      role: ['owner'],
+      disable: true,
     },
   ];
   return menus.filter((m) => m.role.includes(role));

@@ -1,10 +1,15 @@
-import React from "react";
-import { Layout, Menu, Image, Typography, Row, Col, Card, Button } from "antd";
-import { Link, useLocation } from "react-router-dom";
-import { CheckOutlined } from '@ant-design/icons';
-import logo from "../assets/images/logoutotechV2.png";
-import sidebar from "../assets/images/abstract_sidebar.png";
-import { Menus } from ".";
+import React from 'react';
+import { Layout, Menu, Image, Typography, Row, Col, Button, Flex } from 'antd';
+import { Link, useLocation } from 'react-router-dom';
+import logo from '../assets/images/logoutotechV2.png';
+import sidebar from '../assets/images/abstract_sidebar.png';
+import { Menus } from '.';
+import {
+  LeftOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  RightOutlined,
+} from '@ant-design/icons';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -12,8 +17,10 @@ const { SubMenu } = Menu;
 export const Sidebar: React.FC = () => {
   const location = useLocation();
   const [collapsed, setCollapsed] = React.useState(false);
-  const [activeKey, setActiveKey] = React.useState("");
+  const [activeKey, setActiveKey] = React.useState<any[]>([]);
   const [isMobile, setIsMobile] = React.useState(false);
+
+  console.log({ isMobile });
 
   const handleMenuClick = () => {
     if (isMobile) {
@@ -21,32 +28,24 @@ export const Sidebar: React.FC = () => {
     }
   };
 
-  const me = JSON.parse(localStorage.getItem("me") || "{}");
-  const menusWithOnClick = Menus({ role: me.role }).map((menu: any) => ({
+  const me = JSON.parse(localStorage.getItem('me') || '{}');
+  const menusWithOnClick = Menus({ role: me.role.name }).map((menu: any) => ({
     ...menu,
     onClick: handleMenuClick,
   }));
 
-  // Reorder menusWithOnClick to ensure "Organize" is always at the top
-  const reorderedMenus = [
-    ...menusWithOnClick.filter((menu) => menu.key === "organize"),
-    ...menusWithOnClick.filter((menu) => menu.key !== "organize"),
-  ];
+  const toggle = () => {
+    setCollapsed(!collapsed);
+  };
 
   React.useEffect(() => {
-    const key = location.pathname.split("/");
-    if (key.length) {
-      const newActiveKey =
-        key[1] === "admin"
-          ? key[2]
-            ? `${key[2]}`
-            : ""
-          : key[1]
-          ? `${key[1]}`
-          : "";
-      setActiveKey(newActiveKey);
-    }
-  }, [location.pathname]);
+    const currentPathname = location.pathname;
+    const resultPath = Menus({ role: me.role.name })
+      .filter((menu: any) => currentPathname.includes(menu.key))
+      .map((item: any) => item.key);
+
+    setActiveKey(resultPath);
+  }, [location.pathname, setActiveKey]);
 
   React.useEffect(() => {
     setCollapsed(isMobile);
@@ -55,168 +54,199 @@ export const Sidebar: React.FC = () => {
   return (
     <>
       <Sider
-        width={200}
+        width={isMobile && collapsed ? 0 : 200}
         theme="light"
-        collapsible={true}
+        trigger={null}
+        collapsible
         collapsed={collapsed}
         onCollapse={(collapsed) => setCollapsed(collapsed)}
         breakpoint="lg"
-        collapsedWidth={80}
+        collapsedWidth={isMobile ? 0 : 80}
         onBreakpoint={(broken) => {
           setIsMobile(broken);
         }}
         style={{
-          position: isMobile ? "fixed" : "relative",
+          position: isMobile ? 'fixed' : 'relative',
           zIndex: 10,
-          height: "100vh",
+          height: '100vh',
+          transition: 'width 0.2s',
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            backgroundImage: `url(${sidebar})`,
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-            opacity: 0.1,
-          }}
-        />
-
-        <Row
-          justify="center"
-          align="middle"
-          style={{
-            marginTop: "10px",
-          }}
-        >
-          <Col>
-            <Link to="http://localhost:8080/analytic">
-              <Image preview={false} src={logo} width={collapsed ? 40 : 70} />
-            </Link>
-          </Col>
-        </Row>
-
-        {!collapsed && (
-          <Row
-            justify="center"
-            align="middle"
-            gutter={[12, 12]}
-            style={{
-              marginTop: "10px",
-              marginBottom: "-10px",
-            }}
-          >
-            <Col>
-              <Typography style={{ color: "#19142A", fontSize: "20px" }}>
-                บริษัท ยูโทเทค จำกัด
-              </Typography>
-            </Col>
-          </Row>
-        )}
-
-        <div style={{ marginTop: collapsed ? "40px" : "0px" }}>
-          <Menu
-            theme="light"
-            mode="inline"
-            selectedKeys={[activeKey]}
-            defaultOpenKeys={["/"]}
-            style={{
-              backgroundColor: "#F7F7F7",
-              marginTop: collapsed ? "0px" : "60px",
-              overflow: "auto",
-            }}
-          >
-            {reorderedMenus.map((menu) =>
-              menu.divider ? (
-                <Menu.Divider key={menu.key} />
-              ) : menu.children ? (
-                <SubMenu key={menu.key} icon={menu.icon} title={menu.label}>
-                  {menu.children.map((subMenu: any) => (
-                    <Menu.Item key={subMenu.key}>{subMenu.label}</Menu.Item>
-                  ))}
-                </SubMenu>
-              ) : (
-                <Menu.Item key={menu.key} icon={menu.icon}>
-                  {menu.label}
-                </Menu.Item>
-              )
+        <Flex vertical justify="space-between" style={{ minHeight: '100vh' }}>
+          <div>
+            <div
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                backgroundImage: `url(${sidebar})`,
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                opacity: 0.1,
+              }}
+            />
+            <Row
+              justify="center"
+              align="middle"
+              style={{
+                marginTop: '10px',
+              }}
+            >
+              <Col>
+                <Link
+                  to={
+                    location.pathname.includes('/admin')
+                      ? '/admin/analytic'
+                      : '/analytic'
+                  }
+                >
+                  <Image
+                    preview={false}
+                    src={logo}
+                    width={collapsed ? 40 : 70}
+                  />
+                </Link>
+              </Col>
+            </Row>
+            {!collapsed && (
+              <Row
+                justify="center"
+                align="middle"
+                gutter={[12, 12]}
+                style={{
+                  marginTop: '10px',
+                  marginBottom: '-10px',
+                }}
+              >
+                <Col>
+                  <Typography style={{ color: '#19142A', fontSize: '20px' }}>
+                    {location.pathname.includes('/admin')
+                      ? 'Stay Organize'
+                      : 'บริษัท ยูโทเทค จำกัด'}
+                  </Typography>
+                </Col>
+              </Row>
             )}
-          </Menu>
-        </div>
+            <div style={{ marginTop: collapsed ? '40px' : '0px' }}>
+              <Menu
+                theme="light"
+                mode="inline"
+                selectedKeys={activeKey}
+                defaultOpenKeys={['/']}
+                style={{
+                  backgroundColor: '#F7F7F7',
+                  marginTop: collapsed ? '0px' : '60px',
+                  overflow: 'auto',
+                }}
+              >
+                {menusWithOnClick.map((menu) =>
+                  menu.divider ? (
+                    <Menu.Divider key={menu.key} />
+                  ) : menu.children ? (
+                    <SubMenu key={menu.key} icon={menu.icon} title={menu.label}>
+                      {menu.children.map((subMenu: any) => (
+                        <Menu.Item key={subMenu.key}>{subMenu.label}</Menu.Item>
+                      ))}
+                    </SubMenu>
+                  ) : (
+                    <Menu.Item
+                      key={menu.key}
+                      icon={menu.icon}
+                      disabled={menu.disable}
+                    >
+                      {menu.label}
+                    </Menu.Item>
+                  ),
+                )}
+              </Menu>
+            </div>
+          </div>
+
+          <div>
+            <Button
+              className="custom-sider-trigger"
+              style={{ width: '100%', height: '40px' }}
+              onClick={toggle}
+            >
+              {collapsed ? (
+                <RightOutlined style={{ fontSize: '18px' }} />
+              ) : (
+                <LeftOutlined style={{ fontSize: '18px' }} />
+              )}
+            </Button>
+          </div>
+        </Flex>
+
+        {/* 
+        FIXME: Reopen me in soon ... 
         {!collapsed && (
           <Card
             style={{
-              position: "absolute",
-              bottom: "50px",
-              margin: "5px",
-              background: "#F7F7F7",
-              borderColor: "#F7F7F7",
-              width: "calc(100% - 10px)",
-              borderRadius: "10px",
+              position: 'absolute',
+              bottom: '50px',
+              margin: '5px',
+              background: '#F7F7F7',
+              borderColor: '#F7F7F7',
+              width: 'calc(100% - 10px)',
+              borderRadius: '10px',
             }}
-            bodyStyle={{ padding: "10px", textAlign: "center" }}
+            bodyStyle={{ padding: '10px', textAlign: 'center' }}
           >
-            <Typography style={{ fontWeight: "bold", color: "#19142A" }}>
+            <Typography style={{ fontWeight: 'bold', color: '#19142A' }}>
               บริษัท ยูโทเทค จำกัด
             </Typography>
-            <Typography style={{ color: "#19142A", opacity: 0.6 }}>
+            <Typography style={{ color: '#19142A', opacity: 0.6 }}>
               STAY ORGANIZED
             </Typography>
+
+       
             <Button
               type="primary"
               block
               style={{
-                marginTop: "10px",
-                backgroundColor: "#19142A",
-                borderColor: "#19142A",
-                borderRadius: "5px",
+                marginTop: '10px',
+                backgroundColor: '#19142A',
+                borderColor: '#19142A',
+                borderRadius: '5px',
               }}
               className="upgrade-button"
             >
               <Link to="/upgrade"> Upgrade </Link>
             </Button>
           </Card>
-        )}
-        <div
-          style={{
-            position: "absolute",
-            top: "60px",
-            right: "-70px",
-            zIndex: 1000,
-            backgroundColor: "#F3F3F3",
-            borderRadius: "2px",
-            width: "70px",
-            height: "40px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            cursor: "pointer"
-          }}
-          onClick={() => setCollapsed(!collapsed)}
-        >
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%" }}>
-            <CheckOutlined style={{ fontSize: "16px", color: "#8C8C8C" }} />
-            <span style={{ marginLeft: "10px", fontSize: "5px", color: "#8C8C8C" }}>...</span>
-          </div>
-        </div>
+        )} */}
       </Sider>
       {isMobile && collapsed === false && (
         <div
           style={{
-            position: "fixed",
+            position: 'fixed',
             top: 0,
             left: 0,
-            width: "100%",
-            height: "100%",
-            background: "#19142A",
+            width: '100%',
+            height: '100%',
+            background: 'rgba(25, 20, 42, 0.8)', // RGBA color for transparency
             zIndex: 9,
           }}
           onClick={() => setCollapsed(true)}
         />
       )}
+      {isMobile === true && (
+        <Button
+          type="text"
+          icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          onClick={() => setCollapsed(!collapsed)}
+          style={{
+            zIndex: 1,
+            margin: '20px 10px',
+            position: 'fixed',
+            fontSize: '24px',
+            top: 20,
+          }}
+        />
+      )}
     </>
   );
 };
+
 export default Sidebar;

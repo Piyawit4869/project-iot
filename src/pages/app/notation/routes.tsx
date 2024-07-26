@@ -1,20 +1,20 @@
-import { NotationIndex } from "./Indexpage";
+import { NotationIndex } from './Indexpage';
 
 export const routes = [
   {
-    path: "notation",
+    path: 'notation',
     // element: <PlanningLandingPage />,
     children: [
       {
-        path: "",
+        path: '',
         element: <NotationIndex />,
       },
       {
-        path: "create",
+        path: 'create',
         element: <>NotationCreate</>,
       },
       {
-        path: ":id",
+        path: ':id',
         element: <>NotationSingle</>,
       },
     ],

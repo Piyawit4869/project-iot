@@ -1,16 +1,16 @@
-import * as API from "@src/apis";
-import { Outlet, redirect, useLoaderData } from "react-router-dom";
+import * as API from '@src/apis';
+import { Outlet, redirect, useLoaderData } from 'react-router-dom';
 
 // import { AuthContext } from "@contexts/AuthContext";
 export async function RootLoader() {
   try {
     const me = await API.user.getMe();
-    // me.data.role = "super_admin";
-    // console.log(me);
-    localStorage.setItem("me", JSON.stringify(me.data));
+    // me.data.role.name = 'manager';
+    console.log(me);
+    localStorage.setItem('me', JSON.stringify(me.data));
     return { me: me.data };
   } catch (e: any) {
-    return redirect("/login");
+    return redirect('/login');
   }
 }
 

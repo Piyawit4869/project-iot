@@ -1,5 +1,5 @@
-import { Form, Input } from "antd";
-import { CSSProperties } from "react";
+import { Form, Input } from 'antd';
+import { CSSProperties } from 'react';
 
 interface InputFormFieldProps {
   name: string;
@@ -11,7 +11,7 @@ interface InputFormFieldProps {
 }
 
 export const InputFormField: React.FC<InputFormFieldProps> = (
-  props: InputFormFieldProps
+  props: InputFormFieldProps,
 ) => {
   const { name, label, placeholder, required } = props;
   return (
@@ -32,8 +32,8 @@ export const InputFormField: React.FC<InputFormFieldProps> = (
 
 const styles: Record<string, CSSProperties> = {
   input: {
-    borderRadius: "10px",
-    border: "1px solid #ccc",
-    padding: "10px",
+    borderRadius: '10px',
+    border: '1px solid #ccc',
+    padding: '10px',
   },
 };

@@ -1,21 +1,21 @@
-import { PlanningIndex } from "./Indexpage";
+import { PlanningIndex } from './Indexpage';
 
 export const routes = [
   {
-    path: "planning",
+    path: 'planning',
     // element: <Planning />,
     children: [
       {
-        path: "",
+        path: '',
         element: <PlanningIndex />,
       },
       {
-        path: "create",
-        element: <>PlanningCreate</>
+        path: 'create',
+        element: <>PlanningCreate</>,
       },
       {
-        path: ":id", 
-        element: <>PlanningSingle</>
+        path: ':id',
+        element: <>PlanningSingle</>,
       },
     ],
   },

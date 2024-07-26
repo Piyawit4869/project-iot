@@ -6,17 +6,17 @@ export async function organizeCreateAction() {
     //   await API.organize.create(JSON.parse(submitData.data));
     return {
       data: {
-        action: "create",
-        status: "success",
-        message: "Organize Created Successfully !",
+        action: 'create',
+        status: 'success',
+        message: 'Organize Created Successfully !',
       },
     };
   } catch (error) {
     return {
       data: {
-        action: "create",
-        status: "error",
-        message: "Organize Created Failed !",
+        action: 'create',
+        status: 'error',
+        message: 'Organize Created Failed !',
       },
     };
   }

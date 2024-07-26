@@ -1,12 +1,11 @@
-import AttendanceIndex from "./Indexpage";
-
+import AttendanceIndex from './Indexpage';
 
 export const routes = [
   {
-    path: "attendance",
+    path: 'attendance',
     children: [
       {
-        path: "",
+        path: '',
         element: <AttendanceIndex />,
       },
     ],

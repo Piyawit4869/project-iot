@@ -1,20 +1,20 @@
-import { ProjectCreate } from "./Createpage";
-import { ProjectIndex } from "./Indexpage";
-import { ProjectSingle } from "./Singlepage";
+import { ProjectCreate } from './Createpage';
+import { ProjectIndex } from './Indexpage';
+import { ProjectSingle } from './Singlepage';
 export const routes = [
   {
-    path: "project",
+    path: 'project',
     children: [
       {
-        path: "",
+        path: '',
         element: <ProjectIndex />,
       },
       {
-        path: "create",
+        path: 'create',
         element: <ProjectCreate />,
       },
       {
-        path: ":id",
+        path: ':id',
         element: <ProjectSingle />,
       },
     ],

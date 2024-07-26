@@ -1,0 +1,90 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ['Build']
+    types:
+      - completed
+    branches:
+      - develop
+      - staging
+
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Deployment Environment'
+        required: true
+        default: dev
+
+      version:
+        description: 'Deployment Version'
+        required: true
+
+  repository_dispatch:
+    types: [deploy]
+
+env:
+  GCP_PROJECT_ID: stay-organize
+  GCP_IDENTITY_PROVIDER: projects/928486735220/locations/global/workloadIdentityPools/github-actions-pool/providers/github
+  GCP_SERVICE_ACCOUNT: stay-organize-deploy-sa@stay-organize.iam.gserviceaccount.com
+  GCP_IMAGE_REGISTRY: asia-southeast1-docker.pkg.dev
+  GCP_CLOUD_RUN_REGION: asia-southeast1
+
+jobs:
+  deploy:
+    name: "${{ github.head_ref || github.ref_name }}${{ github.event.inputs.version && ': version ' || '' }}${{ github.event.inputs.version }}"
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Setting up environment variables via repository_dispatch
+        run: |
+          echo "APP_ENV=${{ github.event.client_payload.env }}" >> $GITHUB_ENV
+          echo "APP_VERSION=${{ github.event.client_payload.version }}" >> $GITHUB_ENV
+        if: ${{ github.event_name == 'repository_dispatch' }}
+
+      - name: Setting up environment variables via workflow_dispatch
+        run: |
+          echo "APP_ENV=${{ github.event.inputs.env }}" >> $GITHUB_ENV
+          echo "APP_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ env.APP_VERSION }}
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/setup-gcloud@v0.4.0
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Deploy to Cloud Run (develop branch)
+        if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
+        env:
+          APP_IMAGE: ${{ env.GCP_IMAGE_REGISTRY }}/${{ env.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}
+          SERVICE_NAME: ${{ github.event.repository.name }}-develop
+          APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
+          GCP_CLOUD_RUN_REGION: ${{ env.GCP_CLOUD_RUN_REGION }}
+          GCP_PROJECT_ID: ${{ env.GCP_PROJECT_ID }}
+        run: |
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+          --region=${{ env.GCP_CLOUD_RUN_REGION }} \
+          --image ${{ env.APP_IMAGE }}:develop \
+          --project ${{ env.GCP_PROJECT_ID }}
+
+      - uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          content: 'deploy ${{ github.event.repository.name }} <@&1196392777852928051> ! by ${{ github.actor }}' # FIXME make this to env
+          title: 'Deploy by ${{ github.actor }}'
+          description: |
+            Build Status: ${{ job.status }} On Repository: ${{ github.event.repository.name }} Version: ${{ steps.get_version.outputs.VERSION }}
+          url: 'https://github.com/Utotech-organize/stay-organize-core/tree/develop'

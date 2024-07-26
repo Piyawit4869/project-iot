@@ -11,7 +11,13 @@
     "branch": "สาขา",
     "orginformation": "ข้อมูลองค์กร",
     "create": "สร้าง",
-    "setting": "ตั้งค่า"
-   
+    "setting": "ตั้งค่า",
+    "super_admin": "แอดมินสูงสุด",
+    "owner": "เจ้าของธุรกิจ",
+    "manager": "ผู้จัดการสาขา",
+    "developer": "นักพัฒนา",
+    "employee": "พนักงาน",
+    "profile": "โปรไฟล์",
+    "logout": "ออกจากระบบ"
   }
 }

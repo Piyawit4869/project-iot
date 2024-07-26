@@ -1,11 +1,11 @@
-import { SettingIndex } from "./Indexpage";
+import { SettingIndex } from './Indexpage';
 
 export const routes = [
   {
-    path: "setting",
+    path: 'setting',
     children: [
       {
-        path: "",
+        path: '',
         element: <SettingIndex />,
       },
     ],

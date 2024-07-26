@@ -1,63 +1,109 @@
-import React from 'react';
-import { Button, Modal } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Button, FormInstance, Modal } from 'antd';
+import { useNavigate, useSubmit } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
 
 const { confirm } = Modal;
 
-interface FormButtonsProps {
-  form: any;
-  onFinish: (values: any) => void;
+interface FormButtonEdit {
+  form: FormInstance;
+  titleModalReset?: string;
+  contentModalReset?: string;
+
+  titleModalSubmit?: string;
+  contentModalSubmit?: string;
+
+  titleModalDelete?: string;
+  contentModalDelete?: string;
 }
 
-const FormButtonsEdit: React.FC<FormButtonsProps> = ({ form }) => {
+const FormButtonsEdit = (props: FormButtonEdit) => {
+  const {
+    form,
+    titleModalReset,
+    contentModalReset,
+    titleModalSubmit,
+    contentModalSubmit,
+    titleModalDelete,
+    contentModalDelete,
+  } = props;
   const navigate = useNavigate();
+  const submit = useSubmit();
 
   const onDelete = () => {
     confirm({
-      title: "ต้องการลบองค์กรนี้หรือไม่?",
-      content: "หากลบแล้ว จะไม่สามารถกู้คืนได้",
-      okText: "ยืนยัน",
-      okType: "danger",
-      cancelText: "ยกเลิก",
+      title: titleModalDelete ? titleModalDelete : 'title',
+      content: contentModalDelete ? contentModalDelete : 'content',
+      okText: 'ยืนยัน',
+      okType: 'danger',
+      cancelText: 'ยกเลิก',
       onOk() {
-        console.log("Deleted");
-      },
-      onCancel() {
-        console.log("Delete action cancelled");
+        submit({ action: 'delete' }, { method: 'delete' });
       },
     });
   };
 
   const onReset = () => {
     confirm({
-      title: "คุณต้องการยกเลิกการแก้ไขหรือไม่?",
-      content: "ข้อมูลที่คุณกรอกจะไม่ถูกบันทึก",
-      okText: "ยืนยัน",
-      cancelText: "ยกเลิก",
+      title: titleModalReset ? titleModalReset : 'title',
+      content: contentModalReset ? contentModalReset : 'content',
+      okText: 'ยืนยัน',
+      cancelText: 'ยกเลิก',
       onOk() {
         form.resetFields();
-        navigate(-1);
       },
-      onCancel() {
-        console.log("Reset action cancelled");
+    });
+  };
+
+  const onSubmit = () => {
+    confirm({
+      title: titleModalSubmit ? titleModalSubmit : 'title',
+      content: contentModalSubmit ? contentModalSubmit : 'content',
+      okText: 'ยืนยัน',
+      cancelText: 'ยกเลิก',
+      onOk() {
+        form.submit();
       },
     });
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
-      <Button type="primary" onClick={() => navigate(-1)} style={{ marginRight: "10px" }}>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: '10px',
+      }}
+    >
+      <Button
+        type="primary"
+        onClick={() => navigate(-1)}
+        style={{ marginRight: '10px' }}
+      >
         <LeftOutlined /> กลับ
       </Button>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-        <Button style={{ marginRight: "10px" }} onClick={onReset}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+        }}
+      >
+        <Button
+          style={{
+            marginRight: '10px',
+            backgroundColor: '#A79DB4',
+            borderColor: '#A79DB4',
+            color: '#fff',
+          }}
+          onClick={onReset}
+        >
           ยกเลิก
         </Button>
-        <Button type="primary" htmlType="submit" onClick={() => form.submit()}>
+        <Button type="primary" onClick={onSubmit}>
           ยืนยัน
         </Button>
-        <Button danger onClick={onDelete} style={{ marginLeft: "10px" }}>
+        <Button danger onClick={onDelete} style={{ marginLeft: '10px' }}>
           ลบ
         </Button>
       </div>
@@ -65,35 +111,84 @@ const FormButtonsEdit: React.FC<FormButtonsProps> = ({ form }) => {
   );
 };
 
-const FormButtonsCreate: React.FC<FormButtonsProps> = ({ form }) => {
+interface FormButtonCreate {
+  form: FormInstance;
+  titleModalReset?: string;
+  contentModalReset?: string;
+
+  titleModalSubmit?: string;
+  contentModalSubmit?: string;
+}
+
+const FormButtonsCreate = (props: FormButtonCreate) => {
+  const {
+    form,
+    titleModalReset,
+    contentModalReset,
+    titleModalSubmit,
+    contentModalSubmit,
+  } = props;
   const navigate = useNavigate();
 
   const onReset = () => {
     confirm({
-      title: "คุณต้องการยกเลิกการแก้ไขหรือไม่?",
-      content: "ข้อมูลที่คุณกรอกจะไม่ถูกบันทึก",
-      okText: "ยืนยัน",
-      cancelText: "ยกเลิก",
+      title: titleModalReset ? titleModalReset : 'title',
+      content: contentModalReset ? contentModalReset : 'content',
+      okText: 'ยืนยัน',
+      cancelText: 'ยกเลิก',
       onOk() {
         form.resetFields();
-        navigate(-1);
       },
-      onCancel() {
-        console.log("Reset action cancelled");
+    });
+  };
+
+  const onSubmit = () => {
+    confirm({
+      title: titleModalSubmit ? titleModalSubmit : 'title',
+      content: contentModalSubmit ? contentModalSubmit : 'content',
+      okText: 'ยืนยัน',
+      cancelText: 'ยกเลิก',
+      onOk() {
+        form.submit();
       },
     });
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
-      <Button type="primary" onClick={() => navigate(-1)} style={{ marginRight: "10px" }}>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: '10px',
+      }}
+    >
+      <Button
+        type="primary"
+        onClick={() => navigate(-1)}
+        style={{ marginRight: '10px' }}
+      >
         <LeftOutlined /> กลับ
       </Button>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-        <Button style={{ marginRight: "10px" }} onClick={onReset}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+        }}
+      >
+        <Button
+          style={{
+            marginRight: '10px',
+            backgroundColor: '#A79DB4',
+            borderColor: '#A79DB4',
+            color: '#fff',
+          }}
+          onClick={onReset}
+        >
           ยกเลิก
         </Button>
-        <Button type="primary" htmlType="submit" onClick={() => form.submit()}>
+        <Button type="primary" onClick={onSubmit}>
           บันทึก
         </Button>
       </div>

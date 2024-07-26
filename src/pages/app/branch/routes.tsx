@@ -1,22 +1,28 @@
-import { BranchCreate } from "./Createpage";
-import { BranchIndex } from "./Indexpage";
-import { BranchSingle } from "./singlepage";
+import { branchCreateAction } from './action';
+import { BranchCreate } from './Createpage';
+import { BranchIndex } from './Indexpage';
+import { branchLoader, branchSingleLoader } from './loader';
+import { BranchSingle } from './singlepage';
 
 export const routes = [
   {
-    path: "branch",
+    path: 'branch',
     children: [
       {
-        path: "",
+        path: '',
         element: <BranchIndex />,
+        loader: branchLoader,
       },
       {
-        path: "create",
+        path: 'create',
         element: <BranchCreate />,
+        action: branchCreateAction,
       },
       {
-        path: ":id",
+        path: ':id',
         element: <BranchSingle />,
+        loader: branchSingleLoader,
+        action: branchCreateAction,
       },
     ],
   },

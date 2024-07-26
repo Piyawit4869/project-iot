@@ -6,11 +6,12 @@ import {
   SelectFormField,
   SwitchFormField,
   TextboxFormField,
-} from "@src/components/shared";
-import { Col } from "antd";
+} from '@src/components/shared';
+import { Col } from 'antd';
 
-import { DatePickerFormField } from "@src/components/shared/DatePicker";
-import { TextAreaFormField } from "@src/components/shared/TextAreaFormField";
+import { DatePickerFormField } from '@src/components/shared/DatePicker';
+import { TextAreaFormField } from '@src/components/shared/TextAreaFormField';
+import { UploadFiles } from '@src/components/shared/UploadFile';
 
 interface DynamicFormProps {
   value: boolean | undefined;
@@ -27,13 +28,14 @@ interface DynamicFormProps {
   checked: boolean;
   maxLength?: number;
   validator?: any;
+  form?: any;
 }
 
 export const DynamicForm: React.FC<DynamicFormProps> = (
-  props: DynamicFormProps
+  props: DynamicFormProps,
 ) => {
   switch (props.type) {
-    case "TextboxFormField":
+    case 'TextboxFormField':
       return (
         <Col
           xs={props.col.xs}
@@ -49,19 +51,11 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             type={props.type}
             disabled={props.disabled}
             maxLength={props.maxLength}
-            rule={[
-              {
-                required: props.require ? true : false,
-                message: props.ruleMessage,
-              },
-              {
-                validator: props.validator,
-              }
-            ]}
+            require={props.require}
           />
         </Col>
       );
-    case "SelectFormField":
+    case 'SelectFormField':
       return (
         <Col
           xs={props.col.xs}
@@ -76,16 +70,17 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             label={props.label}
             options={props.option}
             disabled={props.disabled}
-            rule={[
-              {
-                required: props.require ? true : false,
-                message: props.ruleMessage,
-              },
-            ]}
+            require={props.require}
+            // rule={[
+            //   {
+            //     required: props.require ? true : false,
+            //     message: props.ruleMessage,
+            //   },
+            // ]}
           />
         </Col>
       );
-    case "LabelForm":
+    case 'LabelForm':
       return (
         <Col
           xs={props.col.xs}
@@ -101,7 +96,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
           />
         </Col>
       );
-    case "TextAreaFormField":
+    case 'TextAreaFormField':
       return (
         <Col
           xs={props.col.xs}
@@ -114,17 +109,19 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             placeholder={props.placeholder}
             name={props.name}
             label={props.label}
-            rule={[
-              {
-                required: props.require ? true : false,
-                message: props.ruleMessage,
-              },
-            ]}
+            rows={3}
+            require={props.require}
+            // rule={[
+            //   {
+            //     required: props.require ? true : false,
+            //     message: props.ruleMessage,
+            //   },
+            // ]}
             disabled={props.disabled}
           />
         </Col>
       );
-    case "DatePickerFormField":
+    case 'DatePickerFormField':
       return (
         <Col
           xs={props.col.xs}
@@ -137,16 +134,17 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             placeholder={props.placeholder}
             name={props.name}
             label={props.label}
-            rule={[
-              {
-                required: props.require ? true : false,
-                message: props.ruleMessage,
-              },
-            ]}
+            require={props.require}
+            // rule={[
+            //   {
+            //     required: props.require ? true : false,
+            //     message: props.ruleMessage,
+            //   },
+            // ]}
           />
         </Col>
       );
-    case "CheckboxFormField":
+    case 'CheckboxFormField':
       return (
         <Col
           xs={props.col.xs}
@@ -159,17 +157,18 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             value={props.value}
             name={props.name}
             label={props.label}
-            rule={[
-              {
-                required: props.require ? true : false,
-                message: props.ruleMessage,
-              },
-            ]}
+            require={props.require}
+            // rule={[
+            //   {
+            //     required: props.require ? true : false,
+            //     message: props.ruleMessage,
+            //   },
+            // ]}
           />
         </Col>
       );
 
-    case "RadioFormField":
+    case 'RadioFormField':
       return (
         <Col
           xs={props.col.xs}
@@ -177,16 +176,18 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
           md={props.col.md}
           lg={props.col.lg}
           xl={props.col.xl}
+          style={{ display: 'flex', alignItems: 'center' }}
         >
           <RadioFormField
             name={props.name}
             options={props.option}
             label={props.label}
+            require={props.require}
           />
         </Col>
       );
 
-    case "SwitchFormField":
+    case 'SwitchFormField':
       return (
         <Col
           xs={props.col.xs}
@@ -200,11 +201,12 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             label={props.label}
             disabled={props.disabled}
             checked={props.checked}
+            require={props.require}
           />
         </Col>
       );
 
-    case "SectionLabelForm":
+    case 'SectionLabelForm':
       return (
         <Col
           xs={props.col.xs}
@@ -216,38 +218,24 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
           <SectionLabelForm label={props.label} />
         </Col>
       );
+    case 'UploadFile':
+      return (
+        <Col
+          xs={props.col.xs}
+          sm={props.col.sm}
+          md={props.col.md}
+          lg={props.col.lg}
+          xl={props.col.xl}
+        >
+          <UploadFiles
+            form={props.form}
+            name={props.name}
+            required={props.require}
+            label={props.label}
+          />
+        </Col>
+      );
     default:
       return <></>;
   }
-
-  // const switchForm =
-  //     switch (key) {
-  //       case value:
-  //         break;
-  //       default:
-  //         break;
-  //     }
-  // return (
-  //   <Row>
-  /* <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-        <LabelForm
-          style={{ marginBottom: -30 }}
-          icon={props.LabelFormIcon}
-          label={props.LabelFormLabel}
-          children={props.LabelFormChildren}
-        />
-      </Col>
-      <Col xs={24} sm={24} md={12} lg={12} xl={16}>
-        <TextboxFormField
-          placeholder={props.TextboxFormPlaceholder}
-          name={
-            props.IsObject
-              ? [props.TextboxFormName, props.TextboxFormValue]
-              : props.TextboxFormName
-          }
-          label={props.TextboxFormLabel}
-        />
-      </Col> */
-  // </Row>
-  // );
 };

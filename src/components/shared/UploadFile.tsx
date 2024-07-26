@@ -1,6 +1,6 @@
-import * as React from "react";
-import { Form, Upload, UploadProps, message } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import * as React from 'react';
+import { Form, Upload, UploadProps, message } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 
 const baseURL = import.meta.env.VITE_APP_API_BASE_URL;
 
@@ -8,52 +8,45 @@ const normFile = (e: any) => {
   if (Array.isArray(e)) {
     return e;
   }
-  return e?.fileList;
+  return e && e.fileList ? e.fileList : [];
 };
 
 interface FormInterface {
   form: any;
-
-  name: any;
+  name: string;
   disabled?: boolean;
+  required: boolean;
+  label?: string;
 }
 
 export const UploadFiles: React.FC<FormInterface> = (props: FormInterface) => {
-  const { form, disabled } = props;
-  const file: any = Form.useWatch(props.name, form);
+  const { form, name, disabled, required, label } = props;
+  const file = Form.useWatch(name ? name : 'file', form);
 
-  const [fileList, setFileList] = React.useState<any[]>([]);
-  const [uploading, setUploading] = React.useState<boolean>(false);
+  const [fileList, setFileList] = React.useState<any[]>(file || []);
 
-  const prop: UploadProps = {
+  const uploadProps: UploadProps = {
+    fileList: fileList,
     disabled: disabled,
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
     },
     multiple: false,
     maxCount: 1,
-    action: `${baseURL}/upload`,
-    listType: "picture-card",
+    action: `${baseURL}api/upload`,
+    listType: 'picture-card',
     accept: `image/*`,
     onChange(info) {
-      if (info.file.status === "uploading") {
-        setUploading(true);
-      }
-
-      if (info.file.status === "done") {
+      if (info.file.status === 'done') {
         message.success(`${info.file.name} file uploaded successfully`);
         setFileList((prev: any) => [...prev, info.file]);
-        setUploading(false);
-      } else if (info.file.status === "removed") {
+      } else if (info.file.status === 'removed') {
+        // Handle file removal here
         setFileList((prev: any) =>
-          prev.filter((file: any) => file.uid !== info.file.uid)
+          prev.filter((file: any) => file.uid !== info.file.uid),
         );
-        message.success(`${info.file.name} file has been removed`);
-        setUploading(false);
-      } else if (info.file.status === "error") {
+      } else if (info.file.status === 'error') {
         message.error(`${info.file.name} file upload failed.`);
-
-        setUploading(false);
       }
     },
   };
@@ -66,18 +59,19 @@ export const UploadFiles: React.FC<FormInterface> = (props: FormInterface) => {
   );
 
   return (
-    <>
-      <Form.Item
-        name={props.name}
-        valuePropName="fileList"
-        getValueFromEvent={normFile}
-      >
-        <Upload {...prop}>
-          {uploading || (file && file?.length) || (fileList && fileList?.length)
-            ? null
-            : uploadButton}
-        </Upload>
-      </Form.Item>
-    </>
+    <Form.Item
+      label={label}
+      name={'file'}
+      valuePropName="fileList"
+      getValueFromEvent={normFile}
+      required={required}
+      initialValue={fileList}
+    >
+      {file && file.length ? (
+        <Upload {...uploadProps}>{null}</Upload>
+      ) : (
+        <Upload {...uploadProps}>{uploadButton}</Upload>
+      )}
+    </Form.Item>
   );
 };

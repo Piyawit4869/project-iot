@@ -1,8 +1,8 @@
-import { PublicLandingPage } from "./indexpage";
+import { PublicLandingPage } from './indexpage';
 
 export const routes = [
   {
-    path: "",
+    path: '',
     element: <PublicLandingPage />,
   },
 ];

@@ -1,10 +1,9 @@
 export async function customerhLoader() {
-    try {
+  try {
     //   const organize = await API.organize.getAll();
     //   return { organize: organize.data };
     return {};
-    } catch (error) {
-      return { error: "error", message: error };
-    }
+  } catch (error) {
+    return { error: 'error', message: error };
   }
-  
+}
