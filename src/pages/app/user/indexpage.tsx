@@ -53,7 +53,7 @@ export const UsersIndex: React.FC = () => {
         ]}
       />
 
-      <div style={{ height: '25px' }} />
+      <div style={{ height: '5px' }} />
       <SearchBar />
 
       <TableComponent

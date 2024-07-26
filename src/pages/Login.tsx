@@ -1,4 +1,4 @@
-import { Form, Input, Button, notification } from 'antd';
+import { Form, Input, Button, notification, Typography, Card } from 'antd';
 import {
   UserOutlined,
   LockOutlined,
@@ -15,7 +15,8 @@ import { json, redirect, useNavigation, useSubmit } from 'react-router-dom';
 export async function loginAction({ request }: any) {
   const formData = await request.formData();
   const submitData = Object.fromEntries(formData);
-  // console.log({submitData});
+  console.log({ submitData });
+  const data = JSON.parse(submitData.data);
   switch (submitData.action) {
     case 'adminLogin':
       try {
@@ -27,7 +28,11 @@ export async function loginAction({ request }: any) {
           description: 'You have successfully logged in',
         });
 
-        return redirect('/analytic');
+        return redirect(
+          data.user === 'super.admin@utotech.org'
+            ? '/admin/analytic'
+            : '/analytic',
+        );
       } catch (error) {
         notification.error({
           message: 'Login Failed',
@@ -64,66 +69,83 @@ export const Login = () => {
         height: '100vh',
       }}
     >
-      <Form
-        form={form}
-        name="normal_login"
-        className="login-form"
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-        style={{ maxWidth: '500px' }}
+      <Card
+        style={{
+          margin: '1rem',
+          width: '100%',
+          maxWidth: '515px',
+          // backgroundColor: 'white',
+          borderColor: 'transparent',
+          backgroundColor: 'rgb(25, 20, 42)',
+          boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+        }}
       >
-        <h1 style={{ textAlign: 'left', fontSize: '50px' }}>Sign in</h1>
-        <p style={{ textAlign: 'left', fontSize: '25px', marginTop: '-40px' }}>
-          Stay Organize Login
-        </p>
-        <Form.Item
-          name="user"
-          rules={[
-            { required: true, message: 'Please input your Email or Username' },
-          ]}
+        <Form
+          form={form}
+          name="normal_login"
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
+          size="middle"
         >
-          <Input
-            prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Email or Username"
-            style={{ width: '500px', height: '50px', fontSize: '16px' }}
-          />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          rules={[{ required: true, message: 'Please input your Password!' }]}
-        >
-          <Input.Password
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            placeholder="Password"
-            style={{ width: '500px', height: '50px', fontSize: '16px' }}
-            iconRender={(visible) =>
-              visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
-            }
-          />
-        </Form.Item>
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={
-              navigation.state === 'loading' ||
-              navigation.state === 'submitting'
-            }
-            disabled={
-              navigation.state === 'loading' ||
-              navigation.state === 'submitting'
-            }
-            style={{
-              height: '50px',
-              fontSize: '18px',
-              padding: '0 30px',
-              width: '100%',
-            }}
+          <Typography.Title level={1} style={{ color: 'white' }}>
+            Stay Organize
+          </Typography.Title>
+          <div style={{ height: '30px' }} />
+          <Form.Item
+            name="user"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your Email or Username',
+              },
+            ]}
           >
-            Log in
-          </Button>
-        </Form.Item>
-      </Form>
+            <Input
+              prefix={<UserOutlined />}
+              placeholder="Email or Username"
+              style={{ fontSize: '16px' }}
+            />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            rules={[{ required: true, message: 'Please input your Password!' }]}
+          >
+            <Input.Password
+              prefix={<LockOutlined />}
+              placeholder="Password"
+              style={{ fontSize: '16px' }}
+              iconRender={(visible) =>
+                visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
+              }
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button
+              size="large"
+              type="primary"
+              htmlType="submit"
+              loading={
+                navigation.state === 'loading' ||
+                navigation.state === 'submitting'
+              }
+              disabled={
+                navigation.state === 'loading' ||
+                navigation.state === 'submitting'
+              }
+              style={{
+                fontSize: '18px',
+                padding: '0 30px',
+                width: '100%',
+                backgroundColor: '#A79DB4',
+                borderColor: 'transparent',
+                color: 'white',
+              }}
+            >
+              Sign in
+            </Button>
+          </Form.Item>
+        </Form>
+      </Card>
     </div>
   );
 };

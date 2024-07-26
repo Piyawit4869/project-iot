@@ -9,7 +9,7 @@ export async function organizeLoader(params: any) {
     const search = { ...param };
 
     const organize = await API.organize.getAll(search);
-    return { organize: organize.data.items, param };
+    return { organize: organize.data, param };
   } catch (error) {
     return { error: 'error', message: error };
   }

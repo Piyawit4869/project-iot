@@ -1,7 +1,8 @@
 import React from 'react';
-import { Card, Row, Col, Button, Progress } from 'antd';
+import { Card, Row, Col, Button, Progress, Flex } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { CSSProperties } from 'react';
+import { TitleBar } from '@src/components/shared';
 interface CardData {
   title: string;
   value: number;
@@ -126,54 +127,53 @@ const AttendanceCard: React.FC = () => (
     </div>
   </Card>
 );
-const TaskCard: React.FC = () => (
-  <Card
-    style={{ ...documentCardStyle, width: '500px' }}
-    bodyStyle={{ padding: '10px' }}
-  >
-    <div style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '5px' }}>
-      การทำงาน
-    </div>
-    <div style={documentItemStyle}>
-      <div style={{ fontSize: '12px', fontWeight: 'bold' }}>To Do</div>
-    </div>
-    <div style={documentItemStyle}>
-      <div style={{ fontSize: '12px', fontWeight: 'bold' }}>In Progress</div>
-    </div>
-    <div style={documentItemStyle}>
-      <div style={{ fontSize: '12px', fontWeight: 'bold' }}>In Review</div>
-      <div
-        style={{
-          backgroundColor: '#fff',
-          padding: '5px',
-          borderRadius: '4px',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: '#f44336',
-            color: '#fff',
-            padding: '2px 8px',
-            borderRadius: '4px',
-            marginRight: '5px',
-          }}
-        >
-          Bug
-        </div>
-        <div style={{ fontSize: '12px' }}>Fixed payment components</div>
-        <div style={{ fontSize: '12px', marginLeft: 'auto' }}>27 มิ.ย.</div>
-      </div>
-    </div>
-  </Card>
-);
+// const TaskCard: React.FC = () => (
+//   <Card
+//     style={{ ...documentCardStyle, width: '500px' }}
+//     bodyStyle={{ padding: '10px' }}
+//   >
+//     <div style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '5px' }}>
+//       การทำงาน
+//     </div>
+//     <div style={documentItemStyle}>
+//       <div style={{ fontSize: '12px', fontWeight: 'bold' }}>To Do</div>
+//     </div>
+//     <div style={documentItemStyle}>
+//       <div style={{ fontSize: '12px', fontWeight: 'bold' }}>In Progress</div>
+//     </div>
+//     <div style={documentItemStyle}>
+//       <div style={{ fontSize: '12px', fontWeight: 'bold' }}>In Review</div>
+//       <div
+//         style={{
+//           backgroundColor: '#fff',
+//           padding: '5px',
+//           borderRadius: '4px',
+//           display: 'flex',
+//           alignItems: 'center',
+//         }}
+//       >
+//         <div
+//           style={{
+//             backgroundColor: '#f44336',
+//             color: '#fff',
+//             padding: '2px 8px',
+//             borderRadius: '4px',
+//             marginRight: '5px',
+//           }}
+//         >
+//           Bug
+//         </div>
+//         <div style={{ fontSize: '12px' }}>Fixed payment components</div>
+//         <div style={{ fontSize: '12px', marginLeft: 'auto' }}>27 มิ.ย.</div>
+//       </div>
+//     </div>
+//   </Card>
+// );
 const Analytic: React.FC = () => {
   return (
-    <div style={{ backgroundColor: '#FFFFFF', padding: '20px' }}>
-      <div style={{ fontSize: 30, marginTop: '20px' }}>ภาพรวม</div>
-      <div style={{ fontSize: 20 }}>สวัสดีตอนเที่ยง!</div>
-
+    <Flex vertical>
+      <TitleBar title={'ภาพรวม'} subTitle={'สวัสดีตอนเที่ยง!'} />
+      <div style={{ height: '25px' }} />
       <Row gutter={16} justify="space-between">
         {cardData.map((data, index) => (
           <Col key={index} xs={24} sm={12} md={6}>
@@ -191,9 +191,9 @@ const Analytic: React.FC = () => {
         <Col xs={24} sm={12} md={6}>
           <AttendanceCard />
         </Col>
-        <Col xs={24} sm={12} md={6}>
+        {/* <Col xs={24} sm={12} md={6}>
           <TaskCard />
-        </Col>
+        </Col> */}
         <Col xs={24} sm={12} md={6}>
           <Card style={addWidgetCardStyle} bodyStyle={{ padding: '20px' }}>
             <Button type="dashed" shape="circle" icon={<PlusOutlined />} />
@@ -201,7 +201,7 @@ const Analytic: React.FC = () => {
           </Card>
         </Col>
       </Row>
-    </div>
+    </Flex>
   );
 };
 export default Analytic;

@@ -1,115 +1,206 @@
-import { CSSProperties } from 'react';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import { TitleBar } from '@src/components/shared';
+import { TableComponent } from '@src/components/shared/TableComponent';
+import { Button, Card, Col, Flex, Row, Typography } from 'antd';
+import { ColumnsType } from 'antd/es/table';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const AttendanceIndex = () => {
-  const attendanceData = [
-    { date: '18 มิ.ย., 2020', checkIn: '05:51 am', checkOut: '12:01 pm' },
-    { date: '19 มิ.ย., 2020', checkIn: '01:08 pm', checkOut: '05:49 pm' },
-    { date: '20 มิ.ย., 2020', checkIn: '05:36 pm', checkOut: '11:23 pm' },
-    { date: '21 มิ.ย., 2020', checkIn: '11:49 pm', checkOut: '07:40 am' },
+  const [attendance, setAttendance] = React.useState(true);
+  const me = JSON.parse(localStorage.getItem('me') as any);
+  console.log({ me });
+
+  const myAttendanceColumns: ColumnsType<any> | undefined = [
+    {
+      title: 'ลำดับ',
+      dataIndex: 'id',
+      key: 'id',
+      align: 'center',
+    },
+    {
+      title: 'ชื่อ',
+      dataIndex: 'username',
+      key: 'username',
+    },
+    {
+      title: 'กิจกรรม',
+      dataIndex: 'event',
+      key: 'event',
+    },
+    {
+      title: 'เวลา',
+      dataIndex: 'eventTime',
+      key: 'eventTime',
+    },
+    {
+      dataIndex: 'id',
+      key: 'id',
+      align: 'center',
+      width: '60px',
+      render: () => <InfoCircleOutlined onClick={() => {}} />,
+    },
   ];
 
-  const styles: { [key: string]: CSSProperties } = {
-    attendanceIndex: {
-      width: '100%',
-      maxWidth: '1200px',
-      margin: '0 auto',
-      fontFamily: 'Arial, sans-serif',
+  const myAttendance = [
+    {
+      id: '1',
+      username: 'Pho0m',
+      event: 'เข้างาน',
+      eventTime: '10:03 นาฬิกา',
     },
-    buttonGroup: {
-      display: 'flex',
-      justifyContent: 'center',
-      marginBottom: '20px',
+    {
+      id: '2',
+      username: 'Pho0m',
+      event: 'พักเบรค',
+      eventTime: '11:47 นาฬิกา',
     },
-    button: {
-      backgroundColor: '#4CAF50',
-      color: 'white',
-      padding: '15px 30px',
-      margin: '5px',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      minWidth: '150px', // Adjust the minimum width to make buttons longer
+    {
+      id: '3',
+      username: 'Pho0m',
+      event: 'เข้างาน',
+      eventTime: '13:05 นาฬิกา',
     },
-    summary: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      marginBottom: '20px',
+    {
+      id: '4',
+      username: 'Pho0m',
+      event: 'พักเบรค',
+      eventTime: '16:54 นาฬิกา',
     },
-    summaryItem: {
-      textAlign: 'center',
-      flex: 1,
+    {
+      id: '5',
+      username: 'Pho0m',
+      event: 'ออกงาน',
+      eventTime: '17:00 นาฬิกา',
     },
-    summaryTitle: {
-      display: 'block',
-      fontSize: '24px',
-      fontWeight: 'bold',
-    },
-    summarySubtitle: {
-      display: 'block',
-      fontSize: '14px',
-      color: 'gray',
-    },
-    table: {
-      width: '100%',
-      borderCollapse: 'collapse',
-    },
-    th: {
-      padding: '10px',
-      border: '1px solid #ddd',
-      textAlign: 'center',
-      backgroundColor: '#f4f4f4',
-    },
-    td: {
-      padding: '10px',
-      border: '1px solid #ddd',
-      textAlign: 'center',
-    },
-  };
+  ];
 
   return (
-    <div style={styles.attendanceIndex}>
-      <div style={styles.buttonGroup}>
-        <button style={styles.button}>In</button>
-        <button style={styles.button}>Break</button>
-        <button style={styles.button}>Out</button>
-      </div>
-      <div style={styles.summary}>
-        <div style={styles.summaryItem}>
-          <span style={styles.summaryTitle}>08:00</span>
-          <span style={styles.summarySubtitle}>Average Working Hour</span>
+    <>
+      {(me.role.name === 'owner' || me.role.name === 'manager') && (
+        <div style={{ marginBottom: '30px' }}>
+          <TitleBar
+            title={'ภาพรวมการทำงานในองค์กรวันนี้'}
+            subTitle={'สวัสดีตอนเที่ยง!'}
+          />
+          <Card style={{ backgroundColor: '#f8f9fa' }}>
+            <Row gutter={[8, 8]}>
+              <Col xs={24} sm={24} md={24} lg={16} xl={16}>
+                <TableComponent
+                  columns={myAttendanceColumns}
+                  dataSource={myAttendance}
+                />
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+                <Flex vertical gap={6}>
+                  <Link to="#">
+                    <Card>
+                      <Flex vertical align="center">
+                        <Typography style={{ color: 'white' }}>
+                          {me.role.name === 'owner' ||
+                          me.role.name === 'manager'
+                            ? 'ยังไม่ได้เข้างาน 1 คน'
+                            : 'เหลือวันลา 2 วัน'}
+                        </Typography>
+                      </Flex>
+                    </Card>
+                  </Link>
+                  <Link to="#">
+                    <Card>
+                      <Flex vertical align="center">
+                        <Typography style={{ color: 'white' }}>
+                          {me.role.name === 'owner' ||
+                          me.role.name === 'manager'
+                            ? 'ไม่มีคนลา'
+                            : 'มี 3 นัดหมายในวันนี้'}
+                        </Typography>
+                      </Flex>
+                    </Card>
+                  </Link>
+                </Flex>
+              </Col>
+            </Row>
+          </Card>
         </div>
-        <div style={styles.summaryItem}>
-          <span style={styles.summaryTitle}>10:30 AM</span>
-          <span style={styles.summarySubtitle}>Average In Time</span>
-        </div>
-        <div style={styles.summaryItem}>
-          <span style={styles.summaryTitle}>07:30 PM</span>
-          <span style={styles.summarySubtitle}>Average Out Time</span>
-        </div>
-        <div style={styles.summaryItem}>
-          <span style={styles.summaryTitle}>01:00</span>
-          <span style={styles.summarySubtitle}>Average Break Time</span>
-        </div>
-      </div>
-      <table style={styles.table}>
-        <thead>
-          <tr>
-            <th style={styles.th}>Date</th>
-            <th style={styles.th}>Check In</th>
-            <th style={styles.th}>Check Out</th>
-          </tr>
-        </thead>
-        <tbody>
-          {attendanceData.map((record, index) => (
-            <tr key={index}>
-              <td style={styles.td}>{record.date}</td>
-              <td style={styles.td}>{record.checkIn}</td>
-              <td style={styles.td}>{record.checkOut}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      )}
+      <TitleBar
+        title={
+          me.role.name === 'owner' || me.role.name === 'manager'
+            ? 'การทำงานของฉันวันนี้'
+            : 'การทำงานวันนี้'
+        }
+        subTitle={'วันนี้ฉันทำงานเป็นยังไงบ้างนะ'}
+      />
+      <Row gutter={[12, 12]}>
+        {me.role.name === 'owner' || me.role.name === 'manager' ? (
+          <></>
+        ) : (
+          <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+            <Card style={{ backgroundColor: '#f8f9fa', height: '100%' }}>
+              <Flex vertical justify="center" align="center" gap={10}>
+                <Button
+                  shape="circle"
+                  style={{ width: '200px', height: '200px' }}
+                  onClick={() => {
+                    setAttendance(!attendance);
+                  }}
+                >
+                  <Typography>{attendance ? 'เข้างาน' : 'พักเบรค'}</Typography>
+                </Button>
+
+                <Button
+                  onClick={() => {
+                    setAttendance(true);
+                  }}
+                >
+                  ออกงาน
+                </Button>
+              </Flex>
+            </Card>
+          </Col>
+        )}
+        <Col
+          xs={24}
+          sm={24}
+          md={24}
+          lg={me.role.name === 'owner' || me.role.name === 'manager' ? 24 : 16}
+          xl={me.role.name === 'owner' || me.role.name === 'manager' ? 24 : 16}
+        >
+          <Card style={{ backgroundColor: '#f8f9fa' }}>
+            <Row gutter={[8, 8]}>
+              <Col xs={24} sm={24} md={24} lg={16} xl={16}>
+                <TableComponent
+                  columns={myAttendanceColumns}
+                  dataSource={myAttendance}
+                />
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+                <Flex vertical gap={6}>
+                  <Link to="#">
+                    <Card>
+                      <Flex vertical align="center">
+                        <Typography style={{ color: 'white' }}>
+                          เหลือวันลา 2 วัน
+                        </Typography>
+                      </Flex>
+                    </Card>
+                  </Link>
+                  <Link to="#">
+                    <Card>
+                      <Flex vertical align="center">
+                        <Typography style={{ color: 'white' }}>
+                          มี 3 นัดหมายในวันนี้
+                        </Typography>
+                      </Flex>
+                    </Card>
+                  </Link>
+                </Flex>
+              </Col>
+            </Row>
+          </Card>
+        </Col>
+      </Row>
+    </>
   );
 };
 

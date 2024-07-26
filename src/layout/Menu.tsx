@@ -9,34 +9,26 @@ export const Menus = (props: MenusProps) => {
   const { role } = props;
   const menus = [
     {
+      //<Link to="/admin/analytic" >วิเคราะห์ระบบ</Link>
+      label: <Link to="/admin/analytic">วิเคราะห์ระบบ</Link>,
+      key: '/admin/analytic',
+      icon: <Icon.PieChartOutlined />,
+      role: ['super_admin'],
+      // disable: true,
+    },
+    {
       label: <Link to="/admin/organize">องค์กร</Link>,
       key: '/admin/organize',
       icon: <Icon.ScheduleOutlined />,
       role: ['super_admin'],
     },
     {
-      //<Link to="/admin/analytic" >วิเคราะห์ระบบ</Link>
-      label: (
-        <Link to="#" style={{ cursor: 'not-allowed' }}>
-          วิเคราะห์ระบบ
-        </Link>
-      ),
-      key: '/admin/analytic',
-      icon: <Icon.PieChartOutlined />,
-      role: ['super_admin'],
-      disable: true,
-    },
-    {
       //<Link to="/admin/employee">พนักงาน</Link>,
-      label: (
-        <Link to="#" style={{ cursor: 'not-allowed' }}>
-          พนักงาน
-        </Link>
-      ),
+      label: <Link to="/admin/employee">พนักงาน</Link>,
       key: '/admin/employee',
       icon: <Icon.UserOutlined />,
       role: ['super_admin'],
-      disable: true,
+      // disable: true,
     },
     {
       label: <Link to="/analytic">วิเคราะห์</Link>,
@@ -55,7 +47,7 @@ export const Menus = (props: MenusProps) => {
       label: <Link to="/attendance">เข้างานออกงาน</Link>,
       key: '/attendance',
       icon: <Icon.FieldTimeOutlined />,
-      role: ['owner', 'manager', 'employee'],
+      role: ['owner', 'manager', 'supervisor', 'employee'],
     },
     {
       label: <Link to="/user">ผู้ใช้</Link>,
@@ -64,22 +56,40 @@ export const Menus = (props: MenusProps) => {
       role: ['owner', 'manager'],
     },
     {
-      label: <Link to="/notation">เอกสาร</Link>,
+      //<Link to="/notation">
+      label: (
+        <Link to="#" style={{ cursor: 'not-allowed' }}>
+          เอกสาร
+        </Link>
+      ),
       key: '/notation',
       icon: <Icon.ReconciliationOutlined />,
       role: ['owner', 'manager'],
+      disable: true,
     },
     {
-      label: <Link to="/customer">ลูกค้า</Link>,
+      //  <Link to="/customer">
+      label: (
+        <Link to="#" style={{ cursor: 'not-allowed' }}>
+          ลูกค้า
+        </Link>
+      ),
       key: '/customer',
       icon: <Icon.CustomerServiceOutlined />,
       role: ['owner', 'manager'],
+      disable: true,
     },
     {
-      label: <Link to="/project">โครงการ</Link>,
+      //<Link to="/project">
+      label: (
+        <Link to="#" style={{ cursor: 'not-allowed' }}>
+          โครงการ
+        </Link>
+      ),
       key: '/project',
       icon: <Icon.ProjectOutlined />,
       role: ['owner', 'manager'],
+      disable: true,
     },
     // {
     //   label: <Link to="/setting">ตั้งค่า</Link>,
@@ -88,16 +98,28 @@ export const Menus = (props: MenusProps) => {
     //   role: ["branch_admin","organize_admin"],
     // },
     {
-      label: <Link to="/information-branch">ข้อมูลสาขา</Link>,
+      //<Link to="/information-branch">
+      label: (
+        <Link to="#" style={{ cursor: 'not-allowed' }}>
+          ข้อมูลสาขา
+        </Link>
+      ),
       key: '/information-branch',
       icon: <Icon.SettingOutlined />,
       role: ['manager'],
+      disable: true,
     },
     {
-      label: <Link to="/information">ข้อมูลองค์กร</Link>,
+      // <Link to="/information">
+      label: (
+        <Link to="#" style={{ cursor: 'not-allowed' }}>
+          ข้อมูลองค์กร
+        </Link>
+      ),
       key: '/information',
       icon: <Icon.SettingOutlined />,
       role: ['owner'],
+      disable: true,
     },
   ];
   return menus.filter((m) => m.role.includes(role));

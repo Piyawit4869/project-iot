@@ -4,7 +4,12 @@ import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/images/logoutotechV2.png';
 import sidebar from '../assets/images/abstract_sidebar.png';
 import { Menus } from '.';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import {
+  LeftOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  RightOutlined,
+} from '@ant-design/icons';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -14,6 +19,8 @@ export const Sidebar: React.FC = () => {
   const [collapsed, setCollapsed] = React.useState(false);
   const [activeKey, setActiveKey] = React.useState<any[]>([]);
   const [isMobile, setIsMobile] = React.useState(false);
+
+  console.log({ isMobile });
 
   const handleMenuClick = () => {
     if (isMobile) {
@@ -49,11 +56,11 @@ export const Sidebar: React.FC = () => {
       <Sider
         width={isMobile && collapsed ? 0 : 200}
         theme="light"
-        collapsible={true}
+        trigger={null}
+        collapsible
         collapsed={collapsed}
         onCollapse={(collapsed) => setCollapsed(collapsed)}
         breakpoint="lg"
-        trigger={null}
         collapsedWidth={isMobile ? 0 : 80}
         onBreakpoint={(broken) => {
           setIsMobile(broken);
@@ -90,7 +97,7 @@ export const Sidebar: React.FC = () => {
                 <Link
                   to={
                     location.pathname.includes('/admin')
-                      ? '/admin/organize'
+                      ? '/admin/analytic'
                       : '/analytic'
                   }
                 >
@@ -222,6 +229,20 @@ export const Sidebar: React.FC = () => {
             zIndex: 9,
           }}
           onClick={() => setCollapsed(true)}
+        />
+      )}
+      {isMobile === true && (
+        <Button
+          type="text"
+          icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          onClick={() => setCollapsed(!collapsed)}
+          style={{
+            zIndex: 1,
+            margin: '20px 10px',
+            position: 'fixed',
+            fontSize: '24px',
+            top: 20,
+          }}
         />
       )}
     </>

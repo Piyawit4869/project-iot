@@ -79,7 +79,13 @@ export const Headerbar: React.FC = () => {
 
     {
       label: (
-        <Link to="/login">
+        <Link
+          to="/login"
+          onClick={() => {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+          }}
+        >
           <LogoutOutlined /> {t('logout')}
         </Link>
       ),
@@ -96,7 +102,11 @@ export const Headerbar: React.FC = () => {
       <Breadcrumb style={styles.breadcrumb}>
         <Breadcrumb.Item>
           <Link
-            to={location.pathname.includes('/admin') ? '/admin/organize' : '/'}
+            to={
+              location.pathname.includes('/admin')
+                ? '/admin/analytic'
+                : '/analytic'
+            }
           >
             <HomeOutlined />
           </Link>

@@ -23,6 +23,7 @@
   "devDependencies": {
     "@ant-design/icons": "^5.1.4",
     "@ant-design/plots": "^1.2.5",
+    "@types/lodash": "^4.17.7",
     "@types/node": "^20.9.3",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
