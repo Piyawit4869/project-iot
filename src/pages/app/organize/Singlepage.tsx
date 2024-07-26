@@ -37,7 +37,7 @@ export async function organizeSingleAction({ request, params }: any) {
         return redirect(`/admin/organize/${params.id}`);
       } catch (error) {
         notification["error"]({
-          message: "แก้ไขข้อมูลองค์กรล้มเหลว",
+          message: "แก้ไขข้อมูลองค์กรล้+มเหลว",
           placement: "top",
           duration: 3,
         });

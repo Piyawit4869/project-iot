@@ -1,21 +1,13 @@
-// import React, { useEffect, useState } from "react";
 import React from "react";
 import * as API from "@src/apis";
-import {
- 
-  TagOutlined,
-  EyeOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
-import {  Typography, Input, Button, Tag, Pagination } from "antd";
+import { TagOutlined, EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import { Typography, Input, Button, Tag, Pagination, Image } from "antd";
 import { SearchProps } from "antd/es/input";
-import { Link, useLoaderData, useNavigate } from "react-router-dom";
-import { Image } from "antd";
+import { Link, useNavigate, useNavigation } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import dayjs from "dayjs";
 import { CreateButton } from "@src/components/shared/CreateButton";
-// import { render } from "react-dom";
-// // import axios from "axios";
+import { organizeData } from "./organizeData";
 
 const { Title } = Typography;
 
@@ -30,10 +22,17 @@ export async function organizeLoader() {
 }
 
 export const OrganizeIndexpage: React.FC = () => {
-  const { organize } = useLoaderData() as any;
-
   const me = JSON.parse(localStorage.getItem("me") as any);
   const navigate = useNavigate();
+
+  const [loading, setLoading] = React.useState(true);
+  const { state } = useNavigation();
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, []);
 
   React.useEffect(() => {
     if (me.role === "user" || me.role === "admin") {
@@ -41,25 +40,6 @@ export const OrganizeIndexpage: React.FC = () => {
     }
   }, []);
 
-  //   const [products, setProducts] = React.useState([]);
-  //   const [columns, setColumns] = useState([]);
-  // const axios = require("axios");
-  // Fetch all products
-  // useEffect(() => {
-  //   console.log("in use effect");
-
-  // Step 3: Fetch data using Axios
-  // axios
-  //   .get("https://fakestoreapi.com/products")
-  //   .then((response) => {
-  //     if (response.data.length > 0) {
-  //       const dynamicColumns: any = Object.keys(response.data[0]).map(
-  //         (key) => ({
-  //           title: key.charAt(0).toUpperCase() + key.slice(1),
-  //           dataIndex: key,
-  //           key: key,
-  //         })
-  //       );
   const columns = [
     {
       title: "ID",
@@ -91,8 +71,8 @@ export const OrganizeIndexpage: React.FC = () => {
       ],
       filterMode: "tree",
       filterSearch: true,
-      onFilter: (value: string, record: { name: string | string[] }) =>
-        record.name.includes(value as string),
+      onFilter: (value: string, record: { businessName: string }) =>
+        record.businessName.includes(value as string),
     },
     {
       title: "คำอธิบายธุรกิจ",
@@ -104,7 +84,7 @@ export const OrganizeIndexpage: React.FC = () => {
       dataIndex: "businessRegister",
       key: "businessRegister",
       render: (date: any) => {
-        return <>{dayjs(date).format('DD/MM/YYYY')}</>;
+        return <>{dayjs(date).format("DD/MM/YYYY")}</>;
       },
     },
     {
@@ -126,16 +106,18 @@ export const OrganizeIndexpage: React.FC = () => {
       title: "สถานะ",
       dataIndex: "active",
       key: "active",
-      render: (active: any) => (active ?  <Tag color="success">พร้อมใช้งาน</Tag> :  <Tag color="error">ไม่พร้อมใช้งาน</Tag>),
+      render: (active: any) =>
+        active ? (
+          <Tag color="success">พร้อมใช้งาน</Tag>
+        ) : (
+          <Tag color="error">ไม่พร้อมใช้งาน</Tag>
+        ),
     },
-
     {
       title: "รายละเอียด",
       key: "details",
       dataIndex: "id",
-
       render: (id: number) => {
-        console.log(id);
         return (
           <Link to={`${id}`}>
             <Button
@@ -151,9 +133,6 @@ export const OrganizeIndexpage: React.FC = () => {
     },
   ];
 
-
-
-  // const { organize } = useLoaderData() as any;
   const [searchValue, setSearchValue] = React.useState<string>("");
 
   const onSearch: SearchProps["onSearch"] = (value) => {
@@ -167,17 +146,14 @@ export const OrganizeIndexpage: React.FC = () => {
       </Title>
       <div style={{ display: "flex", alignItems: "center" }}>
         <TagOutlined style={{ marginBottom: -60, marginRight: 8 }} />
-
         <span style={{ marginBottom: -60 }}>ค้นหาองค์กร</span>
       </div>
 
       <div>
         <Link to={"create"}>
-        <CreateButton label={"เพิ่มข้อมูลลูกค้า"}/>
+          <CreateButton label={"เพิ่มข้อมูลลูกค้า"} />
         </Link>
       </div>
-            
-        
 
       {/* Search bar with button */}
       <div
@@ -195,13 +171,13 @@ export const OrganizeIndexpage: React.FC = () => {
           onChange={(e) => setSearchValue(e.target.value)}
           style={{ width: 304 }}
         />
-         <Button
+        <Button
           icon={<SearchOutlined />}
           type="primary"
           onClick={() => onSearch(searchValue)}
           style={{
             backgroundColor: "#19142A",
-              borderColor: "#19142A",
+            borderColor: "#19142A",
           }}
         >
           ค้นหา
@@ -218,16 +194,21 @@ export const OrganizeIndexpage: React.FC = () => {
         }}
       >
         <TableComponent
+          loading={loading || state === "loading" || state === "submitting"}
           columns={columns}
-          // dataSource={dataSource}
-          // columns={columns}
-          // dataSource={products}
-          dataSource={organize?.items ? organize?.items : []}
+          dataSource={organizeData.items}
           pagination={false}
           bordered
         />
       </div>
-      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          marginTop: "20px",
+        }}
+      >
         <Pagination defaultCurrent={1} total={50} />
       </div>
     </div>

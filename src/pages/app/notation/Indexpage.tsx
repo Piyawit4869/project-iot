@@ -1,18 +1,24 @@
-import { HomeOutlined } from "@ant-design/icons";
-import { Breadcrumb, Col, Input, Pagination, Row, Button } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import {  Input, Pagination,Button, Image } from "antd";
+import { Link } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
+import { data } from "./notationData";
+import { EyeOutlined } from "@ant-design/icons";
 
 export const NotationIndex = () => {
-  const navigate = useNavigate();
 
   const columns = [
     {
       title: "ลำดับ",
       dataIndex: "nummer",
       key: "nummer",
-      sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
+      sorter: (a: { id: number; }, b: { id: number; }) => a.id - b.id,
+    },
+    {
+      title: "รูปภาพ",
+      dataIndex: "imageUrl",
+      key: "imageUrl",
+      render: (imageUrl: string | undefined) => <Image width={100} src={imageUrl} alt="รูปภาพ" />,
     },
     {
       title: "ชื่อเอกสาร",
@@ -20,7 +26,7 @@ export const NotationIndex = () => {
       key: "name",
     },
     {
-      title: "active",
+      title: "Active",
       dataIndex: "active",
       key: "active",
     },
@@ -35,11 +41,6 @@ export const NotationIndex = () => {
       key: "tel",
     },
     {
-      title: "ลิ้งค์รูปภาพ",
-      dataIndex: "imageUrl",
-      key: "imageUrl",
-    },
-    {
       title: "อีเมล",
       dataIndex: "email",
       key: "email",
@@ -51,17 +52,16 @@ export const NotationIndex = () => {
     },
     {
       title: "รายละเอียดเพิ่มเติม",
-      dataIndex: "details",
       key: "details",
+      dataIndex: "id",
       render: () => (
-        <Button
-          type="link"
-          onClick={() => navigate("/customers/singlecustomers")}
-        >
-          ดูข้อมูล
-        </Button>
+        <Link to={`/notation`}>
+          <Button style={{ fontSize: "16px", width: "180px" }} type="primary" icon={<EyeOutlined />}>
+            ดูข้อมูล
+          </Button>
+        </Link>
       ),
-    },
+    }
   ];
 
   const onSearch = (value: any) => {
@@ -70,19 +70,6 @@ export const NotationIndex = () => {
 
   return (
     <>
-      <Row>
-        <Col span={12}>
-          <Breadcrumb style={{ marginBottom: "20px" }}>
-            <Breadcrumb.Item onClick={() => navigate("/")}>
-              <HomeOutlined />
-            </Breadcrumb.Item>
-            <Breadcrumb.Item onClick={() => navigate("/customers")}>
-              ข้อมูลลูกค้า
-            </Breadcrumb.Item>
-          </Breadcrumb>
-        </Col>
-      </Row>
-
       <h1>ข้อมูลเอกสาร</h1>
       <div
         style={{
@@ -98,14 +85,14 @@ export const NotationIndex = () => {
           style={{ width: 200 }}
         />
         <Link to={""}>
-          <CreateButton label={"เพิ่มเอกสาร"}></CreateButton>
+          <CreateButton label={"เพิ่มเอกสาร"} />
         </Link>
       </div>
       <TableComponent
         columns={columns}
         pagination={false}
         bordered={false}
-        dataSource={undefined}
+        dataSource={data}
       />
       <div
         style={{

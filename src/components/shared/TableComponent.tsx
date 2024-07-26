@@ -1,4 +1,4 @@
-import { Table, TablePaginationConfig } from "antd";
+import { SpinProps, Table, TablePaginationConfig } from "antd";
 import { FC } from "react";
 
 interface TableComponentProps {
@@ -6,14 +6,16 @@ interface TableComponentProps {
   dataSource: any;
   pagination: false | TablePaginationConfig | undefined;
   bordered: boolean;
+  loading?: boolean | SpinProps | undefined;
 }
 
 export const TableComponent: FC<TableComponentProps> = (
   props: TableComponentProps
 ) => {
-  const { columns, bordered, pagination, dataSource } = props;
+  const { columns, bordered, pagination, dataSource, loading } = props;
   return (
     <Table
+      loading={loading}
       bordered={bordered}
       pagination={pagination}
       dataSource={dataSource}

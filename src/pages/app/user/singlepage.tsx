@@ -1,12 +1,11 @@
  
 import {  Form, Button, Row, Col, Timeline } from "antd";
-import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@src/forms/Dynamic";
 import { useRef, useState } from "react";
+import { FormButtonsEdit } from "@src/components/shared/FormButtons";
 
 export const UsersSingle = () => {
   const [form] = Form.useForm();
-  const navigate = useNavigate();
   const containerRef = useRef(null);
   const [showMore, setShowMore] = useState(false);
 
@@ -15,32 +14,6 @@ export const UsersSingle = () => {
       label: "แก้ไขข้อมูลผู้ใช้",
       col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
       type: "LabelForm",
-    },
-    {
-      name: ["user", "profix"],
-      label: "คำนำหน้า",
-      placeholder: "กรอกคำนำหน้า",
-      col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 6 },
-      type: "SelectFormField",
-      option: [
-        { value: "Mr", label: "นาย" },
-        { value: "Ms", label: "นาง" },
-        { value: "Mrs", label: "นางสาว" },
-      ],
-    },
-    {
-      name: ["user", "profile", "firstName"],
-      label: "ชื่อจริง",
-      placeholder: "กรอกชื่อจริง",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 9 },
-      type: "TextboxFormField",
-    },
-    {
-      name: ["user", "profile", "lastName"],
-      label: "นามสกุล",
-      placeholder: "กรอกนามสกุล",
-      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 9 },
-      type: "TextboxFormField",
     },
     {
       name: "userName",
@@ -67,23 +40,49 @@ export const UsersSingle = () => {
       type: "TextboxFormField",
     },
     {
+      name: ["user", "profix"],
+      label: "คำนำหน้า",
+      placeholder: "กรอกคำนำหน้า",
+      col: { xs: 24, sm: 24, md: 24, lg: 12, xl: 12 },
+      type: "SelectFormField",
+      option: [
+        { value: "Mr", label: "นาย" },
+        { value: "Ms", label: "นาง" },
+        { value: "Mrs", label: "นางสาว" },
+      ],
+    },
+    {
+      name: ["user", "profile", "firstName"],
+      label: "ชื่อจริง",
+      placeholder: "กรอกชื่อจริง",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextboxFormField",
+    },
+    {
+      name: ["user", "profile", "lastName"],
+      label: "นามสกุล",
+      placeholder: "กรอกนามสกุล",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+      type: "TextboxFormField",
+    },
+    {
       name: "active",
       label: "ทำงานอยู่",
       placeholder: "เลือกทำงานอยู่",
-      col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
-      type: "CheckboxFormField",
+      col: { xs: 24, sm: 24, md: 12, lg: 6, xl: 6 },
+      type: "SwitchFormField",
     },
     {
       name: "isMobile",
-      label: "isMobile",
-      placeholder: "isMobile",
-      col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
-      type: "CheckboxFormField",
+      label: "ใช้งานบนมือถือ",
+      placeholder: "ใช้งานบนมือถือ",
+      col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 6 },
+      type: "SwitchFormField",
     },
     {
       name: "organizationId",
       label: "รหัสองค์กร",
-      placeholder: "รหัสองค์กร",
+      placeholder: "กรอกรหัสองค์กร",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
@@ -93,7 +92,7 @@ export const UsersSingle = () => {
       placeholder: "กรอกบทบาทไอดี",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
-    },
+    }, 
     {
       name: ["user", "profile", "birthDate"],
       label: "วัน/เดือน/ปีเกิด",
@@ -104,17 +103,18 @@ export const UsersSingle = () => {
     {
       name: "photoUrl",
       label: "ลิ้งค์รูปภาพ",
-      placeholder: "กรอกลิ้งค์รูปภาพ",
+      placeholder: "กรอกรูปภาพ",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
     {
       name: "discordGuid",
-      label: "กรอกดิสคอร์ดไอดี",
-      placeholder: "กรอกดิสคอร์ดไอดี",
+      label: "กรอกดิสคอร์สไอดี",
+      placeholder: "กรอกดิสคอร์สไอดี",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
+    
     {
       name: "deviceToken",
       label: "โทเค็นของอุปกรณ์",
@@ -125,7 +125,7 @@ export const UsersSingle = () => {
     {
       name: "phone",
       label: "เบอร์โทร",
-      placeholder: "เบอร์โทร",
+      placeholder: "กรอกเบอร์โทร",
       col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
       type: "TextboxFormField",
     },
@@ -156,7 +156,15 @@ export const UsersSingle = () => {
     console.log("Form Submitted", payload);
   };
 
+  function handleFinish(_values: any): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
+    <div>
+      <div>
+      <FormButtonsEdit form={form} onFinish={handleFinish} />
+        </div>
     <div style={{ padding: "20px" }} ref={containerRef}>
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Row gutter={24}>
@@ -181,8 +189,8 @@ export const UsersSingle = () => {
                   value={item.value}
                   ruleMessage={item.message}
                   require={item.require}
-                  disabled={false}
-                  checked={false}
+                  disabled={item.disabled}
+                  checked={item.checked}    
                 />
               ))}
             </Row>
@@ -223,12 +231,8 @@ export const UsersSingle = () => {
             </div>
           </Col>
         </Row>
-        <Row style={{ marginTop: "20px", gap: "10px" }}>
-          <Col><Button type="primary" onClick={() => navigate("/users")}>ยกเลิก</Button></Col>
-          <Col><Button type="primary" htmlType="submit">ยืนยัน</Button></Col>
-          <Col><Button type="primary" danger>ลบ</Button></Col>
-        </Row>
       </Form>
+    </div>
     </div>
   );
 };

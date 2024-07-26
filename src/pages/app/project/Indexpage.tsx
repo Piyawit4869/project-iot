@@ -4,51 +4,77 @@ import {
   EyeOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Input, Button, Tag, Pagination, Typography } from "antd";
-import { SearchProps } from "antd/es/input";
+import { Input, Button, Tag, Pagination, Typography, Image, Spin } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
+import { projectData as initialProjectData } from './projectData';
 
-const data = [
+const { Title } = Typography;
+
+const columns = [
   {
-    key: "1",
-    nummer: "1",
-    name: "Project 1",
-    active: "true",
-    isMainBranch: "true",
-    tel: "0123456789",
-    imageUrl: "https://cdn.discordapp.com/attachments/123",
-    email: "abcdefg@gmailcom",
-    website: "https://123",
+    title: "ลำดับ",
+    dataIndex: "nummer",
+    key: "nummer",
+    sorter: (a: { nummer: number }, b: { nummer: number }) => a.nummer - b.nummer,
   },
   {
-    key: "2",
-    nummer: "1",
-    name: "Project 2",
-    active: "true",
-    isMainBranch: "true",
-    tel: "0123456789",
-    imageUrl: "https://cdn.discordapp.com/attachments/123",
-    email: "abcdefg@gmailcom",
-    website: "https://123",
+    title: "รูปภาพ",
+    dataIndex: "imageUrl",
+    key: "imageUrl",
+    render: (imageUrl: string) => <Image width={100} src={imageUrl} alt="รูปภาพ" />,
   },
   {
-    key: "3",
-    nummer: "1",
-    name: "Project 3",
-    active: "true",
-    isMainBranch: "true",
-    tel: "0123456789",
-    imageUrl: "https://cdn.discordapp.com/attachments/123",
-    email: "abcdefg@gmailcom",
-    website: "https://123",
+    title: "ชื่อโครงการ",
+    dataIndex: "name",
+    key: "name",
+  },
+  {
+    title: "สาขาหลัก",
+    dataIndex: "isMainBranch",
+    key: "isMainBranch",
+  },
+  {
+    title: "เบอร์โทร",
+    dataIndex: "tel",
+    key: "tel",
+  },
+  {
+    title: "อีเมล",
+    dataIndex: "email",
+    key: "email",
+  },
+  {
+    title: "เว็ปไซต์",
+    dataIndex: "website",
+    key: "website",
+  },
+  {
+    title: "สถานะ",
+    dataIndex: "active",
+    key: "active",
+    render: (active: boolean) => (active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>),
+  },
+  {
+    title: "รายละเอียดเพิ่มเติม",
+    key: "details",
+    dataIndex: "id",
+    render: (id: number) => (
+      <Link to={`${id}`}>
+        <Button type="primary" icon={<EyeOutlined />}>
+          ดูข้อมูล
+        </Button>
+      </Link>
+    ),
   },
 ];
 
 export const ProjectIndex = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState<string>("");
+  const [projectData, setProjectData] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const me = JSON.parse(localStorage.getItem("me") as any);
@@ -57,85 +83,33 @@ export const ProjectIndex = () => {
     }
   }, [navigate]);
 
-  const columns = [
-    {
-      title: "ลำดับ",
-      dataIndex: "id",
-      key: "id",
-      sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
-    },
-    {
-      title: "ชื่อโครงการ",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "สาขาหลัก",
-      dataIndex: "isMainBranch",
-      key: "isMainBranch",
-    },
-    {
-      title: "เบอร์โทร",
-      dataIndex: "tel",
-      key: "tel",
-    },
-    {
-      title: "ลิ้งค์รูปภาพ",
-      dataIndex: "imageUrl",
-      key: "imageUrl",
-    },
-    {
-      title: "อีเมล",
-      dataIndex: "email",
-      key: "email",
-    },
-    {
-      title: "เว็ปไซต์",
-      dataIndex: "website",
-      key: "website",
-    },
-    {
-      title: "สถานะ",
-      dataIndex: "active",
-      key: "active",
-      render: (active: any) => (active ? <Tag color="success">พร้อมใช้งาน</Tag> : <Tag color="error">ไม่พร้อมใช้งาน</Tag>),
-    },
-    {
-      title: "รายละเอียดเพิ่มเติม",
-      key: "details",
-      dataIndex: "id",
-      render: (id: number) => (
-        <Link to={`${id}`}>
-          <Button type="primary" icon={<EyeOutlined />}>
-            ดูข้อมูล
-          </Button>
-        </Link>
-      ),
-    },
-  ];
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setProjectData(initialProjectData); 
+      setLoading(false);
+    }, 1000); 
+  }, []);
 
-  const onSearch: SearchProps["onSearch"] = (value) => {
-    console.log(value);
+  const onSearch = (value: string) => {
+    console.log("Search:", value);
   };
 
   return (
     <div>
-      <Typography.Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
+      <Title level={3} style={{ marginBottom: -10, marginTop: -2 }}>
         ข้อมูลโครงการ
-      </Typography.Title>
+      </Title>
       <div style={{ display: "flex", alignItems: "center" }}>
         <TagOutlined style={{ marginBottom: -60, marginRight: 8 }} />
         <span style={{ marginBottom: -60 }}>ค้นหาโครงการ</span>
       </div>
-
       <div>
         <Link to={"create"}>
-        <CreateButton label={"เพิ่มข้อมูลโครงการ"}/>
+          <CreateButton label={"เพิ่มข้อมูลโครงการ"}/>
         </Link>
       </div>
-     
 
-      {/* Search bar with button */}
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
         <Input
           addonBefore="ค้นหา"
@@ -144,20 +118,19 @@ export const ProjectIndex = () => {
           onChange={(e) => setSearchValue(e.target.value)}
           style={{ width: 304 }}
         />
-         <Button
+        <Button
           icon={<SearchOutlined />}
           type="primary"
           onClick={() => onSearch(searchValue)}
           style={{
             backgroundColor: "#19142A",
-              borderColor: "#19142A",
+            borderColor: "#19142A",
           }}
         >
           ค้นหา
         </Button>
       </div>
 
-      {/* Table */}
       <div
         style={{
           boxShadow: "0 4px 8px rgba(0.25, 0.25, 0.25, 0.25)",
@@ -166,16 +139,21 @@ export const ProjectIndex = () => {
           marginTop: 16,
         }}
       >
-        <TableComponent
-          columns={columns}
-          dataSource={data}
-          // dataSource={projects?.items ? projects?.items : []}
-          pagination={false}
-          bordered
-        />
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+            <Spin size="large" />
+          </div>
+        ) : (
+          <TableComponent
+            columns={columns}
+            dataSource={projectData}
+            pagination={false}
+            bordered
+          />
+        )}
       </div>
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
-        <Pagination defaultCurrent={1} total={50} />
+        <Pagination defaultCurrent={1} total={projectData.length} />
       </div>
     </div>
   );

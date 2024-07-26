@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Input, Pagination, Button, Tag, Typography, Image } from "antd";
+import React, { useEffect, useState } from "react";
+import { Input, Pagination, Button, Tag, Typography, Image, Spin } from "antd";
 import { SearchOutlined, EyeOutlined, TagOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { TableComponent } from "@src/components/shared/TableComponent";
 import { CreateButton } from "@src/components/shared/CreateButton";
-
+import { customerData as initialCustomerData } from './customerData'; 
 
 const { Title } = Typography;
 
@@ -13,7 +13,13 @@ const columns = [
     title: 'ลำดับ',
     dataIndex: 'nummer',
     key: 'nummer',
-    sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
+    sorter: (a: { nummer: number }, b: { nummer: number }) => a.nummer - b.nummer,
+  },
+  {
+    title: 'รูปภาพ',
+    dataIndex: 'imageUrl',
+    key: 'imageUrl',
+    render: (imageUrl: string) => <Image width={100} src={imageUrl} alt="รูปภาพ" />,
   },
   {
     title: 'ชื่อลูกค้า',
@@ -30,12 +36,7 @@ const columns = [
     dataIndex: 'tel',
     key: 'tel',
   },
-  {
-    title: 'ลิ้งค์รูปภาพ',
-    dataIndex: 'imageUrl',
-    key: 'imageUrl',
-    render: (imageUrl: string) => <Image width={100} src={imageUrl} alt="รูปภาพ" />,
-  },
+  
   {
     title: 'อีเมล',
     dataIndex: 'email',
@@ -57,7 +58,7 @@ const columns = [
     key: "details",
     dataIndex: "id",
     render: (id: number) => (
-      <Link to={`/customers/singlecustomers/${id}`}>
+      <Link to={`/customer/${id}`}>
         <Button style={{ fontSize: "16px", width: "180px" }} type="primary" icon={<EyeOutlined />}>
           ดูข้อมูล
         </Button>
@@ -66,12 +67,30 @@ const columns = [
   },
 ];
 
-export const CustomersIndex: React.FC = () => {
-  const [searchValue, setSearchValue] = useState<string>("");
+export const CustomerIndex: React.FC = () => {
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [customers, setCustomers] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setCustomers(initialCustomerData);
+      setLoading(false);
+    }, 1000);
+  }, []);
 
   const onSearch = (value: string) => {
     console.log("Search:", value);
-    // Implement search functionality here
+  };
+
+  const handlePageChange = (page: number, pageSize?: number) => {
+    setCurrentPage(page);
+    if (pageSize) {
+      setPageSize(pageSize);
+    }
   };
 
   return (
@@ -83,9 +102,9 @@ export const CustomersIndex: React.FC = () => {
         <TagOutlined style={{ marginBottom: -60, marginRight: 8 }} />
         <span style={{ marginBottom: -60 }}>ค้นหาลูกค้า</span>
       </div>
-        <div>
+      <div>
         <Link to={"create"}>
-        <CreateButton label={"เพิ่มข้อมูลลูกค้า"}/>
+          <CreateButton label={"เพิ่มข้อมูลลูกค้า"}/>
         </Link>
       </div>
 
@@ -111,19 +130,30 @@ export const CustomersIndex: React.FC = () => {
       </div>
 
       <div style={{ boxShadow: "0 4px 8px rgba(0.25, 0.25, 0.25, 0.25)", borderRadius: "25px", overflow: "hidden", marginTop: 16 }}>
-        <TableComponent
-          columns={columns}
-          dataSource={[]}  // Replace with actual data source
-          pagination={false}
-          bordered
-        />
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+            <Spin size="large" />
+          </div>
+        ) : (
+          <TableComponent
+            columns={columns}
+            dataSource={customers.slice((currentPage - 1) * pageSize, currentPage * pageSize)} // Slice data for pagination
+            pagination={false}
+            bordered
+          />
+        )}
       </div>
 
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px" }}>
-        <Pagination defaultCurrent={1} total={50} />
+        <Pagination
+          current={currentPage}
+          total={customers.length}
+          pageSize={pageSize}
+          onChange={handlePageChange}
+        />
       </div>
     </div>
   );
 };
 
-export default CustomersIndex;
+export default CustomerIndex;

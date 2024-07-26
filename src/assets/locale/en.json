@@ -1,6 +1,15 @@
 {
     "translation": {
-      "user": "User"
+      "user": "user",
+    "organize": "organize",
+    "analytic": "analytic",
+    "attendance": "attendance",
+    "notation": "notation",
+    "project": "project",
+    "information": "information",
+    "customers": "customers",
+    "branch": "branch",
+    "orginformation": "orginformation"
     }
   }
   
