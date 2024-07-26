@@ -16,13 +16,13 @@ export const routes = [
       {
         path: 'create',
         element: <BranchCreate />,
-        action: branchCreateAction
+        action: branchCreateAction,
       },
       {
         path: ':id',
         element: <BranchSingle />,
         loader: branchSingleLoader,
-        action: branchCreateAction
+        action: branchCreateAction,
       },
     ],
   },

@@ -9,7 +9,6 @@ import { Link } from 'react-router-dom';
 const AttendanceIndex = () => {
   const [attendance, setAttendance] = React.useState(true);
   const me = JSON.parse(localStorage.getItem('me') as any);
-  console.log({ me });
 
   const myAttendanceColumns: ColumnsType<any> | undefined = [
     {
@@ -38,7 +37,15 @@ const AttendanceIndex = () => {
       key: 'id',
       align: 'center',
       width: '60px',
-      render: () => <InfoCircleOutlined onClick={() => {}} />,
+      render: () => {
+        return (
+          <InfoCircleOutlined
+            onClick={() => {
+              console.log('info click');
+            }}
+          />
+        );
+      },
     },
   ];
 

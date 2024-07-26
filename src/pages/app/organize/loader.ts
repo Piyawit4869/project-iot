@@ -4,6 +4,6 @@ export async function organizeLoader() {
     //   return { organize: organize.data };
     return {};
   } catch (error) {
-    return { error: "error", message: error };
+    return { error: 'error', message: error };
   }
 }
