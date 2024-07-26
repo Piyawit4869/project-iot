@@ -25,6 +25,7 @@ export async function loginAction({ request }: any) {
         localStorage.setItem('refreshToken', res.data.refreshToken);
         notification.success({
           message: 'Login Success',
+          placement: 'bottomRight',
           description: 'You have successfully logged in',
         });
 
@@ -36,6 +37,7 @@ export async function loginAction({ request }: any) {
       } catch (error) {
         notification.error({
           message: 'Login Failed',
+          placement: 'bottomRight',
           description: 'Invalid email or password',
         });
 

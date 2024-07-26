@@ -16,6 +16,11 @@ export async function branchCreateAction({ request }: any) {
 
     return redirect(`/branch`);
   } catch (error) {
+    notification['error']({
+      message: 'สร้างข้อมูลสาขาล้มเหลว',
+      placement: 'bottomRight',
+      duration: 3,
+    });
     return {
       data: {
         action: 'create',
@@ -40,6 +45,11 @@ export async function branchSingleAction({ request, params }: any) {
 
     return redirect(`/branch/${params.id}`);
   } catch (error) {
+    notification['error']({
+      message: 'แก้ไขข้อมูลสาขาล้มเหลว',
+      placement: 'bottomRight',
+      duration: 3,
+    });
     return {
       data: {
         action: 'create',
