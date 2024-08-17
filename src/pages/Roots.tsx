@@ -5,7 +5,7 @@ import { Outlet, redirect, useLoaderData } from 'react-router-dom';
 export async function RootLoader() {
   try {
     const me = await API.user.getMe();
-    me.data.role.name = 'employee';
+    // me.data.role.name = 'employee';
     console.log(me);
     localStorage.setItem('me', JSON.stringify(me.data));
     return { me: me.data };

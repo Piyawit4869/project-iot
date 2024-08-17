@@ -48,7 +48,7 @@ export const UsersIndex: React.FC = () => {
         }
         buttons={[
           <Link to={'create'}>
-            <CreateButton label={'เพิ่มข้อมูลข้อมูลผู้ใช้'} />
+            <CreateButton label={'เพิ่มข้อมูลผู้ใช้'} />
           </Link>,
         ]}
       />
