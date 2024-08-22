@@ -7,3 +7,4 @@ export * as product from './product';
 export * as customer from './customer';
 export * as organize from './organize';
 export * as branch from './branch';
+export * as attendance from './attendance';

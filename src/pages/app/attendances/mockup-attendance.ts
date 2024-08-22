@@ -1,0 +1,56 @@
+const attendanceIndexData = [
+  {
+    id: '1',
+    username: 'สมชาย',
+    event: 'ออกงาน',
+    clockIn: '08:30 น.',
+    breakTimes: '12:20 น. - 12:50 น.',
+    clockOut: '14:30 น.',
+    eventTime: '5 ชม. 30 นาที',
+    reMark: 'ออกก่อนเวลา',
+  },
+  {
+    id: '2',
+    username: 'สมหมาย',
+    event: 'เข้างาน',
+    clockIn: '09:00 น.',
+    breakTimes: '13:00 น. - 13:30 น.',
+    clockOut: 'รอการออกงาน',
+    eventTime: 'รอการออกงาน',
+    reMark: 'เข้างานสาย',
+  },
+  {
+    id: '3',
+    username: 'สมศักดิ์',
+    event: 'ออกงาน',
+    clockIn: '07:45 น.',
+    breakTimes: '11:30 น. - 12:00 น.',
+    clockOut: '16:00 น.',
+    eventTime: '8 ชม. 15 นาที',
+    reMark: 'ทำงานครบเวลา',
+  },
+  {
+    id: '4',
+    username: 'สมศรี',
+    event: 'ออกงาน',
+    clockIn: '08:15 น.',
+    breakTimes: '12:15 น. - 12:45 น.',
+    clockOut: '15:45 น.',
+    eventTime: '7 ชม. 30 นาที',
+    reMark: 'ออกงานก่อนเวลา',
+  },
+  {
+    id: '5',
+    username: 'สมปอง',
+    event: 'ออกงาน',
+    clockIn: '09:30 น.',
+    breakTimes: '13:30 น. - 14:00 น.',
+    clockOut: '18:00 น.',
+    eventTime: '8 ชม. 30 นาที',
+    reMark: 'เข้างานสาย',
+  },
+];
+
+export const mockupAttendance = {
+  attendanceIndexData,
+};

@@ -4,12 +4,18 @@ import { TableComponent } from '@src/components/shared/TableComponent';
 import { Button, Card, Col, Flex, Row, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLoaderData } from 'react-router-dom';
 
-const AttendanceIndex = () => {
+type AttendanceLoaderData = {
+  data: any;
+};
+
+export const AttendanceIndex = () => {
+  const { data: myAttendance } = useLoaderData() as AttendanceLoaderData;
   const [attendance, setAttendance] = React.useState(true);
   const me = JSON.parse(localStorage.getItem('me') as any);
 
+  console.log('data in index page', myAttendance);
   const myAttendanceColumns: ColumnsType<any> | undefined = [
     {
       title: 'ลำดับ',
@@ -69,59 +75,6 @@ const AttendanceIndex = () => {
     },
   ];
 
-  const myAttendance = [
-    {
-      id: '1',
-      username: 'สมชาย',
-      event: 'ออกงาน',
-      clockIn: '08:30 น.',
-      breakTimes: '12:20 น. - 12:50 น.',
-      clockOut: '14:30 น.',
-      eventTime: '5 ชม. 30 นาที',
-      reMark: 'ออกก่อนเวลา',
-    },
-    {
-      id: '2',
-      username: 'สมหมาย',
-      event: 'เข้างาน',
-      clockIn: '09:00 น.',
-      breakTimes: '13:00 น. - 13:30 น.',
-      clockOut: 'รอการออกงาน',
-      eventTime: 'รอการออกงาน',
-      reMark: 'เข้างานสาย',
-    },
-    {
-      id: '3',
-      username: 'สมศักดิ์',
-      event: 'ออกงาน',
-      clockIn: '07:45 น.',
-      breakTimes: '11:30 น. - 12:00 น.',
-      clockOut: '16:00 น.',
-      eventTime: '8 ชม. 15 นาที',
-      reMark: 'ทำงานครบเวลา',
-    },
-    {
-      id: '4',
-      username: 'สมศรี',
-      event: 'ออกงาน',
-      clockIn: '08:15 น.',
-      breakTimes: '12:15 น. - 12:45 น.',
-      clockOut: '15:45 น.',
-      eventTime: '7 ชม. 30 นาที',
-      reMark: 'ออกงานก่อนเวลา',
-    },
-    {
-      id: '5',
-      username: 'สมปอง',
-      event: 'ออกงาน',
-      clockIn: '09:30 น.',
-      breakTimes: '13:30 น. - 14:00 น.',
-      clockOut: '18:00 น.',
-      eventTime: '8 ชม. 30 นาที',
-      reMark: 'เข้างานสาย',
-    },
-  ];
-
   return (
     <>
       {(me.role.name === 'owner' || me.role.name === 'manager') && (
@@ -134,11 +87,8 @@ const AttendanceIndex = () => {
             <Row gutter={[8, 8]}>
               <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Row>
-                  <Col
-                  xs={9} sm={9} md={12} lg={24} xl={24}>
-                  
-                    <Link 
-                    style={{ width: '100%' }} to="#">
+                  <Col xs={9} sm={9} md={12} lg={24} xl={24}>
+                    <Link style={{ width: '100%' }} to="#">
                       <Card>
                         <Flex vertical align="center">
                           <Typography style={{ color: 'white' }}>
@@ -148,11 +98,8 @@ const AttendanceIndex = () => {
                       </Card>
                     </Link>
                   </Col>
-                  <Col
-                  flex="1 0 25%">
-                  
-                    <Link 
-                    style={{ width: '100%' }} to="#">
+                  <Col flex="1 0 25%">
+                    <Link style={{ width: '100%' }} to="#">
                       <Card>
                         <Flex vertical align="center">
                           <Typography style={{ color: 'white' }}>
@@ -162,11 +109,8 @@ const AttendanceIndex = () => {
                       </Card>
                     </Link>
                   </Col>
-                  <Col
-                  flex="1 0 25%">
-                  
-                    <Link 
-                    style={{ width: '100%' }} to="#">
+                  <Col flex="1 0 25%">
+                    <Link style={{ width: '100%' }} to="#">
                       <Card>
                         <Flex vertical align="center">
                           <Typography style={{ color: 'white' }}>
@@ -176,11 +120,8 @@ const AttendanceIndex = () => {
                       </Card>
                     </Link>
                   </Col>
-                  <Col
-                  flex="1 0 25%">
-                  
-                    <Link 
-                    style={{ width: '100%' }} to="#">
+                  <Col flex="1 0 25%">
+                    <Link style={{ width: '100%' }} to="#">
                       <Card>
                         <Flex vertical align="center">
                           <Typography style={{ color: 'white' }}>
@@ -190,8 +131,6 @@ const AttendanceIndex = () => {
                       </Card>
                     </Link>
                   </Col>
-                  
-                  
                 </Row>
               </Col>
             </Row>
@@ -314,5 +253,3 @@ const AttendanceIndex = () => {
     </>
   );
 };
-
-export default AttendanceIndex;

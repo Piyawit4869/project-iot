@@ -1,4 +1,4 @@
-import AttendanceIndex from './Indexpage';
+import { AttendanceIndex, indexLoader } from './attendance-index';
 
 export const routes = [
   {
@@ -6,6 +6,7 @@ export const routes = [
     children: [
       {
         path: '',
+        loader: indexLoader,
         element: <AttendanceIndex />,
       },
     ],
