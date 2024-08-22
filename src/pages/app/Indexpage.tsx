@@ -83,7 +83,7 @@ export const AppLandingPage = () => {
         textAlign: 'center',
       }}
     >
-      <h1>StayOrganuze</h1>
+      <h1>StayOrganize</h1>
       <div style={styles.attendanceIndex}>
         <div style={styles.buttonGroup}>
           <Link to="/attendance" style={{ textDecoration: 'none' }}>
