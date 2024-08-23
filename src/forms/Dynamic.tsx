@@ -1,13 +1,16 @@
 import {
+  RadioGetOrgValue,
   CheckboxFormField,
   LabelForm,
+  LengthInputFormField,
+  PhoneInputFormField,
   RadioFormField,
   SectionLabelForm,
   SelectFormField,
   SwitchFormField,
   TextboxFormField,
 } from '@src/components/shared';
-import { Col } from 'antd';
+import { Card, Col, Typography } from 'antd';
 
 import { DatePickerFormField } from '@src/components/shared/DatePicker';
 import { TextAreaFormField } from '@src/components/shared/TextAreaFormField';
@@ -29,6 +32,14 @@ interface DynamicFormProps {
   maxLength?: number;
   validator?: any;
   form?: any;
+  checkedText?: string;
+  unCheckedText?: string;
+  defaultValue?: string;
+  businessType?: string;
+  isName?: boolean;
+  title?: string;
+  description?: string;
+  formValue?: any;
 }
 
 export const DynamicForm: React.FC<DynamicFormProps> = (
@@ -51,7 +62,9 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             type={props.type}
             disabled={props.disabled}
             maxLength={props.maxLength}
+            businessType={props.businessType}
             require={props.require}
+            isName={props.isName}
           />
         </Col>
       );
@@ -71,6 +84,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             options={props.option}
             disabled={props.disabled}
             require={props.require}
+            defaultValue={props.defaultValue}
             // rule={[
             //   {
             //     required: props.require ? true : false,
@@ -183,6 +197,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             options={props.option}
             label={props.label}
             require={props.require}
+            defaultValue={props.defaultValue}
           />
         </Col>
       );
@@ -201,6 +216,8 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             label={props.label}
             disabled={props.disabled}
             checked={props.checked}
+            checkedText={props.checkedText}
+            unCheckedText={props.unCheckedText}
             require={props.require}
           />
         </Col>
@@ -235,7 +252,95 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
           />
         </Col>
       );
+    case 'ActiveCard':
+      return (
+        <Col
+          xs={props.col.xs}
+          sm={props.col.sm}
+          md={props.col.md}
+          lg={props.col.lg}
+          xl={props.col.xl}
+        >
+          <Card
+            style={{
+              background: 'white',
+              margin: '10px 0  10px 0',
+              borderRadius: '20px',
+            }}
+            bodyStyle={{ padding: '0px 20px' }}
+          >
+            <Typography.Title level={5}>{props.title}</Typography.Title>
+            <Typography.Paragraph>{props.description}</Typography.Paragraph>
+            <SwitchFormField
+              name={props.name}
+              label={''}
+              disabled={props.disabled}
+              checked={props.checked}
+              checkedText={props.checkedText}
+              unCheckedText={props.unCheckedText}
+              require={false}
+            />
+          </Card>
+        </Col>
+      );
+    case 'LengthInput':
+      return (
+        <Col
+          xs={props.col.xs}
+          sm={props.col.sm}
+          md={props.col.md}
+          lg={props.col.lg}
+          xl={props.col.xl}
+        >
+          <LengthInputFormField
+            name={props.name}
+            label={props.label}
+            placeholder={props.placeholder}
+            disabled={props.disabled}
+            require={props.require}
+            maxLength={props.maxLength}
+          ></LengthInputFormField>
+        </Col>
+      );
+    case 'PhoneInput':
+      return (
+        <Col
+          xs={props.col.xs}
+          sm={props.col.sm}
+          md={props.col.md}
+          lg={props.col.lg}
+          xl={props.col.xl}
+        >
+          <PhoneInputFormField
+            name={props.name}
+            label={props.label}
+            placeholder={props.placeholder}
+            disabled={props.disabled}
+            require={props.require}
+          ></PhoneInputFormField>
+        </Col>
+      );
+    case 'ButtonGetOrganizeValue':
+      return (
+        <Col
+          xs={props.col.xs}
+          sm={props.col.sm}
+          md={props.col.md}
+          lg={props.col.lg}
+          xl={props.col.xl}
+        >
+          <RadioGetOrgValue form={props.form} />
+        </Col>
+      );
     default:
-      return <></>;
+      return (
+        <Col
+          xs={props.col.xs}
+          sm={props.col.sm}
+          md={props.col.md}
+          lg={props.col.lg}
+          xl={props.col.xl}
+        />
+      );
   }
 };

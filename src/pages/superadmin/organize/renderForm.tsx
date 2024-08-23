@@ -9,11 +9,31 @@ export const renderForm = [
   },
   {
     name: 'active',
-    label: 'เปิดใช้งาน',
+    label: 'ปิดองค์กร',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'SwitchFormField',
+    type: 'ActiveCard',
+    require: true,
+    title: 'ปิดองค์กร',
+    description:
+      'ใช้สำหรับการปิดหรือยุติการทำงานขององค์กรในระบบหรือเว็บไซต์ ซึ่งอาจรวมถึงการปิดการใช้งานบัญชีองค์กร',
+  },
+  {
+    name: 'status',
+    label: 'สถานะธุรกิจ',
+    placeholder: 'สถานะธุรกิจ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SelectFormField',
+    options: [
+      { value: 'newly_registered', label: 'ลูกค้าที่เพิ่งลงทะเบียนใหม่ในระบบ' },
+      { value: 'active_user', label: 'ลูกค้าที่ใช้งานอย่างต่อเนื่อง' },
+      { value: 'loyal_customer', label: 'ลูกค้าที่มีความภักดีต่อระบบ' },
+      { value: 'at_risk', label: 'ลูกค้าที่อาจจะเสี่ยงต่อการหยุดใช้งาน' },
+      { value: 'churned', label: 'ลูกค้าที่ได้หยุดใช้บริการหรือยกเลิกบัญชี' },
+    ],
+    defaultValue: 'newly_registered',
     require: true,
   },
+
   {
     name: 'fromType',
     label: 'ประเภทธุรกิจ',
@@ -23,30 +43,7 @@ export const renderForm = [
       { value: 'ordinary_person', label: 'บุคคลธรรมดา' },
       { value: 'juristic_person', label: 'นิติบุคคล' },
     ],
-    require: true,
-  },
-  {
-    name: 'nameTh',
-    label: 'ชื่อกิจการ (ภาษาไทย)',
-    placeholder: 'ชื่อกิจการ',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'TextboxFormField',
-    require: true,
-  },
-  {
-    name: 'nameEn',
-    label: 'ชื่อกิจการ (English)',
-    placeholder: 'ชื่อกิจการ',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'TextboxFormField',
-    require: true,
-  },
-  {
-    name: 'taxId',
-    label: 'เลขทะเบียน 13 หลัก',
-    placeholder: 'เลขทะเบียน 13 หลัก',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'TextboxFormField',
+    defaultValue: 'ordinary_person',
     require: true,
   },
   {
@@ -67,27 +64,42 @@ export const renderForm = [
     require: true,
   },
   {
+    name: 'nameTh',
+    label: 'ชื่อกิจการ (ภาษาไทย)',
+    placeholder: 'ชื่อกิจการ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    require: true,
+    isName: true,
+  },
+  {
+    name: 'nameEn',
+    label: 'ชื่อกิจการ (English)',
+    placeholder: 'ชื่อกิจการ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    require: true,
+    isName: true,
+  },
+  {
+    name: 'taxId',
+    label: 'เลขทะเบียน 13 หลัก',
+    placeholder: 'เลขทะเบียน 13 หลัก',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'LengthInput',
+    maxLength: 13,
+    require: true,
+  },
+
+  {
     name: 'registerVat',
     label: 'จดทะเบียนภาษีมูลค่าเพิ่ม',
     placeholder: 'จดทะเบียนภาษีมูลค่าเพิ่ม',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'SwitchFormField',
     require: true,
-  },
-  {
-    name: 'status',
-    label: 'สถานะธุรกิจ',
-    placeholder: 'สถานะธุรกิจ',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'SelectFormField',
-    options: [
-      { value: 'newly_registered', label: 'ลูกค้าที่เพิ่งลงทะเบียนใหม่ในระบบ' },
-      { value: 'active_user', label: 'ลูกค้าที่ใช้งานอย่างต่อเนื่อง' },
-      { value: 'loyal_customer', label: 'ลูกค้าที่มีความภักดีต่อระบบ' },
-      { value: 'at_risk', label: 'ลูกค้าที่อาจจะเสี่ยงต่อการหยุดใช้งาน' },
-      { value: 'churned', label: 'ลูกค้าที่ได้หยุดใช้บริการหรือยกเลิกบัญชี' },
-    ],
-    require: true,
+    checkedText: 'จด',
+    unCheckedText: 'ไม่ได้จด',
   },
 
   {
@@ -120,6 +132,136 @@ export const renderForm = [
     type: 'TextboxFormField',
   },
 
+  /*Setting Section*/
+
+  // {
+  //   label: 'ตั้งค่า',
+  //   col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
+  //   type: 'SectionLabelForm',
+  // },
+  // {
+  //   name: ['setting', 'active'],
+  //   label: 'เปิดใช้งาน',
+  //   col: { xs: 12, sm: 24, md: 12, lg: 12, xl: 12 },
+  //   type: 'SwitchFormField',
+  //   require: true,
+  // },
+  {
+    name: ['setting', 'defaultLanguage'],
+    label: 'ภาษา',
+    placeholder: 'ภาษา',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SelectFormField',
+    options: [
+      { value: 'TH', label: 'ภาษาไทย' },
+      { value: 'EN', label: 'English' },
+    ],
+    defaultValue: 'TH',
+    require: true,
+  },
+  {
+    name: ['setting', 'domainName'],
+    label: 'ชื่อโดเมน',
+    placeholder: 'ชื่อโดเมน ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    require: true,
+  },
+  {
+    name: ['setting', 'theme'],
+    label: 'ธีมสี',
+    placeholder: 'ธีมสี',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SelectFormField',
+    options: [
+      { value: 'light', label: 'สว่าง' },
+      { value: 'dark', label: 'มืด' },
+    ],
+    defaultValue: 'light',
+  },
+  {
+    name: ['setting', 'textDisplay'],
+    label: 'ตัวอักษร',
+    placeholder: 'ตัวอักษร',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SelectFormField',
+    options: [
+      { value: 'large', label: 'ขนาดใหญ่' },
+      { value: 'normal', label: 'ปกติ' },
+      { value: 'small', label: 'ขนาดเล็ก' },
+    ],
+    defaultValue: 'normal',
+  },
+
+  {
+    label: 'ข้อมูลที่อยู่',
+    col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
+    type: 'SectionLabelForm',
+  },
+
+  {
+    name: ['address', 'address'],
+    label: 'ที่อยู่',
+    placeholder: 'ที่อยู่',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextAreaFormField',
+    require: true,
+  },
+  {
+    name: ['address', 'descriptions'],
+    label: 'คำอธิบายเกี่ยวกับที่อยู่',
+    placeholder: 'คำอธิบายเกี่ยวกับที่อยู่',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextAreaFormField',
+  },
+  {
+    name: ['address', 'addressType'],
+    label: 'ประเภทที่อยู่',
+    placeholder: 'ประเภทที่อยู่',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: ['address', 'country'],
+    label: 'ประเทศ',
+    placeholder: 'ประเทศ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: ['address', 'province'],
+    label: 'จังหวัด',
+    placeholder: 'จังหวัด',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    require: true,
+    message: 'กรุณากรอกจังหวัด',
+  },
+  {
+    name: ['address', 'district'],
+    label: 'เขต/อำเภอ',
+    placeholder: 'เขต/อำเภอ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    require: true,
+  },
+  {
+    name: ['address', 'subDistrict'],
+    label: 'แขวง/ตำบล',
+    placeholder: 'แขวง/ตำบล',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    require: true,
+  },
+
+  {
+    name: ['address', 'postalCode'],
+    label: 'รหัสไปรษณีย์',
+    placeholder: 'รหัสไปรษณีย์',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+
   {
     label: 'ข้อมูลช่องทางการติดต่อ',
     col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
@@ -131,7 +273,7 @@ export const renderForm = [
     label: 'เบอร์โทรศัพท์ติดต่อ',
     placeholder: 'เบอร์โทรศัพท์ติดต่อ',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'TextboxFormField',
+    type: 'PhoneInput',
     require: true,
   },
   {
@@ -191,53 +333,38 @@ export const renderForm = [
 
   //FIXME:add upload logo url
   {
-    label: 'เพิ่มสาขา',
+    label: 'ข้อมูลสาขา',
     col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
     type: 'SectionLabelForm',
   },
-
   {
-    name: ['branch', 'active'],
-    label: 'เปิดใช้งาน',
-    col: { xs: 12, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'SwitchFormField',
+    col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
+    type: 'ButtonGetOrganizeValue',
+  },
+  {
+    name: ['branch', 'isMain'],
+    label: 'ประเภทสาขา',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'RadioFormField',
+    options: [
+      { value: true, label: 'สำนักงานใหญ่' },
+      { value: false, label: 'สาขา' },
+    ],
+    defaultValue: true,
     require: true,
   },
   {
     name: ['branch', 'fromType'],
     label: 'ประเภทธุรกิจ',
-    col: { xs: 12, sm: 12, md: 12, lg: 12, xl: 12 },
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'RadioFormField',
     options: [
       { value: 'ordinary_person', label: 'บุคคลธรรมดา' },
       { value: 'juristic_person', label: 'นิติบุคคล' },
     ],
+    defaultValue: 'ordinary_person',
     require: true,
   },
-
-  {
-    name: ['branch', 'nameTh'],
-    label: 'ชื่อสาขา (ภาษาไทย)',
-    placeholder: 'ชื่อสาขา (ภาษาไทย)',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'TextboxFormField',
-  },
-  {
-    name: ['branch', 'nameEn'],
-    label: 'ชื่อกิจการ (English)',
-    placeholder: 'ชื่อกิจการ (English)',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'TextboxFormField',
-  },
-  {
-    name: ['branch', 'taxId'],
-    label: 'เลขทะเบียน 13 หลัก',
-    placeholder: 'เลขทะเบียน 13 หลัก',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'TextboxFormField',
-    require: true,
-  },
-
   {
     name: ['branch', 'type'],
     label: 'รูปแบบธุรกิจ',
@@ -255,17 +382,33 @@ export const renderForm = [
     ],
     require: true,
   },
+  { col: { xs: 0, sm: 0, md: 12, lg: 12, xl: 12 } },
   {
-    name: ['branch', 'isMain'],
-    label: 'ประเภทสาขา',
-    col: { xs: 12, sm: 12, md: 12, lg: 12, xl: 12 },
-    type: 'RadioFormField',
-    options: [
-      { value: true, label: 'สำนักงานใหญ่' },
-      { value: false, label: 'สาขา' },
-    ],
+    name: ['branch', 'nameTh'],
+    label: 'ชื่อสาขา (ภาษาไทย)',
+    placeholder: 'ชื่อสาขา (ภาษาไทย)',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    isName: true,
+  },
+  {
+    name: ['branch', 'nameEn'],
+    label: 'ชื่อกิจการ (English)',
+    placeholder: 'ชื่อกิจการ (English)',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    isName: true,
+  },
+  {
+    name: ['branch', 'taxId'],
+    label: 'เลขทะเบียน 13 หลัก',
+    placeholder: 'เลขทะเบียน 13 หลัก',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'LengthInput',
+    maxLength: 13,
     require: true,
   },
+
   {
     name: ['branch', 'branchCode'],
     label: 'รหัสสาขา',
@@ -288,7 +431,13 @@ export const renderForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
   },
-
+  {
+    name: ['branch', 'contactPhone'],
+    label: 'เบอร์โทรศัพท์ติดต่อ',
+    placeholder: 'เบอร์โทรศัพท์ติดต่อ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'PhoneInput',
+  },
   {
     name: ['branch', 'contactEmail'],
     label: 'อีเมลติดต่อ',
@@ -296,20 +445,15 @@ export const renderForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
   },
-  {
-    name: ['branch', 'contactPhone'],
-    label: 'เบอร์โทรศัพท์ติดต่อ',
-    placeholder: 'เบอร์โทรศัพท์ติดต่อ',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    maxLength: 10,
-    type: 'TextboxFormField',
-  },
+
   {
     name: ['branch', 'registerVat'],
     label: 'จดทะเบียนภาษีมูลค่าเพิ่ม',
     placeholder: 'จดทะเบียนภาษีมูลค่าเพิ่ม',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'SwitchFormField',
+    checkedText: 'จด',
+    unCheckedText: 'ไม่ได้จด',
   },
 
   {
@@ -443,64 +587,6 @@ export const renderForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
   },
-
-  /*Setting Section*/
-
-  {
-    label: 'ตั้งค่า',
-    col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
-    type: 'SectionLabelForm',
-  },
-  {
-    name: ['setting', 'active'],
-    label: 'เปิดใช้งาน',
-    col: { xs: 12, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'SwitchFormField',
-    require: true,
-  },
-  {
-    name: ['setting', 'defaultLanguage'],
-    label: 'ภาษา',
-    placeholder: 'ภาษา',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'SelectFormField',
-    options: [
-      { value: 'TH', label: 'ภาษาไทย' },
-      { value: 'EN', label: 'English' },
-    ],
-    require: true,
-  },
-  {
-    name: ['setting', 'domainName'],
-    label: 'ชื่อโดเมน',
-    placeholder: 'ชื่อโดเมน ',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'TextboxFormField',
-    require: true,
-  },
-  {
-    name: ['setting', 'theme'],
-    label: 'ธีมสี',
-    placeholder: 'ธีมสี',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'SelectFormField',
-    options: [
-      { value: 'light', label: 'สว่าง' },
-      { value: 'dark', label: 'มืด' },
-    ],
-  },
-  {
-    name: ['setting', 'textDisplay'],
-    label: 'ตัวอักษร',
-    placeholder: 'ตัวอักษร',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'SelectFormField',
-    options: [
-      { value: 'large', label: 'ขนาดใหญ่' },
-      { value: 'normal', label: 'ปกติ' },
-      { value: 'small', label: 'ขนาดเล็ก' },
-    ],
-  },
 ];
 
 export const renderEditForm = [
@@ -511,17 +597,32 @@ export const renderEditForm = [
     col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
     type: 'SectionLabelForm',
   },
-  {
-    name: 'logoUrl',
-    label: 'รูปโลโก้',
-    col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
-    type: 'UploadFile',
-  },
+  // {
+  //   name: 'logoUrl',
+  //   label: 'รูปโลโก้',
+  //   col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
+  //   type: 'UploadFile',
+  // },
   {
     name: 'active',
     label: 'เปิดใช้งาน',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'SwitchFormField',
+    require: true,
+  },
+  {
+    name: 'status',
+    label: 'สถานะธุรกิจ',
+    placeholder: 'สถานะธุรกิจ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SelectFormField',
+    options: [
+      { value: 'newly_registered', label: 'ลูกค้าที่เพิ่งลงทะเบียนใหม่ในระบบ' },
+      { value: 'active_user', label: 'ลูกค้าที่ใช้งานอย่างต่อเนื่อง' },
+      { value: 'loyal_customer', label: 'ลูกค้าที่มีความภักดีต่อระบบ' },
+      { value: 'at_risk', label: 'ลูกค้าที่อาจจะเสี่ยงต่อการหยุดใช้งาน' },
+      { value: 'churned', label: 'ลูกค้าที่ได้หยุดใช้บริการหรือยกเลิกบัญชี' },
+    ],
     require: true,
   },
   {
@@ -535,6 +636,24 @@ export const renderEditForm = [
     ],
     require: true,
   },
+  {
+    name: 'type',
+    label: 'รูปแบบธุรกิจ',
+    placeholder: 'รูปแบบธุรกิจ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SelectFormField',
+    options: [
+      { value: 'company_limited', label: 'บริษัทจำกัด' },
+      { value: 'public_company_limited', label: 'บริษัทมหาชนจำกัด' },
+      { value: 'limited_partnership', label: 'ห้างหุ้นส่วนจำกัด' },
+      { value: 'foundation', label: 'มูลนิธิ' },
+      { value: 'association', label: 'สมาคม' },
+      { value: 'joint_venture', label: 'กิจการร่วมค้า' },
+      { value: 'others', label: 'อื่นๆ' },
+    ],
+    require: true,
+  },
+
   {
     name: 'nameTh',
     label: 'ชื่อกิจการ (ภาษาไทย)',
@@ -559,44 +678,13 @@ export const renderEditForm = [
     type: 'TextboxFormField',
     require: true,
   },
-  {
-    name: 'type',
-    label: 'รูปแบบธุรกิจ',
-    placeholder: 'รูปแบบธุรกิจ',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'SelectFormField',
-    options: [
-      { value: 'company_limited', label: 'บริษัทจำกัด' },
-      { value: 'public_company_limited', label: 'บริษัทมหาชนจำกัด' },
-      { value: 'limited_partnership', label: 'ห้างหุ้นส่วนจำกัด' },
-      { value: 'foundation', label: 'มูลนิธิ' },
-      { value: 'association', label: 'สมาคม' },
-      { value: 'joint_venture', label: 'กิจการร่วมค้า' },
-      { value: 'others', label: 'อื่นๆ' },
-    ],
-    require: true,
-  },
+
   {
     name: 'registerVat',
     label: 'จดทะเบียนภาษีมูลค่าเพิ่ม',
     placeholder: 'จดทะเบียนภาษีมูลค่าเพิ่ม',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'SwitchFormField',
-    require: true,
-  },
-  {
-    name: 'status',
-    label: 'สถานะธุรกิจ',
-    placeholder: 'สถานะธุรกิจ',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'SelectFormField',
-    options: [
-      { value: 'newly_registered', label: 'ลูกค้าที่เพิ่งลงทะเบียนใหม่ในระบบ' },
-      { value: 'active_user', label: 'ลูกค้าที่ใช้งานอย่างต่อเนื่อง' },
-      { value: 'loyal_customer', label: 'ลูกค้าที่มีความภักดีต่อระบบ' },
-      { value: 'at_risk', label: 'ลูกค้าที่อาจจะเสี่ยงต่อการหยุดใช้งาน' },
-      { value: 'churned', label: 'ลูกค้าที่ได้หยุดใช้บริการหรือยกเลิกบัญชี' },
-    ],
     require: true,
   },
 

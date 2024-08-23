@@ -13,16 +13,16 @@ interface RadioFormFieldProps {
   options: RadioOption[];
   rules?: any[];
   require: boolean;
+  defaultValue?: any;
 }
 
 export const RadioFormField: React.FC<RadioFormFieldProps> = (props) => {
-  const { name, label, options, rules, require } = props;
+  const { name, label, options, rules, require, defaultValue } = props;
   // Find the initially checked option
-  const defaultCheckedValue = options.find((option) => option.checked)?.value;
 
   return (
     <Form.Item required={require} name={name} label={label} rules={rules}>
-      <Radio.Group defaultValue={defaultCheckedValue}>
+      <Radio.Group defaultValue={defaultValue}>
         {options.map((option) => (
           <Radio value={option.value} key={option.value}>
             {option.label}

@@ -122,7 +122,7 @@ export const Sidebar: React.FC = () => {
                 <Col>
                   <Typography style={{ color: '#19142A', fontSize: '20px' }}>
                     {location.pathname.includes('/admin')
-                      ? 'Stay Organize'
+                      ? 'ROME'
                       : 'บริษัท ยูโทเทค จำกัด'}
                   </Typography>
                 </Col>
