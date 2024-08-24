@@ -7,6 +7,7 @@ export const RadioGetOrgValue = (props: RadioGetOrgProps) => {
   const { form } = props;
 
   const values = form.getFieldValue();
+  console.log(values);
 
   const setFormFields = (value: string) => {
     if (value === 'true') {
@@ -22,6 +23,34 @@ export const RadioGetOrgValue = (props: RadioGetOrgProps) => {
           contactPhone: values?.contactPhone ? values.contactPhone : '',
           contactEmail: values?.contactEmail ? values.contactEmail : '',
           registerVat: values?.registerVat ? values.registerVat : true,
+          address: {
+            language: values?.setting?.defaultLanguage
+              ? values.setting.defaultLanguage
+              : '',
+            isMain: values.address.isMain,
+            name: values?.nameEn ? values?.nameEn : '',
+            city: values?.address?.city ? values.address.city : '',
+            province: values?.address?.province ? values.address.province : '',
+            postalCode: values?.address?.postalCode
+              ? values.address.postalCode
+              : '',
+            roomNo: values?.address?.roomNo ? values.address.roomNo : '',
+            floorNo: values?.address?.floorNo ? values.address.floorNo : '',
+            village: values?.address?.village ? values.address.village : '',
+            villageNo: values?.address?.villageNo
+              ? values.address.villageNo
+              : '',
+            houseNo: values?.address?.houseNo ? values.address.houseNo : '',
+            alley: values?.address?.alley ? values.address.alley : '',
+            road: values?.address?.road ? values.address.road : '',
+            building: values?.address?.building ? values.address.building : '',
+            nation: values?.address?.nation ? values.address.nation : '',
+            district: values?.address?.district ? values.address.district : '',
+            subDistrict: values?.address?.subDistrict
+              ? values.address.subDistrict
+              : '',
+            note: values?.address?.note ? values.address.note : '',
+          },
         },
       });
     } else {
@@ -37,6 +66,28 @@ export const RadioGetOrgValue = (props: RadioGetOrgProps) => {
           contactPhone: '',
           contactEmail: '',
           registerVat: null,
+          address: {
+            language: values?.setting?.defaultLanguage
+              ? values.setting.defaultLanguage
+              : '',
+            isMain: !values.address.isMain,
+            name: values?.branch?.nameEn ? values?.branch?.nameEn : '',
+            city: '',
+            province: '',
+            postalCode: '',
+            roomNo: '',
+            floorNo: '',
+            village: '',
+            villageNo: '',
+            houseNo: '',
+            alley: '',
+            road: '',
+            building: '',
+            nation: '',
+            district: '',
+            subDistrict: '',
+            note: '',
+          },
         },
       });
     }

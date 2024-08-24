@@ -10,7 +10,6 @@ interface TextboxFormFieldProps {
   rule?: any;
   disabled: boolean;
   maxLength?: number;
-  require: boolean;
   businessType?: string;
   isName?: boolean;
 }
@@ -26,7 +25,6 @@ export const TextboxFormField: FC<TextboxFormFieldProps> = (
     rule,
     disabled,
     maxLength,
-    require,
     businessType,
     isName,
   } = props;
@@ -79,7 +77,6 @@ export const TextboxFormField: FC<TextboxFormFieldProps> = (
 
   return (
     <Form.Item
-      required={require}
       name={name}
       label={label}
       rules={rule}

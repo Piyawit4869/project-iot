@@ -194,5 +194,6 @@ const styles: Record<string, CSSProperties> = {
     height: '50px',
     top: 0,
     zIndex: 1,
+    background: 'white',
   },
 };

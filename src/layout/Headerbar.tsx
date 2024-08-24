@@ -144,7 +144,7 @@ export const Headerbar: React.FC = () => {
             <Flex>
               <Dropdown
                 overlay={<Menu items={notifications} />}
-                trigger={['hover', 'click']}
+                trigger={['click']}
               >
                 <a onClick={(e) => e.preventDefault()}>
                   <Space>
@@ -154,10 +154,7 @@ export const Headerbar: React.FC = () => {
                   </Space>
                 </a>
               </Dropdown>
-              <Dropdown
-                overlay={<Menu items={items} />}
-                trigger={['hover', 'click']}
-              >
+              <Dropdown overlay={<Menu items={items} />} trigger={['click']}>
                 <a onClick={(e) => e.preventDefault()}>
                   <Space>
                     <img

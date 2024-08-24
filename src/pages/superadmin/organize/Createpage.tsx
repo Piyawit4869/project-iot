@@ -1,11 +1,12 @@
 import React from 'react';
-import { Form, Row } from 'antd';
+import { Form, notification, Row } from 'antd';
 import { DynamicForm } from '@src/forms/Dynamic';
 import { redirect, useSubmit } from 'react-router-dom';
 import { FormButtonsCreate } from '@src/components/shared/FormButtons';
 import { renderForm } from './renderForm';
-import vine, { errors, SimpleMessagesProvider } from '@vinejs/vine';
+import vine, { errors } from '@vinejs/vine';
 import dayjs from 'dayjs';
+import { schemaCreateOrg } from './schema';
 
 export const OrganizeCreate: React.FC = () => {
   const [form] = Form.useForm();
@@ -19,123 +20,21 @@ export const OrganizeCreate: React.FC = () => {
     }
   }, []);
 
-  const profileSchema = vine.object({
-    firstName: vine.string(),
-    lastName: vine.string().optional(),
-    birthDate: vine.string().optional(),
-    phone: vine.string().maxLength(15).optional(),
-  });
-
-  const userSchema = vine.object({
-    email: vine.string().email(),
-    password: vine.string(),
-    userName: vine.string().optional(),
-    profile: profileSchema.clone(),
-  });
-
-  const addressSchema = vine.object({
-    address: vine.string(),
-    descriptions: vine.string().optional(),
-    addressType: vine.string().optional(),
-    country: vine.string().optional(),
-    province: vine.string(),
-    district: vine.string(),
-    subDistrict: vine.string(),
-    postalCode: vine.string().maxLength(5).optional(),
-  });
-
-  const branchSchema = vine.object({
-    active: vine.boolean(),
-    fromType: vine.enum(['ordinary_person', 'juristic_person']),
-    nameTh: vine.string().optional(),
-    nameEn: vine.string().optional(),
-    taxId: vine.string().maxLength(13),
-    type: vine.enum([
-      'human',
-      'ordinary_partnership',
-      'shop',
-      'bop',
-      'company_limited',
-      'public_company_limited',
-      'limited_partnership',
-      'foundation',
-      'association',
-      'joint_venture',
-      'others',
-    ]),
-    isMain: vine.boolean(),
-    branchCode: vine.string(),
-    openingDate: vine.string().optional(),
-    websiteUrl: vine.string().optional(),
-    contactEmail: vine.string().email().optional(),
-    contactPhone: vine.string().maxLength(15).optional(),
-    registerVat: vine.boolean().optional(),
-    address: addressSchema.clone(),
-  });
-
-  const settingSchema = vine.object({
-    active: vine.boolean(),
-    defaultLanguage: vine.enum(['TH', 'EN', 'JP']),
-    domainName: vine.string(),
-    textDisplay: vine.string().optional(),
-    theme: vine.enum(['light', 'dark']).optional(),
-  });
-
-  const schema = vine.object({
-    nameTh: vine.string(),
-    nameEn: vine.string(),
-    taxId: vine.string(),
-    active: vine.boolean(),
-    status: vine.enum([
-      'newly_registered',
-      'active_user',
-      'loyal_customer',
-      'at_risk',
-      'churned',
-    ]),
-    fromType: vine.enum(['ordinary_person', 'juristic_person']),
-    type: vine.enum([
-      'human',
-      'ordinary_partnership',
-      'shop',
-      'bop',
-      'company_limited',
-      'public_company_limited',
-      'limited_partnership',
-      'foundation',
-      'association',
-      'joint_venture',
-      'others',
-    ]),
-    descriptionsTh: vine.string().optional(),
-    descriptionsEn: vine.string().optional(),
-    registerVat: vine.boolean(),
-    openingDate: vine.string().optional(),
-    websiteUrl: vine.string().optional(),
-    contactEmail: vine.string().email(),
-    contactPhone: vine.string().maxLength(15),
-    contactWebsite: vine.string().optional(),
-    businessEmail: vine.string().email().optional(),
-    contactFacebook: vine.string().optional(),
-    contactLine: vine.string().optional(),
-    contactWhatsapp: vine.string().optional(),
-    contactNote: vine.string().optional(),
-    branch: branchSchema.clone(),
-    address: addressSchema.clone(),
-    user: userSchema.clone(),
-    setting: settingSchema.clone(),
-  });
-
   const defaultValue = {
     active: true,
     status: 'newly_registered',
     fromType: 'ordinary_person',
     registerVat: true,
+    address: {
+      isMain: true,
+    },
     branch: {
+      status: 'newly_registered',
       active: true,
       isMain: true,
       fromType: 'ordinary_person',
       registerVat: true,
+      address: { isMain: false },
     },
     setting: {
       active: true,
@@ -145,17 +44,17 @@ export const OrganizeCreate: React.FC = () => {
     },
   };
 
-  vine.messagesProvider = new SimpleMessagesProvider({
-    required: 'The {{ field }} field is required',
-    string: 'The value of {{ field }} field must be a string',
-    // 'username.required': 'Please choose a username for your account',
-  });
-
   const onFinish = async (values: any) => {
     try {
       const payload = { ...values };
       payload.branch.active = true;
       payload.setting.active = true;
+      payload.address.active = true;
+      payload.branch.address.active = true;
+      payload.address.name = values.nameEn;
+      payload.branch.address.name = values.branch.nameEn;
+      payload.address.language = values.setting.defaultLanguage;
+      payload.branch.address.language = values.setting.defaultLanguage;
 
       // Convert dates to ISO format if they exist
       if (values.openingDate) {
@@ -173,7 +72,7 @@ export const OrganizeCreate: React.FC = () => {
       }
 
       // Compile the main schema for validation
-      const validator = vine.compile(schema);
+      const validator = vine.compile(schemaCreateOrg);
 
       // Validate the entire form payload
       await validator.validate(payload);
@@ -181,61 +80,27 @@ export const OrganizeCreate: React.FC = () => {
       await submit({ data: JSON.stringify(payload) }, { method: 'post' });
     } catch (error) {
       if (error instanceof errors.E_VALIDATION_ERROR) {
-        console.log(error.messages);
-
-        // Correctly map validation errors to the form fields, including nested fields
-        const fieldErrors = error.messages.map((err: any) => {
-          const fieldName = err.field.includes('.')
-            ? err.field.split('.')
-            : [err.field];
-
-          return {
-            name: fieldName,
-            errors: [err.message],
-          };
+        notification.error({
+          message: 'Create organization fail',
+          placement: 'bottomRight',
+          description: 'You have fail to create organization',
         });
-
-        form.setFields(fieldErrors);
       } else {
-        console.error('Submission error:', error);
+        notification.error({
+          message: 'Submission fail',
+          placement: 'bottomRight',
+          description: `You have submission fail : ${error}`,
+        });
       }
     }
   };
 
   const [type, setType] = React.useState('');
-  const [allValues, setAllValues] = React.useState();
 
-  const handleValuesChange = (changedValues: any, allValues: any) => {
+  const handleValuesChange = (changedValues: any) => {
     if (changedValues.type) {
       setType(changedValues.type);
     }
-    setAllValues(allValues);
-
-    const flattenKeys = (obj: any, prefix: string[] = []): any[] => {
-      return Object.keys(obj).reduce((acc: any[], key) => {
-        const currentPath = [...prefix, key];
-        const value = obj[key];
-
-        if (
-          typeof value === 'object' &&
-          value !== null &&
-          !Array.isArray(value)
-        ) {
-          acc.push(...flattenKeys(value, currentPath));
-        } else {
-          acc.push(currentPath);
-        }
-
-        return acc;
-      }, []);
-    };
-
-    const fieldsToClear = flattenKeys(changedValues).map((fieldPath) => ({
-      name: fieldPath,
-      errors: [],
-    }));
-
-    form.setFields(fieldsToClear);
   };
 
   return (
@@ -254,37 +119,111 @@ export const OrganizeCreate: React.FC = () => {
           titleModalSubmit="คุณต้องการสร้างข้อมูลองค์กร ใช่หรือไม่?"
           contentModalSubmit="ข้อมูลที่คุณกรอกจะถูกบันทึก"
         />
-        <Row gutter={20} style={{ paddingTop: '20px' }}>
-          {renderForm.map((item: any, index: number) => (
-            <DynamicForm
-              key={index}
-              name={item.name}
-              label={item.label}
-              placeholder={item.placeholder}
-              type={item.type}
-              col={item.col}
-              icon={item.icon}
-              value={item.value}
-              ruleMessage={item.message}
-              require={item.require}
-              option={item.options}
-              disabled={item.disabled}
-              checked={item.checked}
-              maxLength={item.maxLength}
-              validator={item.validator}
-              defaultValue={item.defaultValue}
-              businessType={type}
-              isName={item.isName}
-              title={item.title}
-              description={item.description}
-              formValue={allValues}
-              form={form}
-              checkedText={item.checkedText}
-              unCheckedText={item.unCheckedText}
-            />
-          ))}
-        </Row>
+        <div
+          style={{
+            maxHeight: '74vh',
+            minHeight: '50vh',
+            height: '100%',
+            overflowY: 'scroll',
+            overflowX: 'hidden',
+          }}
+        >
+          <Row gutter={[20, 24]} style={{ paddingTop: '20px' }}>
+            {renderForm.map((item: any, index: number) => (
+              <DynamicForm
+                key={index}
+                name={item.name}
+                label={item.label}
+                placeholder={item.placeholder}
+                type={item.type}
+                col={item.col}
+                icon={item.icon}
+                value={item.value}
+                rule={item.rule}
+                option={item.options}
+                disabled={item.disabled}
+                checked={item.checked}
+                maxLength={item.maxLength}
+                defaultValue={item.defaultValue}
+                businessType={type}
+                isName={item.isName}
+                title={item.title}
+                description={item.description}
+                form={form}
+                checkedText={item.checkedText}
+                unCheckedText={item.unCheckedText}
+              />
+            ))}
+          </Row>
+        </div>
       </Form>
     </div>
   );
 };
+
+// const mockUp = {
+//   active: true,
+//   status: 'newly_registered',
+//   fromType: 'ordinary_person',
+//   type: 'company_limited',
+//   nameTh: 'ยูโทเทค',
+//   nameEn: 'utotech',
+//   taxId: '1111111111111',
+//   registerVat: true,
+//   openingDate: '2024-08-23T17:00:00.000Z',
+//   websiteUrl: 'https://www.tung-wang-ruey.com',
+//   setting: {
+//     defaultLanguage: 'TH',
+//     domainName: 'www.chong-tum-dee.com',
+//     theme: 'light',
+//     textDisplay: 'normal',
+//     active: true,
+//   },
+//   address: {
+//     address: 'test',
+//     addressType: 'ทาวเฮาส์',
+//     country: 'Thailand',
+//     province: 'Liverpool',
+//     district: 'พุทธมณฑล',
+//     subDistrict: 'คลองโยง',
+//     postalCode: '73170',
+//   },
+//   contactPhone: '660888821480',
+//   contactEmail: 'johnlenon58@gmail.com',
+//   branch: {
+//     isMain: true,
+//     fromType: 'ordinary_person',
+//     type: 'company_limited',
+//     status: 'newly_registered',
+//     nameTh: 'ตั้งหวังรวย',
+//     nameEn: 'Tung Wang Ruey',
+//     taxId: '1111111111111',
+//     branchCode: 'twr001',
+//     openingDate: '2024-08-23T17:00:00.000Z',
+//     websiteUrl: 'https://www.tung-wang-ruey.com',
+//     contactPhone: '',
+//     contactEmail: 'phuwisw@gmail.com',
+//     registerVat: true,
+//     address: {
+//       address: 'test',
+//       descriptions: '',
+//       addressType: 'ทาวเฮาส์',
+//       country: 'ประเทศไทย',
+//       province: 'นครปฐม',
+//       district: 'พุทธมณฑล',
+//       subDistrict: 'คลองโยง',
+//       postalCode: '73170',
+//     },
+//     active: true,
+//   },
+//   user: {
+//     email: 'phuwisw@gmail.com',
+//     password: 'localpass',
+//     profile: {
+//       firstName: 'Phuwis',
+//       lastName: 'Watthana',
+//       birthDate: '2003-03-05T17:00:00.000Z',
+//     },
+//     userName: 'phuwis1',
+//   },
+// };

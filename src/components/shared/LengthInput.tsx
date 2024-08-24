@@ -8,17 +8,15 @@ interface LengthInputFormFieldProps {
   rule?: any;
   disabled: boolean;
   maxLength?: number;
-  require: boolean;
 }
 
 export const LengthInputFormField: FC<LengthInputFormFieldProps> = (
   props: LengthInputFormFieldProps,
 ) => {
-  const { name, label, placeholder, rule, disabled, maxLength, require } =
-    props;
+  const { name, label, placeholder, rule, disabled, maxLength } = props;
 
   return (
-    <Form.Item required={require} name={name} label={label} rules={rule}>
+    <Form.Item name={name} label={label} rules={rule}>
       <Input.OTP
         placeholder={placeholder}
         disabled={disabled}

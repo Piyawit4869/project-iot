@@ -9,16 +9,15 @@ interface PhoneInputFormFieldProps {
   placeholder?: string;
   rule?: any;
   disabled: boolean;
-  require: boolean;
 }
 
 export const PhoneInputFormField: FC<PhoneInputFormFieldProps> = (
   props: PhoneInputFormFieldProps,
 ) => {
-  const { name, label, placeholder, rule, disabled, require } = props;
+  const { name, label, placeholder, rule, disabled } = props;
 
   return (
-    <Form.Item required={require} name={name} label={label} rules={rule}>
+    <Form.Item name={name} label={label} rules={rule}>
       <PhoneInput
         country={'th'}
         placeholder={placeholder}
