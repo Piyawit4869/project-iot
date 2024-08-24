@@ -17,7 +17,7 @@ export const SettingIndex: React.FC = () => {
       <Row gutter={20}>
         <Col span={24} style={{ textAlign: 'left' }}>
           <Button type="primary" onClick={() => navigate(-1)}>
-            <LeftOutlined /> Back
+            <LeftOutlined /> กลับ
           </Button>
         </Col>
       </Row>

@@ -4,9 +4,21 @@ import {
   SettingOutlined,
   UserOutlined,
   HomeOutlined,
+  BellOutlined,
 } from '@ant-design/icons';
 import { Link, useLocation } from 'react-router-dom';
-import { Breadcrumb, Col, Dropdown, MenuProps, Row, Space } from 'antd';
+import {
+  Breadcrumb,
+  Col,
+  Dropdown,
+  Empty,
+  Flex,
+  Image,
+  Menu,
+  MenuProps,
+  Row,
+  Space,
+} from 'antd';
 import { useTranslation } from 'react-i18next';
 
 export const Headerbar: React.FC = () => {
@@ -15,11 +27,43 @@ export const Headerbar: React.FC = () => {
 
   const me = JSON.parse(localStorage.getItem('me') as any);
 
+  const notifications: MenuProps['items'] = [
+    {
+      label: <Empty description={'ไม่มีการแจ้งเตือนในขนาดนี้'} />,
+      key: 'empty',
+    },
+  ];
   const items: MenuProps['items'] = [
     {
       label: (
+        <>
+          <Flex gap="12px" align="center">
+            <Image
+              src={
+                me?.profile?.photoUrl
+                  ? me.profile.photoUrl
+                  : 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'
+              }
+              alt="User Icon"
+              preview={false}
+              style={{ fontSize: '24px' }}
+            />
+            <Flex vertical>
+              <div style={styles.email}>
+                {me.profile.firstName + ' ' + me.profile.lastName}
+              </div>
+              <div style={styles.email}>{me.email}</div>
+              <div style={styles.role}>{t(`${me.role.name}`)}</div>
+            </Flex>
+          </Flex>
+        </>
+      ),
+      key: 'user',
+    },
+    {
+      label: (
         <Link to="/profile">
-          <UserOutlined /> {t('Profile')}
+          <UserOutlined /> {t('profile')}
         </Link>
       ),
       key: '0',
@@ -27,7 +71,7 @@ export const Headerbar: React.FC = () => {
     {
       label: (
         <Link to="/setting">
-          <SettingOutlined /> {t('Settings')}
+          <SettingOutlined /> {t('setting')}
         </Link>
       ),
       key: '1',
@@ -35,13 +79,20 @@ export const Headerbar: React.FC = () => {
 
     {
       label: (
-        <Link to="/login">
-          <LogoutOutlined /> {t('Logout')}
+        <Link
+          to="/login"
+          onClick={() => {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+          }}
+        >
+          <LogoutOutlined /> {t('logout')}
         </Link>
       ),
       key: '2',
     },
   ];
+
   const generateBreadcrumbs = (path: string) => {
     const pathnames = path.split('/').filter((x) => x);
     const modifiedPathnames =
@@ -50,7 +101,13 @@ export const Headerbar: React.FC = () => {
     return (
       <Breadcrumb style={styles.breadcrumb}>
         <Breadcrumb.Item>
-          <Link to="/">
+          <Link
+            to={
+              location.pathname.includes('/admin')
+                ? '/admin/analytic'
+                : '/analytic'
+            }
+          >
             <HomeOutlined />
           </Link>
         </Breadcrumb.Item>
@@ -59,7 +116,19 @@ export const Headerbar: React.FC = () => {
           const isLast = index === modifiedPathnames.length - 1;
           return (
             <Breadcrumb.Item key={name}>
-              {isLast ? t(name) : <Link to={routeTo}>{t(name)}</Link>}
+              {isLast ? (
+                t(name)
+              ) : (
+                <Link
+                  to={
+                    location.pathname.includes('/admin')
+                      ? `/admin${routeTo}`
+                      : routeTo
+                  }
+                >
+                  {t(name)}
+                </Link>
+              )}
             </Breadcrumb.Item>
           );
         })}
@@ -72,23 +141,35 @@ export const Headerbar: React.FC = () => {
       <Row gutter={[12, 12]} align="middle">
         <Col>
           <div style={styles.menu}>
-            <div style={styles.navRight}>
-              <Dropdown menu={{ items }} trigger={['click']}>
+            <Flex>
+              <Dropdown
+                overlay={<Menu items={notifications} />}
+                trigger={['click']}
+              >
                 <a onClick={(e) => e.preventDefault()}>
                   <Space>
-                    <div style={styles.userInfo}>
-                      <div style={styles.email}>{me.email}</div>
-                      <div style={styles.role}>{t(`${me.role.name}`)}</div>
-                    </div>
+                    <BellOutlined
+                      style={{ ...styles.icon, fontSize: '18px' }}
+                    />
+                  </Space>
+                </a>
+              </Dropdown>
+              <Dropdown overlay={<Menu items={items} />} trigger={['click']}>
+                <a onClick={(e) => e.preventDefault()}>
+                  <Space>
                     <img
-                      src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
+                      src={
+                        me?.profile?.photoUrl
+                          ? me.profile.photoUrl
+                          : 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'
+                      }
                       alt="User Icon"
                       style={styles.icon}
                     />
                   </Space>
                 </a>
               </Dropdown>
-            </div>
+            </Flex>
           </div>
         </Col>
       </Row>
@@ -112,11 +193,7 @@ const styles: Record<string, React.CSSProperties> = {
     height: '50px',
     color: '#19142A',
   },
-  navRight: {
-    display: 'flex',
-    alignItems: 'center',
-    color: '#19142A',
-  },
+
   dropdown: {
     position: 'relative',
     display: 'inline-block',
@@ -149,8 +226,9 @@ const styles: Record<string, React.CSSProperties> = {
   },
   icon: {
     marginLeft: '8px',
-    width: '16px',
-    height: '16px',
+    width: '30px',
+    height: '30px',
+    borderRadius: '50%',
   },
   dropdownMenu: {
     position: 'absolute',
@@ -170,8 +248,5 @@ const styles: Record<string, React.CSSProperties> = {
   breadcrumb: {
     margin: '16px 0',
     color: '#19142A',
-  },
-  dropdownItemHover: {
-    // backgroundColor: "#f1f1f1",
   },
 };

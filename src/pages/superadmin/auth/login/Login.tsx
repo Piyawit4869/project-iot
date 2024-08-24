@@ -19,7 +19,7 @@ export const LoginPage = () => {
 
       notification[type]({
         message: action.message,
-        placement: 'bottomLeft',
+        placement: 'bottomRight',
         duration: 5,
       });
 

@@ -10,19 +10,23 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-oauth/google": "^0.12.1",
     "@vinejs/vine": "^2.1.0",
     "dayjs": "^1.11.11",
     "eslint-plugin-react": "^7.35.0",
+    "gapi-script": "^1.2.0",
     "i18next": "^23.7.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.5.0",
+    "react-phone-input-2": "^2.15.1",
     "vconsole": "^3.15.1",
     "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@ant-design/icons": "^5.1.4",
     "@ant-design/plots": "^1.2.5",
+    "@types/lodash": "^4.17.7",
     "@types/node": "^20.9.3",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",

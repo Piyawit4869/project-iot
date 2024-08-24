@@ -45,40 +45,40 @@ export const organizeColumns: TableProps['columns'] = [
     width: '65px',
     align: 'center',
     key: 'logoUrl',
-    render: (logoUrl: string) => <Image width={60} src={logoUrl} alt="โลโก้" />,
+    render: (logoUrl: string) => <Image width={60} src={logoUrl} />,
   },
   {
     title: 'ชื่อองค์กร',
-    width: '200px',
+    width: '400px',
     align: 'start',
     key: 'nameTh',
     render: (data: any) => {
       return <Typography>{data.nameTh + ` (${data.nameEn})`}</Typography>;
     },
   },
-  {
-    title: 'คำอธิบายธุรกิจ',
-    dataIndex: 'descriptionsTh',
-    width: '300px',
-    align: 'start',
-    key: 'descriptionsTh',
-    render: (description: string) => (
-      <Typography.Paragraph
-        style={{ margin: 0 }}
-        ellipsis={{ rows: 2, expandable: false }}
-      >
-        {description}
-      </Typography.Paragraph>
-    ),
-  },
-  {
-    title: 'วันที่จดทะเบียน',
-    dataIndex: 'businessRegister',
-    width: '120px',
-    align: 'center',
-    key: 'businessRegister',
-    render: (date: string) => <>{dayjs(date).format('DD/MM/YYYY')}</>,
-  },
+  // {
+  //   title: 'คำอธิบายธุรกิจ',
+  //   dataIndex: 'descriptionsTh',
+  //   width: '300px',
+  //   align: 'start',
+  //   key: 'descriptionsTh',
+  //   render: (description: string) => (
+  //     <Typography.Paragraph
+  //       style={{ margin: 0 }}
+  //       ellipsis={{ rows: 2, expandable: false }}
+  //     >
+  //       {description}
+  //     </Typography.Paragraph>
+  //   ),
+  // },
+  // {
+  //   title: 'วันที่จดทะเบียน',
+  //   dataIndex: 'businessRegister',
+  //   width: '120px',
+  //   align: 'center',
+  //   key: 'businessRegister',
+  //   render: (date: string) => <>{dayjs(date).format('DD/MM/YYYY')}</>,
+  // },
   {
     title: 'เบอร์โทรศัพท์',
     dataIndex: 'contactPhone',
@@ -146,10 +146,10 @@ export const organizeColumns: TableProps['columns'] = [
   {
     title: 'รายละเอียด',
     key: 'details',
-    dataIndex: 'id',
+    dataIndex: 'slug',
     align: 'center',
-    render: (id: number) => (
-      <Link to={`${id}`}>
+    render: (slug: string) => (
+      <Link to={`${slug}`}>
         <Button type="primary" icon={<EyeOutlined />}>
           ดูข้อมูล
         </Button>
@@ -248,18 +248,5 @@ export const branchColumns: TableProps['columns'] = [
       ) : (
         <Tag color="error">ไม่พร้อมใช้งาน</Tag>
       ),
-  },
-  {
-    title: 'รายละเอียด',
-    key: 'details',
-    dataIndex: 'id',
-    align: 'center',
-    render: (id: number) => (
-      <Link to={`${id}`}>
-        <Button type="primary" disabled icon={<EyeOutlined />}>
-          ดูข้อมูล
-        </Button>
-      </Link>
-    ),
   },
 ];

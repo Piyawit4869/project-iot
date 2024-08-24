@@ -7,19 +7,19 @@ export async function organizeCreateAction({ request, params }: any) {
   const submitData = Object.fromEntries(formData);
 
   try {
-    await API.organize.create(JSON.parse(submitData.data));
+    const res = await API.organize.create(JSON.parse(submitData.data));
 
     notification['success']({
       message: 'สร้างข้อมูลองค์กรเสร็จสิ้น',
-      placement: 'top',
+      placement: 'bottomRight',
       duration: 3,
     });
 
-    return redirect(`/admin/organize/${params.id}`);
+    return redirect(`/admin/organize/${res.data.slug}`);
   } catch (error) {
     notification['error']({
       message: 'สร้างข้อมูลองค์กรล้มเหลว',
-      placement: 'top',
+      placement: 'bottomRight',
       duration: 3,
     });
     return {
@@ -41,14 +41,14 @@ export async function organizeSingleAction({ request, params }: any) {
         await API.organize.update(params.id, JSON.parse(submitData.data));
         notification['success']({
           message: 'แก้ไขข้อมูลองค์กรเสร็จสิ้น',
-          placement: 'top',
+          placement: 'bottomRight',
           duration: 3,
         });
         return redirect(`/admin/organize/${params.id}`);
       } catch (error) {
         notification['error']({
           message: 'แก้ไขข้อมูลองค์กรล้มเหลว',
-          placement: 'top',
+          placement: 'bottomRight',
           duration: 3,
         });
         return {
@@ -64,14 +64,14 @@ export async function organizeSingleAction({ request, params }: any) {
         await API.organize.deleted(params.id);
         notification['success']({
           message: 'ลบข้อมูลองค์กรเสร็จสิ้น',
-          placement: 'top',
+          placement: 'bottomRight',
           duration: 3,
         });
         return redirect('/admin/organize');
       } catch (error) {
         notification['error']({
           message: 'ลบข้อมูลองค์กรล้มเหลว',
-          placement: 'top',
+          placement: 'bottomRight',
           duration: 3,
         });
         return {

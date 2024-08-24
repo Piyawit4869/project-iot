@@ -42,11 +42,11 @@ export const UsersIndex: React.FC = () => {
         }
         buttons={[
           <Link to={'create'}>
-            <CreateButton label={'เพิ่มข้อมูลพนักงาน'} />
+            <CreateButton label={'เพิ่มข้อมูลพนักงาน'} disable />
           </Link>,
         ]}
       />
-      <div style={{ height: '25px' }} />
+      <div style={{ height: '5px' }} />
       <SearchBar />
       <TableComponent
         columns={exployeeColumns}

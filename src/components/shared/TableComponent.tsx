@@ -7,12 +7,18 @@ interface TableComponentProps {
   pagination?: false | TablePaginationConfig | undefined;
   bordered?: boolean;
   loading?: boolean | SpinProps | undefined;
+  onChange?: (
+    pagination: TablePaginationConfig,
+    filters: any,
+    sorter: any,
+  ) => void;
 }
 
 export const TableComponent: FC<TableComponentProps> = (
   props: TableComponentProps,
 ) => {
-  const { columns, bordered, pagination, dataSource, loading } = props;
+  const { columns, bordered, pagination, dataSource, loading, onChange } =
+    props;
   return (
     <Table
       loading={loading}
@@ -22,6 +28,7 @@ export const TableComponent: FC<TableComponentProps> = (
       scroll={{ x: 'max-content' }}
       columns={columns}
       locale={{ emptyText: 'ไม่พบข้อมูล' }}
+      onChange={onChange}
       size="small"
     />
   );

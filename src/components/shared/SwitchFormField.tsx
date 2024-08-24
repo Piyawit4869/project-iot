@@ -9,7 +9,8 @@ interface SwitchFormFieldProps extends FormItemProps {
   switchProps?: SwitchProps;
   disabled: boolean;
   checked: boolean;
-  require: boolean;
+  checkedText?: string;
+  unCheckedText?: string;
 }
 
 export const SwitchFormField: React.FC<SwitchFormFieldProps> = (
@@ -21,14 +22,17 @@ export const SwitchFormField: React.FC<SwitchFormFieldProps> = (
     name,
     switchProps,
     checked,
-    require,
+    checkedText,
+    unCheckedText,
     ...formItemProps
   } = props;
   return (
-    <Form.Item required={require} label={label} name={name} {...formItemProps}>
+    <Form.Item label={label} name={name} {...formItemProps}>
       <Switch
+        checkedChildren={checkedText ? checkedText : 'เปิด'}
+        unCheckedChildren={unCheckedText ? unCheckedText : 'ปิด'}
         {...switchProps}
-        defaultValue={false}
+        defaultValue={true}
         disabled={disabled}
         checked={checked}
       />

@@ -23,3 +23,11 @@ export async function adminLogin(data: any) {
     data,
   });
 }
+
+export async function loginWithGoogle(data: any) {
+  return client({
+    method: 'POST',
+    url: '/api/crud/users/auth-code/',
+    data,
+  });
+}

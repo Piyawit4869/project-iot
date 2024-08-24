@@ -205,12 +205,9 @@ export const CustomerSingle = () => {
                       option={item.option}
                       icon={item.icon}
                       value={item.value}
-                      ruleMessage={item.message}
-                      require={item.require}
                       disabled={false}
                       checked={false}
                       maxLength={item.maxLength}
-                      validator={item.validator}
                     />
                   ))}
                 </Row>
@@ -277,8 +274,6 @@ export const CustomerSingle = () => {
                       option={item.option}
                       icon={item.icon}
                       value={item.value}
-                      ruleMessage={item.message}
-                      require={item.require}
                       disabled={item.disabled}
                       checked={item.checked}
                     />

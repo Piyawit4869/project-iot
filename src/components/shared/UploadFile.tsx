@@ -15,55 +15,39 @@ interface FormInterface {
   form: any;
   name: string;
   disabled?: boolean;
-  require: boolean;
+  label?: string;
 }
 
 export const UploadFiles: React.FC<FormInterface> = (props: FormInterface) => {
-  const { form, name, disabled, require } = props;
-  const file = Form.useWatch(name, form);
+  const { form, name, disabled, label } = props;
+  const file = Form.useWatch(name ? name : 'file', form);
 
-  const [fileList, setFileList] = React.useState<any[]>([]);
-  const [uploading, setUploading] = React.useState<boolean>(false);
-
-  React.useEffect(() => {
-    if (Array.isArray(file)) {
-      setFileList(file);
-    } else if (file && file.fileList) {
-      setFileList(file.fileList);
-    } else {
-      setFileList([]);
-    }
-  }, [file]);
-
-  const handleChange: UploadProps['onChange'] = (info) => {
-    if (info.file.status === 'uploading') {
-      setUploading(true);
-    } else if (info.file.status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully`);
-      setFileList([info.file]); // Set only the uploaded file
-      setUploading(false);
-    } else if (info.file.status === 'removed') {
-      setFileList([]);
-      message.success(`${info.file.name} file has been removed`);
-      setUploading(false);
-    } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-      setUploading(false);
-    }
-  };
+  const [fileList, setFileList] = React.useState<any[]>(file || []);
 
   const uploadProps: UploadProps = {
+    fileList: fileList,
     disabled: disabled,
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
     },
     multiple: false,
     maxCount: 1,
-    action: `${baseURL}/upload`,
+    action: `${baseURL}api/upload`,
     listType: 'picture-card',
     accept: `image/*`,
-    onChange: handleChange,
-    fileList,
+    onChange(info) {
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`);
+        setFileList((prev: any) => [...prev, info.file]);
+      } else if (info.file.status === 'removed') {
+        // Handle file removal here
+        setFileList((prev: any) =>
+          prev.filter((file: any) => file.uid !== info.file.uid),
+        );
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
   };
 
   const uploadButton = (
@@ -75,14 +59,17 @@ export const UploadFiles: React.FC<FormInterface> = (props: FormInterface) => {
 
   return (
     <Form.Item
-      name={name}
+      label={label}
+      name={'file'}
       valuePropName="fileList"
       getValueFromEvent={normFile}
-      required={require}
+      initialValue={fileList}
     >
-      <Upload {...uploadProps}>
-        {uploading || fileList.length ? null : uploadButton}
-      </Upload>
+      {file && file.length ? (
+        <Upload {...uploadProps}>{null}</Upload>
+      ) : (
+        <Upload {...uploadProps}>{uploadButton}</Upload>
+      )}
     </Form.Item>
   );
 };

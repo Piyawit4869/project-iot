@@ -1,9 +1,15 @@
 import React from 'react';
-import { Layout, Menu, Image, Typography, Row, Col, Card } from 'antd';
+import { Layout, Menu, Image, Typography, Row, Col, Button, Flex } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/images/logoutotechV2.png';
 import sidebar from '../assets/images/abstract_sidebar.png';
 import { Menus } from '.';
+import {
+  LeftOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  RightOutlined,
+} from '@ant-design/icons';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -13,6 +19,8 @@ export const Sidebar: React.FC = () => {
   const [collapsed, setCollapsed] = React.useState(false);
   const [activeKey, setActiveKey] = React.useState<any[]>([]);
   const [isMobile, setIsMobile] = React.useState(false);
+
+  console.log({ isMobile });
 
   const handleMenuClick = () => {
     if (isMobile) {
@@ -25,6 +33,10 @@ export const Sidebar: React.FC = () => {
     ...menu,
     onClick: handleMenuClick,
   }));
+
+  const toggle = () => {
+    setCollapsed(!collapsed);
+  };
 
   React.useEffect(() => {
     const currentPathname = location.pathname;
@@ -44,7 +56,8 @@ export const Sidebar: React.FC = () => {
       <Sider
         width={isMobile && collapsed ? 0 : 200}
         theme="light"
-        collapsible={true}
+        trigger={null}
+        collapsible
         collapsed={collapsed}
         onCollapse={(collapsed) => setCollapsed(collapsed)}
         breakpoint="lg"
@@ -59,80 +72,114 @@ export const Sidebar: React.FC = () => {
           transition: 'width 0.2s',
         }}
       >
-        <div
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            backgroundImage: `url(${sidebar})`,
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            opacity: 0.1,
-          }}
-        />
-
-        <Row
-          justify="center"
-          align="middle"
-          style={{
-            marginTop: '10px',
-          }}
-        >
-          <Col>
-            <Link to="http://localhost:8080/analytic">
-              <Image preview={false} src={logo} width={collapsed ? 40 : 70} />
-            </Link>
-          </Col>
-        </Row>
-
-        {!collapsed && (
-          <Row
-            justify="center"
-            align="middle"
-            gutter={[12, 12]}
-            style={{
-              marginTop: '10px',
-              marginBottom: '-10px',
-            }}
-          >
-            <Col>
-              <Typography style={{ color: '#19142A', fontSize: '20px' }}>
-                บริษัท ยูโทเทค จำกัด
-              </Typography>
-            </Col>
-          </Row>
-        )}
-
-        <div style={{ marginTop: collapsed ? '40px' : '0px' }}>
-          <Menu
-            theme="light"
-            mode="inline"
-            selectedKeys={activeKey}
-            defaultOpenKeys={['/']}
-            style={{
-              backgroundColor: '#F7F7F7',
-              marginTop: collapsed ? '0px' : '60px',
-              overflow: 'auto',
-            }}
-          >
-            {menusWithOnClick.map((menu) =>
-              menu.divider ? (
-                <Menu.Divider key={menu.key} />
-              ) : menu.children ? (
-                <SubMenu key={menu.key} icon={menu.icon} title={menu.label}>
-                  {menu.children.map((subMenu: any) => (
-                    <Menu.Item key={subMenu.key}>{subMenu.label}</Menu.Item>
-                  ))}
-                </SubMenu>
-              ) : (
-                <Menu.Item key={menu.key} icon={menu.icon}>
-                  {menu.label}
-                </Menu.Item>
-              ),
+        <Flex vertical justify="space-between" style={{ minHeight: '100vh' }}>
+          <div>
+            <div
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                backgroundImage: `url(${sidebar})`,
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                opacity: 0.1,
+              }}
+            />
+            <Row
+              justify="center"
+              align="middle"
+              style={{
+                marginTop: '10px',
+              }}
+            >
+              <Col>
+                <Link
+                  to={
+                    location.pathname.includes('/admin')
+                      ? '/admin/analytic'
+                      : '/analytic'
+                  }
+                >
+                  <Image
+                    preview={false}
+                    src={logo}
+                    width={collapsed ? 40 : 70}
+                  />
+                </Link>
+              </Col>
+            </Row>
+            {!collapsed && (
+              <Row
+                justify="center"
+                align="middle"
+                gutter={[12, 12]}
+                style={{
+                  marginTop: '10px',
+                  marginBottom: '-10px',
+                }}
+              >
+                <Col>
+                  <Typography style={{ color: '#19142A', fontSize: '20px' }}>
+                    {location.pathname.includes('/admin')
+                      ? 'ROME'
+                      : 'บริษัท ยูโทเทค จำกัด'}
+                  </Typography>
+                </Col>
+              </Row>
             )}
-          </Menu>
-        </div>
+            <div style={{ marginTop: collapsed ? '40px' : '0px' }}>
+              <Menu
+                theme="light"
+                mode="inline"
+                selectedKeys={activeKey}
+                defaultOpenKeys={['/']}
+                style={{
+                  backgroundColor: '#F7F7F7',
+                  marginTop: collapsed ? '0px' : '60px',
+                  overflow: 'auto',
+                }}
+              >
+                {menusWithOnClick.map((menu) =>
+                  menu.divider ? (
+                    <Menu.Divider key={menu.key} />
+                  ) : menu.children ? (
+                    <SubMenu key={menu.key} icon={menu.icon} title={menu.label}>
+                      {menu.children.map((subMenu: any) => (
+                        <Menu.Item key={subMenu.key}>{subMenu.label}</Menu.Item>
+                      ))}
+                    </SubMenu>
+                  ) : (
+                    <Menu.Item
+                      key={menu.key}
+                      icon={menu.icon}
+                      disabled={menu.disable}
+                    >
+                      {menu.label}
+                    </Menu.Item>
+                  ),
+                )}
+              </Menu>
+            </div>
+          </div>
+
+          <div>
+            <Button
+              className="custom-sider-trigger"
+              style={{ width: '100%', height: '40px' }}
+              onClick={toggle}
+            >
+              {collapsed ? (
+                <RightOutlined style={{ fontSize: '18px' }} />
+              ) : (
+                <LeftOutlined style={{ fontSize: '18px' }} />
+              )}
+            </Button>
+          </div>
+        </Flex>
+
+        {/* 
+        FIXME: Reopen me in soon ... 
         {!collapsed && (
           <Card
             style={{
@@ -153,8 +200,8 @@ export const Sidebar: React.FC = () => {
               STAY ORGANIZED
             </Typography>
 
-            {/* FIXME: Reopen me in soon ...  */}
-            {/* <Button
+       
+            <Button
               type="primary"
               block
               style={{
@@ -166,9 +213,9 @@ export const Sidebar: React.FC = () => {
               className="upgrade-button"
             >
               <Link to="/upgrade"> Upgrade </Link>
-            </Button> */}
+            </Button>
           </Card>
-        )}
+        )} */}
       </Sider>
       {isMobile && collapsed === false && (
         <div
@@ -182,6 +229,20 @@ export const Sidebar: React.FC = () => {
             zIndex: 9,
           }}
           onClick={() => setCollapsed(true)}
+        />
+      )}
+      {isMobile === true && (
+        <Button
+          type="text"
+          icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          onClick={() => setCollapsed(!collapsed)}
+          style={{
+            zIndex: 1,
+            margin: '20px 10px',
+            position: 'fixed',
+            fontSize: '24px',
+            top: 20,
+          }}
         />
       )}
     </>
