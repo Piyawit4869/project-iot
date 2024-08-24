@@ -42,8 +42,6 @@ export const UsersSingle = () => {
                   option={item.option}
                   icon={item.icon}
                   value={item.value}
-                  ruleMessage={item.message}
-                  require={item.require}
                   disabled={item.disabled}
                   checked={item.checked}
                 />

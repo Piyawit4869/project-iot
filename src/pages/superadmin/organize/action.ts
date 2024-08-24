@@ -7,7 +7,7 @@ export async function organizeCreateAction({ request, params }: any) {
   const submitData = Object.fromEntries(formData);
 
   try {
-    await API.organize.create(JSON.parse(submitData.data));
+    const res = await API.organize.create(JSON.parse(submitData.data));
 
     notification['success']({
       message: 'สร้างข้อมูลองค์กรเสร็จสิ้น',
@@ -15,7 +15,7 @@ export async function organizeCreateAction({ request, params }: any) {
       duration: 3,
     });
 
-    return redirect(`/admin/organize/${params.id}`);
+    return redirect(`/admin/organize/${res.data.slug}`);
   } catch (error) {
     notification['error']({
       message: 'สร้างข้อมูลองค์กรล้มเหลว',

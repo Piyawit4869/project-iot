@@ -124,13 +124,10 @@ export const BranchCreate = () => {
                 col={item.col}
                 icon={item.icon}
                 value={item.value}
-                ruleMessage={item.message}
-                require={item.require}
                 option={item.options}
                 disabled={item.disabled}
                 checked={item.checked}
                 maxLength={item.maxLength}
-                validator={item.validator}
               />
             );
           })}
