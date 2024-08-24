@@ -132,12 +132,9 @@ export const ProjectSingle: React.FC = () => {
                         option={item.option}
                         icon={item.icon}
                         value={item.value}
-                        ruleMessage={item.message}
-                        require={item.require}
                         disabled={item.disabled}
                         checked={item.checked}
                         maxLength={item.maxLength}
-                        validator={item.validator}
                       />
                     );
                   })}
