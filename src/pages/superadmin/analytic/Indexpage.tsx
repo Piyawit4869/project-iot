@@ -202,59 +202,59 @@ const AttendanceCard: React.FC = () => (
 //   </Card>
 // );
 const Analytic: React.FC = () => {
-    const login = useGoogleLogin({
-      flow: 'auth-code',
-      onSuccess: async (codeResponse) => {
-        try {
-          const tokensResponse = await axios.post(
-            'https://oauth2.googleapis.com/token',
-            {
-              code: codeResponse.code,
-              client_id: clientId,
-              client_secret: clientSecret,
-              redirect_uri: 'http://localhost:8080',
-              grant_type: 'authorization_code',
-            },
-          );
+  const login = useGoogleLogin({
+    flow: 'auth-code',
+    onSuccess: async (codeResponse) => {
+      try {
+        const tokensResponse = await axios.post(
+          'https://oauth2.googleapis.com/token',
+          {
+            code: codeResponse.code,
+            client_id: clientId,
+            client_secret: clientSecret,
+            redirect_uri: 'http://localhost:8080',
+            grant_type: 'authorization_code',
+          },
+        );
 
-          const userInfoResponse = await axios.get(
-            'https://www.googleapis.com/oauth2/v3/userinfo',
-            {
-              headers: {
-                Authorization: `Bearer ${tokensResponse.data.access_token}`,
-              },
+        const userInfoResponse = await axios.get(
+          'https://www.googleapis.com/oauth2/v3/userinfo',
+          {
+            headers: {
+              Authorization: `Bearer ${tokensResponse.data.access_token}`,
             },
-          );
+          },
+        );
 
-          const response = {
-            accessToken: tokensResponse.data.access_token,
-            refreshToken: tokensResponse.data.refresh_token,
-            type: 'web',
-            provider: 'google',
-            details: {
-              idToken: tokensResponse.data.id_token,
-              scopes: codeResponse.scope?.split(' ') || [],
-              serverAuthCode: codeResponse.code,
-              user: {
-                email: userInfoResponse.data.email,
-                familyName: userInfoResponse.data.family_name,
-                givenName: userInfoResponse.data.given_name,
-                id: userInfoResponse.data.sub,
-                name: userInfoResponse.data.name,
-                photo: userInfoResponse.data.picture,
-              },
+        const response = {
+          accessToken: tokensResponse.data.access_token,
+          refreshToken: tokensResponse.data.refresh_token,
+          type: 'web',
+          provider: 'google',
+          details: {
+            idToken: tokensResponse.data.id_token,
+            scopes: codeResponse.scope?.split(' ') || [],
+            serverAuthCode: codeResponse.code,
+            user: {
+              email: userInfoResponse.data.email,
+              familyName: userInfoResponse.data.family_name,
+              givenName: userInfoResponse.data.given_name,
+              id: userInfoResponse.data.sub,
+              name: userInfoResponse.data.name,
+              photo: userInfoResponse.data.picture,
             },
-          };
+          },
+        };
 
-          await loginWithGoogleAction(response);
-        } catch (error) {
-          console.error('Error during login process:', error);
-        }
-      },
-      onError: (errorResponse) => {
-        console.error('Login Failed:', errorResponse);
-      },
-    });
+        await loginWithGoogleAction(response);
+      } catch (error) {
+        console.error('Error during login process:', error);
+      }
+    },
+    onError: (errorResponse) => {
+      console.error('Login Failed:', errorResponse);
+    },
+  });
   return (
     <Flex vertical>
       <TitleBar title={'ภาพรวม'} subTitle={'สวัสดีตอนเที่ยง!'} />

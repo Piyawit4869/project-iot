@@ -15,7 +15,7 @@ const clientId =
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ConfigProvider theme={ThemeConfig.ThemeColorsV2}>
-      <GoogleOAuthProvider clientId={clientId} >
+      <GoogleOAuthProvider clientId={clientId}>
         <App />
       </GoogleOAuthProvider>
     </ConfigProvider>

@@ -2,7 +2,7 @@ import * as API from '@src/apis';
 import { notification } from 'antd';
 import { redirect } from 'react-router-dom';
 
-export async function organizeCreateAction({ request, params }: any) {
+export async function organizeCreateAction({ request }: any) {
   const formData = await request.formData();
   const submitData = Object.fromEntries(formData);
 
