@@ -1,4 +1,5 @@
 import { AttendanceIndex, indexLoader } from './attendance-index';
+import { AttendanceOverview } from './attendance-overview';
 
 export const routes = [
   {
@@ -8,6 +9,11 @@ export const routes = [
         path: '',
         loader: indexLoader,
         element: <AttendanceIndex />,
+      },
+      {
+        path: 'overview',
+        loader: indexLoader,
+        element: <AttendanceOverview />,
       },
     ],
   },

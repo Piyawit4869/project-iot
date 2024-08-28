@@ -45,9 +45,18 @@ export const Menus = (props: MenusProps) => {
 
     {
       label: <Link to="/attendance">เข้างานออกงาน</Link>,
-      key: '/attendance',
       icon: <Icon.FieldTimeOutlined />,
       role: ['owner', 'manager', 'supervisor', 'employee'],
+       children: [
+          {
+            label: <Link to="/attendance/overview">ภาพรวม</Link>,
+            icon: <Icon.DashboardOutlined  />,
+            role: ['owner', 'manager', 'supervisor', 'employee'],
+          },
+          {
+            label: <Link to="/user">ข้อมูลพนักงาน</Link>,
+          },
+        ],
     },
     {
       label: <Link to="/user">ผู้ใช้</Link>,
