@@ -37,7 +37,7 @@ export const AttendanceOverview = () => {
                       <Card>
                         <Flex vertical align="center">
                           <Typography style={{ color: 'white' }}>
-                            ยังไม่เข้างาน 1 คน
+                            คนที่ขาด 1 คน
                           </Typography>
                         </Flex>
                       </Card>
@@ -48,7 +48,7 @@ export const AttendanceOverview = () => {
                       <Card>
                         <Flex vertical align="center">
                           <Typography style={{ color: 'white' }}>
-                            ยังไม่เข้างาน 1 คน
+                            คนที่ลา 1 คน
                           </Typography>
                         </Flex>
                       </Card>
@@ -59,7 +59,7 @@ export const AttendanceOverview = () => {
                       <Card>
                         <Flex vertical align="center">
                           <Typography style={{ color: 'white' }}>
-                            ยังไม่เข้างาน 1 คน
+                            ออกงานก่อนเวลา 1 คน
                           </Typography>
                         </Flex>
                       </Card>
