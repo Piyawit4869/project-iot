@@ -12,7 +12,6 @@ export const routes = [
       },
       {
         path: 'overview',
-        loader: indexLoader,
         element: <AttendanceOverview />,
       },
     ],

@@ -159,6 +159,7 @@ export const Sidebar: React.FC = () => {
                         <Menu.Item 
                         key={subMenu.key}
                         icon={menu.icon}
+                        selectedKeys={activeKey}
                         >{subMenu.label}</Menu.Item>
                       ))}
                     </SubMenu>

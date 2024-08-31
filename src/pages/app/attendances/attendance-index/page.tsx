@@ -87,7 +87,7 @@ export const AttendanceIndex = () => {
             <Row gutter={[8, 8]}>
               <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Row>
-                  <Col xs={9} sm={9} md={12} lg={24} xl={24}>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                     <Link style={{ width: '100%' }} to="#">
                       <Card>
                         <Flex vertical align="center">
@@ -98,34 +98,34 @@ export const AttendanceIndex = () => {
                       </Card>
                     </Link>
                   </Col>
-                  <Col flex="1 0 25%">
+                  <Col xs={24} sm={24} md={24} lg={8} xl={8}>
                     <Link style={{ width: '100%' }} to="#">
                       <Card>
                         <Flex vertical align="center">
                           <Typography style={{ color: 'white' }}>
-                            คนที่ขาด 1 คน
+                            ยังไม่เข้างาน 1 คน
                           </Typography>
                         </Flex>
                       </Card>
                     </Link>
                   </Col>
-                  <Col flex="1 0 25%">
+                  <Col xs={24} sm={24} md={24} lg={8} xl={8}>
                     <Link style={{ width: '100%' }} to="#">
                       <Card>
                         <Flex vertical align="center">
                           <Typography style={{ color: 'white' }}>
-                            คนที่ลา 1 คน
+                            ยังไม่เข้างาน 1 คน
                           </Typography>
                         </Flex>
                       </Card>
                     </Link>
                   </Col>
-                  <Col flex="1 0 25%">
+                  <Col xs={24} sm={24} md={24} lg={8} xl={8}>
                     <Link style={{ width: '100%' }} to="#">
                       <Card>
                         <Flex vertical align="center">
                           <Typography style={{ color: 'white' }}>
-                            ออกงานก่อนเวลา 1 คน
+                            ยังไม่เข้างาน 1 คน
                           </Typography>
                         </Flex>
                       </Card>
