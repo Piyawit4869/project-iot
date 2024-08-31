@@ -44,7 +44,7 @@ export const Menus = (props: MenusProps) => {
     },
 
     {
-      label: <p>เข้างานออกงาน</p>,
+      label: <p style={{color:'grey'}}>เข้างานออกงาน</p>,
       icon: <Icon.FieldTimeOutlined />,
       role: ['owner', 'manager', 'supervisor', 'employee'],
       key: '/attendance',
