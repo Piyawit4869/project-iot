@@ -87,7 +87,7 @@ export const AttendanceIndex = () => {
             <Row gutter={[8, 8]}>
               <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Row>
-                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                     <Link style={{ width: '100%' }} to="#">
                       <Card>
                         <Flex vertical align="center">
@@ -114,7 +114,7 @@ export const AttendanceIndex = () => {
                       <Card>
                         <Flex vertical align="center">
                           <Typography style={{ color: 'white' }}>
-                          คนที่ลา 1 คน
+                            คนที่ลา 1 คน
                           </Typography>
                         </Flex>
                       </Card>
@@ -125,7 +125,7 @@ export const AttendanceIndex = () => {
                       <Card>
                         <Flex vertical align="center">
                           <Typography style={{ color: 'white' }}>
-                          ออกงานก่อนเวลา 1 คน
+                            ออกงานก่อนเวลา 1 คน
                           </Typography>
                         </Flex>
                       </Card>
@@ -142,34 +142,6 @@ export const AttendanceIndex = () => {
                 dataSource={myAttendance}
               />
             </Col>
-            {/* <Col xs={24} sm={24} md={24} lg={8} xl={8}>
-                <Flex vertical gap={6}>
-                  <Link to="#">
-                    <Card>
-                      <Flex vertical align="center">
-                        <Typography style={{ color: 'white' }}>
-                          {me.role.name === 'owner' ||
-                          me.role.name === 'manager'
-                            ? 'ยังไม่ได้เข้างาน 1 คน'
-                            : 'เหลือวันลา 2 วัน'}
-                        </Typography>
-                      </Flex>
-                    </Card>
-                  </Link>
-                  <Link to="#">
-                    <Card>
-                      <Flex vertical align="center">
-                        <Typography style={{ color: 'white' }}>
-                          {me.role.name === 'owner' ||
-                          me.role.name === 'manager'
-                            ? 'ไม่มีคนลา'
-                            : 'มี 3 นัดหมายในวันนี้'}
-                        </Typography>
-                      </Flex>
-                    </Card>
-                  </Link>
-                </Flex>
-              </Col> */}
           </Row>
         </div>
       )}
