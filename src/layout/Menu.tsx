@@ -72,6 +72,13 @@ export const Menus = (props: MenusProps) => {
       role: ['owner', 'manager'],
     },
     {
+      //  <Link to="/customer">
+      label: <Link to="/customer">ลูกค้า</Link>,
+      key: '/customer',
+      icon: <Icon.CustomerServiceOutlined />,
+      role: ['owner', 'manager'],
+    },
+    {
       //<Link to="/notation">
       label: (
         <Link to="#" style={{ cursor: 'not-allowed' }}>
@@ -83,18 +90,7 @@ export const Menus = (props: MenusProps) => {
       role: ['owner', 'manager'],
       disable: true,
     },
-    {
-      //  <Link to="/customer">
-      label: (
-        <Link to="#" style={{ cursor: 'not-allowed' }}>
-          ลูกค้า
-        </Link>
-      ),
-      key: '/customer',
-      icon: <Icon.CustomerServiceOutlined />,
-      role: ['owner', 'manager'],
-      disable: true,
-    },
+
     {
       //<Link to="/project">
       label: (
@@ -114,6 +110,18 @@ export const Menus = (props: MenusProps) => {
     //   role: ["branch_admin","organize_admin"],
     // },
     {
+      // <Link to="/attendance">
+      label: (
+        <Link to="#" style={{ cursor: 'not-allowed' }}>
+          เข้างานออกงาน
+        </Link>
+      ),
+      key: '/attendance',
+      icon: <Icon.FieldTimeOutlined />,
+      role: ['owner', 'manager', 'supervisor', 'employee'],
+      disable: true,
+    },
+    {
       //<Link to="/information-branch">
       label: (
         <Link to="#" style={{ cursor: 'not-allowed' }}>
@@ -127,15 +135,11 @@ export const Menus = (props: MenusProps) => {
     },
     {
       // <Link to="/information">
-      label: (
-        <Link to="#" style={{ cursor: 'not-allowed' }}>
-          ข้อมูลองค์กร
-        </Link>
-      ),
+      label: <Link to="/information">ข้อมูลองค์กร</Link>,
       key: '/information',
       icon: <Icon.SettingOutlined />,
       role: ['owner'],
-      disable: true,
+      // disable: true,
     },
   ];
   return menus.filter((m) => m.role.includes(role));

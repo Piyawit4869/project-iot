@@ -175,7 +175,7 @@ export const Login = () => {
           size="middle"
         >
           <Typography.Title level={1} style={{ color: 'white' }}>
-            Stay Organize
+            ROME
           </Typography.Title>
           <div style={{ height: '30px' }} />
           <Form.Item

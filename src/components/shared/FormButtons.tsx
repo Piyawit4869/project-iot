@@ -1,6 +1,7 @@
 import { Button, FormInstance, Modal } from 'antd';
 import { useNavigate, useSubmit } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
+import { CSSProperties } from 'react';
 
 const { confirm } = Modal;
 
@@ -67,14 +68,7 @@ const FormButtonsEdit = (props: FormButtonEdit) => {
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: '10px',
-      }}
-    >
+    <div style={styles.sticky}>
       <Button
         type="primary"
         onClick={() => navigate(-1)}
@@ -155,14 +149,7 @@ const FormButtonsCreate = (props: FormButtonCreate) => {
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: '10px',
-      }}
-    >
+    <div style={styles.sticky}>
       <Button
         type="primary"
         onClick={() => navigate(-1)}
@@ -197,3 +184,16 @@ const FormButtonsCreate = (props: FormButtonCreate) => {
 };
 
 export { FormButtonsEdit, FormButtonsCreate };
+
+const styles: Record<string, CSSProperties> = {
+  sticky: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    position: 'sticky',
+    height: '50px',
+    top: 0,
+    zIndex: 1,
+    background: 'white',
+  },
+};
