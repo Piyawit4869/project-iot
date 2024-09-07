@@ -2,7 +2,7 @@ import { LoginPage } from './auth';
 import { AppLandingPage } from './Indexpage';
 import { routes as planningRoute } from './planning';
 import { routes as notationRoute } from './notation';
-import { routes as attendanceRoute } from './attendance';
+import { routes as attendanceRoute } from './attendances';
 import { routes as userRoute } from './user';
 import { routes as projectpageRoute } from './project';
 import { routes as customersRoute } from './customer';

@@ -1,4 +1,4 @@
-export async function attendancCreateAction() {
+export async function attendanceCreateAction() {
   // const formData = await request.formData();
   // const submitData = Object.fromEntries(formData);
 

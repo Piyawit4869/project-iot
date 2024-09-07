@@ -4,12 +4,18 @@ import { TableComponent } from '@src/components/shared/TableComponent';
 import { Button, Card, Col, Flex, Row, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLoaderData } from 'react-router-dom';
 
-const AttendanceIndex = () => {
+type AttendanceLoaderData = {
+  data: any;
+};
+
+export const AttendanceIndex = () => {
+  const { data: myAttendance } = useLoaderData() as AttendanceLoaderData;
   const [attendance, setAttendance] = React.useState(true);
   const me = JSON.parse(localStorage.getItem('me') as any);
 
+  console.log('data in index page', myAttendance);
   const myAttendanceColumns: ColumnsType<any> | undefined = [
     {
       title: 'ลำดับ',
@@ -28,9 +34,29 @@ const AttendanceIndex = () => {
       key: 'event',
     },
     {
-      title: 'เวลา',
+      title: 'เข้างาน',
+      dataIndex: 'clockIn',
+      key: 'clockIn',
+    },
+    {
+      title: 'พักเบรก',
+      dataIndex: 'breakTimes',
+      key: 'breakTimes',
+    },
+    {
+      title: 'ออกงาน',
+      dataIndex: 'clockOut',
+      key: 'clockIn',
+    },
+    {
+      title: 'สรุปเวลาเข้างาน',
       dataIndex: 'eventTime',
       key: 'eventTime',
+    },
+    {
+      title: 'หมายเหตุ',
+      dataIndex: 'reMark',
+      key: 'reMark',
     },
     {
       dataIndex: 'id',
@@ -49,39 +75,6 @@ const AttendanceIndex = () => {
     },
   ];
 
-  const myAttendance = [
-    {
-      id: '1',
-      username: 'Pho0m',
-      event: 'เข้างาน',
-      eventTime: '10:03 นาฬิกา',
-    },
-    {
-      id: '2',
-      username: 'Pho0m',
-      event: 'พักเบรค',
-      eventTime: '11:47 นาฬิกา',
-    },
-    {
-      id: '3',
-      username: 'Pho0m',
-      event: 'เข้างาน',
-      eventTime: '13:05 นาฬิกา',
-    },
-    {
-      id: '4',
-      username: 'Pho0m',
-      event: 'พักเบรค',
-      eventTime: '16:54 นาฬิกา',
-    },
-    {
-      id: '5',
-      username: 'Pho0m',
-      event: 'ออกงาน',
-      eventTime: '17:00 นาฬิกา',
-    },
-  ];
-
   return (
     <>
       {(me.role.name === 'owner' || me.role.name === 'manager') && (
@@ -90,15 +83,66 @@ const AttendanceIndex = () => {
             title={'ภาพรวมการทำงานในองค์กรวันนี้'}
             subTitle={'สวัสดีตอนเที่ยง!'}
           />
-          <Card style={{ backgroundColor: '#f8f9fa' }}>
+          <div style={{ margin: '5px 0px 5px 0px' }}>
             <Row gutter={[8, 8]}>
-              <Col xs={24} sm={24} md={24} lg={16} xl={16}>
-                <TableComponent
-                  columns={myAttendanceColumns}
-                  dataSource={myAttendance}
-                />
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Row>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                    <Link style={{ width: '100%' }} to="#">
+                      <Card>
+                        <Flex vertical align="center">
+                          <Typography style={{ color: 'white' }}>
+                            ยังไม่เข้างาน 1 คน
+                          </Typography>
+                        </Flex>
+                      </Card>
+                    </Link>
+                  </Col>
+                  <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+                    <Link style={{ width: '100%' }} to="#">
+                      <Card>
+                        <Flex vertical align="center">
+                          <Typography style={{ color: 'white' }}>
+                            คนที่ขาด 1 คน
+                          </Typography>
+                        </Flex>
+                      </Card>
+                    </Link>
+                  </Col>
+                  <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+                    <Link style={{ width: '100%' }} to="#">
+                      <Card>
+                        <Flex vertical align="center">
+                          <Typography style={{ color: 'white' }}>
+                          คนที่ลา 1 คน
+                          </Typography>
+                        </Flex>
+                      </Card>
+                    </Link>
+                  </Col>
+                  <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+                    <Link style={{ width: '100%' }} to="#">
+                      <Card>
+                        <Flex vertical align="center">
+                          <Typography style={{ color: 'white' }}>
+                          ออกงานก่อนเวลา 1 คน
+                          </Typography>
+                        </Flex>
+                      </Card>
+                    </Link>
+                  </Col>
+                </Row>
               </Col>
-              <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+            </Row>
+          </div>
+          <Row gutter={[8, 8]}>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+              <TableComponent
+                columns={myAttendanceColumns}
+                dataSource={myAttendance}
+              />
+            </Col>
+            {/* <Col xs={24} sm={24} md={24} lg={8} xl={8}>
                 <Flex vertical gap={6}>
                   <Link to="#">
                     <Card>
@@ -125,9 +169,8 @@ const AttendanceIndex = () => {
                     </Card>
                   </Link>
                 </Flex>
-              </Col>
-            </Row>
-          </Card>
+              </Col> */}
+          </Row>
         </div>
       )}
       <TitleBar
@@ -210,5 +253,3 @@ const AttendanceIndex = () => {
     </>
   );
 };
-
-export default AttendanceIndex;
