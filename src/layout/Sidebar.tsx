@@ -20,6 +20,8 @@ export const Sidebar: React.FC = () => {
   const [activeKey, setActiveKey] = React.useState<any[]>([]);
   const [isMobile, setIsMobile] = React.useState(false);
 
+  const currentPath = location.pathname;
+
   console.log({ isMobile });
 
   const handleMenuClick = () => {
@@ -132,7 +134,7 @@ export const Sidebar: React.FC = () => {
               <Menu
                 theme="light"
                 mode="inline"
-                selectedKeys={activeKey}
+                selectedKeys={[currentPath]}
                 defaultOpenKeys={['/']}
                 style={{
                   backgroundColor: '#F7F7F7',
@@ -143,7 +145,6 @@ export const Sidebar: React.FC = () => {
                 {menusWithOnClick.map((menu) =>
                   menu.divider ? (
                     <Menu.Divider
-                    
                      key={menu.key} />
                   ) : menu.children ? (
                     <SubMenu 

@@ -11,7 +11,7 @@ export const routes = [
         element: <AttendanceIndex />,
       },
       {
-        path: 'overview',
+        path: 'attendance-overview',
         element: <AttendanceOverview />,
       },
     ],

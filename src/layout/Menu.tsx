@@ -45,7 +45,7 @@ export const Menus = (props: MenusProps) => {
 
     {
       label: <p style={{color:'grey'}}>เข้างานออกงาน</p>,
-      icon: <Icon.FieldTimeOutlined />,
+      icon: <Icon.FieldTimeOutlined  />,
       role: ['owner', 'manager', 'supervisor', 'employee'],
       key: '/attendance',
 
@@ -57,10 +57,10 @@ export const Menus = (props: MenusProps) => {
             key: '/attendance',
           },
           {
-            label: <Link to="/attendance/overview">ข้อมูลเชิงลึก</Link>,
+            label: <Link to="/attendance/attendance-overview">ข้อมูลเชิงลึก</Link>,
             icon: <Icon.DashboardOutlined  />,
             role: ['owner', 'manager', 'supervisor', 'employee'],
-            key: '/attendance/overview',
+            key: '/attendance/attendance-overview',
           },
          
         ],
