@@ -2,7 +2,7 @@ import { ProfilePage } from './Indexpage';
 
 export const routes = [
   {
-    path: '/profile',
+    path: 'profile',
     children: [
       {
         path: '',

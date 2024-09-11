@@ -1,11 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { Root, RootLoader } from './pages/Roots';
-import { AppLayout } from './layout';
+import { AppLayout, DemoLayout } from './layout';
 
 import { routes as appRoutes } from './pages/app';
 import { routes as publicRoutes } from './pages/public';
 import { routes as adminRoutes } from './pages/superadmin';
+import { routes as demoRoutes } from './pages/demo';
 import { Login, loginAction } from './pages/Login';
 import { Receipt } from './pages/Receipt';
 
@@ -41,6 +42,11 @@ export const router = createBrowserRouter([
         path: '',
         element: <AppLayout />,
         children: [...appRoutes],
+      },
+      {
+        path: 'demo',
+        element: <DemoLayout />,
+        children: [...demoRoutes],
       },
     ],
   },
