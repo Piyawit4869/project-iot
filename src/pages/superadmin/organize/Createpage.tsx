@@ -55,6 +55,8 @@ export const OrganizeCreate: React.FC = () => {
       payload.branch.address.name = values.branch.nameEn;
       payload.address.language = values.setting.defaultLanguage;
       payload.branch.address.language = values.setting.defaultLanguage;
+      payload.address.isMain = true;
+      payload.branch.address.isMain = true;
 
       // Convert dates to ISO format if they exist
       if (values.openingDate) {

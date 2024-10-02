@@ -1,7 +1,7 @@
 import { mockupAttendance } from '@src/pages/app/attendances/mockup-attendance';
 import client from './client';
 
-export async function getAll(params?: any) {
+export async function getAll() {
   // return client({
   //   method: 'GET',
   //   url: '/api/crud/branches',

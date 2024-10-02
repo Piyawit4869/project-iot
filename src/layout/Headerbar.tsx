@@ -5,10 +5,12 @@ import {
   UserOutlined,
   HomeOutlined,
   BellOutlined,
+  GoogleOutlined,
 } from '@ant-design/icons';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Breadcrumb,
+  Button,
   Col,
   Dropdown,
   Empty,
@@ -18,14 +20,103 @@ import {
   MenuProps,
   Row,
   Space,
+  notification,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
+
+import * as API from '@src/apis';
+import axios from 'axios';
+import { useGoogleLogin } from '@react-oauth/google';
+import { json, redirect } from 'react-router-dom';
+
+const clientId =
+  '23189663829-jbftuq5rc78ct17qkjd48f97lcmd28h0.apps.googleusercontent.com';
+
+const clientSecret = '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';
+
+async function loginWithGoogleAction(data: any) {
+  try {
+    const res = await API.auth.loginWithGoogle(data);
+    localStorage.setItem('accessToken', res.data.accessToken);
+    localStorage.setItem('refreshToken', res.data.refreshToken);
+    notification.success({
+      message: 'Login Success',
+      placement: 'bottomRight',
+      description: 'You have successfully logged in',
+    });
+    return redirect(
+      data.user === 'super.admin@utotech.org' ? '/admin/analytic' : '/analytic',
+    );
+  } catch (error) {
+    notification.error({
+      message: 'Login Failed',
+      placement: 'bottomRight',
+      description: 'Invalid email or password',
+    });
+
+    return json({ status: 'error', message: 'Invalid email or password' });
+  }
+}
 
 export const Headerbar: React.FC = () => {
   const location = useLocation();
   const { t } = useTranslation();
 
   const me = JSON.parse(localStorage.getItem('me') as any);
+
+  const login = useGoogleLogin({
+    flow: 'auth-code',
+    onSuccess: async (codeResponse) => {
+      try {
+        const tokensResponse = await axios.post(
+          'https://oauth2.googleapis.com/token',
+          {
+            code: codeResponse.code,
+            client_id: clientId,
+            client_secret: clientSecret,
+            redirect_uri: 'http://localhost:8080',
+            grant_type: 'authorization_code',
+          },
+        );
+
+        const userInfoResponse = await axios.get(
+          'https://www.googleapis.com/oauth2/v3/userinfo',
+          {
+            headers: {
+              Authorization: `Bearer ${tokensResponse.data.access_token}`,
+            },
+          },
+        );
+
+        const response = {
+          accessToken: tokensResponse.data.access_token,
+          refreshToken: tokensResponse.data.refresh_token,
+          type: 'web',
+          provider: 'google',
+          details: {
+            idToken: tokensResponse.data.id_token,
+            scopes: codeResponse.scope?.split(' ') || [],
+            serverAuthCode: codeResponse.code,
+            user: {
+              email: userInfoResponse.data.email,
+              familyName: userInfoResponse.data.family_name,
+              givenName: userInfoResponse.data.given_name,
+              id: userInfoResponse.data.sub,
+              name: userInfoResponse.data.name,
+              photo: userInfoResponse.data.picture,
+            },
+          },
+        };
+
+        await loginWithGoogleAction(response);
+      } catch (error) {
+        console.error('Error during login process:', error);
+      }
+    },
+    onError: (errorResponse) => {
+      console.error('Login Failed:', errorResponse);
+    },
+  });
 
   const notifications: MenuProps['items'] = [
     {
@@ -91,6 +182,27 @@ export const Headerbar: React.FC = () => {
       ),
       key: '2',
     },
+    {
+      label: (
+        <Button
+          onClick={() => login()}
+          size="large"
+          type="primary"
+          htmlType="submit"
+          icon={<GoogleOutlined />}
+          style={{ width: '100%' }}
+          // loading={
+          //   navigation.state === 'loading' || navigation.state === 'submitting'
+          // }
+          // disabled={
+          //   navigation.state === 'loading' || navigation.state === 'submitting'
+          // }
+        >
+          Login with Google
+        </Button>
+      ),
+      key: '3',
+    },
   ];
 
   const generateBreadcrumbs = (path: string) => {
@@ -105,7 +217,7 @@ export const Headerbar: React.FC = () => {
             to={
               location.pathname.includes('/admin')
                 ? '/admin/analytic'
-                : '/analytic'
+                : '/attendance'
             }
           >
             <HomeOutlined />

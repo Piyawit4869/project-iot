@@ -17,12 +17,9 @@ const { SubMenu } = Menu;
 export const Sidebar: React.FC = () => {
   const location = useLocation();
   const [collapsed, setCollapsed] = React.useState(false);
-  const [activeKey, setActiveKey] = React.useState<any[]>([]);
   const [isMobile, setIsMobile] = React.useState(false);
 
   const currentPath = location.pathname;
-
-  console.log({ isMobile });
 
   const handleMenuClick = () => {
     if (isMobile) {
@@ -39,15 +36,6 @@ export const Sidebar: React.FC = () => {
   const toggle = () => {
     setCollapsed(!collapsed);
   };
-
-  React.useEffect(() => {
-    const currentPathname = location.pathname;
-    const resultPath = Menus({ role: me.role.name })
-      .filter((menu: any) => currentPathname.includes(menu.key))
-      .map((item: any) => item.key);
-
-    setActiveKey(resultPath);
-  }, [location.pathname, setActiveKey]);
 
   React.useEffect(() => {
     setCollapsed(isMobile);
@@ -100,7 +88,7 @@ export const Sidebar: React.FC = () => {
                   to={
                     location.pathname.includes('/admin')
                       ? '/admin/analytic'
-                      : '/analytic'
+                      : '/attendance'
                   }
                 >
                   <Image
@@ -144,30 +132,30 @@ export const Sidebar: React.FC = () => {
               >
                 {menusWithOnClick.map((menu) =>
                   menu.divider ? (
-                    <Menu.Divider
-                     key={menu.key} />
+                    <Menu.Divider key={menu.key} />
                   ) : menu.children ? (
-                    <SubMenu 
-                    style={{
-                      backgroundColor: '#F7F7F7',
-                      overflow: 'auto',
-                    }}
-                    key={menu.key}  
-                    icon={menu.icon} 
-                    
-                    title={menu.label}>
+                    <SubMenu
+                      style={{
+                        backgroundColor: '#F7F7F7',
+                        overflow: 'auto',
+                      }}
+                      key={menu.key}
+                      icon={menu.icon} // Use parent icon here
+                      title={menu.label}
+                    >
                       {menu.children.map((subMenu: any) => (
-                        <Menu.Item 
-                        key={subMenu.key}
-                        icon={menu.icon}
-                        selectedKeys={activeKey}
-                        >{subMenu.label}</Menu.Item>
+                        <Menu.Item
+                          key={subMenu.key}
+                          icon={subMenu.icon} // Use child icon here
+                        >
+                          {subMenu.label}
+                        </Menu.Item>
                       ))}
                     </SubMenu>
                   ) : (
                     <Menu.Item
                       key={menu.key}
-                      icon={menu.icon}
+                      icon={menu.icon} // Use parent icon for items without children
                       disabled={menu.disable}
                     >
                       {menu.label}

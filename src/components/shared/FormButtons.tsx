@@ -105,6 +105,84 @@ const FormButtonsEdit = (props: FormButtonEdit) => {
   );
 };
 
+interface FormButtonSetting {
+  form: FormInstance;
+  titleModalReset?: string;
+  contentModalReset?: string;
+
+  titleModalSubmit?: string;
+  contentModalSubmit?: string;
+}
+
+const FormButtonsSetting = (props: FormButtonSetting) => {
+  const {
+    form,
+    titleModalReset,
+    contentModalReset,
+    titleModalSubmit,
+    contentModalSubmit,
+  } = props;
+  const navigate = useNavigate();
+
+  const onReset = () => {
+    confirm({
+      title: titleModalReset ? titleModalReset : 'title',
+      content: contentModalReset ? contentModalReset : 'content',
+      okText: 'ยืนยัน',
+      cancelText: 'ยกเลิก',
+      onOk() {
+        form.resetFields();
+      },
+    });
+  };
+
+  const onSubmit = () => {
+    confirm({
+      title: titleModalSubmit ? titleModalSubmit : 'title',
+      content: contentModalSubmit ? contentModalSubmit : 'content',
+      okText: 'ยืนยัน',
+      cancelText: 'ยกเลิก',
+      onOk() {
+        form.submit();
+      },
+    });
+  };
+
+  return (
+    <div style={styles.sticky}>
+      <Button
+        type="primary"
+        onClick={() => navigate(-1)}
+        style={{ marginRight: '10px' }}
+      >
+        <LeftOutlined /> กลับ
+      </Button>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+        }}
+      >
+        <Button
+          style={{
+            marginRight: '10px',
+            backgroundColor: '#A79DB4',
+            borderColor: '#A79DB4',
+            color: '#fff',
+          }}
+          onClick={onReset}
+        >
+          ยกเลิก
+        </Button>
+        <Button type="primary" onClick={onSubmit}>
+          ยืนยัน
+        </Button>
+      </div>
+    </div>
+  );
+};
+
 interface FormButtonCreate {
   form: FormInstance;
   titleModalReset?: string;
@@ -183,7 +261,7 @@ const FormButtonsCreate = (props: FormButtonCreate) => {
   );
 };
 
-export { FormButtonsEdit, FormButtonsCreate };
+export { FormButtonsEdit, FormButtonsCreate, FormButtonsSetting };
 
 const styles: Record<string, CSSProperties> = {
   sticky: {

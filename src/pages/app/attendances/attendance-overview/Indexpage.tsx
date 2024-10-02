@@ -1,13 +1,9 @@
 import { TitleBar } from '@src/components/shared';
-import {  Card, Col, Flex, Row, Typography } from 'antd';
-import { Link} from 'react-router-dom';
-
+import { Card, Col, Flex, Row, Typography } from 'antd';
+import { Link } from 'react-router-dom';
 
 export const AttendanceOverview = () => {
   const me = JSON.parse(localStorage.getItem('me') as any);
-
-  
-  
 
   return (
     <>
@@ -69,10 +65,8 @@ export const AttendanceOverview = () => {
               </Col>
             </Row>
           </div>
-          
         </div>
       )}
-      
     </>
   );
 };
