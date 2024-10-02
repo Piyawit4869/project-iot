@@ -1,2 +1,2 @@
-export { indexLoader } from './loader';
-export { AttendanceIndex } from './Indexpage';
+export * from './loader';
+export * from './Indexpage';
