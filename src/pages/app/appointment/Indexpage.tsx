@@ -193,8 +193,8 @@ export const AppointmentIndex = () => {
   return (
     <>
       <TitleBar
-        title={'การนัดหมายในวันนี้'}
-        subTitle={'รวมการนัดหมายทั้งหมดในวันนี้อยู่ที่นี่แล้ว'}
+        title={'การนัดหมาย'}
+        subTitle={'รวมการนัดหมายทั้งหมดอยู่ที่นี่แล้ว'}
         buttons={[
           <Link to={'create'}>
             <Button type="primary">สร้างนัดหมาย</Button>

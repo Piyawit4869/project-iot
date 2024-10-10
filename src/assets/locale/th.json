@@ -19,6 +19,9 @@
     "developer": "นักพัฒนา",
     "employee": "พนักงาน",
     "profile": "โปรไฟล์",
-    "logout": "ออกจากระบบ"
+    "logout": "ออกจากระบบ",
+    "action": "กิจกรรม",
+    "approval": "การลางาน",
+    "appointment": "การนัดหมาย"
   }
 }
