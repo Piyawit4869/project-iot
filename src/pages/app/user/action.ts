@@ -15,7 +15,7 @@ export async function userCreateAction({ request }: any) {
       duration: 3,
     });
 
-    return redirect(`/user/${res.data.id}`);
+    return redirect(`/user/${res.data.data.id}`);
   } catch (error) {
     notification.error({
       message: 'สร้างผู้ใช้งานล้มเหลว',
@@ -81,6 +81,29 @@ export async function userEditAction({ request, params }: any) {
             action: 'delete',
             status: 'error',
             message: 'User Deleted Failed !',
+          },
+        };
+      }
+    case 'resetPassword':
+      try {
+        await API.user.resetPassword(params.id, JSON.parse(submitData.data));
+        notification['success']({
+          message: 'แก้ไขรหัสผ่านสำเร็จ',
+          placement: 'bottomRight',
+          duration: 3,
+        });
+        return redirect(`/user/${params.id}`);
+      } catch (error) {
+        notification['error']({
+          message: 'แก้ไขรหัสผ่านล้มเหลว',
+          placement: 'bottomRight',
+          duration: 3,
+        });
+        return {
+          data: {
+            action: 'edit',
+            status: 'error',
+            message: 'User Updated Failed !',
           },
         };
       }
