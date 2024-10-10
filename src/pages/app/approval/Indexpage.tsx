@@ -15,6 +15,8 @@ import {
   Modal,
   Row,
   Select,
+  Tabs,
+  TabsProps,
   Tag,
   Typography,
 } from 'antd';
@@ -24,7 +26,8 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/th';
 import React from 'react';
 import * as API from '../../../apis';
-import { useLoaderData } from 'react-router-dom';
+import { redirect, useLoaderData, useSubmit } from 'react-router-dom';
+import { notification } from 'antd/lib';
 dayjs.locale('th');
 
 export async function approvalLoader() {
@@ -37,15 +40,114 @@ export async function approvalLoader() {
   }
 }
 
+export async function approvalAction({ request }: any) {
+  const formData = await request.formData();
+  const submitData = Object.fromEntries(formData);
+
+  switch (submitData.action) {
+    case 'create':
+      try {
+        await API.approval.create(JSON.parse(submitData.data));
+        notification['success']({
+          message: 'ส่งใบลางานสำเร็จ',
+          placement: 'bottomRight',
+          duration: 3,
+        });
+        return redirect(`/approval`);
+      } catch (error) {
+        notification['error']({
+          message: 'ส่งใบลางานล้มเหลว',
+          placement: 'bottomRight',
+          duration: 3,
+        });
+        return {};
+      }
+    case 'update':
+      try {
+        await API.approval.updateStatus(
+          submitData.id,
+          JSON.parse(submitData.data),
+        );
+        notification['success']({
+          message: 'ส่งใบลางานสำเร็จ',
+          placement: 'bottomRight',
+          duration: 3,
+        });
+        return redirect(`/approval`);
+      } catch (error) {
+        notification['error']({
+          message: 'ส่งใบลางานล้มเหลว',
+          placement: 'bottomRight',
+          duration: 3,
+        });
+        return {};
+      }
+    case 'resend':
+      try {
+        await API.approval.resend(submitData.id, JSON.parse(submitData.data));
+        notification['success']({
+          message: 'ส่งใบลางานสำเร็จ',
+          placement: 'bottomRight',
+          duration: 3,
+        });
+        return redirect(`/approval`);
+      } catch (error) {
+        notification['error']({
+          message: 'ส่งใบลางานล้มเหลว',
+          placement: 'bottomRight',
+          duration: 3,
+        });
+        return {};
+      }
+
+    default:
+      break;
+  }
+  try {
+  } catch (error) {}
+}
+
 export const ApprovalIndex = () => {
   const { approvals } = useLoaderData() as any;
-
-  console.log({ approvals });
-
+  const [form] = Form.useForm();
+  const submit = useSubmit();
   const [open, setOpen] = React.useState(false);
   const [openCreate, setOpenCreate] = React.useState(false);
   const [modalData, setModalData] = React.useState({}) as any;
   const me = JSON.parse(localStorage.getItem('me') as any);
+  const [action, setAction] = React.useState('');
+  const [openConfirm, setOpenConfirm] = React.useState(false);
+  const [openResend, setOpenResend] = React.useState(false);
+
+  const approve = approvals?.items?.filter(
+    (item: any) => item.status === 'Approved',
+  );
+  const reject = approvals?.items?.filter(
+    (item: any) => item.status === 'Rejected',
+  );
+  const cancal = approvals?.items?.filter(
+    (item: any) => item.status === 'Cancelled',
+  );
+  const inProgress = approvals?.items?.filter(
+    (item: any) => item.status === 'InProgress',
+  );
+  const pending = approvals?.items?.filter(
+    (item: any) => item.status === 'Pending',
+  );
+
+  const onFinish = async (values: any) => {
+    const payload = { ...values };
+    if (!payload.note) {
+      payload.note = '';
+    }
+
+    submit(
+      { data: JSON.stringify(payload), action: 'create' },
+      { method: 'POST' },
+    );
+
+    setOpenCreate(false);
+  };
 
   const handleCloseModal = () => {
     setOpen(false);
@@ -55,10 +157,124 @@ export const ApprovalIndex = () => {
     setOpenCreate(false);
   };
 
-  const CreateApprovalModal = () => {
+  const handleConfirm = () => {
+    setOpenConfirm(false);
+  };
+
+  const handleResend = () => {
+    setOpenResend(false);
+  };
+
+  const handleAction = (active: string) => {
+    switch (active) {
+      case 'approve':
+        return async (values: any) => {
+          const payload = { ...values };
+
+          payload.action = 'Approve';
+          submit(
+            {
+              data: JSON.stringify(payload),
+              action: 'update',
+              id: modalData.id,
+            },
+            { method: 'PUT' },
+          );
+
+          setOpenConfirm(false);
+        };
+      case 'reject':
+        return async (values: any) => {
+          const payload = { ...values };
+
+          payload.action = 'Reject';
+          submit(
+            {
+              data: JSON.stringify(payload),
+              action: 'update',
+              id: modalData.id,
+            },
+            { method: 'PUT' },
+          );
+          setOpenConfirm(false);
+        };
+      case 'cancel':
+        return async (values: any) => {
+          const payload = { ...values };
+
+          payload.action = 'Cancel';
+          submit(
+            {
+              data: JSON.stringify(payload),
+              action: 'update',
+              id: modalData.id,
+            },
+            { method: 'PUT' },
+          );
+          setOpenConfirm(false);
+        };
+      case 'resend':
+        return async (values: any) => {
+          const payload = { ...values };
+
+          payload.action = 'RequestChange';
+          submit(
+            {
+              data: JSON.stringify(payload),
+              action: 'update',
+              id: modalData.id,
+            },
+            { method: 'PUT' },
+          );
+          setOpenConfirm(false);
+        };
+
+      default:
+        break;
+    }
+  };
+
+  const ConfirmActionModal = () => {
     return (
-      <Modal open={openCreate} onCancel={handleCloseModalCrate} footer={null}>
-        <Form layout="vertical">
+      <Modal open={openConfirm} onCancel={handleConfirm} footer={null}>
+        <Form onFinish={handleAction(action)} layout="vertical">
+          <Form.Item
+            name="reasons"
+            label="เหตุผล"
+            rules={[{ required: true, message: 'กรุณากรอกเหตุผล' }]}
+          >
+            <TextArea placeholder="กรอกเหตุผล" />
+          </Form.Item>
+          <Flex justify="end">
+            <Button type="primary" htmlType="submit">
+              ยืนยัน
+            </Button>
+          </Flex>
+        </Form>
+      </Modal>
+    );
+  };
+
+  const onResend = async (values: any) => {
+    const payload = { ...values };
+    if (!payload.note) {
+      payload.note = '';
+    }
+
+    payload.action = 'Pending';
+
+    submit(
+      { data: JSON.stringify(payload), action: 'resend', id: modalData.id },
+      { method: 'PUT' },
+    );
+
+    setOpenResend(false);
+  };
+
+  const ResendApprovalModal = () => {
+    return (
+      <Modal open={openResend} onCancel={handleResend} footer={null}>
+        <Form form={form} layout="vertical" onFinish={onResend}>
           <Card
             style={{
               background: 'white',
@@ -68,28 +284,54 @@ export const ApprovalIndex = () => {
             bodyStyle={{ padding: '20px' }}
           >
             <div>
-              <Typography.Title
-                level={5}
-                style={{ margin: '0px 0px 20px 0px' }}
-              >
-                เขียนใบลางาน
-              </Typography.Title>
+              <Flex gap={12}>
+                <Typography.Title
+                  level={4}
+                  style={{ margin: '0px 0px 20px 0px' }}
+                >
+                  เขียนใบลางาน
+                </Typography.Title>
+                <Typography style={{ color: 'red' }}>
+                  * ส่งแล้วจะแก้ไขไม่ได้จนกว่าสถานะกำลังดำเนินการ
+                </Typography>
+              </Flex>
+
               <Row gutter={[12, 12]}>
                 <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                   <Form.Item
-                    label="วันที่ขอลา"
-                    name="duedate"
+                    label="วันที่เริ่มลา"
+                    name="startDate"
                     rules={[
-                      { required: true, message: 'จำเป็นต้องเลือกวันที่ขอลา' },
+                      {
+                        required: true,
+                        message: 'จำเป็นต้องเลือกวันที่เริ่มลา',
+                      },
                     ]}
                   >
                     <DatePicker
-                      placeholder="กรุณาเลือกวันที่จะขอลา"
+                      placeholder="กรุณาเลือกวันที่เริ่มลา"
                       style={{ width: '100%' }}
                     />
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                  <Form.Item
+                    label="ลาถึงวันที่"
+                    name="endDate"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'จำเป็นต้องเลือกว่าลาถึงวันไหน',
+                      },
+                    ]}
+                  >
+                    <DatePicker
+                      placeholder="กรุณาเลือกวันที่สิ้นสุด"
+                      style={{ width: '100%' }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={24}>
                   <Form.Item
                     label="ประเภทของการลา"
                     name="type"
@@ -102,9 +344,10 @@ export const ApprovalIndex = () => {
                   >
                     <Select
                       placeholder="กรุณาเลือกประเภทของการลา"
-                      value={[
-                        { label: 'ลาป่วย', value: 'sick' },
-                        { label: 'ลากิจ', value: 'business' },
+                      options={[
+                        { label: 'ลาป่วย', value: 'Sickleave' },
+                        { label: 'ลากิจ', value: 'LeaveOfAbsence' },
+                        { label: 'ลาพักร้อน', value: 'LeaveRequest' },
                       ]}
                     />
                   </Form.Item>
@@ -112,7 +355,7 @@ export const ApprovalIndex = () => {
                 <Col span={24}>
                   <Form.Item
                     label="เหตุผลที่ขอลา"
-                    name="remark"
+                    name="reasons"
                     rules={[
                       {
                         required: true,
@@ -123,16 +366,129 @@ export const ApprovalIndex = () => {
                     <TextArea placeholder="กรุณากรอกเหตุผลที่จะขอลา" />
                   </Form.Item>
                 </Col>
+                <Col span={24}>
+                  <Form.Item label="หมายเหตุ" name="note">
+                    <TextArea placeholder="หมายเหตุ" />
+                  </Form.Item>
+                </Col>
               </Row>
             </div>
           </Card>
           <Flex gap={6} justify="end" style={{ marginTop: '10px' }}>
-            <Button
-              type="primary"
-              onClick={() => {
-                setOpenCreate(false);
-              }}
-            >
+            <Button type="primary" htmlType="submit">
+              ส่งใบลา
+            </Button>
+          </Flex>
+        </Form>
+      </Modal>
+    );
+  };
+
+  const CreateApprovalModal = () => {
+    return (
+      <Modal open={openCreate} onCancel={handleCloseModalCrate} footer={null}>
+        <Form form={form} layout="vertical" onFinish={onFinish}>
+          <Card
+            style={{
+              background: 'white',
+              borderRadius: '20px',
+              marginTop: '22px',
+            }}
+            bodyStyle={{ padding: '20px' }}
+          >
+            <div>
+              <Flex gap={12}>
+                <Typography.Title
+                  level={4}
+                  style={{ margin: '0px 0px 20px 0px' }}
+                >
+                  เขียนใบลางาน
+                </Typography.Title>
+                <Typography style={{ color: 'red' }}>
+                  * ส่งแล้วจะแก้ไขไม่ได้จนกว่าสถานะกำลังดำเนินการ
+                </Typography>
+              </Flex>
+
+              <Row gutter={[12, 12]}>
+                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                  <Form.Item
+                    label="วันที่เริ่มลา"
+                    name="startDate"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'จำเป็นต้องเลือกวันที่เริ่มลา',
+                      },
+                    ]}
+                  >
+                    <DatePicker
+                      placeholder="กรุณาเลือกวันที่เริ่มลา"
+                      style={{ width: '100%' }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                  <Form.Item
+                    label="ลาถึงวันที่"
+                    name="endDate"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'จำเป็นต้องเลือกว่าลาถึงวันไหน',
+                      },
+                    ]}
+                  >
+                    <DatePicker
+                      placeholder="กรุณาเลือกวันที่สิ้นสุด"
+                      style={{ width: '100%' }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={24}>
+                  <Form.Item
+                    label="ประเภทของการลา"
+                    name="type"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'จำเป็นต้องเลือกประเภทของการลา',
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="กรุณาเลือกประเภทของการลา"
+                      options={[
+                        { label: 'ลาป่วย', value: 'Sickleave' },
+                        { label: 'ลากิจ', value: 'LeaveOfAbsence' },
+                        { label: 'ลาพักร้อน', value: 'LeaveRequest' },
+                      ]}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={24}>
+                  <Form.Item
+                    label="เหตุผลที่ขอลา"
+                    name="reasons"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'จำเป็นต้องกรอกเหตุผลที่ขอลา',
+                      },
+                    ]}
+                  >
+                    <TextArea placeholder="กรุณากรอกเหตุผลที่จะขอลา" />
+                  </Form.Item>
+                </Col>
+                <Col span={24}>
+                  <Form.Item label="หมายเหตุ" name="note">
+                    <TextArea placeholder="หมายเหตุ" />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </div>
+          </Card>
+          <Flex gap={6} justify="end" style={{ marginTop: '10px' }}>
+            <Button type="primary" htmlType="submit">
               ส่งใบลา
             </Button>
           </Flex>
@@ -155,7 +511,7 @@ export const ApprovalIndex = () => {
           <div>
             <Flex justify="space-between" align="center">
               <Typography.Title level={5} style={{ margin: '12px 0' }}>
-                {modalData.name}
+                {modalData?.createdBy ? modalData.createdBy : '-'}
               </Typography.Title>
               <Flex>
                 <Tag color={handleTypeColor(modalData.type)}>
@@ -171,39 +527,166 @@ export const ApprovalIndex = () => {
             </Flex>
 
             <Typography.Paragraph>
-              {'วันที่ขอลา : ' +
-                dayjs(modalData.duedate).format('D dddd , MMMM , YYYY')}
+              {'วันที่ขอลา : '}{' '}
+              {dayjs(modalData.startDate).format('D dddd MMMM YYYY')}
+              {' ถึง '} {dayjs(modalData.endDate).format('D dddd MMMM YYYY')}
             </Typography.Paragraph>
             <Typography.Paragraph>
-              {'เหตุผลที่ขอลา  : ' + modalData.remark}
+              {'เหตุผลที่ขอลา  : '}{' '}
+              {modalData?.reasons ? modalData.reasons : '-'}
             </Typography.Paragraph>
           </div>
         </Card>
-        {(me.role.name === 'owner' || me.role.name === 'manager') && (
+        {(me.role.name === 'owner' || me.role.name === 'manager') &&
+        (modalData.status === 'Pending' ||
+          modalData.status === 'InProgress') ? (
           <Flex gap={6} justify="end" style={{ marginTop: '10px' }}>
             <Button
               onClick={() => {
+                setAction('resend');
                 setOpen(false);
+                setOpenConfirm(true);
               }}
             >
-              ปฏิเสธ
+              ยื่นเรื่องใหม่อีกครั้ง
+            </Button>
+            <Button
+              onClick={() => {
+                setAction('cancel');
+                setOpen(false);
+                setOpenConfirm(true);
+              }}
+            >
+              ยกเลิก
+            </Button>
+            <Button
+              onClick={() => {
+                setAction('reject');
+                setOpen(false);
+                setOpenConfirm(true);
+              }}
+            >
+              ไม่อนุญาติ
             </Button>
             <Button
               type="primary"
               onClick={() => {
+                setAction('approve');
                 setOpen(false);
+                setOpenConfirm(true);
               }}
             >
-              อนุมัติ
+              อนุญาติ
             </Button>
           </Flex>
+        ) : (
+          <></>
         )}
       </Modal>
     );
   };
 
+  const items: TabsProps['items'] = [
+    {
+      key: '1',
+      label: 'อนุญาติ',
+      children: (
+        <TableComponent
+          columns={
+            me.role.name === 'owner' || me.role.name === 'manager'
+              ? adminColumns
+              : columns
+          }
+          dataSource={approve}
+          onRowClick={(record) => {
+            setOpen(true);
+            setModalData(record);
+          }}
+        />
+      ),
+    },
+    {
+      key: '2',
+      label: 'ไม่อนุญาติ',
+      children: (
+        <TableComponent
+          columns={
+            me.role.name === 'owner' || me.role.name === 'manager'
+              ? adminColumns
+              : columns
+          }
+          dataSource={reject}
+          onRowClick={(record) => {
+            setOpen(true);
+            setModalData(record);
+          }}
+        />
+      ),
+    },
+    {
+      key: '3',
+      label: 'ยกเลิก',
+      children: (
+        <TableComponent
+          columns={
+            me.role.name === 'owner' || me.role.name === 'manager'
+              ? adminColumns
+              : columns
+          }
+          dataSource={cancal}
+          onRowClick={(record) => {
+            setOpen(true);
+            setModalData(record);
+          }}
+        />
+      ),
+    },
+    {
+      key: '4',
+      label: 'กำลังดำเนินการ',
+      children: (
+        <TableComponent
+          columns={
+            me.role.name === 'owner' || me.role.name === 'manager'
+              ? adminColumns
+              : columns
+          }
+          dataSource={inProgress}
+          onRowClick={(record) => {
+            record.action === 'RequestChange'
+              ? setOpenResend(true)
+              : setOpen(true);
+            setModalData(record);
+          }}
+        />
+      ),
+    },
+    {
+      key: '5',
+      label: 'กำลังพิจารณา',
+      children: (
+        <TableComponent
+          columns={
+            me.role.name === 'owner' || me.role.name === 'manager'
+              ? adminColumns
+              : columns
+          }
+          dataSource={pending}
+          onRowClick={(record) => {
+            record.action === 'RequestChange'
+              ? setOpenResend(true)
+              : setOpen(true);
+            setModalData(record);
+          }}
+        />
+      ),
+    },
+  ];
+
   return me.role.name === 'owner' || me.role.name === 'manager' ? (
     <>
+      <ResendApprovalModal />
+      <ConfirmActionModal />
       <CreateApprovalModal />
       <ApprovalModal />
       <TitleBar
@@ -221,18 +704,13 @@ export const ApprovalIndex = () => {
         ]}
       />
       <div style={{ marginTop: '12px' }}>
-        <TableComponent
-          columns={adminColumns}
-          dataSource={data}
-          onRowClick={(record) => {
-            setOpen(true);
-            setModalData(record);
-          }}
-        />
+        <Tabs defaultActiveKey="1" items={items} />
       </div>
     </>
   ) : (
     <>
+      <ResendApprovalModal />
+      <ConfirmActionModal />
       <CreateApprovalModal />
       <ApprovalModal />
       <TitleBar
@@ -250,29 +728,31 @@ export const ApprovalIndex = () => {
         ]}
       />
       <div style={{ marginTop: '12px' }}>
-        <TableComponent
-          columns={columns}
-          dataSource={data}
-          onRowClick={(record) => {
-            setOpen(true);
-            setModalData(record);
-          }}
-        />
+        <Tabs defaultActiveKey="1" items={items} />
       </div>
     </>
   );
 };
 
 const columns: ColumnsType<any> | undefined = [
-  { title: 'ลำดับ', dataIndex: 'id', key: 'id', align: 'center' },
-  { title: 'ชื่อ - นามสกุล', dataIndex: 'name', key: 'name', width: 200 },
+  {
+    title: 'ชื่อ - นามสกุล',
+    dataIndex: 'createdBy',
+    key: 'createdBy',
+    width: 200,
+  },
   {
     title: 'วันที่ขอลา',
     dataIndex: 'duedate',
     key: 'duedate',
     align: 'center',
-    render: (value: string) => {
-      return <>{dayjs(value).format('D dddd , MMMM , YYYY')}</>;
+    render: (_: string, record: any) => {
+      return (
+        <>
+          {dayjs(record.startDate).format('D dddd , MMMM , YYYY')} ถึง{' '}
+          {dayjs(record.endDate).format('D dddd , MMMM , YYYY')}
+        </>
+      );
     },
   },
   {
@@ -284,7 +764,7 @@ const columns: ColumnsType<any> | undefined = [
       return <Tag color={handleTypeColor(value)}>{handleType(value)}</Tag>;
     },
   },
-  { title: 'เหตุผล', dataIndex: 'remark', key: 'remark' },
+  { title: 'เหตุผล', dataIndex: 'reasons', key: 'reasons' },
   {
     title: 'สถานะ',
     dataIndex: 'status',
@@ -301,15 +781,24 @@ const columns: ColumnsType<any> | undefined = [
 ];
 
 const adminColumns: ColumnsType<any> | undefined = [
-  { title: 'ลำดับ', dataIndex: 'id', key: 'id', align: 'center' },
-  { title: 'ชื่อ - นามสกุล', dataIndex: 'name', key: 'name', width: 200 },
+  {
+    title: 'ชื่อ - นามสกุล',
+    dataIndex: 'createdBy',
+    key: 'createdBy',
+    width: 200,
+  },
   {
     title: 'วันที่ขอลา',
     dataIndex: 'duedate',
     key: 'duedate',
     align: 'center',
-    render: (value: string) => {
-      return <>{dayjs(value).format('D dddd , MMMM , YYYY')}</>;
+    render: (_: string, record: any) => {
+      return (
+        <>
+          {dayjs(record.startDate).format('D dddd , MMMM , YYYY')} ถึง{' '}
+          {dayjs(record.endDate).format('D dddd , MMMM , YYYY')}
+        </>
+      );
     },
   },
   {
@@ -321,7 +810,7 @@ const adminColumns: ColumnsType<any> | undefined = [
       return <Tag color={handleTypeColor(value)}>{handleType(value)}</Tag>;
     },
   },
-  { title: 'เหตุผล', dataIndex: 'remark', key: 'remark' },
+  { title: 'เหตุผล', dataIndex: 'reasons', key: 'reasons' },
   {
     title: 'สถานะ',
     dataIndex: 'status',
@@ -345,42 +834,14 @@ const adminColumns: ColumnsType<any> | undefined = [
   },
 ];
 
-const data = [
-  {
-    id: 1,
-    name: 'ภูวิศ วัฒนะ',
-    duedate: '2024-10-03T04:40:24.863Z',
-    type: 'sick',
-    remark: 'ท้องเสีย อาหารเป็นพิษ ตั้งแต่เมื่อวันที่ 09/31/24 ช่วงเย็น',
-    status: 'approved',
-    createdAt: '2024-10-02T04:40:24.863Z',
-  },
-  {
-    id: 2,
-    name: 'ภูวิศ วัฒนะ',
-    duedate: '2024-10-03T04:40:24.863Z',
-    type: 'business',
-    remark: 'ไปงานบวชญาติที่จังหวัดนครศรีธรรมราช',
-    status: 'pendding',
-    createdAt: '2024-10-02T04:40:24.863Z',
-  },
-  {
-    id: 3,
-    name: 'ภูวิศ วัฒนะ',
-    duedate: '2024-10-03T04:40:24.863Z',
-    type: 'business',
-    remark: 'ไปปาร์ตี้วันเกิดเพื่อน',
-    status: 'rejected',
-    createdAt: '2024-10-02T04:40:24.863Z',
-  },
-];
-
 const handleType = (type: string) => {
   switch (type) {
-    case 'sick':
+    case 'Sickleave':
       return 'ลาป่วย';
-    case 'business':
+    case 'LeaveOfAbsence':
       return 'ลากิจ';
+    case 'LeaveRequest':
+      return 'ลาพักร้อน';
 
     default:
       return '-';
@@ -389,10 +850,12 @@ const handleType = (type: string) => {
 
 const handleTypeColor = (color: string) => {
   switch (color) {
-    case 'sick':
+    case 'Sickleave':
       return '#2db7f5';
-    case 'business':
+    case 'LeaveOfAbsence':
       return '#87d068';
+    case 'LeaveRequest':
+      return '#f50';
 
     default:
       return 'default';
@@ -401,13 +864,16 @@ const handleTypeColor = (color: string) => {
 
 const handleStatus = (status: string) => {
   switch (status) {
-    case 'pendding':
-      return 'รออนุมัติ';
-    case 'approved':
-      return 'อนุมัติแล้ว';
-    case 'rejected':
-      return 'ปฏิเสธ';
-
+    case 'Pending':
+      return 'กำลังพิจารณา';
+    case 'Approved':
+      return 'อนุญาติ';
+    case 'Rejected':
+      return 'ไม่อนุญาติ';
+    case 'InProgress':
+      return 'กำลังดำเนินการ';
+    case 'Cancelled':
+      return 'ยกเลิก';
     default:
       return '-';
   }
@@ -415,13 +881,16 @@ const handleStatus = (status: string) => {
 
 const handleStatusIcon = (color: string) => {
   switch (color) {
-    case 'pendding':
+    case 'Pending':
       return <SyncOutlined spin />;
-    case 'approved':
+    case 'Approved':
       return <CheckCircleOutlined />;
-    case 'rejected':
+    case 'Rejected':
       return <CloseCircleOutlined />;
-
+    case 'InProgress':
+      return <SyncOutlined spin />;
+    case 'Cancelled':
+      return <CloseCircleOutlined />;
     default:
       return <MinusCircleOutlined />;
   }
@@ -429,11 +898,15 @@ const handleStatusIcon = (color: string) => {
 
 const handleStatusColor = (color: string) => {
   switch (color) {
-    case 'pendding':
+    case 'Pending':
       return 'blue';
-    case 'approved':
+    case 'Approved':
       return 'success';
-    case 'rejected':
+    case 'Rejected':
+      return 'volcano';
+    case 'InProgress':
+      return 'cyan';
+    case 'Cancelled':
       return 'error';
 
     default:
