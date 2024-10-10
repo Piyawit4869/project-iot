@@ -29,7 +29,15 @@ export const UsersCreate = () => {
     const validator = vine.compile(schema);
 
     try {
-      const payload = Object.assign(values);
+      const payload = Object.assign({}, values);
+
+      if (payload.file && payload.file.length > 0) {
+        payload.profile.photoUrl = payload.file[0].response?.url;
+        delete payload.file;
+      } else {
+        payload.profile.photoUrl = null;
+        delete payload.file;
+      }
 
       if (!payload.active) {
         payload.active = true;
@@ -105,5 +113,3 @@ export const UsersCreate = () => {
     </div>
   );
 };
-
-export default UsersCreate;

@@ -44,3 +44,11 @@ export async function deleted(id?: any) {
     url: `/api/crud/users/${id}`,
   });
 }
+
+export async function resetPassword(id: any, data: any) {
+  return client({
+    method: 'PUT',
+    url: `/api/crud/users/${id}/change-password`,
+    data,
+  });
+}

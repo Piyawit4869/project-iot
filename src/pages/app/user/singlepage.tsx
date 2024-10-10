@@ -1,4 +1,4 @@
-import { Form, notification, Row } from 'antd';
+import { Button, Flex, Form, Input, Modal, notification, Row } from 'antd';
 import { DynamicForm } from '@src/forms/Dynamic';
 import { FormButtonsEdit } from '@src/components/shared/FormButtons';
 import { renderEditForm } from './renderForm';
@@ -12,9 +12,9 @@ export const UsersSingle = () => {
   const [form] = Form.useForm();
   const submit = useSubmit();
 
+  const [open, setOpen] = React.useState(false);
+
   const schema = vine.object({
-    email: vine.string().email(),
-    userName: vine.string().optional(),
     active: vine.boolean(),
     roleId: vine.string().optional(),
     profile: vine.object({
@@ -31,7 +31,20 @@ export const UsersSingle = () => {
     const validator = vine.compile(schema);
 
     try {
-      const payload = Object.assign(values);
+      const payload = Object.assign({}, values);
+
+      if (values.file && values.file.length > 0) {
+        if (values.file[0].url) {
+          payload.profile.photoUrl = values.file[0].url;
+          delete payload.file;
+        } else {
+          values.profile.photoUrl = values.file[0].response?.url;
+          delete payload.file;
+        }
+      } else {
+        payload.profile.photoUrl = null;
+        delete payload.file;
+      }
 
       if (!payload.active) {
         payload.active = true;
@@ -74,14 +87,63 @@ export const UsersSingle = () => {
       birthDate = '';
     }
 
+    const profile = user.profile;
+
     form.setFieldsValue({
       ...user,
-      profile: { birthDate: birthDate },
+      profile: {
+        ...profile,
+        birthDate: birthDate,
+        photoUrl: user?.profile?.photoUrl
+          ? [
+              {
+                url: user?.profile?.photoUrl ? user.profile.photoUrl : '',
+              },
+            ]
+          : undefined,
+      },
+      file: user?.profile?.photoUrl
+        ? [
+            {
+              url: user?.profile?.photoUrl ? user.profile.photoUrl : '',
+            },
+          ]
+        : undefined,
     });
   }, [form, user]);
 
+  const handleOpenModal = () => {
+    setOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
+
+  const resetPassword = async (values: any) => {
+    submit(
+      { data: JSON.stringify(values), action: 'resetPassword' },
+      { method: 'put' },
+    );
+
+    setOpen(false);
+  };
+
   return (
     <div>
+      <Modal open={open} onCancel={handleCloseModal} footer={null}>
+        <Form layout="vertical" onFinish={resetPassword}>
+          <Form.Item label={'รหัสผ่าน'} name={'password'}>
+            <Input placeholder="กรอกรหัสผ่านของคุณ" />
+          </Form.Item>
+          <Form.Item label={'รหัสผ่านใหม่'} name={'newPassword'}>
+            <Input placeholder="กรอกรหัสผ่านใหม่ของคุณ" />
+          </Form.Item>
+          <Button type="primary" htmlType="submit">
+            ยืนยัน
+          </Button>
+        </Form>
+      </Modal>
       <div style={{ fontFamily: 'Prompt, sans-serif' }}>
         <div style={{ padding: '20px', marginTop: '10px' }}>
           <Form form={form} layout="vertical" onFinish={onFinish}>
@@ -121,6 +183,11 @@ export const UsersSingle = () => {
               ))}
             </Row>
           </Form>
+          <Flex justify="end">
+            <Button type="text" onClick={handleOpenModal}>
+              เปลี่ยนรหัสผ่าน
+            </Button>
+          </Flex>
         </div>
       </div>
     </div>
