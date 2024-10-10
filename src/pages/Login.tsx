@@ -31,7 +31,7 @@ export async function loginAction({ request }: any) {
         return redirect(
           data.user === 'super.admin@utotech.org'
             ? '/admin/analytic'
-            : '/attendance',
+            : '/attendance/action',
         );
       } catch (error) {
         notification.error({

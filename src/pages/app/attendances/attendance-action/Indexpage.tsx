@@ -216,6 +216,17 @@ export const AttendanceAction = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case 'In':
+        return 'linear-gradient(145deg, #FFA726, #FFCC80)';
+      case 'Break':
+        return 'linear-gradient(145deg, #6E85B7, #ABC4FF)';
+      default:
+        return 'linear-gradient(145deg, #EF5350, #FFCDD2)';
+    }
+  };
+
   return (
     <>
       <LeaveEarlyModal
@@ -269,7 +280,17 @@ export const AttendanceAction = () => {
                     style={{
                       ...styles.actionButton,
                       backgroundImage:
-                        'linear-gradient(145deg, #6E85B7, #ABC4FF)', // Cool gradient background
+                        data && data.length
+                          ? getStatusStyle(data[0].action)
+                          : 'linear-gradient(145deg, #6E85B7, #ABC4FF)',
+                      // 'linear-gradient(145deg, #6E85B7, #ABC4FF)', // Cool gradient background
+
+                      cursor:
+                        data && data.length
+                          ? data[0].action === 'Out'
+                            ? 'not-allowed'
+                            : 'pointer'
+                          : 'pointer',
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.boxShadow =
@@ -289,7 +310,11 @@ export const AttendanceAction = () => {
                       e.currentTarget.style.boxShadow =
                         '0 6px 20px rgba(0, 0, 0, 0.2)'; // Restore shadow after click
                     }}
-                    onClick={handleChangeState}
+                    onClick={() => {
+                      if (data && data.length && data[0].action !== 'Out') {
+                        handleChangeState;
+                      }
+                    }}
                   >
                     <Typography
                       style={{
@@ -301,12 +326,15 @@ export const AttendanceAction = () => {
                       {data && data.length
                         ? data[0].action === 'In'
                           ? 'พักเบรค'
+                          : data[0].action === 'Out'
+                          ? 'เลิกงาน'
                           : 'เข้างาน'
                         : 'เริ่มงานครั้งแรก'}
                     </Typography>
                   </Button>
 
                   <Button
+                    disabled={data && data.length && data[0].action === 'Out'}
                     style={{ width: '100px', height: '35px', marginTop: 12 }}
                     onClick={() => {
                       setOpen(true);
@@ -327,14 +355,15 @@ export const AttendanceAction = () => {
                 bodyStyle={{ padding: '20px' }}
               >
                 <div>
-                  <Typography.Title level={5} style={{ marginTop: '12px' }}>
-                    {'รายละเอียดเข้างาน - ออกงาน'}
+                  <Typography.Title level={3} style={{ marginTop: '12px' }}>
+                    {wf.name}
                   </Typography.Title>
+                  <Typography.Title level={5} style={{ marginTop: '12px' }}>
+                    รายละเอียดงาน : {wf.descriptions}
+                  </Typography.Title>
+
                   <Typography.Paragraph>
-                    {'ทำงานไป 5 ชั่วโมง 15 นาที'}
-                  </Typography.Paragraph>
-                  <Typography.Paragraph>
-                    {'พักเบรคไป  57 นาที'}
+                    {'ทำงานไป 12 ชม และ พักเบรคไป  57 นาที'}
                   </Typography.Paragraph>
                 </div>
               </Card>
