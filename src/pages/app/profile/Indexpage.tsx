@@ -69,7 +69,20 @@ export const ProfilePage: React.FC = () => {
     const validator = vine.compile(schema);
 
     try {
-      const payload = Object.assign(values);
+      const payload = Object.assign({}, values);
+
+      if (values.file && values.file.length > 0) {
+        if (values.file[0].url) {
+          payload.profile.photoUrl = values.file[0].url;
+          delete payload.file;
+        } else {
+          values.profile.photoUrl = values.file[0].response?.url;
+          delete payload.file;
+        }
+      } else {
+        payload.profile.photoUrl = null;
+        delete payload.file;
+      }
 
       if (!payload.active) {
         payload.active = true;
@@ -109,9 +122,28 @@ export const ProfilePage: React.FC = () => {
       birthDate = '';
     }
 
+    const profile = user.profile;
+
     form.setFieldsValue({
       ...user,
-      profile: { birthDate: birthDate },
+      profile: {
+        ...profile,
+        birthDate: birthDate,
+        photoUrl: user?.profile?.photoUrl
+          ? [
+              {
+                url: user?.profile?.photoUrl ? user.profile.photoUrl : '',
+              },
+            ]
+          : undefined,
+      },
+      file: user?.profile?.photoUrl
+        ? [
+            {
+              url: user?.profile?.photoUrl ? user.profile.photoUrl : '',
+            },
+          ]
+        : undefined,
     });
   }, [form, user]);
 

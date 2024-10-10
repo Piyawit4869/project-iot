@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { Root, RootLoader } from './pages/Roots';
-import { AppLayout } from './layout';
+import { AppLayout, layoutLoader } from './layout';
 
 import { routes as appRoutes } from './pages/app';
 import { routes as publicRoutes } from './pages/public';
@@ -40,6 +40,7 @@ export const router = createBrowserRouter([
       {
         path: '',
         element: <AppLayout />,
+        loader: layoutLoader,
         children: [...appRoutes],
       },
     ],

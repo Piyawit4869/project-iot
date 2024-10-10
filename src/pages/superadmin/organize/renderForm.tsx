@@ -1079,3 +1079,271 @@ export const renderEditForm = [
     type: 'SectionLabelForm',
   },
 ];
+
+export const renderSettingData = [
+  //FIXME:add upload logo url
+
+  {
+    label: 'ข้อมูลองค์กร',
+    col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
+    type: 'SectionLabelForm',
+  },
+  {
+    label: 'รูปภาพองค์กร',
+    col: { xs: 24, sm: 24, md: 6, lg: 6, xl: 6 },
+    type: 'UploadFile',
+  },
+  {
+    name: 'active',
+    label: 'ปิดองค์กร',
+    col: { xs: 24, sm: 24, md: 18, lg: 18, xl: 18 },
+    type: 'ActiveCard',
+    title: 'ปิดองค์กร',
+    description:
+      'ใช้สำหรับการปิดหรือยุติการทำงานขององค์กรในระบบหรือเว็บไซต์ ซึ่งอาจรวมถึงการปิดการใช้งานบัญชีองค์กร',
+    rule: [{ required: true, message: 'กรุณาเลือกเปิดปิดองค์กร!' }],
+  },
+  {
+    name: 'status',
+    label: 'สถานะธุรกิจ',
+    placeholder: 'สถานะธุรกิจ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SelectFormField',
+    options: [
+      { value: 'NewlyRegistered', label: 'ลูกค้าที่เพิ่งลงทะเบียนใหม่ในระบบ' },
+      { value: 'ActiveUser', label: 'ลูกค้าที่ใช้งานอย่างต่อเนื่อง' },
+      { value: 'LoyalCustomer', label: 'ลูกค้าที่มีความภักดีต่อระบบ' },
+      { value: 'AtRisk', label: 'ลูกค้าที่อาจจะเสี่ยงต่อการหยุดใช้งาน' },
+      { value: 'Churned', label: 'ลูกค้าที่ได้หยุดใช้บริการหรือยกเลิกบัญชี' },
+    ],
+    defaultValue: 'NewlyRegistered',
+    rule: [{ required: true, message: 'กรุณาเลือกสถานะธุรกิจ!' }],
+  },
+
+  {
+    name: 'fromType',
+    label: 'ประเภทธุรกิจ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'RadioFormField',
+    options: [
+      { value: 'OrdinaryPerson', label: 'บุคคลธรรมดา' },
+      { value: 'JuristicPerson', label: 'นิติบุคคล' },
+    ],
+    defaultValue: 'OrdinaryPerson',
+    rule: [{ required: true, message: 'กรุณาเลือกประเภทธุรกิจ!' }],
+  },
+  {
+    name: 'type',
+    label: 'รูปแบบธุรกิจ',
+    placeholder: 'รูปแบบธุรกิจ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SelectFormField',
+    options: [
+      { value: 'Taxpayer', label: 'บุคคลธรรมดา' },
+      { value: 'OrdinaryPartnership', label: 'ห้างหุ้นส่วนสามัญ' },
+      { value: 'Shop', label: 'ร้านค้า' },
+      { value: 'BodyOfPerson', label: 'คณะบุคคล' },
+      { value: 'CompanyLimited', label: 'บริษัทจำกัด' },
+      { value: 'PublicCompanyLimited', label: 'บริษัทมหาชนจำกัด' },
+      { value: 'LimitedPartnership', label: 'ห้างหุ้นส่วนจำกัด' },
+      { value: 'Foundation', label: 'มูลนิธิ' },
+      { value: 'Association', label: 'สมาคม' },
+      { value: 'JointVenture', label: 'กิจการร่วมค้า' },
+      { value: 'Others', label: 'อื่นๆ' },
+    ],
+    rule: [{ required: true, message: 'กรุณาเลือกรูปแบบธุรกิจ!' }],
+  },
+  {
+    name: 'nameTh',
+    label: 'ชื่อกิจการ (ภาษาไทย)',
+    placeholder: 'ชื่อกิจการ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    rule: [{ required: true, message: 'กรุณากรอกชื่อกิจการ (ภาษาไทย)!' }],
+    isName: true,
+  },
+  {
+    name: 'nameEn',
+    label: 'ชื่อกิจการ (English)',
+    placeholder: 'ชื่อกิจการ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    rule: [{ required: true, message: 'กรุณากรอกชื่อกิจการ (English)!' }],
+    isName: true,
+  },
+  {
+    name: 'registerVat',
+    label: 'จดทะเบียนภาษีมูลค่าเพิ่ม',
+    placeholder: 'จดทะเบียนภาษีมูลค่าเพิ่ม',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SwitchFormField',
+    rule: [
+      {
+        required: true,
+        message: 'กรุณาเลือกว่าจดทะเบียนภาษีมูลค่าเพิ่มหรือไม่!',
+      },
+    ],
+    checkedText: 'จด',
+    unCheckedText: 'ไม่ได้จด',
+  },
+  {
+    name: 'taxId',
+    label: 'เลขทะเบียน 13 หลัก',
+    placeholder: 'เลขทะเบียน 13 หลัก',
+    col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
+    type: 'LengthInput',
+    maxLength: 13,
+    rule: [{ required: true, message: 'กรุณากรอกเลขทะเบียน 13 หลัก!' }],
+  },
+
+  {
+    name: 'descriptionsTh',
+    label: 'คำอธิบายธุรกิจ (ภาษาไทย)',
+    placeholder: 'คำอธิบายธุรกิจ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextAreaFormField',
+  },
+  {
+    name: 'descriptionsEn',
+    label: 'คำอธิบายธุรกิจ (English)',
+    placeholder: 'คำอธิบายธุรกิจ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextAreaFormField',
+  },
+
+  {
+    name: 'openingDate',
+    label: 'วันที่จดทะเบียน',
+    placeholder: 'วันที่จดทะเบียน',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'DatePickerFormField',
+  },
+  {
+    name: 'websiteUrl',
+    label: 'เว็ปไซต์สำนักงาน',
+    placeholder: 'เว็ปไซต์สำนักงาน',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+
+  {
+    label: 'ข้อมูลช่องทางการติดต่อ',
+    col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
+    type: 'SectionLabelForm',
+  },
+
+  {
+    name: 'contactPhone',
+    label: 'เบอร์โทรศัพท์ติดต่อ',
+    placeholder: 'เบอร์โทรศัพท์ติดต่อ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'PhoneInput',
+    rule: [{ required: true, message: 'กรุณากรอกเบอร์โทรศัพท์ติดต่อ!' }],
+  },
+  {
+    name: 'contactEmail',
+    label: 'อีเมลติดต่อ',
+    placeholder: 'อีเมลติดต่อ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    rule: [{ required: true, message: 'กรุณากรอกเบอร์อีเมลติดต่อ!' }],
+  },
+  {
+    name: 'contactWebsite',
+    label: 'เว็บไซต์ติดต่อ',
+    placeholder: 'เว็บไซต์ติดต่อ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'businessEmail',
+    label: 'อีเมลสำนักงาน',
+    placeholder: 'อีเมลสำนักงาน',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+
+  {
+    name: 'contactFacebook',
+    label: 'Facebook',
+    placeholder: 'Facebook',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'contactLine',
+    label: 'Line ID',
+    placeholder: 'line Id',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+
+  {
+    name: 'contactWhatsapp',
+    label: 'WhatsApp',
+    placeholder: 'WhatsApp',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'contactNote',
+    label: 'ข้อมูลการติดต่อ',
+    placeholder: 'ข้อมูลการติดต่อ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+];
+
+export const renderSystemSetting = [
+  {
+    label: 'ตั้งค่าระบบ',
+    col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
+    type: 'SectionLabelForm',
+  },
+  {
+    name: 'defaultLanguage',
+    label: 'ภาษา',
+    placeholder: 'ภาษา',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SelectFormField',
+    options: [
+      { value: 'TH', label: 'ภาษาไทย' },
+      { value: 'EN', label: 'English' },
+    ],
+    defaultValue: 'TH',
+    rule: [{ required: true, message: 'กรุณาเลือกภาษา!' }],
+  },
+  {
+    name: 'domainName',
+    label: 'ชื่อโดเมน',
+    placeholder: 'ชื่อโดเมน ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    rule: [{ required: true, message: 'กรุณากรอกชื่อโดเมน!' }],
+  },
+  {
+    name: 'theme',
+    label: 'ธีมสี',
+    placeholder: 'ธีมสี',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SelectFormField',
+    options: [
+      { value: 'light', label: 'สว่าง' },
+      { value: 'dark', label: 'มืด' },
+    ],
+    defaultValue: 'light',
+  },
+  {
+    name: 'textDisplay',
+    label: 'ตัวอักษร',
+    placeholder: 'ตัวอักษร',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SelectFormField',
+    options: [
+      { value: 'large', label: 'ขนาดใหญ่' },
+      { value: 'normal', label: 'ปกติ' },
+      { value: 'small', label: 'ขนาดเล็ก' },
+    ],
+    defaultValue: 'normal',
+  },
+];
