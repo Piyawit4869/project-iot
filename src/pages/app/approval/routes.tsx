@@ -1,13 +1,9 @@
-import { ApprovalIndex } from './Indexpage';
+import { ApprovalIndex, approvalLoader } from './Indexpage';
 
 export const routes = [
   {
     path: 'approval',
-    children: [
-      {
-        path: '',
-        element: <ApprovalIndex />,
-      },
-    ],
+    loader: approvalLoader,
+    element: <ApprovalIndex />,
   },
 ];
