@@ -1,165 +1,314 @@
-import { TitleBar } from '@src/components/shared';
+import React from 'react';
+import dayjs from 'dayjs';
 import {
   Button,
   Card,
   Col,
+  Divider,
   Flex,
-  Form,
   List,
-  Modal,
   Row,
+  Tag,
   Typography,
 } from 'antd';
-import TextArea from 'antd/es/input/TextArea';
-import dayjs from 'dayjs';
-import React from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { Link, useLoaderData } from 'react-router-dom';
+
+import { TableComponent, TitleBar } from '@src/components/shared';
+import { LeaveEarlyModal } from '@src/components/modules/app/attendance';
+import { ColumnsType } from 'antd/es/table';
+import { InfoCircleOutlined } from '@ant-design/icons';
+
+import buddhistEra from 'dayjs/plugin/buddhistEra';
+
+dayjs.extend(buddhistEra);
+
+const dateFormat = 'DD/MM/BBBB';
+
+const myAttendanceColumns: ColumnsType<any> | undefined = [
+  {
+    title: 'รหัส',
+    dataIndex: 'id',
+    key: 'id',
+    render: (text) => <Link to={`/attendance/${text}`}>{text}</Link>,
+  },
+  {
+    title: 'สร้างเมื่อ',
+    dataIndex: 'createdAt',
+    key: 'createdAt',
+    render: (date: string) => dayjs(date).format(dateFormat),
+  },
+  {
+    title: 'แก้ไขเมื่อ',
+    dataIndex: 'updatedAt',
+    key: 'updatedAt',
+    render: (date: string) => dayjs(date).format(dateFormat),
+  },
+  // {
+  //   title: 'สถานะ',
+  //   dataIndex: 'status',
+  //   key: 'status',
+  //   render: (status: string) => {
+  //     const color = status === 'active' ? 'green' : 'red';
+  //     return <Tag color={color}>{status?.toUpperCase()}</Tag>;
+  //   },
+  // },
+  {
+    title: 'ใช้งาน',
+    dataIndex: 'active',
+    key: 'active',
+    render: (active: boolean) => (active ? 'ใช่' : 'ไม่ใช่'),
+  },
+  {
+    title: 'ปัจจุบัน',
+    dataIndex: 'isCurrent',
+    key: 'isCurrent',
+    render: (isCurrent: boolean) => (isCurrent ? 'ใช่' : 'ไม่ใช่'),
+  },
+  {
+    title: 'ชื่อ',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: 'คำอธิบาย',
+    dataIndex: 'descriptions',
+    key: 'descriptions',
+  },
+  {
+    title: 'ความสำคัญ',
+    dataIndex: 'priority',
+    key: 'priority',
+    render: (priority: string) => {
+      let color = '';
+      let text = '';
+      if (priority === 'high') {
+        color = 'volcano';
+        text = 'สูง';
+      } else if (priority === 'medium') {
+        color = 'orange';
+        text = 'ปานกลาง';
+      } else {
+        color = 'green';
+        text = 'ต่ำ';
+      }
+      return <Tag color={color}>{text}</Tag>;
+    },
+  },
+  {
+    title: 'วันที่เริ่มต้น',
+    dataIndex: 'startDate',
+    key: 'startDate',
+    render: (date: string) => dayjs(date).format(dateFormat),
+  },
+  {
+    title: 'วันครบกำหนด',
+    dataIndex: 'dueDate',
+    key: 'dueDate',
+    render: (date: string) => dayjs(date).format(dateFormat),
+  },
+  {
+    title: 'จำกัดเวลา/วัน',
+    dataIndex: 'limitTimePerDay',
+    key: 'limitTimePerDay',
+    render: (time: number) => `${time} ชั่วโมง`,
+  },
+  {
+    title: 'เครดิตเริ่มต้น',
+    dataIndex: 'startCredit',
+    key: 'startCredit',
+  },
+  {
+    title: 'เครดิตทั้งหมด',
+    dataIndex: 'totalCredit',
+    key: 'totalCredit',
+  },
+  {
+    title: 'ชั่วโมงการทำงานทั้งหมด',
+    dataIndex: 'totalWorkHours',
+    key: 'totalWorkHours',
+  },
+  {
+    title: 'วันจ่าย',
+    dataIndex: 'payDay',
+    key: 'payDay',
+    render: (date: string) => dayjs(date).format(dateFormat),
+  },
+  {
+    title: 'รหัสผู้ใช้',
+    dataIndex: 'userId',
+    key: 'userId',
+  },
+  {
+    title: 'รหัสโปรเจกต์',
+    dataIndex: 'projectId',
+    key: 'projectId',
+    render: (projectId: string | null) => (projectId ? projectId : 'ไม่มี'),
+  },
+  {
+    dataIndex: 'id',
+    key: 'id',
+    align: 'center',
+    width: '60px',
+    render: () => {
+      return (
+        <InfoCircleOutlined
+          onClick={() => {
+            console.log('info click');
+          }}
+        />
+      );
+    },
+  },
+];
 
 export const AttendanceAction = () => {
-  const { data } = useLoaderData() as any;
+  const { workInfos, data } = useLoaderData() as any;
+
   const [attendance, setAttendance] = React.useState(true);
   const [open, setOpen] = React.useState(false);
+
+  const me = JSON.parse(localStorage.getItem('me') || '');
 
   const handleCloseModal = () => {
     setOpen(false);
   };
 
-  const LeaveEarlyModal = () => {
-    return (
-      <Modal open={open} onCancel={handleCloseModal} footer={null}>
-        <Form layout="vertical">
-          <Form.Item
-            label="เหตุผลที่ออกงานก่อนเวลา"
-            name="remark"
-            rules={[
-              { required: true, message: 'กรุณากรอกเหตุผลที่ออกงานก่อนเวลา' },
-            ]}
-          >
-            <TextArea placeholder="กรอกเหตุผลที่ออกงานก่อนเวลา" />
-          </Form.Item>
-          <Flex justify="end">
-            <Button type="primary">ยืนยัน </Button>
-          </Flex>
-        </Form>
-      </Modal>
-    );
-  };
-
   return (
     <>
-      <LeaveEarlyModal />
-      <TitleBar
-        title={'การเข้างาน - ออกงาน'}
-        subTitle={'วันนี้ฉันทำงานเป็นยังไงบ้างนะ'}
-      />
-      <Row gutter={[12, 12]} style={{ marginTop: '12px' }}>
-        <Col xs={24} sm={24} md={24} lg={10} xl={10}>
-          <Card
-            style={{
-              backgroundColor: '#f8f9fa',
-              height: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Flex vertical justify="center" align="center" gap={10}>
-              <Button
-                shape="circle"
-                style={styles.actionButton}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    '0 6px 20px rgba(0, 0, 0, 0.2)'; // Elevate shadow on hover
-                  e.currentTarget.style.transform = 'scale(1.05)'; // Slightly increase size on hover
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    '0 4px 15px rgba(0, 0, 0, 0.1)'; // Restore shadow on leave
-                  e.currentTarget.style.transform = 'scale(1)'; // Restore size
-                }}
-                onMouseDown={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    'inset 0 3px 10px rgba(0, 0, 0, 0.2)'; // Inner shadow on click
-                }}
-                onMouseUp={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    '0 6px 20px rgba(0, 0, 0, 0.2)'; // Restore shadow after click
-                }}
-                onClick={() => {
-                  setAttendance(!attendance); // Toggle attendance state
-                }}
-              >
-                <Typography
-                  style={{
-                    color: 'white',
-                    fontSize: '24px',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  {attendance ? 'เข้างาน' : 'พักเบรค'}
-                </Typography>
-              </Button>
+      <LeaveEarlyModal open={open} handleCloseModal={handleCloseModal} />
 
-              <Button
-                style={{ width: '100px', height: '35px' }}
-                onClick={() => {
-                  setAttendance(true);
-                  setOpen(true);
+      {me?.role?.name ? (
+        <>
+          <TitleBar
+            title={'การเข้างาน - ออกงาน'}
+            buttons={[
+              <Link to="/attendance/create">
+                <Button type="primary">สร้าง</Button>
+              </Link>,
+            ]}
+          />
+          <Divider />
+          <TableComponent
+            columns={myAttendanceColumns}
+            dataSource={workInfos.items}
+          />
+        </>
+      ) : (
+        <>
+          <TitleBar
+            title={'การเข้างาน - ออกงาน'}
+            subTitle={'วันนี้ฉันทำงานเป็นยังไงบ้างนะ'}
+          />
+          <Row gutter={[12, 12]} style={{ marginTop: '12px' }}>
+            <Col xs={24} sm={24} md={24} lg={10} xl={10}>
+              <Card
+                style={{
+                  backgroundColor: '#f8f9fa',
+                  height: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}
               >
-                ออกงาน
-              </Button>
-            </Flex>
-          </Card>
-        </Col>
-        <Col xs={24} sm={24} md={24} lg={14} xl={14}>
-          <Card
-            style={{
-              background: 'white',
-              borderRadius: '20px',
-              marginBottom: '12px',
-            }}
-            bodyStyle={{ padding: '20px' }}
-          >
-            <div>
-              <Typography.Title level={5} style={{ marginTop: '12px' }}>
-                {'รายละเอียดเข้างาน - ออกงาน'}
-              </Typography.Title>
-              <Typography.Paragraph>
-                {'ทำงานไป 5 ชั่วโมง 15 นาที'}
-              </Typography.Paragraph>
-              <Typography.Paragraph>
-                {'พักเบรคไป  57 นาที'}
-              </Typography.Paragraph>
-            </div>
-          </Card>
-          <List
-            size="small"
-            header={
-              <Typography.Title
-                level={5}
-                style={{ textAlign: 'center', marginTop: '12px' }}
-              >
-                ประวัติการเข้างาน - ออกงาน
-              </Typography.Title>
-            }
-            pagination={{ pageSize: 5 }}
-            bordered
-            dataSource={data}
-            renderItem={(item: any) => (
-              <List.Item>
-                <Flex gap={6}>
-                  <Typography>{item.username} </Typography>
-                  <Typography>{item.event} </Typography>
-                  <Typography>
-                    {dayjs(item.createdAt).format('M/D/YYYY h:mm A')}
-                  </Typography>
+                <Flex vertical justify="center" align="center" gap={10}>
+                  <Button
+                    shape="circle"
+                    style={styles.actionButton}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.boxShadow =
+                        '0 6px 20px rgba(0, 0, 0, 0.2)'; // Elevate shadow on hover
+                      e.currentTarget.style.transform = 'scale(1.05)'; // Slightly increase size on hover
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.boxShadow =
+                        '0 4px 15px rgba(0, 0, 0, 0.1)'; // Restore shadow on leave
+                      e.currentTarget.style.transform = 'scale(1)'; // Restore size
+                    }}
+                    onMouseDown={(e) => {
+                      e.currentTarget.style.boxShadow =
+                        'inset 0 3px 10px rgba(0, 0, 0, 0.2)'; // Inner shadow on click
+                    }}
+                    onMouseUp={(e) => {
+                      e.currentTarget.style.boxShadow =
+                        '0 6px 20px rgba(0, 0, 0, 0.2)'; // Restore shadow after click
+                    }}
+                    onClick={() => {
+                      setAttendance(!attendance); // Toggle attendance state
+                    }}
+                  >
+                    <Typography
+                      style={{
+                        color: 'white',
+                        fontSize: '24px',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {attendance ? 'เข้างาน' : 'พักเบรค'}
+                    </Typography>
+                  </Button>
+
+                  <Button
+                    style={{ width: '100px', height: '35px' }}
+                    onClick={() => {
+                      setAttendance(true);
+                      setOpen(true);
+                    }}
+                  >
+                    ออกงาน
+                  </Button>
                 </Flex>
-              </List.Item>
-            )}
-          />
-        </Col>
-      </Row>
+              </Card>
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={14} xl={14}>
+              <Card
+                style={{
+                  background: 'white',
+                  borderRadius: '20px',
+                  marginBottom: '12px',
+                }}
+                bodyStyle={{ padding: '20px' }}
+              >
+                <div>
+                  <Typography.Title level={5} style={{ marginTop: '12px' }}>
+                    {'รายละเอียดเข้างาน - ออกงาน'}
+                  </Typography.Title>
+                  <Typography.Paragraph>
+                    {'ทำงานไป 5 ชั่วโมง 15 นาที'}
+                  </Typography.Paragraph>
+                  <Typography.Paragraph>
+                    {'พักเบรคไป  57 นาที'}
+                  </Typography.Paragraph>
+                </div>
+              </Card>
+              <List
+                size="small"
+                header={
+                  <Typography.Title
+                    level={5}
+                    style={{ textAlign: 'center', marginTop: '12px' }}
+                  >
+                    ประวัติการเข้างาน - ออกงาน
+                  </Typography.Title>
+                }
+                pagination={{ pageSize: 5 }}
+                bordered
+                dataSource={data}
+                renderItem={(item: any) => (
+                  <List.Item>
+                    <Flex gap={6}>
+                      <Typography>{item.username} </Typography>
+                      <Typography>{item.event} </Typography>
+                      <Typography>
+                        {dayjs(item.createdAt).format('M/D/YYYY h:mm A')}
+                      </Typography>
+                    </Flex>
+                  </List.Item>
+                )}
+              />
+            </Col>
+          </Row>
+        </>
+      )}
     </>
   );
 };

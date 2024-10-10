@@ -12,23 +12,31 @@ export async function getAll() {
   const data = mockupAttendance.attendanceIndexData;
   return { data };
 }
-export async function create(data: any) {
+export async function getAllWorkInfo(params?: any) {
   return client({
-    method: 'POST',
-    url: '/api/crud/branches',
-    data,
+    method: 'GET',
+    url: '/api/crud/work-info/',
+    params,
   });
 }
 export async function get(id: any) {
   return client({
     method: 'GET',
-    url: `/api/crud/branches/${id}`,
+    url: `/api/crud/work-info/${id}`,
   });
 }
+export async function create(data: any) {
+  return client({
+    method: 'POST',
+    url: `/api/crud/work-info`,
+    data,
+  });
+}
+
 export async function update(id: any, data: any) {
   return client({
     method: 'PUT',
-    url: `/api/crud/branches/${id}`,
+    url: `/api/crud/work-info/${id}`,
     data,
   });
 }
