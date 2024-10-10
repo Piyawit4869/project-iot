@@ -20,8 +20,8 @@ export const TitleBar = (props: TitleBarProps) => {
         </Col>
         <Col>
           <Row gutter={6}>
-            {buttons?.map((button) => {
-              return <Col>{button}</Col>;
+            {buttons?.map((button, index) => {
+              return <Col key={`btn-title-${index}`}>{button}</Col>;
             })}
           </Row>
         </Col>
