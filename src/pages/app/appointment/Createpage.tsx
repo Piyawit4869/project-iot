@@ -6,6 +6,7 @@ import {
   Input,
   notification,
   Row,
+  Segmented,
   Select,
   TimePicker,
 } from 'antd';
@@ -53,6 +54,7 @@ async function loginWithGoogleAction(data: any) {
 
 export const AppointmentCreate = () => {
   const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(null);
+  const [system, setSystem] = React.useState('system');
   console.log(selectedDate);
 
   const onDateSelect = (date: Dayjs) => {
@@ -197,8 +199,22 @@ export const AppointmentCreate = () => {
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <Row gutter={8}>
+                <Col span={24}>
+                  <Form.Item label="ตัวเลือกใช้งาน">
+                    <Segmented
+                      type="primary"
+                      defaultValue="system"
+                      options={[
+                        { value: 'system', label: 'ระบบ' },
+                        { value: 'google', icon: <GoogleOutlined /> },
+                      ]}
+                      onChange={(value) => {
+                        setSystem(value);
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                  {' '}
                   <Form.Item
                     label="ชื่อการนัดหมาย"
                     name="name"
@@ -252,19 +268,24 @@ export const AppointmentCreate = () => {
                   options={employeeOptions}
                 />
               </Form.Item>
+              <Form.Item label="สถานที่" name="location">
+                <TextArea placeholder="กรอกสถานที่" />
+              </Form.Item>
               <Form.Item label="รายละเอียด" name="descriptions">
                 <TextArea placeholder="กรอกรายละเอียด" />
               </Form.Item>
-              <Button
-                onClick={() => login()}
-                size="large"
-                type="primary"
-                htmlType="submit"
-                icon={<GoogleOutlined />}
-                style={{ width: '100%' }}
-              >
-                Login with Google
-              </Button>
+              {system === 'google' && (
+                <Button
+                  onClick={() => login()}
+                  size="large"
+                  type="primary"
+                  htmlType="submit"
+                  icon={<GoogleOutlined />}
+                  style={{ width: '100%' }}
+                >
+                  เชื่อมต่อกับ Google
+                </Button>
+              )}
             </Col>
           </Row>
         </div>

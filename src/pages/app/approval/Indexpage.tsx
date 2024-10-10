@@ -690,8 +690,8 @@ export const ApprovalIndex = () => {
       <CreateApprovalModal />
       <ApprovalModal />
       <TitleBar
-        title={'การลางานในวันนี้'}
-        subTitle={'มีใครลางานในวันนี้บ้างนะ มาดูกัน'}
+        title={'การลางาน'}
+        subTitle={'เร็วๆนี้มีใครลางานบ้างนะ มาดูกัน'}
         buttons={[
           <Button
             type="primary"
@@ -714,7 +714,7 @@ export const ApprovalIndex = () => {
       <CreateApprovalModal />
       <ApprovalModal />
       <TitleBar
-        title={'การลางานของคุณในวันนี้'}
+        title={'การลางานของคุณ'}
         subTitle={'ส่งเอกสารการลาได้ที่ปุ่มเขียนใบลา'}
         buttons={[
           <Button

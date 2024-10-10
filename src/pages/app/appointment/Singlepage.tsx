@@ -172,6 +172,9 @@ export const AppointmentSingle = () => {
                   options={employeeOptions}
                 />
               </Form.Item>
+              <Form.Item label="สถานที่" name="location">
+                <TextArea placeholder="กรอกสถานที่" />
+              </Form.Item>
               <Form.Item label="รายละเอียด" name="descriptions">
                 <TextArea placeholder="กรอกรายละเอียด" />
               </Form.Item>

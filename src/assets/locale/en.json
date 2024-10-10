@@ -18,6 +18,9 @@
     "developer": "Developer",
     "employee": "Employee",
     "profile": "Profile",
-    "logout": "Logout"
+    "logout": "Logout",
+    "action": "Action",
+    "approval": "Approval",
+    "appointment": "Appointment"
   }
 }

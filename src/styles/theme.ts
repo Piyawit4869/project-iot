@@ -71,6 +71,7 @@ export const Config = {
         headerSortActiveBg: '#19142A',
         colorPrimary: '#ffffff',
       },
+      Segmented: { itemSelectedBg: '#19142A', itemSelectedColor: '#ffffff' },
     },
     Button: {
       defaultColor: 'rgb(25, 20, 42)',
