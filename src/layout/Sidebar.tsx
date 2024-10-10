@@ -181,7 +181,7 @@ export const Sidebar = (props: SidebarProps) => {
                   overflow: 'auto',
                 }}
               >
-                {menusWithOnClick.map((menu) =>
+                {menusWithOnClick.map((menu: any) =>
                   menu.divider ? (
                     <Menu.Divider key={menu.key} />
                   ) : menu.children ? (
