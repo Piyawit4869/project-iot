@@ -169,7 +169,6 @@ export const AttendanceAction = () => {
 
   const submit = useSubmit();
 
-  const [attendance, setAttendance] = React.useState(true);
   const [open, setOpen] = React.useState(false);
 
   const me = JSON.parse(localStorage.getItem('me') || '');
@@ -193,13 +192,18 @@ export const AttendanceAction = () => {
   };
 
   const handleChangeState = () => {
-    setAttendance(!attendance);
-
     submit(
       {
         data: JSON.stringify({
           status: 'Active',
-          action: attendance ? 'In' : 'Break',
+          action:
+            data && data.length
+              ? data[0].action === 'Out'
+                ? 'In'
+                : data[0].action === 'Break'
+                ? 'In'
+                : 'Break'
+              : 'In',
         }),
         action: 'attendance',
       },
@@ -312,7 +316,7 @@ export const AttendanceAction = () => {
                     }}
                     onClick={() => {
                       if (data && data.length && data[0].action !== 'Out') {
-                        handleChangeState;
+                        handleChangeState();
                       }
                     }}
                   >
