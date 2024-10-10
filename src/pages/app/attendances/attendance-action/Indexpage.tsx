@@ -11,7 +11,7 @@ import {
   Tag,
   Typography,
 } from 'antd';
-import { Link, useLoaderData } from 'react-router-dom';
+import { Link, useLoaderData, useSubmit } from 'react-router-dom';
 
 import { TableComponent, TitleBar } from '@src/components/shared';
 import { LeaveEarlyModal } from '@src/components/modules/app/attendance';
@@ -26,10 +26,13 @@ const dateFormat = 'DD/MM/BBBB';
 
 const myAttendanceColumns: ColumnsType<any> | undefined = [
   {
-    title: 'รหัส',
-    dataIndex: 'id',
-    key: 'id',
-    render: (text) => <Link to={`/attendance/${text}`}>{text}</Link>,
+    title: 'ชื่อ',
+    dataIndex: 'name',
+    key: 'name',
+    render: (text, render) => (
+      <Link to={`/attendance/${render.id}`}>{text}</Link>
+    ),
+    width: 200,
   },
   {
     title: 'สร้างเมื่อ',
@@ -64,11 +67,7 @@ const myAttendanceColumns: ColumnsType<any> | undefined = [
     key: 'isCurrent',
     render: (isCurrent: boolean) => (isCurrent ? 'ใช่' : 'ไม่ใช่'),
   },
-  {
-    title: 'ชื่อ',
-    dataIndex: 'name',
-    key: 'name',
-  },
+
   {
     title: 'คำอธิบาย',
     dataIndex: 'descriptions',
@@ -110,7 +109,7 @@ const myAttendanceColumns: ColumnsType<any> | undefined = [
     title: 'จำกัดเวลา/วัน',
     dataIndex: 'limitTimePerDay',
     key: 'limitTimePerDay',
-    render: (time: number) => `${time} ชั่วโมง`,
+    render: (time: number) => `${time ? time : 0} ชั่วโมง`,
   },
   {
     title: 'เครดิตเริ่มต้น',
@@ -162,7 +161,13 @@ const myAttendanceColumns: ColumnsType<any> | undefined = [
 ];
 
 export const AttendanceAction = () => {
-  const { workInfos, data } = useLoaderData() as any;
+  const { workInfos, data, wf } = useLoaderData() as any;
+
+  const [currentTime, setCurrentTime] = React.useState(
+    dayjs().format('HH:mm:ss'),
+  );
+
+  const submit = useSubmit();
 
   const [attendance, setAttendance] = React.useState(true);
   const [open, setOpen] = React.useState(false);
@@ -173,11 +178,64 @@ export const AttendanceAction = () => {
     setOpen(false);
   };
 
+  const handleSubmitLeave = () => {
+    submit(
+      {
+        data: JSON.stringify({
+          status: 'Active',
+          action: 'Out',
+        }),
+        action: 'leave-ealry',
+      },
+      { method: 'post' },
+    );
+    setOpen(false);
+  };
+
+  const handleChangeState = () => {
+    setAttendance(!attendance);
+
+    submit(
+      {
+        data: JSON.stringify({
+          status: 'Active',
+          action: attendance ? 'In' : 'Break',
+        }),
+        action: 'attendance',
+      },
+      { method: 'post' },
+    );
+  };
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(dayjs().format('HH:mm:ss'));
+    }, 1000); // Update every second
+
+    // Cleanup the timer on component unmount
+    return () => clearInterval(timer);
+  }, []);
+
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case 'In':
+        return 'linear-gradient(145deg, #FFA726, #FFCC80)';
+      case 'Break':
+        return 'linear-gradient(145deg, #6E85B7, #ABC4FF)';
+      default:
+        return 'linear-gradient(145deg, #EF5350, #FFCDD2)';
+    }
+  };
+
   return (
     <>
-      <LeaveEarlyModal open={open} handleCloseModal={handleCloseModal} />
+      <LeaveEarlyModal
+        open={open}
+        handleCloseModal={handleCloseModal}
+        handleSubmit={handleSubmitLeave}
+      />
 
-      {me?.role?.name ? (
+      {me?.role?.name === 'owner' ? (
         <>
           <TitleBar
             title={'การเข้างาน - ออกงาน'}
@@ -197,7 +255,13 @@ export const AttendanceAction = () => {
         <>
           <TitleBar
             title={'การเข้างาน - ออกงาน'}
-            subTitle={'วันนี้ฉันทำงานเป็นยังไงบ้างนะ'}
+            subTitle={`วันนี้คุณทำงานเป็นยังไงบ้างครับ :)`}
+            buttons={[
+              <Typography.Title level={4}>
+                วัน{dayjs().format('dddd ที่ DD เดือน MMMM พ.ศ. BBBB')} เวลา{' '}
+                {currentTime}
+              </Typography.Title>,
+            ]}
           />
           <Row gutter={[12, 12]} style={{ marginTop: '12px' }}>
             <Col xs={24} sm={24} md={24} lg={10} xl={10}>
@@ -213,7 +277,21 @@ export const AttendanceAction = () => {
                 <Flex vertical justify="center" align="center" gap={10}>
                   <Button
                     shape="circle"
-                    style={styles.actionButton}
+                    style={{
+                      ...styles.actionButton,
+                      backgroundImage:
+                        data && data.length
+                          ? getStatusStyle(data[0].action)
+                          : 'linear-gradient(145deg, #6E85B7, #ABC4FF)',
+                      // 'linear-gradient(145deg, #6E85B7, #ABC4FF)', // Cool gradient background
+
+                      cursor:
+                        data && data.length
+                          ? data[0].action === 'Out'
+                            ? 'not-allowed'
+                            : 'pointer'
+                          : 'pointer',
+                    }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.boxShadow =
                         '0 6px 20px rgba(0, 0, 0, 0.2)'; // Elevate shadow on hover
@@ -233,7 +311,9 @@ export const AttendanceAction = () => {
                         '0 6px 20px rgba(0, 0, 0, 0.2)'; // Restore shadow after click
                     }}
                     onClick={() => {
-                      setAttendance(!attendance); // Toggle attendance state
+                      if (data && data.length && data[0].action !== 'Out') {
+                        handleChangeState;
+                      }
                     }}
                   >
                     <Typography
@@ -243,14 +323,20 @@ export const AttendanceAction = () => {
                         fontWeight: 'bold',
                       }}
                     >
-                      {attendance ? 'เข้างาน' : 'พักเบรค'}
+                      {data && data.length
+                        ? data[0].action === 'In'
+                          ? 'พักเบรค'
+                          : data[0].action === 'Out'
+                          ? 'เลิกงาน'
+                          : 'เข้างาน'
+                        : 'เริ่มงานครั้งแรก'}
                     </Typography>
                   </Button>
 
                   <Button
-                    style={{ width: '100px', height: '35px' }}
+                    disabled={data && data.length && data[0].action === 'Out'}
+                    style={{ width: '100px', height: '35px', marginTop: 12 }}
                     onClick={() => {
-                      setAttendance(true);
                       setOpen(true);
                     }}
                   >
@@ -269,14 +355,15 @@ export const AttendanceAction = () => {
                 bodyStyle={{ padding: '20px' }}
               >
                 <div>
-                  <Typography.Title level={5} style={{ marginTop: '12px' }}>
-                    {'รายละเอียดเข้างาน - ออกงาน'}
+                  <Typography.Title level={3} style={{ marginTop: '12px' }}>
+                    {wf.name}
                   </Typography.Title>
+                  <Typography.Title level={5} style={{ marginTop: '12px' }}>
+                    รายละเอียดงาน : {wf.descriptions}
+                  </Typography.Title>
+
                   <Typography.Paragraph>
-                    {'ทำงานไป 5 ชั่วโมง 15 นาที'}
-                  </Typography.Paragraph>
-                  <Typography.Paragraph>
-                    {'พักเบรคไป  57 นาที'}
+                    {'ทำงานไป 12 ชม และ พักเบรคไป  57 นาที'}
                   </Typography.Paragraph>
                 </div>
               </Card>
@@ -292,14 +379,28 @@ export const AttendanceAction = () => {
                 }
                 pagination={{ pageSize: 5 }}
                 bordered
-                dataSource={data}
+                dataSource={
+                  data && data.length
+                    ? data.sort(
+                        (a: any, b: any) =>
+                          dayjs(b.createdAt).valueOf() -
+                          dayjs(a.createdAt).valueOf(),
+                      )
+                    : []
+                }
                 renderItem={(item: any) => (
                   <List.Item>
-                    <Flex gap={6}>
-                      <Typography>{item.username} </Typography>
-                      <Typography>{item.event} </Typography>
+                    <Flex gap={20}>
                       <Typography>
-                        {dayjs(item.createdAt).format('M/D/YYYY h:mm A')}
+                        เวลา {dayjs(item.createdAt).format('hh:mm:ss')}
+                      </Typography>
+
+                      <Typography>
+                        {item.action === 'In'
+                          ? 'เข้างาน'
+                          : item.action === 'Break'
+                          ? 'พักเบรค'
+                          : 'ออกงาน'}
                       </Typography>
                     </Flex>
                   </List.Item>
@@ -319,7 +420,7 @@ const styles: Record<string, React.CSSProperties> = {
     height: '250px',
     borderRadius: '50%', // Keep the button circular
     border: '2px solid transparent', // Remove solid borders
-    backgroundImage: 'linear-gradient(145deg, #6E85B7, #ABC4FF)', // Cool gradient background
+
     color: '#fff', // Text color for better contrast
     fontSize: '20px', // Increase font size for better visibility
     display: 'flex', // Center content

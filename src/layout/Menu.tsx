@@ -7,6 +7,7 @@ interface MenusProps {
 
 export const Menus = (props: MenusProps) => {
   const { role } = props;
+
   const menus = [
     {
       //<Link to="/admin/analytic" >วิเคราะห์ระบบ</Link>
@@ -160,5 +161,21 @@ export const Menus = (props: MenusProps) => {
       // disable: true,
     },
   ];
-  return menus.filter((m) => m.role.includes(role));
+  // return menus.filter((m) =>  m.role.includes(role) );
+
+  const filterMenusByRole = (menus: any, userRole: any) => {
+    return menus
+      .filter((menu: any) => menu.role.includes(userRole)) // Filter out menus the user doesn't have access to
+      .map((menu: any) => {
+        // If the menu has children (submenus), we recursively filter the children as well
+        if (menu.children) {
+          const filteredChildren = filterMenusByRole(menu.children, userRole);
+          return { ...menu, children: filteredChildren };
+        }
+        return menu;
+      });
+  };
+
+  const showMenus = filterMenusByRole(menus, role);
+  return showMenus;
 };
