@@ -1,3 +1,4 @@
+import { ThemeConfig } from 'antd';
 import { CSSProperties } from 'react';
 
 export const ThemeColors = {
@@ -35,7 +36,7 @@ export const styles: Record<string, CSSProperties> = {
   },
 };
 
-export const ThemeConfig = {
+export const Config = {
   ThemeColorsV2: {
     token: {
       colorPrimary: '#19142a',
@@ -54,6 +55,11 @@ export const ThemeConfig = {
         itemColor: 'grey',
         itemHoverColor: 'lightGrey',
       },
+
+      Calendar: {
+        controlItemBgActive: '#f2f2f2',
+      },
+      Select: { optionSelectedBg: '#19142A', optionSelectedColor: '#ffffff' },
       Layout: {
         siderBg: '#f2f2f2',
         headerBg: '#ffffff',
@@ -84,5 +90,5 @@ export const ThemeConfig = {
       colorErrorActive: 'rgb(226, 49, 54)',
       colorError: 'rgb(226, 49, 54)',
     },
-  },
+  } as ThemeConfig,
 };

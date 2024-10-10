@@ -17,17 +17,19 @@ const { SubMenu } = Menu;
 export const Sidebar: React.FC = () => {
   const location = useLocation();
   const [collapsed, setCollapsed] = React.useState(false);
-  const [activeKey, setActiveKey] = React.useState<any[]>([]);
   const [isMobile, setIsMobile] = React.useState(false);
+  const [defaultOpenKeys, setDefaultOpenKeys] = React.useState([]);
 
   const currentPath = location.pathname;
-
-  console.log({ isMobile });
 
   const handleMenuClick = () => {
     if (isMobile) {
       setCollapsed(true);
     }
+  };
+
+  const getAllSubmenuKeys = (menus: any[]): string[] => {
+    return menus.filter((menu) => menu.children).map((menu) => menu.key);
   };
 
   const me = JSON.parse(localStorage.getItem('me') || '{}');
@@ -41,16 +43,10 @@ export const Sidebar: React.FC = () => {
   };
 
   React.useEffect(() => {
-    const currentPathname = location.pathname;
-    const resultPath = Menus({ role: me.role.name })
-      .filter((menu: any) => currentPathname.includes(menu.key))
-      .map((item: any) => item.key);
-
-    setActiveKey(resultPath);
-  }, [location.pathname, setActiveKey]);
-
-  React.useEffect(() => {
     setCollapsed(isMobile);
+
+    const allSubmenuKeys: any = getAllSubmenuKeys(menusWithOnClick);
+    isMobile ? setDefaultOpenKeys([]) : setDefaultOpenKeys(allSubmenuKeys);
   }, [isMobile]);
 
   return (
@@ -100,12 +96,14 @@ export const Sidebar: React.FC = () => {
                   to={
                     location.pathname.includes('/admin')
                       ? '/admin/analytic'
-                      : '/analytic'
+                      : '/attendance'
                   }
                 >
                   <Image
                     preview={false}
-                    src={logo}
+                    src={
+                      me?.organization?.logoUrl ? me.organization.logoUrl : logo
+                    }
                     width={collapsed ? 40 : 70}
                   />
                 </Link>
@@ -123,9 +121,7 @@ export const Sidebar: React.FC = () => {
               >
                 <Col>
                   <Typography style={{ color: '#19142A', fontSize: '20px' }}>
-                    {location.pathname.includes('/admin')
-                      ? 'ROME'
-                      : 'บริษัท ยูโทเทค จำกัด'}
+                    {me?.organization?.nameTh ? me?.organization?.nameTh : '-'}
                   </Typography>
                 </Col>
               </Row>
@@ -134,6 +130,7 @@ export const Sidebar: React.FC = () => {
               <Menu
                 theme="light"
                 mode="inline"
+                openKeys={defaultOpenKeys}
                 selectedKeys={[currentPath]}
                 defaultOpenKeys={['/']}
                 style={{
@@ -144,30 +141,30 @@ export const Sidebar: React.FC = () => {
               >
                 {menusWithOnClick.map((menu) =>
                   menu.divider ? (
-                    <Menu.Divider
-                     key={menu.key} />
+                    <Menu.Divider key={menu.key} />
                   ) : menu.children ? (
-                    <SubMenu 
-                    style={{
-                      backgroundColor: '#F7F7F7',
-                      overflow: 'auto',
-                    }}
-                    key={menu.key}  
-                    icon={menu.icon} 
-                    
-                    title={menu.label}>
+                    <SubMenu
+                      style={{
+                        backgroundColor: '#F7F7F7',
+                        overflow: 'auto',
+                      }}
+                      key={menu.key}
+                      icon={menu.icon} // Use parent icon here
+                      title={menu.label}
+                    >
                       {menu.children.map((subMenu: any) => (
-                        <Menu.Item 
-                        key={subMenu.key}
-                        icon={menu.icon}
-                        selectedKeys={activeKey}
-                        >{subMenu.label}</Menu.Item>
+                        <Menu.Item
+                          key={subMenu.key}
+                          icon={subMenu.icon} // Use child icon here
+                        >
+                          {subMenu.label}
+                        </Menu.Item>
                       ))}
                     </SubMenu>
                   ) : (
                     <Menu.Item
                       key={menu.key}
-                      icon={menu.icon}
+                      icon={menu.icon} // Use parent icon for items without children
                       disabled={menu.disable}
                     >
                       {menu.label}

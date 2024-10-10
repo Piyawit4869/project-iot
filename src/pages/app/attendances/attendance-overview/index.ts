@@ -1,2 +1,2 @@
-export { indexLoader } from './loader';
-export { AttendanceOverview } from './page';
+export * from './loader';
+export * from './Indexpage';

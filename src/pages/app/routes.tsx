@@ -13,6 +13,8 @@ import { routes as analyticRoute } from './analytic';
 import { routes as upgradeRoute } from './upgrade';
 import { routes as informationRoute } from './branchsetting';
 import { routes as orginformationRoute } from './organizesetting';
+import { routes as appointmentRoute } from './appointment';
+import { routes as approvalRoute } from './approval';
 
 export const routes = [
   {
@@ -27,6 +29,8 @@ export const routes = [
   ...planningRoute,
   ...notationRoute,
   ...attendanceRoute,
+  ...appointmentRoute,
+  ...approvalRoute,
   ...userRoute,
   ...projectpageRoute,
   ...customersRoute,

@@ -1,6 +1,7 @@
+import { userCreateAction, userEditAction } from './action';
 import { UsersCreate } from './createpage';
 import { UsersIndex } from './indexpage';
-import { userLoader } from './loader';
+import { userLoader, userSingleLoader } from './loader';
 import { UsersSingle } from './singlepage';
 
 export const routes = [
@@ -14,10 +15,13 @@ export const routes = [
       },
       {
         path: 'create',
+        action: userCreateAction,
         element: <UsersCreate />,
       },
       {
         path: ':id',
+        loader: userSingleLoader,
+        action: userEditAction,
         element: <UsersSingle />,
       },
     ],

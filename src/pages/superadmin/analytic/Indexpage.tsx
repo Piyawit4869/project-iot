@@ -1,40 +1,9 @@
 import React from 'react';
-import { Card, Row, Col, Button, Progress, Flex, notification } from 'antd';
-import { GoogleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Card, Row, Col, Button, Progress, Flex } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { CSSProperties } from 'react';
 import { TitleBar } from '@src/components/shared';
-import * as API from '@src/apis';
-import axios from 'axios';
-import { useGoogleLogin } from '@react-oauth/google';
-import { json, redirect } from 'react-router-dom';
-const clientId =
-  '23189663829-jbftuq5rc78ct17qkjd48f97lcmd28h0.apps.googleusercontent.com';
 
-const clientSecret = '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';
-
-async function loginWithGoogleAction(data: any) {
-  try {
-    const res = await API.auth.loginWithGoogle(data);
-    localStorage.setItem('accessToken', res.data.accessToken);
-    localStorage.setItem('refreshToken', res.data.refreshToken);
-    notification.success({
-      message: 'Login Success',
-      placement: 'bottomRight',
-      description: 'You have successfully logged in',
-    });
-    return redirect(
-      data.user === 'super.admin@utotech.org' ? '/admin/analytic' : '/analytic',
-    );
-  } catch (error) {
-    notification.error({
-      message: 'Login Failed',
-      placement: 'bottomRight',
-      description: 'Invalid email or password',
-    });
-
-    return json({ status: 'error', message: 'Invalid email or password' });
-  }
-}
 interface CardData {
   title: string;
   value: number;
@@ -202,85 +171,10 @@ const AttendanceCard: React.FC = () => (
 //   </Card>
 // );
 const Analytic: React.FC = () => {
-  const login = useGoogleLogin({
-    flow: 'auth-code',
-    onSuccess: async (codeResponse) => {
-      try {
-        const tokensResponse = await axios.post(
-          'https://oauth2.googleapis.com/token',
-          {
-            code: codeResponse.code,
-            client_id: clientId,
-            client_secret: clientSecret,
-            redirect_uri: 'http://localhost:8080',
-            grant_type: 'authorization_code',
-          },
-        );
-
-        const userInfoResponse = await axios.get(
-          'https://www.googleapis.com/oauth2/v3/userinfo',
-          {
-            headers: {
-              Authorization: `Bearer ${tokensResponse.data.access_token}`,
-            },
-          },
-        );
-
-        const response = {
-          accessToken: tokensResponse.data.access_token,
-          refreshToken: tokensResponse.data.refresh_token,
-          type: 'web',
-          provider: 'google',
-          details: {
-            idToken: tokensResponse.data.id_token,
-            scopes: codeResponse.scope?.split(' ') || [],
-            serverAuthCode: codeResponse.code,
-            user: {
-              email: userInfoResponse.data.email,
-              familyName: userInfoResponse.data.family_name,
-              givenName: userInfoResponse.data.given_name,
-              id: userInfoResponse.data.sub,
-              name: userInfoResponse.data.name,
-              photo: userInfoResponse.data.picture,
-            },
-          },
-        };
-
-        await loginWithGoogleAction(response);
-      } catch (error) {
-        console.error('Error during login process:', error);
-      }
-    },
-    onError: (errorResponse) => {
-      console.error('Login Failed:', errorResponse);
-    },
-  });
   return (
     <Flex vertical>
       <TitleBar title={'ภาพรวม'} subTitle={'สวัสดีตอนเที่ยง!'} />
-      <Button
-        onClick={() => login()}
-        size="large"
-        type="primary"
-        htmlType="submit"
-        // loading={
-        //   navigation.state === 'loading' || navigation.state === 'submitting'
-        // }
-        // disabled={
-        //   navigation.state === 'loading' || navigation.state === 'submitting'
-        // }
-        icon={<GoogleOutlined />}
-        style={{
-          fontSize: '18px',
-          padding: '0 30px',
-          width: '100%',
-          borderColor: '#A79DB4',
-          color: 'white',
-          marginTop: '20px',
-        }}
-      >
-        Login with Google
-      </Button>
+
       <div style={{ height: '25px' }} />
       <Row gutter={16} justify="space-between">
         {cardData.map((data, index) => (

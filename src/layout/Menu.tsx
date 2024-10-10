@@ -30,40 +30,58 @@ export const Menus = (props: MenusProps) => {
       role: ['super_admin'],
       // disable: true,
     },
+    // {
+    //   label: <Link to="/analytic">วิเคราะห์</Link>,
+    //   key: '/analytic',
+    //   icon: <Icon.PieChartOutlined />,
+    //   role: ['owner', 'manager'],
+    // },
+    // {
+    //   label: <Link to="/branch">สาขา</Link>,
+    //   key: '/branch',
+    //   icon: <Icon.BranchesOutlined />,
+    //   role: ['owner'],
+    // },
     {
-      label: <Link to="/analytic">วิเคราะห์</Link>,
-      key: '/analytic',
-      icon: <Icon.PieChartOutlined />,
-      role: ['owner', 'manager'],
-    },
-    {
-      label: <Link to="/branch">สาขา</Link>,
-      key: '/branch',
-      icon: <Icon.BranchesOutlined />,
-      role: ['owner'],
-    },
-
-    {
-      label: <p style={{color:'grey'}}>เข้างานออกงาน</p>,
-      icon: <Icon.FieldTimeOutlined  />,
+      label: <p style={{ color: 'grey' }}>กิจกรรมการทำงาน</p>,
+      icon: <Icon.FieldTimeOutlined style={{ color: 'grey' }} />,
       role: ['owner', 'manager', 'supervisor', 'employee'],
       key: '/attendance',
+      children: [
+        {
+          label: <Link to="/attendance">ภาพรวม</Link>,
+          icon: <Icon.DashboardOutlined />,
+          role: ['owner', 'manager', 'supervisor'],
+          key: '/attendance',
+        },
+        {
+          label: <Link to="/attendance/action">การเข้าออกงาน</Link>,
+          icon: <Icon.PlayCircleOutlined />,
+          role: ['owner', 'manager', 'supervisor', 'employee'],
+          key: '/attendance/action',
+        },
 
-       children: [
-          {
-            label: <Link to="/attendance">ภาพรวม</Link>,
-            icon: <Icon.BarsOutlined  />,
-            role: ['owner', 'manager', 'supervisor', 'employee'],
-            key: '/attendance',
-          },
-          {
-            label: <Link to="/attendance/attendance-overview">ข้อมูลเชิงลึก</Link>,
-            icon: <Icon.DashboardOutlined  />,
-            role: ['owner', 'manager', 'supervisor', 'employee'],
-            key: '/attendance/attendance-overview',
-          },
-         
-        ],
+        {
+          label: <Link to="/approval">การลางาน</Link>,
+          icon: <Icon.CarryOutOutlined />,
+          role: ['owner', 'manager', 'supervisor', 'employee'],
+          key: '/approval',
+        },
+        {
+          label: <Link to="/appointment">การนัดหมาย</Link>,
+          icon: <Icon.ScheduleOutlined />,
+          role: ['owner', 'manager', 'supervisor', 'employee'],
+          key: '/appointment',
+        },
+        // {
+        //   label: (
+        //     <Link to="/attendance/attendance-overview">ข้อมูลเชิงลึก</Link>
+        //   ),
+        //   icon: <Icon.DashboardOutlined />,
+        //   role: ['owner', 'manager', 'supervisor', 'employee'],
+        //   key: '/attendance/attendance-overview',
+        // },
+      ],
     },
     {
       label: <Link to="/user">ผู้ใช้</Link>,
@@ -71,56 +89,56 @@ export const Menus = (props: MenusProps) => {
       icon: <Icon.UserOutlined />,
       role: ['owner', 'manager'],
     },
-    {
-      //  <Link to="/customer">
-      label: <Link to="/customer">ลูกค้า</Link>,
-      key: '/customer',
-      icon: <Icon.CustomerServiceOutlined />,
-      role: ['owner', 'manager'],
-    },
-    {
-      //<Link to="/notation">
-      label: (
-        <Link to="#" style={{ cursor: 'not-allowed' }}>
-          เอกสาร
-        </Link>
-      ),
-      key: '/notation',
-      icon: <Icon.ReconciliationOutlined />,
-      role: ['owner', 'manager'],
-      disable: true,
-    },
+    // {
+    //   //  <Link to="/customer">
+    //   label: <Link to="/customer">ลูกค้า</Link>,
+    //   key: '/customer',
+    //   icon: <Icon.CustomerServiceOutlined />,
+    //   role: ['owner', 'manager'],
+    // },
+    // {
+    //   //<Link to="/notation">
+    //   label: (
+    //     <Link to="#" style={{ cursor: 'not-allowed' }}>
+    //       เอกสาร
+    //     </Link>
+    //   ),
+    //   key: '/notation',
+    //   icon: <Icon.ReconciliationOutlined />,
+    //   role: ['owner', 'manager'],
+    //   disable: true,
+    // },
 
-    {
-      //<Link to="/project">
-      label: (
-        <Link to="#" style={{ cursor: 'not-allowed' }}>
-          โครงการ
-        </Link>
-      ),
-      key: '/project',
-      icon: <Icon.ProjectOutlined />,
-      role: ['owner', 'manager'],
-      disable: true,
-    },
+    // {
+    //   //<Link to="/project">
+    //   label: (
+    //     <Link to="#" style={{ cursor: 'not-allowed' }}>
+    //       โครงการ
+    //     </Link>
+    //   ),
+    //   key: '/project',
+    //   icon: <Icon.ProjectOutlined />,
+    //   role: ['owner', 'manager'],
+    //   disable: true,
+    // },
     // {
     //   label: <Link to="/setting">ตั้งค่า</Link>,
     //   key: "setting",
     //   icon: <Icon.SettingOutlined />,
     //   role: ["branch_admin","organize_admin"],
     // },
-    {
-      // <Link to="/attendance">
-      label: (
-        <Link to="#" style={{ cursor: 'not-allowed' }}>
-          เข้างานออกงาน
-        </Link>
-      ),
-      key: '/attendance',
-      icon: <Icon.FieldTimeOutlined />,
-      role: ['owner', 'manager', 'supervisor', 'employee'],
-      disable: true,
-    },
+    // {
+    //   // <Link to="/attendance">
+    //   label: (
+    //     <Link to="#" style={{ cursor: 'not-allowed' }}>
+    //       เข้างานออกงาน
+    //     </Link>
+    //   ),
+    //   key: '/attendance',
+    //   icon: <Icon.FieldTimeOutlined />,
+    //   role: ['owner', 'manager', 'supervisor', 'employee'],
+    //   disable: true,
+    // },
     {
       //<Link to="/information-branch">
       label: (

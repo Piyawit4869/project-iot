@@ -1,17 +1,28 @@
-export async function userCreateAction() {
-  // const formData = await request.formData();
-  // const submitData = Object.fromEntries(formData);
+import { notification } from 'antd';
+import * as API from '../../../apis';
+import { redirect } from 'react-router-dom';
+
+export async function userCreateAction({ request }: any) {
+  const formData = await request.formData();
+  const submitData = Object.fromEntries(formData);
 
   try {
-    //   await API.organize.create(JSON.parse(submitData.data));
-    return {
-      data: {
-        action: 'create',
-        status: 'success',
-        message: 'Organize Created Successfully !',
-      },
-    };
+    const res = await API.user.create(JSON.parse(submitData.data));
+
+    notification.success({
+      message: 'สร้างผู้ใช้งานสำเร็จ',
+      placement: 'bottomRight',
+      duration: 3,
+    });
+
+    return redirect(`/user/${res.data.id}`);
   } catch (error) {
+    notification.error({
+      message: 'สร้างผู้ใช้งานล้มเหลว',
+      placement: 'bottomRight',
+      duration: 3,
+    });
+
     return {
       data: {
         action: 'create',
@@ -19,5 +30,61 @@ export async function userCreateAction() {
         message: 'Organize Created Failed !',
       },
     };
+  }
+}
+
+export async function userEditAction({ request, params }: any) {
+  const formData = await request.formData();
+  const submitData = Object.fromEntries(formData);
+
+  switch (submitData.action) {
+    case 'edit':
+      try {
+        await API.user.edit(JSON.parse(submitData.data), params.id);
+        notification['success']({
+          message: 'แก้ไขข้อมูลผู้ใช้งานเสร็จสิ้น',
+          placement: 'bottomRight',
+          duration: 3,
+        });
+        return redirect(`/user/${params.id}`);
+      } catch (error) {
+        notification['error']({
+          message: 'แก้ไขข้อมูลผู้ใช้งานล้มเหลว',
+          placement: 'bottomRight',
+          duration: 3,
+        });
+        return {
+          data: {
+            action: 'edit',
+            status: 'error',
+            message: 'User Updated Failed !',
+          },
+        };
+      }
+    case 'delete':
+      try {
+        await API.user.deleted(params.id);
+        notification['success']({
+          message: 'ลบข้อมูลผู้ใช้งานเสร็จสิ้น',
+          placement: 'bottomRight',
+          duration: 3,
+        });
+        return redirect('/user');
+      } catch (error) {
+        notification['error']({
+          message: 'ลบข้อมูลผู้ใช้งานล้มเหลว',
+          placement: 'bottomRight',
+          duration: 3,
+        });
+        return {
+          data: {
+            action: 'delete',
+            status: 'error',
+            message: 'User Deleted Failed !',
+          },
+        };
+      }
+    default:
+      break;
   }
 }

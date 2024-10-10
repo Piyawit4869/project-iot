@@ -31,17 +31,11 @@ export const userData = [
     id: '3',
   },
 ];
-export const userColumns = [
-  {
-    title: 'ลำดับ',
-    dataIndex: 'index',
-    key: 'index',
-    sorter: (a: { index: number }, b: { index: number }) => a.index - b.index,
-  },
+export const userColumns: any = [
   {
     title: 'ชื่อผู้ใช้',
-    dataIndex: 'name',
-    key: 'name',
+    dataIndex: 'userName',
+    key: 'userName',
   },
   {
     title: 'อีเมล',
@@ -52,11 +46,16 @@ export const userColumns = [
     title: 'เบอร์โทรศัพท์',
     dataIndex: 'phone',
     key: 'phone',
+    align: 'center',
+    render: (value: any, record: any) => {
+      return value ? record.profile.phone : record.profile.phone;
+    },
   },
   {
     title: 'สถานะ',
     dataIndex: 'active',
     key: 'active',
+    align: 'center',
     render: (active: any) =>
       active ? (
         <Tag color="success">พร้อมใช้งาน</Tag>
@@ -69,6 +68,7 @@ export const userColumns = [
     title: 'รายละเอียด',
     dataIndex: 'details',
     key: 'details',
+    align: 'center',
     render: (_: any, record: any) => (
       <Link to={`/user/${record.id}`}>
         <Button

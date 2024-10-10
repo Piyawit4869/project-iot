@@ -24,7 +24,7 @@ export const LoginPage = () => {
       });
 
       if (action.status === 'success') {
-        navigate('/analytic');
+        navigate('/attendance');
       }
     }
   }, [action]);

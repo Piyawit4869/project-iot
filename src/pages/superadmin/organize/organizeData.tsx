@@ -31,14 +31,14 @@ export const organizeData = [
 ];
 
 export const organizeColumns: TableProps['columns'] = [
-  {
-    title: 'ลำดับ',
-    dataIndex: 'id',
-    width: '50px',
-    align: 'center',
-    key: 'id',
-    sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
-  },
+  // {
+  //   title: 'ลำดับ',
+  //   dataIndex: 'id',
+  //   width: '50px',
+  //   align: 'center',
+  //   key: 'id',
+  //   sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
+  // },
   {
     title: 'โลโก้',
     dataIndex: 'logoUrl',
@@ -146,7 +146,7 @@ export const organizeColumns: TableProps['columns'] = [
   {
     title: 'รายละเอียด',
     key: 'details',
-    dataIndex: 'slug',
+    dataIndex: 'id',
     align: 'center',
     render: (slug: string) => (
       <Link to={`${slug}`}>

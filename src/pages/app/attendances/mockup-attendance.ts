@@ -8,6 +8,7 @@ const attendanceIndexData = [
     clockOut: '14:30 น.',
     eventTime: '5 ชม. 30 นาที',
     reMark: 'ออกก่อนเวลา',
+    createdAt: '2024-10-02T04:40:24.863Z',
   },
   {
     id: '2',
@@ -18,6 +19,7 @@ const attendanceIndexData = [
     clockOut: 'รอการออกงาน',
     eventTime: 'รอการออกงาน',
     reMark: 'เข้างานสาย',
+    createdAt: '2024-10-02T04:40:24.863Z',
   },
   {
     id: '3',
@@ -28,6 +30,7 @@ const attendanceIndexData = [
     clockOut: '16:00 น.',
     eventTime: '8 ชม. 15 นาที',
     reMark: 'ทำงานครบเวลา',
+    createdAt: '2024-10-02T04:40:24.863Z',
   },
   {
     id: '4',
@@ -38,6 +41,7 @@ const attendanceIndexData = [
     clockOut: '15:45 น.',
     eventTime: '7 ชม. 30 นาที',
     reMark: 'ออกงานก่อนเวลา',
+    createdAt: '2024-10-02T04:40:24.863Z',
   },
   {
     id: '5',
@@ -48,6 +52,7 @@ const attendanceIndexData = [
     clockOut: '18:00 น.',
     eventTime: '8 ชม. 30 นาที',
     reMark: 'เข้างานสาย',
+    createdAt: '2024-10-02T04:40:24.863Z',
   },
 ];
 

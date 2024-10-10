@@ -22,17 +22,17 @@ export const OrganizeCreate: React.FC = () => {
 
   const defaultValue = {
     active: true,
-    status: 'newly_registered',
-    fromType: 'ordinary_person',
+    status: 'NewlyRegistered',
+    fromType: 'OrdinaryPerson',
     registerVat: true,
     address: {
       isMain: true,
     },
     branch: {
-      status: 'newly_registered',
+      status: 'NewlyRegistered',
       active: true,
       isMain: true,
-      fromType: 'ordinary_person',
+      fromType: 'OrdinaryPerson',
       registerVat: true,
       address: { isMain: false },
     },
@@ -55,6 +55,8 @@ export const OrganizeCreate: React.FC = () => {
       payload.branch.address.name = values.branch.nameEn;
       payload.address.language = values.setting.defaultLanguage;
       payload.branch.address.language = values.setting.defaultLanguage;
+      payload.address.isMain = true;
+      payload.branch.address.isMain = true;
 
       // Convert dates to ISO format if they exist
       if (values.openingDate) {
@@ -163,9 +165,9 @@ export const OrganizeCreate: React.FC = () => {
 
 // const mockUp = {
 //   active: true,
-//   status: 'newly_registered',
-//   fromType: 'ordinary_person',
-//   type: 'company_limited',
+//   status: 'NewlyRegistered',
+//   fromType: 'OrdinaryPerson',
+//   type: 'CompanyLimited',
 //   nameTh: 'ยูโทเทค',
 //   nameEn: 'utotech',
 //   taxId: '1111111111111',
@@ -192,9 +194,9 @@ export const OrganizeCreate: React.FC = () => {
 //   contactEmail: 'johnlenon58@gmail.com',
 //   branch: {
 //     isMain: true,
-//     fromType: 'ordinary_person',
-//     type: 'company_limited',
-//     status: 'newly_registered',
+//     fromType: 'OrdinaryPerson',
+//     type: 'CompanyLimited',
+//     status: 'NewlyRegistered',
 //     nameTh: 'ตั้งหวังรวย',
 //     nameEn: 'Tung Wang Ruey',
 //     taxId: '1111111111111',

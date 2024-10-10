@@ -7,6 +7,7 @@ interface TableComponentProps {
   pagination?: false | TablePaginationConfig | undefined;
   bordered?: boolean;
   loading?: boolean | SpinProps | undefined;
+  onRowClick?: (record: any) => void;
   onChange?: (
     pagination: TablePaginationConfig,
     filters: any,
@@ -17,8 +18,15 @@ interface TableComponentProps {
 export const TableComponent: FC<TableComponentProps> = (
   props: TableComponentProps,
 ) => {
-  const { columns, bordered, pagination, dataSource, loading, onChange } =
-    props;
+  const {
+    columns,
+    bordered,
+    pagination,
+    dataSource,
+    loading,
+    onChange,
+    onRowClick,
+  } = props;
   return (
     <Table
       loading={loading}
@@ -30,6 +38,16 @@ export const TableComponent: FC<TableComponentProps> = (
       locale={{ emptyText: 'ไม่พบข้อมูล' }}
       onChange={onChange}
       size="small"
+      onRow={(record) => {
+        return {
+          onClick: () => {
+            if (onRowClick) {
+              onRowClick(record);
+            }
+          },
+          style: { cursor: onRowClick ? 'pointer' : 'default' },
+        };
+      }}
     />
   );
 };

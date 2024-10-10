@@ -1,9 +1,8 @@
-import { Form, Row } from 'antd';
+import { Form, notification, Row } from 'antd';
 import { DynamicForm } from '@src/forms/Dynamic';
 import { FormButtonsCreate } from '@src/components/shared/FormButtons';
 import { renderForm } from './renderForm';
-import vine, { errors, SimpleMessagesProvider } from '@vinejs/vine';
-import dayjs from 'dayjs';
+import vine, { errors } from '@vinejs/vine';
 import { useSubmit } from 'react-router-dom';
 
 export const UsersCreate = () => {
@@ -12,24 +11,18 @@ export const UsersCreate = () => {
 
   const schema = vine.object({
     email: vine.string().email(),
-    userName: vine.string(),
+    userName: vine.string().optional(),
     password: vine.string(),
     active: vine.boolean(),
     roleId: vine.string().optional(),
-    profix: vine.enum(['Mr.', 'Mrs.', 'Miss']),
-    firstName: vine.string(),
-    lastName: vine.string(),
-    birthDate: vine.string(),
-    phone: vine.string().maxLength(10),
-  });
-
-  vine.messagesProvider = new SimpleMessagesProvider({
-    required: 'The {{ field }} field is required',
-    string: 'The value of {{ field }} field must be a string',
-    email: 'The value is not a valid email address',
-
-    // Error message for the username field
-    'username.required': 'Please choose a username for your account',
+    profile: vine.object({
+      photoUrl: vine.string().optional(),
+      prefix: vine.enum(['Mr.', 'Mrs.', 'Miss']).optional(),
+      firstName: vine.string(),
+      lastName: vine.string().optional(),
+      birthDate: vine.string().optional(),
+      phone: vine.string().maxLength(10).optional(),
+    }),
   });
 
   const onFinish = async (values: any) => {
@@ -38,20 +31,32 @@ export const UsersCreate = () => {
     try {
       const payload = Object.assign(values);
 
-      payload.birthDate = dayjs(values.birthDate, 'DD/MM/YY').toISOString();
+      if (!payload.active) {
+        payload.active = true;
+      }
+
+      if (payload.profile.birthDate) {
+        payload.profile.birthDate = payload.profile.birthDate.toISOString();
+      }
+
       await validator.validate(payload);
 
-      submit({ data: JSON.stringify(payload) }, { method: 'post' });
+      await submit({ data: JSON.stringify(payload) }, { method: 'post' });
     } catch (error) {
       if (error instanceof errors.E_VALIDATION_ERROR) {
-        console.log(error);
+        console.log(error.messages);
 
-        const fieldErrors = error.messages.map((err: any) => ({
-          name: err.field,
-          errors: [err.message],
-        }));
-
-        form.setFields(fieldErrors);
+        notification.error({
+          message: 'สร้างผู้ใช้งานล้มเหลว',
+          placement: 'bottomRight',
+          duration: 3,
+        });
+      } else {
+        notification.error({
+          message: 'ข้อมูลผู้ใช้งานไม่ถูกต้อง',
+          placement: 'bottomRight',
+          duration: 3,
+        });
       }
     }
   };
@@ -61,7 +66,13 @@ export const UsersCreate = () => {
       <div style={{ fontFamily: 'Prompt, sans-serif' }}>
         <div style={{ padding: '20px', marginTop: '10px' }}>
           <Form form={form} layout="vertical" onFinish={onFinish}>
-            <FormButtonsCreate form={form} />
+            <FormButtonsCreate
+              form={form}
+              titleModalReset="คุณต้องการเคลียร์ข้อมูลผู้ใช้งาน ใช่หรือไม่?"
+              contentModalReset="ข้อมูลที่คุณกรอกจะถูกเคลียร์"
+              titleModalSubmit="คุณต้องการสร้างข้อมูลผู้ใช้งาน ใช่หรือไม่?"
+              contentModalSubmit="ข้อมูลที่คุณกรอกจะถูกบันทึก"
+            />
             <Row gutter={24}>
               {renderForm.map((item: any, index: number) => (
                 <DynamicForm
@@ -71,12 +82,20 @@ export const UsersCreate = () => {
                   placeholder={item.placeholder}
                   type={item.type}
                   col={item.col}
-                  option={item.option}
                   icon={item.icon}
                   value={item.value}
+                  rule={item.rule}
+                  option={item.options}
                   disabled={item.disabled}
                   checked={item.checked}
                   maxLength={item.maxLength}
+                  defaultValue={item.defaultValue}
+                  isName={item.isName}
+                  title={item.title}
+                  description={item.description}
+                  form={form}
+                  checkedText={item.checkedText}
+                  unCheckedText={item.unCheckedText}
                 />
               ))}
             </Row>
