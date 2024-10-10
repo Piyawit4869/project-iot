@@ -7,7 +7,7 @@ export const AdminLayout = () => {
       <Layout
         style={{ height: '100vh', display: 'flex', flexDirection: 'row' }}
       >
-        <Sidebar />
+        <Sidebar setting={{}} />
         <Layout>
           <Headerbar />
           <Contents />

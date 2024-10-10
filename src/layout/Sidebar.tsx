@@ -14,7 +14,12 @@ import {
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  setting: any;
+}
+
+export const Sidebar = (props: SidebarProps) => {
+  const { setting } = props;
   const location = useLocation();
   const [collapsed, setCollapsed] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
@@ -48,6 +53,36 @@ export const Sidebar: React.FC = () => {
     const allSubmenuKeys: any = getAllSubmenuKeys(menusWithOnClick);
     isMobile ? setDefaultOpenKeys([]) : setDefaultOpenKeys(allSubmenuKeys);
   }, [isMobile]);
+
+  const handleNameWithType = (type: string) => {
+    switch (type) {
+      case 'Taxpayer':
+        return setting.organization.nameTh;
+      case 'OrdinaryPartnership':
+        return `ห้างหุ้นส่วนสามัญ ${setting.organization.nameTh}`;
+      case 'Shop':
+        return `ร้านค้า ${setting.organization.nameTh}`;
+      case 'BodyOfPerson':
+        return `คณะบุคคล ${setting.organization.nameTh}`;
+      case 'CompanyLimited':
+        return `บริษัท ${setting.organization.nameTh} จำกัด`;
+      case 'PublicCompanyLimited':
+        return `บริษัท ${setting.organization.nameTh} จำกัด (มหาชน)`;
+      case 'LimitedPartnership':
+        return `ห้างหุ้นส่วน ${setting.organization.nameTh}`;
+      case 'Foundation':
+        return `มูลนิธิ ${setting.organization.nameTh}`;
+      case 'Association':
+        return `สมาคม ${setting.organization.nameTh}`;
+      case 'JointVenture':
+        return `กิจการร่วมค้า ${setting.organization.nameTh}`;
+      case 'Others':
+        return setting.organization.nameTh;
+
+      default:
+        return setting.organization.nameTh;
+    }
+  };
 
   return (
     <>
@@ -102,7 +137,9 @@ export const Sidebar: React.FC = () => {
                   <Image
                     preview={false}
                     src={
-                      me?.organization?.logoUrl ? me.organization.logoUrl : logo
+                      setting?.organization?.logoUrl
+                        ? setting.organization.logoUrl
+                        : logo
                     }
                     width={collapsed ? 40 : 70}
                   />
@@ -120,9 +157,14 @@ export const Sidebar: React.FC = () => {
                 }}
               >
                 <Col>
-                  <Typography style={{ color: '#19142A', fontSize: '20px' }}>
-                    {me?.organization?.nameTh ? me?.organization?.nameTh : '-'}
-                  </Typography>
+                  <Flex vertical justify="center" align="center">
+                    <Typography style={{ color: '#19142A', fontSize: '20px' }}>
+                      {handleNameWithType(setting.organization.type)}
+                    </Typography>
+                    <Typography style={{ color: 'grey', fontSize: '16px' }}>
+                      {`(${setting.organization.branches[0].nameTh})`}
+                    </Typography>
+                  </Flex>
                 </Col>
               </Row>
             )}

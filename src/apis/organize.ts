@@ -33,3 +33,18 @@ export async function deleted(id: any) {
     url: `/api/crud/organizations/${id}`,
   });
 }
+
+export async function getSetting() {
+  return client({
+    method: 'GET',
+    url: '/api/crud/settings',
+  });
+}
+
+export async function updateSystem(data: any) {
+  return client({
+    method: 'PUT',
+    url: '/api/crud/settings/update',
+    data,
+  });
+}
