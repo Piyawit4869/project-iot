@@ -104,3 +104,27 @@ code {
     0.1
   ) !important; /* Optional: Add a hover effect */
 }
+
+/* Custom width for specific tooltip */
+.custom-tooltip .ant-tooltip-inner {
+  max-width: 1000px !important; /* Set the desired width */
+  min-width: 400px !important;
+  white-space: normal; /* Ensure the text wraps */
+}
+
+.limited-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* Limit to 3 lines */
+  overflow: hidden; /* Hide overflow */
+  text-align: justify; /* Justify text */
+}
+
+/* Add this to your CSS file or style block */
+.scale-up-on-hover {
+  transition: transform 0.3s ease; /* Smooth transition for scaling */
+}
+
+.scale-up-on-hover:hover {
+  transform: scale(1.05); /* Scale up by 5% on hover */
+}

@@ -18,14 +18,14 @@ export async function paginate(params?: any) {
 export async function get(id: any) {
   return client({
     method: 'GET',
-    url: `/api/users/${id}`,
+    url: `/api/crud/users/${id}`,
   });
 }
 
 export async function create(data: any) {
   return client({
     method: 'POST',
-    url: `/api/crud/users/create`,
+    url: `/api/crud/users`,
     data,
   });
 }
@@ -33,7 +33,7 @@ export async function create(data: any) {
 export async function edit(data: any, id?: any) {
   return client({
     method: 'PUT',
-    url: `/api/crud/users/edit/${id}`,
+    url: `/api/crud/users/${id}`,
     data,
   });
 }
@@ -41,10 +41,6 @@ export async function edit(data: any, id?: any) {
 export async function deleted(id?: any) {
   return client({
     method: 'DELETE',
-    url: `/api/crud/users/delete/${id}`,
+    url: `/api/crud/users/${id}`,
   });
-}
-
-export function getAll() {
-  throw new Error('Function not implemented.');
 }

@@ -5,12 +5,33 @@ export const renderForm = [
     type: 'SectionLabelForm',
   },
   {
+    label: 'รูปภาพ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'UploadFile',
+  },
+  {
+    name: 'active',
+    label: 'เปิดใช้งาน',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'ActiveCard',
+    title: 'เปิดใช้งาน',
+    description: 'ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน',
+    rule: [{ required: true, message: 'กรุณาเลือกเปิดปิดการใช้งาน!' }],
+  },
+
+  {
     name: 'email',
     label: 'อีเมล',
     placeholder: 'อีเมล',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
-    require: true,
+    rule: [
+      { required: true, message: 'กรุณากรอกอีเมล!' },
+      {
+        pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        message: 'กรุณากรอกอีเมลที่ถูกต้อง!',
+      },
+    ],
   },
   {
     name: 'userName',
@@ -18,7 +39,6 @@ export const renderForm = [
     placeholder: 'ชื่อผู้ใช้',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
-    require: true,
   },
   {
     name: 'password',
@@ -26,15 +46,9 @@ export const renderForm = [
     placeholder: 'รหัสผ่าน',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
-    require: true,
+    rule: [{ required: true, message: 'กรุณากรอกรหัสผ่าน!' }],
   },
-  {
-    name: 'active',
-    label: 'เปิดใช้งาน',
-    col: { xs: 12, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'SwitchFormField',
-    require: true,
-  },
+
   {
     name: 'roleId',
     label: 'ตำแหน่ง',
@@ -42,15 +56,14 @@ export const renderForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'SelectFormField',
     options: [
-      { value: '4', label: 'manager' },
-      { value: '5', label: 'supervisor' },
-      { value: '6', label: 'employee' },
+      { value: '03861cc2-95a0-475f-bbd5-629644cad435', label: 'Employee' },
+      { value: 'f6f6d534-26c5-4042-b265-c5108022c239', label: 'Owner' },
     ],
-    require: true,
+    rule: [{ required: true, message: 'กรุณาเลือกตำแหน่ง!' }],
   },
 
   {
-    name: 'profix',
+    name: ['profile', 'profix'],
     label: 'คำนำหน้า',
     placeholder: 'เลือกคำนำหน้า',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
@@ -60,38 +73,113 @@ export const renderForm = [
       { value: 'Mrs.', label: 'นาง' },
       { value: 'Miss', label: 'นางสาว' },
     ],
-    require: true,
   },
   {
-    name: 'firstName',
+    name: ['profile', 'firstName'],
     label: 'ชื่อ',
     placeholder: 'ชื่อ',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
-    require: true,
+    rule: [{ required: true, message: 'กรุณากรอกชื่อจริง!' }],
   },
   {
-    name: 'lastName',
+    name: ['profile', 'lastName'],
     label: 'นามสกุล',
     placeholder: 'นามสกุล',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
-    require: true,
   },
   {
-    name: 'birthDate',
+    name: ['profile', 'birthDate'],
     label: 'วัน/เดือน/ปีเกิด',
-    placeholder: 'เลือก',
+    placeholder: 'เลือกวันเกิด',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'DatePickerFormField',
   },
 
   {
-    name: 'phone',
+    name: ['profile', 'phone'],
     label: 'เบอร์โทรศัพท์',
     placeholder: 'เบอร์โทรศัพท์',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
-    require: true,
+  },
+];
+
+export const renderEditForm = [
+  {
+    label: 'ข้อมูลผู้ใช้',
+    col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
+    type: 'SectionLabelForm',
+  },
+  {
+    label: 'รูปภาพ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'UploadFile',
+  },
+  {
+    name: 'active',
+    label: 'เปิดใช้งาน',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'ActiveCard',
+    title: 'เปิดใช้งาน',
+    description: 'ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน',
+    rule: [{ required: true, message: 'กรุณาเลือกเปิดปิดการใช้งาน!' }],
+  },
+
+  {
+    name: 'roleId',
+    label: 'ตำแหน่ง',
+    placeholder: 'เลือกตำแหน่ง',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SelectFormField',
+    options: [
+      { value: '03861cc2-95a0-475f-bbd5-629644cad435', label: 'Employee' },
+      { value: 'f6f6d534-26c5-4042-b265-c5108022c239', label: 'Owner' },
+    ],
+    rule: [{ required: true, message: 'กรุณาเลือกตำแหน่ง!' }],
+  },
+
+  {
+    name: ['profile', 'profix'],
+    label: 'คำนำหน้า',
+    placeholder: 'เลือกคำนำหน้า',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SelectFormField',
+    options: [
+      { value: 'Mr.', label: 'นาย' },
+      { value: 'Mrs.', label: 'นาง' },
+      { value: 'Miss', label: 'นางสาว' },
+    ],
+  },
+  {
+    name: ['profile', 'firstName'],
+    label: 'ชื่อ',
+    placeholder: 'ชื่อ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    rule: [{ required: true, message: 'กรุณากรอกชื่อจริง!' }],
+  },
+  {
+    name: ['profile', 'lastName'],
+    label: 'นามสกุล',
+    placeholder: 'นามสกุล',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: ['profile', 'birthDate'],
+    label: 'วัน/เดือน/ปีเกิด',
+    placeholder: 'เลือกวันเกิด',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'DatePickerFormField',
+  },
+
+  {
+    name: ['profile', 'phone'],
+    label: 'เบอร์โทรศัพท์',
+    placeholder: 'เบอร์โทรศัพท์',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
   },
 ];

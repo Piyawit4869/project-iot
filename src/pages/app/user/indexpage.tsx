@@ -4,22 +4,13 @@ import { TagOutlined } from '@ant-design/icons';
 import { Link, useLoaderData, useNavigation } from 'react-router-dom';
 import { TableComponent } from '@src/components/shared/TableComponent';
 import { CreateButton } from '@src/components/shared/CreateButton';
-import { userColumns, userData } from './userData';
-import { SearchBar } from '@src/components/shared/SearchBar';
+import { userColumns } from './userData';
 import { TitleBar } from '@src/components/shared';
 
 export const UsersIndex: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const { user, param } = useLoaderData() as any;
   const { state } = useNavigation();
-  // const [searchValue, setSearchValue] = useState<string>('');
-
-  // useEffect(() => {
-  //   const me = JSON.parse(localStorage.getItem('me') as any);
-  //   if (me.role === 'user' || me.role === 'admin') {
-  //     navigate('/');
-  //   }
-  // }, [navigate]);
 
   useEffect(() => {
     setLoading(true);
@@ -27,10 +18,6 @@ export const UsersIndex: React.FC = () => {
       setLoading(false);
     }, 1000);
   }, [user]);
-
-  // const onSearch = (value: string) => {
-  //   console.log('Search:', value);
-  // };
 
   return (
     <Flex vertical gap={'small'}>
@@ -54,11 +41,10 @@ export const UsersIndex: React.FC = () => {
       />
 
       <div style={{ height: '5px' }} />
-      <SearchBar />
 
       <TableComponent
         columns={userColumns}
-        dataSource={userData}
+        dataSource={user?.items ? user.items : []}
         loading={loading || state === 'loading' || state === 'submitting'}
         pagination={{
           current: param && param.page ? Number(param?.page) : 1,
@@ -72,8 +58,3 @@ export const UsersIndex: React.FC = () => {
     </Flex>
   );
 };
-
-// export default UsersIndex;
-// function setUsers(arg0: any) {
-//   throw new Error('Function not implemented.');
-// }

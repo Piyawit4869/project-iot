@@ -1,4 +1,4 @@
-import { ProfilePage } from './Indexpage';
+import { profileAction, profileLoader, ProfilePage } from './Indexpage';
 
 export const routes = [
   {
@@ -6,6 +6,8 @@ export const routes = [
     children: [
       {
         path: '',
+        loader: profileLoader,
+        action: profileAction,
         element: <ProfilePage />,
       },
     ],

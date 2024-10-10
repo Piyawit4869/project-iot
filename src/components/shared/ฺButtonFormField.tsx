@@ -13,7 +13,7 @@ export const RadioGetOrgValue = (props: RadioGetOrgProps) => {
     if (value === 'true') {
       form.setFieldsValue({
         branch: {
-          fromType: values?.fromType ? values.fromType : 'ordinary_person',
+          fromType: values?.fromType ? values.fromType : 'OrdinaryPerson',
           type: values?.type ? values.type : null,
           nameTh: values?.nameTh ? values.nameTh : '',
           nameEn: values?.nameEn ? values.nameEn : '',

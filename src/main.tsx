@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import { ConfigProvider } from 'antd';
 
-import { ThemeConfig } from '@styles/theme.ts';
+import { Config } from '@styles/theme.ts';
 
 import '@styles/index.css';
 
@@ -14,7 +14,7 @@ const clientId =
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <ConfigProvider theme={ThemeConfig.ThemeColorsV2}>
+    <ConfigProvider theme={Config.ThemeColorsV2}>
       <GoogleOAuthProvider clientId={clientId}>
         <App />
       </GoogleOAuthProvider>

@@ -188,11 +188,21 @@ export const ApprovalIndex = () => {
 
   return me.role.name === 'owner' || me.role.name === 'manager' ? (
     <>
+      <CreateApprovalModal />
       <ApprovalModal />
-
       <TitleBar
         title={'การลางานในวันนี้'}
         subTitle={'มีใครลางานในวันนี้บ้างนะ มาดูกัน'}
+        buttons={[
+          <Button
+            type="primary"
+            onClick={() => {
+              setOpenCreate(true);
+            }}
+          >
+            เขียนใบลา
+          </Button>,
+        ]}
       />
       <div style={{ marginTop: '12px' }}>
         <TableComponent

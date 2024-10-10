@@ -35,17 +35,17 @@ export const TextboxFormField: FC<TextboxFormFieldProps> = (
 
     const handleType = (type: any) => {
       switch (type) {
-        case 'company_limited':
+        case 'CompanyLimited':
           return 'จำกัด';
-        case 'public_company_limited':
+        case 'PublicCompanyLimited':
           return 'จำกัด (มหาชน)';
-        case 'limited_partnership':
+        case 'LimitedPartnership':
           return 'ห้างหุ้นส่วนจำกัด';
-        case 'foundation':
+        case 'Foundation':
           return 'มูลนิธิ';
-        case 'association':
+        case 'Association':
           return 'สมาคม';
-        case 'joint_venture':
+        case 'JointVenture':
           return 'กิจการร่วมค้า';
 
         default:
@@ -53,8 +53,8 @@ export const TextboxFormField: FC<TextboxFormFieldProps> = (
       }
     };
     if (
-      businessType === 'company_limited' ||
-      businessType === 'public_company_limited'
+      businessType === 'CompanyLimited' ||
+      businessType === 'PublicCompanyLimited'
     ) {
       text =
         'ตัวอย่างการแสดงผล : ' +
@@ -64,10 +64,10 @@ export const TextboxFormField: FC<TextboxFormFieldProps> = (
         ' ' +
         handleType(businessType);
     } else if (
-      businessType === 'limited_partnership' ||
-      businessType === 'foundation' ||
-      businessType === 'association' ||
-      businessType === 'joint_venture'
+      businessType === 'LimitedPartnership' ||
+      businessType === 'Foundation' ||
+      businessType === 'Association' ||
+      businessType === 'JointVenture'
     ) {
       text = 'ตัวอย่างการแสดงผล : ' + handleType(businessType) + ' ' + value;
     }

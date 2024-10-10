@@ -18,6 +18,7 @@ export const Sidebar: React.FC = () => {
   const location = useLocation();
   const [collapsed, setCollapsed] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
+  const [defaultOpenKeys, setDefaultOpenKeys] = React.useState([]);
 
   const currentPath = location.pathname;
 
@@ -25,6 +26,10 @@ export const Sidebar: React.FC = () => {
     if (isMobile) {
       setCollapsed(true);
     }
+  };
+
+  const getAllSubmenuKeys = (menus: any[]): string[] => {
+    return menus.filter((menu) => menu.children).map((menu) => menu.key);
   };
 
   const me = JSON.parse(localStorage.getItem('me') || '{}');
@@ -39,6 +44,9 @@ export const Sidebar: React.FC = () => {
 
   React.useEffect(() => {
     setCollapsed(isMobile);
+
+    const allSubmenuKeys: any = getAllSubmenuKeys(menusWithOnClick);
+    isMobile ? setDefaultOpenKeys([]) : setDefaultOpenKeys(allSubmenuKeys);
   }, [isMobile]);
 
   return (
@@ -93,7 +101,9 @@ export const Sidebar: React.FC = () => {
                 >
                   <Image
                     preview={false}
-                    src={logo}
+                    src={
+                      me?.organization?.logoUrl ? me.organization.logoUrl : logo
+                    }
                     width={collapsed ? 40 : 70}
                   />
                 </Link>
@@ -111,9 +121,7 @@ export const Sidebar: React.FC = () => {
               >
                 <Col>
                   <Typography style={{ color: '#19142A', fontSize: '20px' }}>
-                    {location.pathname.includes('/admin')
-                      ? 'ROME'
-                      : 'บริษัท ยูโทเทค จำกัด'}
+                    {me?.organization?.nameTh ? me?.organization?.nameTh : '-'}
                   </Typography>
                 </Col>
               </Row>
@@ -122,6 +130,7 @@ export const Sidebar: React.FC = () => {
               <Menu
                 theme="light"
                 mode="inline"
+                openKeys={defaultOpenKeys}
                 selectedKeys={[currentPath]}
                 defaultOpenKeys={['/']}
                 style={{

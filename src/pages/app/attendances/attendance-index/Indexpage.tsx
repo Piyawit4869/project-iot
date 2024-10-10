@@ -81,7 +81,7 @@ export const AttendanceIndex = () => {
             subTitle={'สวัสดีตอนเที่ยง!'}
           />
           <Row gutter={[12, 12]} style={{ marginTop: '12px' }}>
-            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+            <Col xs={24} sm={12} md={12} lg={8} xl={8}>
               <Card
                 title={'ยังไม่เข้างาน'}
                 style={{
@@ -94,9 +94,9 @@ export const AttendanceIndex = () => {
                 <Typography.Title level={3}>0 คน</Typography.Title>
               </Card>
             </Col>
-            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+            <Col xs={24} sm={12} md={12} lg={8} xl={8}>
               <Card
-                title={'คนที่ขาด'}
+                title={'ลากิจ / ลาป่วย'}
                 style={{
                   background: 'white',
                   borderTop: '4px solid #19142A',
@@ -107,9 +107,9 @@ export const AttendanceIndex = () => {
                 <Typography.Title level={3}>1 คน</Typography.Title>
               </Card>
             </Col>
-            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+            <Col xs={24} sm={12} md={12} lg={8} xl={8}>
               <Card
-                title={'คนที่ลา'}
+                title={'เข้างานแล้ว'}
                 style={{
                   background: 'white',
                   borderTop: '4px solid #19142A',
@@ -117,20 +117,7 @@ export const AttendanceIndex = () => {
                 }}
                 bodyStyle={{ padding: '0 22px' }}
               >
-                <Typography.Title level={3}>2 คน</Typography.Title>
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Card
-                title={'ออกงานก่อนเวลา'}
-                style={{
-                  background: 'white',
-                  borderTop: '4px solid #19142A',
-                  borderTopWidth: '5px',
-                }}
-                bodyStyle={{ padding: '0 22px' }}
-              >
-                <Typography.Title level={3}>1 คน</Typography.Title>
+                <Typography.Title level={3}>7 คน</Typography.Title>
               </Card>
             </Col>
 

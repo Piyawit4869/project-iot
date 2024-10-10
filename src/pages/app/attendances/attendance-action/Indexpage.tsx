@@ -1,5 +1,16 @@
 import { TitleBar } from '@src/components/shared';
-import { Button, Card, Col, Flex, List, Row, Typography } from 'antd';
+import {
+  Button,
+  Card,
+  Col,
+  Flex,
+  Form,
+  List,
+  Modal,
+  Row,
+  Typography,
+} from 'antd';
+import TextArea from 'antd/es/input/TextArea';
 import dayjs from 'dayjs';
 import React from 'react';
 import { useLoaderData } from 'react-router-dom';
@@ -7,9 +18,36 @@ import { useLoaderData } from 'react-router-dom';
 export const AttendanceAction = () => {
   const { data } = useLoaderData() as any;
   const [attendance, setAttendance] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
+
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
+
+  const LeaveEarlyModal = () => {
+    return (
+      <Modal open={open} onCancel={handleCloseModal} footer={null}>
+        <Form layout="vertical">
+          <Form.Item
+            label="เหตุผลที่ออกงานก่อนเวลา"
+            name="remark"
+            rules={[
+              { required: true, message: 'กรุณากรอกเหตุผลที่ออกงานก่อนเวลา' },
+            ]}
+          >
+            <TextArea placeholder="กรอกเหตุผลที่ออกงานก่อนเวลา" />
+          </Form.Item>
+          <Flex justify="end">
+            <Button type="primary">ยืนยัน </Button>
+          </Flex>
+        </Form>
+      </Modal>
+    );
+  };
 
   return (
     <>
+      <LeaveEarlyModal />
       <TitleBar
         title={'การเข้างาน - ออกงาน'}
         subTitle={'วันนี้ฉันทำงานเป็นยังไงบ้างนะ'}
@@ -66,6 +104,7 @@ export const AttendanceAction = () => {
                 style={{ width: '100px', height: '35px' }}
                 onClick={() => {
                   setAttendance(true);
+                  setOpen(true);
                 }}
               >
                 ออกงาน
@@ -92,9 +131,6 @@ export const AttendanceAction = () => {
               <Typography.Paragraph>
                 {'พักเบรคไป  57 นาที'}
               </Typography.Paragraph>
-              <Flex justify="end">
-                <Button type="primary">ดูเพิ่มเติม</Button>
-              </Flex>
             </div>
           </Card>
           <List

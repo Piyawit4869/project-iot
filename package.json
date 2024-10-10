@@ -16,6 +16,7 @@
     "eslint-plugin-react": "^7.35.0",
     "gapi-script": "^1.2.0",
     "i18next": "^23.7.11",
+    "pusher-js": "^8.4.0-rc2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.5.0",
