@@ -107,34 +107,13 @@ const FormButtonsEdit = (props: FormButtonEdit) => {
 
 interface FormButtonSetting {
   form: FormInstance;
-  titleModalReset?: string;
-  contentModalReset?: string;
-
   titleModalSubmit?: string;
   contentModalSubmit?: string;
 }
 
 const FormButtonsSetting = (props: FormButtonSetting) => {
-  const {
-    form,
-    titleModalReset,
-    contentModalReset,
-    titleModalSubmit,
-    contentModalSubmit,
-  } = props;
+  const { form, titleModalSubmit, contentModalSubmit } = props;
   const navigate = useNavigate();
-
-  const onReset = () => {
-    confirm({
-      title: titleModalReset ? titleModalReset : 'title',
-      content: contentModalReset ? contentModalReset : 'content',
-      okText: 'ยืนยัน',
-      cancelText: 'ยกเลิก',
-      onOk() {
-        form.resetFields();
-      },
-    });
-  };
 
   const onSubmit = () => {
     confirm({
@@ -164,19 +143,57 @@ const FormButtonsSetting = (props: FormButtonSetting) => {
           alignItems: 'center',
         }}
       >
-        <Button
-          style={{
-            marginRight: '10px',
-            backgroundColor: '#A79DB4',
-            borderColor: '#A79DB4',
-            color: '#fff',
-          }}
-          onClick={onReset}
-        >
-          ยกเลิก
-        </Button>
         <Button type="primary" onClick={onSubmit}>
-          ยืนยัน
+          แก้ไขข้อมูล
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+interface FormButtonSystemSetting {
+  form: FormInstance;
+  titleModalSubmit?: string;
+  contentModalSubmit?: string;
+}
+
+const FormButtonsSystemSetting = (props: FormButtonSystemSetting) => {
+  const { form, titleModalSubmit, contentModalSubmit } = props;
+
+  const onSubmit = () => {
+    confirm({
+      title: titleModalSubmit ? titleModalSubmit : 'title',
+      content: contentModalSubmit ? contentModalSubmit : 'content',
+      okText: 'ยืนยัน',
+      cancelText: 'ยกเลิก',
+      onOk() {
+        form.submit();
+      },
+    });
+  };
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'end',
+        alignItems: 'center',
+        position: 'sticky',
+        height: '50px',
+        top: 0,
+        zIndex: 1,
+        background: 'white',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+        }}
+      >
+        <Button type="primary" onClick={onSubmit}>
+          แก้ไขระบบ
         </Button>
       </div>
     </div>
@@ -261,7 +278,12 @@ const FormButtonsCreate = (props: FormButtonCreate) => {
   );
 };
 
-export { FormButtonsEdit, FormButtonsCreate, FormButtonsSetting };
+export {
+  FormButtonsEdit,
+  FormButtonsCreate,
+  FormButtonsSetting,
+  FormButtonsSystemSetting,
+};
 
 const styles: Record<string, CSSProperties> = {
   sticky: {

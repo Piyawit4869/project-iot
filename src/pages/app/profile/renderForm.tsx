@@ -19,7 +19,7 @@ export const renderEditForm = [
     rule: [{ required: true, message: 'กรุณาเลือกเปิดปิดการใช้งาน!' }],
   },
   {
-    name: ['profile', 'profix'],
+    name: ['profile', 'prefix'],
     label: 'คำนำหน้า',
     placeholder: 'เลือกคำนำหน้า',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },

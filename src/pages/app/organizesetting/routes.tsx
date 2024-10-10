@@ -1,14 +1,14 @@
-import { OrganizeSingle, organizeSingleLoader } from './OrganizeSingle';
+import {
+  OrganizeSingle,
+  organizeSingleAction,
+  organizeSingleLoader,
+} from './OrganizeSingle';
 
 export const routes = [
   {
     path: 'information',
-    children: [
-      {
-        path: '',
-        loader: organizeSingleLoader,
-        element: <OrganizeSingle />,
-      },
-    ],
+    loader: organizeSingleLoader,
+    action: organizeSingleAction,
+    element: <OrganizeSingle />,
   },
 ];
