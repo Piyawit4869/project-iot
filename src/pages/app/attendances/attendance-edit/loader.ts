@@ -1,13 +1,13 @@
 import { LoaderFunctionArgs } from 'react-router-dom';
 import * as API from '@src/apis';
 
-export async function indexLoader({ request }: LoaderFunctionArgs) {
+export async function attendanceEditLoader({ params }: LoaderFunctionArgs) {
   try {
-    const atttendances = await API.attendance.getAll();
+    const { data: workInfo } = await API.attendance.get(params.id);
     //   return { organize: organize.data };
 
-    return { data: atttendances.data };
+    return { workInfo: workInfo.data };
   } catch (error) {
-    return { status: 'error', message: error };
+    return { workInfo: {} };
   }
 }

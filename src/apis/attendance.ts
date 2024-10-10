@@ -1,16 +1,10 @@
-import { mockupAttendance } from '@src/pages/app/attendances/mockup-attendance';
 import client from './client';
 
-export async function getAll() {
-  // return client({
-  //   method: 'GET',
-  //   url: '/api/crud/branches',
-  //   params,
-  // });
-
-  //mockup
-  const data = mockupAttendance.attendanceIndexData;
-  return { data };
+export async function _getAll(id: any) {
+  return client({
+    method: 'GET',
+    url: `/api/attendances/work-info/${id}`,
+  });
 }
 export async function getAllWorkInfo(params?: any) {
   return client({
@@ -19,12 +13,7 @@ export async function getAllWorkInfo(params?: any) {
     params,
   });
 }
-export async function get(id: any) {
-  return client({
-    method: 'GET',
-    url: `/api/crud/work-info/${id}`,
-  });
-}
+
 export async function create(data: any) {
   return client({
     method: 'POST',
@@ -32,7 +21,12 @@ export async function create(data: any) {
     data,
   });
 }
-
+export async function get(id: any) {
+  return client({
+    method: 'GET',
+    url: `/api/crud/work-info/${id}`,
+  });
+}
 export async function update(id: any, data: any) {
   return client({
     method: 'PUT',
@@ -46,3 +40,20 @@ export async function deleted(id: any) {
     url: `/api/crud/branches/${id}`,
   });
 }
+
+export async function getCurrentWorkInfo() {
+  return client({
+    method: 'GET',
+    url: '/api/crud/work-info/current',
+  });
+}
+
+export async function attendanceAction(data: any) {
+  return client({
+    method: 'POST',
+    url: '/api/attendances',
+    data,
+  });
+}
+
+//attendances

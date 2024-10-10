@@ -1,9 +1,11 @@
 import {
   Card,
+  Col,
   DatePicker,
   Form,
   Input,
   InputNumber,
+  Row,
   Select,
   Switch,
 } from 'antd';
@@ -70,45 +72,42 @@ export const WorkInfoForm = (props: WorkInfoFormProps) => {
   }, [fetcher.data]);
 
   return (
-    <>
-      {initialvalues && (
-        <Card
-          styles={{
-            body: {
-              color: 'white',
-            },
+    <Row
+      style={{
+        width: '100%',
+      }}
+    >
+      <Col span={18}>
+        <Form
+          form={form}
+          onFinish={onFinish}
+          name="work-info"
+          initialValues={{
+            active: true,
+            isCurrent: true,
+          }}
+          labelAlign="left"
+          wrapperCol={{ span: 10 }}
+          labelCol={{ span: 6 }}
+          style={{
+            marginTop: 20,
           }}
         >
-          รายละเอียดพนักงาน
-          <div>ชื่อ : {initialvalues?.userId}</div>
-        </Card>
-      )}
-      <Form
-        form={form}
-        onFinish={onFinish}
-        name="work-info"
-        initialValues={{
-          active: true,
-          isCurrent: true,
-        }}
-        labelAlign="left"
-        wrapperCol={{ span: 8 }}
-        labelCol={{ span: 4 }}
-        style={{
-          marginTop: 20,
-        }}
-      >
-        <Form.Item valuePropName="checked" label="การมองเห็น" name="active">
-          <Switch checkedChildren="เปิด" unCheckedChildren="ปิด" checked />
-        </Form.Item>
-        <Form.Item label="สถานะของงาน" valuePropName="checked" name="isCurrent">
-          <Switch
-            checkedChildren="งานหลัก"
-            unCheckedChildren="งานรอง"
-            checked
-          />
-        </Form.Item>
-        {/* 
+          <Form.Item valuePropName="checked" label="การมองเห็น" name="active">
+            <Switch checkedChildren="เปิด" unCheckedChildren="ปิด" checked />
+          </Form.Item>
+          <Form.Item
+            label="สถานะของงาน"
+            valuePropName="checked"
+            name="isCurrent"
+          >
+            <Switch
+              checkedChildren="งานหลัก"
+              unCheckedChildren="งานรอง"
+              checked
+            />
+          </Form.Item>
+          {/* 
         <Form.Item
           label="Status"
           name="status"
@@ -123,111 +122,130 @@ export const WorkInfoForm = (props: WorkInfoFormProps) => {
           />
         </Form.Item> */}
 
-        {/* Name */}
-        <Form.Item
-          label="ชื่องาน"
-          name="name"
-          rules={[{ required: true, message: 'กรุณากรอกขื่อ!' }]}
-        >
-          <Input />
-        </Form.Item>
-
-        {/* Descriptions */}
-        <Form.Item label="คำอธิบาย" name="descriptions">
-          <TextArea rows={3} />
-        </Form.Item>
-
-        {/* Priority */}
-        <Form.Item
-          label="ความสำคัญ"
-          name="priority"
-          rules={[{ required: true, message: 'กรุณากรอกความสำคัญ!' }]}
-        >
-          <Select>
-            <Select.Option value="low">ต่ำ</Select.Option>
-            <Select.Option value="medium">ปานกลาง</Select.Option>
-            <Select.Option value="high">สูง</Select.Option>
-          </Select>
-        </Form.Item>
-
-        {/* Start Date */}
-        <Form.Item
-          label="วันเริ่มงาน"
-          name="startDate"
-          rules={[{ required: true, message: 'กรุณากรอกวันเริ่มงาน!' }]}
-        >
-          <DatePicker format="DD/MM/BBBB" placeholder="วัน/เดือน/ปี" />
-        </Form.Item>
-
-        <Form.Item
-          name="dueDate"
-          label="วันจบงาน"
-          rules={[{ required: true, message: 'กรุณากรอกวันจบงาน!' }]}
-        >
-          <DatePicker format="DD/MM/BBBB" placeholder="วัน/เดือน/ปี" />
-        </Form.Item>
-
-        {/* Limit Time */}
-        <Form.Item
-          label="เวลาทำงานของคนต่อวัน (ชม.)"
-          name="limitTimePerDay"
-          rules={[{ required: true, message: 'กรุณากรอก!' }]}
-        >
-          <InputNumber min={1} max={8} precision={0} />
-        </Form.Item>
-
-        {/* Start Credit */}
-        <Form.Item
-          label="ค่าจ้างของคนต่อชั่วโมง"
-          name="startCredit"
-          rules={[{ required: true, message: 'กรุณากรอก!' }]}
-        >
-          <InputNumber min={0} />
-        </Form.Item>
-
-        {/* Pay Day */}
-        <Form.Item
-          label="วันจ่ายเงิน"
-          name="payDay"
-          rules={[{ required: true, message: 'กรุณากรอกวัน!' }]}
-        >
-          <DatePicker format="DD/MM/BBBB" placeholder="วัน/เดือน/ปี" />
-        </Form.Item>
-
-        {/* Note */}
-        <Form.Item label="หมายเหตุ" name="note">
-          <TextArea />
-        </Form.Item>
-
-        {initialvalues?.id ? (
-          <Form.Item name="userId" hidden>
+          {/* Name */}
+          <Form.Item
+            label="ชื่องาน"
+            name="name"
+            rules={[{ required: true, message: 'กรุณากรอกขื่อ!' }]}
+          >
             <Input />
           </Form.Item>
-        ) : (
+
+          {/* Descriptions */}
+          <Form.Item label="คำอธิบาย" name="descriptions">
+            <TextArea rows={3} />
+          </Form.Item>
+
+          {/* Priority */}
           <Form.Item
-            label="Users"
-            name="userIds"
-            rules={[{ required: true, message: 'กรุณาเลือกพนักงาน!' }]}
+            label="ความสำคัญ"
+            name="priority"
+            rules={[{ required: true, message: 'กรุณากรอกความสำคัญ!' }]}
           >
-            <Select
-              mode="multiple" // Enable multiple selection
-              allowClear // Allow clear selection
-              style={{ width: '100%' }} // Set full width
-              placeholder="Select users" // Placeholder text
-              filterOption={false} // Disable default filter since we handle it manually
-              showSearch // Enable search input
-              onClick={handleSeach}
-              onSearch={onSearch} // Trigger search on input change
-            >
-              {users.map((user: any) => (
-                <Select.Option key={user.id} value={user.id}>
-                  {user.email}
-                </Select.Option>
-              ))}
+            <Select>
+              <Select.Option value="low">ต่ำ</Select.Option>
+              <Select.Option value="medium">ปานกลาง</Select.Option>
+              <Select.Option value="high">สูง</Select.Option>
             </Select>
           </Form.Item>
+
+          {/* Start Date */}
+          <Form.Item
+            label="วันเริ่มงาน"
+            name="startDate"
+            rules={[{ required: true, message: 'กรุณากรอกวันเริ่มงาน!' }]}
+          >
+            <DatePicker format="DD/MM/BBBB" placeholder="วัน/เดือน/ปี" />
+          </Form.Item>
+
+          <Form.Item
+            name="dueDate"
+            label="วันจบงาน"
+            rules={[{ required: true, message: 'กรุณากรอกวันจบงาน!' }]}
+          >
+            <DatePicker format="DD/MM/BBBB" placeholder="วัน/เดือน/ปี" />
+          </Form.Item>
+
+          {/* Limit Time */}
+          <Form.Item
+            label="เวลาทำงานของคนต่อวัน (ชม.)"
+            name="limitTimePerDay"
+            rules={[{ required: true, message: 'กรุณากรอก!' }]}
+          >
+            <InputNumber min={1} max={8} precision={0} />
+          </Form.Item>
+
+          {/* Start Credit */}
+          <Form.Item
+            label="ค่าจ้างของคนต่อชั่วโมง"
+            name="startCredit"
+            rules={[{ required: true, message: 'กรุณากรอก!' }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+
+          {/* Pay Day */}
+          <Form.Item
+            label="วันจ่ายเงิน"
+            name="payDay"
+            rules={[{ required: true, message: 'กรุณากรอกวัน!' }]}
+          >
+            <DatePicker format="DD/MM/BBBB" placeholder="วัน/เดือน/ปี" />
+          </Form.Item>
+
+          {/* Note */}
+          <Form.Item label="หมายเหตุ" name="note">
+            <TextArea />
+          </Form.Item>
+
+          {initialvalues?.id ? (
+            <Form.Item name="userId" hidden>
+              <Input />
+            </Form.Item>
+          ) : (
+            <Form.Item
+              label="Users"
+              name="userIds"
+              rules={[{ required: true, message: 'กรุณาเลือกพนักงาน!' }]}
+            >
+              <Select
+                mode="multiple" // Enable multiple selection
+                allowClear // Allow clear selection
+                style={{ width: '100%' }} // Set full width
+                placeholder="Select users" // Placeholder text
+                filterOption={false} // Disable default filter since we handle it manually
+                showSearch // Enable search input
+                onClick={handleSeach}
+                onSearch={onSearch} // Trigger search on input change
+              >
+                {users.map((user: any) => (
+                  <Select.Option key={user.id} value={user.id}>
+                    {user.email}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
+        </Form>
+      </Col>
+
+      <Col span={6}>
+        {initialvalues && (
+          <Card
+            styles={{
+              body: {
+                // border: '2px solid black',
+                // background: 'white',
+                color: 'white',
+              },
+            }}
+          >
+            รายละเอียดพนักงาน
+            <div>อีเมล : {initialvalues?.user.email}</div>
+            <div>ชื่อผู้ใช้งาน : {initialvalues?.user.userName}</div>
+          </Card>
         )}
-      </Form>
-    </>
+      </Col>
+    </Row>
   );
 };

@@ -1,4 +1,5 @@
 import * as API from '@src/apis';
+import { redirect } from 'react-router-dom';
 
 export async function attendanceCreateAction({ request, params }: any) {
   const formData = await request.formData();
@@ -8,14 +9,11 @@ export async function attendanceCreateAction({ request, params }: any) {
   console.log({ params });
 
   try {
-    await API.attendance.create(JSON.parse(submitData.data));
-    return {
-      data: {
-        action: 'create',
-        status: 'success',
-        message: 'Organize Created Successfully !',
-      },
-    };
+    const { data: res } = await API.attendance.create(
+      JSON.parse(submitData.data),
+    );
+    console.log({ res });
+    return redirect(`/attendance/${res.data[0].id}`);
   } catch (error) {
     return {
       data: {
