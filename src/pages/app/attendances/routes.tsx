@@ -1,15 +1,13 @@
 import { AttendanceIndex, indexLoader } from './attendance-index';
 import { AttendanceAction } from './attendance-action/Indexpage';
-import {
-  AttendanceOverview,
-  singleAttendanceLoader,
-} from './attendance-overview';
-import { indexActionLoader } from './attendance-action/loader';
+import { AttendanceOverview } from './attendance-overview';
+import { attendanceLoader } from './attendance-action/loader';
 import { AttendanceCreate } from './attendance-create';
 import { attendanceEditAction } from './attendance-edit/action';
 import { attendanceCreateAction } from './attendance-create/action';
 import { userLoader } from '../user/loader';
-import { AttendanceEdit } from './attendance-edit';
+import { AttendanceEdit, attendanceEditLoader } from './attendance-edit';
+import { attendanceAction } from './attendance-action/action';
 
 export const routes = [
   {
@@ -22,7 +20,8 @@ export const routes = [
       },
       {
         path: 'action',
-        loader: indexActionLoader,
+        loader: attendanceLoader,
+        action: attendanceAction,
         element: <AttendanceAction />,
       },
       {
@@ -42,7 +41,7 @@ export const routes = [
       },
       {
         path: ':id',
-        loader: singleAttendanceLoader,
+        loader: attendanceEditLoader,
         action: attendanceEditAction,
         element: <AttendanceEdit />,
       },

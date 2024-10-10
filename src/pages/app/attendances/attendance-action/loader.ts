@@ -1,13 +1,20 @@
 import * as API from '@src/apis';
 
-export async function indexActionLoader() {
+export async function attendanceLoader() {
   try {
     const { data: workInfos } = await API.attendance.getAllWorkInfo();
-    const { data: data } = await API.attendance.getAll();
-    //   return { organize: organize.data };
+    const me = JSON.parse(localStorage.getItem('me') || '');
+    let wf;
+    let attendances;
+    if (me?.role?.name !== 'owner') {
+      const { data: currentWf } = await API.attendance.getCurrentWorkInfo();
+      wf = currentWf.data;
 
-    return { workInfos, data };
+      attendances = wf.attendances;
+    }
+
+    return { workInfos, data: attendances, wf };
   } catch (error) {
-    return { workInfos: {}, data: [] };
+    return { workInfos: {}, data: [], wf: {} };
   }
 }

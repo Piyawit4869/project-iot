@@ -4,14 +4,15 @@ import TextArea from 'antd/es/input/TextArea';
 interface LeaveEarlyModalProps {
   open?: boolean;
   handleCloseModal: () => void;
+  handleSubmit: (values: any) => void;
 }
 
 export const LeaveEarlyModal = (props: LeaveEarlyModalProps) => {
-  const { open, handleCloseModal } = props;
+  const { open, handleCloseModal, handleSubmit } = props;
 
   return (
     <Modal open={open} onCancel={handleCloseModal} footer={null}>
-      <Form layout="vertical">
+      <Form layout="vertical" onFinish={handleSubmit}>
         <Form.Item
           label="เหตุผลที่ออกงานก่อนเวลา"
           name="remark"
@@ -22,7 +23,9 @@ export const LeaveEarlyModal = (props: LeaveEarlyModalProps) => {
           <TextArea placeholder="กรอกเหตุผลที่ออกงานก่อนเวลา" />
         </Form.Item>
         <Flex justify="end">
-          <Button type="primary">ยืนยัน </Button>
+          <Button type="primary" htmlType="submit">
+            ยืนยัน{' '}
+          </Button>
         </Flex>
       </Form>
     </Modal>

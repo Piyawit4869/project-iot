@@ -35,7 +35,7 @@ export const AttendanceEdit = () => {
         title={'การเข้างาน - ออกงาน'}
         buttons={[
           <Button type="primary" htmlType="submit" form="work-info">
-            สร้าง
+            บันทึก
           </Button>,
         ]}
       />
