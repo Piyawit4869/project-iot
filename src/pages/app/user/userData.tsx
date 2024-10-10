@@ -1,5 +1,5 @@
 import { EyeOutlined } from '@ant-design/icons';
-import { Button, Tag } from 'antd';
+import { Button, Image, Tag } from 'antd';
 import { Link } from 'react-router-dom';
 
 export const userData = [
@@ -33,6 +33,20 @@ export const userData = [
 ];
 export const userColumns: any = [
   {
+    title: 'รูปภาพ',
+    dataIndex: 'photoUrl',
+    key: 'photoUrl',
+    render: (_: any, record: any) => {
+      return (
+        <Image
+          src={record?.profile?.photoUrl}
+          style={{ width: 60, height: 60 }}
+          preview={false}
+        />
+      );
+    },
+  },
+  {
     title: 'ชื่อผู้ใช้',
     dataIndex: 'userName',
     key: 'userName',
@@ -41,6 +55,15 @@ export const userColumns: any = [
     title: 'อีเมล',
     dataIndex: 'email',
     key: 'email',
+  },
+  {
+    title: 'ตำแหน่ง',
+    dataIndex: 'role',
+    key: 'role',
+    align: 'center',
+    render: (_: any, record: any) => {
+      return <>{record?.role?.name}</>;
+    },
   },
   {
     title: 'เบอร์โทรศัพท์',
