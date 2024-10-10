@@ -2,7 +2,6 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import { Root, RootLoader } from './pages/Roots';
 import { AppLayout, layoutLoader } from './layout';
-
 import { routes as appRoutes } from './pages/app';
 import { routes as publicRoutes } from './pages/public';
 import { routes as adminRoutes } from './pages/superadmin';
