@@ -360,7 +360,7 @@ export const AttendanceAction = () => {
               >
                 <div>
                   <Typography.Title level={3} style={{ marginTop: '12px' }}>
-                    {wf.name}
+                    {wf?.name}
                   </Typography.Title>
                   <Typography.Title level={5} style={{ marginTop: '12px' }}>
                     รายละเอียดงาน : {wf.descriptions}
@@ -396,13 +396,13 @@ export const AttendanceAction = () => {
                   <List.Item>
                     <Flex gap={20}>
                       <Typography>
-                        เวลา {dayjs(item.createdAt).format('hh:mm:ss')}
+                        เวลา {dayjs(item?.createdAt).format('hh:mm:ss')}
                       </Typography>
 
                       <Typography>
-                        {item.action === 'In'
+                        {item?.action === 'In'
                           ? 'เข้างาน'
-                          : item.action === 'Break'
+                          : item?.action === 'Break'
                           ? 'พักเบรค'
                           : 'ออกงาน'}
                       </Typography>

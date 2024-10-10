@@ -4,9 +4,9 @@
 export async function indexLoader() {
   try {
     // const atttendances = await API.attendance.getAll();
-    //   return { organize: organize.data };
+    // return { organize: organize.data };
 
-    return { data: {} };
+    return { data: [] };
   } catch (error) {
     return { status: 'error', message: error };
   }
