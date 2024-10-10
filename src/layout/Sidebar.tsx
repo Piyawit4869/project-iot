@@ -24,7 +24,6 @@ export const Sidebar = (props: SidebarProps) => {
   const [collapsed, setCollapsed] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
   const [defaultOpenKeys, setDefaultOpenKeys] = React.useState([]);
-  console.log({ setting });
 
   const currentPath = location.pathname;
 
@@ -54,18 +53,6 @@ export const Sidebar = (props: SidebarProps) => {
     const allSubmenuKeys: any = getAllSubmenuKeys(menusWithOnClick);
     isMobile ? setDefaultOpenKeys([]) : setDefaultOpenKeys(allSubmenuKeys);
   }, [isMobile]);
-
-  //     { value: 'Taxpayer', label: 'บุคคลธรรมดา' },
-  //     { value: 'OrdinaryPartnership', label: 'ห้างหุ้นส่วนสามัญ' },
-  //     { value: 'Shop', label: 'ร้านค้า' },
-  //     { value: 'BodyOfPerson', label: 'คณะบุคคล' },
-  //     { value: 'CompanyLimited', label: 'บริษัทจำกัด' },
-  //     { value: 'PublicCompanyLimited', label: 'บริษัทมหาชนจำกัด' },
-  //     { value: 'LimitedPartnership', label: 'ห้างหุ้นส่วนจำกัด' },
-  //     { value: 'Foundation', label: 'มูลนิธิ' },
-  //     { value: 'Association', label: 'สมาคม' },
-  //     { value: 'JointVenture', label: 'กิจการร่วมค้า' },
-  //     { value: 'Others', label: 'อื่นๆ' },
 
   const handleNameWithType = (type: string) => {
     switch (type) {
