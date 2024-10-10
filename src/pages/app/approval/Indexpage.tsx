@@ -23,9 +23,25 @@ import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import 'dayjs/locale/th';
 import React from 'react';
+import * as API from '../../../apis';
+import { useLoaderData } from 'react-router-dom';
 dayjs.locale('th');
 
+export async function approvalLoader() {
+  try {
+    const approvals = await API.approval.pagination({});
+
+    return { approvals: approvals.data };
+  } catch (error) {
+    return { approvals: {} };
+  }
+}
+
 export const ApprovalIndex = () => {
+  const { approvals } = useLoaderData() as any;
+
+  console.log({ approvals });
+
   const [open, setOpen] = React.useState(false);
   const [openCreate, setOpenCreate] = React.useState(false);
   const [modalData, setModalData] = React.useState({}) as any;

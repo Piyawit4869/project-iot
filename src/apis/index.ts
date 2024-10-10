@@ -8,3 +8,4 @@ export * as customer from './customer';
 export * as organize from './organize';
 export * as branch from './branch';
 export * as attendance from './attendance';
+export * as approval from './approval';

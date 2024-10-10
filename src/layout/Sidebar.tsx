@@ -57,30 +57,30 @@ export const Sidebar = (props: SidebarProps) => {
   const handleNameWithType = (type: string) => {
     switch (type) {
       case 'Taxpayer':
-        return setting.organization.nameTh;
+        return setting?.organization?.nameTh;
       case 'OrdinaryPartnership':
-        return `ห้างหุ้นส่วนสามัญ ${setting.organization.nameTh}`;
+        return `ห้างหุ้นส่วนสามัญ ${setting?.organization?.nameTh}`;
       case 'Shop':
-        return `ร้านค้า ${setting.organization.nameTh}`;
+        return `ร้านค้า ${setting?.organization?.nameTh}`;
       case 'BodyOfPerson':
-        return `คณะบุคคล ${setting.organization.nameTh}`;
+        return `คณะบุคคล ${setting?.organization?.nameTh}`;
       case 'CompanyLimited':
-        return `บริษัท ${setting.organization.nameTh} จำกัด`;
+        return `บริษัท ${setting?.organization?.nameTh} จำกัด`;
       case 'PublicCompanyLimited':
-        return `บริษัท ${setting.organization.nameTh} จำกัด (มหาชน)`;
+        return `บริษัท ${setting?.organization?.nameTh} จำกัด (มหาชน)`;
       case 'LimitedPartnership':
-        return `ห้างหุ้นส่วน ${setting.organization.nameTh}`;
+        return `ห้างหุ้นส่วน ${setting?.organization?.nameTh}`;
       case 'Foundation':
-        return `มูลนิธิ ${setting.organization.nameTh}`;
+        return `มูลนิธิ ${setting?.organization?.nameTh}`;
       case 'Association':
-        return `สมาคม ${setting.organization.nameTh}`;
+        return `สมาคม ${setting?.organization?.nameTh}`;
       case 'JointVenture':
-        return `กิจการร่วมค้า ${setting.organization.nameTh}`;
+        return `กิจการร่วมค้า ${setting?.organization?.nameTh}`;
       case 'Others':
-        return setting.organization.nameTh;
+        return setting?.organization?.nameTh;
 
       default:
-        return setting.organization.nameTh;
+        return setting?.organization?.nameTh;
     }
   };
 
@@ -159,10 +159,10 @@ export const Sidebar = (props: SidebarProps) => {
                 <Col>
                   <Flex vertical justify="center" align="center">
                     <Typography style={{ color: '#19142A', fontSize: '20px' }}>
-                      {handleNameWithType(setting.organization.type)}
+                      {handleNameWithType(setting?.organization?.type)}
                     </Typography>
                     <Typography style={{ color: 'grey', fontSize: '16px' }}>
-                      {`(${setting.organization.branches[0].nameTh})`}
+                      {`(${setting?.organization?.branches[0]?.nameTh})`}
                     </Typography>
                   </Flex>
                 </Col>
