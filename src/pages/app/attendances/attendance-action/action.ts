@@ -6,9 +6,7 @@ export async function attendanceAction({ request }: any) {
   const data = JSON.parse(submitData.data);
 
   try {
-    const { data: res } = await API.attendance.attendanceAction(data);
-
-    console.log({ res });
+    await API.attendance.attendanceAction(data);
 
     return { status: 'success' };
   } catch (e) {

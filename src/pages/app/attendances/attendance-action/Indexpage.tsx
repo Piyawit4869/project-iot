@@ -197,7 +197,7 @@ export const AttendanceAction = () => {
         data: JSON.stringify({
           status: 'Active',
           action:
-            data && data.length
+            data && data?.length
               ? data[0].action === 'Out'
                 ? 'In'
                 : data[0].action === 'Break'
@@ -315,7 +315,7 @@ export const AttendanceAction = () => {
                         '0 6px 20px rgba(0, 0, 0, 0.2)'; // Restore shadow after click
                     }}
                     onClick={() => {
-                      if (data && data.length && data[0].action !== 'Out') {
+                      if (data[0]?.action !== 'Out') {
                         handleChangeState();
                       }
                     }}

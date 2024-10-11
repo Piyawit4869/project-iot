@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint \"src/**/*{.tsx,.ts}\" --fix",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "auth": "gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://asia-southeast1-docker.pkg.dev",
+    "build-image": "docker build -t asia-southeast1-docker.pkg.dev/$GOOGLE_CLOUD_PROJECT/cloud-run-source-deploy/stay-organize-dashboard-develop:develop .",
+    "push-image": "docker push asia-southeast1-docker.pkg.dev/$GOOGLE_CLOUD_PROJECT/cloud-run-source-deploy/stay-organize-dashboard-develop:develop",
+    "deploy": "gcloud run deploy stay-organize-dashboard-develop --region=asia-southeast1 --image=asia-southeast1-docker.pkg.dev/$GOOGLE_CLOUD_PROJECT/cloud-run-source-deploy/stay-organize-dashboard-develop:develop --project $GOOGLE_CLOUD_PROJECT"
   },
   "dependencies": {
     "@react-oauth/google": "^0.12.1",
