@@ -56,8 +56,8 @@ export const renderForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'SelectFormField',
     options: [
-      { value: '03861cc2-95a0-475f-bbd5-629644cad435', label: 'Employee' },
-      { value: 'f6f6d534-26c5-4042-b265-c5108022c239', label: 'Owner' },
+      { value: '7e86ea9f-f56b-4e4d-8986-fca11eff8dab', label: 'Employee' },
+      { value: '1dc79675-8fdd-4341-b068-608a4385dadc', label: 'Owner' },
     ],
     rule: [{ required: true, message: 'กรุณาเลือกตำแหน่ง!' }],
   },
@@ -134,8 +134,8 @@ export const renderEditForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'SelectFormField',
     options: [
-      { value: '03861cc2-95a0-475f-bbd5-629644cad435', label: 'Employee' },
-      { value: 'f6f6d534-26c5-4042-b265-c5108022c239', label: 'Owner' },
+      { value: '7e86ea9f-f56b-4e4d-8986-fca11eff8dab', label: 'Employee' },
+      { value: '1dc79675-8fdd-4341-b068-608a4385dadc', label: 'Owner' },
     ],
     rule: [{ required: true, message: 'กรุณาเลือกตำแหน่ง!' }],
   },

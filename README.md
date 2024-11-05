@@ -1,4 +1,4 @@
-# Getting Started with StayOrganize project
+# Getting Started with ROME project
 
 ## Available Scripts
 

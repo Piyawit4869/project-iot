@@ -15,6 +15,9 @@ export async function layoutLoader() {
 
 export const AppLayout = () => {
   const { orgSetting } = useLoaderData() as any;
+
+  console.log({ orgSetting });
+
   return (
     <>
       <Layout

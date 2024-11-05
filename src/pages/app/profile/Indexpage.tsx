@@ -116,8 +116,8 @@ export const ProfilePage: React.FC = () => {
 
   React.useEffect(() => {
     let birthDate = null;
-    if (user && user.profile.birthDate) {
-      birthDate = dayjs(user.profile.birthDate);
+    if (user && user.profile?.birthDate) {
+      birthDate = dayjs(user.profile?.birthDate);
     } else {
       birthDate = '';
     }

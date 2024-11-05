@@ -159,10 +159,12 @@ export const Sidebar = (props: SidebarProps) => {
                 <Col>
                   <Flex vertical justify="center" align="center">
                     <Typography style={{ color: '#19142A', fontSize: '20px' }}>
+                      {/* บริษัท ยูโทเทค จำกัด */}
                       {handleNameWithType(setting?.organization?.type)}
                     </Typography>
                     <Typography style={{ color: 'grey', fontSize: '16px' }}>
-                      {`(${setting?.organization?.branches[0]?.nameTh})`}
+                      (สำนักงานใหญ่)
+                      {/* {`(${setting?.organization?.branches[0]?.nameTh})`} */}
                     </Typography>
                   </Flex>
                 </Col>

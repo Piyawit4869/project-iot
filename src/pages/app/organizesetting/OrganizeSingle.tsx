@@ -231,12 +231,12 @@ export const OrganizeSingle: React.FC = () => {
 
   React.useEffect(() => {
     let businessRegister = null;
-    const organize = setting.organization;
+    const organize = setting?.organization;
     if (organize && organize.openingDate) {
       businessRegister = dayjs(organize.openingDate);
     }
 
-    setType(organize.type);
+    setType(organize?.type);
 
     settingForm.setFieldsValue({
       ...organize,
@@ -258,7 +258,7 @@ export const OrganizeSingle: React.FC = () => {
     });
     systemForm.setFieldsValue({
       ...setting,
-      openDays: setting.openDays.map((item: any) => ({
+      openDays: setting?.openDays.map((item: any) => ({
         ...item,
         open: dayjs(item.open, 'HH:mm'),
         close: dayjs(item.close, 'HH:mm'),
