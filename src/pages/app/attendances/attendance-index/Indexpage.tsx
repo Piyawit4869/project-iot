@@ -1,4 +1,4 @@
-import { InfoCircleOutlined } from '@ant-design/icons';
+// import { InfoCircleOutlined } from '@ant-design/icons';
 import { TitleBar } from '@src/components/shared';
 import { TableComponent } from '@src/components/shared/TableComponent';
 import { Card, Col, Row, Typography } from 'antd';
@@ -12,6 +12,49 @@ type AttendanceLoaderData = {
 export const AttendanceIndex = () => {
   const { data: myAttendance } = useLoaderData() as AttendanceLoaderData;
   const me = JSON.parse(localStorage.getItem('me') as any);
+
+  const data = [
+    {
+      id: '1',
+      username: 'Phuwis Watthana',
+      event: 'เข้างาน',
+      clockIn: '10:05 AM',
+      breakTimes: '-',
+      clockOut: '-',
+      eventTime: '07:42:06',
+      remark: '',
+    },
+    {
+      id: '2',
+      username: 'Phuwis Watthana',
+      event: 'พักเบรค',
+      clockIn: '10:05 AM',
+      breakTimes: '01:15 PM',
+      clockOut: '-',
+      eventTime: '06:42:06',
+      remark: '',
+    },
+    {
+      id: '3',
+      username: 'Phuwis Watthana',
+      event: 'เข้างาน',
+      clockIn: '01:43 PM',
+      breakTimes: '01:15 PM',
+      clockOut: '-',
+      eventTime: '06:42:06',
+      remark: '',
+    },
+    {
+      id: '4',
+      username: 'Phuwis Watthana',
+      event: 'เข้างาน',
+      clockIn: '01:43 PM',
+      breakTimes: '01:15 PM',
+      clockOut: '04:28',
+      eventTime: '06:42:06',
+      remark: 'ขอออกก่อนเวลานะครับ หมอนัดตอน 5 โมงครับ',
+    },
+  ];
 
   const myAttendanceColumns: ColumnsType<any> | undefined = [
     {
@@ -29,47 +72,52 @@ export const AttendanceIndex = () => {
       title: 'กิจกรรม',
       dataIndex: 'event',
       key: 'event',
+      align: 'center',
     },
     {
       title: 'เข้างาน',
       dataIndex: 'clockIn',
       key: 'clockIn',
+      align: 'center',
     },
     {
       title: 'พักเบรก',
       dataIndex: 'breakTimes',
       key: 'breakTimes',
+      align: 'center',
     },
     {
       title: 'ออกงาน',
       dataIndex: 'clockOut',
-      key: 'clockIn',
+      key: 'clockOut',
+      align: 'center',
     },
     {
       title: 'สรุปเวลาเข้างาน',
       dataIndex: 'eventTime',
       key: 'eventTime',
+      align: 'center',
     },
     {
       title: 'หมายเหตุ',
-      dataIndex: 'reMark',
-      key: 'reMark',
+      dataIndex: 'remark',
+      key: 'remark',
     },
-    {
-      dataIndex: 'id',
-      key: 'id',
-      align: 'center',
-      width: '60px',
-      render: () => {
-        return (
-          <InfoCircleOutlined
-            onClick={() => {
-              console.log('info click');
-            }}
-          />
-        );
-      },
-    },
+    // {
+    //   dataIndex: 'id',
+    //   key: 'id',
+    //   align: 'center',
+    //   width: '60px',
+    //   render: () => {
+    //     return (
+    //       <InfoCircleOutlined
+    //         onClick={() => {
+    //           console.log('info click');
+    //         }}
+    //       />
+    //     );
+    //   },
+    // },
   ];
 
   return (
@@ -129,10 +177,7 @@ export const AttendanceIndex = () => {
               xl={24}
               style={{ marginTop: '12px' }}
             >
-              <TableComponent
-                columns={myAttendanceColumns}
-                dataSource={myAttendance}
-              />
+              <TableComponent columns={myAttendanceColumns} dataSource={data} />
             </Col>
           </Row>
         </div>
