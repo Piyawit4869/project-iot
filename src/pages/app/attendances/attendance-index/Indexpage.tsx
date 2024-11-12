@@ -122,7 +122,7 @@ export const AttendanceIndex = () => {
 
   return (
     <>
-      {me.role.name === 'owner' || me.role.name === 'manager' ? (
+      {me?.role?.name === 'owner' || me?.role?.name === 'manager' ? (
         <div style={{ marginBottom: '30px' }}>
           <TitleBar
             title={'ภาพรวมการทำงานในองค์กรวันนี้'}

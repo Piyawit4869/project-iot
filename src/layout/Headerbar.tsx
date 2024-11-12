@@ -152,7 +152,9 @@ export const Headerbar: React.FC = () => {
               src={
                 me?.profile?.photoUrl
                   ? me.profile.photoUrl
-                  : `https://api.dicebear.com/7.x/miniavs/svg?seed=${me.id}`
+                  : `https://api.dicebear.com/7.x/miniavs/svg?seed=${
+                      me?.id ? me?.id : '1'
+                    }`
               }
               alt="User Icon"
               width={80}
@@ -341,7 +343,9 @@ export const Headerbar: React.FC = () => {
                       src={
                         me?.profile?.photoUrl
                           ? me.profile.photoUrl
-                          : `https://api.dicebear.com/7.x/miniavs/svg?seed=${me.id}`
+                          : `https://api.dicebear.com/7.x/miniavs/svg?seed=${
+                              me?.id ? me?.id : '0'
+                            }`
                       }
                       alt="User Icon"
                       preview={false}

@@ -3,6 +3,7 @@ import {
   ProjectOutlined,
   ReconciliationOutlined,
 } from '@ant-design/icons';
+import { Button } from 'antd';
 import { CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -28,9 +29,9 @@ const styles: { [key: string]: CSSProperties } = {
     margin: '5px',
     border: '1px solid #000000',
     borderRadius: '4px',
-    cursor: 'pointer',
     minWidth: '150px',
     textDecoration: 'none',
+    height: 75,
   },
   icon: {
     marginRight: '10px',
@@ -87,22 +88,22 @@ export const AppLandingPage = () => {
       <div style={styles.attendanceIndex}>
         <div style={styles.buttonGroup}>
           <Link to="/attendance" style={{ textDecoration: 'none' }}>
-            <button style={styles.button}>
+            <Button style={styles.button}>
               <FieldTimeOutlined style={styles.icon} />
               Attendance
-            </button>
+            </Button>
           </Link>
           <Link to="/notation" style={{ textDecoration: 'none' }}>
-            <button style={styles.button}>
+            <Button style={styles.button} disabled>
               <ReconciliationOutlined style={styles.icon} />
               Notation
-            </button>
+            </Button>
           </Link>
           <Link to="/project" style={{ textDecoration: 'none' }}>
-            <button style={styles.button}>
+            <Button style={styles.button} disabled>
               <ProjectOutlined style={styles.icon} />
               Project
-            </button>
+            </Button>
           </Link>
         </div>
       </div>

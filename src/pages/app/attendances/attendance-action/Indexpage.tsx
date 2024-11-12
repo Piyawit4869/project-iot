@@ -171,7 +171,7 @@ export const AttendanceAction = () => {
 
   const [open, setOpen] = React.useState(false);
 
-  const me = JSON.parse(localStorage.getItem('me') || '');
+  const me = JSON.parse(localStorage.getItem('me') || '{}');
 
   const handleCloseModal = () => {
     setOpen(false);

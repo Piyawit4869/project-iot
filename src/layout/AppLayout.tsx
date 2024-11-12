@@ -16,14 +16,12 @@ export async function layoutLoader() {
 export const AppLayout = () => {
   const { orgSetting } = useLoaderData() as any;
 
-  console.log({ orgSetting });
-
   return (
     <>
       <Layout
         style={{ height: '100vh', display: 'flex', flexDirection: 'row' }}
       >
-        <Sidebar setting={orgSetting} />
+        <Sidebar setting={orgSetting ? orgSetting : {}} />
         <Layout>
           <Headerbar />
           <Contents />
