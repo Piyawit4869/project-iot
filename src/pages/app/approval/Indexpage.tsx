@@ -114,7 +114,10 @@ export const ApprovalIndex = () => {
   const [open, setOpen] = React.useState(false);
   const [openCreate, setOpenCreate] = React.useState(false);
   const [modalData, setModalData] = React.useState({}) as any;
-  const me = JSON.parse(localStorage.getItem('me') as any);
+
+  //FIXME: open this code for API connected
+  // const me = JSON.parse(localStorage.getItem('me') || '{}');
+  const me = { role: { name: 'owner' } };
   const [action, setAction] = React.useState('');
   const [openConfirm, setOpenConfirm] = React.useState(false);
   const [openResend, setOpenResend] = React.useState(false);
