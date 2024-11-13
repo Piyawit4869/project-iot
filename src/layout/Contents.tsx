@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 export const Contents = () => {
   const { Content } = Layout;
+
   return (
     <Content
       className="app-background"
@@ -13,6 +14,7 @@ export const Contents = () => {
     >
       <Flex justify="center">
         <Card
+          bodyStyle={{ padding: '0px 20px 20px' }}
           style={{
             backgroundColor: 'white',
             width: '100%',

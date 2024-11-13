@@ -18,8 +18,8 @@ export const Menus = (props: MenusProps) => {
       // disable: true,
     },
     {
-      label: <Link to="/admin/organize">องค์กร</Link>,
-      key: '/admin/organize',
+      label: <Link to="/admin/organization">องค์กร</Link>,
+      key: '/admin/organization',
       icon: <Icon.ScheduleOutlined />,
       role: ['super_admin'],
     },

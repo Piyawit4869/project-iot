@@ -33,6 +33,7 @@ export const router = createBrowserRouter([
       {
         path: '/admin',
         element: <AppLayout />,
+        loader: layoutLoader,
         children: [...adminRoutes],
       },
 

@@ -1,5 +1,5 @@
 import { TagOutlined } from '@ant-design/icons';
-import { Col, Flex, Row, Typography } from 'antd';
+import { Col, Flex, Row, Space, Typography } from 'antd';
 import {
   Link,
   redirect,
@@ -17,6 +17,7 @@ import { debounce } from 'lodash';
 
 export const OrganizeIndex: React.FC = () => {
   const [loading, setLoading] = React.useState<boolean>(true);
+
   const { organize, param } = useLoaderData() as any;
   const { state } = useNavigation();
   // const [form] = Form.useForm();
@@ -96,44 +97,51 @@ export const OrganizeIndex: React.FC = () => {
   return (
     <Flex vertical gap={'small'}>
       {/* Title section from title component */}
-      <TitleBar
-        title={'องค์กรทั้งหมด'}
-        subTitle={
-          <Row gutter={6} align="middle">
-            <Col>
-              <TagOutlined />
-            </Col>
-            <Col>
-              <Typography>ค้นหาองค์กร</Typography>
-            </Col>
-          </Row>
-        }
-        buttons={[
-          <Link to={'create'}>
-            <CreateButton label={'เพิ่มข้อมูลองค์กร'} />
-          </Link>,
-        ]}
-      />
+      <Space
+        direction="vertical"
+        style={{
+          width: '100%',
+          backgroundColor: 'white',
+          borderRadius: 5,
+          padding: '20px 0px',
+          position: 'sticky',
+          zIndex: 10,
+          borderImageSlice: 1,
+          top: '-10px',
+        }}
+      >
+        <TitleBar
+          title={'องค์กรทั้งหมด'}
+          subTitle={
+            <Row gutter={6} align="middle">
+              <Col>
+                <TagOutlined />
+              </Col>
+              <Col>
+                <Typography>ค้นหาองค์กร</Typography>
+              </Col>
+            </Row>
+          }
+          buttons={[
+            <Link to={'create'}>
+              <CreateButton label={'เพิ่มข้อมูลองค์กร'} />
+            </Link>,
+          ]}
+        />
 
-      {/* Filter section from search bar component */}
-      <div style={{ height: '5px' }} />
-      <SearchBar />
-      {/* <SearchBar
-        form={form}
-        param={param}
-        handleChangeFilter={handleChangeFilter}
-        renderField={renderField}
-      /> */}
-
+        {/* Filter section from search bar component */}
+        <div style={{ height: '5px' }} />
+        <SearchBar />
+      </Space>
       {/* Index data from table component */}
       <TableComponent
         columns={organizeColumns}
-        dataSource={organize?.items}
+        dataSource={organize?.items ? organize?.items : []}
         loading={loading || state === 'loading' || state === 'submitting'}
         pagination={{
-          current: param && param.page ? Number(param?.page) : 1,
-          pageSize: param && param.limit ? Number(param?.limit) : 10,
-          total: organize && organize.meta ? organize.meta.totalItems : 10,
+          current: param && param?.page ? Number(param?.page) : 1,
+          pageSize: param && param?.limit ? Number(param?.limit) : 10,
+          total: organize && organize?.meta ? organize?.meta?.totalItems : 10,
           showTotal: (total: any, range: any) =>
             `${range[0]}-${range[1]} ของ ${total} องค์กรทั้งหมด`,
         }}

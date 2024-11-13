@@ -1,7 +1,6 @@
 import React from 'react';
 import { Layout, Menu, Image, Typography, Row, Col, Button, Flex } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
-import logo from '../assets/images/logoutotechV2.png';
 import sidebar from '../assets/images/abstract_sidebar.png';
 import { Menus } from '.';
 import {
@@ -61,70 +60,52 @@ export const Sidebar = (props: SidebarProps) => {
       case 'Taxpayer':
         return setting?.organization?.nameTh
           ? setting?.organization?.nameTh
-          : 'ยูโทเทค';
+          : 'ROME';
       case 'OrdinaryPartnership':
         return `ห้างหุ้นส่วนสามัญ ${
-          setting?.organization?.nameTh
-            ? setting?.organization?.nameTh
-            : 'ยูโทเทค'
+          setting?.organization?.nameTh ? setting?.organization?.nameTh : 'ROME'
         }`;
       case 'Shop':
         return `ร้านค้า ${
-          setting?.organization?.nameTh
-            ? setting?.organization?.nameTh
-            : 'ยูโทเทค'
+          setting?.organization?.nameTh ? setting?.organization?.nameTh : 'ROME'
         }`;
       case 'BodyOfPerson':
         return `คณะบุคคล ${
-          setting?.organization?.nameTh
-            ? setting?.organization?.nameTh
-            : 'ยูโทเทค'
+          setting?.organization?.nameTh ? setting?.organization?.nameTh : 'ROME'
         }`;
       case 'CompanyLimited':
         return `บริษัท ${
-          setting?.organization?.nameTh
-            ? setting?.organization?.nameTh
-            : 'ยูโทเทค'
+          setting?.organization?.nameTh ? setting?.organization?.nameTh : 'ROME'
         } จำกัด`;
       case 'PublicCompanyLimited':
         return `บริษัท ${
-          setting?.organization?.nameTh
-            ? setting?.organization?.nameTh
-            : 'ยูโทเทค'
+          setting?.organization?.nameTh ? setting?.organization?.nameTh : 'ROME'
         } จำกัด (มหาชน)`;
       case 'LimitedPartnership':
         return `ห้างหุ้นส่วน ${
-          setting?.organization?.nameTh
-            ? setting?.organization?.nameTh
-            : 'ยูโทเทค'
+          setting?.organization?.nameTh ? setting?.organization?.nameTh : 'ROME'
         }`;
       case 'Foundation':
         return `มูลนิธิ ${
-          setting?.organization?.nameTh
-            ? setting?.organization?.nameTh
-            : 'ยูโทเทค'
+          setting?.organization?.nameTh ? setting?.organization?.nameTh : 'ROME'
         }`;
       case 'Association':
         return `สมาคม ${
-          setting?.organization?.nameTh
-            ? setting?.organization?.nameTh
-            : 'ยูโทเทค'
+          setting?.organization?.nameTh ? setting?.organization?.nameTh : 'ROME'
         }`;
       case 'JointVenture':
         return `กิจการร่วมค้า ${
-          setting?.organization?.nameTh
-            ? setting?.organization?.nameTh
-            : 'ยูโทเทค'
+          setting?.organization?.nameTh ? setting?.organization?.nameTh : 'ROME'
         }`;
       case 'Others':
         return setting?.organization?.nameTh
           ? setting?.organization?.nameTh
-          : 'ยูโทเทค';
+          : 'ROME';
 
       default:
         return setting?.organization?.nameTh
           ? setting?.organization?.nameTh
-          : 'ยูโทเทค';
+          : 'ROME';
     }
   };
 
@@ -183,7 +164,7 @@ export const Sidebar = (props: SidebarProps) => {
                     src={
                       setting?.organization?.logoUrl
                         ? setting.organization.logoUrl
-                        : logo
+                        : 'https://cdn-icons-png.flaticon.com/512/8136/8136031.png'
                     }
                     width={collapsed ? 40 : 70}
                   />
@@ -207,7 +188,7 @@ export const Sidebar = (props: SidebarProps) => {
                       {handleNameWithType(
                         setting?.organization?.type
                           ? setting?.organization?.type
-                          : 'CompanyLimited',
+                          : '',
                       )}
                     </Typography>
                     <Typography style={{ color: 'grey', fontSize: '16px' }}>

@@ -11,7 +11,7 @@ export async function organizeLoader(params: any) {
     const organize = await API.organize.getAll(search);
     return { organize: organize.data, param };
   } catch (error) {
-    return { error: 'error', message: error };
+    return { organize: {}, param: {} };
   }
 }
 
@@ -25,6 +25,6 @@ export async function organizeSingleLoader(params: any) {
 
     return { organize: organize.data, param };
   } catch (error) {
-    return { error: 'error', message: error };
+    return { organize: {}, param: {} };
   }
 }

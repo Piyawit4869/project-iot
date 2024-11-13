@@ -6,7 +6,7 @@ import { organizeLoader, organizeSingleLoader } from './loader';
 
 export const routes = [
   {
-    path: 'organize',
+    path: 'organization',
     children: [
       {
         path: '',

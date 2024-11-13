@@ -31,6 +31,7 @@ import * as API from '@src/apis';
 import axios from 'axios';
 import { useGoogleLogin } from '@react-oauth/google';
 import { json, redirect } from 'react-router-dom';
+import { useOrganizationContext } from '@src/contexts/OrganizationContext';
 
 const pusherKey = import.meta.env.VITE_APP_PUSHER_APP_KEY;
 
@@ -68,6 +69,7 @@ export const Headerbar: React.FC = () => {
   const { t } = useTranslation();
   const [notificationsCount, setNotificationsCount] = React.useState(0);
   const me = JSON.parse(localStorage.getItem('me') as any);
+  const { organization } = useOrganizationContext() as any;
 
   const login = useGoogleLogin({
     flow: 'auth-code',
@@ -227,7 +229,7 @@ export const Headerbar: React.FC = () => {
     },
   ];
 
-  const generateBreadcrumbs = (path: string) => {
+  const generateBreadcrumbs = (path: string, organize?: any) => {
     const pathnames = path.split('/').filter((x) => x);
     const modifiedPathnames =
       pathnames[0] === 'admin' ? pathnames.slice(1) : pathnames;
@@ -251,7 +253,11 @@ export const Headerbar: React.FC = () => {
           return (
             <Breadcrumb.Item key={name}>
               {isLast ? (
-                t(name)
+                organization && index > 0 && name !== 'create' ? (
+                  organize.nameTh
+                ) : (
+                  t(name)
+                )
               ) : (
                 <Link
                   to={
@@ -314,7 +320,7 @@ export const Headerbar: React.FC = () => {
 
   return (
     <div style={styles.header}>
-      {generateBreadcrumbs(location.pathname)}
+      {generateBreadcrumbs(location.pathname, organization)}
       <Row gutter={[12, 12]} align="middle">
         <Col>
           <div style={styles.menu}>

@@ -60,7 +60,7 @@ export const UploadFiles: React.FC<FormInterface> = (props: FormInterface) => {
   return (
     <Form.Item
       label={label}
-      name={'file'}
+      name={name ? name : 'file'}
       valuePropName="fileList"
       getValueFromEvent={normFile}
       initialValue={fileList}

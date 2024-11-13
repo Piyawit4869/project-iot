@@ -1,4 +1,4 @@
-import { Button, FormInstance, Modal } from 'antd';
+import { Button, Flex, FormInstance, Modal, Space } from 'antd';
 import { useNavigate, useSubmit } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
 import { CSSProperties } from 'react';
@@ -68,40 +68,36 @@ const FormButtonsEdit = (props: FormButtonEdit) => {
   };
 
   return (
-    <div style={styles.sticky}>
-      <Button
-        type="primary"
-        onClick={() => navigate(-1)}
-        style={{ marginRight: '10px' }}
-      >
-        <LeftOutlined /> กลับ
-      </Button>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-        }}
-      >
+    <Space direction="vertical" style={styles.sticky}>
+      <Flex justify="space-between">
         <Button
-          style={{
-            marginRight: '10px',
-            backgroundColor: '#A79DB4',
-            borderColor: '#A79DB4',
-            color: '#fff',
-          }}
-          onClick={onReset}
+          type="primary"
+          onClick={() => navigate(-1)}
+          style={{ marginRight: '10px' }}
         >
-          ยกเลิก
+          <LeftOutlined /> กลับ
         </Button>
-        <Button type="primary" onClick={onSubmit}>
-          ยืนยัน
-        </Button>
-        <Button danger onClick={onDelete} style={{ marginLeft: '10px' }}>
-          ลบ
-        </Button>
-      </div>
-    </div>
+        <Flex>
+          <Button
+            style={{
+              marginRight: '10px',
+              backgroundColor: '#A79DB4',
+              borderColor: '#A79DB4',
+              color: '#fff',
+            }}
+            onClick={onReset}
+          >
+            ยกเลิก
+          </Button>
+          <Button type="primary" onClick={onSubmit}>
+            ยืนยัน
+          </Button>
+          <Button danger onClick={onDelete} style={{ marginLeft: '10px' }}>
+            ลบ
+          </Button>
+        </Flex>
+      </Flex>
+    </Space>
   );
 };
 
@@ -244,39 +240,66 @@ const FormButtonsCreate = (props: FormButtonCreate) => {
   };
 
   return (
-    <div style={styles.sticky}>
-      <Button
-        type="primary"
-        onClick={() => navigate(-1)}
-        style={{ marginRight: '10px' }}
-      >
-        <LeftOutlined /> กลับ
-      </Button>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-        }}
-      >
+    <Space direction="vertical" style={styles.sticky}>
+      <Flex justify="space-between">
         <Button
-          style={{
-            marginRight: '10px',
-            backgroundColor: '#A79DB4',
-            borderColor: '#A79DB4',
-            color: '#fff',
-          }}
-          onClick={onReset}
+          type="primary"
+          onClick={() => navigate(-1)}
+          style={{ marginRight: '10px' }}
         >
-          ยกเลิก
+          <LeftOutlined /> กลับ
         </Button>
-        <Button type="primary" onClick={onSubmit}>
-          บันทึก
-        </Button>
-      </div>
-    </div>
+        <Flex justify="space-between">
+          <Button
+            style={{
+              marginRight: '10px',
+              backgroundColor: '#A79DB4',
+              borderColor: '#A79DB4',
+              color: '#fff',
+            }}
+            onClick={onReset}
+          >
+            ยกเลิก
+          </Button>
+          <Button type="primary" onClick={onSubmit}>
+            บันทึก
+          </Button>
+        </Flex>
+      </Flex>
+    </Space>
   );
 };
+
+//  <Space direction="vertical" style={styles.sticky}>
+//    <Flex justify="space-between">
+//      <Button
+//        type="primary"
+//        onClick={() => navigate(-1)}
+//        style={{ marginRight: '10px' }}
+//      >
+//        <LeftOutlined /> กลับ
+//      </Button>
+//      <Flex>
+//        <Button
+//          style={{
+//            marginRight: '10px',
+//            backgroundColor: '#A79DB4',
+//            borderColor: '#A79DB4',
+//            color: '#fff',
+//          }}
+//          onClick={onReset}
+//        >
+//          ยกเลิก
+//        </Button>
+//        <Button type="primary" onClick={onSubmit}>
+//          ยืนยัน
+//        </Button>
+//        <Button danger onClick={onDelete} style={{ marginLeft: '10px' }}>
+//          ลบ
+//        </Button>
+//      </Flex>
+//    </Flex>
+//  </Space>;
 
 export {
   FormButtonsEdit,
@@ -287,13 +310,15 @@ export {
 
 const styles: Record<string, CSSProperties> = {
   sticky: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    width: '100%',
+    backgroundColor: 'white',
+    borderRadius: 5,
     position: 'sticky',
-    height: '50px',
-    top: 0,
-    zIndex: 1,
-    background: 'white',
+    padding: ' 20px 0px',
+    zIndex: 10,
+    borderBottom: '2px solid',
+    borderImage: 'linear-gradient(90deg, #19142a -38.4%, #A79DB4 129.4%)',
+    borderImageSlice: 1,
+    top: '-20px',
   },
 };

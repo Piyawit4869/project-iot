@@ -15,7 +15,7 @@ export async function organizeCreateAction({ request }: any) {
       duration: 3,
     });
 
-    return redirect(`/admin/organize/${res.data.slug}`);
+    return redirect(`/admin/organization/${res.data.data}`);
   } catch (error) {
     notification['error']({
       message: 'สร้างข้อมูลองค์กรล้มเหลว',
@@ -44,7 +44,7 @@ export async function organizeSingleAction({ request, params }: any) {
           placement: 'bottomRight',
           duration: 3,
         });
-        return redirect(`/admin/organize/${params.id}`);
+        return redirect(`/admin/organization/${params.id}`);
       } catch (error) {
         notification['error']({
           message: 'แก้ไขข้อมูลองค์กรล้มเหลว',

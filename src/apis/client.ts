@@ -1,5 +1,5 @@
 import axios from 'axios';
-// import * as API from './auth';
+import * as API from './auth';
 const baseURL = import.meta.env.VITE_APP_API_BASE_URL;
 
 const client = () => {
@@ -16,28 +16,27 @@ const client = () => {
     return config;
   });
 
-  //FIXME: open this code for API connected
   instance.interceptors.response.use(
     (response) => response,
-    // async (error) => {
-    // const originalRequest = error.config;
-    // if (error.response.status === 401) {
-    //   window.location.href = '/login';
-    //   localStorage.removeItem('accessToken');
-    // }
-    // if (error.response.status === 401 && !originalRequest._retry) {
-    //   originalRequest._retry = true;
-    //   const refreshToken = localStorage.getItem('refreshToken');
-    //   const resp = await API.refreshToken(refreshToken);
-    //   const access_token = resp.data.accessToken;
-    //   localStorage.setItem('accessToken', access_token);
-    //   instance.defaults.headers.common[
-    //     'Authorization'
-    //   ] = `Bearer ${access_token}`;
-    //   return instance(originalRequest);
-    // }
-    // return Promise.reject(error);
-    // },
+    async (error) => {
+      const originalRequest = error.config;
+      if (error.response.status === 401) {
+        window.location.href = '/login';
+        localStorage.removeItem('accessToken');
+      }
+      if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        const refreshToken = localStorage.getItem('refreshToken');
+        const resp = await API.refreshToken(refreshToken);
+        const access_token = resp.data.accessToken;
+        localStorage.setItem('accessToken', access_token);
+        instance.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${access_token}`;
+        return instance(originalRequest);
+      }
+      return Promise.reject(error);
+    },
   );
 
   return instance;
