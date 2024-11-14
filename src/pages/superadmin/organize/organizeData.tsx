@@ -160,14 +160,6 @@ export const organizeColumns: TableProps['columns'] = [
 
 export const branchColumns: TableProps['columns'] = [
   {
-    title: 'ลำดับ',
-    dataIndex: 'id',
-    width: '50px',
-    align: 'center',
-    key: 'id',
-    sorter: (a: { id: number }, b: { id: number }) => a.id - b.id,
-  },
-  {
     title: 'โลโก้',
     dataIndex: 'logoUrl',
     width: '65px',
@@ -176,7 +168,7 @@ export const branchColumns: TableProps['columns'] = [
     render: (logoUrl: string) => <Image width={60} src={logoUrl} />,
   },
   {
-    title: 'ชื่อองค์กร',
+    title: 'ชื่อสาขา',
     width: '200px',
     align: 'start',
     key: 'nameTh',
@@ -248,5 +240,18 @@ export const branchColumns: TableProps['columns'] = [
       ) : (
         <Tag color="error">ไม่พร้อมใช้งาน</Tag>
       ),
+  },
+  {
+    title: '',
+    dataIndex: 'id',
+    key: 'id',
+    align: 'center',
+    render: (id: any) => {
+      return (
+        <Link to={`/admin/branch/${id}`}>
+          <Button type="primary">ดูเพิ่มเติม</Button>
+        </Link>
+      );
+    },
   },
 ];

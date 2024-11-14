@@ -147,7 +147,14 @@ export const renderCreateForm = [
     placeholder: 'ชื่อโดเมน ',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
-    rule: [{ required: true, message: 'กรุณากรอกชื่อโดเมน!' }],
+    rule: [
+      { required: true, message: 'กรุณากรอกชื่อโดเมน!' },
+      {
+        pattern: /^(?!-)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?<!-)$/,
+        message:
+          'กรุณากรอกชื่อโดเมนให้ถูกต้อง เช่น utotech.com หรือ utotech.co.th',
+      },
+    ],
   },
   {
     label: 'ข้อมูลช่องทางการติดต่อขององค์กร',
@@ -187,14 +194,6 @@ export const renderCreateForm = [
     type: 'TextboxFormField',
   },
   {
-    name: ['organization', 'businessEmail'],
-    label: 'อีเมลสำนักงาน',
-    placeholder: 'อีเมลสำนักงาน',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'TextboxFormField',
-  },
-
-  {
     name: ['organization', 'contactFacebook'],
     label: 'Facebook',
     placeholder: 'Facebook',
@@ -223,6 +222,7 @@ export const renderCreateForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
   },
+
   {
     label: 'ข้อมูลที่อยู่องค์กร',
     col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
@@ -242,7 +242,6 @@ export const renderCreateForm = [
     placeholder: 'เมือง',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
-    rule: [{ required: true, message: 'กรุณากรอกเมือง!' }],
   },
   {
     name: ['organization', 'address', 'province'],
@@ -250,7 +249,6 @@ export const renderCreateForm = [
     placeholder: 'จังหวัด',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
-    rule: [{ required: true, message: 'กรุณากรอกจังหวัด!' }],
   },
   {
     name: ['organization', 'address', 'postalCode'],
@@ -258,7 +256,6 @@ export const renderCreateForm = [
     placeholder: 'รหัสไปรษณีย์',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
-    rule: [{ required: true, message: 'กรุณากรอกรหัสไปรษณีย์!' }],
   },
   {
     name: ['organization', 'address', 'roomNo'],
@@ -510,7 +507,14 @@ export const renderCreateBranchForm = [
     placeholder: 'ชื่อโดเมน ',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
-    rule: [{ required: true, message: 'กรุณากรอกชื่อโดเมน!' }],
+    rule: [
+      { required: true, message: 'กรุณากรอกชื่อโดเมน!' },
+      {
+        pattern: /^(?!-)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?<!-)$/,
+        message:
+          'กรุณากรอกชื่อโดเมนให้ถูกต้อง เช่น utotech.com หรือ utotech.co.th',
+      },
+    ],
   },
   {
     label: 'ข้อมูลช่องทางการติดต่อขององค์กร',
@@ -548,14 +552,6 @@ export const renderCreateBranchForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
   },
-  {
-    name: ['branch', 'businessEmail'],
-    label: 'อีเมลสำนักงาน',
-    placeholder: 'อีเมลสำนักงาน',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'TextboxFormField',
-  },
-
   {
     name: ['branch', 'contactFacebook'],
     label: 'Facebook',
@@ -604,7 +600,6 @@ export const renderCreateBranchForm = [
     placeholder: 'เมือง',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
-    rule: [{ required: true, message: 'กรุณากรอกเมือง!' }],
   },
   {
     name: ['branch', 'address', 'province'],
@@ -612,7 +607,6 @@ export const renderCreateBranchForm = [
     placeholder: 'จังหวัด',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
-    rule: [{ required: true, message: 'กรุณากรอกจังหวัด!' }],
   },
   {
     name: ['branch', 'address', 'postalCode'],
@@ -620,7 +614,6 @@ export const renderCreateBranchForm = [
     placeholder: 'รหัสไปรษณีย์',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
-    rule: [{ required: true, message: 'กรุณากรอกรหัสไปรษณีย์!' }],
   },
 
   {
@@ -808,11 +801,12 @@ export const renderCreateSettingForm = [
       { value: 'dark', label: 'มืด' },
     ],
     defaultValue: 'light',
+    rule: [{ required: true, message: 'กรุณาเลือกธีมสี!' }],
   },
   {
     name: ['organization', 'setting', 'textDisplay'],
-    label: 'ตัวอักษร',
-    placeholder: 'ตัวอักษร',
+    label: 'ขนาดตัวอักษร',
+    placeholder: 'ขนาดตัวอักษร',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'SelectFormField',
     options: [
@@ -821,6 +815,7 @@ export const renderCreateSettingForm = [
       { value: 'small', label: 'ขนาดเล็ก' },
     ],
     defaultValue: 'normal',
+    rule: [{ required: true, message: 'กรุณาเลือกขนาดตัวอักษร!' }],
   },
 ];
 
@@ -919,11 +914,12 @@ export const renderCreateSettingฺBranchForm = [
       { value: 'dark', label: 'มืด' },
     ],
     defaultValue: 'light',
+    rule: [{ required: true, message: 'กรุณาเลือกธีมสี!' }],
   },
   {
     name: ['branch', 'setting', 'textDisplay'],
-    label: 'ตัวอักษร',
-    placeholder: 'ตัวอักษร',
+    label: 'ขนาดตัวอักษร',
+    placeholder: 'ขนาดตัวอักษร',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'SelectFormField',
     options: [
@@ -932,6 +928,7 @@ export const renderCreateSettingฺBranchForm = [
       { value: 'small', label: 'ขนาดเล็ก' },
     ],
     defaultValue: 'normal',
+    rule: [{ required: true, message: 'กรุณาเลือกขนาดตัวอักษร!' }],
   },
 ];
 
@@ -1126,123 +1123,6 @@ export const renderEditForm = [
     defaultValue: 'normal',
   },
 
-  // {
-  //   label: 'ข้อมูลที่อยู่',
-  //   col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
-  //   type: 'SectionLabelForm',
-  // },
-  // {
-  //   name: ['address', 'city'],
-  //   label: 'เมือง',
-  //   placeholder: 'เมือง',
-  //   col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-  //   type: 'TextboxFormField',
-  //   rule: [{ required: true, message: 'กรุณากรอกเมือง!' }],
-  // },
-  // {
-  //   name: ['address', 'province'],
-  //   label: 'จังหวัด',
-  //   placeholder: 'จังหวัด',
-  //   col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-  //   type: 'TextboxFormField',
-  //   rule: [{ required: true, message: 'กรุณากรอกจังหวัด!' }],
-  // },
-  // {
-  //   name: ['address', 'postalCode'],
-  //   label: 'รหัสไปรษณีย์',
-  //   placeholder: 'รหัสไปรษณีย์',
-  //   col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-  //   type: 'TextboxFormField',
-  //   rule: [{ required: true, message: 'กรุณากรอกรหัสไปรษณีย์!' }],
-  // },
-  // { col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 } },
-  // {
-  //   name: ['address', 'roomNo'],
-  //   label: 'เลขห้อง',
-  //   placeholder: 'เลขห้อง',
-  //   col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
-  //   type: 'TextboxFormField',
-  // },
-  // {
-  //   name: ['address', 'floorNo'],
-  //   label: 'ชั้นที่อยู่',
-  //   placeholder: 'ชั้นที่อยู่',
-  //   col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
-  //   type: 'TextboxFormField',
-  // },
-  // {
-  //   name: ['address', 'village'],
-  //   label: 'หมู่บ้าน',
-  //   placeholder: 'หมู่บ้าน',
-  //   col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
-  //   type: 'TextboxFormField',
-  // },
-  // {
-  //   name: ['address', 'villageNo'],
-  //   label: 'เลขหมู่บ้าน',
-  //   placeholder: 'เลขหมู่บ้าน',
-  //   col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
-  //   type: 'TextboxFormField',
-  // },
-  // {
-  //   name: ['address', 'houseNo'],
-  //   label: 'บ้านเลขที่',
-  //   placeholder: 'บ้านเลขที่',
-  //   col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
-  //   type: 'TextboxFormField',
-  // },
-  // {
-  //   name: ['address', 'alley'],
-  //   label: 'ตรอก',
-  //   placeholder: 'ตรอก',
-  //   col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
-  //   type: 'TextboxFormField',
-  // },
-  // {
-  //   name: ['address', 'road'],
-  //   label: 'ถนน',
-  //   placeholder: 'ถนน',
-  //   col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
-  //   type: 'TextboxFormField',
-  // },
-  // {
-  //   name: ['address', 'building'],
-  //   label: 'สิ่งปลูกสร้าง',
-  //   placeholder: 'สิ่งปลูกสร้าง',
-  //   col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
-  //   type: 'TextboxFormField',
-  // },
-
-  // {
-  //   name: ['address', 'nation'],
-  //   label: 'ประเทศ',
-  //   placeholder: 'ประเทศ',
-  //   col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-  //   type: 'TextboxFormField',
-  // },
-
-  // {
-  //   name: ['address', 'district'],
-  //   label: 'เขต/อำเภอ',
-  //   placeholder: 'เขต/อำเภอ',
-  //   col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-  //   type: 'TextboxFormField',
-  // },
-  // {
-  //   name: ['address', 'subDistrict'],
-  //   label: 'แขวง/ตำบล',
-  //   placeholder: 'แขวง/ตำบล',
-  //   col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-  //   type: 'TextboxFormField',
-  // },
-
-  // {
-  //   name: ['address', 'note'],
-  //   label: 'โน็ต',
-  //   placeholder: 'โน็ต',
-  //   col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-  //   type: 'TextAreaFormField',
-  // },
   {
     label: 'ข้อมูลช่องทางการติดต่อ',
     col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
@@ -1317,8 +1197,6 @@ export const renderEditForm = [
 ];
 
 export const renderSettingData = [
-  //FIXME:add upload logo url
-
   {
     label: 'ข้อมูลองค์กร',
     col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
@@ -1507,14 +1385,6 @@ export const renderSettingData = [
     type: 'TextboxFormField',
   },
   {
-    name: 'businessEmail',
-    label: 'อีเมลสำนักงาน',
-    placeholder: 'อีเมลสำนักงาน',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'TextboxFormField',
-  },
-
-  {
     name: 'contactFacebook',
     label: 'Facebook',
     placeholder: 'Facebook',
@@ -1545,6 +1415,130 @@ export const renderSettingData = [
   },
 ];
 
+export const renderAddressSetting = [
+  {
+    label: 'ข้อมูลที่อยู่องค์กร',
+    col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
+    type: 'SectionLabelForm',
+  },
+  {
+    name: 'name',
+    label: 'ชื่อที่อยู่',
+    placeholder: 'ชื่อที่อยู่',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    rule: [{ required: true, message: 'กรุณากรอกชื่อที่อยู่!' }],
+  },
+  {
+    name: 'city',
+    label: 'เมือง',
+    placeholder: 'เมือง',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'province',
+    label: 'จังหวัด',
+    placeholder: 'จังหวัด',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'postalCode',
+    label: 'รหัสไปรษณีย์',
+    placeholder: 'รหัสไปรษณีย์',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'roomNo',
+    label: 'เลขห้อง',
+    placeholder: 'เลขห้อง',
+    col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'floorNo',
+    label: 'ชั้นที่อยู่',
+    placeholder: 'ชั้นที่อยู่',
+    col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'village',
+    label: 'หมู่บ้าน',
+    placeholder: 'หมู่บ้าน',
+    col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'villageNo',
+    label: 'เลขหมู่บ้าน',
+    placeholder: 'เลขหมู่บ้าน',
+    col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'houseNo',
+    label: 'บ้านเลขที่',
+    placeholder: 'บ้านเลขที่',
+    col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'alley',
+    label: 'ตรอก',
+    placeholder: 'ตรอก',
+    col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'road',
+    label: 'ถนน',
+    placeholder: 'ถนน',
+    col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'building',
+    label: 'อาคาร',
+    placeholder: 'อาคาร',
+    col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+    type: 'TextboxFormField',
+  },
+
+  {
+    name: 'nation',
+    label: 'ประเทศ',
+    placeholder: 'ประเทศ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+
+  {
+    name: 'district',
+    label: 'เขต/อำเภอ',
+    placeholder: 'เขต/อำเภอ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'subDistrict',
+    label: 'แขวง/ตำบล',
+    placeholder: 'แขวง/ตำบล',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+
+  {
+    name: 'note',
+    label: 'หมายเหตุ',
+    placeholder: 'หมายเหตุ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextAreaFormField',
+  },
+];
+
 export const renderSystemSetting = [
   {
     label: 'ตั้งค่าระบบ',
@@ -1564,7 +1558,6 @@ export const renderSystemSetting = [
     defaultValue: 'TH',
     rule: [{ required: true, message: 'กรุณาเลือกภาษา!' }],
   },
-
   {
     name: 'theme',
     label: 'ธีมสี',
@@ -1576,11 +1569,12 @@ export const renderSystemSetting = [
       { value: 'dark', label: 'มืด' },
     ],
     defaultValue: 'light',
+    rule: [{ required: true, message: 'กรุณาเลือกธีมสี!' }],
   },
   {
     name: 'textDisplay',
-    label: 'ตัวอักษร',
-    placeholder: 'ตัวอักษร',
+    label: 'ขนาดตัวอักษร',
+    placeholder: 'ขนาดตัวอักษร',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'SelectFormField',
     options: [
@@ -1589,5 +1583,6 @@ export const renderSystemSetting = [
       { value: 'small', label: 'ขนาดเล็ก' },
     ],
     defaultValue: 'normal',
+    rule: [{ required: true, message: 'กรุณาเลือกขนาดตัวอักษร!' }],
   },
 ];

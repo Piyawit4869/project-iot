@@ -37,26 +37,27 @@ export const OrganizeCreate: React.FC = () => {
   ];
 
   const defaultValue = {
-    active: true,
-    status: 'NewlyRegistered',
-    fromType: 'OrdinaryPerson',
-    registerVat: true,
-    address: {
-      isMain: true,
+    organization: {
+      active: true,
+      fromType: 'OrdinaryPerson',
+      status: 'NewlyRegistered',
+      registerVat: true,
+      setting: {
+        defaultLanguage: 'TH',
+        theme: 'light',
+        textDisplay: 'normal',
+      },
     },
     branch: {
-      status: 'NewlyRegistered',
       active: true,
-      isMain: true,
       fromType: 'OrdinaryPerson',
+      status: 'NewlyRegistered',
       registerVat: true,
-      address: { isMain: false },
-    },
-    setting: {
-      active: true,
-      defaultLanguage: 'TH',
-      theme: 'light',
-      textDisplay: 'normal',
+      setting: {
+        defaultLanguage: 'TH',
+        theme: 'light',
+        textDisplay: 'normal',
+      },
     },
   };
 

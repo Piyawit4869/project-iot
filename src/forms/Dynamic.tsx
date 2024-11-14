@@ -38,6 +38,9 @@ interface DynamicFormProps {
   title?: string;
   description?: string;
   rule?: Rule[] | undefined;
+  isBranch?: boolean;
+  nameRadio?: string;
+  labelRadio?: string;
 }
 
 export const DynamicForm: React.FC<DynamicFormProps> = (
@@ -64,6 +67,9 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
     unCheckedText,
     title,
     description,
+    isBranch,
+    nameRadio,
+    labelRadio,
   } = props;
   switch (type) {
     case 'TextboxFormField':
@@ -156,6 +162,10 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             checkedText={checkedText}
             unCheckedText={unCheckedText}
             rules={rule}
+            isBranch={isBranch}
+            nameRadio={nameRadio}
+            labelRadio={labelRadio}
+            options={option}
           />
         </Col>
       );
@@ -192,6 +202,10 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
               checked={checked}
               checkedText={checkedText}
               unCheckedText={unCheckedText}
+              options={option}
+              nameRadio={nameRadio}
+              labelRadio={labelRadio}
+              isBranch={isBranch}
             />
           </Card>
         </Col>

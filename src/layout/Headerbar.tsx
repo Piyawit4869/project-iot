@@ -258,6 +258,8 @@ export const Headerbar: React.FC = () => {
                 ) : (
                   t(name)
                 )
+              ) : name === 'branch' ? (
+                t(name)
               ) : (
                 <Link
                   to={

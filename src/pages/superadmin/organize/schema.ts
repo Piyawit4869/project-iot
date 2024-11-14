@@ -1,71 +1,5 @@
 import vine from '@vinejs/vine';
 
-const profileSchema = vine.object({
-  firstName: vine.string(),
-  lastName: vine.string().optional(),
-  birthDate: vine.string().optional(),
-  phone: vine.string().maxLength(15).optional(),
-});
-
-const userSchema = vine.object({
-  active: vine.boolean(),
-  status: vine.string(),
-  email: vine.string().email(),
-  password: vine.string(),
-  userName: vine.string().optional(),
-  profile: profileSchema.clone(),
-});
-
-const addressSchema = vine.object({
-  active: vine.boolean(),
-  isMain: vine.boolean(),
-  city: vine.string(),
-  province: vine.string(),
-  postalCode: vine.string().maxLength(5),
-  roomNo: vine.string().optional(),
-  floorNo: vine.string().optional(),
-  village: vine.string().optional(),
-  villageNo: vine.string().optional(),
-  houseNo: vine.string().optional(),
-  alley: vine.string().optional(),
-  road: vine.string().optional(),
-  building: vine.string().optional(),
-  nation: vine.string().optional(),
-  district: vine.string().optional(),
-  subDistrict: vine.string().optional(),
-  note: vine.string().optional(),
-  language: vine.string().optional(),
-});
-
-// const branchSchema = vine.object({
-//   active: vine.boolean(),
-//   fromType: vine.enum(['OrdinaryPerson', 'JuristicPerson']),
-//   nameTh: vine.string().optional(),
-//   nameEn: vine.string().optional(),
-//   taxId: vine.string().maxLength(13),
-//   type: vine.enum([
-//     'human',
-//     'ordinary_partnership',
-//     'shop',
-//     'bop',
-//     'CompanyLimited',
-//     'PublicCompanyLimited',
-//     'LimitedPartnership',
-//     'Foundation',
-//     'Association',
-//     'JointVenture',
-//     'Others',
-//   ]),
-//   isMain: vine.boolean(),
-//   branchCode: vine.string(),
-//   openingDate: vine.string().optional(),
-//   websiteUrl: vine.string().optional(),
-//   contactEmail: vine.string().email().optional(),
-//   contactPhone: vine.string().maxLength(15).optional(),
-//   registerVat: vine.boolean().optional(),
-//   address: addressSchema.clone(),
-// });
-
 const settingSchema = vine.object({
   active: vine.boolean(),
   defaultLanguage: vine.enum(['TH', 'EN', 'JP']),
@@ -90,29 +24,43 @@ const settingSchema = vine.object({
   ),
 });
 
-// const addressesSchema = vine.array(
-//   vine.object({
-//     active: vine.boolean().optional(),
-//     language: vine.string().optional(),
-//     isMain: vine.boolean().optional(),
-//     name: vine.string(),
-//     city: vine.string(),
-//     province: vine.string(),
-//     postalCode: vine.string().maxLength(5),
-//     roomNo: vine.string().optional(),
-//     floorNo: vine.string().optional(),
-//     village: vine.string().optional(),
-//     villageNo: vine.string().optional(),
-//     houseNo: vine.string().optional(),
-//     alley: vine.string().optional(),
-//     road: vine.string().optional(),
-//     building: vine.string().optional(),
-//     nation: vine.string().optional(),
-//     district: vine.string().optional(),
-//     subDistrict: vine.string().optional(),
-//     note: vine.string().optional(),
-//   }),
-// );
+const addressSchema = vine.object({
+  active: vine.boolean(),
+  language: vine.string(),
+  isMain: vine.boolean(),
+  name: vine.string(),
+  city: vine.string().optional(),
+  province: vine.string().optional(),
+  postalCode: vine.string().maxLength(5).optional(),
+  roomNo: vine.string().optional(),
+  floorNo: vine.string().optional(),
+  village: vine.string().optional(),
+  villageNo: vine.string().optional(),
+  houseNo: vine.string().optional(),
+  alley: vine.string().optional(),
+  road: vine.string().optional(),
+  building: vine.string().optional(),
+  nation: vine.string().optional(),
+  district: vine.string().optional(),
+  subDistrict: vine.string().optional(),
+  note: vine.string().optional(),
+});
+
+const profileSchema = vine.object({
+  firstName: vine.string(),
+  lastName: vine.string().optional(),
+  birthDate: vine.string().optional(),
+  phone: vine.string().maxLength(15).optional(),
+});
+
+const userSchema = vine.object({
+  active: vine.boolean(),
+  status: vine.string(),
+  email: vine.string().email(),
+  password: vine.string(),
+  userName: vine.string().optional(),
+  profile: profileSchema.clone(),
+});
 
 export const schemaUpdateOrg = vine.object({
   nameTh: vine.string(),
@@ -197,7 +145,6 @@ export const schemaCreateOrg = vine.object({
     contactPhone: vine.string().maxLength(15),
     contactEmail: vine.string().email(),
     contactWebsite: vine.string().optional(),
-    businessEmail: vine.string().email().optional(),
     contactFacebook: vine.string().optional(),
     contactLine: vine.string().optional(),
     contactWhatsapp: vine.string().optional(),
@@ -243,7 +190,6 @@ export const schemaCreateOrg = vine.object({
     contactPhone: vine.string().maxLength(15),
     contactEmail: vine.string().email(),
     contactWebsite: vine.string().optional(),
-    businessEmail: vine.string().email().optional(),
     contactFacebook: vine.string().optional(),
     contactLine: vine.string().optional(),
     contactWhatsapp: vine.string().optional(),
