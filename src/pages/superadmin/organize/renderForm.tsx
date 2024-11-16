@@ -77,6 +77,7 @@ export const renderCreateForm = [
     type: 'TextboxFormField',
     rule: [{ required: true, message: 'กรุณากรอกชื่อกิจการ (ภาษาไทย)!' }],
     isName: true,
+    errorUniqMessage: 'ชื่อหรือเลขทะเบียน13หลักนี้ถูกใช้งานแล้ว',
   },
   {
     name: ['organization', 'nameEn'],
@@ -86,6 +87,7 @@ export const renderCreateForm = [
     type: 'TextboxFormField',
     rule: [{ required: true, message: 'กรุณากรอกชื่อกิจการ (English)!' }],
     isName: true,
+    errorUniqMessage: 'ชื่อหรือเลขทะเบียน13หลักนี้ถูกใช้งานแล้ว',
   },
   {
     name: ['organization', 'taxId'],
@@ -95,6 +97,7 @@ export const renderCreateForm = [
     type: 'LengthInput',
     maxLength: 13,
     rule: [{ required: true, message: 'กรุณากรอกเลขทะเบียน 13 หลัก!' }],
+    errorUniqMessage: 'ชื่อหรือเลขทะเบียน13หลักนี้ถูกใช้งานแล้ว',
   },
 
   {

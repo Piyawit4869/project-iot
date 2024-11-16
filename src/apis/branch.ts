@@ -33,3 +33,10 @@ export async function deleted(id: any) {
     url: `/api/crud/branches/${id}`,
   });
 }
+
+export async function getBranch(orgId: any, branchId: any) {
+  return client({
+    method: 'GET',
+    url: `/api/crud/organizations/${orgId}/branches/${branchId}`,
+  });
+}

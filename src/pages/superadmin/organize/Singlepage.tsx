@@ -35,7 +35,7 @@ import { useOrganizationContext } from '@src/contexts/OrganizationContext';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 export const OrganizeSingle: React.FC = () => {
-  const { organize, param } = useLoaderData() as any;
+  const { organize, branches, param } = useLoaderData() as any;
   const { setOrganization } = useOrganizationContext() as any;
   const [form] = Form.useForm();
   const [addressForm] = Form.useForm();
@@ -412,7 +412,7 @@ export const OrganizeSingle: React.FC = () => {
           <TitleBar
             title={'ตั้งค่าสาขา'}
             buttons={[
-              <Link to={`/admin/branch/create`}>
+              <Link to={`branch/create`}>
                 <CreateButton label={'เพิ่มข้อมูลสาขา'} />
               </Link>,
             ]}
@@ -425,7 +425,7 @@ export const OrganizeSingle: React.FC = () => {
           {/* Index data from table component */}
           <TableComponent
             columns={branchColumns}
-            dataSource={organize.branches}
+            dataSource={branches.items}
             loading={loading || state === 'loading' || state === 'submitting'}
             pagination={{
               current: param && param.page ? Number(param?.page) : 1,

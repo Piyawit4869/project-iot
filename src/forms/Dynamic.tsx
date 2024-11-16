@@ -41,6 +41,9 @@ interface DynamicFormProps {
   isBranch?: boolean;
   nameRadio?: string;
   labelRadio?: string;
+  isUniq?: boolean;
+  validateStatus?: string;
+  errorUniqMessage?: string;
 }
 
 export const DynamicForm: React.FC<DynamicFormProps> = (
@@ -70,6 +73,9 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
     isBranch,
     nameRadio,
     labelRadio,
+    isUniq,
+    validateStatus,
+    errorUniqMessage,
   } = props;
   switch (type) {
     case 'TextboxFormField':
@@ -85,6 +91,9 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             businessType={businessType}
             isName={isName}
             rule={rule}
+            isUniq={isUniq}
+            validateStatus={validateStatus}
+            errorUniqMessage={errorUniqMessage}
           />
         </Col>
       );
@@ -220,6 +229,9 @@ export const DynamicForm: React.FC<DynamicFormProps> = (
             disabled={disabled}
             maxLength={maxLength}
             rule={rule}
+            isUniq={isUniq}
+            validateStatus={validateStatus}
+            errorUniqMessage={errorUniqMessage}
           />
         </Col>
       );

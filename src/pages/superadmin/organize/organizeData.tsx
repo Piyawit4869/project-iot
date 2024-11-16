@@ -248,7 +248,7 @@ export const branchColumns: TableProps['columns'] = [
     align: 'center',
     render: (id: any) => {
       return (
-        <Link to={`/admin/branch/${id}`}>
+        <Link to={`branch/${id}`}>
           <Button type="primary">ดูเพิ่มเติม</Button>
         </Link>
       );

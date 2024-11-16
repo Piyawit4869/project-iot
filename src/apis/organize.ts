@@ -1,5 +1,6 @@
 import client from './client';
 
+//*API for Super Admin
 export async function getAll(params?: any) {
   return client({
     method: 'GET',
@@ -34,6 +35,22 @@ export async function deleted(id: any) {
   });
 }
 
+export async function getUniqFields(params: any) {
+  return client({
+    method: 'GET',
+    url: '/api/crud/organizations/find',
+    params,
+  });
+}
+
+export async function getBranchesWithOrrganiaztionId(id: any) {
+  return client({
+    method: 'GET',
+    url: `/api/crud/organizations/${id}/branches`,
+  });
+}
+
+//*API for Owner
 export async function getSetting() {
   return client({
     method: 'GET',

@@ -8,16 +8,17 @@ import {
   renderSingleBranchSystemForm,
 } from './renderForm';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { useLoaderData } from 'react-router-dom';
+import React from 'react';
+import dayjs from 'dayjs';
 // import { useOrganizationContext } from '@src/contexts/OrganizationContext';
 
 export const BranchSingle = () => {
+  const { branch } = useLoaderData() as any;
   const [form] = Form.useForm();
   const [addressForm] = Form.useForm();
   const [systemForm] = Form.useForm();
-
-  const type = '';
-  // const [type, setType] = React.useState('');
-  // const { setOrganization } = useOrganizationContext() as any;
+  const [type, setType] = React.useState('');
 
   const daysOfWeek = [
     'Sunday',
@@ -39,6 +40,53 @@ export const BranchSingle = () => {
   const onSystemFinish = async (values: any) => {
     console.log(values);
   };
+
+  React.useEffect(() => {
+    let businessRegister = null;
+    if (branch && branch.openingDate) {
+      businessRegister = dayjs(branch.openingDate);
+    }
+
+    setType(branch.type);
+
+    const branchMainAddress = branch.addresses.find(
+      (item: any) => item.isMain === true,
+    );
+    const organizationMainSetting = branch.settings.find(
+      (item: any) => item.active === true,
+    );
+
+    console.log({ organizationMainSetting });
+
+    form.setFieldsValue({
+      ...branch,
+      openingDate: businessRegister,
+      logoUrl: branch?.logoUrl
+        ? [
+            {
+              url: branch?.logoUrl ? branch.logoUrl : '',
+            },
+          ]
+        : undefined,
+      file: branch?.logoUrl
+        ? [
+            {
+              url: branch?.logoUrl ? branch.logoUrl : '',
+            },
+          ]
+        : undefined,
+    });
+
+    addressForm.setFieldsValue({ ...branchMainAddress });
+    systemForm.setFieldsValue({
+      ...organizationMainSetting,
+      openDays: organizationMainSetting?.openDays.map((item: any) => ({
+        ...item,
+        openTime: dayjs(item.open),
+        closeTime: dayjs(item.close),
+      })),
+    });
+  }, [form, branch]);
 
   return (
     <div>

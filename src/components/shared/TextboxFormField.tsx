@@ -12,6 +12,9 @@ interface TextboxFormFieldProps {
   maxLength?: number;
   businessType?: string;
   isName?: boolean;
+  validateStatus?: any;
+  isUniq?: any;
+  errorUniqMessage?: any;
 }
 
 export const TextboxFormField: FC<TextboxFormFieldProps> = (
@@ -27,6 +30,9 @@ export const TextboxFormField: FC<TextboxFormFieldProps> = (
     maxLength,
     businessType,
     isName,
+    validateStatus,
+    isUniq,
+    errorUniqMessage,
   } = props;
   const [value, setValue] = React.useState('');
 
@@ -80,7 +86,8 @@ export const TextboxFormField: FC<TextboxFormFieldProps> = (
       name={name}
       label={label}
       rules={rule}
-      help={isName ? helpValue() : ''}
+      help={isName ? (isUniq ? errorUniqMessage : helpValue()) : ''}
+      validateStatus={errorUniqMessage ? validateStatus : ''}
     >
       <Input
         type={type}

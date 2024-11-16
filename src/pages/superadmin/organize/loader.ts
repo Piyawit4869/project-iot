@@ -22,9 +22,25 @@ export async function organizeSingleLoader(params: any) {
 
   try {
     const { data: organize } = await API.organize.get(params.params.id);
+    const { data: branches } =
+      await API.organize.getBranchesWithOrrganiaztionId(params.params.id);
 
-    return { organize: organize.data, param };
+    return { organize: organize.data, branches: branches, param };
   } catch (error) {
-    return { organize: {}, param: {} };
+    return { organize: {}, branches: {}, param: {} };
+  }
+}
+
+export async function createOrganizationLoader(params: any) {
+  const url = new URL(params.request.url);
+  const query = url.searchParams;
+  const param = Object.fromEntries(query);
+
+  try {
+    const uniqFields = await API.organize.getUniqFields(param);
+
+    return { uniqFields: uniqFields.data, param };
+  } catch (error) {
+    return { uniqFields: {} };
   }
 }

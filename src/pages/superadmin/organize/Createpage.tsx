@@ -1,7 +1,12 @@
 import React from 'react';
 import { Button, Col, Form, notification, Row, Select, TimePicker } from 'antd';
 import { DynamicForm } from '@src/forms/Dynamic';
-import { redirect, useSubmit } from 'react-router-dom';
+import {
+  redirect,
+  useFetcher,
+  useLoaderData,
+  useSubmit,
+} from 'react-router-dom';
 import { FormButtonsCreate } from '@src/components/shared/FormButtons';
 import vine, { errors } from '@vinejs/vine';
 import dayjs from 'dayjs';
@@ -13,10 +18,20 @@ import {
   renderCreateSettingฺBranchForm,
 } from './renderForm';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { debounce } from 'lodash';
 
 export const OrganizeCreate: React.FC = () => {
   const [form] = Form.useForm();
   const submit = useSubmit();
+  const fetcher = useFetcher();
+
+  const { uniqFields, param } = useLoaderData() as any;
+  const [type, setType] = React.useState('');
+  const [uniqError, setUniqError] = React.useState({
+    status: '',
+    uniqError: false,
+  });
+  const [uniqDatas, setUniqDatas] = React.useState({ data: [] }) as any;
 
   // Check path by role
   React.useEffect(() => {
@@ -24,7 +39,14 @@ export const OrganizeCreate: React.FC = () => {
     if (me.role.name !== 'super_admin') {
       redirect('/');
     }
-  }, []);
+    setUniqDatas(uniqFields);
+
+    if (uniqDatas?.data?.length) {
+      setUniqError({ status: 'error', uniqError: true });
+    } else {
+      setUniqError({ status: '', uniqError: false });
+    }
+  }, [uniqFields, uniqDatas]);
 
   const daysOfWeek = [
     'Sunday',
@@ -60,6 +82,46 @@ export const OrganizeCreate: React.FC = () => {
       },
     },
   };
+
+  const handleFormChange = React.useMemo(() => {
+    const updateAndFilterValues = (changedValues: any, allValues: any) => {
+      if (changedValues.type) {
+        setType(changedValues.type);
+      }
+
+      const buildQueryParams = (data: any) => {
+        const allowedFields = ['nameTh', 'nameEn', 'taxId'];
+        const params: Record<string, string> = {};
+
+        const extractFields = (obj: any) => {
+          Object.keys(obj).forEach((key) => {
+            if (
+              allowedFields.includes(key) &&
+              obj[key] !== undefined &&
+              obj[key] !== ''
+            ) {
+              params[key] = obj[key];
+            }
+          });
+        };
+
+        if (data.organization) {
+          extractFields(data.organization);
+        }
+
+        return params;
+      };
+
+      const queryParams = buildQueryParams(allValues);
+      const queryString = new URLSearchParams(queryParams).toString();
+
+      fetcher.load(`/admin/organization/find?${queryString}`);
+    };
+
+    return debounce(updateAndFilterValues, 100);
+  }, [param]);
+
+  console.log('fets', fetcher);
 
   const onFinish = async (values: any) => {
     try {
@@ -186,14 +248,6 @@ export const OrganizeCreate: React.FC = () => {
     }
   };
 
-  const [type, setType] = React.useState('');
-
-  const handleValuesChange = (changedValues: any) => {
-    if (changedValues.type) {
-      setType(changedValues.type);
-    }
-  };
-
   return (
     <div>
       <Form
@@ -201,7 +255,9 @@ export const OrganizeCreate: React.FC = () => {
         initialValues={defaultValue}
         layout="vertical"
         onFinish={onFinish}
-        onValuesChange={handleValuesChange}
+        onValuesChange={(changedValues: any, allValues: any) => {
+          handleFormChange(changedValues, allValues);
+        }}
       >
         <FormButtonsCreate
           form={form}
@@ -241,6 +297,9 @@ export const OrganizeCreate: React.FC = () => {
                     form={form}
                     checkedText={item.checkedText}
                     unCheckedText={item.unCheckedText}
+                    isUniq={uniqError.uniqError}
+                    validateStatus={uniqError.status}
+                    errorUniqMessage={item.errorUniqMessage}
                   />
                 ))}
               </Row>
