@@ -1,5 +1,6 @@
 import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons';
 import { Button, Tag, Image, TableProps, Typography } from 'antd';
+import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 
@@ -158,7 +159,7 @@ export const organizeColumns: TableProps['columns'] = [
   },
 ];
 
-export const branchColumns: TableProps['columns'] = [
+export const branchColumns: ColumnsType<any> = [
   {
     title: 'โลโก้',
     dataIndex: 'logoUrl',

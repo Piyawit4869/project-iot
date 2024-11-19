@@ -5,12 +5,6 @@ export async function branchLoader() {
 }
 
 export async function branchSingleLoader(params: any) {
-  const url = new URL(params.request.url);
-
-  console.log({ url });
-
-  console.log({ params });
-
   try {
     const { data: branch } = await API.branch.getBranch(
       params.params.id,

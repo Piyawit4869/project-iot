@@ -35,6 +35,7 @@ export const LengthInputFormField: FC<LengthInputFormFieldProps> = (
       rules={rule}
       help={isUniq ? errorUniqMessage : ''}
       validateStatus={validateStatus ? validateStatus : ''}
+      hasFeedback
     >
       <Input.OTP
         placeholder={placeholder}

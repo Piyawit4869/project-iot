@@ -1,9 +1,12 @@
-export async function notationLoader() {
+import { data } from './notationData';
+
+export async function notationsLoader(params: any) {
+  const url = new URL(params.request.url);
+  const query = url.searchParams;
+  const param = Object.fromEntries(query);
   try {
-    //   const organize = await API.organize.getAll();
-    //   return { organize: organize.data };
-    return {};
+    return { notations: { items: data, meta: {} }, param };
   } catch (error) {
-    return { error: 'error', message: error };
+    return { notations: { items: [], meta: {} }, param };
   }
 }

@@ -1,8 +1,9 @@
-import { SpinProps, Table, TablePaginationConfig, TableProps } from 'antd';
+import { SpinProps, Table, TablePaginationConfig } from 'antd';
+import { ColumnsType } from 'antd/es/table';
 import { FC } from 'react';
 
 interface TableComponentProps {
-  columns: TableProps['columns'];
+  columns: ColumnsType<any>;
   dataSource: any;
   pagination?: false | TablePaginationConfig | undefined;
   bordered?: boolean;

@@ -73,31 +73,31 @@ export const Sidebar = (props: SidebarProps) => {
         return `คณะบุคคล ${
           setting?.organization?.nameTh ? setting?.organization?.nameTh : 'ROME'
         }`;
-      case 'CompanyLimited':
+      case 'company_limited':
         return `บริษัท ${
           setting?.organization?.nameTh ? setting?.organization?.nameTh : 'ROME'
         } จำกัด`;
-      case 'PublicCompanyLimited':
+      case 'public_company_limited':
         return `บริษัท ${
           setting?.organization?.nameTh ? setting?.organization?.nameTh : 'ROME'
         } จำกัด (มหาชน)`;
-      case 'LimitedPartnership':
+      case 'limited_partnership':
         return `ห้างหุ้นส่วน ${
           setting?.organization?.nameTh ? setting?.organization?.nameTh : 'ROME'
         }`;
-      case 'Foundation':
+      case 'foundation':
         return `มูลนิธิ ${
           setting?.organization?.nameTh ? setting?.organization?.nameTh : 'ROME'
         }`;
-      case 'Association':
+      case 'association':
         return `สมาคม ${
           setting?.organization?.nameTh ? setting?.organization?.nameTh : 'ROME'
         }`;
-      case 'JointVenture':
+      case 'joint_venture':
         return `กิจการร่วมค้า ${
           setting?.organization?.nameTh ? setting?.organization?.nameTh : 'ROME'
         }`;
-      case 'Others':
+      case 'others':
         return setting?.organization?.nameTh
           ? setting?.organization?.nameTh
           : 'ROME';

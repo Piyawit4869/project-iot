@@ -41,17 +41,17 @@ export const TextboxFormField: FC<TextboxFormFieldProps> = (
 
     const handleType = (type: any) => {
       switch (type) {
-        case 'CompanyLimited':
+        case 'company_limited':
           return 'จำกัด';
-        case 'PublicCompanyLimited':
+        case 'public_company_limited':
           return 'จำกัด (มหาชน)';
-        case 'LimitedPartnership':
+        case 'limited_partnership':
           return 'ห้างหุ้นส่วนจำกัด';
-        case 'Foundation':
+        case 'foundation':
           return 'มูลนิธิ';
-        case 'Association':
+        case 'association':
           return 'สมาคม';
-        case 'JointVenture':
+        case 'joint_venture':
           return 'กิจการร่วมค้า';
 
         default:
@@ -59,8 +59,8 @@ export const TextboxFormField: FC<TextboxFormFieldProps> = (
       }
     };
     if (
-      businessType === 'CompanyLimited' ||
-      businessType === 'PublicCompanyLimited'
+      businessType === 'company_limited' ||
+      businessType === 'public_company_limited'
     ) {
       text =
         'ตัวอย่างการแสดงผล : ' +
@@ -70,10 +70,10 @@ export const TextboxFormField: FC<TextboxFormFieldProps> = (
         ' ' +
         handleType(businessType);
     } else if (
-      businessType === 'LimitedPartnership' ||
-      businessType === 'Foundation' ||
-      businessType === 'Association' ||
-      businessType === 'JointVenture'
+      businessType === 'limited_partnership' ||
+      businessType === 'foundation' ||
+      businessType === 'association' ||
+      businessType === 'joint_venture'
     ) {
       text = 'ตัวอย่างการแสดงผล : ' + handleType(businessType) + ' ' + value;
     }
@@ -86,8 +86,9 @@ export const TextboxFormField: FC<TextboxFormFieldProps> = (
       name={name}
       label={label}
       rules={rule}
-      help={isName ? (isUniq ? errorUniqMessage : helpValue()) : ''}
-      validateStatus={errorUniqMessage ? validateStatus : ''}
+      help={isName ? (isUniq ? errorUniqMessage : helpValue()) : undefined}
+      validateStatus={errorUniqMessage ? validateStatus : undefined}
+      hasFeedback
     >
       <Input
         type={type}

@@ -1,12 +1,6 @@
 import React from 'react';
 import { Button, Col, Form, notification, Row, Select, TimePicker } from 'antd';
-import { DynamicForm } from '@src/forms/Dynamic';
-import {
-  redirect,
-  useFetcher,
-  useLoaderData,
-  useSubmit,
-} from 'react-router-dom';
+import { redirect, useFetcher, useSubmit } from 'react-router-dom';
 import { FormButtonsCreate } from '@src/components/shared/FormButtons';
 import vine, { errors } from '@vinejs/vine';
 import dayjs from 'dayjs';
@@ -19,34 +13,19 @@ import {
 } from './renderForm';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { debounce } from 'lodash';
+import { FormFields } from '@src/forms';
 
 export const OrganizeCreate: React.FC = () => {
   const [form] = Form.useForm();
   const submit = useSubmit();
   const fetcher = useFetcher();
 
-  const { uniqFields, param } = useLoaderData() as any;
   const [type, setType] = React.useState('');
   const [uniqError, setUniqError] = React.useState({
     status: '',
     uniqError: false,
+    errorMessage: '',
   });
-  const [uniqDatas, setUniqDatas] = React.useState({ data: [] }) as any;
-
-  // Check path by role
-  React.useEffect(() => {
-    const me = JSON.parse(localStorage.getItem('me') as any);
-    if (me.role.name !== 'super_admin') {
-      redirect('/');
-    }
-    setUniqDatas(uniqFields);
-
-    if (uniqDatas?.data?.length) {
-      setUniqError({ status: 'error', uniqError: true });
-    } else {
-      setUniqError({ status: '', uniqError: false });
-    }
-  }, [uniqFields, uniqDatas]);
 
   const daysOfWeek = [
     'Sunday',
@@ -61,45 +40,100 @@ export const OrganizeCreate: React.FC = () => {
   const defaultValue = {
     organization: {
       active: true,
-      fromType: 'OrdinaryPerson',
-      status: 'NewlyRegistered',
+      fromType: 'ordinary_person',
+      status: 'newly_registered',
       registerVat: true,
       setting: {
-        defaultLanguage: 'TH',
+        defaultLanguage: 'th',
         theme: 'light',
         textDisplay: 'normal',
       },
     },
     branch: {
       active: true,
-      fromType: 'OrdinaryPerson',
-      status: 'NewlyRegistered',
+      fromType: 'ordinary_person',
+      status: 'newly_registered',
       registerVat: true,
       setting: {
-        defaultLanguage: 'TH',
+        defaultLanguage: 'th',
         theme: 'light',
         textDisplay: 'normal',
       },
     },
   };
 
-  const handleFormChange = React.useMemo(() => {
-    const updateAndFilterValues = (changedValues: any, allValues: any) => {
-      if (changedValues.type) {
-        setType(changedValues.type);
+  const handleFormChange = React.useCallback(
+    debounce((changedValues: any, allValues: any) => {
+      if (changedValues.organization?.type) {
+        setType(changedValues.organization.type);
       }
 
+      const nameTh = changedValues.organization?.nameTh || '';
+      // const nameEn = changedValues.organization?.nameEn || '';
+      // const taxId = changedValues.organization?.taxId || '';
+
+      if (nameTh.length > 0 && nameTh.length <= 5) {
+        setUniqError({
+          status: 'error',
+          uniqError: true,
+          errorMessage: 'Name must be longer than 5 characters.',
+        });
+      } else if (nameTh.length === 0) {
+        setUniqError({
+          status: '',
+          uniqError: false,
+          errorMessage: 'Name is required.',
+        });
+      } else {
+        setUniqError({
+          status: 'success',
+          uniqError: false,
+          errorMessage: '',
+        });
+      }
+
+      // if (nameEn.length > 0 && nameEn.length <= 5) {
+      //   setUniqError({
+      //     status: 'error',
+      //     uniqError: true,
+      //     errorMessage: 'Name must be longer than 5 characters.',
+      //   });
+      // } else if (nameEn.length === 0) {
+      //   setUniqError({
+      //     status: '',
+      //     uniqError: false,
+      //     errorMessage: 'Name is required.',
+      //   });
+      // } else {
+      //   setUniqError({
+      //     status: 'success',
+      //     uniqError: false,
+      //     errorMessage: '',
+      //   });
+      // }
+
+      // if (taxId.length === 13) {
+      //   setUniqError({
+      //     status: 'error',
+      //     uniqError: true,
+      //     errorMessage: '',
+      //   });
+      // } else {
+      //   setUniqError({
+      //     status: 'success',
+      //     uniqError: false,
+      //     errorMessage: '',
+      //   });
+      // }
+
+      // Query parameters and API call
       const buildQueryParams = (data: any) => {
         const allowedFields = ['nameTh', 'nameEn', 'taxId'];
         const params: Record<string, string> = {};
 
         const extractFields = (obj: any) => {
           Object.keys(obj).forEach((key) => {
-            if (
-              allowedFields.includes(key) &&
-              obj[key] !== undefined &&
-              obj[key] !== ''
-            ) {
+            if (allowedFields.includes(key) && obj[key]) {
               params[key] = obj[key];
             }
           });
@@ -116,12 +150,9 @@ export const OrganizeCreate: React.FC = () => {
       const queryString = new URLSearchParams(queryParams).toString();
 
       fetcher.load(`/admin/organization/find?${queryString}`);
-    };
-
-    return debounce(updateAndFilterValues, 100);
-  }, [param]);
-
-  console.log('fets', fetcher);
+    }, 100),
+    [fetcher, setUniqError],
+  );
 
   const onFinish = async (values: any) => {
     try {
@@ -133,13 +164,13 @@ export const OrganizeCreate: React.FC = () => {
       payload.branch.address.active = true;
       payload.organization.address.isMain = true;
       payload.branch.address.isMain = true;
-      payload.organization.address.language = 'TH';
-      payload.branch.address.language = 'TH';
+      payload.organization.address.language = 'th';
+      payload.branch.address.language = 'th';
 
       payload.organization.user.active = true;
       payload.branch.user.active = true;
-      payload.organization.user.status = 'Active';
-      payload.branch.user.status = 'Active';
+      payload.organization.user.status = 'active';
+      payload.branch.user.status = 'active';
 
       if (values.file1 && values.file1.length > 0) {
         if (values.file1[0].url) {
@@ -222,7 +253,6 @@ export const OrganizeCreate: React.FC = () => {
 
         payload.branch.setting.openDays = branchOpenDays;
       }
-      console.log({ payload });
 
       // Compile the main schema for validation
       const validator = vine.compile(schemaCreateOrg);
@@ -234,19 +264,50 @@ export const OrganizeCreate: React.FC = () => {
     } catch (error) {
       if (error instanceof errors.E_VALIDATION_ERROR) {
         notification.error({
-          message: 'Create organization fail',
+          message: 'สร้างองค์กรล้มเหลว',
           placement: 'bottomRight',
-          description: 'You have fail to create organization',
+          description: 'ข้อมูลไม่ถูกต้องกรุณาลองตรวจเช็คความเรียบร้อย',
         });
       } else {
         notification.error({
-          message: 'Submission fail',
+          message: 'พบปัญหาในระบบ',
           placement: 'bottomRight',
-          description: `You have submission fail : ${error}`,
+          description: `กรุณาติดต่อทีมงาน`,
         });
       }
     }
   };
+
+  // Check path by role
+  React.useEffect(() => {
+    const me = JSON.parse(localStorage.getItem('me') as any);
+    if (me.role.name !== 'super_admin') {
+      redirect('/');
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (fetcher?.data) {
+      // Update uniqError based on API response
+      if (fetcher.data.org?.length) {
+        setUniqError((prev) => ({
+          ...prev,
+          status: 'error',
+          uniqError: true,
+          errorMessage: 'This organization name already exists.',
+        }));
+      } else {
+        setUniqError((prev) => ({
+          ...prev,
+          status:
+            prev.status === 'error' && prev.errorMessage
+              ? prev.status
+              : 'success',
+          uniqError: prev.errorMessage ? prev.uniqError : false,
+        }));
+      }
+    }
+  }, [fetcher?.data]);
 
   return (
     <div>
@@ -273,65 +334,17 @@ export const OrganizeCreate: React.FC = () => {
         >
           <Row gutter={[24, 24]}>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <Row gutter={[20, 24]} style={{ paddingTop: '20px' }}>
-                {renderCreateForm.map((item: any, index: number) => (
-                  <DynamicForm
-                    key={index}
-                    name={item.name}
-                    label={item.label}
-                    placeholder={item.placeholder}
-                    type={item.type}
-                    col={item.col}
-                    icon={item.icon}
-                    value={item.value}
-                    rule={item.rule}
-                    option={item.options}
-                    disabled={item.disabled}
-                    checked={item.checked}
-                    maxLength={item.maxLength}
-                    defaultValue={item.defaultValue}
-                    businessType={type}
-                    isName={item.isName}
-                    title={item.title}
-                    description={item.description}
-                    form={form}
-                    checkedText={item.checkedText}
-                    unCheckedText={item.unCheckedText}
-                    isUniq={uniqError.uniqError}
-                    validateStatus={uniqError.status}
-                    errorUniqMessage={item.errorUniqMessage}
-                  />
-                ))}
-              </Row>
+              <FormFields
+                renderForm={renderCreateForm}
+                form={form}
+                isUniq={uniqError.uniqError}
+                status={uniqError.status}
+                type={type}
+              />
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <Row gutter={[20, 24]} style={{ paddingTop: '20px' }}>
-                {renderCreateSettingForm.map((item: any, index: number) => (
-                  <DynamicForm
-                    key={index}
-                    name={item.name}
-                    label={item.label}
-                    placeholder={item.placeholder}
-                    type={item.type}
-                    col={item.col}
-                    icon={item.icon}
-                    value={item.value}
-                    rule={item.rule}
-                    option={item.options}
-                    disabled={item.disabled}
-                    checked={item.checked}
-                    maxLength={item.maxLength}
-                    defaultValue={item.defaultValue}
-                    businessType={type}
-                    isName={item.isName}
-                    title={item.title}
-                    description={item.description}
-                    form={form}
-                    checkedText={item.checkedText}
-                    unCheckedText={item.unCheckedText}
-                  />
-                ))}
-              </Row>
+              <FormFields renderForm={renderCreateSettingForm} form={form} />
+
               <Form.List name={['organization', 'setting', 'openDays']}>
                 {(fields, { add, remove }) => (
                   <>
@@ -430,64 +443,19 @@ export const OrganizeCreate: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <Row gutter={[20, 24]} style={{ paddingTop: '20px' }}>
-                {renderCreateBranchForm.map((item: any, index: number) => (
-                  <DynamicForm
-                    key={index}
-                    name={item.name}
-                    label={item.label}
-                    placeholder={item.placeholder}
-                    type={item.type}
-                    col={item.col}
-                    icon={item.icon}
-                    value={item.value}
-                    rule={item.rule}
-                    option={item.options}
-                    disabled={item.disabled}
-                    checked={item.checked}
-                    maxLength={item.maxLength}
-                    defaultValue={item.defaultValue}
-                    businessType={type}
-                    isName={item.isName}
-                    title={item.title}
-                    description={item.description}
-                    form={form}
-                    checkedText={item.checkedText}
-                    unCheckedText={item.unCheckedText}
-                  />
-                ))}
-              </Row>
+              <FormFields
+                renderForm={renderCreateBranchForm}
+                form={form}
+                isUniq={uniqError.uniqError}
+                status={uniqError.status}
+              />
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <Row gutter={[20, 24]} style={{ paddingTop: '20px' }}>
-                {renderCreateSettingฺBranchForm.map(
-                  (item: any, index: number) => (
-                    <DynamicForm
-                      key={index}
-                      name={item.name}
-                      label={item.label}
-                      placeholder={item.placeholder}
-                      type={item.type}
-                      col={item.col}
-                      icon={item.icon}
-                      value={item.value}
-                      rule={item.rule}
-                      option={item.options}
-                      disabled={item.disabled}
-                      checked={item.checked}
-                      maxLength={item.maxLength}
-                      defaultValue={item.defaultValue}
-                      businessType={type}
-                      isName={item.isName}
-                      title={item.title}
-                      description={item.description}
-                      form={form}
-                      checkedText={item.checkedText}
-                      unCheckedText={item.unCheckedText}
-                    />
-                  ),
-                )}
-              </Row>
+              <FormFields
+                renderForm={renderCreateSettingฺBranchForm}
+                form={form}
+              />
+
               <Form.List name={['branch', 'setting', 'openDays']}>
                 {(fields, { add, remove }) => (
                   <>
@@ -594,9 +562,9 @@ export const OrganizeCreate: React.FC = () => {
 // const p = {
 //   organization: {
 //     active: true,
-//     fromType: 'JuristicPerson',
-//     status: 'NewlyRegistered',
-//     type: 'CompanyLimited',
+//     fromType: 'juristic_person',
+//     status: 'newly_registered',
+//     type: 'company_limited',
 //     nameTh: 'ภูวิศ',
 //     nameEn: 'Phuwis',
 //     taxId: '1234567890123',
@@ -698,9 +666,9 @@ export const OrganizeCreate: React.FC = () => {
 //     },
 //     active: true,
 //     isMain: true,
-//     fromType: 'JuristicPerson',
-//     type: 'CompanyLimited',
-//     status: 'NewlyRegistered',
+//     fromType: 'juristic_person',
+//     type: 'company_limited',
+//     status: 'newly_registered',
 //     nameTh: 'ตั้งหวังรวย',
 //     nameEn: 'Tung Wang Ruey',
 //     taxId: '1234567890123',

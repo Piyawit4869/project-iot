@@ -40,3 +40,19 @@ export async function getBranch(orgId: any, branchId: any) {
     url: `/api/crud/organizations/${orgId}/branches/${branchId}`,
   });
 }
+
+export async function createBranch(orgId: any, data: any) {
+  return client({
+    method: 'POST',
+    url: `/api/crud/organizations/${orgId}/branches`,
+    data,
+  });
+}
+
+export async function updateBranch(orgId: any, branchId: any, data: any) {
+  return client({
+    method: 'PUT',
+    url: `/api/crud/organizations/${orgId}/branches/${branchId}`,
+    data,
+  });
+}

@@ -90,24 +90,18 @@ export const Menus = (props: MenusProps) => {
       icon: <Icon.UserOutlined />,
       role: ['owner', 'manager'],
     },
+    {
+      label: <Link to="/notation">เอกสาร</Link>,
+      key: '/notation',
+      icon: <Icon.ReconciliationOutlined />,
+      role: ['owner', 'manager', 'employee'],
+    },
     // {
     //   //  <Link to="/customer">
     //   label: <Link to="/customer">ลูกค้า</Link>,
     //   key: '/customer',
     //   icon: <Icon.CustomerServiceOutlined />,
     //   role: ['owner', 'manager'],
-    // },
-    // {
-    //   //<Link to="/notation">
-    //   label: (
-    //     <Link to="#" style={{ cursor: 'not-allowed' }}>
-    //       เอกสาร
-    //     </Link>
-    //   ),
-    //   key: '/notation',
-    //   icon: <Icon.ReconciliationOutlined />,
-    //   role: ['owner', 'manager'],
-    //   disable: true,
     // },
 
     // {
@@ -129,17 +123,7 @@ export const Menus = (props: MenusProps) => {
     //   role: ["branch_admin","organize_admin"],
     // },
     // {
-    //   // <Link to="/attendance">
-    //   label: (
-    //     <Link to="#" style={{ cursor: 'not-allowed' }}>
-    //       เข้างานออกงาน
-    //     </Link>
-    //   ),
-    //   key: '/attendance',
-    //   icon: <Icon.FieldTimeOutlined />,
-    //   role: ['owner', 'manager', 'supervisor', 'employee'],
-    //   disable: true,
-    // },
+
     {
       //<Link to="/information-branch">
       label: (

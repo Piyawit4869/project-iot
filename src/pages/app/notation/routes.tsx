@@ -1,4 +1,7 @@
+import { NotationCreate } from './Createpage';
 import { NotationIndex } from './Indexpage';
+import { notationsLoader } from './loader';
+import { NotationSingle } from './Singlepage';
 
 export const routes = [
   {
@@ -8,14 +11,15 @@ export const routes = [
       {
         path: '',
         element: <NotationIndex />,
+        loader: notationsLoader,
       },
       {
         path: 'create',
-        element: <>NotationCreate</>,
+        element: <NotationCreate />,
       },
       {
         path: ':id',
-        element: <>NotationSingle</>,
+        element: <NotationSingle />,
       },
     ],
   },
