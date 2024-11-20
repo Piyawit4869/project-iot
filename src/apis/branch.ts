@@ -37,14 +37,14 @@ export async function deleted(id: any) {
 export async function getBranch(orgId: any, branchId: any) {
   return client({
     method: 'GET',
-    url: `/api/crud/organizations/${orgId}/branches/${branchId}`,
+    url: `/api/admin/organizations/${orgId}/branches/${branchId}`,
   });
 }
 
 export async function createBranch(orgId: any, data: any) {
   return client({
     method: 'POST',
-    url: `/api/crud/organizations/${orgId}/branches`,
+    url: `/api/admin/organizations/${orgId}/branches`,
     data,
   });
 }
@@ -52,7 +52,7 @@ export async function createBranch(orgId: any, data: any) {
 export async function updateBranch(orgId: any, branchId: any, data: any) {
   return client({
     method: 'PUT',
-    url: `/api/crud/organizations/${orgId}/branches/${branchId}`,
+    url: `/api/admin/organizations/${orgId}/branches/${branchId}`,
     data,
   });
 }

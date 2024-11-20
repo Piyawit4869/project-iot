@@ -33,8 +33,8 @@ export const LengthInputFormField: FC<LengthInputFormFieldProps> = (
       name={name}
       label={label}
       rules={rule}
-      help={isUniq ? errorUniqMessage : ''}
-      validateStatus={validateStatus ? validateStatus : ''}
+      help={isUniq ? errorUniqMessage : undefined}
+      validateStatus={validateStatus ? validateStatus : undefined}
       hasFeedback
     >
       <Input.OTP
@@ -54,3 +54,5 @@ const styles: Record<string, CSSProperties> = {
     margin: '5px 0',
   },
 };
+
+//0105565119323

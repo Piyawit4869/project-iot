@@ -42,7 +42,7 @@ interface DynamicFormProps {
   nameRadio?: string;
   labelRadio?: string;
   isUniq?: boolean;
-  validateStatus?: string;
+  validateStatus?: 'success' | 'warning' | 'error' | 'validating' | '';
   errorUniqMessage?: string;
 }
 

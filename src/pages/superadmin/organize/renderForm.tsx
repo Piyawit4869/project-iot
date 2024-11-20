@@ -77,7 +77,7 @@ export const renderCreateForm = [
     type: 'TextboxFormField',
     rule: [{ required: true, message: 'กรุณากรอกชื่อกิจการ (ภาษาไทย)!' }],
     isName: true,
-    errorUniqMessage: 'ไม่สามารถใช้ชื่อหรือเลขทะเบียน13หลักนี้ได้',
+    errorUniqMessage: 'ไม่สามารถใช้งานชื่อนี้ได้',
   },
   {
     name: ['organization', 'nameEn'],
@@ -87,7 +87,7 @@ export const renderCreateForm = [
     type: 'TextboxFormField',
     rule: [{ required: true, message: 'กรุณากรอกชื่อกิจการ (English)!' }],
     isName: true,
-    errorUniqMessage: 'ไม่สามารถใช้ชื่อหรือเลขทะเบียน13หลักนี้ได้',
+    errorUniqMessage: 'ไม่สามารถใช้งานชื่อนี้ได้',
   },
   {
     name: ['organization', 'taxId'],
@@ -97,7 +97,7 @@ export const renderCreateForm = [
     type: 'LengthInput',
     maxLength: 13,
     rule: [{ required: true, message: 'กรุณากรอกเลขทะเบียน 13 หลัก!' }],
-    errorUniqMessage: 'ไม่สามารถใช้ชื่อหรือเลขทะเบียน13หลักนี้ได้',
+    errorUniqMessage: 'ไม่สามารถใช้งานเลขทะเบียน13หลักนี้ได้',
   },
 
   {
@@ -445,7 +445,7 @@ export const renderCreateBranchForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
     rule: [{ required: true, message: 'กรุณากรอกชื่อสาขา (ภาษาไทย)!' }],
-    errorUniqMessage: 'ไม่สามารถใช้ชื่อหรือเลขทะเบียน13หลักนี้ได้',
+    errorUniqMessage: 'ไม่สามารถใช้งานชื่อนี้ได้',
     isName: true,
   },
   {
@@ -455,7 +455,7 @@ export const renderCreateBranchForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
     rule: [{ required: true, message: 'กรุณากรอกชื่อสาขา (English)!' }],
-    errorUniqMessage: 'ไม่สามารถใช้ชื่อหรือเลขทะเบียน13หลักนี้ได้',
+    errorUniqMessage: 'ไม่สามารถใช้งานชื่อนี้ได้',
     isName: true,
   },
   {
@@ -466,7 +466,7 @@ export const renderCreateBranchForm = [
     type: 'LengthInput',
     maxLength: 13,
     rule: [{ required: true, message: 'กรุณากรอกเลขทะเบียน 13 หลัก!' }],
-    errorUniqMessage: 'ไม่สามารถใช้ชื่อหรือเลขทะเบียน13หลักนี้ได้',
+    errorUniqMessage: 'ไม่สามารถใช้งานเลขทะเบียน13หลักนี้ได้',
   },
   {
     name: ['branch', 'descriptionsTh'],
@@ -1289,6 +1289,7 @@ export const renderSettingData = [
     type: 'TextboxFormField',
     rule: [{ required: true, message: 'กรุณากรอกชื่อกิจการ (ภาษาไทย)!' }],
     isName: true,
+    errorUniqMessage: 'ไม่สามารถใช้งานชื่อนี้ได้',
   },
   {
     name: 'nameEn',
@@ -1298,6 +1299,7 @@ export const renderSettingData = [
     type: 'TextboxFormField',
     rule: [{ required: true, message: 'กรุณากรอกชื่อกิจการ (English)!' }],
     isName: true,
+    errorUniqMessage: 'ไม่สามารถใช้งานชื่อนี้ได้',
   },
 
   {
@@ -1308,6 +1310,7 @@ export const renderSettingData = [
     type: 'LengthInput',
     maxLength: 13,
     rule: [{ required: true, message: 'กรุณากรอกเลขทะเบียน 13 หลัก!' }],
+    errorUniqMessage: 'ไม่สามารถใช้งานเลขทะเบียน13หลักนี้ได้',
   },
 
   {

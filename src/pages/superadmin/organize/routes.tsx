@@ -51,10 +51,17 @@ export const routes = [
           const url = new URL(params.request.url);
           const query = url.searchParams;
           const param = Object.fromEntries(query);
+          const fieldNames = Object.keys(param);
+
+          console.log({ param });
 
           const { data: uniqFields } = await API.organize.getUniqFields(param);
 
-          return json({ org: uniqFields.data });
+          return json({
+            org: uniqFields.data,
+            name: fieldNames[0],
+            entry: param.entry,
+          });
         },
       },
     ],

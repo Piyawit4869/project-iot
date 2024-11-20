@@ -20,21 +20,27 @@ import dayjs from 'dayjs';
 import vine, { errors } from '@vinejs/vine';
 import { schemaCreateBranch } from './schema';
 
+interface TypeOfUniqError {
+  name: string;
+  status: string;
+  uniqError: boolean;
+  errorMessage: string;
+}
+
 export const BranchCreate = () => {
   const [form] = Form.useForm();
   const submit = useSubmit();
   const fetcher = useFetcher();
   const location = useLocation();
 
+  const [uniqError, setUniqError] = React.useState<TypeOfUniqError[]>([]);
+
+  console.log({ uniqError });
+  console.log({ fetcher });
+
   const pathnames = location.pathname.split('/').filter((x) => x);
   const modifiedPathnames =
     pathnames[0] === 'admin' ? pathnames.slice(1) : pathnames;
-
-  const [uniqError, setUniqError] = React.useState({
-    status: '',
-    uniqError: false,
-    errorMessage: '',
-  });
 
   React.useEffect(() => {
     const me = JSON.parse(localStorage.getItem('me') as any);
@@ -145,7 +151,7 @@ export const BranchCreate = () => {
   };
 
   const handleFormChange = React.useCallback(
-    debounce((changedValues: any, allValues: any) => {
+    debounce((changedValues: any) => {
       if (changedValues?.type) {
         setType(changedValues.type);
       }
@@ -156,91 +162,75 @@ export const BranchCreate = () => {
         setGenerateUser(true);
       }
 
-      const nameTh = changedValues?.nameTh || '';
-      // const nameEn = changedValues.organization?.nameEn || '';
-      // const taxId = changedValues.organization?.taxId || '';
+      const allowedFields = ['nameTh', 'nameEn', 'taxId'];
+      const lastChangedKey = Object.keys(changedValues || {})[0];
+      const lastChangedValue = changedValues?.[lastChangedKey];
 
-      if (nameTh.length > 0 && nameTh.length <= 5) {
-        setUniqError({
-          status: 'error',
-          uniqError: true,
-          errorMessage: 'Name must be longer than 5 characters.',
-        });
-      } else if (nameTh.length === 0) {
-        setUniqError({
-          status: '',
-          uniqError: false,
-          errorMessage: 'Name is required.',
+      if (
+        lastChangedKey &&
+        lastChangedValue &&
+        allowedFields.includes(lastChangedKey)
+      ) {
+        const fullName = lastChangedKey;
+        // Set temporary validation status
+        setUniqError((prev: any) => [
+          ...prev.filter((error: any) => error.name !== fullName),
+          {
+            name: fullName,
+            status: '', // Temporary status for ongoing validation
+            uniqError: false,
+            errorMessage: '',
+          },
+        ]);
+        const queryParams = new URLSearchParams({
+          [lastChangedKey]: lastChangedValue,
+        }).toString();
+
+        // Trigger API call
+        fetcher.load(`/admin/organization/find?${queryParams}`);
+      }
+    }, 300),
+    [fetcher],
+  );
+
+  React.useEffect(() => {
+    if (fetcher?.data) {
+      const { org, name } = fetcher.data; // Ensure `entity` is returned (organization or branch)
+
+      if (org?.length) {
+        setUniqError((prev: any) => {
+          const updatedErrors = prev.map((item: any) =>
+            item.name === name
+              ? {
+                  ...item,
+                  name: name,
+                  status: 'error',
+                  uniqError: true,
+                  errorMessage: `The value for ${name}  already exists.`,
+                }
+              : item,
+          );
+
+          return updatedErrors;
         });
       } else {
-        setUniqError({
-          status: 'success',
-          uniqError: false,
-          errorMessage: '',
+        // Clear errors for the specific field
+        setUniqError((prev: any) => {
+          const otherUniq = prev.filter(
+            (item: any) =>
+              item.name !== name && {
+                name: name,
+                status: '',
+                uniqError: false,
+                errorMessage: '',
+              },
+          );
+
+          return otherUniq;
         });
       }
-
-      // if (nameEn.length > 0 && nameEn.length <= 5) {
-      //   setUniqError({
-      //     status: 'error',
-      //     uniqError: true,
-      //     errorMessage: 'Name must be longer than 5 characters.',
-      //   });
-      // } else if (nameEn.length === 0) {
-      //   setUniqError({
-      //     status: '',
-      //     uniqError: false,
-      //     errorMessage: 'Name is required.',
-      //   });
-      // } else {
-      //   setUniqError({
-      //     status: 'success',
-      //     uniqError: false,
-      //     errorMessage: '',
-      //   });
-      // }
-
-      // if (taxId.length === 13) {
-      //   setUniqError({
-      //     status: 'error',
-      //     uniqError: true,
-      //     errorMessage: '',
-      //   });
-      // } else {
-      //   setUniqError({
-      //     status: 'success',
-      //     uniqError: false,
-      //     errorMessage: '',
-      //   });
-      // }
-
-      // Query parameters and API call
-      const buildQueryParams = (data: any) => {
-        const allowedFields = ['nameTh', 'nameEn', 'taxId'];
-        const params: Record<string, string> = {};
-
-        const extractFields = (obj: any) => {
-          Object.keys(obj).forEach((key) => {
-            if (allowedFields.includes(key) && obj[key]) {
-              params[key] = obj[key];
-            }
-          });
-        };
-
-        if (data) {
-          extractFields(data);
-        }
-
-        return params;
-      };
-
-      const queryParams = buildQueryParams(allValues);
-      const queryString = new URLSearchParams(queryParams).toString();
-
-      fetcher.load(`/admin/organization/find?${queryString}`);
-    }, 100),
-    [fetcher, setUniqError],
-  );
+    }
+  }, [fetcher?.data]);
 
   return (
     <div>
@@ -249,8 +239,8 @@ export const BranchCreate = () => {
         initialValues={defaultValue}
         layout="vertical"
         onFinish={onFinish}
-        onValuesChange={(changedValues: any, allValues: any) => {
-          handleFormChange(changedValues, allValues);
+        onValuesChange={(changedValues: any) => {
+          handleFormChange(changedValues);
         }}
       >
         <FormButtonsCreate
@@ -271,8 +261,7 @@ export const BranchCreate = () => {
               <FormFields
                 renderForm={renderCreateBranchForm}
                 form={form}
-                isUniq={uniqError.uniqError}
-                status={uniqError.status}
+                uniqError={uniqError}
                 type={type}
               />
             </Col>

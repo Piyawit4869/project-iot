@@ -58,7 +58,7 @@ export async function branchEditAction({ request, params }: any) {
           duration: 3,
         });
         return redirect(
-          `/admin/organization/${params.id}/branch/${res.data.res.id}`,
+          `/admin/organization/${params.id}/branch/${res.data.data.id}`,
         );
       } catch (error) {
         notification['error']({

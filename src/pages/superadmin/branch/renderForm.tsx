@@ -93,6 +93,8 @@ export const renderCreateBranchForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
     rule: [{ required: true, message: 'กรุณากรอกชื่อสาขา (ภาษาไทย)!' }],
+    isName: true,
+    errorUniqMessage: 'ไม่สามารถใช้งานชื่อนี้ได้',
   },
   {
     name: 'nameEn',
@@ -101,6 +103,8 @@ export const renderCreateBranchForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'TextboxFormField',
     rule: [{ required: true, message: 'กรุณากรอกชื่อสาขา (English)!' }],
+    isName: true,
+    errorUniqMessage: 'ไม่สามารถใช้งานชื่อนี้ได้',
   },
   {
     name: 'taxId',
@@ -110,6 +114,7 @@ export const renderCreateBranchForm = [
     type: 'LengthInput',
     maxLength: 13,
     rule: [{ required: true, message: 'กรุณากรอกเลขทะเบียน 13 หลัก!' }],
+    errorUniqMessage: 'ไม่สามารถใช้งานเลขทะเบียน13หลักนี้ได้',
   },
   {
     name: 'descriptionsTh',
@@ -500,6 +505,18 @@ export const renderSingleBranchForm = [
     rule: [{ required: true, message: 'กรุณาเลือกเปิดปิดสาขา!' }],
   },
   {
+    name: 'fromType',
+    label: 'ประเภทธุรกิจ',
+    col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 },
+    type: 'RadioFormField',
+    options: [
+      { value: 'ordinary_person', label: 'บุคคลธรรมดา' },
+      { value: 'juristic_person', label: 'นิติบุคคล' },
+    ],
+    defaultValue: 'ordinary_person',
+    rule: [{ required: true, message: 'กรุณาเลือกประเภทธุรกิจ!' }],
+  },
+  {
     name: 'status',
     label: 'สถานะธุรกิจ',
     placeholder: 'สถานะธุรกิจ',
@@ -516,18 +533,6 @@ export const renderSingleBranchForm = [
     rule: [{ required: true, message: 'กรุณาเลือกสถานะธุรกิจ!' }],
   },
 
-  {
-    name: 'fromType',
-    label: 'ประเภทธุรกิจ',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'RadioFormField',
-    options: [
-      { value: 'ordinary_person', label: 'บุคคลธรรมดา' },
-      { value: 'juristic_person', label: 'นิติบุคคล' },
-    ],
-    defaultValue: 'ordinary_person',
-    rule: [{ required: true, message: 'กรุณาเลือกประเภทธุรกิจ!' }],
-  },
   {
     name: 'type',
     label: 'รูปแบบธุรกิจ',
@@ -557,6 +562,7 @@ export const renderSingleBranchForm = [
     type: 'TextboxFormField',
     rule: [{ required: true, message: 'กรุณากรอกชื่อกิจการ (ภาษาไทย)!' }],
     isName: true,
+    errorUniqMessage: 'ไม่สามารถใช้งานชื่อหรือนี้ได้',
   },
   {
     name: 'nameEn',
@@ -566,22 +572,9 @@ export const renderSingleBranchForm = [
     type: 'TextboxFormField',
     rule: [{ required: true, message: 'กรุณากรอกชื่อกิจการ (English)!' }],
     isName: true,
+    errorUniqMessage: 'ไม่สามารถใช้งานชื่อหรือนี้ได้',
   },
-  {
-    name: 'registerVat',
-    label: 'จดทะเบียนภาษีมูลค่าเพิ่ม',
-    placeholder: 'จดทะเบียนภาษีมูลค่าเพิ่ม',
-    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
-    type: 'SwitchFormField',
-    rule: [
-      {
-        required: true,
-        message: 'กรุณาเลือกว่าจดทะเบียนภาษีมูลค่าเพิ่มหรือไม่!',
-      },
-    ],
-    checkedText: 'จด',
-    unCheckedText: 'ไม่ได้จด',
-  },
+
   {
     name: 'taxId',
     label: 'เลขทะเบียน 13 หลัก',
@@ -590,6 +583,7 @@ export const renderSingleBranchForm = [
     type: 'LengthInput',
     maxLength: 13,
     rule: [{ required: true, message: 'กรุณากรอกเลขทะเบียน 13 หลัก!' }],
+    errorUniqMessage: 'ไม่สามารถใช้งานเลขทะเบียน13หลักนี้ได้',
   },
 
   {
@@ -613,6 +607,21 @@ export const renderSingleBranchForm = [
     placeholder: 'วันที่จดทะเบียน',
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'DatePickerFormField',
+  },
+  {
+    name: 'registerVat',
+    label: 'จดทะเบียนภาษีมูลค่าเพิ่ม',
+    placeholder: 'จดทะเบียนภาษีมูลค่าเพิ่ม',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SwitchFormField',
+    rule: [
+      {
+        required: true,
+        message: 'กรุณาเลือกว่าจดทะเบียนภาษีมูลค่าเพิ่มหรือไม่!',
+      },
+    ],
+    checkedText: 'จด',
+    unCheckedText: 'ไม่ได้จด',
   },
   {
     name: 'websiteUrl',
