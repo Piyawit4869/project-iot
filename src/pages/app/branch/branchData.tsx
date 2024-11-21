@@ -1,5 +1,6 @@
 import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons';
-import { Button, TableProps, Tag, Image, Typography } from 'antd';
+import { Button, Tag, Image, Typography } from 'antd';
+import { ColumnsType } from 'antd/es/table';
 import { Link } from 'react-router-dom';
 
 export const branchData = [
@@ -44,7 +45,7 @@ export const branchData = [
   },
 ];
 
-export const branchColumn: TableProps['columns'] = [
+export const branchColumn: ColumnsType<any> = [
   {
     title: 'ลำดับ',
     dataIndex: 'id',
