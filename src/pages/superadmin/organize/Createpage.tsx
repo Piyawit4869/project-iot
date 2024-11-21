@@ -240,7 +240,7 @@ export const OrganizeCreate: React.FC = () => {
 
   React.useEffect(() => {
     if (fetcher?.data) {
-      const { org, name, entry } = fetcher.data; // Ensure `entity` is returned (organization or branch)
+      const { org, name, entry } = fetcher.data;
 
       if (org?.length) {
         setUniqError((prev: any) => {

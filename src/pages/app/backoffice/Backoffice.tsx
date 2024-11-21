@@ -16,10 +16,10 @@ const onChange: CountdownProps['onChange'] = (val) => {
   }
 };
 const description = 'This is a description.';
-export const Dashboard = () => {
+export const Backoffice = () => {
   return (
     <>
-      <div style={{ fontSize: 40 }}>Dashboard</div>
+      <div style={{ fontSize: 40 }}>Backoffice</div>
       <Steps
         current={1}
         items={[
@@ -97,4 +97,4 @@ export const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Backoffice;

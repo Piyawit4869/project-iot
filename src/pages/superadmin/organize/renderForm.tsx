@@ -1607,3 +1607,168 @@ export const renderSystemSetting = [
     rule: [{ required: true, message: 'กรุณาเลือกขนาดตัวอักษร!' }],
   },
 ];
+
+export const renderAddress = [
+  {
+    name: 'name',
+    label: 'ชื่อที่อยู่',
+    placeholder: 'ชื่อที่อยู่',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    rule: [{ required: true, message: 'กรุณากรอกชื่อที่อยู่!' }],
+  },
+  {
+    name: 'city',
+    label: 'เมือง',
+    placeholder: 'เมือง',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    rule: [{ required: true, message: 'กรุณากรอกชื่อเมือง!' }],
+  },
+  {
+    name: 'province',
+    label: 'จังหวัด',
+    placeholder: 'จังหวัด',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    rule: [{ required: true, message: 'กรุณากรอกชื่อจังหวัด!' }],
+  },
+  {
+    name: 'postalCode',
+    label: 'รหัสไปรษณีย์',
+    placeholder: 'รหัสไปรษณีย์',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+    rule: [{ required: true, message: 'กรุณากรอกรหัสไปรษณีย์!' }],
+  },
+  {
+    name: 'roomNo',
+    label: 'เลขห้อง',
+    placeholder: 'เลขห้อง',
+    col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'floorNo',
+    label: 'ชั้นที่อยู่',
+    placeholder: 'ชั้นที่อยู่',
+    col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'village',
+    label: 'หมู่บ้าน',
+    placeholder: 'หมู่บ้าน',
+    col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'villageNo',
+    label: 'เลขหมู่บ้าน',
+    placeholder: 'เลขหมู่บ้าน',
+    col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'houseNo',
+    label: 'บ้านเลขที่',
+    placeholder: 'บ้านเลขที่',
+    col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'alley',
+    label: 'ตรอก',
+    placeholder: 'ตรอก',
+    col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'road',
+    label: 'ถนน',
+    placeholder: 'ถนน',
+    col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'building',
+    label: 'อาคาร',
+    placeholder: 'อาคาร',
+    col: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+    type: 'TextboxFormField',
+  },
+
+  {
+    name: 'nation',
+    label: 'ประเทศ',
+    placeholder: 'ประเทศ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+
+  {
+    name: 'district',
+    label: 'เขต/อำเภอ',
+    placeholder: 'เขต/อำเภอ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+  {
+    name: 'subDistrict',
+    label: 'แขวง/ตำบล',
+    placeholder: 'แขวง/ตำบล',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextboxFormField',
+  },
+
+  {
+    name: 'note',
+    label: 'หมายเหตุ',
+    placeholder: 'หมายเหตุ',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'TextAreaFormField',
+  },
+];
+
+export const renderSetting = [
+  {
+    name: 'defaultLanguage',
+    label: 'ภาษา',
+    placeholder: 'ภาษา',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SelectFormField',
+    options: [
+      { value: 'th', label: 'ภาษาไทย' },
+      { value: 'en', label: 'English' },
+    ],
+    defaultValue: 'th',
+    rule: [{ required: true, message: 'กรุณาเลือกภาษา!' }],
+  },
+  {
+    name: 'theme',
+    label: 'ธีมสี',
+    placeholder: 'ธีมสี',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SelectFormField',
+    options: [
+      { value: 'light', label: 'สว่าง' },
+      { value: 'dark', label: 'มืด' },
+    ],
+    defaultValue: 'light',
+    rule: [{ required: true, message: 'กรุณาเลือกธีมสี!' }],
+  },
+  {
+    name: 'textDisplay',
+    label: 'ขนาดตัวอักษร',
+    placeholder: 'ขนาดตัวอักษร',
+    col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
+    type: 'SelectFormField',
+    options: [
+      { value: 'large', label: 'ขนาดใหญ่' },
+      { value: 'normal', label: 'ปกติ' },
+      { value: 'small', label: 'ขนาดเล็ก' },
+    ],
+    defaultValue: 'normal',
+    rule: [{ required: true, message: 'กรุณาเลือกขนาดตัวอักษร!' }],
+  },
+];
