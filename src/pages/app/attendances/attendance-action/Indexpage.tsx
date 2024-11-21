@@ -8,6 +8,7 @@ import {
   Flex,
   List,
   Row,
+  Space,
   Tag,
   Typography,
 } from 'antd';
@@ -238,182 +239,195 @@ export const AttendanceAction = () => {
         handleCloseModal={handleCloseModal}
         handleSubmit={handleSubmitLeave}
       />
-
-      {me?.role?.name === 'owner' ? (
-        <>
-          <TitleBar
-            title={'การเข้างาน - ออกงาน'}
-            buttons={[
-              <Link to="/attendance/create">
-                <Button type="primary">สร้าง</Button>
-              </Link>,
-            ]}
-          />
-          <Divider />
-          <TableComponent
-            columns={myAttendanceColumns}
-            dataSource={workInfos.items}
-          />
-        </>
-      ) : (
-        <>
-          <TitleBar
-            title={'การเข้างาน - ออกงาน'}
-            subTitle={`วันนี้คุณทำงานเป็นยังไงบ้างครับ :)`}
-            buttons={[
-              <Typography.Title level={4}>
-                วัน{dayjs().format('dddd ที่ DD เดือน MMMM พ.ศ. BBBB')} เวลา{' '}
-                {currentTime}
-              </Typography.Title>,
-            ]}
-          />
-          <Row gutter={[12, 12]} style={{ marginTop: '12px' }}>
-            <Col xs={24} sm={24} md={24} lg={10} xl={10}>
-              <Card
-                style={{
-                  backgroundColor: '#f8f9fa',
-                  height: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Flex vertical justify="center" align="center" gap={10}>
-                  <Button
-                    shape="circle"
-                    style={{
-                      ...styles.actionButton,
-                      backgroundImage:
-                        data && data.length
-                          ? getStatusStyle(data[0].action)
-                          : 'linear-gradient(145deg, #6E85B7, #ABC4FF)',
-                      // 'linear-gradient(145deg, #6E85B7, #ABC4FF)', // Cool gradient background
-
-                      cursor:
-                        data && data.length
-                          ? data[0].action === 'Out'
-                            ? 'not-allowed'
-                            : 'pointer'
-                          : 'pointer',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.boxShadow =
-                        '0 6px 20px rgba(0, 0, 0, 0.2)'; // Elevate shadow on hover
-                      e.currentTarget.style.transform = 'scale(1.05)'; // Slightly increase size on hover
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.boxShadow =
-                        '0 4px 15px rgba(0, 0, 0, 0.1)'; // Restore shadow on leave
-                      e.currentTarget.style.transform = 'scale(1)'; // Restore size
-                    }}
-                    onMouseDown={(e) => {
-                      e.currentTarget.style.boxShadow =
-                        'inset 0 3px 10px rgba(0, 0, 0, 0.2)'; // Inner shadow on click
-                    }}
-                    onMouseUp={(e) => {
-                      e.currentTarget.style.boxShadow =
-                        '0 6px 20px rgba(0, 0, 0, 0.2)'; // Restore shadow after click
-                    }}
-                    onClick={() => {
-                      if (data[0]?.action !== 'Out') {
-                        handleChangeState();
-                      }
-                    }}
-                  >
-                    <Typography
+      <Space
+        direction="vertical"
+        style={{
+          width: '100%',
+          backgroundColor: 'white',
+          borderRadius: 5,
+          padding: '20px 0px',
+          position: 'sticky',
+          zIndex: 10,
+          borderImageSlice: 1,
+          top: '-10px',
+        }}
+      >
+        {me?.role?.name === 'owner' ? (
+          <>
+            <TitleBar
+              title={'การเข้างาน - ออกงาน'}
+              buttons={[
+                <Link to="/attendance/create">
+                  <Button type="primary">สร้าง</Button>
+                </Link>,
+              ]}
+            />
+            <Divider />
+            <TableComponent
+              columns={myAttendanceColumns}
+              dataSource={workInfos.items}
+            />
+          </>
+        ) : (
+          <>
+            <TitleBar
+              title={'การเข้างาน - ออกงาน'}
+              subTitle={`วันนี้คุณทำงานเป็นยังไงบ้างครับ :)`}
+              buttons={[
+                <Typography.Title level={4}>
+                  วัน{dayjs().format('dddd ที่ DD เดือน MMMM พ.ศ. BBBB')} เวลา{' '}
+                  {currentTime}
+                </Typography.Title>,
+              ]}
+            />
+            <Row gutter={[12, 12]} style={{ marginTop: '12px' }}>
+              <Col xs={24} sm={24} md={24} lg={10} xl={10}>
+                <Card
+                  style={{
+                    backgroundColor: '#f8f9fa',
+                    height: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Flex vertical justify="center" align="center" gap={10}>
+                    <Button
+                      shape="circle"
                       style={{
-                        color: 'white',
-                        fontSize: '24px',
-                        fontWeight: 'bold',
+                        ...styles.actionButton,
+                        backgroundImage:
+                          data && data.length
+                            ? getStatusStyle(data[0].action)
+                            : 'linear-gradient(145deg, #6E85B7, #ABC4FF)',
+                        // 'linear-gradient(145deg, #6E85B7, #ABC4FF)', // Cool gradient background
+
+                        cursor:
+                          data && data.length
+                            ? data[0].action === 'Out'
+                              ? 'not-allowed'
+                              : 'pointer'
+                            : 'pointer',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.boxShadow =
+                          '0 6px 20px rgba(0, 0, 0, 0.2)'; // Elevate shadow on hover
+                        e.currentTarget.style.transform = 'scale(1.05)'; // Slightly increase size on hover
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.boxShadow =
+                          '0 4px 15px rgba(0, 0, 0, 0.1)'; // Restore shadow on leave
+                        e.currentTarget.style.transform = 'scale(1)'; // Restore size
+                      }}
+                      onMouseDown={(e) => {
+                        e.currentTarget.style.boxShadow =
+                          'inset 0 3px 10px rgba(0, 0, 0, 0.2)'; // Inner shadow on click
+                      }}
+                      onMouseUp={(e) => {
+                        e.currentTarget.style.boxShadow =
+                          '0 6px 20px rgba(0, 0, 0, 0.2)'; // Restore shadow after click
+                      }}
+                      onClick={() => {
+                        if (data[0]?.action !== 'Out') {
+                          handleChangeState();
+                        }
                       }}
                     >
-                      {data && data.length
-                        ? data[0].action === 'In'
-                          ? 'พักเบรค'
-                          : data[0].action === 'Out'
-                          ? 'เลิกงาน'
-                          : 'เข้างาน'
-                        : 'เริ่มงานครั้งแรก'}
-                    </Typography>
-                  </Button>
-
-                  <Button
-                    disabled={data && data.length && data[0].action === 'Out'}
-                    style={{ width: '100px', height: '35px', marginTop: 12 }}
-                    onClick={() => {
-                      setOpen(true);
-                    }}
-                  >
-                    ออกงาน
-                  </Button>
-                </Flex>
-              </Card>
-            </Col>
-            <Col xs={24} sm={24} md={24} lg={14} xl={14}>
-              <Card
-                style={{
-                  background: 'white',
-                  borderRadius: '20px',
-                  marginBottom: '12px',
-                }}
-                bodyStyle={{ padding: '20px' }}
-              >
-                <div>
-                  <Typography.Title level={3} style={{ marginTop: '12px' }}>
-                    {wf?.name}
-                  </Typography.Title>
-                  <Typography.Title level={5} style={{ marginTop: '12px' }}>
-                    รายละเอียดงาน : {wf.descriptions}
-                  </Typography.Title>
-
-                  <Typography.Paragraph>
-                    {'ทำงานไป 12 ชม และ พักเบรคไป  57 นาที'}
-                  </Typography.Paragraph>
-                </div>
-              </Card>
-              <List
-                size="small"
-                header={
-                  <Typography.Title
-                    level={5}
-                    style={{ textAlign: 'center', marginTop: '12px' }}
-                  >
-                    ประวัติการเข้างาน - ออกงาน
-                  </Typography.Title>
-                }
-                pagination={{ pageSize: 5 }}
-                bordered
-                dataSource={
-                  data && data.length
-                    ? data.sort(
-                        (a: any, b: any) =>
-                          dayjs(b.createdAt).valueOf() -
-                          dayjs(a.createdAt).valueOf(),
-                      )
-                    : []
-                }
-                renderItem={(item: any) => (
-                  <List.Item>
-                    <Flex gap={20}>
-                      <Typography>
-                        เวลา {dayjs(item?.createdAt).format('hh:mm:ss')}
+                      <Typography
+                        style={{
+                          color: 'white',
+                          fontSize: '24px',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        {data && data.length
+                          ? data[0].action === 'In'
+                            ? 'พักเบรค'
+                            : data[0].action === 'Out'
+                            ? 'เลิกงาน'
+                            : 'เข้างาน'
+                          : 'เริ่มงานครั้งแรก'}
                       </Typography>
+                    </Button>
 
-                      <Typography>
-                        {item?.action === 'In'
-                          ? 'เข้างาน'
-                          : item?.action === 'Break'
-                          ? 'พักเบรค'
-                          : 'ออกงาน'}
-                      </Typography>
-                    </Flex>
-                  </List.Item>
-                )}
-              />
-            </Col>
-          </Row>
-        </>
-      )}
+                    <Button
+                      disabled={data && data.length && data[0].action === 'Out'}
+                      style={{ width: '100px', height: '35px', marginTop: 12 }}
+                      onClick={() => {
+                        setOpen(true);
+                      }}
+                    >
+                      ออกงาน
+                    </Button>
+                  </Flex>
+                </Card>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={14} xl={14}>
+                <Card
+                  style={{
+                    background: 'white',
+                    borderRadius: '20px',
+                    marginBottom: '12px',
+                  }}
+                  bodyStyle={{ padding: '20px' }}
+                >
+                  <div>
+                    <Typography.Title level={3} style={{ marginTop: '12px' }}>
+                      {wf?.name}
+                    </Typography.Title>
+                    <Typography.Title level={5} style={{ marginTop: '12px' }}>
+                      รายละเอียดงาน : {wf.descriptions}
+                    </Typography.Title>
+
+                    <Typography.Paragraph>
+                      {'ทำงานไป 12 ชม และ พักเบรคไป  57 นาที'}
+                    </Typography.Paragraph>
+                  </div>
+                </Card>
+                <List
+                  size="small"
+                  header={
+                    <Typography.Title
+                      level={5}
+                      style={{ textAlign: 'center', marginTop: '12px' }}
+                    >
+                      ประวัติการเข้างาน - ออกงาน
+                    </Typography.Title>
+                  }
+                  pagination={{ pageSize: 5 }}
+                  bordered
+                  dataSource={
+                    data && data.length
+                      ? data.sort(
+                          (a: any, b: any) =>
+                            dayjs(b.createdAt).valueOf() -
+                            dayjs(a.createdAt).valueOf(),
+                        )
+                      : []
+                  }
+                  renderItem={(item: any) => (
+                    <List.Item>
+                      <Flex gap={20}>
+                        <Typography>
+                          เวลา {dayjs(item?.createdAt).format('hh:mm:ss')}
+                        </Typography>
+
+                        <Typography>
+                          {item?.action === 'In'
+                            ? 'เข้างาน'
+                            : item?.action === 'Break'
+                            ? 'พักเบรค'
+                            : 'ออกงาน'}
+                        </Typography>
+                      </Flex>
+                    </List.Item>
+                  )}
+                />
+              </Col>
+            </Row>
+          </>
+        )}
+      </Space>
     </>
   );
 };

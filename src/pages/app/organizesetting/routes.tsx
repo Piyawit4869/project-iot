@@ -1,8 +1,5 @@
-import {
-  OrganizeSingle,
-  organizeSingleAction,
-  organizeSingleLoader,
-} from './OrganizeSingle';
+import { organizeSingleAction, organizeSingleLoader } from './action';
+import { OrganizeSingle } from './OrganizeSingle';
 
 export const routes = [
   {

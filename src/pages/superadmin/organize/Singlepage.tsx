@@ -40,7 +40,6 @@ import { CreateButton } from '@src/components/shared/CreateButton';
 import { SearchBar } from '@src/components/shared/SearchBar';
 import vine, { errors } from '@vinejs/vine';
 import { schemaUpdateOrg } from './schema';
-import { useOrganizationContext } from '@src/contexts/OrganizationContext';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { debounce } from 'lodash';
 import { ModalForm, ModalIndex } from '@src/components/modules/admin';
@@ -54,7 +53,6 @@ interface TypeOfUniqError {
 
 export const OrganizeSingle: React.FC = () => {
   const { organize, branches, param } = useLoaderData() as any;
-  const { setOrganization } = useOrganizationContext() as any;
   const fetcher = useFetcher();
 
   const [form] = Form.useForm();
@@ -266,8 +264,6 @@ export const OrganizeSingle: React.FC = () => {
     if (organize && organize.openingDate) {
       businessRegister = dayjs(organize.openingDate);
     }
-
-    setOrganization({ nameTh: organize.nameTh });
 
     setType(organize.type);
 

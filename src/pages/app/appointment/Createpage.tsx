@@ -8,6 +8,7 @@ import {
   Row,
   Segmented,
   Select,
+  Space,
   TimePicker,
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
@@ -122,174 +123,188 @@ export const AppointmentCreate = () => {
 
   return (
     <>
-      <TitleBar
-        title={'สร้างการนัดหมาย'}
-        subTitle={'สร้างการนัดหมายเสร็จแล้วจะได้ลิงค์ Google Meet ไว้ใช้งาน'}
-        buttons={[<Button type="primary">ยืนยัน</Button>]}
-      />
-      <Form layout="vertical">
-        <div style={{ marginTop: '12px' }}>
-          <Row gutter={[12, 12]}>
-            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <CalendarComponent
-                fullWidth={false}
-                onSelect={onDateSelect}
-                headerRender={({ value, onChange }: any) => {
-                  const start = 0;
-                  const end = 12;
-                  const monthOptions = [];
+      <Space
+        direction="vertical"
+        style={{
+          width: '100%',
+          backgroundColor: 'white',
+          borderRadius: 5,
+          padding: '20px 0px',
+          position: 'sticky',
+          zIndex: 10,
+          borderImageSlice: 1,
+          top: '-10px',
+        }}
+      >
+        <TitleBar
+          title={'สร้างการนัดหมาย'}
+          subTitle={'สร้างการนัดหมายเสร็จแล้วจะได้ลิงค์ Google Meet ไว้ใช้งาน'}
+          buttons={[<Button type="primary">ยืนยัน</Button>]}
+        />
+        <Form layout="vertical">
+          <div style={{ marginTop: '12px' }}>
+            <Row gutter={[12, 12]}>
+              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                <CalendarComponent
+                  fullWidth={false}
+                  onSelect={onDateSelect}
+                  headerRender={({ value, onChange }: any) => {
+                    const start = 0;
+                    const end = 12;
+                    const monthOptions = [];
 
-                  let current = value.clone();
-                  const localeData = value.localeData();
-                  const months = [];
-                  for (let i = 0; i < 12; i++) {
-                    current = current.month(i);
-                    months.push(localeData.monthsShort(current));
-                  }
+                    let current = value.clone();
+                    const localeData = value.localeData();
+                    const months = [];
+                    for (let i = 0; i < 12; i++) {
+                      current = current.month(i);
+                      months.push(localeData.monthsShort(current));
+                    }
 
-                  for (let i = start; i < end; i++) {
-                    monthOptions.push(
-                      <Select.Option key={i} value={i} className="month-item">
-                        {months[i]}
-                      </Select.Option>,
+                    for (let i = start; i < end; i++) {
+                      monthOptions.push(
+                        <Select.Option key={i} value={i} className="month-item">
+                          {months[i]}
+                        </Select.Option>,
+                      );
+                    }
+
+                    const year = value.year();
+                    const month = value.month();
+                    const options = [];
+                    for (let i = year - 10; i < year + 10; i += 1) {
+                      options.push(
+                        <Select.Option key={i} value={i} className="year-item">
+                          {i}
+                        </Select.Option>,
+                      );
+                    }
+                    return (
+                      <Row gutter={8} justify={'end'} style={{ margin: '8px' }}>
+                        <Col>
+                          <Select
+                            popupMatchSelectWidth={false}
+                            className="my-year-select"
+                            value={year}
+                            onChange={(newYear: any) => {
+                              const now = value.clone().year(newYear);
+                              onChange(now);
+                            }}
+                          >
+                            {options}
+                          </Select>
+                        </Col>
+                        <Col>
+                          <Select
+                            popupMatchSelectWidth={false}
+                            value={month}
+                            onChange={(newMonth: any) => {
+                              const now = value.clone().month(newMonth);
+                              onChange(now);
+                            }}
+                          >
+                            {monthOptions}
+                          </Select>
+                        </Col>
+                      </Row>
                     );
-                  }
-
-                  const year = value.year();
-                  const month = value.month();
-                  const options = [];
-                  for (let i = year - 10; i < year + 10; i += 1) {
-                    options.push(
-                      <Select.Option key={i} value={i} className="year-item">
-                        {i}
-                      </Select.Option>,
-                    );
-                  }
-                  return (
-                    <Row gutter={8} justify={'end'} style={{ margin: '8px' }}>
-                      <Col>
-                        <Select
-                          popupMatchSelectWidth={false}
-                          className="my-year-select"
-                          value={year}
-                          onChange={(newYear: any) => {
-                            const now = value.clone().year(newYear);
-                            onChange(now);
-                          }}
-                        >
-                          {options}
-                        </Select>
-                      </Col>
-                      <Col>
-                        <Select
-                          popupMatchSelectWidth={false}
-                          value={month}
-                          onChange={(newMonth: any) => {
-                            const now = value.clone().month(newMonth);
-                            onChange(now);
-                          }}
-                        >
-                          {monthOptions}
-                        </Select>
-                      </Col>
-                    </Row>
-                  );
-                }}
-              />
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <Row gutter={8}>
-                <Col span={24}>
-                  <Form.Item label="ตัวเลือกใช้งาน">
-                    <Segmented
-                      type="primary"
-                      defaultValue="system"
-                      options={[
-                        { value: 'system', label: 'ระบบ' },
-                        { value: 'google', icon: <GoogleOutlined /> },
-                      ]}
-                      onChange={(value) => {
-                        setSystem(value);
-                      }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                  <Form.Item
-                    label="ชื่อการนัดหมาย"
-                    name="name"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'จำเป็นต้องกรอกชื่อการนัดหมาย',
-                      },
-                    ]}
-                  >
-                    <Input placeholder="กรอกชื่อการนัดหมาย" />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                  <Form.Item
-                    label="เวลานัดหมาย"
-                    name="duedate"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'จำเป็นต้องเลือกเวลานัดหมาย',
-                      },
-                    ]}
-                  >
-                    <TimePicker
-                      use12Hours
-                      format="h:mm a"
-                      placeholder="กรุณาเลือกเวลานัดหมาย"
-                      style={{ width: '100%' }}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Form.Item
-                label="ผู้เข้าร่วมนัดหมาย"
-                name="joiners"
-                rules={[
-                  {
-                    required: true,
-                    message: 'จำเป็นต้องเลือกผู้เข้าร่วมนัดหมาย',
-                  },
-                ]}
-              >
-                <Select
-                  mode="multiple"
-                  style={{ width: '100%' }}
-                  placeholder="เลือกผู้เข้าร่วมนัดหมาย"
-                  defaultValue={['Phuwis Watthana']}
-                  onChange={handleChange}
-                  options={employeeOptions}
+                  }}
                 />
-              </Form.Item>
-              <Form.Item label="สถานที่" name="location">
-                <TextArea placeholder="กรอกสถานที่" />
-              </Form.Item>
-              <Form.Item label="รายละเอียด" name="descriptions">
-                <TextArea placeholder="กรอกรายละเอียด" />
-              </Form.Item>
-              {system === 'google' && (
-                <Button
-                  onClick={() => login()}
-                  size="large"
-                  type="primary"
-                  htmlType="submit"
-                  icon={<GoogleOutlined />}
-                  style={{ width: '100%' }}
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                <Row gutter={8}>
+                  <Col span={24}>
+                    <Form.Item label="ตัวเลือกใช้งาน">
+                      <Segmented
+                        type="primary"
+                        defaultValue="system"
+                        options={[
+                          { value: 'system', label: 'ระบบ' },
+                          { value: 'google', icon: <GoogleOutlined /> },
+                        ]}
+                        onChange={(value) => {
+                          setSystem(value);
+                        }}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                    <Form.Item
+                      label="ชื่อการนัดหมาย"
+                      name="name"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'จำเป็นต้องกรอกชื่อการนัดหมาย',
+                        },
+                      ]}
+                    >
+                      <Input placeholder="กรอกชื่อการนัดหมาย" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                    <Form.Item
+                      label="เวลานัดหมาย"
+                      name="duedate"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'จำเป็นต้องเลือกเวลานัดหมาย',
+                        },
+                      ]}
+                    >
+                      <TimePicker
+                        use12Hours
+                        format="h:mm a"
+                        placeholder="กรุณาเลือกเวลานัดหมาย"
+                        style={{ width: '100%' }}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+
+                <Form.Item
+                  label="ผู้เข้าร่วมนัดหมาย"
+                  name="joiners"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'จำเป็นต้องเลือกผู้เข้าร่วมนัดหมาย',
+                    },
+                  ]}
                 >
-                  เชื่อมต่อกับ Google
-                </Button>
-              )}
-            </Col>
-          </Row>
-        </div>
-      </Form>
+                  <Select
+                    mode="multiple"
+                    style={{ width: '100%' }}
+                    placeholder="เลือกผู้เข้าร่วมนัดหมาย"
+                    defaultValue={['Phuwis Watthana']}
+                    onChange={handleChange}
+                    options={employeeOptions}
+                  />
+                </Form.Item>
+                <Form.Item label="สถานที่" name="location">
+                  <TextArea placeholder="กรอกสถานที่" />
+                </Form.Item>
+                <Form.Item label="รายละเอียด" name="descriptions">
+                  <TextArea placeholder="กรอกรายละเอียด" />
+                </Form.Item>
+                {system === 'google' && (
+                  <Button
+                    onClick={() => login()}
+                    size="large"
+                    type="primary"
+                    htmlType="submit"
+                    icon={<GoogleOutlined />}
+                    style={{ width: '100%' }}
+                  >
+                    เชื่อมต่อกับ Google
+                  </Button>
+                )}
+              </Col>
+            </Row>
+          </div>
+        </Form>
+      </Space>
     </>
   );
 };

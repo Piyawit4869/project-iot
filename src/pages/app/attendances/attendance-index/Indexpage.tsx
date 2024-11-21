@@ -1,7 +1,7 @@
 // import { InfoCircleOutlined } from '@ant-design/icons';
 import { TitleBar } from '@src/components/shared';
 import { TableComponent } from '@src/components/shared/TableComponent';
-import { Card, Col, Row, Typography } from 'antd';
+import { Card, Col, Row, Space, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { Link, useLoaderData } from 'react-router-dom';
 
@@ -122,118 +122,135 @@ export const AttendanceIndex = () => {
 
   return (
     <>
-      {me?.role?.name === 'owner' || me?.role?.name === 'manager' ? (
-        <div style={{ marginBottom: '30px' }}>
-          <TitleBar
-            title={'ภาพรวมการทำงานในองค์กรวันนี้'}
-            subTitle={'สวัสดีตอนเที่ยง!'}
-          />
-          <Row gutter={[12, 12]} style={{ marginTop: '12px' }}>
-            <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-              <Card
-                title={'ยังไม่เข้างาน'}
-                style={{
-                  background: 'white',
-                  borderTop: '4px solid #19142A',
-                  borderTopWidth: '5px',
-                }}
-                bodyStyle={{ padding: '0 22px' }}
-              >
-                <Typography.Title level={3}>0 คน</Typography.Title>
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-              <Card
-                title={'ลากิจ / ลาป่วย'}
-                style={{
-                  background: 'white',
-                  borderTop: '4px solid #19142A',
-                  borderTopWidth: '5px',
-                }}
-                bodyStyle={{ padding: '0 22px' }}
-              >
-                <Typography.Title level={3}>1 คน</Typography.Title>
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-              <Card
-                title={'เข้างานแล้ว'}
-                style={{
-                  background: 'white',
-                  borderTop: '4px solid #19142A',
-                  borderTopWidth: '5px',
-                }}
-                bodyStyle={{ padding: '0 22px' }}
-              >
-                <Typography.Title level={3}>7 คน</Typography.Title>
-              </Card>
-            </Col>
+      <Space
+        direction="vertical"
+        style={{
+          width: '100%',
+          backgroundColor: 'white',
+          borderRadius: 5,
+          padding: '20px 0px',
+          position: 'sticky',
+          zIndex: 10,
+          borderImageSlice: 1,
+          top: '-10px',
+        }}
+      >
+        {me?.role?.name === 'owner' || me?.role?.name === 'manager' ? (
+          <div style={{ marginBottom: '30px' }}>
+            <TitleBar
+              title={'ภาพรวมการทำงานในองค์กรวันนี้'}
+              subTitle={'สวัสดีตอนเที่ยง!'}
+            />
+            <Row gutter={[12, 12]} style={{ marginTop: '12px' }}>
+              <Col xs={24} sm={12} md={12} lg={8} xl={8}>
+                <Card
+                  title={'ยังไม่เข้างาน'}
+                  style={{
+                    background: 'white',
+                    borderTop: '4px solid #19142A',
+                    borderTopWidth: '5px',
+                  }}
+                  bodyStyle={{ padding: '0 22px' }}
+                >
+                  <Typography.Title level={3}>0 คน</Typography.Title>
+                </Card>
+              </Col>
+              <Col xs={24} sm={12} md={12} lg={8} xl={8}>
+                <Card
+                  title={'ลากิจ / ลาป่วย'}
+                  style={{
+                    background: 'white',
+                    borderTop: '4px solid #19142A',
+                    borderTopWidth: '5px',
+                  }}
+                  bodyStyle={{ padding: '0 22px' }}
+                >
+                  <Typography.Title level={3}>1 คน</Typography.Title>
+                </Card>
+              </Col>
+              <Col xs={24} sm={12} md={12} lg={8} xl={8}>
+                <Card
+                  title={'เข้างานแล้ว'}
+                  style={{
+                    background: 'white',
+                    borderTop: '4px solid #19142A',
+                    borderTopWidth: '5px',
+                  }}
+                  bodyStyle={{ padding: '0 22px' }}
+                >
+                  <Typography.Title level={3}>7 คน</Typography.Title>
+                </Card>
+              </Col>
 
-            <Col
-              xs={24}
-              sm={24}
-              md={24}
-              lg={24}
-              xl={24}
-              style={{ marginTop: '12px' }}
-            >
-              <TableComponent columns={myAttendanceColumns} dataSource={data} />
-            </Col>
-          </Row>
-        </div>
-      ) : (
-        <div style={{ marginBottom: '30px' }}>
-          <TitleBar
-            title={'การทำงานของฉันวันนี้'}
-            subTitle={'วันนี้ฉันทำงานเป็นยังไงบ้างนะ'}
-          />
-          <Row gutter={[12, 12]} style={{ marginTop: '12px' }}>
-            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <Link to={'#'}>
-                <Card
-                  title={'เหลือวันลา'}
-                  style={{
-                    background: 'white',
-                    borderTop: '4px solid #19142A',
-                    borderTopWidth: '5px',
-                  }}
-                  bodyStyle={{ padding: '0 22px' }}
-                >
-                  <Typography.Title level={3}>2 วัน</Typography.Title>
-                </Card>
-              </Link>
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <Link to={'#'}>
-                <Card
-                  title={'นัดหมายในวันนี้'}
-                  style={{
-                    background: 'white',
-                    borderTop: '4px solid #19142A',
-                    borderTopWidth: '5px',
-                  }}
-                  bodyStyle={{ padding: '0 22px' }}
-                >
-                  <Typography.Title level={3}>2 นัดหมาย</Typography.Title>
-                </Card>
-              </Link>
-            </Col>
-            <Col
-              xs={24}
-              sm={24}
-              md={24}
-              lg={24}
-              xl={24}
-              style={{ marginTop: '12px' }}
-            >
-              <TableComponent
-                columns={myAttendanceColumns}
-                dataSource={myAttendance}
-              />
-            </Col>
-          </Row>
-        </div>
-      )}
+              <Col
+                xs={24}
+                sm={24}
+                md={24}
+                lg={24}
+                xl={24}
+                style={{ marginTop: '12px' }}
+              >
+                <TableComponent
+                  columns={myAttendanceColumns}
+                  dataSource={data}
+                />
+              </Col>
+            </Row>
+          </div>
+        ) : (
+          <div style={{ marginBottom: '30px' }}>
+            <TitleBar
+              title={'การทำงานของฉันวันนี้'}
+              subTitle={'วันนี้ฉันทำงานเป็นยังไงบ้างนะ'}
+            />
+            <Row gutter={[12, 12]} style={{ marginTop: '12px' }}>
+              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                <Link to={'#'}>
+                  <Card
+                    title={'เหลือวันลา'}
+                    style={{
+                      background: 'white',
+                      borderTop: '4px solid #19142A',
+                      borderTopWidth: '5px',
+                    }}
+                    bodyStyle={{ padding: '0 22px' }}
+                  >
+                    <Typography.Title level={3}>2 วัน</Typography.Title>
+                  </Card>
+                </Link>
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                <Link to={'#'}>
+                  <Card
+                    title={'นัดหมายในวันนี้'}
+                    style={{
+                      background: 'white',
+                      borderTop: '4px solid #19142A',
+                      borderTopWidth: '5px',
+                    }}
+                    bodyStyle={{ padding: '0 22px' }}
+                  >
+                    <Typography.Title level={3}>2 นัดหมาย</Typography.Title>
+                  </Card>
+                </Link>
+              </Col>
+              <Col
+                xs={24}
+                sm={24}
+                md={24}
+                lg={24}
+                xl={24}
+                style={{ marginTop: '12px' }}
+              >
+                <TableComponent
+                  columns={myAttendanceColumns}
+                  dataSource={myAttendance}
+                />
+              </Col>
+            </Row>
+          </div>
+        )}
+      </Space>
     </>
   );
 };

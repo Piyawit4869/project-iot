@@ -1,98 +1,65 @@
-import * as API from '@src/apis';
-import { redirect, useLoaderData, useSubmit } from 'react-router-dom';
-import { Button, notification, Form, Col, Row, TimePicker, Select } from 'antd';
+import { useFetcher, useLoaderData } from 'react-router-dom';
+import { Button, Form, Col, Row, TimePicker, Select, Flex } from 'antd';
 import React from 'react';
 import dayjs from 'dayjs';
-import vine, { errors } from '@vinejs/vine';
+
 import {
-  FormButtonsSetting,
-  FormButtonsSystemSetting,
-} from '@src/components/shared/FormButtons';
-import { DynamicForm } from '@src/forms';
-import {
+  renderAddress,
+  renderAddressSetting,
+  renderSetting,
   renderSettingData,
   renderSystemSetting,
 } from '../../superadmin/organize/renderForm';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { debounce } from 'lodash';
+import { FormButtonsSetting } from '@src/components/shared/FormButtons';
+import { FormFields } from '@src/forms';
+import { ModalIndex, ModalForm } from '@src/components/modules/admin';
+import {
+  AddressesColumns,
+  mockupAddresses,
+  SettingsColumns,
+  mockupSettings,
+} from '@src/pages/superadmin/organize/organizeData';
 
-export async function organizeSingleLoader() {
-  try {
-    const setting = await API.organize.getSetting();
-
-    return {
-      setting: setting.data.data,
-    };
-  } catch (error) {
-    return { organize: {}, params: [] };
-  }
-}
-
-export async function organizeSingleAction({ request }: any) {
-  const formData = await request.formData();
-  const submitData = Object.fromEntries(formData);
-  const me = JSON.parse(localStorage.getItem('me') as any);
-
-  switch (submitData.action) {
-    case 'edit':
-      try {
-        await API.organize.update(
-          me.organizationId,
-          JSON.parse(submitData.data),
-        );
-        notification['success']({
-          message: 'แก้ไขข้อมูลองค์กรเสร็จสิ้น',
-          placement: 'bottomRight',
-          duration: 3,
-        });
-        return redirect(`/information`);
-      } catch (error) {
-        notification['error']({
-          message: 'แก้ไขข้อมูลองค์กรล้มเหลว',
-          placement: 'bottomRight',
-          duration: 3,
-        });
-        return {
-          data: {
-            action: 'create',
-            status: 'error',
-            message: 'Organize Created Failed !',
-          },
-        };
-      }
-    case 'update':
-      try {
-        await API.organize.updateSystem(JSON.parse(submitData.data));
-        notification['success']({
-          message: 'แก้ไขข้อมูลองค์กรเสร็จสิ้น',
-          placement: 'bottomRight',
-          duration: 3,
-        });
-        return redirect(`/information`);
-      } catch (error) {
-        notification['error']({
-          message: 'แก้ไขข้อมูลองค์กรล้มเหลว',
-          placement: 'bottomRight',
-          duration: 3,
-        });
-        return {
-          data: {
-            action: 'create',
-            status: 'error',
-            message: 'Organize Created Failed !',
-          },
-        };
-      }
-
-    default:
-      break;
-  }
+interface TypeOfUniqError {
+  name: string;
+  status: string;
+  uniqError: boolean;
+  errorMessage: string;
 }
 
 export const OrganizeSingle: React.FC = () => {
   const { setting } = useLoaderData() as any;
-  const [settingForm] = Form.useForm();
+  const fetcher = useFetcher();
+  const [form] = Form.useForm();
+  const [addressForm] = Form.useForm();
   const [systemForm] = Form.useForm();
-  const submit = useSubmit();
+
+  const [addressCreateForm] = Form.useForm();
+  const [addressEditForm] = Form.useForm();
+
+  const [settingCreateForm] = Form.useForm();
+  const [settingEditForm] = Form.useForm();
+
+  const [openAddresses, setOpenAddresses] = React.useState(false);
+  const [openAddressFormCreate, setOpenAddressFormCreate] =
+    React.useState(false);
+  const [openAddressFormSingle, setOpenAddressFormSingle] =
+    React.useState(false);
+
+  const [openSettings, setOpenSettings] = React.useState(false);
+  const [openSettingFormCreate, setOpenSettingFormCreate] =
+    React.useState(false);
+  const [openSettingFormSingle, setOpenSettingFormSingle] =
+    React.useState(false);
+
+  const [selectedAddressId, setSelectedAddressId] = React.useState(null);
+  const [selectedSettingId, setSelectedSettingId] = React.useState(null);
+
+  const [uniqError, setUniqError] = React.useState<TypeOfUniqError[]>([]);
+
+  // const submit = useSubmit();
   const daysOfWeek = [
     'Sunday',
     'Monday',
@@ -105,129 +72,184 @@ export const OrganizeSingle: React.FC = () => {
 
   const [type, setType] = React.useState('');
 
-  const schemaUpdateOrg = vine.object({
-    nameTh: vine.string(),
-    nameEn: vine.string(),
-    taxId: vine.string(),
-    active: vine.boolean(),
-    status: vine.enum([
-      'newly_registered',
-      'active',
-      'loyal_customer',
-      'at_risk',
-      'churned',
-    ]),
-    fromType: vine.enum(['ordinary_person', 'juristic_person']),
-    type: vine.enum([
-      'Taxpayer',
-      'OrdinaryPartnership',
-      'Shop',
-      'BodyOfPerson',
-      'company_limited',
-      'public_company_limited',
-      'limited_partnership',
-      'foundation',
-      'association',
-      'joint_venture',
-      'others',
-    ]),
-    descriptionsTh: vine.string().optional(),
-    descriptionsEn: vine.string().optional(),
-    registerVat: vine.boolean(),
-    openingDate: vine.string().optional(),
-    websiteUrl: vine.string().optional(),
-    contactEmail: vine.string().email(),
-    contactPhone: vine.string().maxLength(15),
-    contactWebsite: vine.string().optional(),
-    businessEmail: vine.string().email().optional(),
-    contactFacebook: vine.string().optional(),
-    contactLine: vine.string().optional(),
-    contactWhatsapp: vine.string().optional(),
-    contactNote: vine.string().optional(),
-  });
+  const onOpenAddresses = () => {
+    setOpenAddresses(true);
+  };
+
+  const handleAddressSingle = async (id: any) => {
+    setOpenAddresses(false);
+    setSelectedAddressId(id);
+    setOpenAddressFormSingle(true);
+
+    // try {
+    //   const response = await API.organization.getAddress(selectedAddressId);
+
+    //   addressEditForm.setFieldsValue({ ...response.data });
+
+    //   return { message: 'Success to get address ' };
+    // } catch (error) {
+    //   addressEditForm.setFieldsValue({});
+    //   return { message: 'Fail to get address', error };
+    // }
+  };
+
+  const onOpenSettings = () => {
+    setOpenSettings(true);
+  };
+
+  const handleSettingSingle = async (id: any) => {
+    setOpenSettings(false);
+    setSelectedSettingId(id);
+    setOpenSettingFormSingle(true);
+
+    // try {
+    //   const response = await API.organization.getSetting(selectedAddressId);
+
+    //   addressEditForm.setFieldsValue({ ...response.data });
+
+    //   return { message: 'Success to get address ' };
+    // } catch (error) {
+    //   addressEditForm.setFieldsValue({});
+    //   return { message: 'Fail to get address', error };
+    // }
+  };
+
+  const onCreateAddressFinish = async (values: any) => {
+    console.log(values);
+  };
+  const onEditAddressFinish = async (values: any) => {
+    console.log(values);
+  };
+
+  const onCreateSettingFinish = async (values: any) => {
+    console.log(values);
+  };
+  const onEditSettingFinish = async (values: any) => {
+    console.log(values);
+  };
+
+  const onDeleteAddress = () => {
+    console.log('Address Deleted !');
+  };
+  const onDeleteSetting = () => {
+    console.log('Setting Deleted !');
+  };
+
+  const onAddressFinish = async (values: any) => {
+    console.log(values);
+  };
 
   const onFinish = async (values: any) => {
-    const validator = vine.compile(schemaUpdateOrg);
-    try {
-      const payload = { ...values };
-      if (!payload.active) {
-        payload.active = true;
-      }
+    console.log(values);
 
-      if (values.file && values.file.length > 0) {
-        if (values.file[0].url) {
-          payload.logoUrl = values.file[0].url;
-          delete payload.file;
-        } else {
-          values.logoUrl = values.file[0].response?.url;
-          delete payload.file;
-        }
-      } else {
-        payload.logoUrl = null;
-        delete payload.file;
-      }
-
-      payload.openingDate = dayjs(payload.openingDate).toISOString();
-
-      await validator.validate(payload);
-
-      await submit(
-        { data: JSON.stringify(payload), action: 'edit' },
-        { method: 'put' },
-      );
-    } catch (error) {
-      if (error instanceof errors.E_VALIDATION_ERROR) {
-        console.log(error.messages);
-
-        notification.error({
-          message: 'แก้ไขข้อมูลองค์กรเสร็จสิ้น',
-          placement: 'bottomRight',
-          duration: 3,
-        });
-      } else {
-        notification.error({
-          message: 'ข้อมูลไม่ถูกต้อง',
-          placement: 'bottomRight',
-          duration: 3,
-        });
-      }
-    }
+    // const validator = vine.compile(schemaUpdateOrg);
+    // try {
+    //   const payload = { ...values };
+    //   if (!payload.active) {
+    //     payload.active = true;
+    //   }
+    //   if (values.file && values.file.length > 0) {
+    //     if (values.file[0].url) {
+    //       payload.logoUrl = values.file[0].url;
+    //       delete payload.file;
+    //     } else {
+    //       values.logoUrl = values.file[0].response?.url;
+    //       delete payload.file;
+    //     }
+    //   } else {
+    //     payload.logoUrl = null;
+    //     delete payload.file;
+    //   }
+    //   payload.openingDate = dayjs(payload.openingDate).toISOString();
+    //   await validator.validate(payload);
+    //   await submit(
+    //     { data: JSON.stringify(payload), action: 'edit' },
+    //     { method: 'put' },
+    //   );
+    // } catch (error) {
+    //   if (error instanceof errors.E_VALIDATION_ERROR) {
+    //     console.log(error.messages);
+    //     notification.error({
+    //       message: 'แก้ไขข้อมูลองค์กรเสร็จสิ้น',
+    //       placement: 'bottomRight',
+    //       duration: 3,
+    //     });
+    //   } else {
+    //     notification.error({
+    //       message: 'ข้อมูลไม่ถูกต้อง',
+    //       placement: 'bottomRight',
+    //       duration: 3,
+    //     });
+    //   }
+    // }
   };
 
   const onSystemFinish = async (values: any) => {
-    try {
-      const payload = { ...values };
+    console.log(values);
 
-      if (payload.openDays && Array.isArray(payload.openDays)) {
-        payload.openDays = payload.openDays.map((dayItem: any) => ({
-          ...dayItem,
-          open: dayjs(dayItem.open).format('HH:mm'),
-          close: dayjs(dayItem.close).format('HH:mm'),
-        }));
-      }
+    // try {
+    //   const payload = { ...values };
 
-      if (!payload.active) {
-        payload.active = true;
-      }
+    //   if (payload.openDays && Array.isArray(payload.openDays)) {
+    //     payload.openDays = payload.openDays.map((dayItem: any) => ({
+    //       ...dayItem,
+    //       open: dayjs(dayItem.open).format('HH:mm'),
+    //       close: dayjs(dayItem.close).format('HH:mm'),
+    //     }));
+    //   }
 
-      await submit(
-        { data: JSON.stringify(payload), action: 'update' },
-        { method: 'put' },
-      );
-    } catch (error) {
-      notification.error({
-        message: 'แก้ไขข้อมูลองค์กรเสร็จสิ้น',
-        placement: 'bottomRight',
-        duration: 3,
-      });
-    }
+    //   if (!payload.active) {
+    //     payload.active = true;
+    //   }
+
+    //   await submit(
+    //     { data: JSON.stringify(payload), action: 'update' },
+    //     { method: 'put' },
+    //   );
+    // } catch (error) {
+    //   notification.error({
+    //     message: 'แก้ไขข้อมูลองค์กรเสร็จสิ้น',
+    //     placement: 'bottomRight',
+    //     duration: 3,
+    //   });
+    // }
   };
 
-  const handleValuesChange = (changedValues: any) => {
-    if (changedValues.type) {
-      setType(changedValues.type);
-    }
-  };
+  const handleFormChange = React.useCallback(
+    debounce((changedValues: any) => {
+      if (changedValues?.type) {
+        setType(changedValues.type);
+      }
+      const allowedFields = ['nameTh', 'nameEn', 'taxId'];
+      const lastChangedKey = Object.keys(changedValues || {})[0];
+      const lastChangedValue = changedValues?.[lastChangedKey];
+
+      if (
+        lastChangedKey &&
+        lastChangedValue &&
+        allowedFields.includes(lastChangedKey)
+      ) {
+        const fullName = lastChangedKey;
+        // Set temporary validation status
+        setUniqError((prev: any) => [
+          ...prev.filter((error: any) => error.name !== fullName),
+          {
+            name: fullName,
+            status: '', // Temporary status for ongoing validation
+            uniqError: false,
+            errorMessage: '',
+          },
+        ]);
+        const queryParams = new URLSearchParams({
+          [lastChangedKey]: lastChangedValue,
+        }).toString();
+
+        // Trigger API call
+        fetcher.load(`/admin/organization/find?${queryParams}`);
+      }
+    }, 300),
+    [fetcher],
+  );
 
   React.useEffect(() => {
     let businessRegister = null;
@@ -238,7 +260,11 @@ export const OrganizeSingle: React.FC = () => {
 
     setType(organize?.type);
 
-    settingForm.setFieldsValue({
+    // const address = organize?.addresses.find(
+    //   (item: any) => item.isMain === true,
+    // );
+
+    form.setFieldsValue({
       ...organize,
       openingDate: businessRegister,
       logoUrl: organize?.logoUrl
@@ -256,212 +282,538 @@ export const OrganizeSingle: React.FC = () => {
           ]
         : undefined,
     });
+    // addressForm.setFieldsValue({ ...address });
     systemForm.setFieldsValue({
       ...setting,
-      openDays: setting?.openDays.map((item: any) => ({
-        ...item,
-        open: dayjs(item.open, 'HH:mm'),
-        close: dayjs(item.close, 'HH:mm'),
-      })),
+      openDays: [],
+      // openDays: setting?.openDays.map((item: any) => ({
+      //   ...item,
+      //   open: dayjs(item.open, 'HH:mm'),
+      //   close: dayjs(item.close, 'HH:mm'),
+      // })),
     });
-  }, [settingForm, systemForm, setting]);
+  }, [form, systemForm, setting]);
+
+  React.useEffect(() => {
+    if (fetcher?.data) {
+      const { org, name } = fetcher.data; // Ensure `entity` is returned (organization or branch)
+
+      if (org?.length) {
+        setUniqError((prev: any) => {
+          const updatedErrors = prev.map((item: any) =>
+            item.name === name
+              ? {
+                  ...item,
+                  name: name,
+                  status: 'error',
+                  uniqError: true,
+                  errorMessage: `The value for ${name}  already exists.`,
+                }
+              : item,
+          );
+
+          return updatedErrors;
+        });
+      } else {
+        // Clear errors for the specific field
+        setUniqError((prev: any) => {
+          const otherUniq = prev.filter(
+            (item: any) =>
+              item.name !== name && {
+                name: name,
+                status: '',
+                uniqError: false,
+                errorMessage: '',
+              },
+          );
+
+          return otherUniq;
+        });
+      }
+    }
+  }, [fetcher?.data]);
 
   return (
     <div>
-      <div
-        style={{
-          maxHeight: '74vh',
-          minHeight: '50vh',
-          height: '100%',
-          overflowY: 'scroll',
-          overflowX: 'hidden',
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onFinish}
+        onValuesChange={(changedValues: any) => {
+          handleFormChange(changedValues);
         }}
       >
+        <FormButtonsSetting
+          form={form}
+          titleModalSubmit="คุณต้องการแก้ไขข้อมูลองค์กร ใช่หรือไม่?"
+          contentModalSubmit="ข้อมูลที่คุณกรอกจะถูกบันทึก"
+        />
+
         <Row gutter={[12, 12]}>
           <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-            <Form
-              form={settingForm}
-              layout="vertical"
-              onFinish={onFinish}
-              onValuesChange={handleValuesChange}
-            >
-              <FormButtonsSetting
-                form={settingForm}
-                titleModalSubmit="คุณต้องการแก้ไขข้อมูลองค์กร ใช่หรือไม่?"
-                contentModalSubmit="ข้อมูลที่คุณกรอกจะถูกบันทึก"
-              />
-              <Row gutter={[20, 24]} style={{ paddingTop: '20px' }}>
-                {renderSettingData.map((item: any, index: number) => {
-                  return (
-                    <DynamicForm
-                      key={index}
-                      name={item.name}
-                      label={item.label}
-                      placeholder={item.placeholder}
-                      type={item.type}
-                      col={item.col}
-                      icon={item.icon}
-                      value={item.value}
-                      rule={item.rule}
-                      option={item.options}
-                      disabled={item.disabled}
-                      checked={item.checked}
-                      maxLength={item.maxLength}
-                      defaultValue={item.defaultValue}
-                      businessType={type}
-                      isName={item.isName}
-                      title={item.title}
-                      description={item.description}
-                      form={settingForm}
-                      checkedText={item.checkedText}
-                      unCheckedText={item.unCheckedText}
-                    />
-                  );
-                })}
-              </Row>
-            </Form>
-          </Col>
-          <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-            <Form form={systemForm} layout="vertical" onFinish={onSystemFinish}>
-              <FormButtonsSystemSetting
-                form={systemForm}
-                titleModalSubmit="คุณต้องการแก้ไขตั้งค่าองค์กร ใช่หรือไม่?"
-                contentModalSubmit="ตั้งค่าที่คุณกรอกจะถูกบันทึก"
-              />
-              <Row gutter={[20, 24]} style={{ paddingTop: '20px' }}>
-                {renderSystemSetting.map((item: any, index: number) => {
-                  return (
-                    <DynamicForm
-                      key={index}
-                      name={item.name}
-                      label={item.label}
-                      placeholder={item.placeholder}
-                      type={item.type}
-                      col={item.col}
-                      icon={item.icon}
-                      value={item.value}
-                      rule={item.rule}
-                      option={item.options}
-                      disabled={item.disabled}
-                      checked={item.checked}
-                      maxLength={item.maxLength}
-                      defaultValue={item.defaultValue}
-                      businessType={type}
-                      isName={item.isName}
-                      title={item.title}
-                      description={item.description}
-                      form={systemForm}
-                      checkedText={item.checkedText}
-                      unCheckedText={item.unCheckedText}
-                    />
-                  );
-                })}
-                <Col span={24}>
-                  <Form.List name="openDays">
-                    {(fields, { add, remove }) => (
-                      <>
-                        {fields.map((field: any) => (
-                          <Row
-                            justify="space-between"
-                            align="middle"
-                            key={field.key}
-                            style={{ display: 'flex', marginBottom: 8 }}
-                          >
-                            <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                              <Form.Item
-                                {...field}
-                                name={[field.name, 'day']}
-                                fieldKey={[field.fieldKey, 'day']}
-                                label="วัน"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message:
-                                      'กรุณาเลือกวันที่ทำงานช่วงเวลานี้!',
-                                  },
-                                ]}
-                                style={{ flex: 1, marginRight: 8 }}
-                              >
-                                <Select
-                                  mode="multiple"
-                                  placeholder="เลือกวันทำงาน"
-                                >
-                                  {daysOfWeek.map((day) => (
-                                    <Select.Option key={day} value={day}>
-                                      {day}
-                                    </Select.Option>
-                                  ))}
-                                </Select>
-                              </Form.Item>
-                            </Col>
-                            <Col xs={10} sm={10} md={10} lg={5} xl={5}>
-                              <Form.Item
-                                {...field}
-                                name={[field.name, 'open']}
-                                fieldKey={[field.fieldKey, 'open']}
-                                label="เริ่มงาน"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: 'กรุณาเลือกเวลาที่งานเริ่ม!',
-                                  },
-                                ]}
-                                style={{ flex: 1, marginRight: 8 }}
-                              >
-                                <TimePicker
-                                  placeholder="เวลางานเริ่ม"
-                                  format="HH:mm"
-                                />
-                              </Form.Item>
-                            </Col>
-                            <Col xs={10} sm={10} md={10} lg={5} xl={5}>
-                              <Form.Item
-                                {...field}
-                                name={[field.name, 'close']}
-                                fieldKey={[field.fieldKey, 'close']}
-                                label="เลิกงาน"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: 'กรุณาเลือกเวลาที่งานเลิก!',
-                                  },
-                                ]}
-                                style={{ flex: 1, marginRight: 8 }}
-                              >
-                                <TimePicker
-                                  placeholder="เวลางานเลิก"
-                                  format="HH:mm"
-                                />
-                              </Form.Item>
-                            </Col>
-                            <Col xs={4} sm={4} md={4} lg={2} xl={2} span={2}>
-                              <MinusCircleOutlined
-                                style={{ alignSelf: 'center' }}
-                                onClick={() => remove(field.name)}
-                              />
-                            </Col>
-                          </Row>
-                        ))}
-
-                        <Form.Item>
-                          <Button
-                            type="dashed"
-                            onClick={() => add()}
-                            block
-                            icon={<PlusOutlined />}
-                          >
-                            เพิ่มวันทำงาน
-                          </Button>
-                        </Form.Item>
-                      </>
-                    )}
-                  </Form.List>
-                </Col>
-              </Row>
-            </Form>
+            <FormFields
+              renderForm={renderSettingData}
+              form={form}
+              uniqError={uniqError}
+              type={type}
+            />
           </Col>
         </Row>
-      </div>
+      </Form>
+      <Row gutter={[12, 12]}>
+        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+          <Form form={addressForm} layout="vertical" onFinish={onAddressFinish}>
+            <Flex
+              justify="end"
+              style={{ marginTop: '25px', marginBottom: '-75px' }}
+              align="center"
+            >
+              <Button
+                type="primary"
+                style={{ zIndex: 10 }}
+                onClick={onOpenAddresses}
+              >
+                ดูที่อยู่ทั้งหมด
+              </Button>
+            </Flex>
+            <FormFields renderForm={renderAddressSetting} form={addressForm} />
+            <Flex justify="end">
+              <Button htmlType="submit" type="primary">
+                บันทึกข้อมูลที่อยู่
+              </Button>
+            </Flex>
+          </Form>
+        </Col>
+        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+          <Form form={systemForm} layout="vertical" onFinish={onSystemFinish}>
+            <Flex
+              justify="end"
+              style={{ marginTop: '25px', marginBottom: '-75px' }}
+              align="center"
+            >
+              <Button
+                type="primary"
+                style={{ zIndex: 10 }}
+                onClick={onOpenSettings}
+              >
+                ดูการตั้งค่าทั้งหมด
+              </Button>
+            </Flex>
+            <FormFields renderForm={renderSystemSetting} form={systemForm} />
+
+            <Col span={24}>
+              <Form.List name={'openDays'}>
+                {(fields, { add, remove }) => (
+                  <>
+                    {fields.map((field: any) => (
+                      <Row
+                        justify="space-between"
+                        align="middle"
+                        key={field.key}
+                        style={{ display: 'flex', marginBottom: 8 }}
+                      >
+                        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                          <Form.Item
+                            {...field}
+                            name={[field.name, 'day']}
+                            fieldKey={[field.fieldKey, 'day']}
+                            label="วัน"
+                            rules={[
+                              {
+                                required: true,
+                                message: 'กรุณาเลือกวันที่ทำงานช่วงเวลานี้!',
+                              },
+                            ]}
+                            style={{ flex: 1, marginRight: 8 }}
+                          >
+                            <Select mode="multiple" placeholder="เลือกวันทำงาน">
+                              {daysOfWeek.map((day) => (
+                                <Select.Option key={day} value={day}>
+                                  {day}
+                                </Select.Option>
+                              ))}
+                            </Select>
+                          </Form.Item>
+                        </Col>
+                        <Col xs={10} sm={10} md={10} lg={5} xl={5}>
+                          <Form.Item
+                            {...field}
+                            name={[field.name, 'openTime']}
+                            fieldKey={[field.fieldKey, 'openTime']}
+                            label="เริ่มงาน"
+                            rules={[
+                              {
+                                required: true,
+                                message: 'กรุณาเลือกเวลาที่งานเริ่ม!',
+                              },
+                            ]}
+                            style={{ flex: 1, marginRight: 8 }}
+                          >
+                            <TimePicker
+                              placeholder="เวลางานเริ่ม"
+                              format="HH:mm"
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={10} sm={10} md={10} lg={5} xl={5}>
+                          <Form.Item
+                            {...field}
+                            name={[field.name, 'closeTime']}
+                            fieldKey={[field.fieldKey, 'closeTime']}
+                            label="เลิกงาน"
+                            rules={[
+                              {
+                                required: true,
+                                message: 'กรุณาเลือกเวลาที่งานเลิก!',
+                              },
+                            ]}
+                            style={{ flex: 1, marginRight: 8 }}
+                          >
+                            <TimePicker
+                              placeholder="เวลางานเลิก"
+                              format="HH:mm"
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={4} sm={4} md={4} lg={2} xl={2} span={2}>
+                          <MinusCircleOutlined
+                            style={{ alignSelf: 'center' }}
+                            onClick={() => remove(field.name)}
+                          />
+                        </Col>
+                      </Row>
+                    ))}
+
+                    <Form.Item>
+                      <Button
+                        type="dashed"
+                        onClick={() => add()}
+                        block
+                        icon={<PlusOutlined />}
+                      >
+                        เพิ่มวันทำงาน
+                      </Button>
+                    </Form.Item>
+                  </>
+                )}
+              </Form.List>
+            </Col>
+            <Flex justify="end">
+              <Button htmlType="submit" type="primary">
+                บันทึกการตั้งค่า
+              </Button>
+            </Flex>
+          </Form>
+        </Col>
+      </Row>
+      <ModalIndex
+        title={'ที่อยู่ทั้งหมด'}
+        open={openAddresses}
+        onCancel={() => {
+          setOpenAddresses(false);
+        }}
+        buttonText={'สร้างที่อยู่ใหม่'}
+        onButtonClick={() => {
+          setOpenAddresses(false);
+          setOpenAddressFormCreate(true);
+        }}
+        columns={AddressesColumns(handleAddressSingle)}
+        dataSource={mockupAddresses}
+      />
+      <ModalForm
+        title={`สร้างที่อยู่ใหม่`}
+        open={openAddressFormCreate}
+        onCancel={() => {
+          setOpenAddressFormCreate(false);
+        }}
+        child={
+          <Form
+            layout="vertical"
+            form={addressCreateForm}
+            onFinish={onCreateAddressFinish}
+          >
+            <FormFields renderForm={renderAddress} form={addressCreateForm} />
+            <Flex justify="end" gap={12}>
+              <Button htmlType="submit" type="primary">
+                สร้าง
+              </Button>
+            </Flex>
+          </Form>
+        }
+      />
+      <ModalForm
+        title={`ที่อยู่ที่ ${selectedAddressId}`}
+        open={openAddressFormSingle}
+        onCancel={() => {
+          setOpenAddressFormSingle(false);
+        }}
+        child={
+          <Form
+            layout="vertical"
+            form={addressEditForm}
+            onFinish={onEditAddressFinish}
+          >
+            <FormFields renderForm={renderAddress} form={addressEditForm} />
+            <Flex justify="end" gap={12}>
+              <Button htmlType="submit" type="primary">
+                แก้ไข
+              </Button>
+              <Button danger onClick={onDeleteAddress}>
+                ลบ
+              </Button>
+            </Flex>
+          </Form>
+        }
+      />
+      <ModalIndex
+        title={'การตั้งค่าทั้งหมด'}
+        open={openSettings}
+        onCancel={() => {
+          setOpenSettings(false);
+        }}
+        buttonText={'สร้างการตั้งค่าใหม่'}
+        onButtonClick={() => {
+          setOpenSettings(false);
+          setOpenSettingFormCreate(true);
+        }}
+        columns={SettingsColumns(handleSettingSingle)}
+        dataSource={mockupSettings}
+      />
+      <ModalForm
+        title={`สร้างการตั้งค่าใหม่`}
+        open={openSettingFormCreate}
+        onCancel={() => {
+          setOpenSettingFormCreate(false);
+        }}
+        child={
+          <Form
+            layout="vertical"
+            form={settingCreateForm}
+            onFinish={onCreateSettingFinish}
+          >
+            <FormFields renderForm={renderSetting} form={settingCreateForm} />
+            <Form.List name={'openDays'}>
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map((field: any) => (
+                    <Row
+                      justify="space-between"
+                      align="middle"
+                      key={field.key}
+                      style={{ display: 'flex', marginBottom: 8 }}
+                    >
+                      <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                        <Form.Item
+                          {...field}
+                          name={[field.name, 'day']}
+                          fieldKey={[field.fieldKey, 'day']}
+                          label="วัน"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'กรุณาเลือกวันที่ทำงานช่วงเวลานี้!',
+                            },
+                          ]}
+                          style={{ flex: 1, marginRight: 8 }}
+                        >
+                          <Select mode="multiple" placeholder="เลือกวันทำงาน">
+                            {daysOfWeek.map((day) => (
+                              <Select.Option key={day} value={day}>
+                                {day}
+                              </Select.Option>
+                            ))}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+                      <Col xs={10} sm={10} md={10} lg={5} xl={5}>
+                        <Form.Item
+                          {...field}
+                          name={[field.name, 'openTime']}
+                          fieldKey={[field.fieldKey, 'openTime']}
+                          label="เริ่มงาน"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'กรุณาเลือกเวลาที่งานเริ่ม!',
+                            },
+                          ]}
+                          style={{ flex: 1, marginRight: 8 }}
+                        >
+                          <TimePicker
+                            placeholder="เวลางานเริ่ม"
+                            format="HH:mm"
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={10} sm={10} md={10} lg={5} xl={5}>
+                        <Form.Item
+                          {...field}
+                          name={[field.name, 'closeTime']}
+                          fieldKey={[field.fieldKey, 'closeTime']}
+                          label="เลิกงาน"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'กรุณาเลือกเวลาที่งานเลิก!',
+                            },
+                          ]}
+                          style={{ flex: 1, marginRight: 8 }}
+                        >
+                          <TimePicker
+                            placeholder="เวลางานเลิก"
+                            format="HH:mm"
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={4} sm={4} md={4} lg={2} xl={2} span={2}>
+                        <MinusCircleOutlined
+                          style={{ alignSelf: 'center' }}
+                          onClick={() => remove(field.name)}
+                        />
+                      </Col>
+                    </Row>
+                  ))}
+
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      block
+                      icon={<PlusOutlined />}
+                    >
+                      เพิ่มวันทำงาน
+                    </Button>
+                  </Form.Item>
+                </>
+              )}
+            </Form.List>
+            <Flex justify="end" gap={12}>
+              <Button htmlType="submit" type="primary">
+                สร้าง
+              </Button>
+            </Flex>
+          </Form>
+        }
+      />
+      <ModalForm
+        title={`การตั้งค่าที่ ${selectedSettingId}`}
+        open={openSettingFormSingle}
+        onCancel={() => {
+          setOpenSettingFormSingle(false);
+        }}
+        child={
+          <Form
+            layout="vertical"
+            form={settingEditForm}
+            onFinish={onEditSettingFinish}
+          >
+            <FormFields renderForm={renderSetting} form={addressEditForm} />
+            <Form.List name={'openDays'}>
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map((field: any) => (
+                    <Row
+                      justify="space-between"
+                      align="middle"
+                      key={field.key}
+                      style={{ display: 'flex', marginBottom: 8 }}
+                    >
+                      <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                        <Form.Item
+                          {...field}
+                          name={[field.name, 'day']}
+                          fieldKey={[field.fieldKey, 'day']}
+                          label="วัน"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'กรุณาเลือกวันที่ทำงานช่วงเวลานี้!',
+                            },
+                          ]}
+                          style={{ flex: 1, marginRight: 8 }}
+                        >
+                          <Select mode="multiple" placeholder="เลือกวันทำงาน">
+                            {daysOfWeek.map((day) => (
+                              <Select.Option key={day} value={day}>
+                                {day}
+                              </Select.Option>
+                            ))}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+                      <Col xs={10} sm={10} md={10} lg={5} xl={5}>
+                        <Form.Item
+                          {...field}
+                          name={[field.name, 'openTime']}
+                          fieldKey={[field.fieldKey, 'openTime']}
+                          label="เริ่มงาน"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'กรุณาเลือกเวลาที่งานเริ่ม!',
+                            },
+                          ]}
+                          style={{ flex: 1, marginRight: 8 }}
+                        >
+                          <TimePicker
+                            placeholder="เวลางานเริ่ม"
+                            format="HH:mm"
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={10} sm={10} md={10} lg={5} xl={5}>
+                        <Form.Item
+                          {...field}
+                          name={[field.name, 'closeTime']}
+                          fieldKey={[field.fieldKey, 'closeTime']}
+                          label="เลิกงาน"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'กรุณาเลือกเวลาที่งานเลิก!',
+                            },
+                          ]}
+                          style={{ flex: 1, marginRight: 8 }}
+                        >
+                          <TimePicker
+                            placeholder="เวลางานเลิก"
+                            format="HH:mm"
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={4} sm={4} md={4} lg={2} xl={2} span={2}>
+                        <MinusCircleOutlined
+                          style={{ alignSelf: 'center' }}
+                          onClick={() => remove(field.name)}
+                        />
+                      </Col>
+                    </Row>
+                  ))}
+
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      block
+                      icon={<PlusOutlined />}
+                    >
+                      เพิ่มวันทำงาน
+                    </Button>
+                  </Form.Item>
+                </>
+              )}
+            </Form.List>
+            <Flex justify="end" gap={12}>
+              <Button htmlType="submit" type="primary">
+                แก้ไข
+              </Button>
+              <Button danger onClick={onDeleteSetting}>
+                ลบ
+              </Button>
+            </Flex>
+          </Form>
+        }
+      />
     </div>
   );
 };

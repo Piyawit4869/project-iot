@@ -1,5 +1,5 @@
 import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons';
-import { Button, Tag, Image, TableProps, Typography } from 'antd';
+import { Button, Tag, Image, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
@@ -31,7 +31,7 @@ export const organizeData = [
   },
 ];
 
-export const organizeColumns: TableProps['columns'] = [
+export const organizeColumns: ColumnsType<any> = [
   // {
   //   title: 'ลำดับ',
   //   dataIndex: 'id',

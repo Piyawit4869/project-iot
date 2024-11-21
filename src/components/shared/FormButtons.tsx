@@ -124,26 +124,21 @@ const FormButtonsSetting = (props: FormButtonSetting) => {
   };
 
   return (
-    <div style={styles.sticky}>
-      <Button
-        type="primary"
-        onClick={() => navigate(-1)}
-        style={{ marginRight: '10px' }}
-      >
-        <LeftOutlined /> กลับ
-      </Button>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-        }}
-      >
+    <Space direction="vertical" style={styles.sticky}>
+      <Flex justify="space-between">
+        <Button
+          type="primary"
+          onClick={() => navigate(-1)}
+          style={{ marginRight: '10px' }}
+        >
+          <LeftOutlined /> กลับ
+        </Button>
+
         <Button type="primary" onClick={onSubmit}>
           แก้ไขข้อมูล
         </Button>
-      </div>
-    </div>
+      </Flex>
+    </Space>
   );
 };
 

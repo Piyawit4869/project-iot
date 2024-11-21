@@ -15,6 +15,7 @@ import {
   Modal,
   Row,
   Select,
+  Space,
   Tabs,
   TabsProps,
   Tag,
@@ -686,56 +687,84 @@ export const ApprovalIndex = () => {
 
   return me.role.name === 'owner' || me.role.name === 'manager' ? (
     <>
-      <ResendApprovalModal />
-      <ConfirmActionModal />
-      <CreateApprovalModal />
-      <ApprovalModal />
-      <TitleBar
-        title={'การลางาน'}
-        subTitle={'เร็วๆนี้มีใครลางานบ้างนะ มาดูกัน'}
-        buttons={[
-          <Button
-            type="primary"
-            onClick={() => {
-              setOpenCreate(true);
-            }}
-          >
-            เขียนใบลา
-          </Button>,
-        ]}
-      />
-      <div style={{ marginTop: '12px' }}>
-        <Tabs defaultActiveKey="1" items={items} />
-      </div>
+      <Space
+        direction="vertical"
+        style={{
+          width: '100%',
+          backgroundColor: 'white',
+          borderRadius: 5,
+          padding: '20px 0px',
+          position: 'sticky',
+          zIndex: 10,
+          borderImageSlice: 1,
+          top: '-10px',
+        }}
+      >
+        <ResendApprovalModal />
+        <ConfirmActionModal />
+        <CreateApprovalModal />
+        <ApprovalModal />
+        <TitleBar
+          title={'การลางาน'}
+          subTitle={'เร็วๆนี้มีใครลางานบ้างนะ มาดูกัน'}
+          buttons={[
+            <Button
+              type="primary"
+              onClick={() => {
+                setOpenCreate(true);
+              }}
+            >
+              เขียนใบลา
+            </Button>,
+          ]}
+        />
+        <div style={{ marginTop: '12px' }}>
+          <Tabs defaultActiveKey="1" items={items} />
+        </div>
+      </Space>
     </>
   ) : (
     <>
-      <ResendApprovalModal />
-      <ConfirmActionModal />
-      <CreateApprovalModal />
-      <ApprovalModal />
-      <TitleBar
-        title={'การลางานของคุณ'}
-        subTitle={'ส่งเอกสารการลาได้ที่ปุ่มเขียนใบลา'}
-        buttons={[
-          <Button
-            type="primary"
-            onClick={() => {
-              setOpenCreate(true);
-            }}
-          >
-            เขียนใบลา
-          </Button>,
-        ]}
-      />
-      <div style={{ marginTop: '12px' }}>
-        <Tabs defaultActiveKey="1" items={items} />
-      </div>
+      <Space
+        direction="vertical"
+        style={{
+          width: '100%',
+          backgroundColor: 'white',
+          borderRadius: 5,
+          padding: '20px 0px',
+          position: 'sticky',
+          zIndex: 10,
+          borderImageSlice: 1,
+          top: '-10px',
+        }}
+      >
+        <ResendApprovalModal />
+        <ConfirmActionModal />
+        <CreateApprovalModal />
+        <ApprovalModal />
+        <TitleBar
+          title={'การลางานของคุณ'}
+          subTitle={'ส่งเอกสารการลาได้ที่ปุ่มเขียนใบลา'}
+          buttons={[
+            <Button
+              type="primary"
+              onClick={() => {
+                setOpenCreate(true);
+              }}
+            >
+              เขียนใบลา
+            </Button>,
+          ]}
+        />
+        <div style={{ marginTop: '12px' }}>
+          <Tabs defaultActiveKey="1" items={items} />
+        </div>
+      </Space>
     </>
   );
 };
 
-const columns: ColumnsType<any> | undefined = [
+const columns: ColumnsType<any> = [
   {
     title: 'ชื่อ - นามสกุล',
     dataIndex: 'createdBy',
@@ -781,7 +810,7 @@ const columns: ColumnsType<any> | undefined = [
   },
 ];
 
-const adminColumns: ColumnsType<any> | undefined = [
+const adminColumns: ColumnsType<any> = [
   {
     title: 'ชื่อ - นามสกุล',
     dataIndex: 'createdBy',

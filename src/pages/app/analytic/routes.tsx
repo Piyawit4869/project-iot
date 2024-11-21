@@ -1,4 +1,4 @@
-import Analytic from './Indexpage';
+import { Analytic } from './Indexpage';
 
 export const routes = [
   {

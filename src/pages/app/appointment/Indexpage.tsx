@@ -11,6 +11,7 @@ import {
   Select,
   Tag,
   Divider,
+  Space,
 } from 'antd';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -192,44 +193,58 @@ export const AppointmentIndex = () => {
 
   return (
     <>
-      <TitleBar
-        title={'การนัดหมาย'}
-        subTitle={'รวมการนัดหมายทั้งหมดอยู่ที่นี่แล้ว'}
-        buttons={[
-          <Link to={'create'}>
-            <Button type="primary">สร้างนัดหมาย</Button>
-          </Link>,
-        ]}
-      />
-
-      <div style={{ marginTop: '12px' }}>
-        <Calendar
-          headerRender={headerRender}
-          fullscreen={true}
-          cellRender={customCellRender}
-          onSelect={onDateSelect}
-          locale={thaiLocale as any}
+      <Space
+        direction="vertical"
+        style={{
+          width: '100%',
+          backgroundColor: 'white',
+          borderRadius: 5,
+          padding: '20px 0px',
+          position: 'sticky',
+          zIndex: 10,
+          borderImageSlice: 1,
+          top: '-10px',
+        }}
+      >
+        <TitleBar
+          title={'การนัดหมาย'}
+          subTitle={'รวมการนัดหมายทั้งหมดอยู่ที่นี่แล้ว'}
+          buttons={[
+            <Link to={'create'}>
+              <Button type="primary">สร้างนัดหมาย</Button>
+            </Link>,
+          ]}
         />
-      </div>
-      <TitleBar
-        title={'การนัดหมายที่มีคุณ'}
-        subTitle={'รวมการนัดหมายทั้งหมดที่มีคุณเกี่ยวข้องอยู่ที่นี่แล้ว'}
-      />
 
-      <div style={{ marginTop: '22px' }}>
-        <TableComponent
-          columns={columns}
-          dataSource={data}
-          onRowClick={(record) => {
-            navigate(`/appointment/${record.id}`);
-          }}
+        <div style={{ marginTop: '12px' }}>
+          <Calendar
+            headerRender={headerRender}
+            fullscreen={true}
+            cellRender={customCellRender}
+            onSelect={onDateSelect}
+            locale={thaiLocale as any}
+          />
+        </div>
+        <TitleBar
+          title={'การนัดหมายที่มีคุณ'}
+          subTitle={'รวมการนัดหมายทั้งหมดที่มีคุณเกี่ยวข้องอยู่ที่นี่แล้ว'}
         />
-      </div>
+
+        <div style={{ marginTop: '22px' }}>
+          <TableComponent
+            columns={columns}
+            dataSource={data}
+            onRowClick={(record) => {
+              navigate(`/appointment/${record.id}`);
+            }}
+          />
+        </div>
+      </Space>
     </>
   );
 };
 
-const columns: ColumnsType<any> | undefined = [
+const columns: ColumnsType<any> = [
   { title: 'ลำดับ', dataIndex: 'id', key: 'id', align: 'center' },
   { title: 'ชื่อการนัดหมาย', dataIndex: 'name', key: 'name', width: 200 },
   {
