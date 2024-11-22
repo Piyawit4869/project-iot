@@ -433,6 +433,7 @@ export const OrganizeCreate: React.FC = () => {
               <FormFields
                 renderForm={renderCreateSettingฺBranchForm}
                 form={form}
+                uniqError={uniqError}
               />
 
               <Form.List name={['branch', 'setting', 'openDays']}>

@@ -1,4 +1,4 @@
-import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons';
+import { CheckOutlined, EyeOutlined } from '@ant-design/icons';
 import { Button, Tag, Image, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
@@ -186,7 +186,7 @@ export const branchColumns: ColumnsType<any> = [
       if (isMainBranch === true) {
         return <CheckOutlined style={{ color: 'green', fontSize: '15px' }} />;
       }
-      return <CloseOutlined style={{ color: 'red', fontSize: '15px' }} />;
+      return <>-</>;
     },
   },
 

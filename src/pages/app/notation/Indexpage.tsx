@@ -23,12 +23,13 @@ import React from 'react';
 import { debounce } from 'lodash';
 import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
+import { handleStatusTag } from './notationData';
 
 export const NotationIndex = () => {
   const [loading, setLoading] = React.useState<boolean>(true);
   const { notations, param } = useLoaderData() as any;
+
   const { state } = useNavigation();
-  // const [form] = Form.useForm();
   const submit = useSubmit();
 
   React.useEffect(() => {
@@ -37,6 +38,17 @@ export const NotationIndex = () => {
       setLoading(false);
     }, 1000);
   }, []);
+
+  const convertToUTC7 = (dateInput: any) => {
+    const localDate = new Date(dateInput);
+    localDate.setHours(0, 0, 0, 0);
+    const utc7Offset = 7 * 60 * 60 * 1000;
+    const utc7Date = new Date(
+      localDate.getTime() + utc7Offset - localDate.getTimezoneOffset() * 60000,
+    );
+
+    return utc7Date.toISOString().split('T')[0];
+  };
 
   const handleChange = React.useMemo(() => {
     const fetchData = (pagination: any) => {
@@ -62,11 +74,54 @@ export const NotationIndex = () => {
     };
     return debounce(fetchData, 500);
   }, [param]);
+
+  const handleChangeFilter = React.useMemo(() => {
+    const fetchData = (values: any) => {
+      let payload = {} as any;
+
+      payload = {
+        ...param,
+        ...values,
+      };
+
+      Object.keys(payload).map((key) => {
+        if (
+          payload[key] === undefined ||
+          payload[key] === '' ||
+          payload[key] === null
+        ) {
+          delete payload[key];
+        }
+
+        if (key === 'createdAt' && payload.createdAt) {
+          payload.createdAt = convertToUTC7(payload.createdAt);
+        }
+        if (key === 'updatedAt' && payload.updatedAt) {
+          payload.updatedAt = convertToUTC7(payload.updatedAt);
+        }
+
+        if (payload['page'] !== '1') delete payload['page'];
+
+        return payload;
+      });
+
+      // Remove empty or undefined values from the payload
+      Object.keys(payload).forEach((key) => {
+        if (payload[key] === undefined || payload[key] === '') {
+          delete payload[key];
+        }
+      });
+
+      submit(payload, { method: 'get' });
+    };
+    return debounce(fetchData, 500);
+  }, [param]);
+
   const columns: ColumnsType<any> = [
     {
       title: 'เลขที่เอกสาร',
-      dataIndex: 'number',
-      key: 'number',
+      dataIndex: 'docNo',
+      key: 'docNo',
     },
     {
       title: 'ประเภทเอกสาร',
@@ -81,6 +136,19 @@ export const NotationIndex = () => {
       key: 'status',
       align: 'center',
       width: 150,
+      render: (value: any) => {
+        return handleStatusTag(value);
+      },
+    },
+    {
+      title: 'สถานะเอกสาร',
+      dataIndex: 'docStatus',
+      key: 'docStatus',
+      align: 'center',
+      width: 150,
+      render: (value: any) => {
+        return handleStatusTag(value);
+      },
     },
     {
       title: 'วันที่สร้าง',
@@ -155,28 +223,40 @@ export const NotationIndex = () => {
 
         {/* Filter section from search bar component */}
         <div style={{ height: '5px' }} />
-        <Form layout="vertical">
+        <Form
+          layout="vertical"
+          initialValues={param}
+          onValuesChange={handleChangeFilter}
+        >
           <Flex gap={12}>
             <Col xs={12} sm={12} md={8} lg={8} xl={6}>
-              <Form.Item name={'number'}>
-                <Input placeholder="เลขที่เอกสาร" />
+              <Form.Item name={'docNo'}>
+                <Input placeholder="เลขที่เอกสาร" allowClear />
               </Form.Item>
             </Col>
             <Col xs={12} sm={12} md={8} lg={8} xl={6}>
               <Form.Item name={'type'}>
                 <Select
+                  allowClear
                   placeholder="ประเภทเอกสาร"
-                  options={[{ value: 'quotation', label: 'ใบเสนอราคา' }]}
+                  options={[
+                    { value: 'invoice', label: 'Invoice' },
+                    { value: 'quotation', label: 'Quotation' },
+                    { value: 'delivery_order', label: 'DeliveryOrder' },
+                    { value: 'purchase_order', label: ' PurchaseOrder' },
+                    { value: 'receipt', label: 'Receipt' },
+                  ]}
                 />
               </Form.Item>
             </Col>
             <Col xs={12} sm={12} md={8} lg={8} xl={6}>
               <Form.Item name={'status'}>
                 <Select
+                  allowClear
                   placeholder="สถานะ"
                   options={[
                     { value: 'draft', label: 'แบบร่าง' },
-                    { value: 'waiting', label: 'รอการตรวจสอบ' },
+                    { value: 'waiting_for_review', label: 'รอการตรวจสอบ' },
                     { value: 'done', label: 'สำเร็จ' },
                     { value: 'active', label: 'พร้อมใช้งาน' },
                   ]}

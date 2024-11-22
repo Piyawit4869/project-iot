@@ -9,3 +9,4 @@ export * as organize from './organize';
 export * as branch from './branch';
 export * as attendance from './attendance';
 export * as approval from './approval';
+export * as notations from './notation';

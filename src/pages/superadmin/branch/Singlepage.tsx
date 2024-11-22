@@ -391,6 +391,7 @@ export const BranchSingle = () => {
             <FormFields
               renderForm={renderSingleBranchAddressForm}
               form={addressForm}
+              uniqError={uniqError}
               type={type}
             />
 
@@ -419,6 +420,7 @@ export const BranchSingle = () => {
             <FormFields
               renderForm={renderSingleBranchSystemForm}
               form={systemForm}
+              uniqError={uniqError}
               type={type}
             />
             <Col span={24}>

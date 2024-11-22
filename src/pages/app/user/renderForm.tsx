@@ -56,8 +56,9 @@ export const renderForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'SelectFormField',
     options: [
-      { value: '7e86ea9f-f56b-4e4d-8986-fca11eff8dab', label: 'Employee' },
-      { value: '1dc79675-8fdd-4341-b068-608a4385dadc', label: 'Owner' },
+      { value: '3e1bcf2b-3bb3-4d7d-949f-f86911a47e14', label: 'พนักงาน' },
+      { value: '11853391-5fbc-4dea-8fb6-b4720aec4585', label: 'ผู้จัดการ' },
+      { value: 'bcdb3790-5657-497d-8132-f82acd3f52ef', label: 'เจ้าของกิจการ' },
     ],
     rule: [{ required: true, message: 'กรุณาเลือกตำแหน่ง!' }],
   },
@@ -134,8 +135,9 @@ export const renderEditForm = [
     col: { xs: 24, sm: 24, md: 12, lg: 12, xl: 12 },
     type: 'SelectFormField',
     options: [
-      { value: '7e86ea9f-f56b-4e4d-8986-fca11eff8dab', label: 'Employee' },
-      { value: '1dc79675-8fdd-4341-b068-608a4385dadc', label: 'Owner' },
+      { value: '3e1bcf2b-3bb3-4d7d-949f-f86911a47e14', label: 'พนักงาน' },
+      { value: '11853391-5fbc-4dea-8fb6-b4720aec4585', label: 'ผู้จัดการ' },
+      { value: 'bcdb3790-5657-497d-8132-f82acd3f52ef', label: 'เจ้าของกิจการ' },
     ],
     rule: [{ required: true, message: 'กรุณาเลือกตำแหน่ง!' }],
   },

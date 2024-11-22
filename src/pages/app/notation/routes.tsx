@@ -1,6 +1,7 @@
+import { notationCreateAction, notationEditAction } from './action';
 import { NotationCreate } from './Createpage';
 import { NotationIndex } from './Indexpage';
-import { notationsLoader } from './loader';
+import { notationLoader, notationsLoader } from './loader';
 import { NotationSingle } from './Singlepage';
 
 export const routes = [
@@ -16,10 +17,13 @@ export const routes = [
       {
         path: 'create',
         element: <NotationCreate />,
+        action: notationCreateAction,
       },
       {
         path: ':id',
         element: <NotationSingle />,
+        loader: notationLoader,
+        action: notationEditAction,
       },
     ],
   },

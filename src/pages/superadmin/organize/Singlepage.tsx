@@ -267,12 +267,10 @@ export const OrganizeSingle: React.FC = () => {
 
     setType(organize.type);
 
-    const organizationMainAddress = organize.addresses.find(
-      (item: any) => item.isMain === true,
-    );
-    const organizationMainSetting = organize.settings.find(
-      (item: any) => item.active === true,
-    );
+    const organizationMainAddress =
+      organize.addresses.find((item: any) => item.isMain === true) || {};
+    const organizationMainSetting =
+      organize.settings.find((item: any) => item.active === true) || {};
 
     form.setFieldsValue({
       ...organize,
@@ -390,7 +388,11 @@ export const OrganizeSingle: React.FC = () => {
                 ดูที่อยู่ทั้งหมด
               </Button>
             </Flex>
-            <FormFields renderForm={renderAddressSetting} form={addressForm} />
+            <FormFields
+              renderForm={renderAddressSetting}
+              form={addressForm}
+              uniqError={uniqError}
+            />
             <Flex justify="end">
               <Button htmlType="submit" type="primary">
                 บันทึกข้อมูลที่อยู่
@@ -413,7 +415,11 @@ export const OrganizeSingle: React.FC = () => {
                 ดูการตั้งค่าทั้งหมด
               </Button>
             </Flex>
-            <FormFields renderForm={renderSystemSetting} form={systemForm} />
+            <FormFields
+              renderForm={renderSystemSetting}
+              form={systemForm}
+              uniqError={uniqError}
+            />
 
             <Col span={24}>
               <Form.List name={'openDays'}>
