@@ -1,4 +1,3 @@
-import { LoginPage } from './auth';
 import { AppLandingPage } from './Indexpage';
 import { routes as planningRoute } from './planning';
 import { routes as notationRoute } from './notation';
@@ -15,15 +14,12 @@ import { routes as informationRoute } from './branchsetting';
 import { routes as orginformationRoute } from './organizesetting';
 import { routes as appointmentRoute } from './appointment';
 import { routes as approvalRoute } from './approval';
+import { routes as notificationRoute } from './notification';
 
 export const routes = [
   {
     path: '',
     element: <AppLandingPage />,
-  },
-  {
-    path: 'login',
-    element: <LoginPage />,
   },
   ...profileRoute,
   ...planningRoute,
@@ -40,4 +36,5 @@ export const routes = [
   ...upgradeRoute,
   ...informationRoute,
   ...orginformationRoute,
+  ...notificationRoute,
 ];

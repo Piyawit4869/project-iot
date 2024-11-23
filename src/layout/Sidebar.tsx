@@ -22,7 +22,7 @@ export const Sidebar = (props: SidebarProps) => {
   const location = useLocation();
   const [collapsed, setCollapsed] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
-  const [defaultOpenKeys, setDefaultOpenKeys] = React.useState([]);
+  const [defaultOpenKeys, setDefaultOpenKeys] = React.useState([]) as any;
 
   const currentPath = location.pathname;
 
@@ -32,11 +32,8 @@ export const Sidebar = (props: SidebarProps) => {
     }
   };
 
-  const getAllSubmenuKeys = (menus: any[]): string[] => {
-    return menus.filter((menu) => menu.children).map((menu) => menu.key);
-  };
-
   const me = JSON.parse(localStorage.getItem('me') || '{}');
+
   const menusWithOnClick = Menus({
     role: me?.role?.name ? me?.role?.name : 'owner',
   }).map((menu: any) => ({
@@ -48,12 +45,16 @@ export const Sidebar = (props: SidebarProps) => {
     setCollapsed(!collapsed);
   };
 
-  React.useEffect(() => {
-    setCollapsed(isMobile);
+  // Helper function to extract keys of menus with children (submenus)
+  const getAllSubmenuKeys = (menus: any[]): string[] => {
+    return menus.filter((menu) => menu.children).map((menu) => menu.key);
+  };
 
-    const allSubmenuKeys: any = getAllSubmenuKeys(menusWithOnClick);
+  React.useEffect(() => {
+    // Set all submenus to be opened by default
+    const allSubmenuKeys = getAllSubmenuKeys(menusWithOnClick);
     isMobile ? setDefaultOpenKeys([]) : setDefaultOpenKeys(allSubmenuKeys);
-  }, [isMobile]);
+  }, [location.pathname]);
 
   const handleNameWithType = (type: string) => {
     switch (type) {
@@ -114,8 +115,7 @@ export const Sidebar = (props: SidebarProps) => {
       <Sider
         width={isMobile && collapsed ? 0 : 200}
         theme="light"
-        trigger={null}
-        collapsible
+        collapsible={true}
         collapsed={collapsed}
         onCollapse={(collapsed) => setCollapsed(collapsed)}
         breakpoint="lg"
@@ -184,7 +184,6 @@ export const Sidebar = (props: SidebarProps) => {
                 <Col>
                   <Flex vertical justify="center" align="center">
                     <Typography style={{ color: '#19142A', fontSize: '20px' }}>
-                      {/* บริษัท ยูโทเทค จำกัด */}
                       {handleNameWithType(
                         setting?.organization?.type
                           ? setting?.organization?.type
@@ -206,6 +205,7 @@ export const Sidebar = (props: SidebarProps) => {
                 openKeys={defaultOpenKeys}
                 selectedKeys={[currentPath]}
                 defaultOpenKeys={['/']}
+                onOpenChange={(openKeys) => setDefaultOpenKeys(openKeys)}
                 style={{
                   backgroundColor: '#F7F7F7',
                   marginTop: collapsed ? '0px' : '60px',
@@ -222,14 +222,11 @@ export const Sidebar = (props: SidebarProps) => {
                         overflow: 'auto',
                       }}
                       key={menu.key}
-                      icon={menu.icon} // Use parent icon here
+                      icon={menu.icon}
                       title={menu.label}
                     >
                       {menu.children.map((subMenu: any) => (
-                        <Menu.Item
-                          key={subMenu.key}
-                          icon={subMenu.icon} // Use child icon here
-                        >
+                        <Menu.Item key={subMenu.key} icon={subMenu.icon}>
                           {subMenu.label}
                         </Menu.Item>
                       ))}
@@ -237,7 +234,7 @@ export const Sidebar = (props: SidebarProps) => {
                   ) : (
                     <Menu.Item
                       key={menu.key}
-                      icon={menu.icon} // Use parent icon for items without children
+                      icon={menu.icon}
                       disabled={menu.disable}
                     >
                       {menu.label}
@@ -262,45 +259,6 @@ export const Sidebar = (props: SidebarProps) => {
             </Button>
           </div>
         </Flex>
-
-        {/* 
-        FIXME: Reopen me in soon ... 
-        {!collapsed && (
-          <Card
-            style={{
-              position: 'absolute',
-              bottom: '50px',
-              margin: '5px',
-              background: '#F7F7F7',
-              borderColor: '#F7F7F7',
-              width: 'calc(100% - 10px)',
-              borderRadius: '10px',
-            }}
-            bodyStyle={{ padding: '10px', textAlign: 'center' }}
-          >
-            <Typography style={{ fontWeight: 'bold', color: '#19142A' }}>
-              บริษัท ยูโทเทค จำกัด
-            </Typography>
-            <Typography style={{ color: '#19142A', opacity: 0.6 }}>
-              STAY ORGANIZED
-            </Typography>
-
-       
-            <Button
-              type="primary"
-              block
-              style={{
-                marginTop: '10px',
-                backgroundColor: '#19142A',
-                borderColor: '#19142A',
-                borderRadius: '5px',
-              }}
-              className="upgrade-button"
-            >
-              <Link to="/upgrade"> Upgrade </Link>
-            </Button>
-          </Card>
-        )} */}
       </Sider>
       {isMobile && collapsed === false && (
         <div
@@ -310,7 +268,7 @@ export const Sidebar = (props: SidebarProps) => {
             left: 0,
             width: '100%',
             height: '100%',
-            background: 'rgba(25, 20, 42, 0.8)', // RGBA color for transparency
+            background: 'rgba(25, 20, 42, 0.8)',
             zIndex: 9,
           }}
           onClick={() => setCollapsed(true)}

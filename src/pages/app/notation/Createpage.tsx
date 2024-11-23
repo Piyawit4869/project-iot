@@ -1,3 +1,4 @@
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   Button,
   Col,
@@ -56,25 +57,41 @@ export const NotationCreate = () => {
           width: '100%',
           backgroundColor: 'white',
           borderRadius: 5,
-          padding: '20px 0px 0px 0px',
           position: 'sticky',
           zIndex: 10,
           borderImageSlice: 1,
-          top: '-10px',
         }}
       >
         <Form layout="vertical" form={form} onFinish={onFinish}>
-          <Flex justify="space-between">
-            <Typography.Title level={3}>เอกสาร</Typography.Title>
-            <Flex gap={12}>
-              <Button type="dashed" onClick={handleDraft}>
-                Draft
-              </Button>
-              <Button type="primary" onClick={handlePending}>
-                Pending
-              </Button>
+          <Space
+            direction="vertical"
+            style={{
+              width: '100%',
+              backgroundColor: 'white',
+              borderRadius: 5,
+              position: 'sticky',
+              padding: ' 20px 0px',
+              zIndex: 10,
+              borderBottom: '2px solid',
+              borderImage:
+                'linear-gradient(90deg, #19142a -38.4%, #A79DB4 129.4%)',
+              borderImageSlice: 1,
+              top: '-22px',
+              marginBottom: '2rem',
+            }}
+          >
+            <Flex justify="space-between">
+              <Typography.Title level={3}>เอกสาร</Typography.Title>
+              <Flex gap={12} align="center">
+                <Button type="dashed" onClick={handleDraft}>
+                  Draft
+                </Button>
+                <Button type="primary" onClick={handlePending}>
+                  Pending
+                </Button>
+              </Flex>
             </Flex>
-          </Flex>
+          </Space>
           <Flex gap={12}>
             <Col span={12}>
               <Row gutter={[24, 24]}>
@@ -126,6 +143,80 @@ export const NotationCreate = () => {
                   <Form.Item name={'note'} label={'note'}>
                     <TextArea rows={4} />
                   </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  <Typography.Title level={3}>รายการ</Typography.Title>
+                  <Form.List name={'items'}>
+                    {(fields, { add, remove }) => (
+                      <>
+                        {fields.map((field: any) => (
+                          <Row key={field.key}>
+                            <Col xs={10} sm={10} md={10} lg={10} xl={10}>
+                              <Form.Item
+                                {...field}
+                                name={[field.name, 'itemName']}
+                                fieldKey={[field.fieldKey, 'openTime']}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'กรุณาเลือกรายการ!',
+                                  },
+                                ]}
+                                style={{ flex: 1, marginRight: 8 }}
+                              >
+                                <Select
+                                  placeholder="เลือกรายการ"
+                                  style={{ width: '100%' }}
+                                />
+                              </Form.Item>
+                            </Col>
+                            <Col xs={10} sm={10} md={10} lg={10} xl={10}>
+                              <Form.Item
+                                {...field}
+                                name={[field.name, 'quantity']}
+                                fieldKey={[field.fieldKey, 'quantity']}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'กรุณาเลือกจำนวนรายการ!',
+                                  },
+                                ]}
+                                style={{ flex: 1, marginRight: 8 }}
+                              >
+                                <InputNumber
+                                  placeholder="เลือกจำนวน"
+                                  style={{ width: '100%' }}
+                                />
+                              </Form.Item>
+                            </Col>
+                            <Col xs={4} sm={4} md={4} lg={4} xl={4}>
+                              <Button
+                                danger
+                                icon={
+                                  <MinusCircleOutlined
+                                    style={{ alignSelf: 'center' }}
+                                  />
+                                }
+                                style={{ width: '100%' }}
+                                onClick={() => remove(field.name)}
+                              />
+                            </Col>
+                          </Row>
+                        ))}
+
+                        <Form.Item>
+                          <Button
+                            type="dashed"
+                            onClick={() => add()}
+                            block
+                            icon={<PlusOutlined />}
+                          >
+                            เพิ่มรายการ
+                          </Button>
+                        </Form.Item>
+                      </>
+                    )}
+                  </Form.List>
                 </Col>
               </Row>
             </Col>

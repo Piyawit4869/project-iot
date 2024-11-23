@@ -287,6 +287,19 @@ export const AddressesColumns = (handleViewDetails: (id: any) => void) => [
     dataIndex: 'city',
   },
   {
+    title: 'ที่อยู่หลัก',
+    width: '100px',
+    align: 'center',
+    key: 'isMain',
+    dataIndex: 'isMain',
+    render: (value: boolean) => {
+      if (value === true) {
+        return <CheckOutlined style={{ color: 'green', fontSize: '15px' }} />;
+      }
+      return <>-</>;
+    },
+  },
+  {
     title: '',
     key: 'id',
     dataIndex: 'id',
@@ -309,6 +322,7 @@ export const mockupAddresses = [
     province: 'กรุงเทพมหานคร',
     city: 'จรัญสนิทวงศ์',
     houseNo: '99/6',
+    isMain: true,
   },
   {
     id: 2,
@@ -316,6 +330,7 @@ export const mockupAddresses = [
     province: 'กรุงเทพมหานคร',
     city: 'บางกอกน้อย',
     houseNo: '123/9',
+    isMain: false,
   },
   {
     id: 3,
@@ -323,6 +338,7 @@ export const mockupAddresses = [
     province: 'กรุงเทพมหานคร',
     city: 'บางนา',
     houseNo: '867',
+    isMain: false,
   },
 ];
 

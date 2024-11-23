@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Row, Col, Button, Progress, Flex } from 'antd';
+import { Card, Row, Col, Button, Progress, Flex, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { CSSProperties } from 'react';
 import { TitleBar } from '@src/components/shared';
@@ -172,10 +172,22 @@ const AttendanceCard: React.FC = () => (
 // );
 const Analytic: React.FC = () => {
   return (
-    <Flex vertical>
-      <TitleBar title={'ภาพรวม'} subTitle={'สวัสดีตอนเที่ยง!'} />
-
-      <div style={{ height: '25px' }} />
+    <Flex vertical gap={'small'}>
+      <Space
+        direction="vertical"
+        style={{
+          width: '100%',
+          backgroundColor: 'white',
+          borderRadius: 5,
+          padding: '20px 0px 0px 0px',
+          position: 'sticky',
+          zIndex: 10,
+          borderImageSlice: 1,
+          top: '-10px',
+        }}
+      >
+        <TitleBar title={'ภาพรวม'} subTitle={'สวัสดีตอนเที่ยง!'} />
+      </Space>
       <Row gutter={16} justify="space-between">
         {cardData.map((data, index) => (
           <Col key={index} xs={24} sm={12} md={6}>

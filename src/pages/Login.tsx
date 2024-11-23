@@ -1,4 +1,14 @@
-import { Form, Input, Button, notification, Typography, Card } from 'antd';
+import {
+  Form,
+  Input,
+  Button,
+  notification,
+  Typography,
+  Card,
+  Flex,
+  Col,
+  Image,
+} from 'antd';
 import {
   UserOutlined,
   LockOutlined,
@@ -8,7 +18,14 @@ import {
 // import React from "react";
 
 import * as API from '@src/apis';
-import { json, redirect, useNavigation, useSubmit } from 'react-router-dom';
+import {
+  json,
+  Link,
+  redirect,
+  useNavigation,
+  useSubmit,
+} from 'react-router-dom';
+import Rome from '@src/assets/images/rome.jpg';
 
 //here Action example
 export async function loginAction({ request }: any) {
@@ -23,9 +40,10 @@ export async function loginAction({ request }: any) {
         localStorage.setItem('accessToken', res.data.accessToken);
         localStorage.setItem('refreshToken', res.data.refreshToken);
         notification.success({
-          message: 'Login Success',
+          message: 'เข้าสู่ระบบสำเร็จ',
           placement: 'bottomRight',
-          description: 'You have successfully logged in',
+          description: 'คุณเข้าสู่ระบบสำเร็จแล้ว',
+          duration: 3,
         });
 
         return redirect(
@@ -35,11 +53,11 @@ export async function loginAction({ request }: any) {
         );
       } catch (error) {
         notification.error({
-          message: 'Login Failed',
+          message: 'เข้าสู่ระบบล้มเหลว',
           placement: 'bottomRight',
-          description: 'Invalid email or password',
+          description: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง',
+          duration: 3,
         });
-
         return json({ status: 'error', message: 'Invalid email or password' });
       }
 
@@ -52,6 +70,7 @@ export const Login = () => {
   const submit = useSubmit();
   const navigation = useNavigation();
   const [form] = Form.useForm();
+
   const onFinish = async (values: any) => {
     const payload = { ...values };
     console.log({ payload });
@@ -68,84 +87,141 @@ export const Login = () => {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
+        background:
+          'linear-gradient(90deg, rgba(28, 181, 224, 0.5), rgba(0, 0, 70, 1))',
       }}
     >
       <Card
+        bodyStyle={{ padding: '0' }}
         style={{
-          margin: '1rem',
+          borderRadius: '10px',
           width: '100%',
-          maxWidth: '515px',
-          // backgroundColor: 'white',
-          borderColor: 'transparent',
-          backgroundColor: 'rgb(25, 20, 42)',
-          boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+          maxWidth: '1360px',
+          minWidth: '300px',
+          background: 'white',
+          height: '76vh',
+          margin: '20px',
+          boxShadow: '12px 12px 12px 12px rgba(0, 0, 70, 0.5)',
         }}
       >
-        <Form
-          form={form}
-          name="normal_login"
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-          size="middle"
-        >
-          <Typography.Title level={1} style={{ color: 'white' }}>
-            ROME
-          </Typography.Title>
-          <div style={{ height: '30px' }} />
-          <Form.Item
-            name="user"
-            rules={[
-              {
-                required: true,
-                message: 'Please input your Email or Username',
-              },
-            ]}
-          >
-            <Input
-              prefix={<UserOutlined />}
-              placeholder="Email or Username"
-              style={{ fontSize: '16px' }}
-            />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            rules={[{ required: true, message: 'Please input your Password!' }]}
-          >
-            <Input.Password
-              prefix={<LockOutlined />}
-              placeholder="Password"
-              style={{ fontSize: '16px' }}
-              iconRender={(visible) =>
-                visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
-              }
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button
-              size="large"
-              type="primary"
-              htmlType="submit"
-              loading={
-                navigation.state === 'loading' ||
-                navigation.state === 'submitting'
-              }
-              disabled={
-                navigation.state === 'loading' ||
-                navigation.state === 'submitting'
-              }
+        <Flex>
+          <Col xs={0} sm={0} md={12} lg={13} xl={13}>
+            <Image
+              src={Rome}
               style={{
-                fontSize: '18px',
-                padding: '0 30px',
-                width: '100%',
-                backgroundColor: '#A79DB4',
+                borderRadius: '10px',
+                height: '75vh',
                 borderColor: 'transparent',
-                color: 'white',
               }}
+              preview={false}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={11} xl={11}>
+            <Flex
+              vertical
+              justify="center"
+              align="center"
+              style={{ height: '70vh' }}
             >
-              Sign in
-            </Button>
-          </Form.Item>
-        </Form>
+              <Form
+                form={form}
+                name="normal_login"
+                initialValues={{ remember: true }}
+                onFinish={onFinish}
+                size="large"
+                style={{ padding: '2rem' }}
+              >
+                <Typography.Title
+                  level={1}
+                  style={{ fontSize: 'calc(2rem + 1vw)' }}
+                >
+                  ROME
+                </Typography.Title>
+                <Typography.Paragraph
+                  style={{
+                    fontSize: 'calc(0.8rem + 0.5vw)',
+                    marginBottom: '3rem',
+                  }}
+                >
+                  "If you haven't figured out how to build Rome in a day, let us
+                  show you how with the ROME platform."
+                </Typography.Paragraph>
+                <Form.Item
+                  name="user"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please input your Email or Username',
+                    },
+                  ]}
+                  style={{ boxShadow: ' 0px 8px 12px rgba(0, 0, 70, 0.5)' }}
+                >
+                  <Input
+                    className="no-autofill"
+                    prefix={<UserOutlined />}
+                    placeholder="Email or Username"
+                    size="large"
+                    style={{ borderRadius: 0, height: 60, fontSize: 18 }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="password"
+                  rules={[
+                    { required: true, message: 'Please input your Password!' },
+                  ]}
+                  style={{ boxShadow: ' 0px 8px 12px rgba(0, 0, 70, 0.5)' }}
+                >
+                  <Input.Password
+                    className="no-autofill"
+                    prefix={<LockOutlined />}
+                    placeholder="Password"
+                    size="large"
+                    iconRender={(visible) =>
+                      visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
+                    }
+                    style={{ borderRadius: 0, height: 60, fontSize: 18 }}
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Button
+                    size="large"
+                    type="primary"
+                    htmlType="submit"
+                    loading={
+                      navigation.state === 'loading' ||
+                      navigation.state === 'submitting'
+                    }
+                    disabled={
+                      navigation.state === 'loading' ||
+                      navigation.state === 'submitting'
+                    }
+                    style={{
+                      fontSize: 18,
+                      borderRadius: 0,
+                      height: 60,
+                      padding: '0 30px',
+                      width: '100%',
+                      borderColor: 'transparent',
+                      color: 'white',
+                      boxShadow: ' 0px 8px 12px rgba(0, 0, 70, 0.5)',
+                    }}
+                  >
+                    Sign in
+                  </Button>
+                </Form.Item>
+              </Form>
+              <div style={{ height: '30px' }} />
+              <Flex gap={6}>
+                <Typography>Do you have organization like Rome? | </Typography>
+                <Link to={'https://utotech.co.th/'} target="_blank">
+                  <Typography.Link style={{ color: '#2db7f5' }}>
+                    Contact us
+                  </Typography.Link>
+                </Link>
+              </Flex>
+            </Flex>
+          </Col>
+        </Flex>
       </Card>
     </div>
   );

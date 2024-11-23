@@ -123,26 +123,45 @@ export const Menus = (props: MenusProps) => {
     //   role: ["branch_admin","organize_admin"],
     // },
     // {
-
     {
-      //<Link to="/information-branch">
-      label: (
-        <Link to="#" style={{ cursor: 'not-allowed' }}>
-          ข้อมูลสาขา
-        </Link>
-      ),
-      key: '/information-branch',
-      icon: <Icon.SettingOutlined />,
-      role: ['manager'],
-      disable: true,
-    },
-    {
-      // <Link to="/information">
-      label: <Link to="/information">ข้อมูลองค์กร</Link>,
-      key: '/information',
-      icon: <Icon.SettingOutlined />,
-      role: ['owner'],
-      // disable: true,
+      label: <p style={{ color: 'grey' }}>การตั้งค่า</p>,
+      icon: <Icon.SettingOutlined style={{ color: 'grey' }} />,
+      role: ['owner', 'manager'],
+      key: '/setting-menu',
+      children: [
+        {
+          //<Link to="/information-branch">
+          label: (
+            <Link to="#" style={{ cursor: 'not-allowed' }}>
+              ข้อมูลสาขา
+            </Link>
+          ),
+          key: '/information-branch',
+          icon: <Icon.SettingOutlined />,
+          role: ['manager'],
+          disable: true,
+        },
+        {
+          // <Link to="/information">
+          label: <Link to="/information">ข้อมูลองค์กร</Link>,
+          key: '/information',
+          icon: <Icon.FileTextOutlined />,
+          role: ['owner'],
+          // disable: true,
+        },
+        {
+          label: <Link to="/address">ที่อยู่</Link>,
+          key: '/address',
+          icon: <Icon.EnvironmentOutlined />,
+          role: ['owner'],
+        },
+        {
+          label: <Link to="/system">ระบบ</Link>,
+          key: '/system',
+          icon: <Icon.ControlOutlined />,
+          role: ['owner'],
+        },
+      ],
     },
   ];
   // return menus.filter((m) =>  m.role.includes(role) );

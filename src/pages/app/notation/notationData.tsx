@@ -1,16 +1,77 @@
-import { Tag } from 'antd';
+import { EyeOutlined } from '@ant-design/icons';
+import { Button, Tag } from 'antd';
+import { ColumnsType } from 'antd/es/table';
+import dayjs from 'dayjs';
+import { Link } from 'react-router-dom';
 
-export const data = [
+export const columns: ColumnsType<any> = [
   {
-    id: 1,
-    number: 'QU2419110001',
-    status: 'draft',
-    type: 'quotation',
-    createdAt: '2024-11-19T10:55:23.192Z',
-    expiredAt: '2024-12-01T10:55:00.192Z',
+    title: 'เลขที่เอกสาร',
+    dataIndex: 'docNo',
+    key: 'docNo',
+  },
+  {
+    title: 'ประเภทเอกสาร',
+    dataIndex: 'type',
+    key: 'type',
+    align: 'center',
+    width: 150,
+  },
+  {
+    title: 'สถานะ',
+    dataIndex: 'status',
+    key: 'status',
+    align: 'center',
+    width: 150,
+    render: (value: any) => {
+      return handleStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    key: 'docStatus',
+    align: 'center',
+    width: 150,
+    render: (value: any) => {
+      return handleStatusTag(value);
+    },
+  },
+  {
+    title: 'วันที่สร้าง',
+    dataIndex: 'createdAt',
+    key: 'createdAt',
+    align: 'center',
+    width: 150,
+    render: (value) => {
+      return <>{dayjs(value).format('DD/MM/YYYY')}</>;
+    },
+  },
+  {
+    title: 'วันหมดอายุการใช้งาน',
+    dataIndex: 'expiredAt',
+    key: 'expiredAt',
+    align: 'center',
+    width: 150,
+    render: (value) => {
+      return <>{dayjs(value).format('DD/MM/YYYY')}</>;
+    },
+  },
+
+  {
+    title: 'รายละเอียด',
+    key: 'details',
+    dataIndex: 'id',
+    align: 'center',
+    render: (id: number) => (
+      <Link to={`${id}`}>
+        <Button type="primary" icon={<EyeOutlined />}>
+          ดูข้อมูล
+        </Button>
+      </Link>
+    ),
   },
 ];
-
 export const handleStatusTag = (status: string) => {
   switch (status) {
     case 'draft':
@@ -33,5 +94,23 @@ export const handleStatusTag = (status: string) => {
       return <Tag color="default">{status}</Tag>;
     default:
       return <>{status}</>;
+  }
+};
+
+export const handleTypeTag = (type: string) => {
+  switch (type) {
+    case 'invoice':
+      return <Tag color="geekblue">{type}</Tag>;
+    case 'quotation':
+      return <Tag color="orange">{type}</Tag>;
+    case 'delivery_order':
+      return <Tag color="purple">{type}</Tag>;
+    case 'purchase_order':
+      return <Tag color="green">{type}</Tag>;
+    case 'receipt':
+      return <Tag color="magenta">{type}</Tag>;
+
+    default:
+      return <>{type}</>;
   }
 };

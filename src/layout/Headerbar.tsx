@@ -126,7 +126,7 @@ export const Headerbar: React.FC = () => {
   const defaultNotifications: MenuProps['items'] = [
     {
       label: (
-        <Link to={'#'}>
+        <Link to={'/notification'}>
           <Flex align="center" justify="end">
             ดูทั้งหมด
           </Flex>

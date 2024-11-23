@@ -21,6 +21,8 @@
     "logout": "Logout",
     "action": "Action",
     "approval": "Approval",
-    "appointment": "Appointment"
+    "appointment": "Appointment",
+    "address": "Address",
+    "system": "System"
   }
 }

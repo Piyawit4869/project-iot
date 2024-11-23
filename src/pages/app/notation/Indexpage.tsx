@@ -1,10 +1,12 @@
 import {
-  Button,
+  Card,
   Col,
   Flex,
   Form,
   Input,
+  List,
   Row,
+  Segmented,
   Select,
   Space,
   Typography,
@@ -17,13 +19,11 @@ import {
 } from 'react-router-dom';
 import { TableComponent } from '@src/components/shared/TableComponent';
 import { CreateButton } from '@src/components/shared/CreateButton';
-import { EyeOutlined, TagOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, BarsOutlined, TagOutlined } from '@ant-design/icons';
 import { TitleBar } from '@src/components/shared';
 import React from 'react';
 import { debounce } from 'lodash';
-import { ColumnsType } from 'antd/es/table';
-import dayjs from 'dayjs';
-import { handleStatusTag } from './notationData';
+import { columns, handleTypeTag } from './notationData';
 
 export const NotationIndex = () => {
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -31,6 +31,8 @@ export const NotationIndex = () => {
 
   const { state } = useNavigation();
   const submit = useSubmit();
+
+  const [widgetDisplay, setWidgetDisplay] = React.useState('Table');
 
   React.useEffect(() => {
     setLoading(true);
@@ -75,6 +77,66 @@ export const NotationIndex = () => {
     return debounce(fetchData, 500);
   }, [param]);
 
+  const hadleWidget = (widget: string) => {
+    switch (widget) {
+      case 'Widget':
+        return (
+          <List
+            grid={{ gutter: 16, column: 4 }}
+            dataSource={notations?.items ? notations.items : []}
+            renderItem={(item: any, index: any) => (
+              <List.Item>
+                <Link to={`${item.id}`}>
+                  <Card
+                    bodyStyle={{ padding: '12px' }}
+                    style={{ background: 'white' }}
+                  >
+                    <>
+                      <Flex justify="space-between" align="center">
+                        <Typography.Title level={3}>
+                          {'เอกสารที่ ' + (index + 1)}
+                        </Typography.Title>
+                        {handleTypeTag(item.type)}
+                      </Flex>
+                      <Typography.Paragraph>{item.docNo}</Typography.Paragraph>
+                    </>
+                  </Card>
+                </Link>
+              </List.Item>
+            )}
+            pagination={{
+              current: param && param?.page ? Number(param?.page) : 1,
+              pageSize: param && param?.limit ? Number(param?.limit) : 10,
+              total:
+                notations && notations?.meta ? notations?.meta?.totalItems : 10,
+              showTotal: (total: any, range: any) =>
+                `${range[0]}-${range[1]} ของ ${total} เอกสารทั้งหมด`,
+            }}
+          />
+        );
+      case 'Table':
+        return (
+          <TableComponent
+            columns={columns}
+            dataSource={notations?.items ? notations.items : []}
+            loading={loading || state === 'loading' || state === 'submitting'}
+            pagination={{
+              current: param && param?.page ? Number(param?.page) : 1,
+              pageSize: param && param?.limit ? Number(param?.limit) : 10,
+              total:
+                notations && notations?.meta ? notations?.meta?.totalItems : 10,
+              showTotal: (total: any, range: any) =>
+                `${range[0]}-${range[1]} ของ ${total} เอกสารทั้งหมด`,
+            }}
+            bordered
+            onChange={handleChange}
+          />
+        );
+      default:
+        return <></>;
+    }
+  };
+
   const handleChangeFilter = React.useMemo(() => {
     const fetchData = (values: any) => {
       let payload = {} as any;
@@ -117,75 +179,6 @@ export const NotationIndex = () => {
     return debounce(fetchData, 500);
   }, [param]);
 
-  const columns: ColumnsType<any> = [
-    {
-      title: 'เลขที่เอกสาร',
-      dataIndex: 'docNo',
-      key: 'docNo',
-    },
-    {
-      title: 'ประเภทเอกสาร',
-      dataIndex: 'type',
-      key: 'type',
-      align: 'center',
-      width: 150,
-    },
-    {
-      title: 'สถานะ',
-      dataIndex: 'status',
-      key: 'status',
-      align: 'center',
-      width: 150,
-      render: (value: any) => {
-        return handleStatusTag(value);
-      },
-    },
-    {
-      title: 'สถานะเอกสาร',
-      dataIndex: 'docStatus',
-      key: 'docStatus',
-      align: 'center',
-      width: 150,
-      render: (value: any) => {
-        return handleStatusTag(value);
-      },
-    },
-    {
-      title: 'วันที่สร้าง',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-      align: 'center',
-      width: 150,
-      render: (value) => {
-        return <>{dayjs(value).format('DD/MM/YYYY')}</>;
-      },
-    },
-    {
-      title: 'วันหมดอายุการใช้งาน',
-      dataIndex: 'expiredAt',
-      key: 'expiredAt',
-      align: 'center',
-      width: 150,
-      render: (value) => {
-        return <>{dayjs(value).format('DD/MM/YYYY')}</>;
-      },
-    },
-
-    {
-      title: 'รายละเอียด',
-      key: 'details',
-      dataIndex: 'id',
-      align: 'center',
-      render: (id: number) => (
-        <Link to={`${id}`}>
-          <Button type="primary" icon={<EyeOutlined />}>
-            ดูข้อมูล
-          </Button>
-        </Link>
-      ),
-    },
-  ];
-
   return (
     <Flex vertical gap={'small'}>
       {/* Title section from title component */}
@@ -215,6 +208,20 @@ export const NotationIndex = () => {
             </Row>
           }
           buttons={[
+            <Segmented
+              defaultValue={widgetDisplay}
+              options={[
+                { label: 'ตาราง', value: 'Table', icon: <BarsOutlined /> },
+                {
+                  label: 'วิดเจ็ต',
+                  value: 'Widget',
+                  icon: <AppstoreOutlined />,
+                },
+              ]}
+              onChange={(value) => {
+                setWidgetDisplay(value);
+              }}
+            />,
             <Link to={'create'}>
               <CreateButton label={'สร้างเอกสาร'} />
             </Link>,
@@ -267,21 +274,7 @@ export const NotationIndex = () => {
         </Form>
       </Space>
       {/* Index data from table component */}
-      <TableComponent
-        columns={columns}
-        dataSource={notations?.items ? notations.items : []}
-        loading={loading || state === 'loading' || state === 'submitting'}
-        pagination={{
-          current: param && param?.page ? Number(param?.page) : 1,
-          pageSize: param && param?.limit ? Number(param?.limit) : 10,
-          total:
-            notations && notations?.meta ? notations?.meta?.totalItems : 10,
-          showTotal: (total: any, range: any) =>
-            `${range[0]}-${range[1]} ของ ${total} เอกสารทั้งหมด`,
-        }}
-        bordered
-        onChange={handleChange}
-      />
+      {hadleWidget(widgetDisplay)}
     </Flex>
   );
 };

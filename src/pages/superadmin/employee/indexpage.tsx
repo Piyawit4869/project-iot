@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Flex, Col, Row } from 'antd';
+import { Typography, Flex, Col, Row, Space } from 'antd';
 import { TagOutlined } from '@ant-design/icons';
 import { Link, redirect, useNavigation } from 'react-router-dom';
 import { TableComponent } from '@src/components/shared/TableComponent';
@@ -28,25 +28,38 @@ export const UsersIndex: React.FC = () => {
 
   return (
     <Flex vertical gap={'small'}>
-      <TitleBar
-        title={'ข้อมูลพนักงาน'}
-        subTitle={
-          <Row gutter={6} align="middle">
-            <Col>
-              <TagOutlined />
-            </Col>
-            <Col>
-              <Typography>ค้นหาพนักงาน</Typography>
-            </Col>
-          </Row>
-        }
-        buttons={[
-          <Link to={'create'}>
-            <CreateButton label={'เพิ่มข้อมูลพนักงาน'} disable />
-          </Link>,
-        ]}
-      />
-      <div style={{ height: '5px' }} />
+      <Space
+        direction="vertical"
+        style={{
+          width: '100%',
+          backgroundColor: 'white',
+          borderRadius: 5,
+          padding: '20px 0px',
+          position: 'sticky',
+          zIndex: 10,
+          borderImageSlice: 1,
+          top: '-10px',
+        }}
+      >
+        <TitleBar
+          title={'ข้อมูลพนักงาน'}
+          subTitle={
+            <Row gutter={6} align="middle">
+              <Col>
+                <TagOutlined />
+              </Col>
+              <Col>
+                <Typography>ค้นหาพนักงาน</Typography>
+              </Col>
+            </Row>
+          }
+          buttons={[
+            <Link to={'create'}>
+              <CreateButton label={'เพิ่มข้อมูลพนักงาน'} disable />
+            </Link>,
+          ]}
+        />
+      </Space>
       <SearchBar />
       <TableComponent
         columns={exployeeColumns}

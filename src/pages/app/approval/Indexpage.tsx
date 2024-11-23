@@ -122,19 +122,19 @@ export const ApprovalIndex = () => {
   const [openResend, setOpenResend] = React.useState(false);
 
   const approve = approvals?.items?.filter(
-    (item: any) => item.status === 'Approved',
+    (item: any) => item.status === 'approved',
   );
   const reject = approvals?.items?.filter(
-    (item: any) => item.status === 'Rejected',
+    (item: any) => item.status === 'rejected',
   );
   const cancal = approvals?.items?.filter(
-    (item: any) => item.status === 'Cancelled',
+    (item: any) => item.status === 'cancelled',
   );
   const inProgress = approvals?.items?.filter(
-    (item: any) => item.status === 'InProgress',
+    (item: any) => item.status === 'in_progress',
   );
   const pending = approvals?.items?.filter(
-    (item: any) => item.status === 'Pending',
+    (item: any) => item.status === 'pending',
   );
 
   const onFinish = async (values: any) => {
@@ -173,7 +173,7 @@ export const ApprovalIndex = () => {
         return async (values: any) => {
           const payload = { ...values };
 
-          payload.action = 'Approve';
+          payload.action = 'approve';
           submit(
             {
               data: JSON.stringify(payload),
@@ -189,7 +189,7 @@ export const ApprovalIndex = () => {
         return async (values: any) => {
           const payload = { ...values };
 
-          payload.action = 'Reject';
+          payload.action = 'reject';
           submit(
             {
               data: JSON.stringify(payload),
@@ -204,7 +204,7 @@ export const ApprovalIndex = () => {
         return async (values: any) => {
           const payload = { ...values };
 
-          payload.action = 'Cancel';
+          payload.action = 'cancel';
           submit(
             {
               data: JSON.stringify(payload),
@@ -219,7 +219,7 @@ export const ApprovalIndex = () => {
         return async (values: any) => {
           const payload = { ...values };
 
-          payload.action = 'RequestChange';
+          payload.action = 'request_change';
           submit(
             {
               data: JSON.stringify(payload),
@@ -263,7 +263,7 @@ export const ApprovalIndex = () => {
       payload.note = '';
     }
 
-    payload.action = 'Pending';
+    payload.action = 'pending';
 
     submit(
       { data: JSON.stringify(payload), action: 'resend', id: modalData.id },
@@ -347,9 +347,9 @@ export const ApprovalIndex = () => {
                     <Select
                       placeholder="กรุณาเลือกประเภทของการลา"
                       options={[
-                        { label: 'ลาป่วย', value: 'Sickleave' },
-                        { label: 'ลากิจ', value: 'LeaveOfAbsence' },
-                        { label: 'ลาพักร้อน', value: 'LeaveRequest' },
+                        { label: 'ลาป่วย', value: 'sickleave' },
+                        { label: 'ลากิจ', value: 'leave_of_absence' },
+                        { label: 'ลาพักร้อน', value: 'leave_request' },
                       ]}
                     />
                   </Form.Item>
@@ -460,9 +460,9 @@ export const ApprovalIndex = () => {
                     <Select
                       placeholder="กรุณาเลือกประเภทของการลา"
                       options={[
-                        { label: 'ลาป่วย', value: 'Sickleave' },
-                        { label: 'ลากิจ', value: 'LeaveOfAbsence' },
-                        { label: 'ลาพักร้อน', value: 'LeaveRequest' },
+                        { label: 'ลาป่วย', value: 'sickleave' },
+                        { label: 'ลากิจ', value: 'leave_of_absence' },
+                        { label: 'ลาพักร้อน', value: 'leave_request' },
                       ]}
                     />
                   </Form.Item>
@@ -866,11 +866,11 @@ const adminColumns: ColumnsType<any> = [
 
 const handleType = (type: string) => {
   switch (type) {
-    case 'Sickleave':
+    case 'sickleave':
       return 'ลาป่วย';
-    case 'LeaveOfAbsence':
+    case 'leave_of_absence':
       return 'ลากิจ';
-    case 'LeaveRequest':
+    case 'leave_request':
       return 'ลาพักร้อน';
 
     default:
@@ -880,11 +880,11 @@ const handleType = (type: string) => {
 
 const handleTypeColor = (color: string) => {
   switch (color) {
-    case 'Sickleave':
+    case 'sickleave':
       return '#2db7f5';
-    case 'LeaveOfAbsence':
+    case 'leave_of_absence':
       return '#87d068';
-    case 'LeaveRequest':
+    case 'leave_request':
       return '#f50';
 
     default:
@@ -894,15 +894,15 @@ const handleTypeColor = (color: string) => {
 
 const handleStatus = (status: string) => {
   switch (status) {
-    case 'Pending':
+    case 'pending':
       return 'กำลังพิจารณา';
-    case 'Approved':
+    case 'approved':
       return 'อนุญาติ';
-    case 'Rejected':
+    case 'rejected':
       return 'ไม่อนุญาติ';
-    case 'InProgress':
+    case 'in_progress':
       return 'กำลังดำเนินการ';
-    case 'Cancelled':
+    case 'cancelled':
       return 'ยกเลิก';
     default:
       return '-';
@@ -911,15 +911,15 @@ const handleStatus = (status: string) => {
 
 const handleStatusIcon = (color: string) => {
   switch (color) {
-    case 'Pending':
+    case 'pending':
       return <SyncOutlined spin />;
-    case 'Approved':
+    case 'approved':
       return <CheckCircleOutlined />;
-    case 'Rejected':
+    case 'rejected':
       return <CloseCircleOutlined />;
-    case 'InProgress':
+    case 'in_progress':
       return <SyncOutlined spin />;
-    case 'Cancelled':
+    case 'cancelled':
       return <CloseCircleOutlined />;
     default:
       return <MinusCircleOutlined />;
@@ -928,15 +928,15 @@ const handleStatusIcon = (color: string) => {
 
 const handleStatusColor = (color: string) => {
   switch (color) {
-    case 'Pending':
+    case 'pending':
       return 'blue';
-    case 'Approved':
+    case 'approved':
       return 'success';
-    case 'Rejected':
+    case 'rejected':
       return 'volcano';
-    case 'InProgress':
+    case 'in_progress':
       return 'cyan';
-    case 'Cancelled':
+    case 'cancelled':
       return 'error';
 
     default:

@@ -7,7 +7,7 @@
     "attendance-overview": "ข้อมูลเชิงลึก",
     "notation": "เอกสาร",
     "project": "โครงการ",
-    "information": "สารสนเทศ",
+    "information": "ข้อมูลองค์กร",
     "customers": "ลูกค้า",
     "branch": "สาขา",
     "orginformation": "ข้อมูลองค์กร",
@@ -22,6 +22,8 @@
     "logout": "ออกจากระบบ",
     "action": "กิจกรรม",
     "approval": "การลางาน",
-    "appointment": "การนัดหมาย"
+    "appointment": "การนัดหมาย",
+    "address": "ที่อยู่",
+    "system": "ระบบ"
   }
 }

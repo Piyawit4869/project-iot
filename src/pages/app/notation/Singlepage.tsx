@@ -1,4 +1,9 @@
 import {
+  ClockCircleOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
+import {
   Button,
   Col,
   DatePicker,
@@ -8,6 +13,7 @@ import {
   Row,
   Select,
   Space,
+  Timeline,
   Typography,
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
@@ -69,48 +75,66 @@ export const NotationSingle = () => {
           width: '100%',
           backgroundColor: 'white',
           borderRadius: 5,
-          padding: '20px 0px 0px 0px',
           position: 'sticky',
           zIndex: 10,
           borderImageSlice: 1,
-          top: '-10px',
         }}
       >
         <Form layout="vertical" form={form} onFinish={onFinish}>
-          <Flex justify="space-between">
-            <Typography.Title level={3}>เอกสาร</Typography.Title>
-            <Flex gap={12}>
-              <Button
-                type="primary"
-                onClick={() => {
-                  //FIXME: handle editing notation
-                  console.log('ready for editing');
-                  setDisabledForm((prev: any) => !prev);
-                }}
-              >
-                Edit
-              </Button>
-              {me?.role?.name === 'owner' && (
-                <Button style={{ background: '#87d068', color: 'white' }}>
-                  Approved
+          <Space
+            direction="vertical"
+            style={{
+              width: '100%',
+              backgroundColor: 'white',
+              borderRadius: 5,
+              position: 'sticky',
+              padding: ' 20px 0px',
+              zIndex: 10,
+              borderBottom: '2px solid',
+              borderImage:
+                'linear-gradient(90deg, #19142a -38.4%, #A79DB4 129.4%)',
+              borderImageSlice: 1,
+              top: '-22px',
+              marginBottom: '2rem',
+            }}
+          >
+            <Flex justify="space-between">
+              <Typography.Title level={3} style={{ marginTop: 0 }}>
+                เอกสาร
+              </Typography.Title>
+              <Flex gap={12} align="center">
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    //FIXME: handle editing notation
+                    console.log('ready for editing');
+                    setDisabledForm((prev: any) => !prev);
+                  }}
+                >
+                  Edit
                 </Button>
-              )}
-              {me?.role?.name === 'owner' && (
-                <Button danger type="primary">
-                  Rejected
-                </Button>
-              )}
-              {me?.role?.name === 'owner' && (
-                <Button danger type="default">
-                  Canceled
-                </Button>
-              )}
+                {me?.role?.name === 'owner' && (
+                  <Button style={{ background: '#87d068', color: 'white' }}>
+                    Approved
+                  </Button>
+                )}
+                {me?.role?.name === 'owner' && (
+                  <Button danger type="primary">
+                    Rejected
+                  </Button>
+                )}
+                {me?.role?.name === 'owner' && (
+                  <Button danger type="default">
+                    Canceled
+                  </Button>
+                )}
 
-              {/* <Button danger onClick={onDelete}>
+                {/* <Button danger onClick={onDelete}>
                 ลบ
               </Button> */}
+              </Flex>
             </Flex>
-          </Flex>
+          </Space>
           <Flex gap={12}>
             <Col span={12}>
               <Row gutter={[24, 24]}>
@@ -180,6 +204,80 @@ export const NotationSingle = () => {
                     <TextArea rows={4} disabled={disabledForm} />
                   </Form.Item>
                 </Col>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  <Typography.Title level={3}>รายการ</Typography.Title>
+                  <Form.List name={'items'}>
+                    {(fields, { add, remove }) => (
+                      <>
+                        {fields.map((field: any) => (
+                          <Row key={field.key}>
+                            <Col xs={10} sm={10} md={10} lg={10} xl={10}>
+                              <Form.Item
+                                {...field}
+                                name={[field.name, 'itemName']}
+                                fieldKey={[field.fieldKey, 'itemName']}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'กรุณาเลือกรายการ!',
+                                  },
+                                ]}
+                                style={{ flex: 1, marginRight: 8 }}
+                              >
+                                <Select
+                                  placeholder="เลือกรายการ"
+                                  style={{ width: '100%' }}
+                                />
+                              </Form.Item>
+                            </Col>
+                            <Col xs={10} sm={10} md={10} lg={10} xl={10}>
+                              <Form.Item
+                                {...field}
+                                name={[field.name, 'quantity']}
+                                fieldKey={[field.fieldKey, 'quantity']}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'กรุณาเลือกจำนวนรายการ!',
+                                  },
+                                ]}
+                                style={{ flex: 1, marginRight: 8 }}
+                              >
+                                <InputNumber
+                                  placeholder="เลือกจำนวน"
+                                  style={{ width: '100%' }}
+                                />
+                              </Form.Item>
+                            </Col>
+                            <Col xs={4} sm={4} md={4} lg={4} xl={4}>
+                              <Button
+                                danger
+                                icon={
+                                  <MinusCircleOutlined
+                                    style={{ alignSelf: 'center' }}
+                                  />
+                                }
+                                style={{ width: '100%' }}
+                                onClick={() => remove(field.name)}
+                              />
+                            </Col>
+                          </Row>
+                        ))}
+
+                        <Form.Item>
+                          <Button
+                            type="dashed"
+                            onClick={() => add()}
+                            block
+                            icon={<PlusOutlined />}
+                          >
+                            เพิ่มรายการ
+                          </Button>
+                        </Form.Item>
+                      </>
+                    )}
+                  </Form.List>
+                </Col>
               </Row>
               {/* <Flex gap={12}>
                 <Button htmlType="submit" type="primary">
@@ -205,6 +303,36 @@ export const NotationSingle = () => {
                 }}
               >
                 <Typography.Title level={4}>PDF</Typography.Title>
+              </div>
+              <div style={{ padding: 20 }}>
+                <Typography.Title level={4}>ติดตามสถานะเอกสาร</Typography.Title>
+                <Timeline
+                  mode="left"
+                  items={[
+                    {
+                      children: 'Create a services site 2015-09-01',
+                    },
+                    {
+                      children: 'Solve initial network problems 2015-09-01',
+                      color: 'green',
+                    },
+                    {
+                      dot: <ClockCircleOutlined style={{ fontSize: '16px' }} />,
+                      children: `Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.`,
+                    },
+                    {
+                      color: 'red',
+                      children: 'Network problems being solved 2015-09-01',
+                    },
+                    {
+                      children: 'Create a services site 2015-09-01',
+                    },
+                    {
+                      dot: <ClockCircleOutlined style={{ fontSize: '16px' }} />,
+                      children: 'Technical testing 2015-09-01',
+                    },
+                  ]}
+                />
               </div>
             </Col>
           </Flex>
