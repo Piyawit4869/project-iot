@@ -8,7 +8,7 @@ import {
   Col,
   DatePicker,
   Flex,
-  Input,
+  // Input,
   InputNumber,
   Row,
   Select,
@@ -38,7 +38,7 @@ export const NotationSingle = () => {
     payload.active = true;
     payload.code = 'code1234';
     payload.docNo = 'QU-24112200107';
-    payload.Status = 'draft';
+    payload.status = 'draft';
     payload.docStatus = 'pending';
 
     submit(
@@ -139,11 +139,6 @@ export const NotationSingle = () => {
             <Col span={12}>
               <Row gutter={[24, 24]}>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                  <Form.Item name={'name'} label={'name'}>
-                    <Input disabled={disabledForm} />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                   <Form.Item name={'startDate'} label={'startDate'}>
                     <DatePicker
                       style={{ width: '100%' }}
@@ -176,7 +171,7 @@ export const NotationSingle = () => {
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                  <Form.Item name={'excludingVat'} label={'excludingVat'}>
+                  <Form.Item name={'wht'} label={'wht'}>
                     <InputNumber
                       style={{ width: '100%' }}
                       disabled={disabledForm}
@@ -184,7 +179,7 @@ export const NotationSingle = () => {
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                  <Form.Item name={'taxValue'} label={'taxValue'}>
+                  <Form.Item name={'vat'} label={'vat'}>
                     <InputNumber
                       style={{ width: '100%' }}
                       disabled={disabledForm}
