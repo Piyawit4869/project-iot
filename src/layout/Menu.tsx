@@ -10,6 +10,12 @@ export const Menus = (props: MenusProps) => {
 
   const menus = [
     {
+      label: <Link to="/">หน้าแรก</Link>,
+      key: '/',
+      icon: <Icon.HomeOutlined />,
+      role: ['owner'],
+    },
+    {
       //<Link to="/admin/analytic" >วิเคราะห์ระบบ</Link>
       label: <Link to="/admin/analytic">วิเคราะห์ระบบ</Link>,
       key: '/admin/analytic',

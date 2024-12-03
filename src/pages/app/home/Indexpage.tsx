@@ -72,7 +72,7 @@ const styles: { [key: string]: CSSProperties } = {
   },
 };
 
-export const AppLandingPage = () => {
+export const Homepage = () => {
   return (
     <div
       style={{

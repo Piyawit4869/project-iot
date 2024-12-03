@@ -1,5 +1,5 @@
-import { AppLandingPage } from './Indexpage';
 import { routes as planningRoute } from './planning';
+import { routes as homeRoute } from './home';
 import { routes as notationRoute } from './notation';
 import { routes as attendanceRoute } from './attendances';
 import { routes as userRoute } from './user';
@@ -17,10 +17,7 @@ import { routes as approvalRoute } from './approval';
 import { routes as notificationRoute } from './notification';
 
 export const routes = [
-  {
-    path: '',
-    element: <AppLandingPage />,
-  },
+  ...homeRoute,
   ...profileRoute,
   ...planningRoute,
   ...notationRoute,

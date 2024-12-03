@@ -142,6 +142,7 @@ export const OrganizeIndex: React.FC = () => {
           current: param && param?.page ? Number(param?.page) : 1,
           pageSize: param && param?.limit ? Number(param?.limit) : 10,
           total: organize && organize?.meta ? organize?.meta?.totalItems : 10,
+
           showTotal: (total: any, range: any) =>
             `${range[0]}-${range[1]} ของ ${total} องค์กรทั้งหมด`,
         }}

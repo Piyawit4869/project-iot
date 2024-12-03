@@ -28,11 +28,17 @@ export const TableComponent: FC<TableComponentProps> = (
     onChange,
     onRowClick,
   } = props;
+
+  const paginate = {
+    ...pagination,
+    showSizeChanger: true,
+    locale: { items_per_page: 'รายการ / หน้า' },
+  };
   return (
     <Table
       loading={loading}
       bordered={bordered}
-      pagination={pagination}
+      pagination={paginate}
       dataSource={dataSource}
       scroll={{ x: 'max-content' }}
       columns={columns}
