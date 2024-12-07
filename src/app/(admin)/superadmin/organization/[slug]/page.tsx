@@ -1,14 +1,6 @@
 import { organizationLoader } from '../api/loaders';
 
-interface OrganizationPageProps {
-  params: {
-    slug: string; // The dynamic route parameter
-  };
-}
-
-export default async function OrganizationPage({
-  params,
-}: OrganizationPageProps) {
+export default async function OrganizationPage({ params }: any) {
   const { data: organization } = await organizationLoader(params.slug);
 
   return (

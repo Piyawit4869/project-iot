@@ -9,11 +9,11 @@ export default async function App() {
         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
           <div className="text-center">
             <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
-              Welcome to Our Next.js App!
+              Welcome to ROME!
             </h1>
             <p className="text-lg text-gray-600 mb-8">
-              Build amazing web experiences with the power of Next.js and
-              Tailwind CSS.
+              {`"If you haven't figured out how to build Rome in a day. let us
+              show you how with the ROME platform"`}
             </p>
             {session.isLoggedIn && (
               <a href={'/login'}>
