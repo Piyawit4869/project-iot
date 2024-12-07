@@ -24,16 +24,14 @@ export const sessionOptions: SessionOptions = {
 
 export const getSession = async () => {
   const cookiesStore: any = cookies();
+
   const session = await getIronSession<SessionData>(
-    // await cookiesStore,
     cookiesStore,
     sessionOptions,
   );
-
   if (!session.isLoggedIn) {
     session.isLoggedIn = defaultSession.isLoggedIn;
   }
-
   return session;
 };
 
