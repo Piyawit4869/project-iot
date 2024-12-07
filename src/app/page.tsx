@@ -12,8 +12,8 @@ export default async function App() {
               Welcome to ROME!
             </h1>
             <p className="text-lg text-gray-600 mb-8">
-              "If you haven't figured out how to build Rome in a day. let us
-              show you how with the ROME platform"
+              {`"If you haven't figured out how to build Rome in a day. let us
+              show you how with the ROME platform"`}
             </p>
             {session.isLoggedIn && (
               <a href={'/login'}>
