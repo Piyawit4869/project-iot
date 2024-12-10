@@ -1,8 +1,9 @@
 // 'use client';
+import React from 'react';
 
 // import { useRouter } from 'next/navigation';
 
-export default function Indexpage() {
+export default async function IndexPage() {
   // const router = useRouter();
 
   // Example data for the table
@@ -35,7 +36,7 @@ export default function Indexpage() {
         </div>
 
         {/* Table */}
-        <div className="bg-white shadow rounded-md overflow-hidden">
+        {/* <div className="bg-white shadow rounded-md overflow-hidden">
           <table className="min-w-full border-collapse">
             <thead className="bg-gray-100">
               <tr>
@@ -51,7 +52,7 @@ export default function Indexpage() {
               </tr>
             </thead>
             <tbody>
-              {/* {organizations.map((org) => (
+              {organizations.map((org) => (
                 <tr
                   key={org.id}
                   className="cursor-pointer hover:bg-gray-100"
@@ -61,10 +62,10 @@ export default function Indexpage() {
                   <td className="px-6 py-4 text-gray-700">{org.name}</td>
                   <td className="px-6 py-4 text-gray-700">{org.role}</td>
                 </tr>
-              ))} */}
+              ))}
             </tbody>
           </table>
-        </div>
+        </div> */}
       </div>
     </div>
   );

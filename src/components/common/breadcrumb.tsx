@@ -2,14 +2,14 @@ import Link from 'next/link';
 import React from 'react';
 
 export const Breadcrumb = () => {
-  const router = window.location;
-  const [pathSegments, setPathSegments] = React.useState<string[]>([]);
+  // const router = window.location;
+  const [pathSegments] = React.useState<string[]>([]);
 
   // Update breadcrumbs whenever the path changes
-  React.useEffect(() => {
-    const segments = router.pathname.split('/').filter((segment) => segment);
-    setPathSegments(segments);
-  }, [router.pathname]);
+  // React.useEffect(() => {
+  //   const segments = router.pathname.split('/').filter((segment) => segment);
+  //   setPathSegments(segments);
+  // }, [router.pathname]);
 
   return (
     <nav className="flex" aria-label="Breadcrumb">
