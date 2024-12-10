@@ -1,24 +1,24 @@
-'use client';
+// 'use client';
 
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 
 export default function Indexpage() {
-  const router = useRouter();
+  // const router = useRouter();
 
   // Example data for the table
-  const organizations = [
-    { id: 1, name: 'John Doe', slug: '1', role: 'Owner' },
-    { id: 2, name: 'Doe John', slug: '2', role: 'Manager' },
-    { id: 3, name: 'Don joh', slug: '3', role: 'Employee' },
-  ];
+  // const organizations = [
+  //   { id: 1, name: 'John Doe', slug: '1', role: 'Owner' },
+  //   { id: 2, name: 'Doe John', slug: '2', role: 'Manager' },
+  //   { id: 3, name: 'Don joh', slug: '3', role: 'Employee' },
+  // ];
 
-  const handleRowClick = (slug: string) => {
-    router.push(`user/${slug}`);
-  };
+  // const handleRowClick = (slug: string) => {
+  //   router.push(`user/${slug}`);
+  // };
 
-  const handleNewPageClick = () => {
-    router.push('user/new');
-  };
+  // const handleNewPageClick = () => {
+  //   router.push('user/new');
+  // };
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -26,12 +26,12 @@ export default function Indexpage() {
         {/* Page Header */}
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Users</h1>
-          <button
+          {/* <button
             onClick={handleNewPageClick}
             className="px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700"
           >
             Add New User
-          </button>
+          </button> */}
         </div>
 
         {/* Table */}
@@ -51,7 +51,7 @@ export default function Indexpage() {
               </tr>
             </thead>
             <tbody>
-              {organizations.map((org) => (
+              {/* {organizations.map((org) => (
                 <tr
                   key={org.id}
                   className="cursor-pointer hover:bg-gray-100"
@@ -61,7 +61,7 @@ export default function Indexpage() {
                   <td className="px-6 py-4 text-gray-700">{org.name}</td>
                   <td className="px-6 py-4 text-gray-700">{org.role}</td>
                 </tr>
-              ))}
+              ))} */}
             </tbody>
           </table>
         </div>
