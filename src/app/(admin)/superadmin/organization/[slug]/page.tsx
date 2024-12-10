@@ -1,4 +1,4 @@
-import { organizationLoader } from '../api/loaders';
+import { organizationLoader } from '@/app/api/organization';
 
 export default async function OrganizationPage({ params }: any) {
   const { data: organization } = await organizationLoader(params.slug);

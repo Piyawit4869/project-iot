@@ -4,6 +4,9 @@ import { SuperAdminSideBar } from '@/components/superadmin/superadminSidebar';
 import Image from 'next/image';
 import Logo from '../../../../public/logo.png';
 import React from 'react';
+import { Breadcrumb } from '@/components/common/breadcrumb';
+import * as Icon from '@ant-design/icons';
+import Link from 'next/link';
 
 export default function AdminLayout({
   children,
@@ -21,11 +24,12 @@ export default function AdminLayout({
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="bg-white shadow p-4 flex items-center justify-between">
-          <h1 className="text-xl font-bold text-gray-800">Admin Dashboard</h1>
+          <Breadcrumb />
+          {/* <h1 className="text-xl font-bold text-gray-800">Admin Dashboard</h1> */}
           <div className="flex items-center space-x-4">
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-              Notifications
-            </button>
+            <Link href={'#'}>
+              <Icon.BellFilled />
+            </Link>
             <div className="relative">
               <button className="flex items-center space-x-2">
                 <Image
