@@ -7,7 +7,7 @@ export default function CreatePage() {
         <TopSection
           title={'สร้างข้อมูงองค์กร'}
           buttons={[
-            <button className="bg-primary" key={'1'}>
+            <button className="bg-primary font" key={'1'}>
               ยืนยัน
             </button>,
           ]}
