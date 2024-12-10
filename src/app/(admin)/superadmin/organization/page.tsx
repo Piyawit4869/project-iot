@@ -1,57 +1,40 @@
 import Link from 'next/link';
-import { organizationsLoader } from './api/loaders';
+import { Table } from '@/components/common/table';
+import { organizationsLoader } from '@/app/api/organization';
 
 export default async function IndexPage() {
   const organizations = await organizationsLoader();
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
         {/* Page Header */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Organizations</h1>
+          <h1 className="text-2xl font-bold text-gray-900">องค์กรทั้งหมด</h1>
           <Link href={`organization/new`}>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700">
-              Add New Organization
+            <button className="px-4 py-2 bg-primary text-white rounded-md shadow hover:bg-gray-600">
+              เพิ่มข้อมูลองค์กร
             </button>
           </Link>
         </div>
 
         {/* Table */}
-        <div className="bg-white shadow rounded-md overflow-hidden">
-          <table className="min-w-full border-collapse">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
-                  ID
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
-                  Organization Name
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {organizations.items.map((organize: any) => (
-                <tr
-                  key={organize.id}
-                  className="cursor-pointer hover:bg-gray-100"
-                >
-                  <td className="px-6 py-4 text-gray-700">
-                    <Link href={`organization/${organize.id}`}>
-                      {organize.id}
-                    </Link>
-                  </td>
-                  <td className="px-6 py-4 text-gray-700">
-                    <Link href={`organization/${organize.id}`}>
-                      {organize.nameTh}
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table data={organizations.items} columns={columns} />
       </div>
     </div>
   );
 }
+
+const columns = [
+  { Header: 'ชื่อ', accessor: 'nameTh' },
+  { Header: 'เบอร์โทรศัพท์', accessor: 'contactPhone' },
+  { Header: 'อีเมลติดต่อ', accessor: 'contactEmail' },
+  { Header: 'Facebook', accessor: 'contactFacebook' },
+  { Header: 'ไลน์ไอดี', accessor: 'contactLine' },
+  { Header: 'WhatsApp', accessor: 'contactWhatsapp' },
+  { Header: 'เว็บไซต์', accessor: 'contactWebsite' },
+  {
+    Header: '',
+    accessor: 'details',
+  },
+];

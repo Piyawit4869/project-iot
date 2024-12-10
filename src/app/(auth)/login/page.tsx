@@ -1,7 +1,7 @@
 'use client';
 
+import { login } from '@/app/api/auth';
 import React, { useActionState } from 'react';
-import { login } from '@/app/(auth)/login/api/actions';
 
 export default function LoginPage() {
   const [user, setUser] = React.useState('');
