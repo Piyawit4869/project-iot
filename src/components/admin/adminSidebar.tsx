@@ -10,6 +10,7 @@ export function AdminSideBar() {
   const pathname = usePathname();
   const [menuItems, setMenuItems] = React.useState([]);
   const [isSubMenuOpen, setIsSubMenuOpen] = React.useState(false);
+  
 
   // Simulate fetching menu data (replace with an actual API call if needed)
   React.useEffect(() => {

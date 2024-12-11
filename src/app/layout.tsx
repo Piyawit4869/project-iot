@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '@/styles/globals.css';
 import React from 'react';
-import {NextUIProvider} from "@nextui-org/react";
+import { NextUIProvider } from '@nextui-org/react';
 
 const ibmPlexSans = localFont({
   src: '../assets/fonts/IBMPlexSansThai-Regular.ttf',
@@ -23,9 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${ibmPlexSans.variable}  antialiased`}>
-      <NextUIProvider>
-        <main>{children}</main>
-      </NextUIProvider>
+        <NextUIProvider>
+          <main>{children}</main>
+        </NextUIProvider>
       </body>
     </html>
   );
