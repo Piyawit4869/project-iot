@@ -5,7 +5,7 @@ interface TopSectionProps {
   buttons?: ReactNode[];
 }
 
-export async function TopSection({ title, buttons }: TopSectionProps) {
+export function TopSection({ title, buttons }: TopSectionProps) {
   return (
     <div className="sticky top-0 bg-white shadow-md p-4 z-10">
       <div className="flex items-center justify-between">
