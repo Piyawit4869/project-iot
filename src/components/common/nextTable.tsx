@@ -21,12 +21,15 @@ export default function NextTable({
     <Table title={title} aria-label={ariaLabel || 'Dynamic table'}>
       <TableHeader>
         {columns.map((column: any) => (
-          <TableColumn key={column.dataIndex}>{column.title}</TableColumn>
+          <TableColumn key={column.dataIndex} className="bg-primary text-white">
+            {column.title}
+          </TableColumn>
         ))}
       </TableHeader>
       <TableBody>
         {rows.map((row: any) => (
           <TableRow
+            className="cursor-pointer hover:bg-primary hover:text-white"
             key={row.id}
             onClick={() => rowClickHandler && rowClickHandler(row)}
           >

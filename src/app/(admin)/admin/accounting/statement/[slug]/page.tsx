@@ -81,11 +81,11 @@ export default function SingleSinglePage() {
                     <div className="text-start">
                       <div className="flex justify-between items-center">
                         <h2 className="text-lg font-bold">
-                          เงินเดือน นาย ภูวิศ วัฒนะ
+                          เงินเดือน นาย ภูวิศ วัฒนะ <></>
                         </h2>
                         <button
                           onClick={exportData}
-                          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600"
+                          className="mt-4 px-4 py-2 bg-primary text-white rounded shadow hover:bg-gray-600"
                         >
                           ดาวน์โหลดข้อมูล
                         </button>
