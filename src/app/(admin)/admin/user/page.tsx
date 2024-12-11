@@ -1,6 +1,5 @@
 // 'use client';
 import React from 'react';
-import { Table } from "@nextui-org/table";
 
 // import { useRouter } from 'next/navigation';
 
