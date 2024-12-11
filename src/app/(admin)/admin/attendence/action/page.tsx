@@ -26,16 +26,20 @@ export default async function IndexPage() {
 }
 
 const columns = [
-  { Header: 'order', accessor: 'nameTh' },
-  { Header: 'name', accessor: 'contactPhone' },
-  { Header: 'active', accessor: 'contactEmail' },
-  { Header: 'in', accessor: 'contactFacebook' },
-  { Header: 'break', accessor: 'contactLine' },
-  { Header: 'out', accessor: 'contactWhatsapp' },
-  { Header: 'Summary time', accessor: 'contactWebsite' },
-  { Header: 'Note', accessor: 'Note' },
-  {
-    Header: '',
-    accessor: 'details',
-  },
+  { Header: 'name', accessor: 'name' },
+  { Header: 'create_at', accessor: 'create_at' },
+  { Header: 'update_at', accessor: 'update_at' },
+  { Header: 'use', accessor: 'use' },
+  { Header: 'now', accessor: 'now' },
+  { Header: 'desciption', accessor: 'desciption' },
+  { Header: 'importance', accessor: 'importance' },
+  { Header: 'date_start', accessor: 'date_start' },
+  { Header: 'due_date', accessor: 'due_date' },
+  { Header: 'Limited time/day', accessor: 'Limited time/day' },
+  { Header: 'Starting Credits', accessor: 'Starting Credits' },
+  { Header: 'All Credits', accessor: 'All Credits' },
+  { Header: 'Total_working_hours', accessor: 'Total_working_hours' },
+  { Header: 'Pay Day', accessor: 'Pay Day' },
+  { Header: 'User ID', accessor: 'User ID' },
+  { Header: 'Project_Code', accessor: 'Project_Code' },
 ];
