@@ -9,8 +9,9 @@ import * as Icon from '@ant-design/icons';
 export function AdminSideBar() {
   const pathname = usePathname();
   const [menuItems, setMenuItems] = React.useState([]);
-  const [isSubMenuOpen, setIsSubMenuOpen] = React.useState<{ [key: string]: boolean }>({});
-
+  const [isSubMenuOpen, setIsSubMenuOpen] = React.useState<{
+    [key: string]: boolean;
+  }>({});
 
   // Simulate fetching menu data (replace with an actual API call if needed)
   React.useEffect(() => {
@@ -21,27 +22,27 @@ export function AdminSideBar() {
           name: 'บัญชี',
           key: 'accounting',
           path: '',
-          icon: <Icon.PieChartOutlined />,
+          icon: <Icon.DollarOutlined />,
           subMenu: [
             {
-              name: 'สรุปผล',
-              path: '/admin/accounting/',
-              icon: <Icon.ScheduleOutlined />,
-            },
-            {
-              name: 'รายรับและรายจ่าย',
+              name: 'ภาพรวม',
               path: '/admin/accounting/statement',
-              icon: <Icon.ScheduleOutlined />,
+              icon: <Icon.FundProjectionScreenOutlined />,
             },
             {
               name: 'รายรับ',
               path: '/admin/accounting/revenue',
-              icon: <Icon.ScheduleOutlined />,
+              icon: <Icon.RiseOutlined />,
             },
             {
               name: 'รายจ่าย',
               path: '/admin/accounting/expenses',
-              icon: <Icon.ScheduleOutlined />,
+              icon: <Icon.FallOutlined />,
+            },
+            {
+              name: 'วิเคราะห์',
+              path: '/admin/accounting/analysis',
+              icon: <Icon.AreaChartOutlined />,
             },
           ],
         },
@@ -99,13 +100,13 @@ export function AdminSideBar() {
     setIsSubMenuOpen((prev) => ({
       ...prev,
       [key]: !prev[key],
-    })); 
+    }));
   };
 
   return (
-    <div className="flex ">
+    <div className="flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-gray-100 shadow-md">
+      <aside className="w-64 bg-primary shadow-md">
         <div className="flex flex-col items-center py-6">
           {/* Logo */}
           <Image
@@ -115,26 +116,30 @@ export function AdminSideBar() {
             height={100}
             className="mb-4"
           />
-          <h1 className="text-xl font-bold text-gray-700">Super Admin</h1>
+          <h1 className="text-xl font-bold text-primaryFont">Super Admin</h1>
         </div>
 
-        <nav className="flex flex-col h-full p-4 space-y-4">
+        <nav className="flex flex-col h-full p-4 space-y-4 ">
           {menuItems.map((item: any, index) => (
             <React.Fragment key={index}>
-            {/* Main Menu Item */}
-            <Link
-              key={index}
-              href={item.path}
-              className={`block px-4 py-2 rounded-md text-lg font-ibm cursor-pointer ${
-                pathname === item.path
-                  ? 'bg-primary text-white'
-                  : 'text-gray-700 hover:bg-gray-200'
-              }`}
-              onClick={item.subMenu ? () => toggleSubMenu(item.key) : undefined}
-            >
-              <div className="flex gap-1">
-                {item.icon}
-                {item.name}
+              {/* Main Menu Item */}
+              <Link
+                key={index}
+                href={item.path}
+                className={`block px-4 py-2 rounded-md text-lg font-ibm cursor-pointer ${
+                  pathname === item.path
+                    ? 'bg-primaryFont text-secondaryFont'
+                    : 'text-primaryFont hover:bg-primaryFont hover:text-secondaryFont'
+                }`}
+                onClick={
+                  item.subMenu ? () => toggleSubMenu(item.key) : undefined
+                }
+              >
+                <div className="flex justify-between ">
+                  <div>
+                    {item.icon}
+                    <span className="ml-2">{item.name}</span>
+                  </div>
                   {item.subMenu && (
                     <div>
                       {isSubMenuOpen ? (
@@ -144,41 +149,33 @@ export function AdminSideBar() {
                       )}
                     </div>
                   )}
-              </div>
-            </Link>
+                </div>
+              </Link>
 
-            {item.subMenu && isSubMenuOpen[item.key] && (
-              <div className="pl-6 space-y-2">
-                {item.subMenu.map((subItem: any, subIndex: number) => (
-                  <Link
-                    key={subIndex}
-                    href={subItem.path}
-                    className={`block px-4 py-2 rounded-md text-lg font-ibm ${
-                      pathname === subItem.path
-                        ? 'bg-primary text-white'
-                        : 'text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    <div className="flex gap-1">
-                      {subItem.icon}
-                      {subItem.name}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </React.Fragment>
+              {item.subMenu && isSubMenuOpen[item.key] && (
+                <div className="pl-6 space-y-2">
+                  {item.subMenu.map((subItem: any, subIndex: number) => (
+                    <Link
+                      key={subIndex}
+                      href={subItem.path}
+                      className={`block px-4 py-2 rounded-md text-lg font-ibm ${
+                        pathname === subItem.path
+                          ? 'bg-primaryFont text-secondaryFont'
+                          : 'text-primaryFont hover:bg-primaryFont hover:text-secondaryFont'
+                      }`}
+                    >
+                      <div className="flex gap-1">
+                        <div>
+                          {subItem.icon}
+                          <span className="ml-2">{subItem.name}</span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </React.Fragment>
           ))}
-            {/* <Link
-              href="/admin/user"
-              className={`block px-4 py-2 rounded-md text-lg font-medium ${
-                pathname === '/superadmin/user'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              User
-            </Link> */}
         </nav>
       </aside>
     </div>

@@ -7,7 +7,12 @@ import React from 'react';
 import Link from 'next/link';
 import { Breadcrumb } from '@/components/common/breadcrumb';
 import * as Icon from '@ant-design/icons';
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from '@nextui-org/react';
 
 export default function AdminLayout({
   children,
@@ -16,30 +21,29 @@ export default function AdminLayout({
 }>) {
   const items = [
     {
-      key: "new",
-      label: "New file",
+      key: 'new',
+      label: 'New file',
       path: '/admin/accounting/revenue',
       icon: <Icon.ScheduleOutlined />,
-
     },
     {
-      key: "copy",
-      label: "Copy link",
+      key: 'copy',
+      label: 'Copy link',
     },
     {
-      key: "edit",
-      label: "Edit file",
+      key: 'edit',
+      label: 'Edit file',
     },
     {
-      key: "delete",
-      label: "Delete file",
+      key: 'delete',
+      label: 'Delete file',
     },
   ];
 
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-gray-100 shadow-md">
+      <aside className="w-64 bg-primary shadow-md">
         <AdminSideBar />
       </aside>
 
@@ -48,33 +52,34 @@ export default function AdminLayout({
         {/* Header */}
         <header className="bg-white shadow p-4 flex items-center justify-between">
           <Breadcrumb />
-          {/* <h1 className="text-xl font-bold text-gray-800">Admin Dashboard</h1> */}
           <div className="flex items-center space-x-4">
             <Dropdown>
               <div>
                 <DropdownTrigger>
                   <Link href={'#'}>
-                    <Icon.BellFilled />
+                    <Icon.BellFilled className="text-headFont" />
                   </Link>
                 </DropdownTrigger>
               </div>
               <div>
                 <DropdownMenu aria-label="Dynamic Actions" items={items}>
-                    {(item) => (
-                      <DropdownItem
-                        key={item.key}
-                        className={item.key === "delete" ? "text-danger" : ""}
-                        color={item.key === "delete" ? "danger" : "default"}
-                      >
-                        {item.label}
-                      </DropdownItem>
-                    )}
+                  {(item) => (
+                    <DropdownItem
+                      key={item.key}
+                      className={
+                        item.key === 'delete' ? 'text-danger' : 'text-headFont'
+                      }
+                      color={item.key === 'delete' ? 'danger' : 'default'}
+                    >
+                      {item.label}
+                    </DropdownItem>
+                  )}
                 </DropdownMenu>
               </div>
             </Dropdown>
 
             <Dropdown>
-                <div className="relative">
+              <div className="relative">
                 <DropdownTrigger>
                   <button className="flex items-center space-x-2">
                     <Image
@@ -88,18 +93,20 @@ export default function AdminLayout({
 
                   {/* Add dropdown menu logic here if needed */}
                 </DropdownTrigger>
-                </div>
-                <DropdownMenu aria-label="Dynamic Actions" items={items}>
-                  {(item) => (
-                    <DropdownItem
-                      key={item.key}
-                      className={item.key === "delete" ? "text-danger" : ""}
-                      color={item.key === "delete" ? "danger" : "default"}
-                    >
-                      {item.label}
-                    </DropdownItem>
-                  )}
-                </DropdownMenu>
+              </div>
+              <DropdownMenu aria-label="Dynamic Actions" items={items}>
+                {(item) => (
+                  <DropdownItem
+                    key={item.key}
+                    className={
+                      item.key === 'delete' ? 'text-danger' : 'text-headFont'
+                    }
+                    color={item.key === 'delete' ? 'danger' : 'default'}
+                  >
+                    {item.label}
+                  </DropdownItem>
+                )}
+              </DropdownMenu>
             </Dropdown>
           </div>
         </header>

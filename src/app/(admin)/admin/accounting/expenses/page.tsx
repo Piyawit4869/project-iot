@@ -1,6 +1,7 @@
 import React from 'react';
 import { TopSection } from '@/components/common/topSection';
 import NextTable from '@/components/common/nextTable';
+import Scaffold from '@/components/common/scaffold';
 
 export default function ExpensesPage() {
   const initialData = [
@@ -36,36 +37,36 @@ export default function ExpensesPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-7xl mx-auto">
-        <TopSection title={'รายจ่าย'} />
+    <Scaffold
+      child={
+        <div>
+          <TopSection title={'รายจ่าย'} />
+          {/* Filter Bar */}
+          <div className="bg-white shadow rounded-lg p-4 mb-6">
+            <div className="flex flex-wrap gap-4">
+              {/* Search Bar */}
+              <input
+                type="text"
+                name="search"
+                placeholder="ค้นหา..."
+                className="flex-1 p-2 border border-gray-300 rounded-lg"
+              />
 
-        {/* Filter Bar */}
-        <div className="bg-white shadow rounded-lg p-4 mb-6">
-          <div className="flex flex-wrap gap-4">
-            {/* Search Bar */}
-            <input
-              type="text"
-              name="search"
-              placeholder="ค้นหา..."
-              className="flex-1 p-2 border border-gray-300 rounded-lg"
-            />
-
-            {/* Status Filter */}
-            <select
-              name="status"
-              className="flex-1 p-2 border border-gray-300 rounded-lg"
-            >
-              <option value="">ทุกสถานะ</option>
-              <option value="สำเร็จ">สำเร็จ</option>
-              <option value="รอดำเนินการ">รอดำเนินการ</option>
-            </select>
+              {/* Status Filter */}
+              <select
+                name="status"
+                className="flex-1 p-2 border border-gray-300 rounded-lg"
+              >
+                <option value="">ทุกสถานะ</option>
+                <option value="สำเร็จ">สำเร็จ</option>
+                <option value="รอดำเนินการ">รอดำเนินการ</option>
+              </select>
+            </div>
           </div>
+          {/* Table */}
+          <NextTable rows={initialData} columns={columns} />
         </div>
-
-        {/* Table */}
-        <NextTable rows={initialData} columns={columns} />
-      </div>
-    </div>
+      }
+    />
   );
 }

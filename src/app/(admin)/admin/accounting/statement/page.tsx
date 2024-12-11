@@ -4,6 +4,7 @@ import React from 'react';
 import { TopSection } from '@/components/common/topSection';
 import NextTable from '@/components/common/nextTable';
 import { useRouter } from 'next/navigation';
+import Scaffold from '@/components/common/scaffold';
 
 export default function StatementPage() {
   const router = useRouter();
@@ -65,50 +66,51 @@ export default function StatementPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-7xl mx-auto">
-        <TopSection title={'รายรับและรายจ่าย'} />
+    <Scaffold
+      child={
+        <div>
+          {' '}
+          <TopSection title={'รายรับและรายจ่าย'} />
+          {/* Filter Bar */}
+          <div className="bg-white shadow rounded-lg p-4 mb-6">
+            <div className="flex flex-wrap gap-4">
+              {/* Search Bar */}
+              <input
+                type="text"
+                name="search"
+                placeholder="ค้นหา..."
+                className="flex-1 p-2 border border-gray-300 rounded-lg"
+              />
 
-        {/* Filter Bar */}
-        <div className="bg-white shadow rounded-lg p-4 mb-6">
-          <div className="flex flex-wrap gap-4">
-            {/* Search Bar */}
-            <input
-              type="text"
-              name="search"
-              placeholder="ค้นหา..."
-              className="flex-1 p-2 border border-gray-300 rounded-lg"
-            />
+              {/* Category Filter */}
+              <select
+                name="category"
+                className="flex-1 p-2 border border-gray-300 rounded-lg"
+              >
+                <option value="">ทุกประเภท</option>
+                <option value="รายรับ">รายรับ</option>
+                <option value="รายจ่าย">รายจ่าย</option>
+              </select>
 
-            {/* Category Filter */}
-            <select
-              name="category"
-              className="flex-1 p-2 border border-gray-300 rounded-lg"
-            >
-              <option value="">ทุกประเภท</option>
-              <option value="รายรับ">รายรับ</option>
-              <option value="รายจ่าย">รายจ่าย</option>
-            </select>
-
-            {/* Status Filter */}
-            <select
-              name="status"
-              className="flex-1 p-2 border border-gray-300 rounded-lg"
-            >
-              <option value="">ทุกสถานะ</option>
-              <option value="สำเร็จ">สำเร็จ</option>
-              <option value="รอดำเนินการ">รอดำเนินการ</option>
-            </select>
+              {/* Status Filter */}
+              <select
+                name="status"
+                className="flex-1 p-2 border border-gray-300 rounded-lg"
+              >
+                <option value="">ทุกสถานะ</option>
+                <option value="สำเร็จ">สำเร็จ</option>
+                <option value="รอดำเนินการ">รอดำเนินการ</option>
+              </select>
+            </div>
           </div>
+          {/* Table */}
+          <NextTable
+            rows={initialData}
+            columns={columns}
+            rowClickHandler={handleRowClick}
+          />
         </div>
-
-        {/* Table */}
-        <NextTable
-          rows={initialData}
-          columns={columns}
-          rowClickHandler={handleRowClick}
-        />
-      </div>
-    </div>
+      }
+    />
   );
 }
