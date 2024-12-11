@@ -1,8 +1,12 @@
+'use client';
+
 import React from 'react';
 import { TopSection } from '@/components/common/topSection';
 import NextTable from '@/components/common/nextTable';
+import { useRouter } from 'next/navigation';
 
-export default function IndexPage() {
+export default function StatementPage() {
+  const router = useRouter();
   const initialData = [
     {
       id: 1,
@@ -56,6 +60,10 @@ export default function IndexPage() {
     { title: 'สถานะ', dataIndex: 'status' },
   ];
 
+  const handleRowClick = (row: any) => {
+    router.push(`statement/${row.id}`); // Redirect to a dynamic route
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
@@ -95,7 +103,11 @@ export default function IndexPage() {
         </div>
 
         {/* Table */}
-        <NextTable rows={initialData} columns={columns} />
+        <NextTable
+          rows={initialData}
+          columns={columns}
+          rowClickHandler={handleRowClick}
+        />
       </div>
     </div>
   );

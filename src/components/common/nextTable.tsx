@@ -10,7 +10,13 @@ import {
   TableCell,
 } from '@nextui-org/react';
 
-export default function NextTable({ columns, rows, ariaLabel, title }: any) {
+export default function NextTable({
+  columns,
+  rows,
+  ariaLabel,
+  title,
+  rowClickHandler,
+}: any) {
   return (
     <Table title={title} aria-label={ariaLabel || 'Dynamic table'}>
       <TableHeader>
@@ -20,7 +26,10 @@ export default function NextTable({ columns, rows, ariaLabel, title }: any) {
       </TableHeader>
       <TableBody>
         {rows.map((row: any) => (
-          <TableRow key={row.id}>
+          <TableRow
+            key={row.id}
+            onClick={() => rowClickHandler && rowClickHandler(row)}
+          >
             {columns.map((column: any) => (
               <TableCell key={column.dataIndex}>
                 {row[column.dataIndex]}
@@ -43,6 +52,7 @@ NextTable.propTypes = {
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
   ariaLabel: PropTypes.string,
   title: PropTypes.string,
+  rowClickHandler: PropTypes.func,
 };
 
 NextTable.defaultProps = {
