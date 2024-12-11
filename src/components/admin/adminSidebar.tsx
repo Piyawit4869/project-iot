@@ -10,7 +10,6 @@ export function AdminSideBar() {
   const pathname = usePathname();
   const [menuItems, setMenuItems] = React.useState([]);
   const [isSubMenuOpen, setIsSubMenuOpen] = React.useState(false);
-  const [isSubMenu1Open, setIsSubMenu1Open] = React.useState(false);
 
   // Simulate fetching menu data (replace with an actual API call if needed)
   React.useEffect(() => {
@@ -118,15 +117,15 @@ export function AdminSideBar() {
               <div className="flex gap-1">
                 {item.icon}
                 {item.name}
-                {item.subMenu && (
-                <div>
-                  {isSubMenuOpen ? (
-                    <Icon.CaretUpOutlined />
-                  ) : (
-                    <Icon.CaretDownOutlined />
+                  {item.subMenu && (
+                    <div>
+                      {isSubMenuOpen ? (
+                        <Icon.CaretUpOutlined />
+                      ) : (
+                        <Icon.CaretDownOutlined />
+                      )}
+                    </div>
                   )}
-                  </div>
-              )}
               </div>
             </div>
 

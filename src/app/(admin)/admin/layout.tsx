@@ -7,7 +7,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Breadcrumb } from '@/components/common/breadcrumb';
 import * as Icon from '@ant-design/icons';
-import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@nextui-org/react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 
 export default function AdminLayout({
   children,
