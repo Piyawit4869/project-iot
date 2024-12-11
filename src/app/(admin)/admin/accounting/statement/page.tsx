@@ -1,8 +1,12 @@
-import React from 'react';
-import { Table } from '@/components/common/table';
-import { TopSection } from '@/components/common/topSection';
+'use client';
 
-export default function IndexPage() {
+import React from 'react';
+import { TopSection } from '@/components/common/topSection';
+import NextTable from '@/components/common/nextTable';
+import { useRouter } from 'next/navigation';
+
+export default function StatementPage() {
+  const router = useRouter();
   const initialData = [
     {
       id: 1,
@@ -49,12 +53,16 @@ export default function IndexPage() {
   ];
 
   const columns = [
-    { Header: 'รายการที่', accessor: 'id' },
-    { Header: 'ชื่อ', accessor: 'name' },
-    { Header: 'ประเภท', accessor: 'category' },
-    { Header: 'จำนวนเงิน', accessor: 'amount' },
-    { Header: 'สถานะ', accessor: 'status' },
+    { title: 'รายการที่', dataIndex: 'id' },
+    { title: 'ชื่อ', dataIndex: 'name' },
+    { title: 'ประเภท', dataIndex: 'category' },
+    { title: 'จำนวนเงิน', dataIndex: 'amount' },
+    { title: 'สถานะ', dataIndex: 'status' },
   ];
+
+  const handleRowClick = (row: any) => {
+    router.push(`statement/${row.id}`); // Redirect to a dynamic route
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -95,7 +103,11 @@ export default function IndexPage() {
         </div>
 
         {/* Table */}
-        <Table data={initialData} columns={columns} />
+        <NextTable
+          rows={initialData}
+          columns={columns}
+          rowClickHandler={handleRowClick}
+        />
       </div>
     </div>
   );
