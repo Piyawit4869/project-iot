@@ -1,6 +1,6 @@
 import React from 'react';
-import { Table } from '@/components/common/table';
 import { TopSection } from '@/components/common/topSection';
+import NextTable from '@/components/common/nextTable';
 
 export default function ExpensesPage() {
   const initialData = [
@@ -28,11 +28,11 @@ export default function ExpensesPage() {
   ];
 
   const columns = [
-    { Header: 'รายการที่', accessor: 'id' },
-    { Header: 'ชื่อ', accessor: 'name' },
-    { Header: 'ประเภท', accessor: 'category' },
-    { Header: 'จำนวนเงิน', accessor: 'amount' },
-    { Header: 'สถานะ', accessor: 'status' },
+    { title: 'รายการที่', dataIndex: 'id' },
+    { title: 'ชื่อ', dataIndex: 'name' },
+    { title: 'ประเภท', dataIndex: 'category' },
+    { title: 'จำนวนเงิน', dataIndex: 'amount' },
+    { title: 'สถานะ', dataIndex: 'status' },
   ];
 
   return (
@@ -64,7 +64,7 @@ export default function ExpensesPage() {
         </div>
 
         {/* Table */}
-        <Table data={initialData} columns={columns} />
+        <NextTable rows={initialData} columns={columns} />
       </div>
     </div>
   );

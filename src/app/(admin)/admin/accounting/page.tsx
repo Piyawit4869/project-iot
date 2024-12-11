@@ -14,6 +14,7 @@ import {
   ArcElement,
 } from 'chart.js';
 import { TopSection } from '@/components/common/topSection';
+import NextTable from '@/components/common/nextTable';
 
 ChartJS.register(
   CategoryScale,
@@ -26,6 +27,59 @@ ChartJS.register(
   LineElement,
   ArcElement,
 );
+
+const initialData = [
+  {
+    id: 1,
+    name: 'เงินเดือน',
+    category: 'รายรับ',
+    amount: '฿50,000',
+    status: 'สำเร็จ',
+  },
+  {
+    id: 2,
+    name: 'โบนัส',
+    category: 'รายรับ',
+    amount: '฿20,000',
+    status: 'สำเร็จ',
+  },
+  {
+    id: 3,
+    name: 'ค่าเช่า',
+    category: 'รายจ่าย',
+    amount: '฿15,000',
+    status: 'รอดำเนินการ',
+  },
+  {
+    id: 4,
+    name: 'ค่าอาหาร',
+    category: 'รายจ่าย',
+    amount: '฿12,000',
+    status: 'สำเร็จ',
+  },
+  {
+    id: 5,
+    name: 'ค่าเดินทาง',
+    category: 'รายจ่าย',
+    amount: '฿8,000',
+    status: 'รอดำเนินการ',
+  },
+  {
+    id: 6,
+    name: 'ดอกเบี้ยเงินฝาก',
+    category: 'รายรับ',
+    amount: '฿5,000',
+    status: 'รอดำเนินการ',
+  },
+];
+
+const columns = [
+  { title: 'รายการที่', dataIndex: 'id' },
+  { title: 'ชื่อ', dataIndex: 'name' },
+  { title: 'ประเภท', dataIndex: 'category' },
+  { title: 'จำนวนเงิน', dataIndex: 'amount' },
+  { title: 'สถานะ', dataIndex: 'status' },
+];
 
 // Mock Thai Data
 const barData = {
@@ -151,6 +205,10 @@ export default function AccountSummaryPage() {
               เพิ่ม Widget
             </button>
           </div>
+        </div>
+
+        <div className="flex space-x-4 mt-8">
+          <NextTable columns={columns} rows={initialData} />
         </div>
       </div>
     </div>
