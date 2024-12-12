@@ -30,7 +30,7 @@ export function AdminSideBar() {
               icon: <Icon.FundProjectionScreenOutlined />,
             },
             {
-              name: 'รายรับ',
+              name: 'รายได้',
               path: '/admin/accounting/revenue',
               icon: <Icon.RiseOutlined />,
             },
