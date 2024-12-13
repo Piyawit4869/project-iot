@@ -43,7 +43,7 @@ export default function AdminLayout({
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-primary shadow-md">
+      <aside className="w-64 bg-primary shadow-md overflow-y-auto">
         <AdminSideBar />
       </aside>
 
@@ -89,9 +89,6 @@ export default function AdminLayout({
                     />
                     <span className="text-gray-600">John Doe</span>
                   </button>
-                  {/* Dropdown (optional) */}
-
-                  {/* Add dropdown menu logic here if needed */}
                 </DropdownTrigger>
               </div>
               <DropdownMenu aria-label="Dynamic Actions" items={items}>
