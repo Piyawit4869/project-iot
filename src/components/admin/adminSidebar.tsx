@@ -75,14 +75,23 @@ export function AdminSideBar() {
           ],
         },
         {
+          name: 'เอกสาร',
+          key: 'notation',
+          icon: <Icon.FileTextOutlined />,
+          path: '',
+          subMenu: [
+            {
+              name: 'เอกสารทั้งหมด',
+              path: '/admin/notation',
+              icon: <Icon.FileSearchOutlined />,
+            },
+          ],
+        },
+
+        {
           name: 'ผู้ใช้',
           path: '/admin/user',
           icon: <Icon.UserOutlined />,
-        },
-        {
-          name: 'เอกสาร',
-          path: '/admin/notation',
-          icon: <Icon.FileTextOutlined />,
         },
         {
           name: 'ข้อมูลองค์กร',
@@ -104,7 +113,7 @@ export function AdminSideBar() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex w-[300px]">
       {/* Sidebar */}
       <aside className="w-64 bg-primary shadow-md">
         <div className="flex flex-col items-center py-6">
@@ -119,7 +128,8 @@ export function AdminSideBar() {
           <h1 className="text-xl font-bold text-primaryFont">Super Admin</h1>
         </div>
 
-        <nav className="flex flex-col h-full p-4 space-y-4 ">
+        {/* Sidebar Menu with Scrolling */}
+        <nav className="flex flex-col h-full p-4 space-y-4 overflow-y-auto max-h-screen">
           {menuItems.map((item: any, index) => (
             <React.Fragment key={index}>
               {/* Main Menu Item */}
@@ -142,7 +152,7 @@ export function AdminSideBar() {
                   </div>
                   {item.subMenu && (
                     <div>
-                      {isSubMenuOpen ? (
+                      {isSubMenuOpen[item.key] ? (
                         <Icon.CaretUpOutlined />
                       ) : (
                         <Icon.CaretDownOutlined />

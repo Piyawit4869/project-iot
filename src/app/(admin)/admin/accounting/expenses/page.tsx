@@ -56,7 +56,7 @@ export default function ExpensesPage() {
                 className="flex-1 p-2 text-headFont"
                 size="sm"
                 name="status"
-                label="เลือกประเภท"
+                label="เลือกสถานะ"
               >
                 <SelectItem className="text-headFont" key={'option1'}>
                   ทุกสถานะ
