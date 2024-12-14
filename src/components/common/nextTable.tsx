@@ -157,7 +157,15 @@ export default function NextTable({
           isCompact
           showControls
           showShadow
-          color="secondary"
+          classNames={{
+            // base: 'bg-accent3',
+            // chevronNext: 'bg-accent3',
+            // ellipsis: 'bg-accent3',
+            // item: 'bg-accent3',
+            // next: 'bg-accent3',
+            // prev: 'bg-accent3',
+            cursor: 'bg-accent3',
+          }}
           page={page}
           total={pages}
           onChange={setPage}
@@ -172,7 +180,7 @@ export default function NextTable({
             ย้อนกลับ
           </Button>
           <Button
-            className="bg-secondary text-whiteFont"
+            className="bg-accent3 text-whiteFont"
             isDisabled={page === pages}
             size="sm"
             variant="flat"
