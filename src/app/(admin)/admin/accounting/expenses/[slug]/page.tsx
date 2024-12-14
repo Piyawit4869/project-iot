@@ -2,16 +2,18 @@
 
 import CardComponent from '@/components/common/card';
 import Scaffold from '@/components/common/scaffold';
-import { TopSection } from '@/components/common/topSection';
 import { Spacer } from '@nextui-org/react';
+import Link from 'next/link';
+import * as Icon from '@ant-design/icons';
+import { TopSection } from '@/components/common/topSection';
 
-export default function StatementSinglePage() {
+export default function ExpensesSinglePage() {
   const exportData = () => {
     const data = {
       name: 'Product A',
-      description: 'รายได้จากการให้บริการ Product A เดือนธันวาคม',
-      category: 'รายได้จากการให้บริการ',
-      amount: '฿2,000',
+      description: 'รายได้จากขาย Product A เดือนธันวาคม',
+      category: 'รายได้จากการขาย',
+      amount: '฿50,000',
       status: 'สำเร็จ',
     };
 
@@ -27,19 +29,19 @@ export default function StatementSinglePage() {
   };
 
   const timeline = [
-    { date: '1 ธันวาคม 2567', description: 'เริ่มต้นนับรายได้ของเดือนธันวา' },
     {
-      date: '15 ธันวาคม 2567',
-      description: 'ตรวจสอบสถานะการจ่ายเงินของลูกค้า',
+      date: '2 มกราคม 2568',
+      description: 'เริ่มต้นนับเงินเดือนของเดือนมกราคม',
     },
-    { date: '29 ธันวาคม 2567', description: 'ได้รับเงินแล้ว' },
+
+    { date: '29 มกราคม 2568', description: 'จ่ายเงินเสร็จสิ้น' },
   ];
 
   return (
     <Scaffold
       child={
         <div>
-          <TopSection title={'รายการข้อมูลเงินเข้า-ออก'} />
+          <TopSection title={'รายจ่าย'} />
           <div className="flex space-x-4 mt-8">
             <div className="flex-1">
               <CardComponent
@@ -47,8 +49,8 @@ export default function StatementSinglePage() {
                 customCard
                 custom={
                   <div className="text-headFont">
-                    <div className="text-2xl">เงินเข้า</div>
-                    <div className="text-lg">รายได้จากการให้บริการ</div>
+                    <div className="text-2xl">ประเภทรายจ่าย</div>
+                    <div className="text-lg">งบบุคลากร</div>
                   </div>
                 }
               />
@@ -75,7 +77,7 @@ export default function StatementSinglePage() {
                   <div className="text-white">
                     <div className="text-2xl">จำนวนเงิน</div>
                     <div>
-                      <span className="font-bold text-lg">฿2,000</span>
+                      <span className="font-bold text-lg">฿50,000</span>
                     </div>
                   </div>
                 }
@@ -90,8 +92,15 @@ export default function StatementSinglePage() {
                   custom={
                     <div className="text-start">
                       <div className="flex justify-between items-center">
-                        <h2 className="text-2xl font-bold text-headFont">
-                          รายได้จากการติดตั้ง Product A เดือนธันวาคม
+                        <h2 className="text-2xl font-bold text-headFont ">
+                          เงินเดือน นาย{' '}
+                          <Link
+                            href={'/admin/user'}
+                            className="hover:text-secondary"
+                          >
+                            ภูวิศ วัฒนะ{' '}
+                            <Icon.EyeOutlined className="text-lg text-gray-500" />
+                          </Link>
                         </h2>
                         <button
                           onClick={exportData}
@@ -102,7 +111,7 @@ export default function StatementSinglePage() {
                       </div>
                       <div className="mt-6">
                         <p className="text-md text-gray-500">
-                          ประเภท : <span>รายได้จากการให้บริการ</span>
+                          ประเภทรายจ่าย : <span>งบบุคลากร</span>
                         </p>
                         <p className="text-md text-gray-500">
                           สถานะ :{' '}
@@ -113,15 +122,13 @@ export default function StatementSinglePage() {
                         <p className="text-md text-gray-500">
                           จำนวนเงิน :{' '}
                           <span className="font-bold text-green-500">
-                            ฿2,000
+                            ฿50,000
                           </span>
                         </p>
                         <p className="text-md text-gray-500">
                           รายอะเอียด :{' '}
                           <span>
-                            รายได้จากการให้บริการ Product A ประจำเดือนธันวาคม
-                            2567 ได้จำนวน 10 การขาย นับเป็นจำนวนเงิน 2,000
-                            บาทถ้วน
+                            ค่าแรงของ นายภูวิศ วัฒนะ ประจำเดือนมกราคม 2568
                           </span>
                         </p>
                       </div>

@@ -5,13 +5,13 @@ import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Spacer } from '@nextui-org/react';
 
-export default function StatementSinglePage() {
+export default function RevenueSinglePage() {
   const exportData = () => {
     const data = {
       name: 'Product A',
-      description: 'รายได้จากการให้บริการ Product A เดือนธันวาคม',
-      category: 'รายได้จากการให้บริการ',
-      amount: '฿2,000',
+      description: 'รายได้จากการขาย Product A เดือนธันวาคม',
+      category: 'รายได้จากการขาย',
+      amount: '฿50,000',
       status: 'สำเร็จ',
     };
 
@@ -39,7 +39,7 @@ export default function StatementSinglePage() {
     <Scaffold
       child={
         <div>
-          <TopSection title={'รายการข้อมูลเงินเข้า-ออก'} />
+          <TopSection title={'รายได้'} />
           <div className="flex space-x-4 mt-8">
             <div className="flex-1">
               <CardComponent
@@ -47,8 +47,8 @@ export default function StatementSinglePage() {
                 customCard
                 custom={
                   <div className="text-headFont">
-                    <div className="text-2xl">เงินเข้า</div>
-                    <div className="text-lg">รายได้จากการให้บริการ</div>
+                    <div className="text-2xl">ประเภทรายได้</div>
+                    <div className="text-lg">รายได้จากการขาย</div>
                   </div>
                 }
               />
@@ -75,7 +75,7 @@ export default function StatementSinglePage() {
                   <div className="text-white">
                     <div className="text-2xl">จำนวนเงิน</div>
                     <div>
-                      <span className="font-bold text-lg">฿2,000</span>
+                      <span className="font-bold text-lg">฿50,000</span>
                     </div>
                   </div>
                 }
@@ -91,7 +91,7 @@ export default function StatementSinglePage() {
                     <div className="text-start">
                       <div className="flex justify-between items-center">
                         <h2 className="text-2xl font-bold text-headFont">
-                          รายได้จากการติดตั้ง Product A เดือนธันวาคม
+                          รายได้จากขาย Product A เดือนธันวาคม
                         </h2>
                         <button
                           onClick={exportData}
@@ -102,7 +102,7 @@ export default function StatementSinglePage() {
                       </div>
                       <div className="mt-6">
                         <p className="text-md text-gray-500">
-                          ประเภท : <span>รายได้จากการให้บริการ</span>
+                          ประเภทรายได้ : <span>รายได้จากการขาย</span>
                         </p>
                         <p className="text-md text-gray-500">
                           สถานะ :{' '}
@@ -113,15 +113,14 @@ export default function StatementSinglePage() {
                         <p className="text-md text-gray-500">
                           จำนวนเงิน :{' '}
                           <span className="font-bold text-green-500">
-                            ฿2,000
+                            ฿50,000
                           </span>
                         </p>
                         <p className="text-md text-gray-500">
                           รายอะเอียด :{' '}
                           <span>
-                            รายได้จากการให้บริการ Product A ประจำเดือนธันวาคม
-                            2567 ได้จำนวน 10 การขาย นับเป็นจำนวนเงิน 2,000
-                            บาทถ้วน
+                            รายได้จากการขาย Product A ประจำเดือนธันวาคม 2567
+                            ได้จำนวน 10 การขาย นับเป็นจำนวนเงิน 50,000 บาทถ้วน
                           </span>
                         </p>
                       </div>

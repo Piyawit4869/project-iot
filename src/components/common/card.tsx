@@ -16,9 +16,10 @@ export default function CardComponent({
   footer,
   customCard,
   custom,
+  className,
 }: any) {
   return (
-    <Card>
+    <Card className={className}>
       {customCard ? (
         <div className="m-6">{custom}</div>
       ) : (
@@ -54,6 +55,7 @@ CardComponent.propTypes = {
   footer: PropTypes.node,
   customCard: PropTypes.bool,
   custom: PropTypes.node,
+  className: PropTypes.string,
 };
 
 CardComponent.defaultProps = {

@@ -2,20 +2,13 @@ import Link from 'next/link';
 import React from 'react';
 
 export const Breadcrumb = () => {
-  // const router = window.location;
   const [pathSegments] = React.useState<string[]>([]);
-
-  // Update breadcrumbs whenever the path changes
-  // React.useEffect(() => {
-  //   const segments = router.pathname.split('/').filter((segment) => segment);
-  //   setPathSegments(segments);
-  // }, [router.pathname]);
 
   return (
     <nav className="flex" aria-label="Breadcrumb">
       <ol className="inline-flex items-center space-x-1 md:space-x-3">
         {/* Home Link */}
-        <li className="inline-flex items-center">
+        <li className="inline-flex items-center text-headFont">
           <Link
             href="/"
             className="inline-flex items-center text-sm font-medium text-gray hover:text-primary"
@@ -42,7 +35,7 @@ export const Breadcrumb = () => {
             <li key={href} className="inline-flex items-center">
               {/* Separator Icon */}
               <svg
-                className="w-6 h-6 text-gray-400"
+                className="w-6 h-6 text-headFont"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
                 viewBox="0 0 20 20"
@@ -56,13 +49,13 @@ export const Breadcrumb = () => {
               </svg>
 
               {isLast ? (
-                <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2">
+                <span className="ml-1 text-sm font-medium text-headFont md:ml-2">
                   {segment}
                 </span>
               ) : (
                 <Link
                   href={href}
-                  className="ml-1 text-sm font-medium text-gray hover:text-primary md:ml-2"
+                  className="ml-1 text-sm font-medium text-headFont hover:text-primary md:ml-2"
                 >
                   {segment}
                 </Link>

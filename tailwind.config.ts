@@ -13,12 +13,19 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#5555',
-        secondary: '#5555',
+        primaryFont: 'var(--primaryFont)',
+        secondaryFont: 'var(--secondaryFont)',
+        primary: 'var(--primary)',
+        secondary: 'var(--secondary)',
+        accent1: 'var(--accent1)',
+        accent2: 'var(--accent2)',
+        accent3: 'var(--accent3)',
         foreground: 'var(--foreground)',
+        headFont: 'var(--headFont)',
+        whiteFont: 'var(--whiteFont)',
       },
     },
   },
-  darkMode: 'class',
+  darkMode: 'selector',
   plugins: [nextui()],
 } satisfies Config;
