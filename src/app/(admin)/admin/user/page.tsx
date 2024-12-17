@@ -5,6 +5,7 @@ import { TopSection } from '@/components/common/topSection';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import NextTable from '@/components/common/nextTable';
+import Image from 'next/image';
 import {
   Button,
   Chip
@@ -99,12 +100,14 @@ export default function IndexPage() {
 const columns: any = [
   { title: 'รูปภาพ', 
     dataIndex: 'image',
-    render: (image: string) => {
+    render: () => {
       return (
-        <img
+        <Image
           src="/logo.png"
           alt="user"
           className="w-12 h-12 rounded-full"
+          width={12}
+          height={12}
         />
       );
     }
@@ -116,7 +119,7 @@ const columns: any = [
   { 
     title: 'สถานะ', 
     dataIndex: 'status',
-    render: (status: string) => (
+    render: () => (
       <Chip color="success" variant="bordered">
         พร้อมใช้งาน
       </Chip>

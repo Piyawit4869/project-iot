@@ -9,7 +9,6 @@ import {
   Select,
   SelectItem
 } from '@nextui-org/react';
-import { label } from 'framer-motion/client';
 import React from 'react';
 
 export default function SettingPage() {

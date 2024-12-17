@@ -23,7 +23,7 @@ import {
 } from '@nextui-org/react';
 import React from 'react';
 
-export default async function CreateUserPage() {
+export default function CreateUserPage() {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the form from submitting to the URL

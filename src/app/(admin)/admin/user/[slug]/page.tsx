@@ -3,7 +3,6 @@
 import Scaffold from '@/components/common/scaffold';
 import CardComponent from '@/components/common/card';
 import { TopSection } from '@/components/common/topSection';
-import { useRouter } from 'next/navigation';
 import {
   Button,
   Form,
@@ -24,8 +23,7 @@ import {
 } from '@nextui-org/react';
 import React from 'react';
 
-export default async function UserSinglePage() {
-  const router = useRouter();
+export default function UserSinglePage() {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the form from submitting to the URL
