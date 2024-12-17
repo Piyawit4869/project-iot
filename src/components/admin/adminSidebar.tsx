@@ -87,14 +87,14 @@ export function AdminSideBar() {
             },
           ],
         },
-
         {
           name: 'ผู้ใช้',
           path: '/admin/user',
           icon: <Icon.UserOutlined />,
         },
         {
-          name: 'ข้อมูลองค์กร',
+          name: 'การตั้งค่า',
+          key: 'setting',
           path: '/admin/organization',
           icon: <Icon.SettingOutlined />,
         },
