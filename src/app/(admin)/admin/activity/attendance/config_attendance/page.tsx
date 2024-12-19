@@ -141,12 +141,14 @@ export default function ConfigAttendancesPage() {
                 {/* </div>
                   </div>  ))} */}
               </div>
+              
               <Input
                 errorMessage="Please enter a valid salary"
                 label="Salary"
                 labelPlacement="outside"
                 name="salary"
                 type="number"
+                className='mb-5'
               />
 
               <Textarea
