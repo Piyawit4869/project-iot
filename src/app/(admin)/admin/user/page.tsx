@@ -1,10 +1,23 @@
-// 'use client';
+'use client';
+
+import Scaffold from '@/components/common/scaffold';
+import { TopSection } from '@/components/common/topSection';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import NextTable from '@/components/common/nextTable';
+import Image from 'next/image';
+import {
+  Button,
+  Chip
+} from '@nextui-org/react';
 import React from 'react';
 
-// import { useRouter } from 'next/navigation';
+export default function IndexPage() {
+  const router = useRouter();
 
-export default async function IndexPage() {
-  // const router = useRouter();
+  const handleRowClick = (row: any) => {
+    router.push(`user/${row.id}`); // Redirect to a dynamic route
+};
 
   // Example data for the table
   // const organizations = [
@@ -25,45 +38,29 @@ export default async function IndexPage() {
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
         {/* Page Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Users</h1>
-          {/* <button
-            onClick={handleNewPageClick}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700"
-          >
-            Add New User
-          </button> */}
-        </div>
-
-        {/* <Table isStriped aria-label="Example static collection table"> */}
-          {/* <TableHeader>
-            <TableColumn>NAME</TableColumn>
-            <TableColumn>ROLE</TableColumn>
-            <TableColumn>STATUS</TableColumn>
-          </TableHeader>
-          <TableBody>
-            <TableRow key="1">
-              <TableCell>Tony Reichert</TableCell>
-              <TableCell>CEO</TableCell>
-              <TableCell>Active</TableCell>
-            </TableRow>
-            <TableRow key="2">
-              <TableCell>Zoey Lang</TableCell>
-              <TableCell>Technical Lead</TableCell>
-              <TableCell>Paused</TableCell>
-            </TableRow>
-            <TableRow key="3">
-              <TableCell>Jane Fisher</TableCell>
-              <TableCell>Senior Developer</TableCell>
-              <TableCell>Active</TableCell>
-            </TableRow>
-            <TableRow key="4">
-              <TableCell>William Howard</TableCell>
-              <TableCell>Community Manager</TableCell>
-              <TableCell>Vacation</TableCell>
-            </TableRow>
-          </TableBody> */}
-        {/* </Table> */}
+        <Scaffold
+          child={
+            <div>
+              <TopSection
+                title="ข้อมูลผู้ใช้"
+                buttons={[
+                  <Link href={'user/new'} key={'create button'}>
+                    <Button className="bg-accent2 text-white" key={'create button'}>
+                      เพิ่มข้อมูลผูัใช้
+                    </Button>
+                  </Link>,
+                ]}
+              />
+              <div className='mt-4 mb-4'>
+                <NextTable
+                  columns={columns}
+                  rows={data}
+                  rowClickHandler={handleRowClick}
+                />
+              </div>
+            </div>
+          }
+        />
         {/* Table */}
         {/* <div className="bg-white shadow rounded-md overflow-hidden">
           <table className="min-w-full border-collapse">
@@ -99,3 +96,63 @@ export default async function IndexPage() {
     </div>
   );
 }
+
+const columns: any = [
+  { title: 'รูปภาพ', 
+    dataIndex: 'image',
+    render: () => {
+      return (
+        <Image
+          src="/logo.png"
+          alt="user"
+          className="w-12 h-12 rounded-full"
+          width={12}
+          height={12}
+        />
+      );
+    }
+  },
+  { title: 'ชื่อผู้ใช้', dataIndex: 'username' },
+  { title: 'อีเมล', dataIndex: 'gmail' },
+  { title: 'ตำแหน่ง', dataIndex: 'position' },
+  { title: 'เบอร์โทรศัพท์', dataIndex: 'phone' },
+  { 
+    title: 'สถานะ', 
+    dataIndex: 'status',
+    render: () => (
+      <Chip color="success" variant="bordered">
+        พร้อมใช้งาน
+      </Chip>
+    )
+  },
+];
+
+const data = [
+  {
+    id: 1,
+    image: '',
+    username: 'chief phuwis',
+    gmail: 'phuwisw@threechief.com',
+    position: 'employee',
+    phone: '0804237373',
+    status: 'พร้อมใช้งาน',
+  },
+  {
+    id: 2,
+    image: '',
+    username: 'K.123',
+    gmail: 'phoom1@utotech.org',
+    position: 'employee',
+    phone: '0804237373',
+    status: 'พร้อมใช้งาน',
+  },
+  {
+    id: 3,
+    image: '',
+    username: 'TRTxQc',
+    gmail: 'organization@threechief.com',
+    position: 'owner',
+    phone: '0804237373',
+    status: 'พร้อมใช้งาน',
+  },
+];

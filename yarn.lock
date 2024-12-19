@@ -1035,26 +1035,6 @@
     "@react-types/checkbox" "3.9.0"
     "@react-types/shared" "3.26.0"
 
-"@nextui-org/checkbox@2.3.6":
-  version "2.3.6"
-  resolved "https://registry.yarnpkg.com/@nextui-org/checkbox/-/checkbox-2.3.6.tgz#b284382992547d5f1d4a6423f99105463a90baa0"
-  integrity sha512-QiJuRNllmRACf2rDrA6/hT8o46PjC3P6ttzJxz1OeUH6ME8MUY+EyH0S+C4C+cWoBv4UC2JS5S5QXalQ0WSViw==
-  dependencies:
-    "@nextui-org/form" "2.1.6"
-    "@nextui-org/react-utils" "2.1.1"
-    "@nextui-org/shared-utils" "2.1.1"
-    "@nextui-org/use-callback-ref" "2.1.1"
-    "@nextui-org/use-safe-layout-effect" "2.1.1"
-    "@react-aria/checkbox" "3.15.0"
-    "@react-aria/focus" "3.19.0"
-    "@react-aria/interactions" "3.22.5"
-    "@react-aria/utils" "3.26.0"
-    "@react-aria/visually-hidden" "3.8.18"
-    "@react-stately/checkbox" "3.6.10"
-    "@react-stately/toggle" "3.8.0"
-    "@react-types/checkbox" "3.9.0"
-    "@react-types/shared" "3.26.0"
-
 "@nextui-org/chip@2.2.4":
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/@nextui-org/chip/-/chip-2.2.4.tgz#e915510ff3bf43d976e69b788a7bbcdcc6d38152"
@@ -1167,20 +1147,6 @@
     "@nextui-org/shared-utils" "2.1.1"
     "@nextui-org/system" "2.4.4"
     "@nextui-org/theme" "2.4.1"
-    "@react-aria/utils" "3.26.0"
-    "@react-stately/form" "3.1.0"
-    "@react-types/form" "3.7.8"
-    "@react-types/shared" "3.26.0"
-
-"@nextui-org/form@2.1.6":
-  version "2.1.6"
-  resolved "https://registry.yarnpkg.com/@nextui-org/form/-/form-2.1.6.tgz#cf0dc1457745892ec61514be2dc9d9eb2642fbbc"
-  integrity sha512-bQ4TkmHcuAEvu2UKoRIYXwvZmjaAxhY8sFYqaX9Ma1Jis1tHeu9ScxhFXDKBN1q7RiNoRdWU6o9lBcFrvHEB6w==
-  dependencies:
-    "@nextui-org/react-utils" "2.1.1"
-    "@nextui-org/shared-utils" "2.1.1"
-    "@nextui-org/system" "2.4.4"
-    "@nextui-org/theme" "2.4.3"
     "@react-aria/utils" "3.26.0"
     "@react-stately/form" "3.1.0"
     "@react-types/form" "3.7.8"
@@ -1644,26 +1610,6 @@
     "@react-types/grid" "3.2.10"
     "@react-types/table" "3.10.3"
 
-"@nextui-org/table@^2.2.6":
-  version "2.2.6"
-  resolved "https://registry.yarnpkg.com/@nextui-org/table/-/table-2.2.6.tgz#7d68e67599f37061a97417f5e17ad15b719aedae"
-  integrity sha512-0XZaxcsYMkIcWRbTGq9cW51pWHL6czdKUHAlj1tkRPXEcRbuUxkOWVccsz83pn2vyb56ftDA4nm1qeivcO+PkA==
-  dependencies:
-    "@nextui-org/checkbox" "2.3.6"
-    "@nextui-org/react-utils" "2.1.1"
-    "@nextui-org/shared-icons" "2.1.1"
-    "@nextui-org/shared-utils" "2.1.1"
-    "@nextui-org/spacer" "2.2.4"
-    "@react-aria/focus" "3.19.0"
-    "@react-aria/interactions" "3.22.5"
-    "@react-aria/table" "3.16.0"
-    "@react-aria/utils" "3.26.0"
-    "@react-aria/visually-hidden" "3.8.18"
-    "@react-stately/table" "3.13.0"
-    "@react-stately/virtualizer" "4.2.0"
-    "@react-types/grid" "3.2.10"
-    "@react-types/table" "3.10.3"
-
 "@nextui-org/tabs@2.2.4":
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/@nextui-org/tabs/-/tabs-2.2.4.tgz#6735c4e85319c207ca9489bbdfa334f3b82d14a7"
@@ -1688,20 +1634,6 @@
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@nextui-org/theme/-/theme-2.4.1.tgz#fa8b766f90475e23b1347b79850cff37b231aa41"
   integrity sha512-tJn4KsSU4QR8HAzAJk/TwbjtYWBuVcrRsiJeqTAN5L4galKXt5jJe23wGzHg+EAIs3t6IsjIjgo/PGwZenUPGQ==
-  dependencies:
-    "@nextui-org/shared-utils" "2.1.1"
-    clsx "^1.2.1"
-    color "^4.2.3"
-    color2k "^2.0.2"
-    deepmerge "4.3.1"
-    flat "^5.0.2"
-    tailwind-merge "^2.5.2"
-    tailwind-variants "^0.1.20"
-
-"@nextui-org/theme@2.4.3":
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/@nextui-org/theme/-/theme-2.4.3.tgz#fabd04a95e2dfc07f82dd39795b1493835a99c9c"
-  integrity sha512-QH9ps5NpenWU966INdGbdvZOWWUEGqxrLM2vyqkSRq+A65YON4Jhg/x1xWcSX0SJECNhoNZLh5mt6jp3jH5k8Q==
   dependencies:
     "@nextui-org/shared-utils" "2.1.1"
     clsx "^1.2.1"

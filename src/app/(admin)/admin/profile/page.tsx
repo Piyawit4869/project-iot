@@ -14,12 +14,6 @@ import {
   SelectItem,
   Input,
   DatePicker,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure
 } from '@nextui-org/react';
 import React from 'react';
 
@@ -34,8 +28,6 @@ export default function CreateUserPage() {
     console.log(data); // Log the form data for debugging
   };
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
@@ -44,7 +36,7 @@ export default function CreateUserPage() {
           child={
             <div>
               <TopSection
-                title="สร้างข้อมูลผู้ใช้"
+                title="ข้อมูลผู้ใช้"
                 backpath={'/admin/user'}
                 buttons={[
                   //submit form where out form
@@ -53,7 +45,6 @@ export default function CreateUserPage() {
                     type="submit"
                     form="notation"
                     key={'cancel button'}
-                    onPress={onOpen}
                   >
                     ยกเลิก
                   </Button>,
@@ -62,41 +53,18 @@ export default function CreateUserPage() {
                     type="submit"
                     form="notation"
                     key={'create button'}
-                    onPress={onOpen}
                   >
                     บันทึก
                   </Button>,
                 ]}
               />
-
-              <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-                <ModalContent>
-                  {(onClose) => (
-                    <>
-                      <ModalHeader className="flex flex-col gap-1">คุณต้องการสร้างผู้ใช้งานใช่หรือไม่</ModalHeader>
-                      <ModalBody>
-                        <p>ข้อมูลที่คุณกรอกจะถูกบันทึก</p>
-                      </ModalBody>
-                      <ModalFooter>
-                        <Button color="danger" variant="light" onPress={onClose}>
-                          ยกเลิก
-                        </Button>
-                        <Button color="success" variant="light" onPress={onClose}>
-                          ยืนยัน
-                        </Button>
-                      </ModalFooter>
-                    </>
-                  )}
-                </ModalContent>
-              </Modal>
-
               <div className="flex space-x-4 mt-6">
                 <div className='flex-1'>
                   <CardComponent
                     customCard
                     custom={
                       <Form
-                        id="user"
+                        id="profile"
                         onSubmit={onSubmit}
                         method="post"
                       >
@@ -126,58 +94,6 @@ export default function CreateUserPage() {
                             </div>
                           </div>
 
-                          <div className="flex gap-4 mt-6">
-                            <Input
-                              className="flex-1"
-                              label={
-                                <span className="text-headFont">อีเมล</span>
-                              }
-                              labelPlacement="outside"
-                              name="gmail"
-                              placeholder="กรอกอีเมล"
-                            />
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <Input
-                              className="flex-1"
-                              label={
-                                <span className="text-headFont">ชื่อผู้ใช้</span>
-                              }
-                              labelPlacement="outside"
-                              name="username"
-                              placeholder="กรอกชื่อผู้ใช้"
-                            />
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <Input
-                              className="flex-1"
-                              label={
-                                <span className="text-headFont">รหัสผ่าน</span>
-                              }
-                              labelPlacement="outside"
-                              name="password"
-                              placeholder="กรอกรหัสผ่าน"
-                            />
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <Select
-                              className="flex-1  text-headFont"
-                              name="position"
-                              placeholder="เลือกตำแหน่ง"
-                              label="ตำแหน่ง"
-                              labelPlacement={"outside"}
-                            >
-                              {position.map((item: any) => (
-                                <SelectItem
-                                  className="text-headFont"
-                                  key={item.label}
-                                  value={item.value}
-                                >
-                                  {item.label}
-                                </SelectItem>
-                              ))}
-                            </Select>
-                          </div>
                           <div className="flex gap-4 mt-6">
                             <Select
                               className="flex-1  text-headFont"
@@ -251,11 +167,6 @@ export default function CreateUserPage() {
     </div >
   );
 }
-
-const position = [
-  { label: 'Employee', value: '1' },
-  { label: 'Owner', value: '2' },
-];
 
 const prefix = [
   { label: 'นาย', value: '1' },
