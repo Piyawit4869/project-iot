@@ -21,22 +21,22 @@ export default function AdminLayout({
 }>) {
   const items = [
     {
-      key: 'new',
-      label: 'New file',
-      path: '/admin/accounting/revenue',
-      icon: <Icon.ScheduleOutlined />,
+      key: 'profile',
+      label: 'โปรไฟล์',
+      path: '/admin/profile',
+      icon: <Icon.UserOutlined />,
     },
     {
-      key: 'copy',
-      label: 'Copy link',
+      key: 'setting',
+      label: 'ตั้งค่า',
+      path: '/admin/profile/setting',
+      icon: <Icon.SettingOutlined />,
     },
     {
-      key: 'edit',
-      label: 'Edit file',
-    },
-    {
-      key: 'delete',
-      label: 'Delete file',
+      key: 'logout',
+      label: 'ออกจากระบบ',
+      path: '/login',
+      icon: <Icon.LogoutOutlined />,
     },
   ];
 
@@ -70,7 +70,7 @@ export default function AdminLayout({
                         item.key === 'delete' ? 'text-danger' : 'text-headFont'
                       }
                       color={item.key === 'delete' ? 'danger' : 'default'}
-                    >
+                    >                
                       {item.label}
                     </DropdownItem>
                   )}
@@ -95,11 +95,14 @@ export default function AdminLayout({
                 {(item) => (
                   <DropdownItem
                     key={item.key}
+                    href={item.path}
+                    as={"a"}
                     className={
                       item.key === 'delete' ? 'text-danger' : 'text-headFont'
                     }
                     color={item.key === 'delete' ? 'danger' : 'default'}
                   >
+                    {item.icon}
                     {item.label}
                   </DropdownItem>
                 )}
