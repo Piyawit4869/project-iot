@@ -4,7 +4,6 @@ import {
   CardBody,
   CardFooter,
   Divider,
-  Image,
 } from '@nextui-org/react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
@@ -12,11 +11,6 @@ import CardComponent from '@/components/common/card';
 import {Button} from "@nextui-org/react";
 
 export default function ActionPage({
-  Action,
-  icon,
-  subTitle,
-  body,
-  footer,
   customCard,
   custom,
   className,

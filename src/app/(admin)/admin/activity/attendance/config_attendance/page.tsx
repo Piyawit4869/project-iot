@@ -13,7 +13,6 @@ import {
   Textarea,
   TimeInput,
 } from '@nextui-org/react';
-import { DateRangePicker } from '@nextui-org/react';
 import { parseAbsoluteToLocal, Time } from '@internationalized/date';
 
 export const ClockCircleLinearIcon = (props : any) => {
