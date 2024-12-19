@@ -12,6 +12,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  User
 } from '@nextui-org/react';
 
 export default function AdminLayout({
@@ -70,7 +71,7 @@ export default function AdminLayout({
                         item.key === 'delete' ? 'text-danger' : 'text-headFont'
                       }
                       color={item.key === 'delete' ? 'danger' : 'default'}
-                    >                
+                    >
                       {item.label}
                     </DropdownItem>
                   )}
@@ -96,14 +97,30 @@ export default function AdminLayout({
                   <DropdownItem
                     key={item.key}
                     href={item.path}
-                    as={"a"}
+                    as="a"
                     className={
                       item.key === 'delete' ? 'text-danger' : 'text-headFont'
                     }
                     color={item.key === 'delete' ? 'danger' : 'default'}
                   >
-                    {item.icon}
-                    {item.label}
+                    <User
+                      avatarProps={{
+                        size: "sm",
+                        src: "https://avatars.githubusercontent.com/u/30373425?v=4",
+                      }}
+                      classNames={{
+                        name: "text-default-600",
+                        description: "text-default-500",
+                      }}
+                      description="@jrgarciadev"
+                      name="Junior Garcia"
+                    />
+                    <div className='flex'>
+                      {item.icon}
+                      <div className='ml-3'>
+                        {item.label}
+                      </div>
+                    </div>
                   </DropdownItem>
                 )}
               </DropdownMenu>
