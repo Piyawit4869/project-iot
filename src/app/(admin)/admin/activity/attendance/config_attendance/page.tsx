@@ -2,7 +2,6 @@
 
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
-import { useRouter } from 'next/navigation';
 import React from 'react';
 import {
   Form,
@@ -11,44 +10,36 @@ import {
   Checkbox,
   CheckboxGroup,
   Textarea,
-  TimeInput,
+  // TimeInput,
 } from '@nextui-org/react';
-import { parseAbsoluteToLocal, Time } from '@internationalized/date';
+// import { Time } from '@internationalized/date';
 
-export const ClockCircleLinearIcon = (props : any) => {
-  return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      focusable="false"
-      height="1em"
-      role="presentation"
-      viewBox="0 0 24 24"
-      width="1em"
-      {...props}
-    >
-      <g fill="none" stroke="currentColor" strokeWidth="1.5">
-        <circle cx="12" cy="12" r="10" />
-        <path
-          d="M12 8v4l2.5 2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </g>
-    </svg>
-  );
-};
+// export const ClockCircleLinearIcon = (props : any) => {
+//   return (
+//     <svg
+//       aria-hidden="true"
+//       fill="none"
+//       focusable="false"
+//       height="1em"
+//       role="presentation"
+//       viewBox="0 0 24 24"
+//       width="1em"
+//       {...props}
+//     >
+//       <g fill="none" stroke="currentColor" strokeWidth="1.5">
+//         <circle cx="12" cy="12" r="10" />
+//         <path
+//           d="M12 8v4l2.5 2.5"
+//           strokeLinecap="round"
+//           strokeLinejoin="round"
+//         />
+//       </g>
+//     </svg>
+//   );
+// };
 
 export default function ConfigAttendancesPage() {
-  const variants = ['bordered'];
-  const [action, setAction] = React.useState(null);
-  const router = useRouter();
-  const handleRowClick = (row: any) => {
-    router.push(`attendance/${row.id}`); // Redirect to a dynamic route
-  };
-  let [date, setDate] = React.useState(
-    parseAbsoluteToLocal('2021-04-07T18:45:22Z'),
-  );
+
   return (
     <Scaffold
       child={
@@ -57,7 +48,7 @@ export default function ConfigAttendancesPage() {
             title="การตั้งค่าAttendance"
             // backpath={'/admin/activity/attendance/'}
             buttons={[
-              <div className="flex gap-2">
+              <div className="flex gap-2" key={"button"}> 
                 <Button className="bg-accent2 text-white" type="submit">
                   Submit
                 </Button>
@@ -118,7 +109,7 @@ export default function ConfigAttendancesPage() {
                       </Checkbox>
                     </CheckboxGroup>
                   </div>
-                  <div className="flex flex-col">
+                  {/* <div className="flex flex-col">
                     <TimeInput
                       defaultValue={new Time(9, )}
                       endContent={
@@ -135,7 +126,7 @@ export default function ConfigAttendancesPage() {
                       label="End working"
                       labelPlacement="outside"
                     />
-                  </div>
+                  </div> */}
                 </div>
                 {/* </div>
                   </div>  ))} */}

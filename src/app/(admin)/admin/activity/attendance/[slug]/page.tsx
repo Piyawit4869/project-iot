@@ -3,18 +3,13 @@
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import NextTable from '@/components/common/nextTable';
-import { Button } from '@nextui-org/react';
-import { Input, Select, SelectItem, DatePicker } from '@nextui-org/react';
+import { Select, SelectItem, DatePicker } from '@nextui-org/react';
 import {
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
   Divider,
-  Image,
 } from '@nextui-org/react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 export default function AttendanceSinglePage() {
   return (
     <Scaffold

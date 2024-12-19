@@ -5,7 +5,6 @@ import CardComponent from './card';
 import PropTypes from 'prop-types';
 import * as Icon from '@ant-design/icons';
 import Link from 'next/link';
-import { div } from 'framer-motion/client';
 
 export function TopSection({ title, subtitle, buttons, backpath }: any) {
   return (

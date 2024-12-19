@@ -19,8 +19,8 @@ interface EmployeeData {
   break: string;
   out: string;
   summery: string;
-  note: string;
-  info: JSX.Element;
+  // note: string;
+  // info: JSX.Element;
 }
 
 interface FilterOption {
@@ -37,15 +37,15 @@ const filterOptions: FilterOption[] = [
   { label: 'Mobile', value: 'Mobile' },
 ];
 
-const roleMapper = (role: string): string => {
-  const mapping: Record<string, string> = {
-    frontend: 'Front-end',
-    backend: 'Back-end',
-    mobile: 'Mobile',
-  };
+// const roleMapper = (role: string): string => {
+//   const mapping: Record<string, string> = {
+//     frontend: 'Front-end',
+//     backend: 'Back-end',
+//     mobile: 'Mobile',
+//   };
 
-  return mapping[role.toLowerCase()] || 'หมวดหมู่ไม่ถูกต้อง';
-};
+//   return mapping[role.toLowerCase()] || 'หมวดหมู่ไม่ถูกต้อง';
+// };
 
 export default function RevenuePage() {
   const router = useRouter();
@@ -179,23 +179,23 @@ const initialData: EmployeeData[] = [
     break: '13:00',
     out: '17:00',
     summery: '08:00:00',
-    note: '-',
-    info: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth="1.5"
-        stroke="currentColor"
-        className="size-6"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
-        />
-      </svg>
-    ),
+  //   note: '-',
+  //   info: (
+  //     <svg
+  //       xmlns="http://www.w3.org/2000/svg"
+  //       fill="none"
+  //       viewBox="0 0 24 24"
+  //       strokeWidth="1.5"
+  //       stroke="currentColor"
+  //       className="size-6"
+  //     >
+  //       <path
+  //         strokeLinecap="round"
+  //         strokeLinejoin="round"
+  //         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
+  //       />
+  //     </svg>
+  //   ),
   },
   {
     id: 2,
@@ -207,23 +207,23 @@ const initialData: EmployeeData[] = [
     break: '13:00',
     out: '17:00',
     summery: '08:00:00',
-    note: '-',
-    info: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth="1.5"
-        stroke="currentColor"
-        className="size-6"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
-        />
-      </svg>
-    ),
+  //   note: '-',
+  //   info: (
+  //     <svg
+  //       xmlns="http://www.w3.org/2000/svg"
+  //       fill="none"
+  //       viewBox="0 0 24 24"
+  //       strokeWidth="1.5"
+  //       stroke="currentColor"
+  //       className="size-6"
+  //     >
+  //       <path
+  //         strokeLinecap="round"
+  //         strokeLinejoin="round"
+  //         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
+  //       />
+  //     </svg>
+  //   ),
   },
   {
     id: 3,
@@ -235,23 +235,23 @@ const initialData: EmployeeData[] = [
     break: '13:00',
     out: '17:00',
     summery: '08:00:00',
-    note: '-',
-    info: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth="1.5"
-        stroke="currentColor"
-        className="size-6"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
-        />
-      </svg>
-    ),
+  //   note: '-',
+  //   info: (
+  //     <svg
+  //       xmlns="http://www.w3.org/2000/svg"
+  //       fill="none"
+  //       viewBox="0 0 24 24"
+  //       strokeWidth="1.5"
+  //       stroke="currentColor"
+  //       className="size-6"
+  //     >
+  //       <path
+  //         strokeLinecap="round"
+  //         strokeLinejoin="round"
+  //         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
+  //       />
+  //     </svg>
+  //   ),
   },
   {
     id: 4,
@@ -263,23 +263,23 @@ const initialData: EmployeeData[] = [
     break: '13:00',
     out: '17:00',
     summery: '08:00:00',
-    note: '-',
-    info: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth="1.5"
-        stroke="currentColor"
-        className="size-6"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
-        />
-      </svg>
-    ),
+  //   note: '-',
+  //   info: (
+  //     <svg
+  //       xmlns="http://www.w3.org/2000/svg"
+  //       fill="none"
+  //       viewBox="0 0 24 24"
+  //       strokeWidth="1.5"
+  //       stroke="currentColor"
+  //       className="size-6"
+  //     >
+  //       <path
+  //         strokeLinecap="round"
+  //         strokeLinejoin="round"
+  //         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
+  //       />
+  //     </svg>
+  //   ),
   },
   {
     id: 1,
@@ -291,23 +291,23 @@ const initialData: EmployeeData[] = [
     break: '13:00',
     out: '17:00',
     summery: '08:00:00',
-    note: '-',
-    info: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth="1.5"
-        stroke="currentColor"
-        className="size-6"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
-        />
-      </svg>
-    ),
+  //   note: '-',
+  //   info: (
+  //     <svg
+  //       xmlns="http://www.w3.org/2000/svg"
+  //       fill="none"
+  //       viewBox="0 0 24 24"
+  //       strokeWidth="1.5"
+  //       stroke="currentColor"
+  //       className="size-6"
+  //     >
+  //       <path
+  //         strokeLinecap="round"
+  //         strokeLinejoin="round"
+  //         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
+  //       />
+  //     </svg>
+  //   ),
   },
   {
     id: 1,
@@ -319,23 +319,23 @@ const initialData: EmployeeData[] = [
     break: '13:00',
     out: '17:00',
     summery: '08:00:00',
-    note: '-',
-    info: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth="1.5"
-        stroke="currentColor"
-        className="size-6"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
-        />
-      </svg>
-    ),
+  //   note: '-',
+  //   info: (
+  //     <svg
+  //       xmlns="http://www.w3.org/2000/svg"
+  //       fill="none"
+  //       viewBox="0 0 24 24"
+  //       strokeWidth="1.5"
+  //       stroke="currentColor"
+  //       className="size-6"
+  //     >
+  //       <path
+  //         strokeLinecap="round"
+  //         strokeLinejoin="round"
+  //         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
+  //       />
+  //     </svg>
+  //   ),
   },
   {
     id: 1,
@@ -347,23 +347,23 @@ const initialData: EmployeeData[] = [
     break: '13:00',
     out: '17:00',
     summery: '08:00:00',
-    note: '-',
-    info: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth="1.5"
-        stroke="currentColor"
-        className="size-6"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
-        />
-      </svg>
-    ),
+  //   note: '-',
+  //   info: (
+  //     <svg
+  //       xmlns="http://www.w3.org/2000/svg"
+  //       fill="none"
+  //       viewBox="0 0 24 24"
+  //       strokeWidth="1.5"
+  //       stroke="currentColor"
+  //       className="size-6"
+  //     >
+  //       <path
+  //         strokeLinecap="round"
+  //         strokeLinejoin="round"
+  //         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
+  //       />
+  //     </svg>
+  //   ),
   },
 
 ];
