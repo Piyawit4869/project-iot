@@ -17,7 +17,7 @@ export default function IndexPage() {
 
   const handleRowClick = (row: any) => {
     router.push(`user/${row.id}`); // Redirect to a dynamic route
-};
+  };
 
   // Example data for the table
   // const organizations = [

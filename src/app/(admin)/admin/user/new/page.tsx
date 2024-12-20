@@ -3,13 +3,10 @@
 import Scaffold from '@/components/common/scaffold';
 import CardComponent from '@/components/common/card';
 import { TopSection } from '@/components/common/topSection';
+import { CardControl } from '@/components/setting/card-organization';
 import {
   Button,
   Form,
-  Card,
-  CardHeader,
-  CardBody,
-  Switch,
   Select,
   SelectItem,
   Input,
@@ -34,6 +31,14 @@ export default function CreateUserPage() {
     console.log(data); // Log the form data for debugging
   };
 
+  // const resetForm = (formId: string): void => {
+  //   const form = document.getElementById(formId) as HTMLFormElement | null;
+  //   if (form) {
+  //     form.reset();
+  //     console.log(`Form with ID "${formId}" has been cleared.`);
+  //   }
+  // };
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
@@ -51,7 +56,7 @@ export default function CreateUserPage() {
                   <Button
                     className="bg-accent3 text-white"
                     type="submit"
-                    form="notation"
+                    form="user"
                     key={'cancel button'}
                     onPress={onOpen}
                   >
@@ -60,7 +65,7 @@ export default function CreateUserPage() {
                   <Button
                     className="bg-accent2 text-white"
                     type="submit"
-                    form="notation"
+                    form="user"
                     key={'create button'}
                     onPress={onOpen}
                   >
@@ -69,11 +74,11 @@ export default function CreateUserPage() {
                 ]}
               />
 
-              <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+              <Modal isOpen={isOpen} onOpenChange={onOpenChange} key={'create button'}>
                 <ModalContent>
                   {(onClose) => (
                     <>
-                      <ModalHeader className="flex flex-col gap-1">คุณต้องการสร้างผู้ใช้งานใช่หรือไม่</ModalHeader>
+                      <ModalHeader className="flex flex-col gap-1">คุณต้องการสร้างผู้ใช้งาน ใช่หรือไม่</ModalHeader>
                       <ModalBody>
                         <p>ข้อมูลที่คุณกรอกจะถูกบันทึก</p>
                       </ModalBody>
@@ -81,7 +86,7 @@ export default function CreateUserPage() {
                         <Button color="danger" variant="light" onPress={onClose}>
                           ยกเลิก
                         </Button>
-                        <Button color="success" variant="light" onPress={onClose}>
+                        <Button color="success" variant="light" type="submit" key={'create button'} form="user" onPress={onClose}>
                           ยืนยัน
                         </Button>
                       </ModalFooter>
@@ -89,6 +94,31 @@ export default function CreateUserPage() {
                   )}
                 </ModalContent>
               </Modal>
+              {/* <Modal isOpen={isOpen} onOpenChange={onOpenChange} key={'cancel button'}>
+                <ModalContent>
+                  {(onClose) => (
+                    <>
+                      <ModalHeader className="flex flex-col gap-1">คุณต้องการเคลียร์ผู้ใช้งาน ใช่หรือไม่</ModalHeader>
+                      <ModalBody>
+                        <p>ข้อมูลที่คุณกรอกจะถูกเคลียร์</p>
+                      </ModalBody>
+                      <ModalFooter>
+                        <Button color="danger" variant="light" onPress={onClose}>
+                          ยกเลิก
+                        </Button>
+                        <Button color="success" variant="light"
+                        onPress={() => {
+                          // resetForm("user");
+                          onClose();
+                        }}
+                        >
+                          ยืนยัน
+                        </Button>
+                      </ModalFooter>
+                    </>
+                  )}
+                </ModalContent>
+              </Modal> */}
 
               <div className="flex space-x-4 mt-6">
                 <div className='flex-1'>
@@ -111,18 +141,11 @@ export default function CreateUserPage() {
                           </div>
                           <div className="flex gap-4 mt-6">
                             <div>
-                              <Card className="py-4">
-                                <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-                                  <h4 className="font-bold text-large">เปิดใช้งาน</h4>
-                                </CardHeader>
-                                <CardBody className=" overflow-visible py-2">
-                                  <p>ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน</p>
-                                  <br />
-                                  <p>เปิดใช้งาน</p>
-                                  <Switch className='mt-3' defaultSelected color="danger">
-                                  </Switch>
-                                </CardBody>
-                              </Card>
+                              <CardControl
+                                title="เปิดใช้งาน"
+                                description="ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน"
+                                control="เปิดใช้งาน"
+                              />
                             </div>
                           </div>
 

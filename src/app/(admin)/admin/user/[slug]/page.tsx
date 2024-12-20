@@ -3,13 +3,10 @@
 import Scaffold from '@/components/common/scaffold';
 import CardComponent from '@/components/common/card';
 import { TopSection } from '@/components/common/topSection';
+import { CardControl } from '@/components/setting/card-organization';
 import {
   Button,
   Form,
-  Card,
-  CardHeader,
-  CardBody,
-  Switch,
   Select,
   SelectItem,
   Input,
@@ -95,18 +92,11 @@ export default function UserSinglePage() {
                           </div>
                           <div className="flex gap-4 mt-6">
                             <div>
-                              <Card className="py-4">
-                                <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-                                  <h4 className="font-bold text-large">เปิดใช้งาน</h4>
-                                </CardHeader>
-                                <CardBody className=" overflow-visible py-2">
-                                  <p>ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน</p>
-                                  <br />
-                                  <p>เปิดใช้งาน</p>
-                                  <Switch className='mt-3' defaultSelected color="danger">
-                                  </Switch>
-                                </CardBody>
-                              </Card>
+                              <CardControl
+                                title="เปิดใช้งาน"
+                                description="ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน"
+                                control="เปิดใช้งาน"
+                              />
                             </div>
                           </div>
 

@@ -3,19 +3,17 @@
 import Scaffold from '@/components/common/scaffold';
 import CardComponent from '@/components/common/card';
 import { TopSection } from '@/components/common/topSection';
+import Image from 'next/image';
 import {
   Button,
   Form,
-  Card,
-  CardHeader,
-  CardBody,
-  Switch,
   Select,
   SelectItem,
   Input,
   DatePicker,
 } from '@nextui-org/react';
 import React from 'react';
+import { CardControl } from '@/components/setting/card-organization';
 
 export default function CreateUserPage() {
 
@@ -51,7 +49,7 @@ export default function CreateUserPage() {
                   <Button
                     className="bg-accent2 text-white"
                     type="submit"
-                    form="notation"
+                    form="profile"
                     key={'create button'}
                   >
                     บันทึก
@@ -69,28 +67,24 @@ export default function CreateUserPage() {
                         method="post"
                       >
                         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                          <div >
-                            <h1 className="text-2xl font-bold text-headFont">
-                              ข้อมูลผู้ใข้
-                            </h1>
+                          <div>
+                            <div>
+                              <h1 className="text-2xl font-bold text-headFont">
+                                ข้อมูลผู้ใข้
+                              </h1>
+                            </div>
                             <div className='font-bold text-headFon mt-10'>
                               <p>รูปภาพองค์กร</p>
+                              <Image className='mt-3' src="/logo.png" alt='image organization' width={100} height={100}></Image>
                             </div>
                           </div>
                           <div className="flex gap-4 mt-6">
                             <div>
-                              <Card className="py-4">
-                                <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-                                  <h4 className="font-bold text-large">เปิดใช้งาน</h4>
-                                </CardHeader>
-                                <CardBody className=" overflow-visible py-2">
-                                  <p>ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน</p>
-                                  <br />
-                                  <p>เปิดใช้งาน</p>
-                                  <Switch className='mt-3' defaultSelected color="danger">
-                                  </Switch>
-                                </CardBody>
-                              </Card>
+                              <CardControl
+                                title="เปิดใช้งาน"
+                                description="ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน"
+                                control="เปิดใช้งาน"
+                              />
                             </div>
                           </div>
 

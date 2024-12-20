@@ -12,8 +12,9 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  User
+  DropdownSection,
 } from '@nextui-org/react';
+import CardComponent from '@/components/common/card';
 
 export default function AdminLayout({
   children,
@@ -41,6 +42,8 @@ export default function AdminLayout({
     },
   ];
 
+
+
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
@@ -54,7 +57,13 @@ export default function AdminLayout({
         <header className="bg-white shadow p-4 flex items-center justify-between">
           <Breadcrumb />
           <div className="flex items-center space-x-4">
-            <Dropdown>
+            <Dropdown 
+              showArrow
+              classNames={{
+                base: "before:bg-default-200", // change arrow background
+                content:"py-1 px-1 border border-default-200 bg-gradient-to-br from-white to-default-200 dark:from-default-50 dark:to-black",
+              }}
+            >
               <div>
                 <DropdownTrigger>
                   <Link href={'#'}>
@@ -62,24 +71,32 @@ export default function AdminLayout({
                   </Link>
                 </DropdownTrigger>
               </div>
-              <div>
-                <DropdownMenu aria-label="Dynamic Actions" items={items}>
-                  {(item) => (
-                    <DropdownItem
-                      key={item.key}
-                      className={
-                        item.key === 'delete' ? 'text-danger' : 'text-headFont'
-                      }
-                      color={item.key === 'delete' ? 'danger' : 'default'}
-                    >
-                      {item.label}
-                    </DropdownItem>
-                  )}
-                </DropdownMenu>
-              </div>
+              <DropdownMenu aria-label="Dynamic Actions">
+                <DropdownSection title="การแจ้งเตือน" items={items}>
+                {(item) => (
+                  <DropdownItem
+                    key={item.key}
+                    className={
+                      item.key === 'delete' ? 'text-danger' : 'text-headFont'
+                    }
+                    color={item.key === 'delete' ? 'danger' : 'default'}
+                  >
+                    <CardComponent>
+                      
+                    </CardComponent>
+                  </DropdownItem>
+                )}
+                </DropdownSection>
+              </DropdownMenu>
             </Dropdown>
 
-            <Dropdown>
+            <Dropdown 
+              showArrow
+              classNames={{
+                base: "before:bg-default-200", // change arrow background
+                content:"py-1 px-1 border border-default-200 bg-gradient-to-br from-white to-default-200 dark:from-default-50 dark:to-black",
+              }}
+            >
               <div className="relative">
                 <DropdownTrigger>
                   <button className="flex items-center space-x-2">
@@ -96,31 +113,19 @@ export default function AdminLayout({
                 {(item) => (
                   <DropdownItem
                     key={item.key}
-                    href={item.path}
-                    as="a"
                     className={
                       item.key === 'delete' ? 'text-danger' : 'text-headFont'
                     }
                     color={item.key === 'delete' ? 'danger' : 'default'}
                   >
-                    <User
-                      avatarProps={{
-                        size: "sm",
-                        src: "https://avatars.githubusercontent.com/u/30373425?v=4",
-                      }}
-                      classNames={{
-                        name: "text-default-600",
-                        description: "text-default-500",
-                      }}
-                      description="@jrgarciadev"
-                      name="Junior Garcia"
-                    />
-                    <div className='flex'>
-                      {item.icon}
-                      <div className='ml-3'>
-                        {item.label}
+                    <Link href={item.path}>
+                      <div className='flex'>
+                        {item.icon}
+                        <div className='ml-3'>
+                          {item.label}
+                        </div>
                       </div>
-                    </div>
+                    </Link>
                   </DropdownItem>
                 )}
               </DropdownMenu>
