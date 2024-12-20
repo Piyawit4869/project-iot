@@ -53,12 +53,20 @@ export default function NotationCreatePage() {
             buttons={[
               //submit form where out form
               <Button
-                className="bg-accent2 text-white"
+                className="bg-accent3 text-white"
+                type="submit"
+                form="notation"
+                key={'draft button'}
+              >
+                แบบร่าง
+              </Button>,
+              <Button
+                className="bg-accent1 text-white"
                 type="submit"
                 form="notation"
                 key={'create button'}
               >
-                ยืนยัน
+                สร้าง
               </Button>,
             ]}
           />
@@ -244,7 +252,7 @@ export default function NotationCreatePage() {
                   <Button
                     size="lg"
                     type="button"
-                    className="px-4 py-2 bg-secondary text-white"
+                    className="px-4 py-2 bg-accent3 text-white"
                     onClick={handleAddItem}
                   >
                     <Icon.PlusSquareOutlined className="text-xl" />
