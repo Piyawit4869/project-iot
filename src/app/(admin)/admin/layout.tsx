@@ -12,7 +12,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  User
+  User,
 } from '@nextui-org/react';
 
 export default function AdminLayout({
@@ -105,21 +105,19 @@ export default function AdminLayout({
                   >
                     <User
                       avatarProps={{
-                        size: "sm",
-                        src: "https://avatars.githubusercontent.com/u/30373425?v=4",
+                        size: 'sm',
+                        src: 'https://avatars.githubusercontent.com/u/30373425?v=4',
                       }}
                       classNames={{
-                        name: "text-default-600",
-                        description: "text-default-500",
+                        name: 'text-default-600',
+                        description: 'text-default-500',
                       }}
                       description="@jrgarciadev"
                       name="Junior Garcia"
                     />
-                    <div className='flex'>
+                    <div className="flex">
                       {item.icon}
-                      <div className='ml-3'>
-                        {item.label}
-                      </div>
+                      <div className="ml-3">{item.label}</div>
                     </div>
                   </DropdownItem>
                 )}
@@ -129,7 +127,9 @@ export default function AdminLayout({
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 w-full p-8 overflow-y-auto">{children}</main>
+        <main className="bg-gray-100 flex-1 w-full p-8 overflow-y-auto">
+          {children}
+        </main>
       </div>
     </div>
   );
