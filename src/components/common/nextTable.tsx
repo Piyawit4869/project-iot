@@ -29,20 +29,13 @@ export default function NextTable({
     tabs?.[0]?.value || 'all',
   );
 
-  // Debugging Logs
-  console.log('Selected Tab:', selectedTab);
-  console.log('Tab Field Name:', tabFieldName);
-
   // Filter rows based on the selected tab
   const filteredRows = React.useMemo(() => {
     if (selectedTab === 'all') return rows;
     return rows.filter((row: any) => {
-      console.log('Row:', row); // Log row data for debugging
       return row[tabFieldName] === selectedTab;
     });
   }, [rows, selectedTab, tabFieldName]);
-
-  console.log('Filtered Rows:', filteredRows); // Log filtered rows for debugging
 
   const pages = Math.ceil(filteredRows.length / rowsPerPage);
   const startIndex = (page - 1) * rowsPerPage;
@@ -69,8 +62,6 @@ export default function NextTable({
   );
 
   const handleTabChange = (value: string) => {
-    console.log('category changed : ', value);
-
     setSelectedTab(value);
     setPage(1); // Reset to the first page when changing tabs
   };
