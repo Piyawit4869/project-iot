@@ -16,7 +16,7 @@
   --whiteFont: #ffffff;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --primaryFont: #ffffff;
     --secondaryFont: #0a0a0a;
@@ -30,7 +30,7 @@
     --headFont: #19142a;
     --whiteFont: #ffffff;
   }
-}
+} */
 
 body {
   color: var(--foreground);

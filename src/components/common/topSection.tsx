@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import * as Icon from '@ant-design/icons';
 import Link from 'next/link';
 
-export function TopSection({ title, buttons, backpath }: any) {
+export function TopSection({ title, subtitle, buttons, backpath }: any) {
   return (
     <CardComponent
       className="sticky top-[-32px] shadow-md z-10"
@@ -26,6 +26,14 @@ export function TopSection({ title, buttons, backpath }: any) {
             <h1 className="text-2xl font-bold text-headFont">{title}</h1>
           )}
 
+          {subtitle ? (
+            <div >
+              <h1 className="text-sm">{subtitle}</h1>
+            </div>
+          ) : (
+            <h1 className="text-sm">{subtitle}</h1>
+          )}
+
           {/* Buttons */}
           {buttons ? (
             <div className="flex space-x-2" key={'buttons'}>
@@ -42,6 +50,7 @@ export function TopSection({ title, buttons, backpath }: any) {
 
 TopSection.propTypes = {
   title: PropTypes.string.isRequired,
+  subtitle: PropTypes.string,
   buttons: PropTypes.arrayOf(PropTypes.element),
   backpath: PropTypes.string,
 };
