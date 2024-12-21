@@ -13,6 +13,10 @@ import {
   DropdownMenu,
   DropdownItem,
   DropdownSection,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  Button
 } from '@nextui-org/react';
 import CardComponent from '@/components/common/card';
 
@@ -42,8 +46,6 @@ export default function AdminLayout({
     },
   ];
 
-
-
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
@@ -57,44 +59,33 @@ export default function AdminLayout({
         <header className="bg-white shadow p-4 flex items-center justify-between">
           <Breadcrumb />
           <div className="flex items-center space-x-4">
-            <Dropdown 
-              showArrow
-              classNames={{
-                base: "before:bg-default-200", // change arrow background
-                content:"py-1 px-1 border border-default-200 bg-gradient-to-br from-white to-default-200 dark:from-default-50 dark:to-black",
-              }}
-            >
-              <div>
-                <DropdownTrigger>
-                  <Link href={'#'}>
-                    <Icon.BellFilled className="text-headFont" />
-                  </Link>
-                </DropdownTrigger>
-              </div>
-              <DropdownMenu aria-label="Dynamic Actions">
-                <DropdownSection title="การแจ้งเตือน" items={items}>
-                {(item) => (
-                  <DropdownItem
-                    key={item.key}
-                    className={
-                      item.key === 'delete' ? 'text-danger' : 'text-headFont'
-                    }
-                    color={item.key === 'delete' ? 'danger' : 'default'}
-                  >
-                    <CardComponent>
-                      
-                    </CardComponent>
-                  </DropdownItem>
-                )}
-                </DropdownSection>
-              </DropdownMenu>
-            </Dropdown>
 
-            <Dropdown 
+            <Popover showArrow offset={10} placement="bottom">
+              <PopoverTrigger>
+                <Icon.BellFilled className="text-headFont" />
+              </PopoverTrigger>
+              <PopoverContent className="w-[240px]">
+                {(titleProps) => (
+                  <div className="px-1 py-2 w-full">
+                    <p className="text-small font-bold text-foreground" {...titleProps}>
+                      การแจ้งเตือน
+                    </p>
+                    <div className="mt-2 flex flex-col gap-2 w-full">
+                      <CardComponent>
+                        <h1>Hello</h1>
+                      </CardComponent>
+                      <img src="/empty-state.svg" alt="ไม่มีการแจ้งเตือน" width="50" />
+                    </div>
+                  </div>
+                )}
+              </PopoverContent>
+            </Popover>
+
+            <Dropdown
               showArrow
               classNames={{
                 base: "before:bg-default-200", // change arrow background
-                content:"py-1 px-1 border border-default-200 bg-gradient-to-br from-white to-default-200 dark:from-default-50 dark:to-black",
+                content: "py-1 px-1 border border-default-200 bg-gradient-to-br from-white to-default-200 dark:from-default-50 dark:to-black",
               }}
             >
               <div className="relative">

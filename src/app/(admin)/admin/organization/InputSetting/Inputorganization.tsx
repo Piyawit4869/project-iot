@@ -15,7 +15,7 @@ import {
 } from '@nextui-org/react';
 import React, {useState} from 'react';
 
-export default function InformationPage() {
+export const Inputorganization = () => {
 
   const [value, setValue] = useState("");
 

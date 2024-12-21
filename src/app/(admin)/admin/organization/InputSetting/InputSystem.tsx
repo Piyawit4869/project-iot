@@ -8,7 +8,7 @@ import {
 } from '@nextui-org/react';
 import React from 'react';
 
-export default function SystemPage() {
+export const  InputSystem = () => {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
 
   const handleAddItem = () => {
@@ -125,7 +125,7 @@ export default function SystemPage() {
         <div className="flex  gap-4 mt-6">
           <Button
             type="button"
-            className="bg-secondary text-white w-full"
+            className="bg-accent3 text-white w-full"
             onClick={handleAddItem}
           >
             <Icon.PlusSquareOutlined className="text-xl" />

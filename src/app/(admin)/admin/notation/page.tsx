@@ -22,7 +22,7 @@ export default function NotationsPage() {
             title="เอกสารทั้งหมด"
             buttons={[
               <Link href={'notation/create'} key={'create button'}>
-                <Button className="bg-accent2 text-white" key={'create button'}>
+                <Button className="bg-accent1 text-white" key={'create button'}>
                   สร้างเอกสาร
                 </Button>
               </Link>,

@@ -45,7 +45,7 @@ export default function IndexPage() {
                 title="ข้อมูลผู้ใช้"
                 buttons={[
                   <Link href={'user/new'} key={'create button'}>
-                    <Button className="bg-accent2 text-white" key={'create button'}>
+                    <Button className="bg-accent1 text-white" key={'create button'}>
                       เพิ่มข้อมูลผูัใช้
                     </Button>
                   </Link>,

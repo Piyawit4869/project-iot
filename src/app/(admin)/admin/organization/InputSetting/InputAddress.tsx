@@ -3,7 +3,7 @@
 import { Input, Textarea } from '@nextui-org/react';
 import React from 'react';
 
-export default function AddressPage() {
+export const InputAddress = () => {
 
   return (
     <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">

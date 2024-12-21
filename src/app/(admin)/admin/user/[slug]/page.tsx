@@ -4,6 +4,7 @@ import Scaffold from '@/components/common/scaffold';
 import CardComponent from '@/components/common/card';
 import { TopSection } from '@/components/common/topSection';
 import { CardControl } from '@/components/setting/card-organization';
+import Image from 'next/image';
 import {
   Button,
   Form,
@@ -46,25 +47,24 @@ export default function UserSinglePage() {
                 buttons={[
                   //submit form where out form
                   <Button
-                    className="bg-accent3 text-white"
+                    className="bg-accent1 text-white"
                     type="submit"
-                    form="notation"
+                    form="user"
+                    key={'create button'}
+                  >
+                    ยืนยัน
+                  </Button>, <Button
+                    className="bg-accent2 text-white"
+                    type="submit"
+                    form="user"
                     key={'cancel button'}
                   >
                     ยกเลิก
                   </Button>,
                   <Button
-                    className="bg-accent2 text-white"
+                    className="bg-accent3 text-white"
                     type="submit"
-                    form="notation"
-                    key={'create button'}
-                  >
-                    บันทึก
-                  </Button>,
-                  <Button
-                    className="bg-accent1 text-white"
-                    type="submit"
-                    form="notation"
+                    form="user"
                     key={'delete button'}
                   >
                     ลบ
@@ -81,14 +81,13 @@ export default function UserSinglePage() {
                         onSubmit={onSubmit}
                         method="post"
                       >
+                        <h1 className="text-2xl font-bold text-headFont">
+                          ข้อมูลผู้ใช้
+                        </h1>
                         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                          <div >
-                            <h1 className="text-2xl font-bold text-headFont">
-                              ข้อมูลผู้ใข้
-                            </h1>
-                            <div className='font-bold text-headFon mt-10'>
-                              <p>รูปภาพองค์กร</p>
-                            </div>
+                          <div className='font-bold text-headFon mt-10'>
+                            <p>รูปภาพองค์กร</p>
+                            <Image className='mt-3' src="/logo.png" alt='logo' width={100} height={100}></Image>
                           </div>
                           <div className="flex gap-4 mt-6">
                             <div>
@@ -179,16 +178,17 @@ export default function UserSinglePage() {
                               placeholder="กรอกเบอร์โทรศัพท์"
                             />
                           </div>
-                          <div className="flex gap-4 mt-6">
+
+                          <div className="gap-4 mt-6 flex">
                             <Button onPress={onOpen}>เปลี่ยนรหัสผ่าน</Button>
                             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                               <ModalContent>
                                 {(onClose) => (
                                   <>
-                                    <ModalHeader className="flex flex-col gap-1">เปลี่ยนรหัสผ่าน</ModalHeader>
+                                    <ModalHeader className="flex gap-1">เปลี่ยนรหัสผ่าน</ModalHeader>
                                     <ModalBody>
                                       <Input
-                                        className="flex-1"
+                                        className=""
                                         label={
                                           <span className="text-headFont">รหัสผ่าน</span>
                                         }
@@ -197,7 +197,7 @@ export default function UserSinglePage() {
                                         placeholder="กรอกรหัสผ่าน"
                                       />
                                       <Input
-                                        className="flex-1"
+                                        className=""
                                         label={
                                           <span className="text-headFont">รหัสผ่านใหม่</span>
                                         }
@@ -207,8 +207,11 @@ export default function UserSinglePage() {
                                       />
                                     </ModalBody>
                                     <ModalFooter>
-                                      <Button color="danger" variant="light" onPress={onClose}>
+                                      <Button color="success" variant="light" onPress={onClose}>
                                         ยืนยัน
+                                      </Button>
+                                      <Button color="danger" variant="light" onPress={onClose}>
+                                        ยกเลิก
                                       </Button>
                                     </ModalFooter>
                                   </>
