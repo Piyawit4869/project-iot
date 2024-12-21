@@ -4,13 +4,20 @@ import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import NextTable from '@/components/common/nextTable';
 import { Select, SelectItem, DatePicker } from '@nextui-org/react';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Divider,
-} from '@nextui-org/react';
+import { Card, CardHeader, CardBody, Divider } from '@nextui-org/react';
+import { useState } from 'react';
+
 export default function AttendanceSinglePage() {
+  const [selectedActivity, setSelectedActivity] = useState<string>('All');
+  
+  const handleActivityChange = (activity: string) => {
+    setSelectedActivity(activity);
+  };
+
+  const filteredData = data.filter((item) =>
+    selectedActivity === 'All' ? true : item.action.toLowerCase() === selectedActivity.toLowerCase()
+  );
+
   return (
     <Scaffold
       child={
@@ -46,7 +53,7 @@ export default function AttendanceSinglePage() {
               <Divider />
             </Card>
           </div>
-          <div className="bg-white shadow rounded-lg  mb-4 mt-4">
+          <div className="bg-white shadow rounded-lg mb-4 mt-4">
             <div className="flex flex-wrap gap-4">
               {/* Activity Filter */}
               <Select
@@ -54,29 +61,27 @@ export default function AttendanceSinglePage() {
                 size="sm"
                 name="activity"
                 label="Select Activity"
+                onChange={(a) => handleActivityChange(a.target.value)}
               >
-                <SelectItem className="text-headFont" key={'option1'}>
+                <SelectItem className="text-headFont" key="all" value="All">
                   All
                 </SelectItem>
-                <SelectItem className="text-headFont" key={'option2'}>
+                <SelectItem className="text-headFont" key="in" value="In">
                   In
                 </SelectItem>
-                <SelectItem className="text-headFont" key={'option3'}>
+                <SelectItem className="text-headFont" key="break" value="Break">
                   Break
                 </SelectItem>
-                <SelectItem className="text-headFont" key={'option4'}>
+                <SelectItem className="text-headFont" key="out" value="Out">
                   Out
                 </SelectItem>
               </Select>
               {/* Day Filter */}
-              <DatePicker
-                className=" flex-1 p-2 text-headFont"
-                label="Select Date"
-              />
+              <DatePicker className="flex-1 p-2 text-headFont" label="Select Date" />
             </div>
           </div>
           <div className="text-center">
-            <NextTable columns={columns} rows={data} />
+            <NextTable columns={columns} rows={filteredData} />
           </div>
         </div>
       }

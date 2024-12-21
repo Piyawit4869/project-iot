@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { TopSection } from '@/components/common/topSection';
 import NextTable from '@/components/common/nextTable';
 import Scaffold from '@/components/common/scaffold';
@@ -19,16 +19,13 @@ interface EmployeeData {
   break: string;
   out: string;
   summery: string;
-  // note: string;
-  // info: JSX.Element;
+  note: string;
 }
 
 interface FilterOption {
   label: string;
   value: string;
 }
-
-
 
 const filterOptions: FilterOption[] = [
   { label: 'All', value: 'all' },
@@ -37,51 +34,62 @@ const filterOptions: FilterOption[] = [
   { label: 'Mobile', value: 'Mobile' },
 ];
 
-// const roleMapper = (role: string): string => {
-//   const mapping: Record<string, string> = {
-//     frontend: 'Front-end',
-//     backend: 'Back-end',
-//     mobile: 'Mobile',
-//   };
+const filterActivityOptions: FilterOption[] = [
+  { label: 'All', value: 'all' },
+  { label: 'In', value: 'in' },
+  { label: 'Break', value: 'break' },
+  { label: 'Out', value: 'out' },
+];
 
-//   return mapping[role.toLowerCase()] || 'หมวดหมู่ไม่ถูกต้อง';
-// };
-
-export default function RevenuePage() {
+export default function AttendancePage() {
   const router = useRouter();
 
-  const [filteredData, setFilteredData] = useState<EmployeeData[]>(initialData);
   const [searchValue, setSearchValue] = useState('');
   const [selectedRole, setSelectedRole] = useState('all');
+  const [selectedActivity, setSelectedActivity] = useState('all');
+  const [employeeData, setEmployeeData] = useState<EmployeeData[]>([]); // State to hold JSON data
+
+  useEffect(() => {
+    // Fetch JSON data from public directory
+    fetch('/test.json') // ชื่อไฟล์เป็น test.json
+      .then((response) => response.json())
+      .then((data: EmployeeData[]) => {
+        setEmployeeData(data);
+      })
+      .catch((error) => console.error('Error fetching data:', error));
+  }, []); // Run only once when component mounts
 
   const handleRowClick = (row: EmployeeData) => {
     router.push(`attendance/${row.id}`);
   };
 
-  const filterData = () => {
-    let filtered = initialData;
+  // Filter function to apply multiple filters
+  const filteredData = useMemo(() => {
+    return employeeData.filter((item) => {
+      const matchesRole =
+        selectedRole === 'all' ||
+        item.role.toLowerCase() === selectedRole.toLowerCase();
+      const matchesActivity =
+        selectedActivity === 'all' ||
+        item.activity.toLowerCase() === selectedActivity.toLowerCase();
+      const matchesSearch =
+        !searchValue ||
+        item.name.toLowerCase().includes(searchValue.toLowerCase());
 
-    if (selectedRole !== 'all') {
-      filtered = filtered.filter((item) => item.role === selectedRole);
-    }
-
-    if (searchValue) {
-      filtered = filtered.filter((item) =>
-        item.name.toLowerCase().includes(searchValue.toLowerCase())
-      );
-    }
-
-    setFilteredData(filtered);
-  };
+      return matchesRole && matchesActivity && matchesSearch;
+    });
+  }, [searchValue, selectedRole, selectedActivity, employeeData]);
 
   const handleSearchChange = (value: string) => {
     setSearchValue(value);
-    filterData();
   };
 
   const handleRoleChange = (value: string) => {
     setSelectedRole(value);
-    filterData();
+  };
+
+  const handleActivityChange = (value: string) => {
+    setSelectedActivity(value);
   };
 
   const renderCard = (title: string, count: number, colorClass: string) => (
@@ -111,11 +119,10 @@ export default function RevenuePage() {
             {renderCard('ลากิจ', 0, 'bg-accent1')}
             {renderCard('ขาด', 0, 'bg-accent1')}
           </div>
-          <div className="bg-white shadow rounded-lg mb-4 mt-4">
+          <div className="bg-white shadow rounded-2xl mb-4 mt-4">
             <div className="flex flex-wrap gap-4">
               <Input
                 className="flex-1 p-2 text-headFont"
-                labelPlacement="outside"
                 size="lg"
                 name="name"
                 placeholder="ค้นหาชื่อพนักงาน"
@@ -131,6 +138,25 @@ export default function RevenuePage() {
                 onChange={(r) => handleRoleChange(r.target.value)}
               >
                 {filterOptions.map((option) => (
+                  <SelectItem
+                    key={option.value}
+                    className="text-headFont"
+                    value={option.value}
+                  >
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </Select>
+
+              <Select
+                className="flex-1 p-2 text-headFont"
+                size="sm"
+                name="activity"
+                label="เลือกกิจกรรม"
+                value={selectedActivity}
+                onChange={(a) => handleActivityChange(a.target.value)}
+              >
+                {filterActivityOptions.map((option) => (
                   <SelectItem
                     key={option.value}
                     className="text-headFont"
@@ -163,207 +189,5 @@ const columns: any = [
   { title: 'Break', dataIndex: 'break', align: 'center' },
   { title: 'Out', dataIndex: 'out', align: 'center' },
   { title: 'Summary', dataIndex: 'summery', align: 'center' },
-  { title: 'Note', dataIndex: 'note', align: 'center' },
-  { title: '', dataIndex: 'info', align: 'right' },
-];
-
-
-const initialData: EmployeeData[] = [
-  {
-    id: 1,
-    order: '1',
-    name: 'Vachira Rongmuang',
-    role: 'Frontend',
-    activity: 'เข้างาน',
-    in: '08:00',
-    break: '13:00',
-    out: '17:00',
-    summery: '08:00:00',
-  //   note: '-',
-  //   info: (
-  //     <svg
-  //       xmlns="http://www.w3.org/2000/svg"
-  //       fill="none"
-  //       viewBox="0 0 24 24"
-  //       strokeWidth="1.5"
-  //       stroke="currentColor"
-  //       className="size-6"
-  //     >
-  //       <path
-  //         strokeLinecap="round"
-  //         strokeLinejoin="round"
-  //         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
-  //       />
-  //     </svg>
-  //   ),
-  },
-  {
-    id: 2,
-    order: '2',
-    name: 'ปิยะวิทย์ เอี่ยมสำอางค์',
-    role: 'Frontend',
-    activity: 'พักเบรก',
-    in: '08:00',
-    break: '13:00',
-    out: '17:00',
-    summery: '08:00:00',
-  //   note: '-',
-  //   info: (
-  //     <svg
-  //       xmlns="http://www.w3.org/2000/svg"
-  //       fill="none"
-  //       viewBox="0 0 24 24"
-  //       strokeWidth="1.5"
-  //       stroke="currentColor"
-  //       className="size-6"
-  //     >
-  //       <path
-  //         strokeLinecap="round"
-  //         strokeLinejoin="round"
-  //         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
-  //       />
-  //     </svg>
-  //   ),
-  },
-  {
-    id: 3,
-    order: '3',
-    name: 'Beam',
-    role: 'Backend',
-    activity: 'ออกงาน',
-    in: '08:00',
-    break: '13:00',
-    out: '17:00',
-    summery: '08:00:00',
-  //   note: '-',
-  //   info: (
-  //     <svg
-  //       xmlns="http://www.w3.org/2000/svg"
-  //       fill="none"
-  //       viewBox="0 0 24 24"
-  //       strokeWidth="1.5"
-  //       stroke="currentColor"
-  //       className="size-6"
-  //     >
-  //       <path
-  //         strokeLinecap="round"
-  //         strokeLinejoin="round"
-  //         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
-  //       />
-  //     </svg>
-  //   ),
-  },
-  {
-    id: 4,
-    order: '4',
-    name: 'L',
-    role: 'Mobile',
-    activity: 'เข้างาน',
-    in: '08:00',
-    break: '13:00',
-    out: '17:00',
-    summery: '08:00:00',
-  //   note: '-',
-  //   info: (
-  //     <svg
-  //       xmlns="http://www.w3.org/2000/svg"
-  //       fill="none"
-  //       viewBox="0 0 24 24"
-  //       strokeWidth="1.5"
-  //       stroke="currentColor"
-  //       className="size-6"
-  //     >
-  //       <path
-  //         strokeLinecap="round"
-  //         strokeLinejoin="round"
-  //         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
-  //       />
-  //     </svg>
-  //   ),
-  },
-  {
-    id: 1,
-    order: '1',
-    name: 'Phuwis',
-    role: 'Frontend',
-    activity: 'เข้างาน',
-    in: '08:00',
-    break: '13:00',
-    out: '17:00',
-    summery: '08:00:00',
-  //   note: '-',
-  //   info: (
-  //     <svg
-  //       xmlns="http://www.w3.org/2000/svg"
-  //       fill="none"
-  //       viewBox="0 0 24 24"
-  //       strokeWidth="1.5"
-  //       stroke="currentColor"
-  //       className="size-6"
-  //     >
-  //       <path
-  //         strokeLinecap="round"
-  //         strokeLinejoin="round"
-  //         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
-  //       />
-  //     </svg>
-  //   ),
-  },
-  {
-    id: 1,
-    order: '1',
-    name: 'Vachira Rongmuang',
-    role: 'Frontend',
-    activity: 'เข้างาน',
-    in: '08:00',
-    break: '13:00',
-    out: '17:00',
-    summery: '08:00:00',
-  //   note: '-',
-  //   info: (
-  //     <svg
-  //       xmlns="http://www.w3.org/2000/svg"
-  //       fill="none"
-  //       viewBox="0 0 24 24"
-  //       strokeWidth="1.5"
-  //       stroke="currentColor"
-  //       className="size-6"
-  //     >
-  //       <path
-  //         strokeLinecap="round"
-  //         strokeLinejoin="round"
-  //         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
-  //       />
-  //     </svg>
-  //   ),
-  },
-  {
-    id: 1,
-    order: '1',
-    name: 'Vachira Rongmuang',
-    role: 'Frontend',
-    activity: 'เข้างาน',
-    in: '08:00',
-    break: '13:00',
-    out: '17:00',
-    summery: '08:00:00',
-  //   note: '-',
-  //   info: (
-  //     <svg
-  //       xmlns="http://www.w3.org/2000/svg"
-  //       fill="none"
-  //       viewBox="0 0 24 24"
-  //       strokeWidth="1.5"
-  //       stroke="currentColor"
-  //       className="size-6"
-  //     >
-  //       <path
-  //         strokeLinecap="round"
-  //         strokeLinejoin="round"
-  //         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0Zm-9-3.75h.008v.008H12V8.25Z"
-  //       />
-  //     </svg>
-  //   ),
-  },
-
+  { title: 'Note', dataIndex: 'note', align: 'center' }
 ];
