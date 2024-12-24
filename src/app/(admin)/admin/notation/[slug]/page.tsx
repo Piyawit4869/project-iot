@@ -254,6 +254,7 @@ export default function NotationSinglePage() {
           </div>
         </div>
       }
+      backgroundColor={''}
     />
   );
 }

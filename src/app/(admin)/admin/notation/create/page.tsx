@@ -91,6 +91,7 @@ export default function NotationCreatePage() {
                     </div>
                     <Input
                       className="flex-1"
+                      size="lg"
                       label="หมายเลขอ้างอิง"
                       labelPlacement="outside"
                       name="refNo"
@@ -99,11 +100,13 @@ export default function NotationCreatePage() {
                   </div>
                   <div className="flex gap-4">
                     <DatePicker
+                      size="sm"
                       className="flex-1"
                       name="startDate"
                       label="วันที่สร้าง"
                     />
                     <Select
+                      size="sm"
                       className="flex-1"
                       name="type"
                       label="เลือกประเภทเอกสาร"
@@ -130,14 +133,14 @@ export default function NotationCreatePage() {
                     </h1>
                   </div>
                   <div className="flex gap-4">
-                    <Select name="customer" label="เลือกลูกค้า">
+                    <Select name="customer" size="sm" label="เลือกลูกค้า">
                       {customer.map((item) => (
                         <SelectItem key={item.value} value={item.value}>
                           {item.label}
                         </SelectItem>
                       ))}
                     </Select>
-                    <Select name="address" label="เลือกที่อยู่บริษัท">
+                    <Select name="address" size="sm" label="เลือกที่อยู่บริษัท">
                       {address.map((item) => (
                         <SelectItem key={item.value} value={item.value}>
                           {item.label}
@@ -149,11 +152,11 @@ export default function NotationCreatePage() {
                     รายการ
                   </h1>
                   {items.map((_, index) => (
-                    <div key={index} className="flex items-center gap-2">
+                    <div key={index} className="flex items-center gap-4">
                       <Select
+                        size="sm"
                         name={`item_${index}`}
                         label="เลือกรายการ"
-                        size="sm"
                         className="flex-1"
                       >
                         {selectItem.map((item) => (
@@ -162,17 +165,15 @@ export default function NotationCreatePage() {
                           </SelectItem>
                         ))}
                       </Select>
-                      <Input
-                        type="number"
-                        placeholder="จำนวน"
-                        className="flex-1"
-                      />
-                      <a
-                        className="text-red-500 cursor-pointer"
-                        onClick={() => handleRemoveItem(index)}
-                      >
-                        ลบรายการ
-                      </a>
+                      <div className="flex-1 flex gap-2 items-center ">
+                        <Input size="lg" type="number" placeholder="จำนวน" />
+                        <a
+                          className="text-red-500 cursor-pointer"
+                          onClick={() => handleRemoveItem(index)}
+                        >
+                          ลบ
+                        </a>
+                      </div>
                     </div>
                   ))}
                   <Button
@@ -253,6 +254,7 @@ export default function NotationCreatePage() {
           </div>
         </div>
       }
+      backgroundColor={''}
     />
   );
 }
