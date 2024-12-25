@@ -2,37 +2,36 @@
 
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Button, Chip } from '@nextui-org/react';
 import NextTable from '@/components/common/nextTable';
 import Image from 'next/image';
-import {
-  Button,
-  Chip
-} from '@nextui-org/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { usersLoader } from '@/app/api/user';
 
 export default function IndexPage() {
-  const router = useRouter();
+  const [users, setUsers] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const handleRowClick = (row: any) => {
-    router.push(`user/${row.id}`); // Redirect to a dynamic route
-  };
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const result = await usersLoader();
+        setUsers(result);
+      } catch (err: any) {
+        setError(err.message || 'An error occurred');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  // Example data for the table
-  // const organizations = [
-  //   { id: 1, name: 'John Doe', slug: '1', role: 'Owner' },
-  //   { id: 2, name: 'Doe John', slug: '2', role: 'Manager' },
-  //   { id: 3, name: 'Don joh', slug: '3', role: 'Employee' },
-  // ];
+    fetchUsers();
+  }, []);
 
-  // const handleRowClick = (slug: string) => {
-  //   router.push(`user/${slug}`);
-  // };
-
-  // const handleNewPageClick = () => {
-  //   router.push('user/new');
-  // };
+  console.log(users);
+  console.log(error);
+  console.log(isLoading);
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -45,60 +44,33 @@ export default function IndexPage() {
                 title="ข้อมูลผู้ใช้"
                 buttons={[
                   <Link href={'user/new'} key={'create button'}>
-                    <Button className="bg-accent1 text-white" key={'create button'}>
+                    <Button
+                      className="bg-accent1 text-white"
+                      key={'create button'}
+                    >
                       เพิ่มข้อมูลผูัใช้
                     </Button>
                   </Link>,
                 ]}
               />
-              <div className='mt-4 mb-4'>
+              <div className="mt-4 mb-4">
                 <NextTable
                   columns={columns}
                   rows={data}
-                  rowClickHandler={handleRowClick}
+                  // rowClickHandler={handleRowClick}
                 />
               </div>
             </div>
           }
         />
-        {/* Table */}
-        {/* <div className="bg-white shadow rounded-md overflow-hidden">
-          <table className="min-w-full border-collapse">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
-                  ID
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
-                  Role
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
-                  Username
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {organizations.map((org) => (
-                <tr
-                  key={org.id}
-                  className="cursor-pointer hover:bg-gray-100"
-                  onClick={() => handleRowClick(org.slug)}
-                >
-                  <td className="px-6 py-4 text-gray-700">{org.id}</td>
-                  <td className="px-6 py-4 text-gray-700">{org.name}</td>
-                  <td className="px-6 py-4 text-gray-700">{org.role}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div> */}
       </div>
     </div>
   );
 }
 
 const columns: any = [
-  { title: 'รูปภาพ', 
+  {
+    title: 'รูปภาพ',
     dataIndex: 'image',
     render: () => {
       return (
@@ -110,20 +82,20 @@ const columns: any = [
           height={12}
         />
       );
-    }
+    },
   },
-  { title: 'ชื่อผู้ใช้', dataIndex: 'username' },
-  { title: 'อีเมล', dataIndex: 'gmail' },
+  { title: 'ชื่อผู้ใช้', dataIndex: 'createdBy' },
+  { title: 'อีเมล', dataIndex: 'email' },
   { title: 'ตำแหน่ง', dataIndex: 'position' },
   { title: 'เบอร์โทรศัพท์', dataIndex: 'phone' },
-  { 
-    title: 'สถานะ', 
+  {
+    title: 'สถานะ',
     dataIndex: 'status',
     render: () => (
       <Chip color="success" variant="bordered">
         พร้อมใช้งาน
       </Chip>
-    )
+    ),
   },
 ];
 

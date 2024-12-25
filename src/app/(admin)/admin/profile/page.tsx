@@ -13,10 +13,7 @@ import {
   DatePicker,
 } from '@nextui-org/react';
 import React from 'react';
-import { CardControl } from '@/components/setting/card-organization';
-
 export default function CreateUserPage() {
-
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the form from submitting to the URL
     const formData = new FormData(e.currentTarget);
@@ -39,33 +36,29 @@ export default function CreateUserPage() {
                 buttons={[
                   //submit form where out form
                   <Button
-                    className="bg-accent3 text-white"
-                    type="submit"
-                    form="notation"
-                    key={'cancel button'}
-                  >
-                    ยกเลิก
-                  </Button>,
-                  <Button
-                    className="bg-accent2 text-white"
+                    className="bg-accent1 text-white"
                     type="submit"
                     form="profile"
                     key={'create button'}
                   >
                     บันทึก
                   </Button>,
+                  <Button
+                    className="bg-accent2 text-white"
+                    type="submit"
+                    form="notation"
+                    key={'cancel button'}
+                  >
+                    ยกเลิก
+                  </Button>,
                 ]}
               />
               <div className="flex space-x-4 mt-6">
-                <div className='flex-1'>
+                <div className="flex-1">
                   <CardComponent
                     customCard
                     custom={
-                      <Form
-                        id="profile"
-                        onSubmit={onSubmit}
-                        method="post"
-                      >
+                      <Form id="profile" onSubmit={onSubmit} method="post">
                         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                           <div>
                             <div>
@@ -73,19 +66,19 @@ export default function CreateUserPage() {
                                 ข้อมูลผู้ใข้
                               </h1>
                             </div>
-                            <div className='font-bold text-headFon mt-10'>
-                              <p>รูปภาพองค์กร</p>
-                              <Image className='mt-3' src="/logo.png" alt='image organization' width={100} height={100}></Image>
+                            <div className="font-bold text-headFon mt-10">
+                              <p>รูปภาพผู้ใช้งาน</p>
+                              <Image
+                                className="mt-3"
+                                src="/logo.png"
+                                alt="image organization"
+                                width={100}
+                                height={100}
+                              ></Image>
                             </div>
                           </div>
                           <div className="flex gap-4 mt-6">
-                            <div>
-                              <CardControl
-                                title="เปิดใช้งาน"
-                                description="ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน"
-                                control="เปิดใช้งาน"
-                              />
-                            </div>
+                            <div></div>
                           </div>
 
                           <div className="flex gap-4 mt-6">
@@ -94,7 +87,7 @@ export default function CreateUserPage() {
                               name="prefix"
                               placeholder="เลือกคำนำหน้า"
                               label="คำนำหน้า"
-                              labelPlacement={"outside"}
+                              labelPlacement={'outside'}
                             >
                               {prefix.map((item: any) => (
                                 <SelectItem
@@ -135,13 +128,16 @@ export default function CreateUserPage() {
                               name="birthday"
                               label="วัน/เดือน/ปีเกิด"
                               labelPlacement="outside"
+                              disableAnimation
                             />
                           </div>
                           <div className="flex gap-4 mt-6">
                             <Input
                               className="flex-1"
                               label={
-                                <span className="text-headFont">เบอร์โทรศัพท์</span>
+                                <span className="text-headFont">
+                                  เบอร์โทรศัพท์
+                                </span>
                               }
                               labelPlacement="outside"
                               name="phone"
@@ -158,7 +154,7 @@ export default function CreateUserPage() {
           }
         />
       </div>
-    </div >
+    </div>
   );
 }
 

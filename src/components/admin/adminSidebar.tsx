@@ -119,10 +119,10 @@ export function AdminSideBar() {
         <div className="flex flex-col items-center py-6">
           {/* Logo */}
           <Image
-            src="/logo.png"
+            src="/logoRome.png"
             alt="Logo"
-            width={100}
-            height={100}
+            width={150}
+            height={200}
             className="mb-4"
           />
           <h1 className="text-xl font-bold text-primaryFont">Super Admin</h1>

@@ -12,11 +12,9 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  DropdownSection,
   Popover,
   PopoverTrigger,
   PopoverContent,
-  Button
 } from '@nextui-org/react';
 import CardComponent from '@/components/common/card';
 
@@ -74,7 +72,6 @@ export default function AdminLayout({
                       <CardComponent>
                         <h1>Hello</h1>
                       </CardComponent>
-                      <img src="/empty-state.svg" alt="ไม่มีการแจ้งเตือน" width="50" />
                     </div>
                   </div>
                 )}

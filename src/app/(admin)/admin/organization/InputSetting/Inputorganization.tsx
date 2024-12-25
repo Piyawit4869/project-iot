@@ -164,6 +164,7 @@ export const Inputorganization = () => {
             name="date"
             label="วันที่จดทะเบียน"
             labelPlacement={'outside'}
+            disableAnimation
           />
         </div>
         <div className="flex gap-4 mt-6">
