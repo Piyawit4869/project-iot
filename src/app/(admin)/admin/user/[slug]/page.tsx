@@ -19,18 +19,43 @@ import {
   ModalFooter,
   useDisclosure,
 } from '@nextui-org/react';
+import { singleUserLoader } from '@/app/api/singleuser';
 import React from 'react';
+import { useParams } from 'next/navigation';
 
 export default function UserSinglePage() {
-
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the form from submitting to the URL
     const formData = new FormData(e.currentTarget);
 
-    // Convert formData to an object
+    // Convert formData to an object]h
     const data = Object.fromEntries(formData.entries());
     console.log(data); // Log the form data for debugging
   };
+
+  const params = useParams<{ slug: string }>();
+  console.log(params);
+  const [usersSingle, setUsersSingle] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    if (!params?.slug) {
+      console.log('Waiting for params.id to be ready...');
+      return;
+    }
+    const fetchUserSingle = async () => {
+      try {
+        const userSingle = await singleUserLoader(params.slug);
+        setUsersSingle(userSingle);
+        console.log('User data:', userSingle);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchUserSingle();
+  }, [params?.slug]);
+
+  console.log(usersSingle);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -53,7 +78,8 @@ export default function UserSinglePage() {
                     key={'create button'}
                   >
                     ยืนยัน
-                  </Button>, <Button
+                  </Button>,
+                  <Button
                     className="bg-accent2 text-white"
                     type="submit"
                     form="user"
@@ -72,22 +98,24 @@ export default function UserSinglePage() {
                 ]}
               />
               <div className="flex space-x-4 mt-6">
-                <div className='flex-1'>
+                <div className="flex-1">
                   <CardComponent
                     customCard
                     custom={
-                      <Form
-                        id="user"
-                        onSubmit={onSubmit}
-                        method="post"
-                      >
+                      <Form id="user" onSubmit={onSubmit} method="post">
                         <h1 className="text-2xl font-bold text-headFont">
                           ข้อมูลผู้ใช้
                         </h1>
                         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                          <div className='font-bold text-headFon mt-10'>
+                          <div className="font-bold text-headFon mt-10">
                             <p>รูปภาพผู้ใช้งาน</p>
-                            <Image className='mt-3' src="/logo.png" alt='logo' width={100} height={100}></Image>
+                            <Image
+                              className="mt-3"
+                              src="/logo.png"
+                              alt="logo"
+                              width={100}
+                              height={100}
+                            ></Image>
                           </div>
                           <div className="flex gap-4 mt-6">
                             <div>
@@ -105,7 +133,7 @@ export default function UserSinglePage() {
                               name="position"
                               placeholder="เลือกตำแหน่ง"
                               label="ตำแหน่ง"
-                              labelPlacement={"outside"}
+                              labelPlacement={'outside'}
                             >
                               {position.map((item: any) => (
                                 <SelectItem
@@ -124,7 +152,7 @@ export default function UserSinglePage() {
                               name="prefix"
                               placeholder="เลือกคำนำหน้า"
                               label="คำนำหน้า"
-                              labelPlacement={"outside"}
+                              labelPlacement={'outside'}
                             >
                               {prefix.map((item: any) => (
                                 <SelectItem
@@ -145,7 +173,7 @@ export default function UserSinglePage() {
                               }
                               labelPlacement="outside"
                               name="name"
-                              placeholder="กรอกรชื่อ"
+                              placeholder="กรอกชื่อ"
                             />
                           </div>
                           <div className="flex gap-4 mt-6">
@@ -171,7 +199,9 @@ export default function UserSinglePage() {
                             <Input
                               className="flex-1"
                               label={
-                                <span className="text-headFont">เบอร์โทรศัพท์</span>
+                                <span className="text-headFont">
+                                  เบอร์โทรศัพท์
+                                </span>
                               }
                               labelPlacement="outside"
                               name="phone"
@@ -185,12 +215,16 @@ export default function UserSinglePage() {
                               <ModalContent>
                                 {(onClose) => (
                                   <>
-                                    <ModalHeader className="flex gap-1">เปลี่ยนรหัสผ่าน</ModalHeader>
+                                    <ModalHeader className="flex gap-1">
+                                      เปลี่ยนรหัสผ่าน
+                                    </ModalHeader>
                                     <ModalBody>
                                       <Input
                                         className=""
                                         label={
-                                          <span className="text-headFont">รหัสผ่าน</span>
+                                          <span className="text-headFont">
+                                            รหัสผ่าน
+                                          </span>
                                         }
                                         labelPlacement="outside"
                                         name="password"
@@ -199,7 +233,9 @@ export default function UserSinglePage() {
                                       <Input
                                         className=""
                                         label={
-                                          <span className="text-headFont">รหัสผ่านใหม่</span>
+                                          <span className="text-headFont">
+                                            รหัสผ่านใหม่
+                                          </span>
                                         }
                                         labelPlacement="outside"
                                         name="newpassword"
@@ -207,10 +243,20 @@ export default function UserSinglePage() {
                                       />
                                     </ModalBody>
                                     <ModalFooter>
-                                      <Button className='bg-accent1 text-white' color="success" variant="light" onPress={onClose}>
+                                      <Button
+                                        className="bg-accent1 text-white"
+                                        color="success"
+                                        variant="light"
+                                        onPress={onClose}
+                                      >
                                         ยืนยัน
                                       </Button>
-                                      <Button className='bg-accent2 text-white' color="danger" variant="light" onPress={onClose}>
+                                      <Button
+                                        className="bg-accent2 text-white"
+                                        color="danger"
+                                        variant="light"
+                                        onPress={onClose}
+                                      >
                                         ยกเลิก
                                       </Button>
                                     </ModalFooter>
@@ -229,7 +275,7 @@ export default function UserSinglePage() {
           }
         />
       </div>
-    </div >
+    </div>
   );
 }
 const position = [
