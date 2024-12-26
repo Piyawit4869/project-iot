@@ -58,18 +58,18 @@ export function AdminSideBar() {
               icon: <Icon.ScheduleOutlined />,
             },
             {
-              name: 'การเข้าออกงาน',
-              path: '/admin/activity/attendance/action',
+              name: 'การตั้งค่า',
+              path: '/admin/activity/config_attendance',
+              icon: <Icon.ScheduleOutlined />,
+            },
+            {
+              name: 'ไวท์ลิสต์',
+              path: '/admin/activity/whitelist',
               icon: <Icon.ScheduleOutlined />,
             },
             {
               name: 'การลางาน',
               path: '/admin/activity/approval',
-              icon: <Icon.ScheduleOutlined />,
-            },
-            {
-              name: 'การนัดหมาย',
-              path: '/admin/activity/appointment',
               icon: <Icon.ScheduleOutlined />,
             },
           ],
@@ -113,7 +113,7 @@ export function AdminSideBar() {
   };
 
   return (
-    <div className="flex w-[300px]">
+    <div className="flex w-[250px]">
       {/* Sidebar */}
       <aside className="w-64 bg-primary shadow-md">
         <div className="flex flex-col items-center py-6">
@@ -125,7 +125,7 @@ export function AdminSideBar() {
             height={200}
             className="mb-4"
           />
-          <h1 className="text-xl font-bold text-primaryFont">Super Admin</h1>
+          <h1 className="text-xl font-bold text-primaryFont">Admin</h1>
         </div>
 
         {/* Sidebar Menu with Scrolling */}
