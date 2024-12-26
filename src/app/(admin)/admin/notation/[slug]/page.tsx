@@ -14,27 +14,54 @@ import {
   Textarea,
 } from '@nextui-org/react';
 import React from 'react';
+import get from '@/pages/api/notations/get';
+import { useParams } from 'next/navigation';
 
 export default function NotationSinglePage() {
-  const [items, setItems] = React.useState([{ description: '', amount: '' }]);
-  const [zoomLevel, setZoomLevel] = React.useState(100); // Default zoom level (100%)
+  // const [items, setItems] = React.useState([{ description: '', amount: '' }]);
+  // const [zoomLevel, setZoomLevel] = React.useState(100); // Default zoom level (100%)
+  const [data, setData] = React.useState<{ data: any }>();
+  const params = useParams<{ slug?: string }>();
 
-  const handleZoomIn = () => {
-    setZoomLevel((prevZoom) => Math.min(prevZoom + 10, 200)); // Max zoom 200%
-  };
+  React.useEffect(() => {
+    if (!params || !params.slug) {
+      console.error('No slug provided in the URL params.');
+      return;
+    }
 
-  const handleZoomOut = () => {
-    setZoomLevel((prevZoom) => Math.max(prevZoom - 10, 50)); // Min zoom 50%
-  };
+    const fetchData = async () => {
+      const data = await get(params.slug as string);
 
-  const handleAddItem = () => {
-    setItems([...items, { description: '', amount: '' }]);
-  };
+      setData(data);
+    };
 
-  const handleRemoveItem = (index: number) => {
-    const updatedItems = items.filter((_, i) => i !== index);
-    setItems(updatedItems);
-  };
+    fetchData();
+  }, [params]);
+
+  console.log({ data });
+
+  // const data = await get({
+  //   id: '',
+  // });
+
+  // console.log({ data });
+
+  // const handleZoomIn = () => {
+  //   setZoomLevel((prevZoom) => Math.min(prevZoom + 10, 200)); // Max zoom 200%
+  // };
+
+  // const handleZoomOut = () => {
+  //   setZoomLevel((prevZoom) => Math.max(prevZoom - 10, 50)); // Min zoom 50%
+  // };
+
+  // const handleAddItem = () => {
+  //   setItems([...items, { description: '', amount: '' }]);
+  // };
+
+  // const handleRemoveItem = (index: number) => {
+  //   const updatedItems = items.filter((_, i) => i !== index);
+  //   setItems(updatedItems);
+  // };
 
   // const handleItemChange = (index: number, value: string) => {
   //   const updatedItems = [...items];
@@ -56,17 +83,21 @@ export default function NotationSinglePage() {
       child={
         <div>
           <TopSection
-            title="แก้ไขเอกสาร"
+            title={data?.data.docNo}
             backpath={'/admin/notation'}
             buttons={[
-              <Button className="bg-accent1 text-white" key={'approve button'}>
-                อนุมัติ
-              </Button>,
-              <Button className="bg-accent2 text-white" key={'reject button'}>
-                ปฎิเสษ
+              <Button className=" text-white" key={'cancel button'}>
+                ยกเลิก
               </Button>,
               <Button className="bg-accent3 text-white" key={'edit button'}>
                 แก้ไข
+              </Button>,
+
+              <Button className="bg-accent2 text-white" key={'reject button'}>
+                ปฎิเสษ
+              </Button>,
+              <Button className="bg-accent1 text-white" key={'approve button'}>
+                อนุมัติ
               </Button>,
             ]}
           />
@@ -88,7 +119,11 @@ export default function NotationSinglePage() {
                   <div className="flex gap-4">
                     <div className="flex-1 flex items-center gap-4">
                       <span className="text-headFont">แสดงผล</span>
-                      <Switch defaultSelected name="active" />
+                      <Switch
+                        defaultSelected
+                        name="active"
+                        isSelected={data?.data?.active ?? false}
+                      />
                     </div>
                     <Input
                       className="flex-1"
@@ -96,6 +131,7 @@ export default function NotationSinglePage() {
                       labelPlacement="outside"
                       name="refNo"
                       placeholder="กรอกหมายเลขอ้างอิง"
+                      defaultValue={data?.data?.refNo ?? ''}
                     />
                   </div>
                   <div className="flex gap-4">
@@ -108,6 +144,7 @@ export default function NotationSinglePage() {
                       className="flex-1"
                       name="type"
                       label="เลือกประเภทเอกสาร"
+                      value={data?.data.type ?? ''}
                     >
                       {types.map((item) => (
                         <SelectItem key={item.value} value={item.value}>
@@ -121,6 +158,7 @@ export default function NotationSinglePage() {
                     labelPlacement="outside"
                     name="note"
                     placeholder=""
+                    value={data?.data?.note ?? ''}
                   />
                   <div className="flex gap-4 mt-6">
                     <h1 className="text-2xl font-bold text-headFont flex-1">
@@ -146,7 +184,7 @@ export default function NotationSinglePage() {
                       ))}
                     </Select>
                   </div>
-                  <h1 className="text-2xl font-bold text-headFont mt-6">
+                  {/* <h1 className="text-2xl font-bold text-headFont mt-6">
                     รายการ
                   </h1>
                   {items.map((_, index) => (
@@ -183,7 +221,7 @@ export default function NotationSinglePage() {
                   >
                     <Icon.PlusSquareOutlined className="text-xl" />
                     เพิ่มรายการ
-                  </Button>
+                  </Button> */}
                 </Form>
               </div>
 
@@ -228,21 +266,22 @@ export default function NotationSinglePage() {
                       <Button
                         className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
                         aria-label="Zoom Out"
-                        onClick={handleZoomOut}
+                        // onClick={handleZoomOut}
                       >
                         <Icon.MinusOutlined className="text-lg text-gray-700" />
                       </Button>
 
                       {/* Zoom Level Display */}
                       <span className="text-sm font-medium text-gray-700">
-                        {zoomLevel}%
+                        {/* {zoomLevel}% */}
+                        100 %
                       </span>
 
                       {/* Zoom In Button */}
                       <Button
                         className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
                         aria-label="Zoom In"
-                        onClick={handleZoomIn}
+                        // onClick={handleZoomIn}
                       >
                         <Icon.PlusOutlined className="text-lg text-gray-700" />
                       </Button>
@@ -301,9 +340,9 @@ const customer = [
   { label: 'ลูกค้าคนที่ 4', value: '4' },
 ];
 
-const selectItem = [
-  { label: 'รายการที่ 1', value: '1' },
-  { label: 'รายการที่ 2', value: '2' },
-  { label: 'รายการที่ 3', value: '3' },
-  { label: 'รายการที่ 4', value: '4' },
-];
+// const selectItem = [
+//   { label: 'รายการที่ 1', value: '1' },
+//   { label: 'รายการที่ 2', value: '2' },
+//   { label: 'รายการที่ 3', value: '3' },
+//   { label: 'รายการที่ 4', value: '4' },
+// ];

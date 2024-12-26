@@ -36,7 +36,7 @@ export function TopSection({ title, subtitle, buttons, backpath }: any) {
 
           {/* Buttons */}
           {buttons ? (
-            <div className="flex space-x-2" key={'buttons'}>
+            <div className="flex space-x-2" key={'buttonTitle'}>
               {buttons.map((button: ReactNode) => button)}
             </div>
           ) : (

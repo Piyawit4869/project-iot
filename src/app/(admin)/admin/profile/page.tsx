@@ -3,22 +3,17 @@
 import Scaffold from '@/components/common/scaffold';
 import CardComponent from '@/components/common/card';
 import { TopSection } from '@/components/common/topSection';
+import Image from 'next/image';
 import {
   Button,
   Form,
-  Card,
-  CardHeader,
-  CardBody,
-  Switch,
   Select,
   SelectItem,
   Input,
   DatePicker,
 } from '@nextui-org/react';
 import React from 'react';
-
 export default function CreateUserPage() {
-
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the form from submitting to the URL
     const formData = new FormData(e.currentTarget);
@@ -41,57 +36,49 @@ export default function CreateUserPage() {
                 buttons={[
                   //submit form where out form
                   <Button
-                    className="bg-accent3 text-white"
+                    className="bg-accent1 text-white"
+                    type="submit"
+                    form="profile"
+                    key={'create button'}
+                  >
+                    บันทึก
+                  </Button>,
+                  <Button
+                    className="bg-accent2 text-white"
                     type="submit"
                     form="notation"
                     key={'cancel button'}
                   >
                     ยกเลิก
                   </Button>,
-                  <Button
-                    className="bg-accent2 text-white"
-                    type="submit"
-                    form="notation"
-                    key={'create button'}
-                  >
-                    บันทึก
-                  </Button>,
                 ]}
               />
               <div className="flex space-x-4 mt-6">
-                <div className='flex-1'>
+                <div className="flex-1">
                   <CardComponent
                     customCard
                     custom={
-                      <Form
-                        id="profile"
-                        onSubmit={onSubmit}
-                        method="post"
-                      >
+                      <Form id="profile" onSubmit={onSubmit} method="post">
                         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                          <div >
-                            <h1 className="text-2xl font-bold text-headFont">
-                              ข้อมูลผู้ใข้
-                            </h1>
-                            <div className='font-bold text-headFon mt-10'>
-                              <p>รูปภาพองค์กร</p>
+                          <div>
+                            <div>
+                              <h1 className="text-2xl font-bold text-headFont">
+                                ข้อมูลผู้ใข้
+                              </h1>
+                            </div>
+                            <div className="font-bold text-headFon mt-10">
+                              <p>รูปภาพผู้ใช้งาน</p>
+                              <Image
+                                className="mt-3"
+                                src="/logo.png"
+                                alt="image organization"
+                                width={100}
+                                height={100}
+                              ></Image>
                             </div>
                           </div>
                           <div className="flex gap-4 mt-6">
-                            <div>
-                              <Card className="py-4">
-                                <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-                                  <h4 className="font-bold text-large">เปิดใช้งาน</h4>
-                                </CardHeader>
-                                <CardBody className=" overflow-visible py-2">
-                                  <p>ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน</p>
-                                  <br />
-                                  <p>เปิดใช้งาน</p>
-                                  <Switch className='mt-3' defaultSelected color="danger">
-                                  </Switch>
-                                </CardBody>
-                              </Card>
-                            </div>
+                            <div></div>
                           </div>
 
                           <div className="flex gap-4 mt-6">
@@ -100,7 +87,7 @@ export default function CreateUserPage() {
                               name="prefix"
                               placeholder="เลือกคำนำหน้า"
                               label="คำนำหน้า"
-                              labelPlacement={"outside"}
+                              labelPlacement={'outside'}
                             >
                               {prefix.map((item: any) => (
                                 <SelectItem
@@ -141,13 +128,16 @@ export default function CreateUserPage() {
                               name="birthday"
                               label="วัน/เดือน/ปีเกิด"
                               labelPlacement="outside"
+                              disableAnimation
                             />
                           </div>
                           <div className="flex gap-4 mt-6">
                             <Input
                               className="flex-1"
                               label={
-                                <span className="text-headFont">เบอร์โทรศัพท์</span>
+                                <span className="text-headFont">
+                                  เบอร์โทรศัพท์
+                                </span>
                               }
                               labelPlacement="outside"
                               name="phone"
@@ -164,7 +154,7 @@ export default function CreateUserPage() {
           }
         />
       </div>
-    </div >
+    </div>
   );
 }
 

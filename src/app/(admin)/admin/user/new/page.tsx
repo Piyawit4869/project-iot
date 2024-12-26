@@ -3,13 +3,10 @@
 import Scaffold from '@/components/common/scaffold';
 import CardComponent from '@/components/common/card';
 import { TopSection } from '@/components/common/topSection';
+import { CardControl } from '@/components/setting/card-organization';
 import {
   Button,
   Form,
-  Card,
-  CardHeader,
-  CardBody,
-  Switch,
   Select,
   SelectItem,
   Input,
@@ -34,7 +31,16 @@ export default function CreateUserPage() {
     console.log(data); // Log the form data for debugging
   };
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  // const resetForm = (formId: string): void => {
+  //   const form = document.getElementById(formId) as HTMLFormElement | null;
+  //   if (form) {
+  //     form.reset();
+  //     console.log(`Form with ID "${formId}" has been cleared.`);
+  //   }
+  // };
+
+  const { isOpen: isCreate, onOpen: openCreate, onOpenChange: changeCreate } = useDisclosure();
+  const { isOpen: isDelete, onOpen: openDelete, onOpenChange: changeDelete } = useDisclosure();
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -49,39 +55,66 @@ export default function CreateUserPage() {
                 buttons={[
                   //submit form where out form
                   <Button
-                    className="bg-accent3 text-white"
+                    className="bg-accent1 text-white"
                     type="submit"
-                    form="notation"
-                    key={'cancel button'}
-                    onPress={onOpen}
+                    form="user"
+                    key={'create button'}
+                    onPress={openCreate}
                   >
-                    ยกเลิก
+                    บันทึก
                   </Button>,
                   <Button
                     className="bg-accent2 text-white"
                     type="submit"
-                    form="notation"
-                    key={'create button'}
-                    onPress={onOpen}
+                    form="user"
+                    key={'cancel button'}
+                    onPress={openDelete}
                   >
-                    บันทึก
+                    ยกเลิก
                   </Button>,
+                  
                 ]}
               />
 
-              <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+              <Modal isOpen={isCreate} onOpenChange={changeCreate} key={'create button'}>
                 <ModalContent>
                   {(onClose) => (
                     <>
-                      <ModalHeader className="flex flex-col gap-1">คุณต้องการสร้างผู้ใช้งานใช่หรือไม่</ModalHeader>
+                      <ModalHeader className="flex flex-col gap-1">คุณต้องการสร้างผู้ใช้งาน ใช่หรือไม่</ModalHeader>
                       <ModalBody>
                         <p>ข้อมูลที่คุณกรอกจะถูกบันทึก</p>
                       </ModalBody>
                       <ModalFooter>
-                        <Button color="danger" variant="light" onPress={onClose}>
+                        <Button className='bg-accent2 text-white' variant="light" onPress={onClose}>
                           ยกเลิก
                         </Button>
-                        <Button color="success" variant="light" onPress={onClose}>
+                        <Button className='bg-accent1 text-white' variant="light" type="submit" key={'create button'} form="user" onPress={onClose}>
+                          ยืนยัน
+                        </Button>
+                      </ModalFooter>
+                    </>
+                  )}
+                </ModalContent>
+              </Modal>
+
+              <Modal isOpen={isDelete} onOpenChange={changeDelete} key={'cancel button'}>
+                <ModalContent>
+                  {(onClose) => (
+                    <>
+                      <ModalHeader className="flex flex-col gap-1">คุณต้องการเคลียร์ผู้ใช้งาน ใช่หรือไม่</ModalHeader>
+                      <ModalBody>
+                        <p>ข้อมูลที่คุณกรอกจะถูกเคลียร์</p>
+                      </ModalBody>
+                      <ModalFooter>
+                        <Button className='bg-accent2 text-white' variant="light" onPress={onClose}>
+                          ยกเลิก
+                        </Button>
+                        <Button className='bg-accent1 text-white' variant="light"
+                        onPress={() => {
+                          // resetForm("user");
+                          onClose();
+                        }}
+                        >
                           ยืนยัน
                         </Button>
                       </ModalFooter>
@@ -106,23 +139,16 @@ export default function CreateUserPage() {
                               ข้อมูลผู้ใข้
                             </h1>
                             <div className='font-bold text-headFon mt-10'>
-                              <p>รูปภาพองค์กร</p>
+                              <p>รูปภาพผู้ใช้</p>
                             </div>
                           </div>
                           <div className="flex gap-4 mt-6">
                             <div>
-                              <Card className="py-4">
-                                <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-                                  <h4 className="font-bold text-large">เปิดใช้งาน</h4>
-                                </CardHeader>
-                                <CardBody className=" overflow-visible py-2">
-                                  <p>ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน</p>
-                                  <br />
-                                  <p>เปิดใช้งาน</p>
-                                  <Switch className='mt-3' defaultSelected color="danger">
-                                  </Switch>
-                                </CardBody>
-                              </Card>
+                              <CardControl
+                                title="เปิดใช้งาน"
+                                description="ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน"
+                                control="เปิดใช้งาน"
+                              />
                             </div>
                           </div>
 

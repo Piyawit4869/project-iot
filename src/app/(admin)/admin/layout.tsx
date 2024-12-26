@@ -3,8 +3,7 @@
 import { AdminSideBar } from '@/components/admin/adminSidebar';
 import Image from 'next/image';
 import Logo from '../../../../public/logo.png';
-import React from 'react';
-import Link from 'next/link';
+import React, { Suspense } from 'react';
 import { Breadcrumb } from '@/components/common/breadcrumb';
 import * as Icon from '@ant-design/icons';
 import {
@@ -13,7 +12,11 @@ import {
   DropdownMenu,
   DropdownItem,
   User,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
 } from '@nextui-org/react';
+import CardComponent from '@/components/common/card';
 
 export default function AdminLayout({
   children,
@@ -54,32 +57,37 @@ export default function AdminLayout({
         <header className="bg-white shadow p-4 flex items-center justify-between">
           <Breadcrumb />
           <div className="flex items-center space-x-4">
-            <Dropdown>
-              <div>
-                <DropdownTrigger>
-                  <Link href={'#'}>
-                    <Icon.BellFilled className="text-headFont" />
-                  </Link>
-                </DropdownTrigger>
-              </div>
-              <div>
-                <DropdownMenu aria-label="Dynamic Actions" items={items}>
-                  {(item) => (
-                    <DropdownItem
-                      key={item.key}
-                      className={
-                        item.key === 'delete' ? 'text-danger' : 'text-headFont'
-                      }
-                      color={item.key === 'delete' ? 'danger' : 'default'}
+            <Popover showArrow offset={10} placement="bottom">
+              <PopoverTrigger>
+                <Icon.BellFilled className="text-headFont" />
+              </PopoverTrigger>
+              <PopoverContent className="w-[240px]">
+                {(titleProps) => (
+                  <div className="px-1 py-2 w-full">
+                    <p
+                      className="text-small font-bold text-foreground"
+                      {...titleProps}
                     >
-                      {item.label}
-                    </DropdownItem>
-                  )}
-                </DropdownMenu>
-              </div>
-            </Dropdown>
+                      การแจ้งเตือน
+                    </p>
+                    <div className="mt-2 flex flex-col gap-2 w-full">
+                      <CardComponent>
+                        <h1>Hello</h1>
+                      </CardComponent>
+                    </div>
+                  </div>
+                )}
+              </PopoverContent>
+            </Popover>
 
-            <Dropdown>
+            <Dropdown
+              showArrow
+              classNames={{
+                base: 'before:bg-default-200', // change arrow background
+                content:
+                  'py-1 px-1 border border-default-200 bg-gradient-to-br from-white to-default-200 dark:from-default-50 dark:to-black',
+              }}
+            >
               <div className="relative">
                 <DropdownTrigger>
                   <button className="flex items-center space-x-2">
@@ -96,8 +104,6 @@ export default function AdminLayout({
                 {(item) => (
                   <DropdownItem
                     key={item.key}
-                    href={item.path}
-                    as="a"
                     className={
                       item.key === 'delete' ? 'text-danger' : 'text-headFont'
                     }
@@ -128,7 +134,23 @@ export default function AdminLayout({
 
         {/* Page Content */}
         <main className="bg-gray-100 flex-1 w-full p-8 overflow-y-auto">
-          {children}
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center min-h-screen">
+                <div className="relative flex flex-col items-center space-y-4">
+                  {/* Spinner */}
+                  <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+
+                  {/* Loading Text */}
+                  <p className="text-gray-600 text-lg font-semibold animate-pulse">
+                    Loading, please wait...
+                  </p>
+                </div>
+              </div>
+            }
+          >
+            {children}
+          </Suspense>
         </main>
       </div>
     </div>

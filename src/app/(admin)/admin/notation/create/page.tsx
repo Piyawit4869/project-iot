@@ -51,22 +51,24 @@ export default function NotationCreatePage() {
             title="สร้างเอกสาร"
             backpath={'/admin/notation'}
             buttons={[
-              <Button
-                className="bg-accent3 text-white"
-                type="submit"
-                form="notation"
-                key={'draft button'}
-              >
-                แบบร่าง
-              </Button>,
-              <Button
-                className="bg-accent1 text-white"
-                type="submit"
-                form="notation"
-                key={'create button'}
-              >
-                สร้าง
-              </Button>,
+              <a href={'/admin/notation'} key={'draft button'}>
+                <Button
+                  className="bg-accent3 text-white"
+                  type="submit"
+                  // form="notation"
+                >
+                  แบบร่าง
+                </Button>
+              </a>,
+              <a href={'/admin/notation'} key={'create button'}>
+                <Button
+                  className="bg-accent1 text-white"
+                  type="submit"
+                  // form="notation"
+                >
+                  สร้าง
+                </Button>
+              </a>,
             ]}
           />
           <div className="bg-gray-100  flex justify-center items-center pt-6">

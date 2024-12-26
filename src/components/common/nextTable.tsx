@@ -118,7 +118,7 @@ export default function NextTable({
         <TableBody>
           {currentRows.map((row: any, index: any) => (
             <TableRow
-              className="cursor-pointer text-headFont hover:bg-accent1 hover:opacity-50 hover:text-white"
+              className="cursor-pointer text-headFont hover:bg-gray-200"
               key={index}
               onClick={() => rowClickHandler && rowClickHandler(row)}
             >
