@@ -1,4 +1,4 @@
-import { getSession } from '@/lib';
+import { getSession } from '@/libs/lib';
 import Link from 'next/link';
 
 export default async function Homepage() {
