@@ -6,32 +6,41 @@ import Link from 'next/link';
 import { Button, Chip } from '@nextui-org/react';
 import NextTable from '@/components/common/nextTable';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { usersLoader } from '@/app/api/user';
+import { useRouter } from 'next/navigation';
 
 export default function IndexPage() {
-  const [users, setUsers] = useState<any[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [users, setUsers] = React.useState<any[]>([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchUsers = async () => {
       try {
         const result = await usersLoader();
-        setUsers(result);
-      } catch (err: any) {
-        setError(err.message || 'An error occurred');
-      } finally {
-        setIsLoading(false);
+        setUsers(result.items);
+        console.log(result);
+      } catch (error: any) {
+        console.error('Error fetching notations:', error);
       }
     };
 
     fetchUsers();
   }, []);
 
-  console.log(users);
-  console.log(error);
-  console.log(isLoading);
+  const row = users.map((user) => ({
+    id: user.id,
+    image: user.profile.photoUrl,
+    username: user.profile.firstName,
+    email: user.email,
+    position: user.role.status,
+    phone: user.profile.phone,
+    status: user.role.status,
+  }));
+
+  const router = useRouter();
+  const handleRowClick = (row: any) => {
+    router.push(`user/${row.id}`); // Redirect to a dynamic route
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -56,8 +65,8 @@ export default function IndexPage() {
               <div className="mt-4 mb-4">
                 <NextTable
                   columns={columns}
-                  rows={data}
-                  // rowClickHandler={handleRowClick}
+                  rows={row}
+                  rowClickHandler={handleRowClick}
                 />
               </div>
             </div>
@@ -84,7 +93,7 @@ const columns: any = [
       );
     },
   },
-  { title: 'ชื่อผู้ใช้', dataIndex: 'createdBy' },
+  { title: 'ชื่อผู้ใช้', dataIndex: 'username' },
   { title: 'อีเมล', dataIndex: 'email' },
   { title: 'ตำแหน่ง', dataIndex: 'position' },
   { title: 'เบอร์โทรศัพท์', dataIndex: 'phone' },
@@ -96,35 +105,5 @@ const columns: any = [
         พร้อมใช้งาน
       </Chip>
     ),
-  },
-];
-
-const data = [
-  {
-    id: 1,
-    image: '',
-    username: 'chief phuwis',
-    gmail: 'phuwisw@threechief.com',
-    position: 'employee',
-    phone: '0804237373',
-    status: 'พร้อมใช้งาน',
-  },
-  {
-    id: 2,
-    image: '',
-    username: 'K.123',
-    gmail: 'phoom1@utotech.org',
-    position: 'employee',
-    phone: '0804237373',
-    status: 'พร้อมใช้งาน',
-  },
-  {
-    id: 3,
-    image: '',
-    username: 'TRTxQc',
-    gmail: 'organization@threechief.com',
-    position: 'owner',
-    phone: '0804237373',
-    status: 'พร้อมใช้งาน',
   },
 ];
