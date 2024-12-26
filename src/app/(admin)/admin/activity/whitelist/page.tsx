@@ -20,7 +20,7 @@ export default function WhitelistPage() {
         <div>
           <TopSection title={'ไวท์ลิสต์'} />
           {/* Filter Bar */}
-          <div className="bg-white shadow rounded-lg  mb-4 mt-4">
+          <div className="bg-white shadow rounded-2xl  mb-4 mt-4">
             <div className="flex flex-wrap gap-4">
               {/* Search Bar */}
               <Input
@@ -28,7 +28,7 @@ export default function WhitelistPage() {
                 labelPlacement="outside"
                 size="lg"
                 name="name"
-                placeholder="ค้นหาชื่อสถานที่"
+                placeholder="ค้นหาชื่อ"
               />
 
               {/* status Filter */}

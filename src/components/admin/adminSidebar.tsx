@@ -90,6 +90,7 @@ export function AdminSideBar() {
         {
           name: 'ผู้ใช้',
           path: '/admin/user',
+          relatedPaths: ['/admin/user/new'],
           icon: <Icon.UserOutlined />,
         },
         {
@@ -134,10 +135,11 @@ export function AdminSideBar() {
             <React.Fragment key={index}>
               {/* Main Menu Item */}
               <Link
-                key={index}
                 href={item.path}
                 className={`block px-4 py-2 rounded-md text-lg font-ibm cursor-pointer ${
-                  pathname === item.path
+                  pathname === item.path ||
+                  (Array.isArray(item.relatedPaths) &&
+                    item.relatedPaths.some((p : any) => pathname.startsWith(p)))
                     ? 'bg-primaryFont text-secondaryFont'
                     : 'text-primaryFont hover:bg-primaryFont hover:text-secondaryFont'
                 }`}
@@ -169,7 +171,8 @@ export function AdminSideBar() {
                       key={subIndex}
                       href={subItem.path}
                       className={`block px-4 py-2 rounded-md text-lg font-ibm ${
-                        pathname === subItem.path
+                        pathname === subItem.path ||
+                        pathname.startsWith(subItem.path)
                           ? 'bg-primaryFont text-secondaryFont'
                           : 'text-primaryFont hover:bg-primaryFont hover:text-secondaryFont'
                       }`}

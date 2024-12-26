@@ -94,7 +94,7 @@ export default function NotationSinglePage() {
               </Button>,
 
               <Button className="bg-accent2 text-white" key={'reject button'}>
-                ปฎิเสษ
+                ปฏิเสธ
               </Button>,
               <Button className="bg-accent1 text-white" key={'approve button'}>
                 อนุมัติ
