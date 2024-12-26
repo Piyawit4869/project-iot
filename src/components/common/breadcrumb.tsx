@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import * as Icon from '@ant-design/icons';
 
 export const Breadcrumb = () => {
-  const pathname = usePathname();
+  const pathname = usePathname() as string;
 
   // Split the pathname into segments
   const pathSegments = pathname.split('/').filter((segment) => segment);

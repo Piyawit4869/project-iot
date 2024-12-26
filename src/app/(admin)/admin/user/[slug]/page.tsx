@@ -55,6 +55,8 @@ export default function UserSinglePage() {
     fetchUserSingle();
   }, [params?.slug]);
 
+  console.log(usersSingle);
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
