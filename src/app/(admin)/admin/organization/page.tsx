@@ -243,7 +243,7 @@ export default function OraganizationPage() {
                                         <div className="flex  gap-4 mt-6">
                                           <Button
                                             type="button"
-                                            className="bg-secondary text-white w-full"
+                                            className="bg-accent3 text-white w-full"
                                             onClick={handleAddItem}
                                           >
                                             <Icon.PlusSquareOutlined className="text-xl" />
@@ -883,7 +883,7 @@ const columnsSet: any = [
 const dataSet = [
   {
     id: 1,
-    setting: 'การตั้งค่าที่ 3',
+    setting: 'การตั้งค่าที่ 1',
     language: 'th',
     theme: 'light',
     fontsize: 'normal',

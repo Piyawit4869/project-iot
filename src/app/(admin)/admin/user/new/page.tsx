@@ -39,7 +39,8 @@ export default function CreateUserPage() {
   //   }
   // };
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen: isCreate, onOpen: openCreate, onOpenChange: changeCreate } = useDisclosure();
+  const { isOpen: isDelete, onOpen: openDelete, onOpenChange: changeDelete } = useDisclosure();
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -54,27 +55,28 @@ export default function CreateUserPage() {
                 buttons={[
                   //submit form where out form
                   <Button
-                    className="bg-accent3 text-white"
+                    className="bg-accent1 text-white"
                     type="submit"
                     form="user"
-                    key={'cancel button'}
-                    onPress={onOpen}
+                    key={'create button'}
+                    onPress={openCreate}
                   >
-                    ยกเลิก
+                    บันทึก
                   </Button>,
                   <Button
                     className="bg-accent2 text-white"
                     type="submit"
                     form="user"
-                    key={'create button'}
-                    onPress={onOpen}
+                    key={'cancel button'}
+                    onPress={openDelete}
                   >
-                    บันทึก
+                    ยกเลิก
                   </Button>,
+                  
                 ]}
               />
 
-              <Modal isOpen={isOpen} onOpenChange={onOpenChange} key={'create button'}>
+              <Modal isOpen={isCreate} onOpenChange={changeCreate} key={'create button'}>
                 <ModalContent>
                   {(onClose) => (
                     <>
@@ -83,10 +85,10 @@ export default function CreateUserPage() {
                         <p>ข้อมูลที่คุณกรอกจะถูกบันทึก</p>
                       </ModalBody>
                       <ModalFooter>
-                        <Button color="danger" variant="light" onPress={onClose}>
+                        <Button className='bg-accent2 text-white' variant="light" onPress={onClose}>
                           ยกเลิก
                         </Button>
-                        <Button color="success" variant="light" type="submit" key={'create button'} form="user" onPress={onClose}>
+                        <Button className='bg-accent1 text-white' variant="light" type="submit" key={'create button'} form="user" onPress={onClose}>
                           ยืนยัน
                         </Button>
                       </ModalFooter>
@@ -94,7 +96,8 @@ export default function CreateUserPage() {
                   )}
                 </ModalContent>
               </Modal>
-              {/* <Modal isOpen={isOpen} onOpenChange={onOpenChange} key={'cancel button'}>
+
+              <Modal isOpen={isDelete} onOpenChange={changeDelete} key={'cancel button'}>
                 <ModalContent>
                   {(onClose) => (
                     <>
@@ -103,10 +106,10 @@ export default function CreateUserPage() {
                         <p>ข้อมูลที่คุณกรอกจะถูกเคลียร์</p>
                       </ModalBody>
                       <ModalFooter>
-                        <Button color="danger" variant="light" onPress={onClose}>
+                        <Button className='bg-accent2 text-white' variant="light" onPress={onClose}>
                           ยกเลิก
                         </Button>
-                        <Button color="success" variant="light"
+                        <Button className='bg-accent1 text-white' variant="light"
                         onPress={() => {
                           // resetForm("user");
                           onClose();
@@ -118,7 +121,7 @@ export default function CreateUserPage() {
                     </>
                   )}
                 </ModalContent>
-              </Modal> */}
+              </Modal>
 
               <div className="flex space-x-4 mt-6">
                 <div className='flex-1'>
@@ -136,7 +139,7 @@ export default function CreateUserPage() {
                               ข้อมูลผู้ใข้
                             </h1>
                             <div className='font-bold text-headFon mt-10'>
-                              <p>รูปภาพองค์กร</p>
+                              <p>รูปภาพผู้ใช้</p>
                             </div>
                           </div>
                           <div className="flex gap-4 mt-6">

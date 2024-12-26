@@ -118,7 +118,7 @@ export const  InputSystem = () => {
               className="text-red-500 cursor-pointer mt-6"
               onClick={() => handleRemoveItem(index)}
             >
-              ลบรายการ
+              ลบวันทำงาน
             </a>
           </div>
         ))}

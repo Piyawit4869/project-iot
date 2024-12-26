@@ -86,7 +86,7 @@ export default function UserSinglePage() {
                         </h1>
                         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                           <div className='font-bold text-headFon mt-10'>
-                            <p>รูปภาพองค์กร</p>
+                            <p>รูปภาพผู้ใช้งาน</p>
                             <Image className='mt-3' src="/logo.png" alt='logo' width={100} height={100}></Image>
                           </div>
                           <div className="flex gap-4 mt-6">
@@ -207,10 +207,10 @@ export default function UserSinglePage() {
                                       />
                                     </ModalBody>
                                     <ModalFooter>
-                                      <Button color="success" variant="light" onPress={onClose}>
+                                      <Button className='bg-accent1 text-white' color="success" variant="light" onPress={onClose}>
                                         ยืนยัน
                                       </Button>
-                                      <Button color="danger" variant="light" onPress={onClose}>
+                                      <Button className='bg-accent2 text-white' color="danger" variant="light" onPress={onClose}>
                                         ยกเลิก
                                       </Button>
                                     </ModalFooter>
