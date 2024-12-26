@@ -63,6 +63,10 @@ export default function AttendancePage() {
     router.push(`attendance/${row.id}`);
   };
 
+  const handleRowClick1 = (row: EmployeeData) => {
+    router.push(`attendance/workInfo/${row.id}`);
+  };
+
   // Filter function to apply multiple filters
   const filteredData = useMemo(() => {
     return employeeData.filter((item) => {
@@ -114,10 +118,9 @@ export default function AttendancePage() {
         <div>
           <TopSection title="ภาพรวมการทำงานในองค์กรวันนี้" />
           <div className="flex space-x-4 mt-8">
-            {renderCard('เข้างาน', 0, 'bg-accent1')}
-            {renderCard('ลาป่วย', 0, 'bg-accent1')}
-            {renderCard('ลากิจ', 0, 'bg-accent1')}
-            {renderCard('ขาด', 0, 'bg-accent1')}
+            {renderCard('เข้างาน', 10, 'bg-accent2')}
+            {renderCard('ลาป่วย/ลากิจ', 0, 'bg-accent1')}
+            {renderCard('ขาด', 0, 'bg-accent3')}
           </div>
           <div className="bg-white shadow rounded-2xl mb-4 mt-4">
             <div className="flex flex-wrap gap-4">
@@ -168,12 +171,22 @@ export default function AttendancePage() {
               </Select>
             </div>
           </div>
-          <NextTable
-            rows={filteredData}
-            columns={columns}
-            rowClickHandler={handleRowClick}
-            tabFieldName="Activity"
-          />
+          <div>
+            <NextTable
+              rows={filteredData}
+              columns={columns}
+              rowClickHandler={handleRowClick}
+              tabFieldName="Overview Employee Table"
+            />
+          </div>
+          <div>
+            <NextTable
+              rows={filteredData}
+              columns={columns1}
+              rowClickHandler={handleRowClick1}
+              tabFieldName="Overview Employee Table"
+            />
+          </div>
         </div>
       }
     />
@@ -189,5 +202,12 @@ const columns: any = [
   { title: 'Break', dataIndex: 'break', align: 'center' },
   { title: 'Out', dataIndex: 'out', align: 'center' },
   { title: 'Summary', dataIndex: 'summery', align: 'center' },
-  { title: 'Note', dataIndex: 'note', align: 'center' }
+  { title: 'Note', dataIndex: 'note', align: 'center' },
+];
+
+const columns1: any = [
+  { title: 'Order', dataIndex: 'order', align: 'center' },
+  { title: 'Full Name', dataIndex: 'name', align: 'left' },
+  { title: 'Role', dataIndex: 'role', align: 'center' },
+  { title: 'WorkInfo', dataIndex: 'work', align: 'center' },
 ];

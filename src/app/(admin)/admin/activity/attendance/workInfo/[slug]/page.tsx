@@ -35,7 +35,7 @@ const filterActivityOptions: FilterOption[] = [
   { label: 'Out', value: 'out' },
 ];
 
-export default function AttendanceDetailPage() {
+export default function WorkInfoPage() {
 
 
   const [selectedActivity, setSelectedActivity] = useState('all');
@@ -87,7 +87,7 @@ export default function AttendanceDetailPage() {
         <div>
           <TopSection
             backpath={'/admin/activity/attendance'}
-            title="ยินดีต้อนรับคุณ (' ชื่อจริง-นามสกุล ผู้ใช้ ') ,เข้าสู่หน้าการเข้าร่วม"
+            title="ยินดีต้อนรับคุณ (' ชื่อจริง-นามสกุล ผู้ใช้ ') ,workinfo"
             subtitle="ตำแหน่ง : ?"
           />
           <div className="flex space-x-4 mt-8">
