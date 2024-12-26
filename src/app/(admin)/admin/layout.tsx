@@ -12,8 +12,11 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  User
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
 } from '@nextui-org/react';
+import CardComponent from '@/components/common/card';
 
 export default function AdminLayout({
   children,
@@ -54,32 +57,34 @@ export default function AdminLayout({
         <header className="bg-white shadow p-4 flex items-center justify-between">
           <Breadcrumb />
           <div className="flex items-center space-x-4">
-            <Dropdown>
-              <div>
-                <DropdownTrigger>
-                  <Link href={'#'}>
-                    <Icon.BellFilled className="text-headFont" />
-                  </Link>
-                </DropdownTrigger>
-              </div>
-              <div>
-                <DropdownMenu aria-label="Dynamic Actions" items={items}>
-                  {(item) => (
-                    <DropdownItem
-                      key={item.key}
-                      className={
-                        item.key === 'delete' ? 'text-danger' : 'text-headFont'
-                      }
-                      color={item.key === 'delete' ? 'danger' : 'default'}
-                    >
-                      {item.label}
-                    </DropdownItem>
-                  )}
-                </DropdownMenu>
-              </div>
-            </Dropdown>
 
-            <Dropdown>
+            <Popover showArrow offset={10} placement="bottom">
+              <PopoverTrigger>
+                <Icon.BellFilled className="text-headFont" />
+              </PopoverTrigger>
+              <PopoverContent className="w-[240px]">
+                {(titleProps) => (
+                  <div className="px-1 py-2 w-full">
+                    <p className="text-small font-bold text-foreground" {...titleProps}>
+                      การแจ้งเตือน
+                    </p>
+                    <div className="mt-2 flex flex-col gap-2 w-full">
+                      <CardComponent>
+                        <h1>Hello</h1>
+                      </CardComponent>
+                    </div>
+                  </div>
+                )}
+              </PopoverContent>
+            </Popover>
+
+            <Dropdown
+              showArrow
+              classNames={{
+                base: "before:bg-default-200", // change arrow background
+                content: "py-1 px-1 border border-default-200 bg-gradient-to-br from-white to-default-200 dark:from-default-50 dark:to-black",
+              }}
+            >
               <div className="relative">
                 <DropdownTrigger>
                   <button className="flex items-center space-x-2">
@@ -96,31 +101,19 @@ export default function AdminLayout({
                 {(item) => (
                   <DropdownItem
                     key={item.key}
-                    href={item.path}
-                    as="a"
                     className={
                       item.key === 'delete' ? 'text-danger' : 'text-headFont'
                     }
                     color={item.key === 'delete' ? 'danger' : 'default'}
                   >
-                    <User
-                      avatarProps={{
-                        size: "sm",
-                        src: "https://avatars.githubusercontent.com/u/30373425?v=4",
-                      }}
-                      classNames={{
-                        name: "text-default-600",
-                        description: "text-default-500",
-                      }}
-                      description="@jrgarciadev"
-                      name="Junior Garcia"
-                    />
-                    <div className='flex'>
-                      {item.icon}
-                      <div className='ml-3'>
-                        {item.label}
+                    <Link href={item.path}>
+                      <div className='flex'>
+                        {item.icon}
+                        <div className='ml-3'>
+                          {item.label}
+                        </div>
                       </div>
-                    </div>
+                    </Link>
                   </DropdownItem>
                 )}
               </DropdownMenu>

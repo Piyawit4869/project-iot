@@ -29,20 +29,13 @@ export default function NextTable({
     tabs?.[0]?.value || 'all',
   );
 
-  // Debugging Logs
-  console.log('Selected Tab:', selectedTab);
-  console.log('Tab Field Name:', tabFieldName);
-
   // Filter rows based on the selected tab
   const filteredRows = React.useMemo(() => {
     if (selectedTab === 'all') return rows;
     return rows.filter((row: any) => {
-      console.log('Row:', row); // Log row data for debugging
       return row[tabFieldName] === selectedTab;
     });
   }, [rows, selectedTab, tabFieldName]);
-
-  console.log('Filtered Rows:', filteredRows); // Log filtered rows for debugging
 
   const pages = Math.ceil(filteredRows.length / rowsPerPage);
   const startIndex = (page - 1) * rowsPerPage;
@@ -69,8 +62,6 @@ export default function NextTable({
   );
 
   const handleTabChange = (value: string) => {
-    console.log('category changed : ', value);
-
     setSelectedTab(value);
     setPage(1); // Reset to the first page when changing tabs
   };
@@ -127,7 +118,7 @@ export default function NextTable({
         <TableBody>
           {currentRows.map((row: any, index: any) => (
             <TableRow
-              className="cursor-pointer text-headFont hover:bg-accent1 hover:opacity-50 hover:text-white"
+              className="cursor-pointer text-headFont hover:bg-gray-200"
               key={index}
               onClick={() => rowClickHandler && rowClickHandler(row)}
             >
@@ -157,7 +148,15 @@ export default function NextTable({
           isCompact
           showControls
           showShadow
-          color="secondary"
+          classNames={{
+            // base: 'bg-accent3',
+            // chevronNext: 'bg-accent3',
+            // ellipsis: 'bg-accent3',
+            // item: 'bg-accent3',
+            // next: 'bg-accent3',
+            // prev: 'bg-accent3',
+            cursor: 'bg-accent3',
+          }}
           page={page}
           total={pages}
           onChange={setPage}
@@ -172,7 +171,7 @@ export default function NextTable({
             ย้อนกลับ
           </Button>
           <Button
-            className="bg-secondary text-whiteFont"
+            className="bg-accent3 text-whiteFont"
             isDisabled={page === pages}
             size="sm"
             variant="flat"
