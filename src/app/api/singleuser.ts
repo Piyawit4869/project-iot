@@ -1,7 +1,9 @@
+'use server';
+
 import { base_url } from '@/components/common/constant';
 
-export async function usersLoader() {
-  const url = `${base_url}/crud/users/`;
+export async function singleUserLoader(id: string) {
+  const url = `${base_url}/crud/users/${id}`;
 
   const data = await fetch(url, {
     method: 'GET',
