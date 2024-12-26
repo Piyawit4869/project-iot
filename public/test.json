@@ -4,7 +4,7 @@
       "order": "01",
       "name": "วิทยา สุทธิ",
       "role": "Frontend",
-      "activity": "In",
+      "status": "In",
       "in": "08:00",
       "break": "13:00",
       "out": "17:00",
@@ -12,14 +12,14 @@
       "note": "-",
       "time": "8:00",
       "date": "2024-12-24",
-      "work": "Rome"
+      "work": "isted"
   },
   {
       "id": 2,
       "order": "02",
       "name": "มานพ กิจวิศิษฏ์",
       "role": "Backend",
-      "activity": "In",
+      "status": "In",
       "in": "08:30",
       "break": "13:30",
       "out": "17:30",
@@ -27,14 +27,14 @@
       "note": "-",
       "time": "8:00",
       "date": "2024-12-24",
-      "work": "Rome"
+      "work": "isted"
   },
   {
       "id": 3,
       "order": "03",
       "name": "ณัฐพล ศุภฤทธิ์",
       "role": "Mobile",
-      "activity": "In",
+      "status": "In",
       "in": "09:00",
       "break": "12:00",
       "out": "18:00",
@@ -42,14 +42,14 @@
       "note": "-",
       "time": "8:00",
       "date": "2024-12-24",
-      "work": "Rome"
+      "work": "isted"
   },
   {
       "id": 4,
       "order": "04",
       "name": "กิติพงษ์ สิริ",
       "role": "Backend",
-      "activity": "In",
+      "status": "In",
       "in": "08:15",
       "break": "13:15",
       "out": "17:15",
@@ -57,14 +57,14 @@
       "note": "-",
       "time": "8:00",
       "date": "2024-12-24",
-      "work": "Rome"
+      "work": "isted"
   },
   {
       "id": 5,
       "order": "05",
       "name": "วชิระ รอเมือง",
       "role": "Frontend",
-      "activity": "In",
+      "status": "In",
       "in": "08:00",
       "break": "13:00",
       "out": "17:00",
@@ -79,7 +79,7 @@
       "order": "06",
       "name": "สมพงษ์ เครือทอง",
       "role": "Backend",
-      "activity": "Out",
+      "status": "Out",
       "in": "08:30",
       "break": "13:30",
       "out": "16:30",
@@ -94,7 +94,7 @@
       "order": "07",
       "name": "สุวรรณา บุญสุข",
       "role": "Mobile",
-      "activity": "In",
+      "status": "In",
       "in": "09:00",
       "break": "14:00",
       "out": "18:00",
@@ -109,7 +109,7 @@
       "order": "08",
       "name": "กิตติพงษ์ ธรรมมะ",
       "role": "Frontend",
-      "activity": "Out",
+      "status": "Out",
       "in": "08:45",
       "break": "13:45",
       "out": "17:45",
@@ -124,7 +124,7 @@
       "order": "09",
       "name": "ณัฐวัชร์ พูลเกษ",
       "role": "Backend",
-      "activity": "Break",
+      "status": "Break",
       "in": "08:15",
       "break": "12:30",
       "out": "17:15",
@@ -139,7 +139,7 @@
       "order": "10",
       "name": "พัชราภา ทวีผล",
       "role": "Mobile",
-      "activity": "In",
+      "status": "In",
       "in": "09:00",
       "break": "12:00",
       "out": "17:00",
@@ -147,6 +147,6 @@
       "note": "-",
       "time": "8:00",
       "date": "2024-12-24",
-      "work": "Rome"
+      "work": "isted"
   }
 ]

@@ -55,7 +55,7 @@ export default function NotationSinglePage() {
                 อนุมัติ
               </Button>,
               <Button className="bg-accent2 text-white" key={'reject button'}>
-                ปฎิเสษ
+                ปฏิเสธ
               </Button>,
               <Button className="bg-accent3 text-white" key={'edit button'}>
                 แก้ไข

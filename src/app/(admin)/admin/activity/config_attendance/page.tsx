@@ -20,7 +20,7 @@ export default function Config_attendanceIndexPage() {
         <div>
           <TopSection title={'การตั้งค่าการทำงานของพนักงาน'} />
           {/* Filter Bar */}
-          <div className="bg-white shadow rounded-lg  mb-4 mt-4">
+          <div className="bg-white shadow rounded-2xl  mb-4 mt-4">
             <div className="flex flex-wrap gap-4">
               {/* Search Bar */}
               <Input
@@ -30,44 +30,6 @@ export default function Config_attendanceIndexPage() {
                 name="name"
                 placeholder="ค้นหาชื่อ"
               />
-
-              {/* role Filter */}
-
-              <Select
-                className="flex-1 p-2 text-headFont"
-                size="sm"
-                name="role"
-                label="เลือกประเภท"
-              >
-                <SelectItem className="text-headFont" key={'option1'}>
-                  ทุกประเภท
-                </SelectItem>
-                <SelectItem className="text-headFont" key={'option2'}>
-                  รายได้
-                </SelectItem>
-                <SelectItem className="text-headFont" key={'option3'}>
-                  รายจ่าย
-                </SelectItem>
-              </Select>
-
-              {/* Status Filter */}
-
-              <Select
-                className="flex-1 p-2 text-headFont"
-                size="sm"
-                name="status"
-                label="เลือกสถานะ"
-              >
-                <SelectItem className="text-headFont" key={'option1'}>
-                  ทุกสถานะ
-                </SelectItem>
-                <SelectItem className="text-headFont" key={'option2'}>
-                  สำเร็จ
-                </SelectItem>
-                <SelectItem className="text-headFont" key={'option3'}>
-                  รอดำเนินการ
-                </SelectItem>
-              </Select>
             </div>
           </div>
           {/* Table */}

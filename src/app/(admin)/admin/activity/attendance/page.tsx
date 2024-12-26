@@ -14,7 +14,7 @@ interface EmployeeData {
   order: string;
   name: string;
   role: string;
-  activity: string;
+  status: string;
   in: string;
   break: string;
   out: string;
@@ -34,7 +34,7 @@ const filterOptions: FilterOption[] = [
   { label: 'Mobile', value: 'Mobile' },
 ];
 
-const filterActivityOptions: FilterOption[] = [
+const filterstatusOptions: FilterOption[] = [
   { label: 'All', value: 'all' },
   { label: 'In', value: 'in' },
   { label: 'Break', value: 'break' },
@@ -46,7 +46,7 @@ export default function AttendancePage() {
 
   const [searchValue, setSearchValue] = useState('');
   const [selectedRole, setSelectedRole] = useState('all');
-  const [selectedActivity, setSelectedActivity] = useState('all');
+  const [selectedstatus, setSelectedstatus] = useState('all');
   const [employeeData, setEmployeeData] = useState<EmployeeData[]>([]); // State to hold JSON data
 
   useEffect(() => {
@@ -73,16 +73,16 @@ export default function AttendancePage() {
       const matchesRole =
         selectedRole === 'all' ||
         item.role.toLowerCase() === selectedRole.toLowerCase();
-      const matchesActivity =
-        selectedActivity === 'all' ||
-        item.activity.toLowerCase() === selectedActivity.toLowerCase();
+      const matchesstatus =
+        selectedstatus === 'all' ||
+        item.status.toLowerCase() === selectedstatus.toLowerCase();
       const matchesSearch =
         !searchValue ||
         item.name.toLowerCase().includes(searchValue.toLowerCase());
 
-      return matchesRole && matchesActivity && matchesSearch;
+      return matchesRole && matchesstatus && matchesSearch;
     });
-  }, [searchValue, selectedRole, selectedActivity, employeeData]);
+  }, [searchValue, selectedRole, selectedstatus, employeeData]);
 
   const handleSearchChange = (value: string) => {
     setSearchValue(value);
@@ -92,8 +92,8 @@ export default function AttendancePage() {
     setSelectedRole(value);
   };
 
-  const handleActivityChange = (value: string) => {
-    setSelectedActivity(value);
+  const handlestatusChange = (value: string) => {
+    setSelectedstatus(value);
   };
 
   const renderCard = (title: string, count: number, colorClass: string) => (
@@ -118,9 +118,9 @@ export default function AttendancePage() {
         <div>
           <TopSection title="ภาพรวมการทำงานในองค์กรวันนี้" />
           <div className="flex space-x-4 mt-8">
-            {renderCard('เข้างาน', 10, 'bg-accent2')}
-            {renderCard('ลาป่วย/ลากิจ', 0, 'bg-accent1')}
-            {renderCard('ขาด', 0, 'bg-accent3')}
+            {renderCard('เข้างาน', 10, 'bg-accent1')}
+            {renderCard('ลาป่วย/ลากิจ', 0, 'bg-accent3')}
+            {renderCard('ขาด', 0, 'bg-accent2')}
           </div>
           <div className="bg-white shadow rounded-2xl mb-4 mt-4">
             <div className="flex flex-wrap gap-4">
@@ -154,12 +154,12 @@ export default function AttendancePage() {
               <Select
                 className="flex-1 p-2 text-headFont"
                 size="sm"
-                name="activity"
-                label="เลือกกิจกรรม"
-                value={selectedActivity}
-                onChange={(a) => handleActivityChange(a.target.value)}
+                name="status"
+                label="เลือกสถานะ"
+                value={selectedstatus}
+                onChange={(a) => handlestatusChange(a.target.value)}
               >
-                {filterActivityOptions.map((option) => (
+                {filterstatusOptions.map((option) => (
                   <SelectItem
                     key={option.value}
                     className="text-headFont"
@@ -184,7 +184,7 @@ export default function AttendancePage() {
               rows={filteredData}
               columns={columns1}
               rowClickHandler={handleRowClick1}
-              tabFieldName="Overview Employee Table"
+              tabFieldName="Overview Workinfo Table"
             />
           </div>
         </div>
@@ -197,7 +197,7 @@ const columns: any = [
   { title: 'Order', dataIndex: 'order', align: 'center' },
   { title: 'Full Name', dataIndex: 'name', align: 'left' },
   { title: 'Role', dataIndex: 'role', align: 'center' },
-  { title: 'Activity', dataIndex: 'activity', align: 'center' },
+  { title: 'Status', dataIndex: 'status', align: 'center' },
   { title: 'In', dataIndex: 'in', align: 'center' },
   { title: 'Break', dataIndex: 'break', align: 'center' },
   { title: 'Out', dataIndex: 'out', align: 'center' },
@@ -206,8 +206,8 @@ const columns: any = [
 ];
 
 const columns1: any = [
-  { title: 'Order', dataIndex: 'order', align: 'center' },
+  { title: 'status', dataIndex: 'order', align: 'center' },
   { title: 'Full Name', dataIndex: 'name', align: 'left' },
-  { title: 'Role', dataIndex: 'role', align: 'center' },
   { title: 'WorkInfo', dataIndex: 'work', align: 'center' },
+  { title: 'Note', dataIndex: 'note', align: 'center' },
 ];
