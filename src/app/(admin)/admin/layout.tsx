@@ -3,8 +3,7 @@
 import { AdminSideBar } from '@/components/admin/adminSidebar';
 import Image from 'next/image';
 import Logo from '../../../../public/logo.png';
-import React from 'react';
-import Link from 'next/link';
+import React, { Suspense } from 'react';
 import { Breadcrumb } from '@/components/common/breadcrumb';
 import * as Icon from '@ant-design/icons';
 import {
@@ -12,6 +11,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  User,
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -57,7 +57,6 @@ export default function AdminLayout({
         <header className="bg-white shadow p-4 flex items-center justify-between">
           <Breadcrumb />
           <div className="flex items-center space-x-4">
-
             <Popover showArrow offset={10} placement="bottom">
               <PopoverTrigger>
                 <Icon.BellFilled className="text-headFont" />
@@ -65,7 +64,10 @@ export default function AdminLayout({
               <PopoverContent className="w-[240px]">
                 {(titleProps) => (
                   <div className="px-1 py-2 w-full">
-                    <p className="text-small font-bold text-foreground" {...titleProps}>
+                    <p
+                      className="text-small font-bold text-foreground"
+                      {...titleProps}
+                    >
                       การแจ้งเตือน
                     </p>
                     <div className="mt-2 flex flex-col gap-2 w-full">
@@ -81,8 +83,9 @@ export default function AdminLayout({
             <Dropdown
               showArrow
               classNames={{
-                base: "before:bg-default-200", // change arrow background
-                content: "py-1 px-1 border border-default-200 bg-gradient-to-br from-white to-default-200 dark:from-default-50 dark:to-black",
+                base: 'before:bg-default-200', // change arrow background
+                content:
+                  'py-1 px-1 border border-default-200 bg-gradient-to-br from-white to-default-200 dark:from-default-50 dark:to-black',
               }}
             >
               <div className="relative">
@@ -106,14 +109,22 @@ export default function AdminLayout({
                     }
                     color={item.key === 'delete' ? 'danger' : 'default'}
                   >
-                    <Link href={item.path}>
-                      <div className='flex'>
-                        {item.icon}
-                        <div className='ml-3'>
-                          {item.label}
-                        </div>
-                      </div>
-                    </Link>
+                    <User
+                      avatarProps={{
+                        size: 'sm',
+                        src: 'https://avatars.githubusercontent.com/u/30373425?v=4',
+                      }}
+                      classNames={{
+                        name: 'text-default-600',
+                        description: 'text-default-500',
+                      }}
+                      description="@jrgarciadev"
+                      name="Junior Garcia"
+                    />
+                    <div className="flex">
+                      {item.icon}
+                      <div className="ml-3">{item.label}</div>
+                    </div>
                   </DropdownItem>
                 )}
               </DropdownMenu>
@@ -122,7 +133,25 @@ export default function AdminLayout({
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 w-full p-8 overflow-y-auto">{children}</main>
+        <main className="bg-gray-100 flex-1 w-full p-8 overflow-y-auto">
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center min-h-screen">
+                <div className="relative flex flex-col items-center space-y-4">
+                  {/* Spinner */}
+                  <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+
+                  {/* Loading Text */}
+                  <p className="text-gray-600 text-lg font-semibold animate-pulse">
+                    Loading, please wait...
+                  </p>
+                </div>
+              </div>
+            }
+          >
+            {children}
+          </Suspense>
+        </main>
       </div>
     </div>
   );
