@@ -3,6 +3,7 @@
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import * as Icon from '@ant-design/icons';
+import { createNotation } from '@/pages/api/notations/create';
 import {
   Button,
   DatePicker,
@@ -18,6 +19,33 @@ import React from 'react';
 export default function NotationCreatePage() {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   const [zoomLevel, setZoomLevel] = React.useState(100); // Default zoom level (100%)
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+  // useState เก็บข้อมูลการกรอกฟอร์ม
+  const [formData, setFormData] = React.useState({
+    active: '',
+    refNo: '',
+    startDate: '2024-12-25T00:00:00.000Z',
+    type: '',
+    note: '',
+    customer: {
+      name: 'john',
+    },
+    docStatus: 'draft',
+    status: 'draft',
+  });
+
+  console.log(formData);
+  console.log(error);
+  console.log(loading);
+
+  const handleChange = (e: any) => {
+    const { name, checked, type, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
 
   const handleZoomIn = () => {
     setZoomLevel((prevZoom) => Math.min(prevZoom + 10, 200)); // Max zoom 200%
@@ -36,11 +64,26 @@ export default function NotationCreatePage() {
     setItems(updatedItems);
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-    console.log(data);
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); // Prevent the form from submitting to the URL
+    setError(null);
+    setLoading(true);
+
+    try {
+      // const status = {
+      //   ...formData,
+      //   docStatus: 'draft',
+      //   status: 'draft',
+      // };
+      // const formData = new FormData(e.currentTarget as HTMLFormElement);
+      const data = await createNotation({}, formData);
+      console.log('Notation created:', data);
+    } catch (err: any) {
+      console.error('Send FormData error:', err);
+      setError(err.message || 'An unexpected error occurred.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -55,16 +98,16 @@ export default function NotationCreatePage() {
                 <Button
                   className="bg-accent3 text-white"
                   type="submit"
-                  // form="notation"
+                  form="notation"
                 >
                   แบบร่าง
                 </Button>
               </a>,
-              <a href={'/admin/notation'} key={'create button'}>
+              <a key={'create button'}>
                 <Button
                   className="bg-accent1 text-white"
                   type="submit"
-                  // form="notation"
+                  form="notation"
                 >
                   สร้าง
                 </Button>
@@ -89,7 +132,12 @@ export default function NotationCreatePage() {
                   <div className="flex gap-4">
                     <div className="flex-1 flex items-center gap-4">
                       <span className="text-headFont">แสดงผล</span>
-                      <Switch defaultSelected name="active" />
+                      <Switch
+                        defaultSelected
+                        name="active"
+                        color="secondary"
+                        onChange={handleChange}
+                      />
                     </div>
                     <Input
                       className="flex-1"
@@ -98,6 +146,7 @@ export default function NotationCreatePage() {
                       labelPlacement="outside"
                       name="refNo"
                       placeholder="กรอกหมายเลขอ้างอิง"
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="flex gap-4">
@@ -106,12 +155,15 @@ export default function NotationCreatePage() {
                       className="flex-1"
                       name="startDate"
                       label="วันที่สร้าง"
+                      disableAnimation
+                      onChange={handleChange}
                     />
                     <Select
                       size="sm"
                       className="flex-1"
                       name="type"
                       label="เลือกประเภทเอกสาร"
+                      onChange={handleChange}
                     >
                       {types.map((item) => (
                         <SelectItem key={item.value} value={item.value}>
@@ -125,6 +177,7 @@ export default function NotationCreatePage() {
                     labelPlacement="outside"
                     name="note"
                     placeholder=""
+                    onChange={handleChange}
                   />
                   <div className="flex gap-4 mt-6">
                     <h1 className="text-2xl font-bold text-headFont flex-1">
@@ -135,14 +188,24 @@ export default function NotationCreatePage() {
                     </h1>
                   </div>
                   <div className="flex gap-4">
-                    <Select name="customer" size="sm" label="เลือกลูกค้า">
+                    <Select
+                      name="customer"
+                      size="sm"
+                      label="เลือกลูกค้า"
+                      onChange={handleChange}
+                    >
                       {customer.map((item) => (
                         <SelectItem key={item.value} value={item.value}>
                           {item.label}
                         </SelectItem>
                       ))}
                     </Select>
-                    <Select name="address" size="sm" label="เลือกที่อยู่บริษัท">
+                    <Select
+                      name="address"
+                      size="sm"
+                      label="เลือกที่อยู่บริษัท"
+                      onChange={handleChange}
+                    >
                       {address.map((item) => (
                         <SelectItem key={item.value} value={item.value}>
                           {item.label}
@@ -160,6 +223,7 @@ export default function NotationCreatePage() {
                         name={`item_${index}`}
                         label="เลือกรายการ"
                         className="flex-1"
+                        onChange={handleChange}
                       >
                         {selectItem.map((item) => (
                           <SelectItem key={item.value} value={item.value}>
@@ -168,7 +232,12 @@ export default function NotationCreatePage() {
                         ))}
                       </Select>
                       <div className="flex-1 flex gap-2 items-center ">
-                        <Input size="lg" type="number" placeholder="จำนวน" />
+                        <Input
+                          size="lg"
+                          type="number"
+                          placeholder="จำนวน"
+                          onChange={handleChange}
+                        />
                         <a
                           className="text-red-500 cursor-pointer"
                           onClick={() => handleRemoveItem(index)}

@@ -33,6 +33,22 @@ export async function notationsLoader(params = {}) {
   }
 }
 
+// export async function createNotation(prevState: any, formData: any) {
+//   const url = `${base_url}/crud/notations/create/`;
+
+//   const data = await fetch(url, {
+//     method: `POST`,
+//     headers: {
+//       'Content-Type': 'application/json',
+//       Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3MzUyNjYzMTUsImV4cCI6MTczNTI5NTExNX0.r-V8HwNazgmOt5MMHw4CpYzvmubPwVz6EOVkECNpqE8`,
+//       // Authorization: `Bearer ${session.accessToken}`,
+//     },
+//     body: JSON.stringify(FormData),
+//   });
+
+//   return await data.json();
+// }
+
 // export async function notationLoader({ params }: any) {
 //   const session = await lib.getSession();
 
