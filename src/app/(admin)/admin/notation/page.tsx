@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useCallback } from 'react';
+import React from 'react';
 import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
@@ -42,7 +42,7 @@ export default function NotationsPage() {
   };
 
   // Debounced function to handle filter changes
-  const handleFilterChange = useCallback(
+  const handleFilterChange = React.useCallback(
     debounce((updatedFilters) => {
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
@@ -57,7 +57,7 @@ export default function NotationsPage() {
   };
 
   // Fetch data whenever filters, page, or rowsPerPage change
-  useEffect(() => {
+  React.useEffect(() => {
     fetchNotations();
   }, [filters, page, rowsPerPage]);
 
