@@ -5,7 +5,7 @@ import { TopSection } from '@/components/common/topSection';
 import NextTable from '@/components/common/nextTable';
 import Scaffold from '@/components/common/scaffold';
 import { useRouter } from 'next/navigation';
-import { Input, Select, SelectItem } from '@nextui-org/react';
+import { Input } from '@nextui-org/react';
 
 export default function Config_attendanceIndexPage() {
   const router = useRouter();

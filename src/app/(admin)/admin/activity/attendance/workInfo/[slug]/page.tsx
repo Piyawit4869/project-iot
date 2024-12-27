@@ -11,22 +11,10 @@ import {
   Select,
   SelectItem,
   Switch,
-  Textarea,
 } from '@nextui-org/react';
 import React from 'react';
 
 export default function NotationSinglePage() {
-  const [items, setItems] = React.useState([{ description: '', amount: '' }]);
-
-  const handleAddItem = () => {
-    setItems([...items, { description: '', amount: '' }]);
-  };
-
-  const handleRemoveItem = (index: number) => {
-    const updatedItems = items.filter((_, i) => i !== index);
-    setItems(updatedItems);
-  };
-
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the form from submitting to the URL
     const formData = new FormData(e.currentTarget);
