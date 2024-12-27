@@ -44,6 +44,7 @@ export const login = async (prevState: any, formData: any) => {
     .then((response) => response.json())
     .then((data) => {
       session.role = data.role;
+      session.employeeRole = data.employeeRole;
       session.profile = data.profile;
     })
     .catch((e) => console.log({ e }));
@@ -51,42 +52,45 @@ export const login = async (prevState: any, formData: any) => {
   session.save();
   if (session.role.name === 'super_admin') {
     redirect('/superadmin');
-  } else if (session.role.name === 'owner') {
+  } else if (
+    session.role.name === 'employee' &&
+    session.employeeRole.name === 'owner'
+  ) {
     redirect('/admin');
   } else {
     redirect('/');
   }
 };
 
-export const loginT = async (data: any) => {
-  const session = await getSession();
+// export const loginT = async (data: any) => {
+//   const session = await getSession();
 
-  const { user, password } = data;
+//   const { user, password } = data;
 
-  if (!user && !password) {
-    return { error: 'Wrong Credentials!' };
-  }
+//   if (!user && !password) {
+//     return { error: 'Wrong Credentials!' };
+//   }
 
-  const body = {
-    user: user,
-    password: password,
-  };
+//   const body = {
+//     user: user,
+//     password: password,
+//   };
 
-  await fetch(`${base_url}/auth/signin/`, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      session.accessToken = data.accessToken;
-      session.refreshToken = data.refreshToken;
-      console.log({ data });
-    })
-    .catch((e) => console.log({ e }));
+//   await fetch(`${base_url}/auth/signin/`, {
+//     method: 'POST',
+//     headers: {
+//       'content-type': 'application/json',
+//     },
+//     body: JSON.stringify(body),
+//   })
+//     .then((response) => response.json())
+//     .then((data) => {
+//       session.accessToken = data.accessToken;
+//       session.refreshToken = data.refreshToken;
+//       console.log({ data });
+//     })
+//     .catch((e) => console.log({ e }));
 
-  session.save();
-  redirect('/');
-};
+//   session.save();
+//   redirect('/');
+// };
