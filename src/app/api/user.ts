@@ -1,3 +1,5 @@
+'use server';
+
 import { base_url } from '@/components/common/constant';
 
 export async function usersLoader() {
@@ -7,7 +9,22 @@ export async function usersLoader() {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkMTdjZGU5Zi0xMTk2LTQ3NTktODM1Mi00OWM5NzE4ZDBjMzciLCJyb2xlIjoib3duZXIiLCJpYXQiOjE3MzUxODIzNjIsImV4cCI6MTczNTIxMTE2Mn0.FertygNPSmM8GgmWEx4aW3K9bVhv9s9obdXKoTb9uOA`,
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3MzUyNjYzMTUsImV4cCI6MTczNTI5NTExNX0.r-V8HwNazgmOt5MMHw4CpYzvmubPwVz6EOVkECNpqE8`,
+      // Authorization: `Bearer ${session.accessToken}`,
+    },
+  });
+
+  return await data.json();
+}
+
+export async function singleUserLoader(id: string) {
+  const url = `${base_url}/crud/users/${id}`;
+
+  const data = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3MzUyNjYzMTUsImV4cCI6MTczNTI5NTExNX0.r-V8HwNazgmOt5MMHw4CpYzvmubPwVz6EOVkECNpqE8`,
       // Authorization: `Bearer ${session.accessToken}`,
     },
   });
