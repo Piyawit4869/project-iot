@@ -1,7 +1,9 @@
 'use client';
 
 import { login } from '@/app/api/auth';
-import React, { useState } from 'react';
+import { Button, Input } from '@nextui-org/react';
+import localFont from 'next/font/local';
+import React, { useActionState, useState } from 'react';
 
 export default function LoginPage() {
   const [user, setUser] = useState('');
@@ -27,36 +29,45 @@ export default function LoginPage() {
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center text-center">
-      <h1 className="text-2xl font-bold mb-6">Login</h1>
+      <h1 className="text-2xl font-bold mb-6">ROME</h1>
       <form onSubmit={handleSubmit} className="w-full max-w-sm">
         {/* Email Input */}
-        <div className="mb-4">
-          <input
+        <div className="mb-3">
+          <Input
+            size="lg"
             name="username"
-            type="email"
-            placeholder="User"
+            placeholder="ชื่อผู้ใช้หรืออีเมล"
+            variant="bordered"
             value={user}
-            onChange={(e) => setUser(e.target.value)}
-            className="w-full px-4 py-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            onChange={(e) => {
+              setUser(e.target.value);
+            }}
+            errorMessage="โปรดป้อนชื่อหรืออีเมล"
+            className={`w-full text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
             required
           />
         </div>
 
         {/* Password Input */}
         <div className="mb-4">
-          <input
+          <Input
+            size="lg"
             name="password"
             type="password"
-            placeholder="Password"
+            placeholder="รหัสผ่าน"
+            variant="bordered"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+            className="w-full text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             required
+            errorMessage="โปรดป้อนรหัสผ่าน"
           />
         </div>
 
         {/* Submit Button */}
-        <button
+        <Button
           type="submit"
           disabled={loading} // Disable during loading
           className={`w-full px-4 py-2 text-lg font-semibold text-white rounded-md ${
@@ -87,12 +98,12 @@ export default function LoginPage() {
                   d="M4 12a8 8 0 018-8v8H4z"
                 ></path>
               </svg>
-              Loading ...
+              กำลังโหลด ...
             </div>
           ) : (
-            'Login'
+            'เข้าสู่ระบบ'
           )}
-        </button>
+        </Button>
 
         {/* Error Message */}
         {error && (

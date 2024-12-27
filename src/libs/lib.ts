@@ -6,6 +6,7 @@ export interface SessionData {
   refreshToken?: string;
   isLoggedIn: boolean;
   role?: any;
+  employeeRole?: any;
   profile?: any;
 }
 

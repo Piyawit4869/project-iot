@@ -25,7 +25,7 @@ export default async function pagination({
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjY2M5MTZjNC0zNTdjLTQyMDQtODA1Ni03MDI4ZGRjMzRjN2IiLCJyb2xlIjoib3duZXIiLCJpYXQiOjE3MzUxODIxMDAsImV4cCI6MTczNTIxMDkwMH0.7Z_f8EbgqixOXqKd0i4KmXwpWIIG7p07W0aXuBHCOq8`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3MzUyMTc1NzMsImV4cCI6MTczNTI0NjM3M30.lMkjLcG2GiT-UYfzyh1v9dOWck1tZtgLZQOv5UKzq_E`,
       },
     });
 

@@ -11,6 +11,9 @@ export default async function NotationsPage() {
 
   const { items, meta } = await pagination({ page, limit: rowsPerPage });
 
+  console.log({ items });
+  console.log({ meta });
+
   return (
     <div>
       <Scaffold
