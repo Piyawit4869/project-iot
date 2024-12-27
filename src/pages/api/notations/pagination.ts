@@ -3,6 +3,7 @@ import { base_url } from '@/constant/common';
 interface FetchNotationsParams {
   page: number;
   limit: number;
+  docNo?: string;
 }
 
 interface FetchNotationsResponse {
@@ -18,14 +19,22 @@ interface FetchNotationsResponse {
 export default async function pagination({
   page,
   limit,
+  docNo,
 }: FetchNotationsParams): Promise<FetchNotationsResponse> {
   try {
-    //query params in this
-    const response = await fetch(`${base_url}/crud/notations`, {
+    const url = new URL(`${base_url}/crud/notations`);
+    url.searchParams.append('page', page.toString());
+    url.searchParams.append('limit', limit.toString());
+
+    if (docNo) {
+      url.searchParams.append('docNo', docNo);
+    }
+
+    const response = await fetch(url.toString(), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3MzUyMTc1NzMsImV4cCI6MTczNTI0NjM3M30.lMkjLcG2GiT-UYfzyh1v9dOWck1tZtgLZQOv5UKzq_E`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3MzUyNjcyNzIsImV4cCI6MTczNTI5NjA3Mn0.gbWesGioCYGY1dJ2X5L79iw_gjK3QkybXtaXbp7Fvuw`,
       },
     });
 
