@@ -22,16 +22,6 @@ export default function ConfigAttendanceDetailPage() {
     breakTime: '',
     clockOut: '',
   });
-  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
-
-  // ตัวอย่างข้อมูลพนักงาน (จำลอง)
-  const employees = [
-    { id: '1', name: 'พนักงาน 1', avatar: '/path-to-avatar1.jpg' },
-    { id: '2', name: 'พนักงาน 2', avatar: '/path-to-avatar2.jpg' },
-    { id: '3', name: 'พนักงาน 3', avatar: '/path-to-avatar3.jpg' },
-    { id: '4', name: 'พนักงาน 3', avatar: '/path-to-avatar3.jpg' },
-    { id: '5', name: 'พนักงาน 3', avatar: '/path-to-avatar3.jpg' },
-  ];
 
   const handleAddItem = () => {
     setItems([...items, { description: '', amount: '' }]);
@@ -47,14 +37,6 @@ export default function ConfigAttendanceDetailPage() {
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
     console.log(data);
-  };
-
-  const handleAvatarClick = (employee: string) => {
-    if (selectedEmployees.includes(employee)) {
-      setSelectedEmployees(selectedEmployees.filter((e) => e !== employee)); // ลบออกถ้าคลิกซ้ำ
-    } else {
-      setSelectedEmployees([...selectedEmployees, employee]); // เพิ่มถ้ายังไม่มี
-    }
   };
 
   const handleTimeChange = (

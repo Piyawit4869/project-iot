@@ -32,7 +32,7 @@ export default function IndexPage() {
     image: user.profile.photoUrl,
     username: user.profile.firstName,
     email: user.email,
-    position: user.role.status,
+    position: user.role.name,
     phone: user.profile.phone,
     status: user.role.status,
   }));
