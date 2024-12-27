@@ -25,7 +25,7 @@ const puckConfig: Config = {
     },
     Image: {
       label: 'รูปภาพ',
-      render: ({ children }: any) => {
+      render: () => {
         return (
           <Image
             src="https://static.vecteezy.com/system/resources/previews/016/916/479/original/placeholder-icon-design-free-vector.jpg"
