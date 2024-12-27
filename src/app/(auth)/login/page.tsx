@@ -2,8 +2,7 @@
 
 import { login } from '@/app/api/auth';
 import { Button, Input } from '@nextui-org/react';
-import localFont from 'next/font/local';
-import React, { useActionState, useState } from 'react';
+import React, { useState } from 'react';
 
 export default function LoginPage() {
   const [user, setUser] = useState('');

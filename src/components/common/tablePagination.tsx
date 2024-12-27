@@ -39,7 +39,6 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   initialMeta,
   rowsPerPage,
   onPageChange,
-  onRowsPerPageChange,
   columns,
 }) => {
   const handlePageChange = (newPage: number) => {

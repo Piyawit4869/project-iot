@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { Input, Select, SelectItem } from '@nextui-org/react';
 
 export default function WhitelistPage() {
-  const router = useRouter();
+  // const router = useRouter();
 
 
   return (

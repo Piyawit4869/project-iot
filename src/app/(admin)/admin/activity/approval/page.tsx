@@ -4,10 +4,9 @@ import React from 'react';
 import { TopSection } from '@/components/common/topSection';
 import NextTable from '@/components/common/nextTable';
 import Scaffold from '@/components/common/scaffold';
-import { useRouter } from 'next/navigation';
 
 export default function WhitelistPage() {
-  const router = useRouter();
+  // const router = useRouter();
 
   return (
     <Scaffold

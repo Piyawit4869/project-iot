@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { TopSection } from '@/components/common/topSection';
 import NextTable from '@/components/common/nextTable';
 import Scaffold from '@/components/common/scaffold';
@@ -47,25 +47,8 @@ export default function AttendancePage() {
   const [searchValue, setSearchValue] = useState('');
   const [selectedRole, setSelectedRole] = useState('all');
   const [selectedstatus, setSelectedstatus] = useState('all');
-  const [employeeData, setEmployeeData] = useState<EmployeeData[]>([]);
+  const [employeeData, ] = useState<EmployeeData[]>([]);
   // State to hold JSON data
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          'https://rome-core-dev-673367393938.asia-southeast1.run.app',
-        );
-        const result = await response.json();
-        console.log('API Response:', result); // Debug here
-        setEmployeeData(result);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const handleRowClick = (row: EmployeeData) => {
     router.push(`attendance/${row.id}`);
