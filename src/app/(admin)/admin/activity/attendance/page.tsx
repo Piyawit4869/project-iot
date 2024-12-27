@@ -47,17 +47,25 @@ export default function AttendancePage() {
   const [searchValue, setSearchValue] = useState('');
   const [selectedRole, setSelectedRole] = useState('all');
   const [selectedstatus, setSelectedstatus] = useState('all');
-  const [employeeData, setEmployeeData] = useState<EmployeeData[]>([]); // State to hold JSON data
+  const [employeeData, setEmployeeData] = useState<EmployeeData[]>([]);
+  // State to hold JSON data
 
   useEffect(() => {
-    // Fetch JSON data from public directory
-    fetch('/test.json') // ชื่อไฟล์เป็น test.json
-      .then((response) => response.json())
-      .then((data: EmployeeData[]) => {
-        setEmployeeData(data);
-      })
-      .catch((error) => console.error('Error fetching data:', error));
-  }, []); // Run only once when component mounts
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          'https://rome-core-dev-673367393938.asia-southeast1.run.app',
+        );
+        const result = await response.json();
+        console.log('API Response:', result); // Debug here
+        setEmployeeData(result);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleRowClick = (row: EmployeeData) => {
     router.push(`attendance/${row.id}`);
@@ -69,6 +77,7 @@ export default function AttendancePage() {
 
   // Filter function to apply multiple filters
   const filteredData = useMemo(() => {
+    if (!Array.isArray(employeeData)) return [];
     return employeeData.filter((item) => {
       const matchesRole =
         selectedRole === 'all' ||

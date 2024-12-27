@@ -36,7 +36,7 @@ export default function Config_attendanceIndexPage() {
           <NextTable
             rows={initialData}
             columns={columns}
-            tabs={tabs}
+            // tabs={tabs}
             rowClickHandler={handleRowClick}
             tabFieldName={'role'}
           />
@@ -190,7 +190,7 @@ const columns = [
   {
     title: 'ตำแหน่ง',
     dataIndex: 'role',
-    render: (text: string) => <span>{handlerole(text)}</span>,
+    // render: (text: string) => <span>{handlerole(text)}</span>,
   },
   { title: 'เข้างาน', dataIndex: 'in', align: 'center' },
   { title: 'พักเบรก', dataIndex: 'break', align: 'center' },
@@ -198,25 +198,25 @@ const columns = [
   { title: '', dataIndex: 'info', align: 'center' },
 ];
 
-const tabs: any = [
-  { label: 'All', value: 'all' },
-  { label: 'frontend', value: 'frontend' },
-  { label: 'backend', value: 'backend' },
-  { label: 'mobile', value: 'mobile' },
-];
+// const tabs: any = [
+//   { label: 'All', value: 'all' },
+//   { label: 'frontend', value: 'frontend' },
+//   { label: 'backend', value: 'backend' },
+//   { label: 'mobile', value: 'mobile' },
+// ];
 
-const handlerole = (role: string): string => {
-  switch (role) {
-    case 'frontend':
-      return 'frontend';
+// const handlerole = (role: string): string => {
+//   switch (role) {
+//     case 'frontend':
+//       return 'frontend';
 
-    case 'backend':
-      return 'backend';
+//     case 'backend':
+//       return 'backend';
 
-    case 'mobile':
-      return 'mobile';
+//     case 'mobile':
+//       return 'mobile';
 
-    default:
-      return 'ตำแหน่งไม่ถูกต้อง'; // Return text for unrecognized categories
-  }
-};
+//     default:
+//       return 'ตำแหน่งไม่ถูกต้อง'; // Return text for unrecognized categories
+//   }
+// };
