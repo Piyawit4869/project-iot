@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primaryFont: #0a0a0a;
+  --secondaryFont: #ffffff;
+  --background: #ffffff;
+  --foreground: #171717;
+  --primary: #ffffff;
+  --secondary: #19142a;
+  --accent1: #00a57c;
+  --accent2: #c41e1e;
+  --accent3: #ffbe3d;
+  --headFont: #19142a;
+  --whiteFont: #ffffff;
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --primaryFont: #ffffff;
+    --secondaryFont: #0a0a0a;
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --primary: #19142a;
+    --secondary: #ffffff;
+    --accent1: #00a57c;
+    --accent2: #c41e1e;
+    --accent3: #ffbe3d;
+    --headFont: #19142a;
+    --whiteFont: #ffffff;
+  }
+} */
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-ibm-sans), sans-serif;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #4f46e5; /* Customize the spinner color */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

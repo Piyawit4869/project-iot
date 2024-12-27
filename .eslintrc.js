@@ -1,25 +1,13 @@
-/* eslint-disable no-undef */
 module.exports = {
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    project: 'tsconfig.json',
-    tsconfigRootDir: __dirname,
-    sourceType: 'module',
-  },
-  plugins: ['@typescript-eslint/eslint-plugin'],
+  parser: '@typescript-eslint/parser', // Use TypeScript parser
   extends: [
-    'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
+    'eslint:recommended',
+    'next/core-web-vitals', // Next.js-specific rules
   ],
-  root: true,
-  env: {
-    node: true,
-  },
-  ignorePatterns: ['.eslintrc.js', 'vite.config.ts', 'vite-env.d.ts'],
-  rules: {
-    '@typescript-eslint/interface-name-prefix': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
+  parserOptions: {
+    project: './tsconfig.json', // Path to your tsconfig.json
+    tsconfigRootDir: __dirname, // Ensure correct root directory
+    ecmaVersion: 2020, // Modern JavaScript
+    sourceType: 'module', // Use ES Modules
   },
 };

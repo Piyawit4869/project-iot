@@ -1,55 +1,35 @@
 {
-  "name": "stay-organize-dashboard",
+  "name": "rome-backoffice",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.1",
-  "license": "UNLICENSED",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint \"src/**/*{.tsx,.ts}\" --fix",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "@react-oauth/google": "^0.12.1",
-    "@vinejs/vine": "^2.1.0",
-    "dayjs": "^1.11.11",
-    "eslint-plugin-react": "^7.35.0",
-    "gapi-script": "^1.2.0",
-    "i18next": "^23.7.11",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-i18next": "^13.5.0",
-    "react-phone-input-2": "^2.15.1",
-    "vconsole": "^3.15.1",
-    "yarn": "^1.22.22"
+    "@ant-design/icons": "^5.5.2",
+    "@million/lint": "^1.0.13",
+    "@nextui-org/react": "^2.6.5",
+    "chart.js": "^4.4.7",
+    "framer-motion": "^11.13.3",
+    "iron-session": "^8.0.4",
+    "lodash": "^4.17.21",
+    "next": "15.0.3",
+    "react": "19.0.0-rc-66855b96-20241106",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "swr": "^2.3.0"
   },
   "devDependencies": {
-    "@ant-design/icons": "^5.1.4",
-    "@ant-design/plots": "^1.2.5",
-    "@types/lodash": "^4.17.7",
-    "@types/node": "^20.9.3",
-    "@types/react": "^18.0.37",
-    "@types/react-dom": "^18.0.11",
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
-    "@vitejs/plugin-react": "^4.0.0",
-    "antd": "^5.17",
-    "axios": "^1.4.0",
-    "commitizen": "^4.3.0",
-    "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.0.1",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.3.4",
-    "prettier": "^2.3.2",
-    "react-router-dom": "^6.12.1",
-    "typescript": "^5.0.2",
-    "vite": "^4.3.9"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "15.0.3",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
   }
 }
