@@ -7,6 +7,7 @@ import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
 import pagination from '@/pages/api/notations/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
+import { TemplateBuilder } from '@/components/builder/templateBuilder';
 
 export default function NotationsPage() {
   const [page, setPage] = React.useState(1);
