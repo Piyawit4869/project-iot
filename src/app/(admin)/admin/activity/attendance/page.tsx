@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { TopSection } from '@/components/common/topSection';
 import NextTable from '@/components/common/nextTable';
 import Scaffold from '@/components/common/scaffold';
@@ -47,17 +47,8 @@ export default function AttendancePage() {
   const [searchValue, setSearchValue] = useState('');
   const [selectedRole, setSelectedRole] = useState('all');
   const [selectedstatus, setSelectedstatus] = useState('all');
-  const [employeeData, setEmployeeData] = useState<EmployeeData[]>([]); // State to hold JSON data
-
-  useEffect(() => {
-    // Fetch JSON data from public directory
-    fetch('/test.json') // ชื่อไฟล์เป็น test.json
-      .then((response) => response.json())
-      .then((data: EmployeeData[]) => {
-        setEmployeeData(data);
-      })
-      .catch((error) => console.error('Error fetching data:', error));
-  }, []); // Run only once when component mounts
+  const [employeeData, ] = useState<EmployeeData[]>([]);
+  // State to hold JSON data
 
   const handleRowClick = (row: EmployeeData) => {
     router.push(`attendance/${row.id}`);
@@ -69,6 +60,7 @@ export default function AttendancePage() {
 
   // Filter function to apply multiple filters
   const filteredData = useMemo(() => {
+    if (!Array.isArray(employeeData)) return [];
     return employeeData.filter((item) => {
       const matchesRole =
         selectedRole === 'all' ||

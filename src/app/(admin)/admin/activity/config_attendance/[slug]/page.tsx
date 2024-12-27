@@ -11,7 +11,6 @@ import {
   SelectItem,
   Avatar,
   Input,
-  AvatarGroup,
 } from '@nextui-org/react';
 import React, { useState } from 'react';
 import { Tabs, Tab } from '@nextui-org/react';
@@ -131,24 +130,84 @@ export default function ConfigAttendanceDetailPage() {
                               <h1 className="text-2xl font-bold text-headFont">
                                 เพิ่มพนักงาน
                               </h1>
-                              <Button
-                                type="button"
-                                className="bg-secondary text-white w-50%"
-                                onClick={toggleEmployeeList}
-                              >
-                                <Icon.PlusSquareOutlined className="text-xl" />
-                                เพิ่มพนักงาน
-                              </Button>
-                              <div className="m-6">
-                                <AvatarGroup isBordered max={3}>
-                                  <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
-                                  <Avatar src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
-                                  <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
-                                  <Avatar src="https://i.pravatar.cc/150?u=a04258114e29026302d" />
-                                  <Avatar src="https://i.pravatar.cc/150?u=a04258114e29026702d" />
-                                  <Avatar src="https://i.pravatar.cc/150?u=a04258114e29026708c" />
-                                </AvatarGroup>
+                              <div className="mt-6">
+                                <Button
+                                  type="button"
+                                  className="bg-secondary text-white w-full"
+                                  onClick={toggleEmployeeList}
+                                >
+                                  {showEmployeeList
+                                    ? 'ซ่อนรายการพนักงาน'
+                                    : 'เพิ่มพนักงาน'}
+                                </Button>
+                                {showEmployeeList && (
+                                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                                    {employees.map((employee) => (
+                                      <div
+                                        key={employee.id}
+                                        className={`flex items-center gap-4 cursor-pointer p-2 border ${
+                                          selectedEmployees.includes(
+                                            employee.id,
+                                          )
+                                            ? 'border-accent1'
+                                            : 'border-gray-300'
+                                        } rounded-md`}
+                                        onClick={() =>
+                                          handleAvatarClick(employee.id)
+                                        }
+                                      >
+                                        <Avatar
+                                          src={employee.avatar}
+                                          size="lg"
+                                          className="border border-gray-300"
+                                        />
+                                        <span className="text-headFont">
+                                          {employee.name}
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
+
+                              {/* แสดงพนักงานที่เลือกแล้ว */}
+                              {selectedEmployees.length > 0 && (
+                                <div className="mt-6">
+                                  <h2 className="text-xl font-semibold text-headFont">
+                                    พนักงานที่เลือกแล้ว
+                                  </h2>
+                                  <div className="flex flex-wrap gap-4 mt-4">
+                                    {employees
+                                      .filter((employee) =>
+                                        selectedEmployees.includes(employee.id),
+                                      )
+                                      .map((employee) => (
+                                        <div
+                                          key={employee.id}
+                                          className="flex items-center gap-4 p-2 border border-accent1 rounded-md"
+                                        >
+                                          <Avatar
+                                            src={employee.avatar}
+                                            size="md"
+                                            className="border border-gray-300"
+                                          />
+                                          <span className="text-headFont">
+                                            {employee.name}
+                                          </span>
+                                          <Button
+                                            size="sm"
+                                            className="bg-accent2 text-white"
+                                            onClick={() =>
+                                              handleAvatarClick(employee.id)
+                                            }
+                                          >
+                                            ลบ
+                                          </Button>
+                                        </div>
+                                      ))}
+                                  </div>
+                                </div>
+                              )}
 
                               {/* เวลาในการทำงาน */}
                               <div className="mt-6">

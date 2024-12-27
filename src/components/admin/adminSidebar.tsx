@@ -7,7 +7,7 @@ import Image from 'next/image';
 import * as Icon from '@ant-design/icons';
 
 export function AdminSideBar() {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? ''; // ใช้ Default Value
   const [menuItems, setMenuItems] = React.useState([]);
   const [isSubMenuOpen, setIsSubMenuOpen] = React.useState<{
     [key: string]: boolean;
