@@ -18,7 +18,9 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  DateValue,
 } from '@nextui-org/react';
+import { parseAbsoluteToLocal } from '@internationalized/date';
 import { singleUserLoader } from '@/app/api/user';
 import React from 'react';
 import { useParams } from 'next/navigation';
@@ -36,6 +38,9 @@ export default function UserSinglePage() {
   const params = useParams<{ slug: string }>();
   console.log(params);
   const [usersSingle, setUsersSingle] = React.useState<any>({});
+  // const [birthDate, setBirthDate] = React.useState<DateValue | null>(
+  //   parseAbsoluteToLocal(usersSingle?.profile?.birthDate),
+  // );
 
   React.useEffect(() => {
     if (!params?.slug) {
@@ -54,6 +59,10 @@ export default function UserSinglePage() {
 
     fetchUserSingle();
   }, [params?.slug]);
+
+  const fixDate = usersSingle?.profile?.birthDate
+    ? parseAbsoluteToLocal(usersSingle.profile.birthDate)
+    : undefined;
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -193,6 +202,13 @@ export default function UserSinglePage() {
                               name="birthday"
                               label="วัน/เดือน/ปีเกิด"
                               labelPlacement="outside"
+                              value={fixDate}
+                              granularity="day"
+                              // defaultValue={parseAbsoluteToLocal(
+                              //   usersSingle?.profile?.birthDate,
+                              // )}
+                              // value={birthDate}
+                              // onChange={setBirthDate}
                             />
                           </div>
                           <div className="flex gap-4 mt-6">

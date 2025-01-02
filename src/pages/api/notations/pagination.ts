@@ -34,7 +34,7 @@ export default async function pagination({
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3MzUyNjcyNzIsImV4cCI6MTczNTI5NjA3Mn0.gbWesGioCYGY1dJ2X5L79iw_gjK3QkybXtaXbp7Fvuw`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiZW1wbG95ZWUiLCJlbXBsb3llZVJvbGUiOiJvd25lciIsImlhdCI6MTczNTc4NDQ5MiwiZXhwIjoxNzM2MDQzNjkyfQ.4zCV41v3OgNzR-LnCsIQ7TZEml500t0kJ1UDt8ODKRQ`,
       },
     });
 

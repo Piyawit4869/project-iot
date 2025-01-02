@@ -16,19 +16,42 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  useDisclosure
+  useDisclosure,
 } from '@nextui-org/react';
 import React from 'react';
+import { createUser } from '@/pages/api/user/create';
 
 export default function CreateUserPage() {
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+  const [formData, setFormData] = React.useState({
+    active: '',
+    email: '',
+    userName: '',
+    // password: '',
+    type: '',
+    note: '',
+    customer: {
+      name: 'john',
+    },
+    docStatus: 'draft',
+    status: 'draft',
+  });
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent the form from submitting to the URL
-    const formData = new FormData(e.currentTarget);
+    setError(null);
+    setLoading(true);
 
-    // Convert formData to an object
-    const data = Object.fromEntries(formData.entries());
-    console.log(data); // Log the form data for debugging
+    // try {
+    //   // Convert formData to an object
+    //   const data = await createUser({}, formdata);
+    //   console.log('User Create:', data); // Log the form data for debugging
+    // } catch (err: any) {
+    //   console.log('Send FormData error:', err);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   // const resetForm = (formId: string): void => {
@@ -39,8 +62,16 @@ export default function CreateUserPage() {
   //   }
   // };
 
-  const { isOpen: isCreate, onOpen: openCreate, onOpenChange: changeCreate } = useDisclosure();
-  const { isOpen: isDelete, onOpen: openDelete, onOpenChange: changeDelete } = useDisclosure();
+  const {
+    isOpen: isCreate,
+    onOpen: openCreate,
+    onOpenChange: changeCreate,
+  } = useDisclosure();
+  const {
+    isOpen: isDelete,
+    onOpen: openDelete,
+    onOpenChange: changeDelete,
+  } = useDisclosure();
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -72,23 +103,39 @@ export default function CreateUserPage() {
                   >
                     ยกเลิก
                   </Button>,
-                  
                 ]}
               />
 
-              <Modal isOpen={isCreate} onOpenChange={changeCreate} key={'create button'}>
+              <Modal
+                isOpen={isCreate}
+                onOpenChange={changeCreate}
+                key={'create button'}
+              >
                 <ModalContent>
                   {(onClose) => (
                     <>
-                      <ModalHeader className="flex flex-col gap-1">คุณต้องการสร้างผู้ใช้งาน ใช่หรือไม่</ModalHeader>
+                      <ModalHeader className="flex flex-col gap-1">
+                        คุณต้องการสร้างผู้ใช้งาน ใช่หรือไม่
+                      </ModalHeader>
                       <ModalBody>
                         <p>ข้อมูลที่คุณกรอกจะถูกบันทึก</p>
                       </ModalBody>
                       <ModalFooter>
-                        <Button className='bg-accent2 text-white' variant="light" onPress={onClose}>
+                        <Button
+                          className="bg-accent2 text-white"
+                          variant="light"
+                          onPress={onClose}
+                        >
                           ยกเลิก
                         </Button>
-                        <Button className='bg-accent1 text-white' variant="light" type="submit" key={'create button'} form="user" onPress={onClose}>
+                        <Button
+                          className="bg-accent1 text-white"
+                          variant="light"
+                          type="submit"
+                          key={'create button'}
+                          form="user"
+                          onPress={onClose}
+                        >
                           ยืนยัน
                         </Button>
                       </ModalFooter>
@@ -97,23 +144,35 @@ export default function CreateUserPage() {
                 </ModalContent>
               </Modal>
 
-              <Modal isOpen={isDelete} onOpenChange={changeDelete} key={'cancel button'}>
+              <Modal
+                isOpen={isDelete}
+                onOpenChange={changeDelete}
+                key={'cancel button'}
+              >
                 <ModalContent>
                   {(onClose) => (
                     <>
-                      <ModalHeader className="flex flex-col gap-1">คุณต้องการเคลียร์ผู้ใช้งาน ใช่หรือไม่</ModalHeader>
+                      <ModalHeader className="flex flex-col gap-1">
+                        คุณต้องการเคลียร์ผู้ใช้งาน ใช่หรือไม่
+                      </ModalHeader>
                       <ModalBody>
                         <p>ข้อมูลที่คุณกรอกจะถูกเคลียร์</p>
                       </ModalBody>
                       <ModalFooter>
-                        <Button className='bg-accent2 text-white' variant="light" onPress={onClose}>
+                        <Button
+                          className="bg-accent2 text-white"
+                          variant="light"
+                          onPress={onClose}
+                        >
                           ยกเลิก
                         </Button>
-                        <Button className='bg-accent1 text-white' variant="light"
-                        onPress={() => {
-                          // resetForm("user");
-                          onClose();
-                        }}
+                        <Button
+                          className="bg-accent1 text-white"
+                          variant="light"
+                          onPress={() => {
+                            // resetForm("user");
+                            onClose();
+                          }}
                         >
                           ยืนยัน
                         </Button>
@@ -124,21 +183,17 @@ export default function CreateUserPage() {
               </Modal>
 
               <div className="flex space-x-4 mt-6">
-                <div className='flex-1'>
+                <div className="flex-1">
                   <CardComponent
                     customCard
                     custom={
-                      <Form
-                        id="user"
-                        onSubmit={onSubmit}
-                        method="post"
-                      >
+                      <Form id="user" onSubmit={onSubmit} method="post">
                         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                          <div >
+                          <div>
                             <h1 className="text-2xl font-bold text-headFont">
                               ข้อมูลผู้ใข้
                             </h1>
-                            <div className='font-bold text-headFon mt-10'>
+                            <div className="font-bold text-headFon mt-10">
                               <p>รูปภาพผู้ใช้</p>
                             </div>
                           </div>
@@ -146,6 +201,7 @@ export default function CreateUserPage() {
                             <div>
                               <CardControl
                                 title="เปิดใช้งาน"
+                                name="active"
                                 description="ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน"
                                 control="เปิดใช้งาน"
                               />
@@ -159,7 +215,7 @@ export default function CreateUserPage() {
                                 <span className="text-headFont">อีเมล</span>
                               }
                               labelPlacement="outside"
-                              name="gmail"
+                              name="email"
                               placeholder="กรอกอีเมล"
                             />
                           </div>
@@ -167,10 +223,12 @@ export default function CreateUserPage() {
                             <Input
                               className="flex-1"
                               label={
-                                <span className="text-headFont">ชื่อผู้ใช้</span>
+                                <span className="text-headFont">
+                                  ชื่อผู้ใช้
+                                </span>
                               }
                               labelPlacement="outside"
-                              name="username"
+                              name="userName"
                               placeholder="กรอกชื่อผู้ใช้"
                             />
                           </div>
@@ -191,7 +249,7 @@ export default function CreateUserPage() {
                               name="position"
                               placeholder="เลือกตำแหน่ง"
                               label="ตำแหน่ง"
-                              labelPlacement={"outside"}
+                              labelPlacement={'outside'}
                             >
                               {position.map((item: any) => (
                                 <SelectItem
@@ -210,7 +268,7 @@ export default function CreateUserPage() {
                               name="prefix"
                               placeholder="เลือกคำนำหน้า"
                               label="คำนำหน้า"
-                              labelPlacement={"outside"}
+                              labelPlacement={'outside'}
                             >
                               {prefix.map((item: any) => (
                                 <SelectItem
@@ -251,13 +309,16 @@ export default function CreateUserPage() {
                               name="birthday"
                               label="วัน/เดือน/ปีเกิด"
                               labelPlacement="outside"
+                              disableAnimation
                             />
                           </div>
                           <div className="flex gap-4 mt-6">
                             <Input
                               className="flex-1"
                               label={
-                                <span className="text-headFont">เบอร์โทรศัพท์</span>
+                                <span className="text-headFont">
+                                  เบอร์โทรศัพท์
+                                </span>
                               }
                               labelPlacement="outside"
                               name="phone"
@@ -274,7 +335,7 @@ export default function CreateUserPage() {
           }
         />
       </div>
-    </div >
+    </div>
   );
 }
 

@@ -70,11 +70,7 @@ export default function AdminLayout({
                     >
                       การแจ้งเตือน
                     </p>
-                    <div className="mt-2 flex flex-col gap-2 w-full">
-                      <CardComponent>
-                        <h1>Hello</h1>
-                      </CardComponent>
-                    </div>
+                    <div className="mt-2 flex flex-col gap-2 w-full"></div>
                   </div>
                 )}
               </PopoverContent>

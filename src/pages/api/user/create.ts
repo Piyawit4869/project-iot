@@ -1,7 +1,7 @@
-import { base_url } from '@/constant/common';
+import { base_url } from '@/components/common/constant';
 
-export async function createNotation(prevState: any, formData: any) {
-  const url = `${base_url}/crud/notations/create/`;
+export async function createUser(prevState: any, formData: any) {
+  const url = `${base_url}/crud/users/`;
 
   const body = {
     ...formData,
