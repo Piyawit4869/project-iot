@@ -86,7 +86,7 @@ export default function AttendanceDetailPage() {
       child={
         <div>
           <TopSection
-            backpath={'/admin/activity/attendance'}
+            backpath={'/admin/attendance/attendance'}
             title="ยินดีต้อนรับคุณ (' ชื่อจริง-นามสกุล ผู้ใช้ ') ,เข้าสู่หน้าการเข้าร่วม"
             subtitle="ตำแหน่ง : ?"
           />

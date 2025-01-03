@@ -30,7 +30,7 @@ export default function NotationSinglePage() {
         <div>
           <TopSection
             title="ข้อมูลการทำงาน (WorkInfo)"
-            backpath={'/admin/activity/attendance'}
+            backpath={'/admin/attendance'}
             buttons={[
               <Button className="bg-accent1 text-white" key={'approve button'}>
                 อนุมัติ

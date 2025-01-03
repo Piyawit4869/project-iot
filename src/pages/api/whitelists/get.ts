@@ -1,25 +1,20 @@
-import { base_url } from '@/constant/common';
+import { base_url } from '@/components/common/constant';
 
-export default async function get(): Promise<any> {
-    console.log('await');
-  try {
-    //query params in this
-    const response = await fetch(`${base_url}/crud/whitelists`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiZW1wbG95ZWUiLCJlbXBsb3llZVJvbGUiOiJvd25lciIsImlhdCI6MTczNTI4OTgxMSwiZXhwIjoxNzM1NTQ5MDExfQ.h-5zAbbhox5bWLpFk2wCTnTPSIrgeIeeKsubImoxE78`,
-      },
-    });
+export async function getWhitelists() {
+  const url = `${base_url}/crud/whitelists/`;
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch data from external API');
-    }
+  const data = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiZW1wbG95ZWUiLCJlbXBsb3llZVJvbGUiOiJvd25lciIsImlhdCI6MTczNTgxMDMxOSwiZXhwIjoxNzM2MDY5NTE5fQ.libADF6cgdH8krEsIBhqc32AJjdiqnP3WQTJdPT7ENo`,
+      // Authorization: `Bearer ${session.accessToken}`,
+    },
+  });
 
-    const data = await response.json();
-    return data;
-  } catch (error: any) {
-    console.error('Error fetching data:', error);
-    return {};
-  }
+  
+
+  return await data.json();
 }
+
+

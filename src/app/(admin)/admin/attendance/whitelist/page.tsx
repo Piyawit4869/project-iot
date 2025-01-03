@@ -4,15 +4,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
-import { Input } from '@nextui-org/react';
+import { Input, Button, Link } from '@nextui-org/react';
 import pagination from '@/pages/api/whitelists/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
-import { whitelistsLoader } from '@/app/api/whitelists';
+import { getWhitelists } from '@/pages/api/whitelists/get';
 
-// TypeScript Types
 interface FilterState {
-  name: string;
-  docNo: string;
+  ip: string;
 }
 
 interface MetaData {
@@ -29,12 +27,16 @@ interface WhitelistItem {
   createdAt: string;
   browser: string;
   os: string;
+  address: {
+    name: string;
+    nation: string
+  };
 }
 
 export default function WhitelistsPage() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [filters, setFilters] = useState<FilterState>({ name: '', docNo: '' });
+  const [filters, setFilters] = useState<FilterState>({ ip: '' });
   const [whitelists, setWhitelists] = useState<WhitelistItem[]>([]);
   const [items, setItems] = useState<WhitelistItem[]>([]);
   const [meta, setMeta] = useState<MetaData>({
@@ -45,23 +47,34 @@ export default function WhitelistsPage() {
   });
   const [loading, setLoading] = useState(false);
 
-  // Fetch data from the API
   const fetchWhitelists = async () => {
     setLoading(true);
     try {
-      // Fetch whitelist general data
-      const result = await whitelistsLoader();
+      const result = await getWhitelists();
+      const transformedItems = result.items.map((item: WhitelistItem) => ({
+        ...item,
+        addressName: item.address.name || '',addressNation: item.address.nation || '',
+      }));
+      console.log(result.items)
+      // console.log(result.items.address.name)
+      // console.log(result.items);
+      // const Items = result.items.map((v : any) =>  v)
+      // const Items = result.items[0].address.name
+      // console.log(Items)
       setWhitelists(result.items);
 
-      // Fetch paginated data with filters
-      const { name, docNo } = filters;
+      const { ip } = filters;
       const { items: fetchedItems, meta: fetchedMeta } = await pagination({
         page,
         limit: rowsPerPage,
-        ...(name && { name }),
-        ...(docNo && { docNo }),
+        ...(ip && { ip }),
       });
-      setItems(fetchedItems);
+      setItems(
+        fetchedItems.map((item: WhitelistItem) => ({
+          ...item,
+          addressName: item.address.name || '',addressNation: item.address.nation || '',
+        })),
+      );
       setMeta(fetchedMeta);
     } catch (error) {
       console.error('Error fetching whitelists:', error);
@@ -70,7 +83,6 @@ export default function WhitelistsPage() {
     }
   };
 
-  // Debounced function to handle filter changes
   const handleFilterChange = useCallback(
     debounce((updatedFilters: FilterState) => {
       setPage(1); // Reset to the first page for new filters
@@ -95,7 +107,19 @@ export default function WhitelistsPage() {
       <Scaffold
         child={
           <div>
-            <TopSection title="ไวท์ลิสต์" />
+            <TopSection
+              title="ไวท์ลิสต์"
+              buttons={[
+                <Link href={'whitelist/create'} key={'create button'}>
+                  <Button
+                    className="bg-accent1 text-white"
+                    key={'create button'}
+                  >
+                    สร้างไวท์ลิสต์
+                  </Button>
+                </Link>,
+              ]}
+            />
             <div className="bg-white shadow rounded-lg mb-4 mt-4">
               <div className="flex flex-wrap gap-4">
                 <Input
@@ -104,23 +128,15 @@ export default function WhitelistsPage() {
                   size="lg"
                   name="name"
                   placeholder="ค้นหาชื่อ"
-                  value={filters.name}
-                  onChange={(e) => onInputChange('name', e.target.value)}
-                />
-                <Input
-                  className="flex-1 p-2 text-headFont"
-                  labelPlacement="outside"
-                  size="lg"
-                  name="docNo"
-                  placeholder="ค้นหาหมายเลขเอกสาร"
-                  value={filters.docNo}
-                  onChange={(e) => onInputChange('docNo', e.target.value)}
+                  value={filters.ip}
+                  onChange={(e) => onInputChange('ip', e.target.value)}
                 />
               </div>
             </div>
             {loading ? (
               <div className="flex justify-center items-center h-64">
-                <div className="spinner"></div> {/* Make sure to style this spinner */}
+                <div className="spinner"></div>{' '}
+                {/* Make sure to style this spinner */}
               </div>
             ) : (
               <TablePagination
@@ -129,7 +145,9 @@ export default function WhitelistsPage() {
                 rowsPerPage={rowsPerPage}
                 columns={columns}
                 onPageChange={(newPage) => setPage(newPage)}
-                onRowsPerPageChange={(newRowsPerPage) => setRowsPerPage(newRowsPerPage)}
+                onRowsPerPageChange={(newRowsPerPage) =>
+                  setRowsPerPage(newRowsPerPage)
+                }
               />
             )}
           </div>
@@ -140,15 +158,13 @@ export default function WhitelistsPage() {
   );
 }
 
-// Table Columns
 const columns = [
-  {
-    title: 'ไอดี',
-    dataIndex: 'id',
-  },
   { title: 'สถานะ', dataIndex: 'status' },
+  { title: 'ที่อยู่', dataIndex: 'addressName' },
+  { title: 'ประเทศ', dataIndex: 'addressNation' },
   { title: 'ไอพี', dataIndex: 'ip' },
   { title: 'สร้างวันที่', dataIndex: 'createdAt' },
   { title: 'บราวเซอร์', dataIndex: 'browser' },
+  { title: 'ไอเอสพี', dataIndex: 'isp' },
   { title: 'ระบบปฏิบัติการ', dataIndex: 'os' },
 ];
