@@ -20,7 +20,7 @@ export const login = async (prevState: any, formData: any) => {
     password: password,
   };
 
-  await fetch(`${base_url}/auth/signin/`, {
+  const data = await fetch(`${base_url}/auth/signin/`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -31,66 +31,12 @@ export const login = async (prevState: any, formData: any) => {
     .then((data) => {
       session.accessToken = data.accessToken;
       session.refreshToken = data.refreshToken;
-    })
-    .catch((e) => console.log({ e }));
 
-  await fetch(`${base_url}/auth/me/`, {
-    method: 'GET',
-    headers: {
-      'content-type': 'application/json',
-      Authorization: `Bearer ${session.accessToken}`,
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      session.role = data.role;
-      session.employeeRole = data.employeeRole;
-      session.profile = data.profile;
+      return data;
     })
     .catch((e) => console.log({ e }));
 
   session.save();
-  if (session.role.name === 'super_admin') {
-    redirect('/superadmin');
-  } else if (
-    session.role.name === 'employee' &&
-    session.employeeRole.name === 'owner'
-  ) {
-    redirect('/admin');
-  } else {
-    redirect('/');
-  }
+
+  return { data };
 };
-
-// export const loginT = async (data: any) => {
-//   const session = await getSession();
-
-//   const { user, password } = data;
-
-//   if (!user && !password) {
-//     return { error: 'Wrong Credentials!' };
-//   }
-
-//   const body = {
-//     user: user,
-//     password: password,
-//   };
-
-//   await fetch(`${base_url}/auth/signin/`, {
-//     method: 'POST',
-//     headers: {
-//       'content-type': 'application/json',
-//     },
-//     body: JSON.stringify(body),
-//   })
-//     .then((response) => response.json())
-//     .then((data) => {
-//       session.accessToken = data.accessToken;
-//       session.refreshToken = data.refreshToken;
-//       console.log({ data });
-//     })
-//     .catch((e) => console.log({ e }));
-
-//   session.save();
-//   redirect('/');
-// };

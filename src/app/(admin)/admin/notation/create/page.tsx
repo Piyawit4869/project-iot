@@ -15,35 +15,27 @@ import {
   Textarea,
 } from '@nextui-org/react';
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function NotationCreatePage() {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   const [zoomLevel, setZoomLevel] = React.useState(100); // Default zoom level (100%)
   const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-  // useState เก็บข้อมูลการกรอกฟอร์ม
-  const [formData, setFormData] = React.useState({
-    active: '',
-    refNo: '',
-    startDate: '2024-12-25T00:00:00.000Z',
-    type: '',
-    note: '',
-    customer: {
-      name: 'john',
-    },
-    docStatus: 'draft',
-    status: 'draft',
-  });
-
-  console.log(formData);
-  console.log(error);
-  console.log(loading);
+  const [errors, setErrors] = React.useState({}) as any;
+  const [formData, setFormData] = React.useState({}) as any;
+  const [createStatus, setCreateStatus] = React.useState('');
+  const router = useRouter();
 
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
-    setFormData((prevData) => ({
+    setFormData((prevData: any) => ({
       ...prevData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]:
+        type === 'checkbox'
+          ? checked
+          : name === 'startDate' && value instanceof Date
+          ? value.toISOString()
+          : value,
     }));
   };
 
@@ -65,22 +57,55 @@ export default function NotationCreatePage() {
   };
 
   const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent the form from submitting to the URL
-    setError(null);
+    e.preventDefault();
     setLoading(true);
 
+    const requiredFields = ['refNo', 'startDate', 'type'];
+    const newErrors: any = {};
+
+    requiredFields.forEach((field) => {
+      if (!formData[field] || formData[field].trim() === '') {
+        newErrors[field] = `Field ${field} is required.`;
+      }
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setLoading(false);
+      return;
+    }
+
+    const handleCreateStatus = (status: string) => {
+      switch (status) {
+        case 'draft':
+          return { docStatus: 'draft', status: 'draft' };
+        case 'pending':
+          return { docStatus: 'pending', status: '' };
+        default:
+          return {};
+      }
+    };
+
+    const statusData = handleCreateStatus(createStatus);
+
     try {
-      // const status = {
-      //   ...formData,
-      //   docStatus: 'draft',
-      //   status: 'draft',
-      // };
-      // const formData = new FormData(e.currentTarget as HTMLFormElement);
-      const data = await createNotation({}, formData);
-      console.log('Notation created:', data);
+      const payload = {
+        ...formData,
+        ...statusData,
+      };
+
+      if (!payload.active) {
+        payload.active = false;
+      } else {
+        payload.active = true;
+      }
+
+      const { data } = await createNotation({}, payload);
+
+      router.push(`/admin/notation/${data.id}`);
     } catch (err: any) {
       console.error('Send FormData error:', err);
-      setError(err.message || 'An unexpected error occurred.');
+      setErrors({ general: err.message || 'An unexpected error occurred.' });
     } finally {
       setLoading(false);
     }
@@ -99,6 +124,9 @@ export default function NotationCreatePage() {
                   className="bg-accent3 text-white"
                   type="submit"
                   form="notation"
+                  onClick={() => {
+                    setCreateStatus('draft');
+                  }}
                 >
                   แบบร่าง
                 </Button>
@@ -108,6 +136,9 @@ export default function NotationCreatePage() {
                   className="bg-accent1 text-white"
                   type="submit"
                   form="notation"
+                  onClick={() => {
+                    setCreateStatus('pending');
+                  }}
                 >
                   สร้าง
                 </Button>
@@ -124,6 +155,7 @@ export default function NotationCreatePage() {
                   onSubmit={onSubmit}
                   method="post"
                   className="grid grid-cols-1 gap-4"
+                  validationErrors={errors}
                 >
                   <h1 className="text-2xl font-bold text-headFont">
                     ข้อมูลเอกสาร
@@ -133,10 +165,11 @@ export default function NotationCreatePage() {
                     <div className="flex-1 flex items-center gap-4">
                       <span className="text-headFont">แสดงผล</span>
                       <Switch
-                        defaultSelected
                         name="active"
                         color="secondary"
                         onChange={handleChange}
+                        required
+                        defaultChecked
                       />
                     </div>
                     <Input
@@ -147,6 +180,8 @@ export default function NotationCreatePage() {
                       name="refNo"
                       placeholder="กรอกหมายเลขอ้างอิง"
                       onChange={handleChange}
+                      isRequired
+                      errorMessage={'กรุณากรอกหมายเลขอ้างอิง'}
                     />
                   </div>
                   <div className="flex gap-4">
@@ -156,7 +191,27 @@ export default function NotationCreatePage() {
                       name="startDate"
                       label="วันที่สร้าง"
                       disableAnimation
-                      onChange={handleChange}
+                      isRequired
+                      errorMessage={'กรุณาเลือกวันที่สร้าง'}
+                      onChange={(date: any) => {
+                        if (date?.year && date?.month && date?.day) {
+                          // Convert the custom date object to a valid Date instance
+                          const parsedDate = new Date(
+                            date.year,
+                            date.month - 1,
+                            date.day,
+                          ); // month is 0-indexed
+                          const isoString = parsedDate.toISOString();
+
+                          // Update formData with the ISO string
+                          setFormData((prevData: any) => ({
+                            ...prevData,
+                            startDate: isoString,
+                          }));
+                        } else {
+                          console.error('Invalid date object:', date);
+                        }
+                      }}
                     />
                     <Select
                       size="sm"
@@ -164,6 +219,8 @@ export default function NotationCreatePage() {
                       name="type"
                       label="เลือกประเภทเอกสาร"
                       onChange={handleChange}
+                      isRequired
+                      errorMessage={'กรุณาเลือกประเภทเอกสาร'}
                     >
                       {types.map((item) => (
                         <SelectItem key={item.value} value={item.value}>
