@@ -1,10 +1,6 @@
 'use client';
 
-<<<<<<< HEAD
 import React, { useEffect, useCallback } from 'react';
-=======
-import React from 'react';
->>>>>>> 39974607641502f7ff2c27a08b162cd77064eac5
 import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
