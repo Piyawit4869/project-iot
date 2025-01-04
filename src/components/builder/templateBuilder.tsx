@@ -1,13 +1,16 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Config, Puck } from '@measured/puck';
 import '@measured/puck/puck.css';
-import { Card, Button, Spinner } from '@nextui-org/react';
+import { Card, Button } from '@nextui-org/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { createTemplate } from '@/pages/api/templates/create';
 import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
+import { updateTemplate } from '@/pages/api/templates/update';
+import { deleteTemplate } from '@/pages/api/templates/delete';
+import { toast } from 'sonner';
 
 interface BuilderTemplateProps {
   isCreate: boolean;
@@ -15,8 +18,6 @@ interface BuilderTemplateProps {
 }
 
 const parseHtmlToPuckData = (htmlString: string) => {
-  console.log('Parsing HTML String:', htmlString);
-
   if (!htmlString) {
     console.warn('Empty HTML string received!');
     return { content: [] };
@@ -55,7 +56,6 @@ const parseHtmlToPuckData = (htmlString: string) => {
     });
   });
 
-  console.log('Parsed Puck Data:', { content: puckData });
   return { content: puckData };
 };
 
@@ -101,35 +101,25 @@ export const TemplateBuilder = ({
   initialData,
   isCreate,
 }: BuilderTemplateProps) => {
-  console.log('Initial Data:', initialData);
-  console.log('Template Notation:', initialData?.templateNotation);
-
-  const [editorContent, setEditorContent] = useState<{ content: any[] }>({
+  const [editorContent, setEditorContent] = React.useState<{ content: any[] }>({
     content: [],
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = React.useState(true);
   const router = useRouter();
 
-  useEffect(() => {
+  React.useEffect(() => {
     setLoading(true);
-
     if (isCreate) {
-      console.log('Creating New Template - Initializing Default Content');
       setEditorContent({ content: [] });
       setTimeout(() => setLoading(false), 100);
     } else if (initialData?.templateNotation) {
       const parsedData = parseHtmlToPuckData(initialData.templateNotation);
-      console.log('Setting Editor Content:', parsedData);
       setEditorContent(parsedData);
       setTimeout(() => setLoading(false), 100);
     } else {
       setLoading(false);
     }
   }, [initialData, isCreate]);
-
-  useEffect(() => {
-    console.log('Editor Content Updated:', editorContent);
-  }, [editorContent]);
 
   const exportToHTML = async () => {
     const generateHTML = (data: any): string => {
@@ -173,28 +163,73 @@ export const TemplateBuilder = ({
     `;
 
     const payload = {
-      templateName: 'template name',
+      templateName: 'template name2',
       templateNotation: htmlContent,
     };
 
-    console.log({ payload });
-    console.log(htmlContent);
-
     try {
-      const { data } = await createTemplate({}, payload);
-      router.push(`/admin/notation/template/${data.id}`);
+      if (isCreate) {
+        const { data } = await createTemplate({}, payload);
+
+        toast.success('🎉 สร้างรูปแบบเอกสารสำเร็จ!', {
+          duration: 3000,
+          position: 'bottom-left',
+          style: { fontFamily: 'var(--font-ibm-sans)' },
+        });
+        router.push(`/admin/notation/template/${data.id}`);
+      } else if (!isCreate && initialData?.id) {
+        const { data } = await updateTemplate({}, payload, initialData?.id);
+
+        toast.success('📝 แก้ไขรูปแบบเอกสารสำเร็จ!', {
+          duration: 3000,
+          position: 'bottom-left',
+          style: { fontFamily: 'var(--font-ibm-sans)' },
+        });
+        router.push(`/admin/notation/template/${data.id}`);
+      }
     } catch (error) {
-      console.log(error);
+      toast.error('❌ ไม่สามารถบันทึกรูปแบบเอกสารได้', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+    }
+  };
+
+  const onTemplateDelete = async () => {
+    try {
+      await deleteTemplate(initialData?.id);
+
+      toast.success('🗑️ ลบรูปแบบเอกสารสำเร็จ!', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
+      router.push(`/admin/notation/template`);
+    } catch (error) {
+      toast.error('❌ ไม่สามารถลบรูปแบบเอกสารได้', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+      console.error('Delete error:', error);
     }
   };
 
   return (
     <Card style={{ zIndex: 0 }}>
       {loading ? (
-        <div
-          style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}
-        >
-          <Spinner size="lg" />
+        <div className="flex items-center justify-center m-10">
+          <div className="relative flex flex-col items-center space-y-4">
+            {/* Spinner */}
+            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+
+            {/* Loading Text */}
+            <p className="text-gray-600 text-lg font-semibold animate-pulse">
+              Loading, please wait...
+            </p>
+          </div>
         </div>
       ) : (
         <Puck
@@ -206,13 +241,28 @@ export const TemplateBuilder = ({
           }}
           overrides={{
             headerActions: () => (
-              <div className="flex">
-                {isCreate && (
+              <div className="flex gap-2">
+                {isCreate ? (
                   <Button
                     className="bg-blue-400 text-white"
                     onClick={exportToHTML}
                   >
                      สร้าง
+                  </Button>
+                ) : (
+                  <Button
+                    className="bg-blue-400 text-white"
+                    onClick={exportToHTML}
+                  >
+                     แก้ไข
+                  </Button>
+                )}
+                {!isCreate && initialData?.id && (
+                  <Button
+                    className="bg-accent2 text-white"
+                    onClick={onTemplateDelete}
+                  >
+                     ลบ
                   </Button>
                 )}
               </div>

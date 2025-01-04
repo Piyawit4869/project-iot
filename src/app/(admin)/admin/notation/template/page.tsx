@@ -61,14 +61,13 @@ export default function TemplatesPage() {
     fetchNotations();
   }, [filters, page, rowsPerPage]);
 
-  console.log({ items });
-
   return (
     <div>
       <Scaffold
         child={
           <div>
             <TopSection
+              backpath={'/admin/notation'}
               title="รูปแบบเอกสาร"
               buttons={[
                 <Link href={'template/create'} key={'create button'}>
@@ -106,8 +105,16 @@ export default function TemplatesPage() {
               </div>
             </div>
             {loading ? (
-              <div className="flex justify-center items-center h-64">
-                <div className="spinner"></div>
+              <div className="flex items-center justify-center m-10">
+                <div className="relative flex flex-col items-center space-y-4">
+                  {/* Spinner */}
+                  <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+
+                  {/* Loading Text */}
+                  <p className="text-gray-600 text-lg font-semibold animate-pulse">
+                    Loading, please wait...
+                  </p>
+                </div>
               </div>
             ) : (
               <TablePagination

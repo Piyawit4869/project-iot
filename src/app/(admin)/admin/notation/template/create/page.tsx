@@ -1,5 +1,6 @@
 import { TemplateBuilder } from '@/components/builder/templateBuilder';
 import Scaffold from '@/components/common/scaffold';
+import { TopSection } from '@/components/common/topSection';
 import { Card } from '@nextui-org/react';
 
 export default function CreateTemplatePage() {
@@ -8,7 +9,12 @@ export default function CreateTemplatePage() {
       backgroundColor=""
       child={
         <div>
-          <Card>
+          <TopSection
+            backpath={'/admin/notation/template'}
+            title="สร้างรูปแบบเอกสาร"
+            buttons={[]}
+          />
+          <Card className="mb-4 mt-4">
             <TemplateBuilder isCreate={true} />
           </Card>
         </div>

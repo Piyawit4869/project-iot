@@ -2,7 +2,8 @@
 
 import { TemplateBuilder } from '@/components/builder/templateBuilder';
 import Scaffold from '@/components/common/scaffold';
-import get from '@/pages/api/templates/get';
+import { TopSection } from '@/components/common/topSection';
+import getTemplate from '@/pages/api/templates/get';
 import { Card } from '@nextui-org/react';
 import { useParams } from 'next/navigation';
 import React from 'react';
@@ -21,7 +22,7 @@ export default function SingleTemplatePage() {
     setLoading(true);
 
     const fetchData = async () => {
-      const { data } = await get(params.slug as string);
+      const { data } = await getTemplate(params.slug as string);
 
       setData(data);
       setLoading(false);
@@ -30,14 +31,17 @@ export default function SingleTemplatePage() {
     fetchData();
   }, [params]);
 
-  console.log({ data });
-
   return (
     <Scaffold
       backgroundColor=""
       child={
         <div>
-          <Card>
+          <TopSection
+            backpath={'/admin/notation/template'}
+            title="แก้ไขรูปแบบเอกสาร"
+            buttons={[]}
+          />
+          <Card className="mb-4 mt-4">
             <TemplateBuilder isCreate={false} initialData={data} />
           </Card>
         </div>

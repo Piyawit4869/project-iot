@@ -15,12 +15,17 @@ import {
 } from '@nextui-org/react';
 import { parseDate } from '@internationalized/date';
 import React from 'react';
+import getTemplate from '@/pages/api/templates/get';
 import get from '@/pages/api/notations/get';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { updateNotation } from '@/pages/api/notations/update';
 import { deleteNotation } from '@/pages/api/notations/delete';
 import { changeStatusNotation } from '@/pages/api/notations/changeStatus';
+import { toast } from 'sonner';
+import pagination from '@/pages/api/templates/pagination';
+import TemplatesPage from '../template/page';
+import { handleDocumentStatusTag } from '@/components/common/common';
 
 export default function NotationSinglePage() {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
@@ -32,6 +37,45 @@ export default function NotationSinglePage() {
   const [formData, setFormData] = React.useState({}) as any;
   const router = useRouter();
   const [openEdit, setOpenEdit] = React.useState(false);
+  const [templates, setTemplates] = React.useState([]) as any;
+  const [templateSelected, setTemplateSelected] = React.useState({}) as any;
+  const [processedHtml, setProcessedHtml] = React.useState<string>('');
+  const htmlTemplate = templateSelected.templateNotation;
+
+  const handleTemplateChange = async (e: any) => {
+    const selectedId = e.target.value;
+
+    setFormData((prevData: any) => ({ ...prevData, templateId: selectedId }));
+
+    if (selectedId) {
+      const { data } = await getTemplate(selectedId);
+      setTemplateSelected(data);
+    }
+  };
+
+  React.useEffect(() => {
+    const fetchTemplate = async () => {
+      const { items: fetchedItems } = await pagination({
+        page: 1,
+        limit: 20,
+      });
+
+      setTemplates(fetchedItems);
+    };
+
+    fetchTemplate();
+  }, []);
+
+  React.useEffect(() => {
+    if (formData.templateId) {
+      const fetchedTemplateWithId = async () => {
+        const { data } = await getTemplate(formData.templateId);
+        setTemplateSelected(data);
+      };
+
+      fetchedTemplateWithId();
+    }
+  }, [formData]);
 
   React.useEffect(() => {
     if (!params || !params.slug) {
@@ -64,6 +108,30 @@ export default function NotationSinglePage() {
           : value,
     }));
   };
+
+  React.useEffect(() => {
+    if (htmlTemplate) {
+      let updatedHtml = htmlTemplate;
+
+      Object.keys(formData).forEach((key) => {
+        const regex = new RegExp(`{{${key}}}`, 'g');
+        let value = formData[key] || '';
+
+        if (key === 'startDate' && value) {
+          const date = new Date(value);
+          value = date.toLocaleDateString('th-TH', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          });
+        }
+
+        updatedHtml = updatedHtml.replace(regex, value);
+      });
+
+      setProcessedHtml(updatedHtml);
+    }
+  }, [formData, htmlTemplate]);
 
   const handleZoomIn = () => {
     setZoomLevel((prevZoom) => Math.min(prevZoom + 10, 200)); // Max zoom 200%
@@ -119,8 +187,20 @@ export default function NotationSinglePage() {
 
       setOpenEdit(false);
 
+      toast.success('📝 แก้ไขเอกสารสำเร็จ!', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
       router.push(`/admin/notation/${res.data.id}`);
     } catch (err: any) {
+      toast.error('❌ ไม่สามารถแก้ไขเอกสารได้', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
       console.error('Send FormData error:', err);
       setErrors({ general: err.message || 'An unexpected error occurred.' });
     } finally {
@@ -132,8 +212,20 @@ export default function NotationSinglePage() {
     try {
       await changeStatusNotation(params?.slug, 'canceled');
 
+      toast.success('ยกเลิกเอกสารสำเร็จ!', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
       router.push(`/admin/notation/${params?.slug}`);
     } catch (error) {
+      toast.error('❌ ไม่สามารถยกเลิกเอกสารได้', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
       console.error('Change status error:', error);
     }
   };
@@ -142,8 +234,20 @@ export default function NotationSinglePage() {
     try {
       await deleteNotation(params?.slug);
 
+      toast.success('ลบเอกสารสำเร็จ!', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
       router.push(`/admin/notation`);
     } catch (error) {
+      toast.error('❌ ไม่สามารถลบเอกสารได้', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
       console.error('Delete error:', error);
     }
   };
@@ -152,8 +256,20 @@ export default function NotationSinglePage() {
     try {
       await changeStatusNotation(params?.slug, 'pending');
 
+      toast.success('เอกสารถูกเปลี่ยนเป็นรอดำเนินการแล้ว!', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
       router.push(`/admin/notation/${params?.slug}`);
     } catch (error) {
+      toast.error('❌ ไม่สามารถเปลี่ยนเอกสารเป็นรอดำเนินการได้', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
       console.error('Pending error:', error);
     }
   };
@@ -162,8 +278,19 @@ export default function NotationSinglePage() {
     try {
       await changeStatusNotation(params?.slug, 'review');
 
+      toast.success('เอกสารถูกเปลี่ยนเป็นรอตรวจสอบแล้ว!', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
       router.push(`/admin/notation/${params?.slug}`);
     } catch (error) {
+      toast.error('❌ ไม่สามารถเปลี่ยนเอกสารเป็นรอตรวจสอบได้', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
       console.error('Waiting error:', error);
     }
   };
@@ -172,8 +299,19 @@ export default function NotationSinglePage() {
     try {
       await changeStatusNotation(params?.slug, 'rejected');
 
+      toast.success('เอกสารถูกเปลี่ยนเป็นปฏิเสษแล้ว!', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
       router.push(`/admin/notation/${params?.slug}`);
     } catch (error) {
+      toast.error('❌ ไม่สามารถเปลี่ยนเอกสารเป็นปฏิเสษได้', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
       console.error('Reject error:', error);
     }
   };
@@ -182,8 +320,20 @@ export default function NotationSinglePage() {
     try {
       await changeStatusNotation(params?.slug, 'approved');
 
+      toast.success('เอกสารถูกเปลี่ยนเป็นอนุมัติแล้ว!', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
       router.push(`/admin/notation/${params?.slug}`);
     } catch (error) {
+      toast.error('❌ ไม่สามารถเปลี่ยนเอกสารเป็นอนุมัติได้', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
       console.error('Approve error:', error);
     }
   };
@@ -328,9 +478,26 @@ export default function NotationSinglePage() {
                     className="grid grid-cols-1 gap-4"
                     validationErrors={errors}
                   >
-                    <h1 className="text-2xl font-bold text-headFont">
-                      ข้อมูลเอกสาร
-                    </h1>
+                    <div className="flex justify-between items-center">
+                      <h1 className="flex-1 text-2xl font-bold text-headFont">
+                        ข้อมูลเอกสาร
+                      </h1>
+                      <Select
+                        size="sm"
+                        className="flex-1"
+                        name="templateId"
+                        label="เลือกรูปแบบเอกสาร"
+                        onChange={handleTemplateChange}
+                        defaultSelectedKeys={[formData.templateId]}
+                        isDisabled={!openEdit}
+                      >
+                        {templates.map((item: any) => (
+                          <SelectItem key={item.id} value={item.id}>
+                            {item.templateName}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                    </div>
                     {/* Notation Section */}
                     <div className="flex gap-4">
                       <div className="flex-1 flex items-center gap-4">
@@ -516,7 +683,7 @@ export default function NotationSinglePage() {
                         ข้อมูลเอกสาร
                       </h1>
                       {/* Dynamic Status Tag */}
-                      {handleDocStatus(data?.docStatus)}
+                      {handleDocumentStatusTag(data?.docStatus)}
                       {/* <div
                         className={`px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700 border border-gray`}
                       >
@@ -524,25 +691,23 @@ export default function NotationSinglePage() {
                       </div> */}
                     </div>
 
-                    <div className="bg-white w-[170mm] h-[240mm] shadow-lg border border-gray-300 rounded overflow-hidden">
-                      <div className="p-6 border-b">
-                        <h1 className="text-center text-2xl font-bold text-primary">
-                          Document Title
-                        </h1>
-                        <p className="text-center text-sm text-gray-500">
-                          Subtitle or additional details
+                    {/* Render HTML Template Here */}
+                    <div
+                      className="bg-white w-[170mm] h-[240mm] shadow-lg border border-gray-300 rounded overflow-hidden p-6"
+                      style={{
+                        transform: `scale(${zoomLevel / 100})`,
+                        transformOrigin: 'top left',
+                      }}
+                    >
+                      {processedHtml ? (
+                        <div
+                          dangerouslySetInnerHTML={{ __html: processedHtml }}
+                        />
+                      ) : (
+                        <p className="text-center text-gray-500">
+                          กรุณาเลือกรูปแบบเอกสาร
                         </p>
-                      </div>
-                      <div className="p-6">
-                        <p className="text-sm text-gray-600">
-                          Preview content will appear here.
-                        </p>
-                      </div>
-                      <div className="p-6 border-t">
-                        <p className="text-center text-sm text-gray-500">
-                          Footer text or signature placeholder
-                        </p>
-                      </div>
+                      )}
                     </div>
                     <div className="w-[170mm] w-full flex justify-center items-center mt-4">
                       <div className="flex items-center gap-2">
@@ -583,27 +748,11 @@ export default function NotationSinglePage() {
 }
 
 const types = [
-  {
-    label: 'Invoice',
-    value: 'invoice',
-  },
-  {
-    label: 'Quotation',
-    value: 'quotation',
-  },
-  {
-    label: 'DeliveryOrder',
-    value: 'delivery_order',
-  },
-  {
-    label: 'PurchaseOrder',
-    value: 'purchase_order',
-  },
-
-  {
-    label: 'Receipt',
-    value: 'receipt',
-  },
+  { label: 'ใบแจ้งหนี้', value: 'invoice' },
+  { label: 'ใบเสนอราคา', value: 'quotation' },
+  { label: 'ใบการจัดส่งคำสั่งซื้อ', value: 'delivery_order' },
+  { label: 'ใบสั่งซื้อ', value: 'purchase_order' },
+  { label: 'ใบเสร็จรับเงิน', value: 'receipt' },
 ];
 
 const address = [
@@ -626,59 +775,3 @@ const selectItem = [
   { label: 'รายการที่ 1', value: '1' },
   { label: 'รายการที่ 2', value: '2' },
 ];
-
-const handleDocStatus = (docStatus: string) => {
-  switch (docStatus) {
-    case 'draft':
-      return (
-        <div
-          className={`px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700 border border-gray`}
-        >
-          แบบร่าง
-        </div>
-      );
-    case 'pending':
-      return (
-        <div
-          className={`px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700 border border-gray`}
-        >
-          รอดำเนินการ
-        </div>
-      );
-    case 'waiting_for_review':
-      return (
-        <div
-          className={`px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700 border border-gray`}
-        >
-          รอตรวจสอบ
-        </div>
-      );
-    case 'approved':
-      return (
-        <div
-          className={`px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700 border border-gray`}
-        >
-          อนุมัติ
-        </div>
-      );
-    case 'rejected':
-      return (
-        <div
-          className={`px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700 border border-gray`}
-        >
-          ปฏิเสษ
-        </div>
-      );
-    case 'canceled':
-      return (
-        <div
-          className={`px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700 border border-gray`}
-        >
-          ยกเลิก
-        </div>
-      );
-
-    default:
-      break;
-  }
-};

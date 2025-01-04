@@ -81,8 +81,6 @@ export default function IndexPage() {
     router.push(`user/${row.id}`); // Redirect to a dynamic route
   };
 
-  console.log({ items });
-
   return (
     <div>
       {/* Page Header */}
@@ -132,18 +130,21 @@ const columns: any = [
     title: 'รูปภาพ',
     dataIndex: 'image',
     render: () => {
+      return '-';
+    },
+  },
+  {
+    title: 'ชื่อผู้ใช้',
+    dataIndex: 'name',
+    link: '/admin/user',
+    render: (_: any, record: any) => {
       return (
-        <Image
-          src="/logo.png"
-          alt="user"
-          className="w-12 h-12 rounded-full"
-          width={12}
-          height={12}
-        />
+        <Link href={`/admin/user/${record.id}`}>
+          {record.profile.firstName}
+        </Link>
       );
     },
   },
-  { title: 'ชื่อผู้ใช้', dataIndex: 'name', link: '/admin/user' },
   { title: 'อีเมล', dataIndex: 'email' },
   { title: 'ตำแหน่ง', dataIndex: 'position' },
   { title: 'เบอร์โทรศัพท์', dataIndex: 'phone' },

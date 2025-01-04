@@ -1,11 +1,11 @@
 import { base_url } from '@/constant/common';
 
-export default async function getTemplate(id: string): Promise<any> {
+export default async function getUser(id: string): Promise<any> {
   try {
     const accessToken = localStorage.getItem('accessToken');
 
     //query params in this
-    const response = await fetch(`${base_url}/crud/configure-notations/${id}`, {
+    const response = await fetch(`${base_url}/crud/users/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
