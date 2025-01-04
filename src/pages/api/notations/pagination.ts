@@ -26,6 +26,8 @@ export default async function pagination({
     url.searchParams.append('page', page.toString());
     url.searchParams.append('limit', limit.toString());
 
+    const accessToken = localStorage.getItem('accessToken');
+
     if (docNo) {
       url.searchParams.append('docNo', docNo);
     }
@@ -34,7 +36,7 @@ export default async function pagination({
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3MzUyNjcyNzIsImV4cCI6MTczNTI5NjA3Mn0.gbWesGioCYGY1dJ2X5L79iw_gjK3QkybXtaXbp7Fvuw`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 

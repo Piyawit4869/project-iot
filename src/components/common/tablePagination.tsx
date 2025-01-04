@@ -16,6 +16,7 @@ interface Column {
   dataIndex: string;
   align?: 'left' | 'center' | 'right';
   link?: string;
+  render?: (value: string, record: any, index: number) => React.ReactNode;
 }
 
 interface Meta {
@@ -39,11 +40,9 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   initialMeta,
   rowsPerPage,
   onPageChange,
-  onRowsPerPageChange,
   columns,
 }) => {
   const handlePageChange = (newPage: number) => {
-    // Ensure page numbers are within bounds
     if (newPage >= 1 && newPage <= initialMeta.totalPages) {
       onPageChange(newPage);
     }
@@ -77,7 +76,9 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
                       : ''
                   }`}
                 >
-                  {col.link ? (
+                  {col.render ? (
+                    col.render(row[col.dataIndex], row, idx)
+                  ) : col.link ? (
                     <Link href={`${col.link}/${row.id}`}>
                       {row[col.dataIndex] || '-'}
                     </Link>
@@ -91,7 +92,6 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
         </TableBody>
       </Table>
       <div className="flex justify-between items-center mt-4 p-4 bg-gray-100 rounded-lg shadow">
-        {/* Left: Showing Length */}
         <div className="text-gray-700">
           <strong>
             {Math.min(
@@ -106,8 +106,6 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
           </strong>{' '}
           จากทั้งหมด <strong>{initialMeta.totalItems}</strong> รายการ
         </div>
-
-        {/* Center: Page Numbers */}
         <div className="flex items-center gap-2">
           {Array.from({ length: initialMeta.totalPages }, (_, index) => (
             <button
@@ -123,8 +121,6 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             </button>
           ))}
         </div>
-
-        {/* Right: Previous/Next Buttons */}
         <div className="flex items-center gap-2">
           <button
             onClick={() => handlePageChange(initialMeta.currentPage - 1)}

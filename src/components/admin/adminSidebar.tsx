@@ -7,7 +7,7 @@ import Image from 'next/image';
 import * as Icon from '@ant-design/icons';
 
 export function AdminSideBar() {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? ''; // ใช้ Default Value
   const [menuItems, setMenuItems] = React.useState([]);
   const [isSubMenuOpen, setIsSubMenuOpen] = React.useState<{
     [key: string]: boolean;
@@ -48,28 +48,28 @@ export function AdminSideBar() {
         },
         {
           name: 'กิจกรรมการทำงาน',
-          key: 'activity',
+          key: 'attendance',
           path: '',
           icon: <Icon.UserOutlined />,
           subMenu: [
             {
               name: 'ภาพรวม',
-              path: '/admin/activity/attendance',
+              path: '/admin/attendance/overview',
               icon: <Icon.ScheduleOutlined />,
             },
             {
               name: 'การตั้งค่า',
-              path: '/admin/activity/config_attendance',
+              path: '/admin/attendance/config_attendance',
               icon: <Icon.ScheduleOutlined />,
             },
             {
               name: 'ไวท์ลิสต์',
-              path: '/admin/activity/whitelist',
+              path: '/admin/attendance/whitelist',
               icon: <Icon.ScheduleOutlined />,
             },
             {
               name: 'การลางาน',
-              path: '/admin/activity/approval',
+              path: '/admin/attendance/approval',
               icon: <Icon.ScheduleOutlined />,
             },
           ],
@@ -114,9 +114,9 @@ export function AdminSideBar() {
   };
 
   return (
-    <div className="flex w-[250px]">
+    <div className="flex w-[250px] overflow-x-hidden">
       {/* Sidebar */}
-      <aside className="w-64 bg-primary shadow-md">
+      <aside className="bg-primary shadow-md w-full">
         <div className="flex flex-col items-center py-6">
           {/* Logo */}
           <Image
@@ -130,7 +130,7 @@ export function AdminSideBar() {
         </div>
 
         {/* Sidebar Menu with Scrolling */}
-        <nav className="flex flex-col h-full p-4 space-y-4 overflow-y-auto max-h-screen">
+        <nav className="m-4 space-y-1.5 overflow-y-auto max-h-screen -mt-4 pb-6">
           {menuItems.map((item: any, index) => (
             <React.Fragment key={index}>
               {/* Main Menu Item */}
@@ -143,11 +143,9 @@ export function AdminSideBar() {
                     ? 'bg-primaryFont text-secondaryFont'
                     : 'text-primaryFont hover:bg-primaryFont hover:text-secondaryFont'
                 }`}
-                onClick={
-                  item.subMenu ? () => toggleSubMenu(item.key) : undefined
-                }
+                onClick={item.subMenu ? () => toggleSubMenu(item.key) : undefined}
               >
-                <div className="flex justify-between ">
+                <div className="flex justify-between">
                   <div>
                     {item.icon}
                     <span className="ml-2">{item.name}</span>
@@ -165,7 +163,7 @@ export function AdminSideBar() {
               </Link>
 
               {item.subMenu && isSubMenuOpen[item.key] && (
-                <div className="pl-6 space-y-2">
+                <div className="px-2 space-y-1.5">
                   {item.subMenu.map((subItem: any, subIndex: number) => (
                     <Link
                       key={subIndex}

@@ -11,12 +11,12 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  User,
   Popover,
   PopoverTrigger,
   PopoverContent,
 } from '@nextui-org/react';
 import CardComponent from '@/components/common/card';
+import Link from 'next/link';
 
 export default function AdminLayout({
   children,
@@ -109,22 +109,12 @@ export default function AdminLayout({
                     }
                     color={item.key === 'delete' ? 'danger' : 'default'}
                   >
-                    <User
-                      avatarProps={{
-                        size: 'sm',
-                        src: 'https://avatars.githubusercontent.com/u/30373425?v=4',
-                      }}
-                      classNames={{
-                        name: 'text-default-600',
-                        description: 'text-default-500',
-                      }}
-                      description="@jrgarciadev"
-                      name="Junior Garcia"
-                    />
-                    <div className="flex">
-                      {item.icon}
-                      <div className="ml-3">{item.label}</div>
-                    </div>
+                    <Link href={item.path}>
+                      <div className="flex">
+                        {item.icon}
+                        <div className="ml-3">{item.label}</div>
+                      </div>
+                    </Link>
                   </DropdownItem>
                 )}
               </DropdownMenu>
@@ -133,7 +123,7 @@ export default function AdminLayout({
         </header>
 
         {/* Page Content */}
-        <main className="bg-gray-100 flex-1 w-full p-8 overflow-y-auto">
+        <main className="bg-gray-100 flex-1 w-full overflow-y-auto">
           <Suspense
             fallback={
               <div className="flex items-center justify-center min-h-screen">

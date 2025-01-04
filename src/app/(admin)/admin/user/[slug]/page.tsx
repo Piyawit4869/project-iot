@@ -19,7 +19,7 @@ import {
   ModalFooter,
   useDisclosure,
 } from '@nextui-org/react';
-import { singleUserLoader } from '@/app/api/singleuser';
+import { singleUserLoader } from '@/app/api/user';
 import React from 'react';
 import { useParams } from 'next/navigation';
 
@@ -35,7 +35,7 @@ export default function UserSinglePage() {
 
   const params = useParams<{ slug: string }>();
   console.log(params);
-  const [usersSingle, setUsersSingle] = React.useState<any[]>([]);
+  const [usersSingle, setUsersSingle] = React.useState<any>({});
 
   React.useEffect(() => {
     if (!params?.slug) {
@@ -44,7 +44,7 @@ export default function UserSinglePage() {
     }
     const fetchUserSingle = async () => {
       try {
-        const userSingle = await singleUserLoader(params.slug);
+        const { data: userSingle } = await singleUserLoader(params.slug);
         setUsersSingle(userSingle);
         console.log('User data:', userSingle);
       } catch (error) {
@@ -54,8 +54,6 @@ export default function UserSinglePage() {
 
     fetchUserSingle();
   }, [params?.slug]);
-
-  console.log(usersSingle);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -81,14 +79,6 @@ export default function UserSinglePage() {
                   </Button>,
                   <Button
                     className="bg-accent2 text-white"
-                    type="submit"
-                    form="user"
-                    key={'cancel button'}
-                  >
-                    ยกเลิก
-                  </Button>,
-                  <Button
-                    className="bg-accent3 text-white"
                     type="submit"
                     form="user"
                     key={'delete button'}
@@ -131,7 +121,7 @@ export default function UserSinglePage() {
                             <Select
                               className="flex-1  text-headFont"
                               name="position"
-                              placeholder="เลือกตำแหน่ง"
+                              placeholder={usersSingle?.role?.name}
                               label="ตำแหน่ง"
                               labelPlacement={'outside'}
                             >
@@ -150,7 +140,7 @@ export default function UserSinglePage() {
                             <Select
                               className="flex-1  text-headFont"
                               name="prefix"
-                              placeholder="เลือกคำนำหน้า"
+                              placeholder={usersSingle?.profile?.prefix}
                               label="คำนำหน้า"
                               labelPlacement={'outside'}
                             >
@@ -173,6 +163,7 @@ export default function UserSinglePage() {
                               }
                               labelPlacement="outside"
                               name="name"
+                              value={usersSingle?.profile?.firstName}
                               placeholder="กรอกชื่อ"
                             />
                           </div>
@@ -184,6 +175,7 @@ export default function UserSinglePage() {
                               }
                               labelPlacement="outside"
                               name="lastname"
+                              value={usersSingle?.profile?.lastName}
                               placeholder="กรอกนามสกุล"
                             />
                           </div>
@@ -205,6 +197,7 @@ export default function UserSinglePage() {
                               }
                               labelPlacement="outside"
                               name="phone"
+                              value={usersSingle?.profile?.phone}
                               placeholder="กรอกเบอร์โทรศัพท์"
                             />
                           </div>

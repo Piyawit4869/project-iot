@@ -2,28 +2,52 @@
 
 import { login } from '@/app/api/auth';
 import { Button, Input } from '@nextui-org/react';
-import localFont from 'next/font/local';
-import React, { useActionState, useState } from 'react';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+const base_url = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function LoginPage() {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); // Clear previous errors
-    setLoading(true); // Start loading state
+    setError(null);
+    setLoading(true);
 
     try {
       const formData = new FormData(e.currentTarget as HTMLFormElement);
-      await login({}, formData); // Pass empty prevState for now
+      const { data } = await login({}, formData);
+      const me = await fetch(`${base_url}/auth/me/`, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: `Bearer ${data.accessToken}`,
+        },
+      }).then((response) => response.json());
+
+      localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('refreshToken', data.refreshToken);
+
+      if (me.role.name === 'super_admin') {
+        router.push('/superadmin');
+      } else if (
+        me.role.name === 'employee' &&
+        me.employeeRole.name === 'owner'
+      ) {
+        router.push('/admin');
+      } else {
+        router.push('/');
+      }
     } catch (err: any) {
       console.error('Login error:', err);
       setError(err.message || 'An unexpected error occurred.');
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
 

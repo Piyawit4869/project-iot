@@ -14,6 +14,8 @@
   --accent3: #ffbe3d;
   --headFont: #19142a;
   --whiteFont: #ffffff;
+
+  --puck-font-family: var(--font-ibm-sans), sans-serif !important;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -54,4 +56,14 @@ body {
   100% {
     transform: rotate(360deg);
   }
+}
+
+._PuckLayout_1g88c_31 {
+  position: relative !important;
+}
+
+body, html {
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
 }
