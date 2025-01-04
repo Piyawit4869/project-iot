@@ -9,6 +9,8 @@ import { Tabs, Tab } from '@nextui-org/react';
 
 export default function ConfigAttendancesPage() {
 
+
+  
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the form from submitting to the URL
     const formData = new FormData(e.currentTarget);
@@ -23,7 +25,7 @@ export default function ConfigAttendancesPage() {
       child={
         <div>
           <TopSection
-            backpath={'/admin/activity/whitelist'}
+            backpath={'/admin/attendance/whitelist'}
             title="การตั้งค่าการเข้าออกงาน"
             buttons={[
               <div key="action-buttons">
@@ -228,12 +230,3 @@ export default function ConfigAttendancesPage() {
   );
 }
 
-// const day = [
-//   { label: 'Sunday', value: '1' },
-//   { label: 'Monday', value: '2' },
-//   { label: 'Tuesday', value: '3' },
-//   { label: 'Wednesday', value: '4' },
-//   { label: 'Thursday', value: '5' },
-//   { label: 'Friday', value: '6' },
-//   { label: 'Saturday', value: '7' },
-// ];

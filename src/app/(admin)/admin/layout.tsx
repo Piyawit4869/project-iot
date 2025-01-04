@@ -119,7 +119,7 @@ export default function AdminLayout({
         </header>
 
         {/* Page Content */}
-        <main className="bg-gray-100 flex-1 w-full p-8 overflow-y-auto">
+        <main className="bg-gray-100 flex-1 w-full overflow-y-auto">
           <Suspense
             fallback={
               <div className="flex items-center justify-center min-h-screen">

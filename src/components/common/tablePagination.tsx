@@ -41,13 +41,15 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   onPageChange,
   columns,
 }) => {
+  // console.log(columns)
+  // console.log(columns.map((col: any) => {return col.dataIndex }))
   const handlePageChange = (newPage: number) => {
     // Ensure page numbers are within bounds
     if (newPage >= 1 && newPage <= initialMeta.totalPages) {
       onPageChange(newPage);
     }
   };
-
+  
   return (
     <div>
       <Table aria-label="Paginated Table" className="w-full border-collapse">

@@ -29,13 +29,8 @@ export default function CreateUserPage() {
     email: '',
     userName: '',
     // password: '',
-    type: '',
+    role: '',
     note: '',
-    customer: {
-      name: 'john',
-    },
-    docStatus: 'draft',
-    status: 'draft',
   });
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -246,7 +241,7 @@ export default function CreateUserPage() {
                           <div className="flex gap-4 mt-6">
                             <Select
                               className="flex-1  text-headFont"
-                              name="position"
+                              name="role.name"
                               placeholder="เลือกตำแหน่ง"
                               label="ตำแหน่ง"
                               labelPlacement={'outside'}

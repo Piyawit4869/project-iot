@@ -17,6 +17,7 @@ import { Tabs, Tab } from '@nextui-org/react';
 
 export default function ConfigAttendanceDetailPage() {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
+  const [selectedEmployees, setSelectedEmployees] = useState<number[]>([]); // Initialize state for selected employees
   const [workHours, setWorkHours] = useState({
     clockIn: '',
     breakTime: '',
@@ -30,6 +31,16 @@ export default function ConfigAttendanceDetailPage() {
   const handleRemoveItem = (index: number) => {
     const updatedItems = items.filter((_, i) => i !== index);
     setItems(updatedItems);
+  };
+
+  const handleAvatarClick = (employeeId: number) => {
+    if (selectedEmployees.includes(employeeId)) {
+      setSelectedEmployees(
+        selectedEmployees.filter((id) => id !== employeeId)
+      );
+    } else {
+      setSelectedEmployees([...selectedEmployees, employeeId]);
+    }
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -57,7 +68,7 @@ export default function ConfigAttendanceDetailPage() {
       child={
         <div>
           <TopSection
-            backpath={'/admin/activity/config_attendance'}
+            backpath={'/admin/attendance/config_attendance'}
             title="การตั้งค่าการเข้าออกงาน"
             buttons={[
               <div key={'btnConfig'}>
@@ -265,4 +276,9 @@ const day = [
   { label: 'Thursday', value: '5' },
   { label: 'Friday', value: '6' },
   { label: 'Saturday', value: '7' },
+];
+const employees = [
+  { id: 1, name: 'John Doe', avatar: '/path/to/avatar1.jpg' },
+  { id: 2, name: 'Jane Smith', avatar: '/path/to/avatar2.jpg' },
+  // Add more employees here
 ];
