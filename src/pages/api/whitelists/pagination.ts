@@ -1,12 +1,13 @@
 import { base_url } from '@/constant/common';
 
-interface FetchWhielistsParams {
+interface FetchWhitelistsParams {
   page: number;
   limit: number;
-  docNo?: string;
+  ip?: string;
+  status?: string;
 }
 
-interface FetchWhielistsResponse {
+interface FetchWhitelistsResponse {
   items: any[];
   meta: {
     totalItems: number;
@@ -19,17 +20,31 @@ interface FetchWhielistsResponse {
 export default async function pagination({
   page,
   limit,
-}: FetchWhielistsParams): Promise<FetchWhielistsResponse> {
+  ip,
+  status,
+}: FetchWhitelistsParams): Promise<FetchWhitelistsResponse> {
   try {
     const url = new URL(`${base_url}/crud/whitelists`);
+    url.searchParams.append('page', page.toString());
+    url.searchParams.append('limit', limit.toString());
+
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (ip) {
+      url.searchParams.append('ip', ip);
+    }
+    if (status) {
+      url.searchParams.append('status', status);
+    }
 
     const response = await fetch(url.toString(), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiZW1wbG95ZWUiLCJlbXBsb3llZVJvbGUiOiJvd25lciIsImlhdCI6MTczNTg3NTMwMSwiZXhwIjoxNzM2MTM0NTAxfQ.uDJ3Cam3hOcexLplqpji86Hl1dsxwwlB_pWgzqHdJio`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
+    
 
     if (!response.ok) {
       throw new Error('Failed to fetch data from external API');
