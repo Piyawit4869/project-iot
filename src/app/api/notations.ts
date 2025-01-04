@@ -20,8 +20,6 @@ export async function notationsLoader(params = {}) {
       },
     });
 
-    console.log({ data });
-
     if (!data.ok) {
       throw new Error(`Error fetching notations: ${data.statusText}`);
     }
