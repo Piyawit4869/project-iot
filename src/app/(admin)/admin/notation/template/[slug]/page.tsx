@@ -10,7 +10,6 @@ import React from 'react';
 
 export default function SingleTemplatePage() {
   const params = useParams<{ slug?: string }>();
-  const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState() as any;
 
   React.useEffect(() => {
@@ -19,13 +18,10 @@ export default function SingleTemplatePage() {
       return;
     }
 
-    setLoading(true);
-
     const fetchData = async () => {
       const { data } = await getTemplate(params.slug as string);
 
       setData(data);
-      setLoading(false);
     };
 
     fetchData();

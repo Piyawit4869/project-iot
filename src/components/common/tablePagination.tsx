@@ -16,7 +16,7 @@ interface Column {
   dataIndex: string;
   align?: 'left' | 'center' | 'right';
   link?: string;
-  render?: (value: any, record: any, index: number) => React.ReactNode;
+  render?: (value: string, record: any, index: number) => React.ReactNode;
 }
 
 interface Meta {

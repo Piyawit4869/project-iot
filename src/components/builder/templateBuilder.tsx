@@ -247,14 +247,14 @@ export const TemplateBuilder = ({
                     className="bg-blue-400 text-white"
                     onClick={exportToHTML}
                   >
-                     สร้าง
+                    สร้าง
                   </Button>
                 ) : (
                   <Button
                     className="bg-blue-400 text-white"
                     onClick={exportToHTML}
                   >
-                     แก้ไข
+                    แก้ไข
                   </Button>
                 )}
                 {!isCreate && initialData?.id && (
@@ -262,7 +262,7 @@ export const TemplateBuilder = ({
                     className="bg-accent2 text-white"
                     onClick={onTemplateDelete}
                   >
-                     ลบ
+                    ลบ
                   </Button>
                 )}
               </div>

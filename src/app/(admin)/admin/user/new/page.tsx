@@ -11,12 +11,12 @@ import {
   SelectItem,
   Input,
   DatePicker,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
+  // Modal,
+  // ModalContent,
+  // ModalHeader,
+  // ModalBody,
+  // ModalFooter,
+  // useDisclosure,
 } from '@nextui-org/react';
 import React from 'react';
 import { createUser } from '@/pages/api/user/create';

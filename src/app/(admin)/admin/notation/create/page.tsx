@@ -23,7 +23,6 @@ import getTemplate from '@/pages/api/templates/get';
 export default function NotationCreatePage() {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   const [zoomLevel, setZoomLevel] = React.useState(100); // Default zoom level (100%)
-  const [loading, setLoading] = React.useState(false);
   const [errors, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [createStatus, setCreateStatus] = React.useState('');
@@ -58,8 +57,6 @@ export default function NotationCreatePage() {
   };
 
   React.useEffect(() => {
-    setLoading(true);
-
     const fetchTemplate = async () => {
       const { items: fetchedItems } = await pagination({ page: 1, limit: 20 });
 
@@ -112,7 +109,6 @@ export default function NotationCreatePage() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
     const requiredFields = ['refNo', 'startDate', 'type'];
     const newErrors: any = {};
@@ -125,7 +121,6 @@ export default function NotationCreatePage() {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      setLoading(false);
       return;
     }
 
@@ -172,8 +167,6 @@ export default function NotationCreatePage() {
 
       console.error('Send FormData error:', err);
       setErrors({ general: err.message || 'An unexpected error occurred.' });
-    } finally {
-      setLoading(false);
     }
   };
 

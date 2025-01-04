@@ -1,7 +1,6 @@
 'use server';
 
 import { getSession } from '@/libs/lib';
-import { redirect } from 'next/navigation';
 
 const base_url = process.env.NEXT_PUBLIC_API_BASE_URL;
 

@@ -4,10 +4,7 @@ import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import Link from 'next/link';
 import { Button, Chip } from '@nextui-org/react';
-import NextTable from '@/components/common/nextTable';
-import Image from 'next/image';
 import React from 'react';
-import { usersLoader } from '@/app/api/user';
 import { useRouter } from 'next/navigation';
 import { TablePagination } from '@/components/common/tablePagination';
 import pagination from '@/pages/api/user/pagination';
@@ -75,11 +72,6 @@ export default function IndexPage() {
   //   phone: user.profile.phone,
   //   status: user.role.status,
   // }));
-
-  const router = useRouter();
-  const handleRowClick = (row: any) => {
-    router.push(`user/${row.id}`); // Redirect to a dynamic route
-  };
 
   return (
     <div>

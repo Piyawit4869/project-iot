@@ -24,7 +24,6 @@ import { deleteNotation } from '@/pages/api/notations/delete';
 import { changeStatusNotation } from '@/pages/api/notations/changeStatus';
 import { toast } from 'sonner';
 import pagination from '@/pages/api/templates/pagination';
-import TemplatesPage from '../template/page';
 import { handleDocumentStatusTag } from '@/components/common/common';
 
 export default function NotationSinglePage() {
