@@ -2,12 +2,14 @@ import { base_url } from '@/constant/common';
 
 export default async function get(id: string): Promise<any> {
   try {
+    const accessToken = localStorage.getItem('accessToken');
+
     //query params in this
     const response = await fetch(`${base_url}/crud/notations/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiZW1wbG95ZWUiLCJlbXBsb3llZVJvbGUiOiJvd25lciIsImlhdCI6MTczNTc4NDQ5MiwiZXhwIjoxNzM2MDQzNjkyfQ.4zCV41v3OgNzR-LnCsIQ7TZEml500t0kJ1UDt8ODKRQ`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 

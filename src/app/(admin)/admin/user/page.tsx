@@ -9,70 +9,120 @@ import Image from 'next/image';
 import React from 'react';
 import { usersLoader } from '@/app/api/user';
 import { useRouter } from 'next/navigation';
+import { TablePagination } from '@/components/common/tablePagination';
+import pagination from '@/pages/api/user/pagination';
+// import { debounce } from 'lodash';
 
 export default function IndexPage() {
-  const [users, setUsers] = React.useState<any[]>([]);
+  const [page, setPage] = React.useState(1);
+  const [loading, setLoading] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  // const [filters, setFilters] = React.useState({});
+  const [items, setItems] = React.useState([]) as any;
+  const [meta, setMeta] = React.useState({
+    totalItems: 0,
+    itemsPerPage: 10,
+    totalPages: 0,
+    currentPage: 1,
+  });
 
+  const fetchNotations = async () => {
+    setLoading(true);
+    try {
+      // const {} = filters;
+      const { items: fetchedItems, meta: fetchedMeta } = await pagination({
+        page,
+        limit: rowsPerPage,
+        // ...(name && { name }),
+        // ...(docNo && { docNo }),
+      });
+      setItems(fetchedItems);
+      setMeta(fetchedMeta);
+    } catch (error) {
+      console.error('Error fetching notations:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Debounced function to handle filter changes
+  // const handleFilterChange = React.useCallback(
+  //   debounce((updatedFilters) => {
+  //     setPage(1); // Reset to the first page for new filters
+  //     setFilters(updatedFilters);
+  //   }),
+  //   [],
+  // );
+
+  // Handle input changes
+  // const onInputChange = (key: keyof typeof filters, value: string) => {
+  //   const updatedFilters = { ...filters, [key]: value };
+  //   handleFilterChange(updatedFilters);
+  // };
+
+  // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const result = await usersLoader();
-        setUsers(result.items);
-        console.log(result);
-      } catch (error: any) {
-        console.error('Error fetching notations:', error);
-      }
-    };
+    fetchNotations();
+  }, [page, rowsPerPage]);
+  // }, [filters, page, rowsPerPage]);
 
-    fetchUsers();
-  }, []);
-
-  const row = users.map((user) => ({
-    id: user.id,
-    image: user.profile.photoUrl,
-    username: user.profile.firstName,
-    email: user.email,
-    position: user.role.name,
-    phone: user.profile.phone,
-    status: user.role.status,
-  }));
+  // const row = users?.map((user) => ({
+  //   id: user.id,
+  //   image: user.profile.photoUrl,
+  //   username: user.profile.firstName,
+  //   email: user.email,
+  //   position: user.role.name,
+  //   phone: user.profile.phone,
+  //   status: user.role.status,
+  // }));
 
   const router = useRouter();
   const handleRowClick = (row: any) => {
     router.push(`user/${row.id}`); // Redirect to a dynamic route
   };
 
+  console.log({ items });
+
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Page Header */}
-        <Scaffold
-          child={
-            <div>
-              <TopSection
-                title="ข้อมูลผู้ใช้"
-                buttons={[
-                  <Link href={'user/new'} key={'create button'}>
-                    <Button
-                      className="bg-accent1 text-white"
-                      key={'create button'}
-                    >
-                      เพิ่มข้อมูลผูัใช้
-                    </Button>
-                  </Link>,
-                ]}
-              />
-              <div className="mt-4 mb-4">
-                <NextTable
-                  columns={columns}
-                  rows={row}
-                  rowClickHandler={handleRowClick}
-                />
+    <div>
+      {/* Page Header */}
+      <Scaffold
+        child={
+          <div>
+            <TopSection
+              title="ข้อมูลผู้ใช้"
+              buttons={[
+                <Link href={'user/new'} key={'create button'}>
+                  <Button
+                    className="bg-accent1 text-white"
+                    key={'create button'}
+                  >
+                    เพิ่มข้อมูลผูัใช้
+                  </Button>
+                </Link>,
+              ]}
+            />
+
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="spinner"></div>
               </div>
-            </div>
-          }
-        />
-      </div>
+            ) : (
+              <TablePagination
+                initialRows={items}
+                initialMeta={meta}
+                rowsPerPage={rowsPerPage}
+                columns={columns}
+                onPageChange={(newPage) => setPage(newPage)}
+                onRowsPerPageChange={(newRowsPerPage) =>
+                  setRowsPerPage(newRowsPerPage)
+                }
+              />
+            )}
+          </div>
+        }
+        backgroundColor={''}
+      />
     </div>
   );
 }
@@ -93,7 +143,7 @@ const columns: any = [
       );
     },
   },
-  { title: 'ชื่อผู้ใช้', dataIndex: 'username' },
+  { title: 'ชื่อผู้ใช้', dataIndex: 'name', link: '/admin/user' },
   { title: 'อีเมล', dataIndex: 'email' },
   { title: 'ตำแหน่ง', dataIndex: 'position' },
   { title: 'เบอร์โทรศัพท์', dataIndex: 'phone' },

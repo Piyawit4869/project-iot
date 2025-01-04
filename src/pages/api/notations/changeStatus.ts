@@ -1,22 +1,17 @@
 import { base_url } from '@/constant/common';
 
-export async function createNotation(prevState: any, formData: any) {
-  const url = `${base_url}/crud/notations/create/`;
-
-  const body = {
-    ...formData,
-  };
+export async function changeStatusNotation(id: any, status: string) {
+  const url = `${base_url}/crud/notations/status/${status}/${id}`;
 
   const accessToken = localStorage.getItem('accessToken');
 
   const data = await fetch(url, {
-    method: `POST`,
+    method: `PUT`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
       // Authorization: `Bearer ${session.accessToken}`,
     },
-    body: JSON.stringify(body),
   });
 
   return await data.json();
