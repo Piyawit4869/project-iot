@@ -29,9 +29,20 @@ interface WhitelistItem {
   os: string;
   address: {
     name: string;
-    nation: string
+    nation: string;
   };
 }
+
+const columns = [
+  { title: 'สถานะ', dataIndex: 'status' },
+  { title: 'ที่อยู่', dataIndex: 'addressName' },
+  { title: 'ประเทศ', dataIndex: 'addressNation' },
+  { title: 'ไอพี', dataIndex: 'ip' },
+  { title: 'สร้างวันที่', dataIndex: 'createdAt' },
+  { title: 'บราวเซอร์', dataIndex: 'browser' },
+  { title: 'ไอเอสพี', dataIndex: 'isp' },
+  { title: 'ระบบปฏิบัติการ', dataIndex: 'os' },
+];
 
 export default function WhitelistsPage() {
   const [page, setPage] = useState(1);
@@ -53,14 +64,9 @@ export default function WhitelistsPage() {
       const result = await getWhitelists();
       const transformedItems = result.items.map((item: WhitelistItem) => ({
         ...item,
-        addressName: item.address.name || '',addressNation: item.address.nation || '',
+        addressName: item.address.name || '',
+        addressNation: item.address.nation || '',
       }));
-      console.log(result.items)
-      // console.log(result.items.address.name)
-      // console.log(result.items);
-      // const Items = result.items.map((v : any) =>  v)
-      // const Items = result.items[0].address.name
-      // console.log(Items)
       setWhitelists(result.items);
 
       const { ip } = filters;
@@ -72,7 +78,8 @@ export default function WhitelistsPage() {
       setItems(
         fetchedItems.map((item: WhitelistItem) => ({
           ...item,
-          addressName: item.address.name || '',addressNation: item.address.nation || '',
+          addressName: item.address.name || '',
+          addressNation: item.address.nation || '',
         })),
       );
       setMeta(fetchedMeta);
@@ -91,13 +98,11 @@ export default function WhitelistsPage() {
     [],
   );
 
-  // Handle input changes
   const onInputChange = (key: keyof FilterState, value: string) => {
     const updatedFilters = { ...filters, [key]: value };
     handleFilterChange(updatedFilters);
   };
 
-  // Fetch data whenever filters, page, or rowsPerPage change
   useEffect(() => {
     fetchWhitelists();
   }, [filters, page, rowsPerPage]);
@@ -111,10 +116,7 @@ export default function WhitelistsPage() {
               title="ไวท์ลิสต์"
               buttons={[
                 <Link href={'whitelist/create'} key={'create button'}>
-                  <Button
-                    className="bg-accent1 text-white"
-                    key={'create button'}
-                  >
+                  <Button className="bg-accent1 text-white" key={'create button'}>
                     สร้างไวท์ลิสต์
                   </Button>
                 </Link>,
@@ -135,8 +137,7 @@ export default function WhitelistsPage() {
             </div>
             {loading ? (
               <div className="flex justify-center items-center h-64">
-                <div className="spinner"></div>{' '}
-                {/* Make sure to style this spinner */}
+                <div className="spinner"></div>
               </div>
             ) : (
               <TablePagination
@@ -145,9 +146,7 @@ export default function WhitelistsPage() {
                 rowsPerPage={rowsPerPage}
                 columns={columns}
                 onPageChange={(newPage) => setPage(newPage)}
-                onRowsPerPageChange={(newRowsPerPage) =>
-                  setRowsPerPage(newRowsPerPage)
-                }
+                onRowsPerPageChange={(newRowsPerPage) => setRowsPerPage(newRowsPerPage)}
               />
             )}
           </div>
@@ -157,14 +156,3 @@ export default function WhitelistsPage() {
     </div>
   );
 }
-
-const columns = [
-  { title: 'สถานะ', dataIndex: 'status' },
-  { title: 'ที่อยู่', dataIndex: 'addressName' },
-  { title: 'ประเทศ', dataIndex: 'addressNation' },
-  { title: 'ไอพี', dataIndex: 'ip' },
-  { title: 'สร้างวันที่', dataIndex: 'createdAt' },
-  { title: 'บราวเซอร์', dataIndex: 'browser' },
-  { title: 'ไอเอสพี', dataIndex: 'isp' },
-  { title: 'ระบบปฏิบัติการ', dataIndex: 'os' },
-];
