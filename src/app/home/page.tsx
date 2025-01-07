@@ -1,19 +1,16 @@
-import { getSession } from '@/libs/lib';
 import Link from 'next/link';
 
 export default async function Homepage() {
-  const session = await getSession();
-
-  const redirectToBackoffice = (role: string) => {
-    switch (role) {
-      case 'super_admin':
-        return '/superadmin';
-      case 'owner':
-        return '/admin';
-      default:
-        return '/';
-    }
-  };
+  // const redirectToBackoffice = (role: string) => {
+  //   switch (role) {
+  //     case 'super_admin':
+  //       return '/superadmin';
+  //     case 'owner':
+  //       return '/admin';
+  //     default:
+  //       return '/';
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center px-6 py-12 sm:py-16 lg:py-20">
@@ -111,9 +108,9 @@ export default async function Homepage() {
 
       {/* Backoffice Button */}
       <div className="mt-8 flex justify-center items-center">
-        <Link href={redirectToBackoffice(session.role.name)}>
+        <Link href={'/'}>
           <button className="px-6 py-3 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700">
-            Go to Backoffice
+            Back
           </button>
         </Link>
       </div>
