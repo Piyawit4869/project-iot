@@ -28,7 +28,7 @@ export function TopSection({ title, subtitle, buttons, backpath }: any) {
 
   return (
     <CardComponent
-      className="sticky top-[-32px] shadow-md z-30"
+      className="sticky top-[-10px] shadow-md z-30" // Added min-height
       customCard
       custom={
         <div className="flex items-center justify-between" key={'title-card'}>
@@ -36,12 +36,12 @@ export function TopSection({ title, subtitle, buttons, backpath }: any) {
           {backpath ? (
             <div className="flex text-headFont gap-2 items-center">
               <Link href={backpath}>
-                <Icon.LeftOutlined className="text-2xl cursor-pointer" />
+                <Icon.LeftOutlined className="text-base cursor-pointer" />
               </Link>
-              <h1 className="text-2xl font-bold text-headFont">{title}</h1>
+              <h1 className="text-base font-bold text-headFont">{title}</h1>
             </div>
           ) : (
-            <h1 className="text-2xl font-bold text-headFont">{title}</h1>
+            <h1 className="text-base font-bold text-headFont">{title}</h1>
           )}
 
           {subtitle && <h1 className="text-sm">{subtitle}</h1>}
@@ -61,7 +61,7 @@ export function TopSection({ title, subtitle, buttons, backpath }: any) {
                     <DropdownItem
                       key={index}
                       as="button"
-                      className="w-full text-left"
+                      className="w-full text-left text-base"
                     >
                       {button}
                     </DropdownItem>
@@ -71,7 +71,9 @@ export function TopSection({ title, subtitle, buttons, backpath }: any) {
             ) : (
               <div className="flex space-x-2" key={'buttonTitle'}>
                 {buttons.map((button: ReactNode, index: number) => (
-                  <div key={index}>{button}</div>
+                  <div key={index} className="text-base">
+                    {button}
+                  </div>
                 ))}
               </div>
             ))}

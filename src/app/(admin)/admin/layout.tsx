@@ -23,6 +23,8 @@ export default function AdminLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const me = JSON.parse(localStorage.getItem('me') as any);
+
   const items = [
     {
       key: 'profile',
@@ -47,14 +49,14 @@ export default function AdminLayout({
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-primary shadow-md overflow-y-auto">
+      <aside className="w-62 bg-primary shadow-md overflow-y-auto">
         <AdminSideBar />
       </aside>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="bg-white shadow p-4 flex items-center justify-between">
+        <header className="bg-white shadow p-4 flex items-center justify-between ">
           <Breadcrumb />
           <div className="flex items-center space-x-4">
             <Popover showArrow offset={10} placement="bottom">
@@ -96,7 +98,11 @@ export default function AdminLayout({
                       alt="Profile"
                       className="w-8 h-8 rounded-full"
                     />
-                    <span className="text-gray-600">John Doe</span>
+                    <span className="text-gray-800 text-xs">
+                      {`${me.profile.firstName ? me.profile.firstName : ''} ${
+                        me.profile.lastName ? me.profile.lastName : ''
+                      }`}
+                    </span>
                   </button>
                 </DropdownTrigger>
               </div>
@@ -112,7 +118,7 @@ export default function AdminLayout({
                     <Link href={item.path}>
                       <div className="flex">
                         {item.icon}
-                        <div className="ml-3">{item.label}</div>
+                        <div className="ml-3 text-xs">{item.label}</div>
                       </div>
                     </Link>
                   </DropdownItem>

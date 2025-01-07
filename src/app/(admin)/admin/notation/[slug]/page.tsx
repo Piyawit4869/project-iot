@@ -344,7 +344,7 @@ export default function NotationSinglePage() {
           data?.docStatus === 'canceled'
             ? 'gray-400 cursor-not-allowed'
             : 'accent1'
-        } text-white`}
+        } text-white text-xs`}
         key={'submit edit button'}
         type="submit"
         form="notation"
@@ -358,7 +358,7 @@ export default function NotationSinglePage() {
           data?.docStatus === 'canceled'
             ? 'gray-400 cursor-not-allowed'
             : 'accent3'
-        } text-white`}
+        } text-white text-xs`}
         key={'edit button'}
         onClick={() => {
           setOpenEdit(true);
@@ -393,7 +393,7 @@ export default function NotationSinglePage() {
               buttons={[
                 data?.docStatus !== 'canceled' ? (
                   <Button
-                    className=" text-white"
+                    className=" text-white text-xs"
                     key={'cancel button'}
                     onClick={onCancel}
                   >
@@ -406,7 +406,7 @@ export default function NotationSinglePage() {
                 handleEditButton(openEdit),
                 data?.docStatus === 'draft' ? (
                   <Button
-                    className={`bg-sky-400 text-white`}
+                    className={`bg-sky-400 text-white text-xs`}
                     key={'pending button'}
                     onClick={onPending}
                   >
@@ -417,7 +417,7 @@ export default function NotationSinglePage() {
                 ),
                 data?.docStatus === 'pending' ? (
                   <Button
-                    className={`bg-sky-600 text-white`}
+                    className={`bg-sky-600 text-white text-xs`}
                     key={'waiting button'}
                     onClick={onWaiting}
                   >
@@ -431,7 +431,7 @@ export default function NotationSinglePage() {
                     data?.docStatus !== 'waiting_for_review'
                       ? 'gray-400 cursor-not-allowed'
                       : 'accent2'
-                  } text-white`}
+                  } text-white text-xs`}
                   key={'reject button'}
                   disabled={data?.docStatus !== 'waiting_for_review'}
                   onClick={onRejected}
@@ -443,7 +443,7 @@ export default function NotationSinglePage() {
                     data?.docStatus !== 'waiting_for_review'
                       ? 'gray-400 cursor-not-allowed'
                       : 'accent1'
-                  } text-white`}
+                  } text-white text-xs`}
                   key={'approve button'}
                   disabled={data?.docStatus !== 'waiting_for_review'}
                   onClick={onApproved}
@@ -455,7 +455,7 @@ export default function NotationSinglePage() {
                     data?.docStatus === 'canceled'
                       ? 'gray-400 cursor-not-allowed'
                       : 'accent2'
-                  } text-white`}
+                  } text-white text-xs`}
                   key={'delete button'}
                   onClick={onDelete}
                   disabled={data?.docStatus === 'canceled'}
@@ -478,7 +478,7 @@ export default function NotationSinglePage() {
                     validationErrors={errors}
                   >
                     <div className="flex justify-between items-center">
-                      <h1 className="flex-1 text-2xl font-bold text-headFont">
+                      <h1 className="flex-1 text-xl font-bold text-headFont">
                         ข้อมูลเอกสาร
                       </h1>
                       <Select
@@ -500,7 +500,7 @@ export default function NotationSinglePage() {
                     {/* Notation Section */}
                     <div className="flex gap-4">
                       <div className="flex-1 flex items-center gap-4">
-                        <span className="text-headFont">แสดงผล</span>
+                        <span className="text-headFont text-xs">แสดงผล</span>
                         <Switch
                           name="active"
                           color="secondary"
@@ -511,7 +511,7 @@ export default function NotationSinglePage() {
                       </div>
                       <Input
                         className="flex-1"
-                        size="lg"
+                        size="sm"
                         label="หมายเลขอ้างอิง"
                         labelPlacement="outside"
                         name="refNo"
@@ -586,10 +586,10 @@ export default function NotationSinglePage() {
                       isDisabled={!openEdit}
                     />
                     <div className="flex gap-4 mt-6">
-                      <h1 className="text-2xl font-bold text-headFont flex-1">
+                      <h1 className="text-base font-bold text-headFont flex-1">
                         ลูกค้า
                       </h1>
-                      <h1 className="text-2xl font-bold text-headFont flex-1">
+                      <h1 className="text-base font-bold text-headFont flex-1">
                         ที่อยู่
                       </h1>
                     </div>
@@ -619,7 +619,7 @@ export default function NotationSinglePage() {
                         ))}
                       </Select>
                     </div>
-                    <h1 className="text-2xl font-bold text-headFont mt-6">
+                    <h1 className="text-base font-bold text-headFont mt-6">
                       รายการ
                     </h1>
                     {items.map((_, index) => (
@@ -677,7 +677,7 @@ export default function NotationSinglePage() {
                 {/* PDF Preview Section */}
                 <div className="w-full lg:w-1/2 p-6 bg-gray-100 justify-center">
                   <div className=" flex justify-between items-center mb-2">
-                    <h1 className="text-2xl font-bold text-headFont">
+                    <h1 className="text-base font-bold text-headFont">
                       ข้อมูลเอกสาร
                     </h1>
                     {/* Dynamic Status Tag */}
