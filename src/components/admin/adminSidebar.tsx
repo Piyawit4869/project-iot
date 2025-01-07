@@ -55,12 +55,12 @@ export function AdminSideBar() {
             {
               name: 'ภาพรวม',
               path: '/admin/attendance/overview',
-              icon: <Icon.ScheduleOutlined />,
+              icon: <Icon.ClusterOutlined />,
             },
             {
               name: 'การตั้งค่า',
               path: '/admin/attendance/config_attendance',
-              icon: <Icon.ScheduleOutlined />,
+              icon: <Icon.SettingOutlined />,
             },
             {
               name: 'ไวท์ลิสต์',

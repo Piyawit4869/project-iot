@@ -1,7 +1,7 @@
 import { base_url } from '@/constant/common';
 
 export async function createUser(prevState: any, formData: any) {
-  const url = `${base_url}/crud/users`;
+  const url = `${base_url}/crud/users/`;
 
   const body = {
     ...formData,

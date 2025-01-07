@@ -2,6 +2,7 @@
 
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
+import { ModalVerify } from '@/components/setting/modalVerify';
 import * as Icon from '@ant-design/icons';
 import { createNotation } from '@/pages/api/notations/create';
 import {
@@ -13,6 +14,7 @@ import {
   SelectItem,
   Switch,
   Textarea,
+  useDisclosure,
 } from '@nextui-org/react';
 import React from 'react';
 import { useRouter } from 'next/navigation';
@@ -170,6 +172,18 @@ export default function NotationCreatePage() {
     }
   };
 
+  const {
+    isOpen: isPending,
+    onOpen: openPending,
+    onOpenChange: changePending,
+  } = useDisclosure();
+
+  const {
+    isOpen: isDraft,
+    onOpen: openDraft,
+    onOpenChange: changeDraft,
+  } = useDisclosure();
+
   return (
     <Scaffold
       child={
@@ -178,7 +192,8 @@ export default function NotationCreatePage() {
             title="สร้างเอกสาร"
             backpath={'/admin/notation'}
             buttons={[
-              <a href={'/admin/notation'} key={'draft button'}>
+              // <a href={'/admin/notation'} key={'draft button'}>
+              <a key={'draft button'}>
                 <Button
                   className="bg-accent3 text-white text-xs"
                   type="submit"
@@ -204,11 +219,46 @@ export default function NotationCreatePage() {
               </a>,
             ]}
           />
+
+          <ModalVerify
+            isOpen={isPending}
+            title="สร้างเอกสาร"
+            content="สร้างข้อมูลเอกสารในสถานะ Pending"
+            onClose={changePending}
+            CancelButton={{
+              label: 'ยกเลิก',
+              onClick: changePending,
+            }}
+            ConfirmButton={{
+              label: 'ยืนยัน',
+              type: 'submit',
+              form: 'notation',
+              onClick: () => setCreateStatus('pending'),
+            }}
+          />
+
+          <ModalVerify
+            isOpen={isDraft}
+            title="แบบร่างเอกสาร"
+            content="สร้างแบบร่างข้อมูลเอกสารในสถานะ Draft"
+            onClose={changeDraft}
+            CancelButton={{
+              label: 'ยกเลิก',
+              onClick: changeDraft,
+            }}
+            ConfirmButton={{
+              label: 'ยืนยัน',
+              type: 'submit',
+              form: 'notation',
+              onClick: () => setCreateStatus('draft'),
+            }}
+          />
+
           <div className="bg-gray-100  flex justify-center items-center pt-6">
             {/* A4 Paper Styled Container */}
-            <div className="bg-white w-full border-gray-300 rounded-lg shadow-lg flex flex-wrap">
+            <div className="bg-white w-full border-gray-300 rounded overflow-hidden flex flex-row">
               {/* Input Form Section */}
-              <div className="w-full lg:w-1/2 p-6 border-r border-gray-200 overflow-y-auto">
+              <div className="w-1/2 p-6 border-r border-gray-200 overflow-y-auto">
                 <Form
                   id="notation"
                   onSubmit={onSubmit}
@@ -396,24 +446,20 @@ export default function NotationCreatePage() {
                 </h1>
 
                 {/* Render HTML Template Here */}
-                <div className="flex justify-center">
-                  <div
-                    className="bg-white w-full max-w-[170mm] h-[240mm] shadow-lg border border-gray-300 rounded p-6"
-                    style={{
-                      transform: `scale(${zoomLevel / 100})`,
-                      transformOrigin: 'top left',
-                    }}
-                  >
-                    {processedHtml ? (
-                      <div
-                        dangerouslySetInnerHTML={{ __html: processedHtml }}
-                      />
-                    ) : (
-                      <p className="text-center text-gray-500">
-                        กรุณาเลือกรูปแบบเอกสาร
-                      </p>
-                    )}
-                  </div>
+                <div
+                  className="bg-white w-[170mm] h-[240mm] shadow-lg border border-gray-300 rounded overflow-hidden p-6"
+                  style={{
+                    transform: `scale(${zoomLevel / 100})`,
+                    transformOrigin: 'top left',
+                  }}
+                >
+                  {processedHtml ? (
+                    <div dangerouslySetInnerHTML={{ __html: processedHtml }} />
+                  ) : (
+                    <p className="text-center text-gray-500">
+                      กรุณาเลือกรูปแบบเอกสาร
+                    </p>
+                  )}
                 </div>
                 <div className="w-[170mm] w-full flex justify-center items-center mt-4">
                   <div className="flex items-center gap-2">

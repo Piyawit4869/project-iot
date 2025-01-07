@@ -4,15 +4,69 @@ import React from 'react';
 import { TopSection } from '@/components/common/topSection';
 import NextTable from '@/components/common/nextTable';
 import Scaffold from '@/components/common/scaffold';
-import { useRouter } from 'next/navigation';
 import { Input, Select, SelectItem } from '@nextui-org/react';
+import { TablePagination } from '@/components/common/tablePagination';
 
 export default function RevenuePage() {
-  const router = useRouter();
+  const [page, setPage] = React.useState(1);
+  const [loading, setLoading] = React.useState(false);
+  const [items, setItems] = React.useState([]) as any;
+  const [filters, setFilters] = React.useState({});
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [meta, setMeta] = React.useState({
+    totalItems: 0,
+    itemsPerPage: 10,
+    totalPages: 0,
+    currentPage: 1,
+  });
 
-  const handleRowClick = (row: any) => {
-    router.push(`revenue/${row.id}`); // Redirect to a dynamic route
+  // Fetch data from the API
+  /*
+  const fetchNotations = async () => {
+    setLoading(true);
+    try {
+      const { name, docNo } = filters;
+      const { items: fetchedItems, meta: fetchedMeta } = await API Revenue({
+        page,
+        limit: rowsPerPage,
+        ...(name && { name }),
+        ...(docNo && { docNo }),
+      });
+      setItems(fetchedItems);
+      setMeta(fetchedMeta);
+    } catch (error) {
+      console.error('Error fetching notations:', error);
+    } finally {
+      setLoading(false);
+    }
   };
+  */
+
+  // Debounced function to handle filter changes
+  /*
+  const handleFilterChange = React.useCallback(
+    debounce((updatedFilters) => {
+      setPage(1); // Reset to the first page for new filters
+      setFilters(updatedFilters);
+    }),
+    [],
+  );
+  */
+
+  // Handle input changes
+  /*
+  const onInputChange = (key: keyof typeof filters, value: string) => {
+    const updatedFilters = { ...filters, [key]: value };
+    handleFilterChange(updatedFilters);
+  };
+  */
+
+  // Fetch data whenever filters, page, or rowsPerPage change
+  /*
+  React.useEffect(() => {
+    fetchNotations();
+  }, [filters, page, rowsPerPage]);
+  */
 
   return (
     <Scaffold
@@ -29,6 +83,9 @@ export default function RevenuePage() {
                 size="lg"
                 name="name"
                 placeholder="ค้นหาชื่อ"
+                // value={filters.name}
+                // onChange={(e) => onInputChange('name', e.target.value)}
+                isDisabled
               />
 
               {/* Category Filter */}
@@ -38,6 +95,9 @@ export default function RevenuePage() {
                 size="sm"
                 name="category"
                 label="เลือกประเภท"
+                // value={filters.type}
+                // onChange={(e) => onInputChange('type', e.target.value)}
+                isDisabled
               >
                 <SelectItem className="text-headFont" key={'option1'}>
                   ทุกประเภท
@@ -57,6 +117,9 @@ export default function RevenuePage() {
                 size="sm"
                 name="status"
                 label="เลือกสถานะ"
+                // value={filters.status}
+                // onChange={(e) => onInputChange('status', e.target.value)}
+                isDisabled
               >
                 <SelectItem className="text-headFont" key={'option1'}>
                   ทุกสถานะ
@@ -71,13 +134,22 @@ export default function RevenuePage() {
             </div>
           </div>
           {/* Table */}
-          <NextTable
-            rows={initialData}
-            columns={columns}
-            tabs={tabs}
-            rowClickHandler={handleRowClick}
-            tabFieldName={'category'}
-          />
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="spinner"></div>
+            </div>
+          ) : (
+            <TablePagination
+              initialRows={initialData}
+              initialMeta={meta}
+              rowsPerPage={rowsPerPage}
+              columns={columns as any}
+              onPageChange={(newPage) => setPage(newPage)}
+              onRowsPerPageChange={(newRowsPerPage) =>
+                setRowsPerPage(newRowsPerPage)
+              }
+            />
+          )}
         </div>
       }
     />
@@ -194,7 +266,7 @@ const initialData = [
 
 const columns = [
   { title: 'รายการที่', dataIndex: 'id', align: 'center' },
-  { title: 'ชื่อ', dataIndex: 'name' },
+  { title: 'ชื่อ', dataIndex: 'name', link: '/admin/accounting/revenue' },
   {
     title: 'ประเภทรายได้',
     dataIndex: 'category',

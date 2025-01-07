@@ -46,7 +46,7 @@ export default function StatementSinglePage() {
                 className={'bg-secondary'}
                 customCard
                 custom={
-                  <div className="text-headFont">
+                  <div className="text-headFont text-white">
                     <div className="text-2xl">เงินเข้า</div>
                     <div className="text-lg">รายได้จากการให้บริการ</div>
                   </div>

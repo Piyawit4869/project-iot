@@ -22,6 +22,7 @@ import React from 'react';
 import { createUser } from '@/pages/api/user/create';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { profile } from 'console';
 
 export default function CreateUserPage() {
   const [errors, setErrors] = React.useState({}) as any;
@@ -55,7 +56,12 @@ export default function CreateUserPage() {
     const { name, checked, type, value } = e.target;
     setFormData((prevData: any) => ({
       ...prevData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]:
+        type === 'checkbox'
+          ? checked
+          : name === 'birthDate' && value instanceof Date
+          ? value.toISOString()
+          : value,
     }));
   };
 
@@ -84,6 +90,17 @@ export default function CreateUserPage() {
 
     try {
       const payload = {
+        profile: {
+          prefix: formData.prefix,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          birthDate: formData.birthDate,
+          phone: formData.phone,
+        },
+
+        role: {
+          name: formData.position,
+        },
         ...formData,
         status: 'active',
       };
@@ -95,6 +112,7 @@ export default function CreateUserPage() {
       }
 
       const data = await createUser({}, payload);
+      console.log('Create User', data);
 
       if (data.success) {
         toast.success('🎉 สร้างผู้ใช้งานสำเร็จ!', {
@@ -104,7 +122,7 @@ export default function CreateUserPage() {
         });
       }
 
-      router.push(`/admin/user/${data.data.id}`);
+      // router.push(`/admin/user/${data.data.id}`);
     } catch (err: any) {
       toast.error('❌ ไม่สามารถสร้างผู้ใช้งานได้', {
         duration: 3000,
@@ -198,9 +216,11 @@ export default function CreateUserPage() {
                       <div className="flex gap-4 mt-6">
                         <div>
                           <CardControl
+                            name="active"
                             title="เปิดใช้งาน"
                             description="ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน"
                             control="เปิดใช้งาน"
+                            onChange={handleChange}
                           />
                         </div>
                       </div>
@@ -224,7 +244,7 @@ export default function CreateUserPage() {
                             <span className="text-headFont">ชื่อผู้ใช้</span>
                           }
                           labelPlacement="outside"
-                          name="username"
+                          name="userName"
                           placeholder="กรอกชื่อผู้ใช้"
                           onChange={handleChange}
                           isRequired
@@ -304,7 +324,7 @@ export default function CreateUserPage() {
                           className="flex-1"
                           label={<span className="text-headFont">นามสกุล</span>}
                           labelPlacement="outside"
-                          name="lastname"
+                          name="lastName"
                           placeholder="กรอกนามสกุล"
                           onChange={handleChange}
                         />
@@ -312,15 +332,16 @@ export default function CreateUserPage() {
                       <div className="flex gap-4 mt-6">
                         <DatePicker
                           className="flex-1  text-headFont"
-                          name="birthday"
+                          name="birthDate"
                           label="วัน/เดือน/ปีเกิด"
                           labelPlacement="outside"
+                          disableAnimation
                           onChange={(date: any) => {
                             if (date?.year && date?.month && date?.day) {
                               // Convert the custom date object to a valid Date instance
                               const parsedDate = new Date(
                                 date.year,
-                                date.month - 1,
+                                date.month,
                                 date.day,
                               ); // month is 0-indexed
                               const isoString = parsedDate.toISOString();
@@ -328,7 +349,7 @@ export default function CreateUserPage() {
                               // Update formData with the ISO string
                               setFormData((prevData: any) => ({
                                 ...prevData,
-                                startDate: isoString,
+                                birthDate: isoString,
                               }));
                             } else {
                               console.error('Invalid date object:', date);
@@ -361,12 +382,12 @@ export default function CreateUserPage() {
 }
 
 const position = [
-  { label: 'Employee', value: '1' },
-  { label: 'Owner', value: '2' },
+  { label: 'Employee', value: 'employee' },
+  { label: 'Owner', value: 'owner' },
 ];
 
 const prefix = [
-  { label: 'นาย', value: '1' },
-  { label: 'นาง', value: '2' },
-  { label: 'นางสาว', value: '3' },
+  { label: 'นาย', value: 'Mr.' },
+  { label: 'นาง', value: 'Mrs.' },
+  { label: 'นางสาว', value: 'Ms.' },
 ];
