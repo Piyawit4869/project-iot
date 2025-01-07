@@ -18,12 +18,20 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  DateValue,
 } from '@nextui-org/react';
-import { singleUserLoader } from '@/app/api/user';
+import { parseDate, parseAbsoluteToLocal } from '@internationalized/date';
+import getUser from '@/pages/api/user/get';
 import React from 'react';
 import { useParams } from 'next/navigation';
+import { setDefaultAutoSelectFamily } from 'net';
 
 export default function UserSinglePage() {
+  const [data, setData] = React.useState() as any;
+  const [loading, setLoading] = React.useState(false);
+  const [errors, setErrors] = React.useState({}) as any;
+  const [formData, setFormData] = React.useState({}) as any;
+
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the form from submitting to the URL
     const formData = new FormData(e.currentTarget);
@@ -34,26 +42,45 @@ export default function UserSinglePage() {
   };
 
   const params = useParams<{ slug: string }>();
-  console.log(params);
-  const [usersSingle, setUsersSingle] = React.useState<any>({});
+  // const [birthDate, setBirthDate] = React.useState<DateValue | null>(
+  //   parseAbsoluteToLocal(usersSingle?.profile?.birthDate),
+  // );
 
   React.useEffect(() => {
-    if (!params?.slug) {
+    if (!params || !params.slug) {
       console.log('Waiting for params.id to be ready...');
       return;
     }
+
+    setLoading(true);
+
     const fetchUserSingle = async () => {
-      try {
-        const { data: userSingle } = await singleUserLoader(params.slug);
-        setUsersSingle(userSingle);
-        console.log('User data:', userSingle);
-      } catch (error) {
-        console.error('Error:', error);
-      }
+      const { data } = await getUser(params.slug);
+
+      setData(data);
+      setFormData(data);
+      setLoading(data);
     };
 
     fetchUserSingle();
-  }, [params?.slug]);
+  }, [params]);
+
+  const handleChange = (e: any) => {
+    const { name, checked, type, value } = e.target;
+    setFormData((prevData: any) => ({
+      ...prevData,
+      [name]:
+        type === 'checkbox'
+          ? checked
+          : name === 'birthDate' && value instanceof Date
+          ? value.toISOString()
+          : value,
+    }));
+  };
+
+  const fixDate = formData?.profile?.birthDate
+    ? parseAbsoluteToLocal(formData.profile.birthDate)
+    : undefined;
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -79,8 +106,6 @@ export default function UserSinglePage() {
                   </Button>,
                   <Button
                     className="bg-accent2 text-white"
-                    type="submit"
-                    form="user"
                     key={'delete button'}
                   >
                     ลบ
@@ -110,9 +135,11 @@ export default function UserSinglePage() {
                           <div className="flex gap-4 mt-6">
                             <div>
                               <CardControl
+                                name="active"
                                 title="เปิดใช้งาน"
                                 description="ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน"
                                 control="เปิดใช้งาน"
+                                onChange={handleChange}
                               />
                             </div>
                           </div>
@@ -121,14 +148,15 @@ export default function UserSinglePage() {
                             <Select
                               className="flex-1  text-headFont"
                               name="position"
-                              placeholder={usersSingle?.role?.name}
+                              placeholder="กรุณาเลือกตำแหน่ง"
                               label="ตำแหน่ง"
+                              defaultSelectedKeys={[formData.role]}
                               labelPlacement={'outside'}
                             >
-                              {position.map((item: any) => (
+                              {position.map((item) => (
                                 <SelectItem
                                   className="text-headFont"
-                                  key={item.label}
+                                  key={item.value}
                                   value={item.value}
                                 >
                                   {item.label}
@@ -140,7 +168,7 @@ export default function UserSinglePage() {
                             <Select
                               className="flex-1  text-headFont"
                               name="prefix"
-                              placeholder={usersSingle?.profile?.prefix}
+                              placeholder="กรุณาเลือกคำนำหน้า"
                               label="คำนำหน้า"
                               labelPlacement={'outside'}
                             >
@@ -162,9 +190,10 @@ export default function UserSinglePage() {
                                 <span className="text-headFont">ชื่อ</span>
                               }
                               labelPlacement="outside"
-                              name="name"
-                              value={usersSingle?.profile?.firstName}
+                              name="userName"
                               placeholder="กรอกชื่อ"
+                              defaultValue={formData.email}
+                              onChange={handleChange}
                             />
                           </div>
                           <div className="flex gap-4 mt-6">
@@ -175,16 +204,19 @@ export default function UserSinglePage() {
                               }
                               labelPlacement="outside"
                               name="lastname"
-                              value={usersSingle?.profile?.lastName}
                               placeholder="กรอกนามสกุล"
+                              value={formData.profile?.lastName}
                             />
                           </div>
                           <div className="flex gap-4 mt-6">
                             <DatePicker
                               className="flex-1  text-headFont"
-                              name="birthday"
+                              name="birthDate"
                               label="วัน/เดือน/ปีเกิด"
                               labelPlacement="outside"
+                              disableAnimation
+                              granularity="day"
+                              value={fixDate}
                             />
                           </div>
                           <div className="flex gap-4 mt-6">
@@ -197,8 +229,8 @@ export default function UserSinglePage() {
                               }
                               labelPlacement="outside"
                               name="phone"
-                              value={usersSingle?.profile?.phone}
                               placeholder="กรอกเบอร์โทรศัพท์"
+                              value={formData.profile?.phone}
                             />
                           </div>
 
@@ -272,8 +304,8 @@ export default function UserSinglePage() {
   );
 }
 const position = [
-  { label: 'Employee', value: '1' },
-  { label: 'Owner', value: '2' },
+  { label: 'Employee', value: 'employee' },
+  { label: 'Owner', value: 'owner' },
 ];
 
 const prefix = [

@@ -49,8 +49,8 @@ export default function ExpensesSinglePage() {
                 customCard
                 custom={
                   <div className="text-headFont">
-                    <div className="text-2xl">ประเภทรายจ่าย</div>
-                    <div className="text-lg">งบบุคลากร</div>
+                    <div className="text-2xl text-white">ประเภทรายจ่าย</div>
+                    <div className="text-lg text-white">งบบุคลากร</div>
                   </div>
                 }
               />

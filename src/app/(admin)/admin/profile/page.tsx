@@ -13,15 +13,35 @@ import {
   DatePicker,
 } from '@nextui-org/react';
 import React from 'react';
+import get from '@/pages/api/profile/get';
+import { profile } from 'console';
+import { parseDate } from '@internationalized/date';
+
 export default function CreateUserPage() {
+  const [data, setData] = React.useState() as any;
+  const [formData, setFormData] = React.useState({}) as any;
+  const [loading, setLoading] = React.useState(false);
+  const [honorific, setHonorific] = React.useState<string>();
+
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the form from submitting to the URL
     const formData = new FormData(e.currentTarget);
-
     // Convert formData to an object
     const data = Object.fromEntries(formData.entries());
     console.log(data); // Log the form data for debugging
   };
+
+  React.useEffect(() => {
+    const getProfile = async () => {
+      const profile = await get();
+
+      setData(profile);
+      setFormData(profile);
+      setLoading(false);
+    };
+
+    getProfile();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -63,7 +83,7 @@ export default function CreateUserPage() {
                           <div>
                             <div>
                               <h1 className="text-2xl font-bold text-headFont">
-                                ข้อมูลผู้ใข้
+                                ข้อมูลผู้ใช้
                               </h1>
                             </div>
                             <div className="font-bold text-headFon mt-10">
@@ -88,13 +108,10 @@ export default function CreateUserPage() {
                               placeholder="เลือกคำนำหน้า"
                               label="คำนำหน้า"
                               labelPlacement={'outside'}
+                              defaultSelectedKeys={[formData.profile?.prefix]}
                             >
-                              {prefix.map((item: any) => (
-                                <SelectItem
-                                  className="text-headFont"
-                                  key={item.label}
-                                  value={item.value}
-                                >
+                              {prefix.map((item) => (
+                                <SelectItem key={item.value} value={item.value}>
                                   {item.label}
                                 </SelectItem>
                               ))}
@@ -107,8 +124,9 @@ export default function CreateUserPage() {
                                 <span className="text-headFont">ชื่อ</span>
                               }
                               labelPlacement="outside"
-                              name="name"
-                              placeholder="กรอกรชื่อ"
+                              name="firstName"
+                              placeholder="กรอกชื่อ"
+                              value={formData.profile?.firstName}
                             />
                           </div>
                           <div className="flex gap-4 mt-6">
@@ -118,17 +136,25 @@ export default function CreateUserPage() {
                                 <span className="text-headFont">นามสกุล</span>
                               }
                               labelPlacement="outside"
-                              name="lastname"
+                              name="lastName"
                               placeholder="กรอกนามสกุล"
+                              value={formData.profile?.lastName}
                             />
                           </div>
                           <div className="flex gap-4 mt-6">
                             <DatePicker
                               className="flex-1  text-headFont"
-                              name="birthday"
+                              name="birthDate"
                               label="วัน/เดือน/ปีเกิด"
                               labelPlacement="outside"
                               disableAnimation
+                              value={
+                                formData.profile?.birthDate
+                                  ? parseDate(
+                                      formData.profile.birthDate.split('T')[0],
+                                    )
+                                  : undefined
+                              }
                             />
                           </div>
                           <div className="flex gap-4 mt-6">
@@ -142,6 +168,7 @@ export default function CreateUserPage() {
                               labelPlacement="outside"
                               name="phone"
                               placeholder="กรอกเบอร์โทรศัพท์"
+                              value={formData.profile?.phone}
                             />
                           </div>
                         </div>
@@ -159,7 +186,7 @@ export default function CreateUserPage() {
 }
 
 const prefix = [
-  { label: 'นาย', value: '1' },
-  { label: 'นาง', value: '2' },
-  { label: 'นางสาว', value: '3' },
+  { label: 'นาย', value: 'Mr.' },
+  { label: 'นาง', value: 'Mrs.' },
+  { label: 'นางสาว', value: 'Ms.' },
 ];

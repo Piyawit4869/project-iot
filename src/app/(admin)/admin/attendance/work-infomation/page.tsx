@@ -48,7 +48,7 @@ interface WorkInfoItem {
 }
 
 const columns = [
-  { title: 'ลำดับ', dataIndex: 'order', link: '/admin/attendance/work-info' },
+  { title: 'ลำดับ', dataIndex: 'order', link: '/admin/attendance/work-infomation' },
   { title: 'คำนำหน้า', dataIndex: 'prefix' },
   { title: 'ชื่อ', dataIndex: 'name' },
   { title: 'สถานะ', dataIndex: 'status' },
@@ -140,7 +140,7 @@ export default function WorkInfoPage() {
             <TopSection
               title="ข้อมูลการทำงาน"
               buttons={[
-                <Link href={'workInfo/create'} key={'create button'}>
+                <Link href={'work-infomation/create'} key={'create button'}>
                   <Button
                     className="bg-accent1 text-white"
                     key={'create button'}

@@ -4,6 +4,7 @@ import { login } from '@/app/api/auth';
 import { Button, Input } from '@nextui-org/react';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner'; // ✅ Import Toast
 
 const base_url = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -11,17 +12,18 @@ export default function LoginPage() {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
     setLoading(true);
 
     try {
       const formData = new FormData(e.currentTarget as HTMLFormElement);
       const { data } = await login({}, formData);
+
+      // Fetch user data
       const me = await fetch(`${base_url}/auth/me/`, {
         method: 'GET',
         headers: {
@@ -30,13 +32,23 @@ export default function LoginPage() {
         },
       }).then((response) => response.json());
 
+      // Store login data in localStorage
+      localStorage.setItem('me', JSON.stringify(me));
       localStorage.setItem('accessToken', data.accessToken);
       localStorage.setItem('refreshToken', data.refreshToken);
 
-      if (me.role.name === 'super_admin') {
+      // ✅ Show success toast notification
+      toast.success('🎉 เข้าสู่ระบบสำเร็จ!', {
+        description: `ยินดีต้อนรับ, ${me.employeeRole.name}`,
+        duration: 3000,
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
+      // Redirect based on user role
+      if (me.employeeRole.name === 'super_admin') {
         router.push('/superadmin');
       } else if (
-        me.role.name === 'employee' &&
+        me.employeeRole.name === 'employee' ||
         me.employeeRole.name === 'owner'
       ) {
         router.push('/admin');
@@ -44,8 +56,12 @@ export default function LoginPage() {
         router.push('/');
       }
     } catch (err: any) {
-      console.error('Login error:', err);
-      setError(err.message || 'An unexpected error occurred.');
+      // ❌ Show error toast notification
+      toast.error('❌ เข้าสู่ระบบล้มเหลว!', {
+        description: 'อีเมล ชื่อผู้ใช้ หรือผ่านไม่ถูกต้อง โปรดลองอีกครั้ง',
+        duration: 3000,
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
     } finally {
       setLoading(false);
     }
@@ -63,11 +79,9 @@ export default function LoginPage() {
             placeholder="ชื่อผู้ใช้หรืออีเมล"
             variant="bordered"
             value={user}
-            onChange={(e) => {
-              setUser(e.target.value);
-            }}
+            onChange={(e) => setUser(e.target.value)}
             errorMessage="โปรดป้อนชื่อหรืออีเมล"
-            className={`w-full text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+            className="w-full text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -81,9 +95,7 @@ export default function LoginPage() {
             placeholder="รหัสผ่าน"
             variant="bordered"
             value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             required
             errorMessage="โปรดป้อนรหัสผ่าน"
@@ -93,11 +105,11 @@ export default function LoginPage() {
         {/* Submit Button */}
         <Button
           type="submit"
-          disabled={loading} // Disable during loading
+          disabled={loading}
           className={`w-full px-4 py-2 text-lg font-semibold text-white rounded-md ${
             loading
               ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-blue-600 hover:bg-blue-700'
+              : 'bg-secondary hover:bg-accent1'
           }`}
         >
           {loading ? (
@@ -128,13 +140,6 @@ export default function LoginPage() {
             'เข้าสู่ระบบ'
           )}
         </Button>
-
-        {/* Error Message */}
-        {error && (
-          <div className="mt-4 text-red-600">
-            <p>{error}</p>
-          </div>
-        )}
       </form>
     </div>
   );

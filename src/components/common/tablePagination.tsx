@@ -49,50 +49,57 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   };
 
   return (
-    <div>
-      <Table aria-label="Paginated Table" className="w-full border-collapse">
-        <TableHeader>
-          {columns.map((col: any) => (
-            <TableColumn
-              key={col.dataIndex}
-              className="border-b-2 border-gray-300 px-4 py-2 text-left"
-            >
-              {col.title}
-            </TableColumn>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {initialRows.map((row, idx) => (
-            <TableRow
-              key={idx}
-              className="border-b border-gray-200 hover:bg-gray-100"
-            >
-              {columns.map((col, colIdx) => (
-                <TableCell
+    <div className="w-full">
+      {/* ✅ Force Horizontal Scroll */}
+      <div className="w-full overflow-x-auto">
+        <div className="min-w-[300px] bg-white shadow-md rounded-lg">
+          <Table aria-label="Paginated Table" className="w-full">
+            <TableHeader>
+              {columns.map((col: any) => (
+                <TableColumn
                   key={col.dataIndex}
-                  className={`px-4 py-2 ${
-                    colIdx !== columns.length - 1
-                      ? 'border-r border-gray-200'
-                      : ''
-                  }`}
+                  className="border-b-2 border-gray-300 px-4 py-2 text-left whitespace-nowrap"
                 >
-                  {col.render ? (
-                    col.render(row[col.dataIndex], row, idx)
-                  ) : col.link ? (
-                    <Link href={`${col.link}/${row.id}`}>
-                      {row[col.dataIndex] || '-'}
-                    </Link>
-                  ) : (
-                    row[col.dataIndex] || '-'
-                  )}
-                </TableCell>
+                  {col.title}
+                </TableColumn>
               ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <div className="flex justify-between items-center mt-4 p-4 bg-gray-100 rounded-lg shadow">
-        <div className="text-gray-700">
+            </TableHeader>
+            <TableBody>
+              {initialRows.map((row, idx) => (
+                <TableRow
+                  key={idx}
+                  className="border-b border-gray-200 hover:bg-gray-100"
+                >
+                  {columns.map((col, colIdx) => (
+                    <TableCell
+                      key={col.dataIndex}
+                      className={`px-4 py-2 whitespace-nowrap ${
+                        colIdx !== columns.length - 1
+                          ? 'border-r border-gray-200'
+                          : ''
+                      }`}
+                    >
+                      {col.render ? (
+                        col.render(row[col.dataIndex], row, idx)
+                      ) : col.link ? (
+                        <Link href={`${col.link}/${row.id}`}>
+                          {row[col.dataIndex] || '-'}
+                        </Link>
+                      ) : (
+                        row[col.dataIndex] || '-'
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+
+      {/* ✅ Pagination Controls */}
+      <div className="flex flex-col md:flex-row justify-between items-center mt-4 p-4 bg-gray-100 rounded-lg shadow">
+        <div className="text-gray-700 text-sm">
           <strong>
             {Math.min(
               rowsPerPage * (initialMeta.currentPage - 1) + 1,
@@ -106,12 +113,14 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
           </strong>{' '}
           จากทั้งหมด <strong>{initialMeta.totalItems}</strong> รายการ
         </div>
-        <div className="flex items-center gap-2">
+
+        {/* ✅ Page Numbers */}
+        <div className="flex items-center gap-2 my-2 md:my-0">
           {Array.from({ length: initialMeta.totalPages }, (_, index) => (
             <button
               key={index + 1}
               onClick={() => handlePageChange(index + 1)}
-              className={`px-3 py-1 rounded-md font-medium ${
+              className={`px-3 py-1 rounded-md text-sm font-medium transition ${
                 initialMeta.currentPage === index + 1
                   ? 'bg-accent1 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-blue-300 hover:text-white'
@@ -121,11 +130,13 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             </button>
           ))}
         </div>
+
+        {/* ✅ Navigation Buttons */}
         <div className="flex items-center gap-2">
           <button
             onClick={() => handlePageChange(initialMeta.currentPage - 1)}
             disabled={initialMeta.currentPage === 1}
-            className={`px-4 py-2 rounded-md font-medium ${
+            className={`px-4 py-2 rounded-md text-sm font-medium transition ${
               initialMeta.currentPage === 1
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-400'
@@ -136,7 +147,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
           <button
             onClick={() => handlePageChange(initialMeta.currentPage + 1)}
             disabled={initialMeta.currentPage === initialMeta.totalPages}
-            className={`px-4 py-2 rounded-md font-medium ${
+            className={`px-4 py-2 rounded-md text-sm font-medium transition ${
               initialMeta.currentPage === initialMeta.totalPages
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 : 'bg-accent1 text-white hover:bg-blue-600'

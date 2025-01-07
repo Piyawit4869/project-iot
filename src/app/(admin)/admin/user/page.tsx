@@ -63,16 +63,6 @@ export default function IndexPage() {
   }, [page, rowsPerPage]);
   // }, [filters, page, rowsPerPage]);
 
-  // const row = users?.map((user) => ({
-  //   id: user.id,
-  //   image: user.profile.photoUrl,
-  //   username: user.profile.firstName,
-  //   email: user.email,
-  //   position: user.role.name,
-  //   phone: user.profile.phone,
-  //   status: user.role.status,
-  // }));
-
   return (
     <div>
       {/* Page Header */}

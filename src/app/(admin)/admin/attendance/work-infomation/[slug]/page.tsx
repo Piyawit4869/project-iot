@@ -30,7 +30,7 @@ export default function WorkInfonSinglePage() {
         <div>
           <TopSection
             title="ข้อมูลการทำงาน (WorkInfo)"
-            backpath={'/admin/attendance/work-info'}
+            backpath={'/admin/attendance/work-infomation'}
             buttons={[
               <Button className="bg-accent1 text-white" key={'approve button'}>
                 อนุมัติ
