@@ -1,27 +1,104 @@
-# Getting Started with ROME project
+# 🌍 ROME Project
 
-## Available Scripts
+Welcome to the **ROME** project! If you haven’t figured out how to build Rome in a day, let us show you how with the **ROME platform**. 🏗️
 
-In the project directory, you can run:
+---
 
-### `nvm use`
+## 🚀 Getting Started
 
-For use node same as version in project
+To set up and run the project, follow these steps:
 
-### `yarn install`
+### 1️⃣ Set Node.js Version
 
-For install all dependencies
+Ensure you're using the correct Node.js version with:
 
-### `yarn run build`
+```sh
+nvm use
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+This will switch to the project's specified Node.js version.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 2️⃣ Install Dependencies
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Run the following command to install all required dependencies:
 
-### `yarn run dev`
+```sh
+yarn install
+```
 
-For development
+### 3️⃣ Run the Development Server
+
+Start the development server with:
+
+```sh
+yarn dev
+```
+
+This will launch the app in development mode, allowing for real-time updates.
+
+## 🔧 Building for Production
+
+To create a production-ready build for Next.js, use:
+
+```sh
+yarn build
+```
+
+- This command optimizes the application and outputs it to the .next/ directory.
+- The build is minified, and filenames include content hashes for better caching.
+
+## 🏎️ Start Production Server
+
+After building, you can run the production server with:
+
+```sh
+yarn start
+```
+
+This will serve the optimized Next.js app.
+
+## 🚀 Deployment
+
+### **Deploying to Vercel**
+
+Vercel is the recommended deployment platform for Next.js. If you haven't already, install the **Vercel CLI**:
+
+```sh
+npm i -g vercel
+```
+
+Then, deploy your app with:
+
+```sh
+vercel
+```
+
+This will automatically detect Next.js and deploy your project.
+
+### **Deploying to a Custom Server**
+
+If you're deploying on your own server, follow these steps:
+
+1. **Build the app**
+
+```sh
+yarn build
+```
+
+2. **Run the production server**
+
+```sh
+yarn start
+```
+
+Your Next.js app will now be running in production mode.
+
+## 🌍 Deployment Options
+
+- **Vercel (Recommended)** - [Vercel Docs](https://vercel.com/guides/deploying-nextjs-with-vercel)
+- **Docker** - Build a Docker image and run it in a container.
+- **PM2 (Process Manager for Node.js)** - Use `pm2 start yarn -- start` to keep the app running.
+- **AWS, DigitalOcean, Firebase Hosting** - Host it on a cloud provider.
+
+Now your **deployment section** is properly formatted and enclosed in `""`. 🚀  
+Let me know if you need any more modifications! 😊
