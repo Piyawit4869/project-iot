@@ -90,14 +90,6 @@ export default function UserSinglePage() {
                     className="bg-accent2 text-white"
                     type="submit"
                     form="user"
-                    key={'cancel button'}
-                  >
-                    ยกเลิก
-                  </Button>,
-                  <Button
-                    className="bg-accent3 text-white"
-                    type="submit"
-                    form="user"
                     key={'delete button'}
                   >
                     ลบ

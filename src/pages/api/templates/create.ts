@@ -1,7 +1,7 @@
 import { base_url } from '@/constant/common';
 
-export default async function createWhitelists(prevState: any, formData: any) {
-  const url = `${base_url}/crud/whitelists/create/`;
+export async function createTemplate(prevState: any, formData: any) {
+  const url = `${base_url}/crud/configure-notations/create/`;
 
   const body = {
     ...formData,

@@ -1,22 +1,16 @@
 import { base_url } from '@/constant/common';
 
-export default async function createWhitelists(prevState: any, formData: any) {
-  const url = `${base_url}/crud/whitelists/create/`;
-
-  const body = {
-    ...formData,
-  };
+export async function deleteUser(id: any) {
+  const url = `${base_url}/crud/users/delete/${id}`;
 
   const accessToken = localStorage.getItem('accessToken');
 
   const data = await fetch(url, {
-    method: `POST`,
+    method: `DELETE`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
-      // Authorization: `Bearer ${session.accessToken}`,
     },
-    body: JSON.stringify(body),
   });
 
   return await data.json();

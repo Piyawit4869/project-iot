@@ -18,15 +18,32 @@ import {
 } from '@nextui-org/react';
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import pagination from '@/pages/api/templates/pagination';
+import getTemplate from '@/pages/api/templates/get';
 
 export default function NotationCreatePage() {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   const [zoomLevel, setZoomLevel] = React.useState(100); // Default zoom level (100%)
-  const [loading, setLoading] = React.useState(false);
   const [errors, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [createStatus, setCreateStatus] = React.useState('');
   const router = useRouter();
+  const [templates, setTemplates] = React.useState([]) as any;
+  const [templateSelected, setTemplateSelected] = React.useState({}) as any;
+  const [processedHtml, setProcessedHtml] = React.useState<string>('');
+  const htmlTemplate = templateSelected.templateNotation;
+
+  const handleTemplateChange = async (e: any) => {
+    const selectedId = e.target.value;
+
+    setFormData((prevData: any) => ({ ...prevData, templateId: selectedId }));
+
+    if (selectedId) {
+      const { data } = await getTemplate(selectedId);
+      setTemplateSelected(data);
+    }
+  };
 
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
@@ -40,6 +57,40 @@ export default function NotationCreatePage() {
           : value,
     }));
   };
+
+  React.useEffect(() => {
+    const fetchTemplate = async () => {
+      const { items: fetchedItems } = await pagination({ page: 1, limit: 20 });
+
+      setTemplates(fetchedItems);
+    };
+
+    fetchTemplate();
+  }, []);
+
+  React.useEffect(() => {
+    if (htmlTemplate) {
+      let updatedHtml = htmlTemplate;
+
+      Object.keys(formData).forEach((key) => {
+        const regex = new RegExp(`{{${key}}}`, 'g');
+        let value = formData[key] || '';
+
+        if (key === 'startDate' && value) {
+          const date = new Date(value);
+          value = date.toLocaleDateString('th-TH', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          });
+        }
+
+        updatedHtml = updatedHtml.replace(regex, value);
+      });
+
+      setProcessedHtml(updatedHtml);
+    }
+  }, [formData, htmlTemplate]);
 
   const handleZoomIn = () => {
     setZoomLevel((prevZoom) => Math.min(prevZoom + 10, 200)); // Max zoom 200%
@@ -60,7 +111,6 @@ export default function NotationCreatePage() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
     const requiredFields = ['refNo', 'startDate', 'type'];
     const newErrors: any = {};
@@ -73,7 +123,6 @@ export default function NotationCreatePage() {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      setLoading(false);
       return;
     }
 
@@ -104,12 +153,22 @@ export default function NotationCreatePage() {
 
       const { data } = await createNotation({}, payload);
 
+      toast.success('🎉 สร้างเอกสารสำเร็จ!', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
       router.push(`/admin/notation/${data.id}`);
     } catch (err: any) {
+      toast.error('❌ ไม่สามารถสร้างเอกสารได้', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
       console.error('Send FormData error:', err);
       setErrors({ general: err.message || 'An unexpected error occurred.' });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -209,9 +268,24 @@ export default function NotationCreatePage() {
                   className="grid grid-cols-1 gap-4"
                   validationErrors={errors}
                 >
-                  <h1 className="text-2xl font-bold text-headFont">
-                    ข้อมูลเอกสาร
-                  </h1>
+                  <div className="flex justify-between items-center">
+                    <h1 className="flex-1 text-2xl font-bold text-headFont">
+                      ข้อมูลเอกสาร
+                    </h1>
+                    <Select
+                      size="sm"
+                      className="flex-1"
+                      name="templateId"
+                      label="เลือกรูปแบบเอกสาร"
+                      onChange={handleTemplateChange}
+                    >
+                      {templates.map((item: any) => (
+                        <SelectItem key={item.id} value={item.id}>
+                          {item.templateName}
+                        </SelectItem>
+                      ))}
+                    </Select>
+                  </div>
                   {/* Notation Section */}
                   <div className="flex gap-4">
                     <div className="flex-1 flex items-center gap-4">
@@ -374,33 +448,25 @@ export default function NotationCreatePage() {
                     <h1 className="text-2xl font-bold text-headFont">
                       ข้อมูลเอกสาร
                     </h1>
-                    {/* Dynamic Status Tag */}
-                    <div
-                      className={`px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700 border border-gray`}
-                    >
-                      แบบร่าง
-                    </div>
                   </div>
 
-                  <div className="bg-white w-[170mm] h-[240mm] shadow-lg border border-gray-300 rounded overflow-hidden">
-                    <div className="p-6 border-b">
-                      <h1 className="text-center text-2xl font-bold text-primary">
-                        Document Title
-                      </h1>
-                      <p className="text-center text-sm text-gray-500">
-                        Subtitle or additional details
+                  {/* Render HTML Template Here */}
+                  <div
+                    className="bg-white w-[170mm] h-[240mm] shadow-lg border border-gray-300 rounded overflow-hidden p-6"
+                    style={{
+                      transform: `scale(${zoomLevel / 100})`,
+                      transformOrigin: 'top left',
+                    }}
+                  >
+                    {processedHtml ? (
+                      <div
+                        dangerouslySetInnerHTML={{ __html: processedHtml }}
+                      />
+                    ) : (
+                      <p className="text-center text-gray-500">
+                        กรุณาเลือกรูปแบบเอกสาร
                       </p>
-                    </div>
-                    <div className="p-6">
-                      <p className="text-sm text-gray-600">
-                        Preview content will appear here.
-                      </p>
-                    </div>
-                    <div className="p-6 border-t">
-                      <p className="text-center text-sm text-gray-500">
-                        Footer text or signature placeholder
-                      </p>
-                    </div>
+                    )}
                   </div>
                   <div className="w-[170mm] w-full flex justify-center items-center mt-4">
                     <div className="flex items-center gap-2">
@@ -440,11 +506,11 @@ export default function NotationCreatePage() {
 }
 
 const types = [
-  { label: 'Invoice', value: 'invoice' },
-  { label: 'Quotation', value: 'quotation' },
-  { label: 'DeliveryOrder', value: 'delivery_order' },
-  { label: 'PurchaseOrder', value: 'purchase_order' },
-  { label: 'Receipt', value: 'receipt' },
+  { label: 'ใบแจ้งหนี้', value: 'invoice' },
+  { label: 'ใบเสนอราคา', value: 'quotation' },
+  { label: 'ใบการจัดส่งคำสั่งซื้อ', value: 'delivery_order' },
+  { label: 'ใบสั่งซื้อ', value: 'purchase_order' },
+  { label: 'ใบเสร็จรับเงิน', value: 'receipt' },
 ];
 
 const address = [

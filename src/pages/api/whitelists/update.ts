@@ -1,7 +1,7 @@
 import { base_url } from '@/constant/common';
 
-export default async function createWhitelists(prevState: any, formData: any) {
-  const url = `${base_url}/crud/whitelists/create/`;
+export async function updateWhitelists(prevState: any, formData: any, id: any) {
+  const url = `${base_url}/crud/whitelists/edit/${id}`;
 
   const body = {
     ...formData,
@@ -10,11 +10,10 @@ export default async function createWhitelists(prevState: any, formData: any) {
   const accessToken = localStorage.getItem('accessToken');
 
   const data = await fetch(url, {
-    method: `POST`,
+    method: `PUT`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
-      // Authorization: `Bearer ${session.accessToken}`,
     },
     body: JSON.stringify(body),
   });

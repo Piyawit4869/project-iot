@@ -4,10 +4,7 @@ import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import Link from 'next/link';
 import { Button, Chip } from '@nextui-org/react';
-import NextTable from '@/components/common/nextTable';
-import Image from 'next/image';
 import React from 'react';
-import { usersLoader } from '@/app/api/user';
 import { useRouter } from 'next/navigation';
 import { TablePagination } from '@/components/common/tablePagination';
 import pagination from '@/pages/api/user/pagination';
@@ -76,13 +73,6 @@ export default function IndexPage() {
   //   status: user.role.status,
   // }));
 
-  const router = useRouter();
-  const handleRowClick = (row: any) => {
-    router.push(`user/${row.id}`); // Redirect to a dynamic route
-  };
-
-  console.log({ items });
-
   return (
     <div>
       {/* Page Header */}
@@ -132,18 +122,21 @@ const columns: any = [
     title: 'รูปภาพ',
     dataIndex: 'image',
     render: () => {
+      return '-';
+    },
+  },
+  {
+    title: 'ชื่อผู้ใช้',
+    dataIndex: 'name',
+    link: '/admin/user',
+    render: (_: any, record: any) => {
       return (
-        <Image
-          src="/logo.png"
-          alt="user"
-          className="w-12 h-12 rounded-full"
-          width={12}
-          height={12}
-        />
+        <Link href={`/admin/user/${record.id}`}>
+          {record.profile.firstName}
+        </Link>
       );
     },
   },
-  { title: 'ชื่อผู้ใช้', dataIndex: 'name', link: '/admin/user' },
   { title: 'อีเมล', dataIndex: 'email' },
   { title: 'ตำแหน่ง', dataIndex: 'position' },
   { title: 'เบอร์โทรศัพท์', dataIndex: 'phone' },
