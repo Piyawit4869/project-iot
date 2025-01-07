@@ -41,6 +41,17 @@ interface WhitelistItem {
   };
 }
 
+const columns = [
+  { title: 'ไอพี', dataIndex: 'ip', link: '/admin/attendance/whitelist' },
+  { title: 'ไอเอสพี', dataIndex: 'isp' },
+  { title: 'สถานะ', dataIndex: 'status' },
+  { title: 'บราวเซอร์', dataIndex: 'browser' },
+  { title: 'ระบบปฏิบัติการ', dataIndex: 'os' },
+  { title: 'ที่อยู่', dataIndex: 'addressName' },
+  { title: 'ประเทศ', dataIndex: 'addressNation' },
+  { title: 'สร้างวันที่', dataIndex: 'createdAt' },
+];
+
 export default function WhitelistsPage() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -59,16 +70,6 @@ export default function WhitelistsPage() {
     setLoading(true);
     try {
       const result = await getWhitelists();
-      const transformedItems = result.items.map((item: WhitelistItem) => ({
-        ...item,
-        addressName: item.address.name || '',addressNation: item.address.nation || '',
-      }));
-      console.log(result.items)
-      // console.log(result.items.address.name)
-      // console.log(result.items);
-      // const Items = result.items.map((v : any) =>  v)
-      // const Items = result.items[0].address.name
-      // console.log(Items)
       setWhitelists(result.items);
 
       const { ip, status } = filters;
@@ -101,13 +102,16 @@ export default function WhitelistsPage() {
     [],
   );
 
-  // Handle input changes
-  const onInputChange = (key: keyof FilterState, value: string) => {
+  const onInputChange = (key: keyof typeof filters, value: string) => {
     const updatedFilters = { ...filters, [key]: value };
     handleFilterChange(updatedFilters);
   };
 
-  // Fetch data whenever filters, page, or rowsPerPage change
+  const handleStatusChange = (status: string) => {
+    const updatedFilters = { ...filters, status };
+    handleFilterChange(updatedFilters); // This will trigger the debounced filter change
+  };
+
   useEffect(() => {
     fetchWhitelists();
   }, [filters, page, rowsPerPage]);
@@ -118,44 +122,92 @@ export default function WhitelistsPage() {
         child={
           <div>
             <TopSection
-              title="ไวท์ลิสต์"
+              title="การเข้าใช้งาน"
               buttons={[
                 <Link href={'whitelist/create'} key={'create button'}>
                   <Button className="bg-accent1 text-white" key={'create button'}>
-                    สร้างไวท์ลิสต์
+                    สร้างการเข้าใช้งาน
                   </Button>
                 </Link>,
               ]}
             />
-            <div className="bg-white shadow rounded-lg mb-4 mt-4">
-              <div className="flex flex-wrap gap-4">
-                <Input
-                  className="flex-1 p-2 text-headFont"
-                  labelPlacement="outside"
-                  size="lg"
-                  name="name"
-                  placeholder="ค้นหาชื่อ"
-                  value={filters.ip}
-                  onChange={(e) => onInputChange('ip', e.target.value)}
-                />
-              </div>
-            </div>
             {loading ? (
-              <div className="flex justify-center items-center h-64">
-                <div className="spinner"></div>{' '}
-                {/* Make sure to style this spinner */}
+              <div className="flex justify-center items-center h-[350px]">
+                <div className="relative flex flex-col items-center space-y-4">
+                  <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                  <p className="text-gray-600 text-lg font-semibold animate-pulse">
+                    Loading, please wait...
+                  </p>
+                </div>
               </div>
             ) : (
-              <TablePagination
-                initialRows={items}
-                initialMeta={meta}
-                rowsPerPage={rowsPerPage}
-                columns={columns}
-                onPageChange={(newPage) => setPage(newPage)}
-                onRowsPerPageChange={(newRowsPerPage) =>
-                  setRowsPerPage(newRowsPerPage)
-                }
-              />
+              <>
+                <div className="bg-white shadow rounded-lg mb-4 mt-4">
+                  <div className="flex flex-wrap gap-4">
+                    <Input
+                      className="flex-1 p-2 text-headFont"
+                      labelPlacement="outside"
+                      size="lg"
+                      name="name"
+                      placeholder="ค้นหา ip"
+                      value={filters.ip}
+                      onChange={(e) => onInputChange('ip', e.target.value)}
+                    />
+                  </div>
+
+                  <div className="flex flex-wrap gap-4 p-4">
+                    <Popover placement="bottom" showArrow={true}>
+                      <PopoverTrigger>
+                        <Button
+                          onClick={() => handleStatusChange('pending')}
+                          className=""
+                        >
+                          <Icon.SyncOutlined spin />
+                          Pending
+                        </Button>
+                      </PopoverTrigger>
+                      <></>
+                    </Popover>
+
+                    <Popover placement="bottom" showArrow={true}>
+                      <PopoverTrigger>
+                        <Button
+                          onClick={() => handleStatusChange('approved')}
+                          className="bg-accent1 text-white"
+                        >
+                          <Icon.CheckOutlined />
+                          Approved
+                        </Button>
+                      </PopoverTrigger>
+                      <></>
+                    </Popover>
+
+                    <Popover placement="bottom" showArrow={true}>
+                      <PopoverTrigger>
+                        <Button
+                          onClick={() => handleStatusChange('rejected')}
+                          className="bg-accent2 text-white"
+                        >
+                          <Icon.CloseOutlined />
+                          Rejected
+                        </Button>
+                      </PopoverTrigger>
+                      <></>
+                    </Popover>
+                  </div>
+                </div>
+
+                <TablePagination
+                  initialRows={items}
+                  initialMeta={meta}
+                  rowsPerPage={rowsPerPage}
+                  columns={columns}
+                  onPageChange={(newPage) => setPage(newPage)}
+                  onRowsPerPageChange={(newRowsPerPage) =>
+                    setRowsPerPage(newRowsPerPage)
+                  }
+                />
+              </>
             )}
           </div>
         }

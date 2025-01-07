@@ -63,7 +63,7 @@ export function AdminSideBar() {
               icon: <Icon.ScheduleOutlined />,
             },
             {
-              name: 'ไวท์ลิสต์',
+              name: 'การเข้าใช้งาน',
               path: '/admin/attendance/whitelist',
               icon: <Icon.ScheduleOutlined />,
             },
@@ -78,14 +78,7 @@ export function AdminSideBar() {
           name: 'เอกสาร',
           key: 'notation',
           icon: <Icon.FileTextOutlined />,
-          path: '',
-          subMenu: [
-            {
-              name: 'เอกสารทั้งหมด',
-              path: '/admin/notation',
-              icon: <Icon.FileSearchOutlined />,
-            },
-          ],
+          path: '/admin/notation',
         },
         {
           name: 'ผู้ใช้',
