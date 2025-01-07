@@ -1,11 +1,11 @@
 import { base_url } from '@/constant/common';
 
-export default async function getSingleWhitelists(id: string): Promise<any> {
+export default async function getSingleWorkinfo(id: string): Promise<any> {
   try {
     const accessToken = localStorage.getItem('accessToken');
 
     //query params in this
-    const response = await fetch(`${base_url}/crud/whitelists/${id}`, {
+    const response = await fetch(`${base_url}/crud/work-info/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -26,8 +26,8 @@ export default async function getSingleWhitelists(id: string): Promise<any> {
 } 
 
 
-export async function getWhitelists(){
-  const url = `${base_url}/crud/whitelists/`;
+export async function getWorkinfo() {
+  const url = `${base_url}/crud/work-info/`;
   const accessToken = localStorage.getItem('accessToken');
 
   const data = await fetch(url, {

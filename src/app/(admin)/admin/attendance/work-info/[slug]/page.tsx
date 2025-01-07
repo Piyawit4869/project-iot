@@ -14,7 +14,7 @@ import {
 } from '@nextui-org/react';
 import React from 'react';
 
-export default function NotationSinglePage() {
+export default function WorkInfonSinglePage() {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the form from submitting to the URL
     const formData = new FormData(e.currentTarget);
@@ -30,7 +30,7 @@ export default function NotationSinglePage() {
         <div>
           <TopSection
             title="ข้อมูลการทำงาน (WorkInfo)"
-            backpath={'/admin/attendance'}
+            backpath={'/admin/attendance/work-info'}
             buttons={[
               <Button className="bg-accent1 text-white" key={'approve button'}>
                 อนุมัติ
@@ -210,25 +210,6 @@ export default function NotationSinglePage() {
               }
             />
 
-            {/* PDF Preview */}
-            <div className="bg-white w-[210mm] h-[297mm] shadow-lg overflow-hidden p-8">
-              <div className="text-center text-xl font-bold mb-4 text-primary">
-                Document Title
-              </div>
-              <div className="text-sm text-gray-600 leading-relaxed">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Maecenas volutpat, velit eu tincidunt interdum, mauris libero
-                consectetur ex, sed bibendum nulla lorem id eros. Duis
-                efficitur, enim sit amet tristique tincidunt, arcu est vehicula
-                metus, nec vehicula nisi lectus sit amet ex.
-              </div>
-              <div className="mt-4 text-sm text-primary">
-                Sed egestas, quam at fringilla vulputate, ligula velit luctus
-                elit, eget tempus tortor turpis ac dolor. Phasellus vel
-                scelerisque arcu. Integer eget nisi arcu. Nullam vehicula auctor
-                ex, ac interdum odio volutpat eget.
-              </div>
-            </div>
           </div>
         </div>
       }

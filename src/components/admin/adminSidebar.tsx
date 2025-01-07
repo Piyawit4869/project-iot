@@ -58,8 +58,8 @@ export function AdminSideBar() {
               icon: <Icon.ScheduleOutlined />,
             },
             {
-              name: 'การตั้งค่า',
-              path: '/admin/attendance/config_attendance',
+              name: 'ข้อมูลการทำงาน',
+              path: '/admin/attendance/workInfo',
               icon: <Icon.ScheduleOutlined />,
             },
             {

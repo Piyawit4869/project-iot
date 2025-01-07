@@ -11,9 +11,9 @@ import {
   Popover,
   PopoverTrigger,
 } from '@nextui-org/react';
-import pagination from '@/pages/api/whitelists/pagination';
+import pagination from '@/pages/api/workinfos/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
-import { getWhitelists } from '@/pages/api/whitelists/get';
+import { formatDate } from '@/utils/enums/date';
 import * as Icon from '@ant-design/icons';
 
 interface FilterState {
@@ -28,36 +28,49 @@ interface MetaData {
   currentPage: number;
 }
 
-interface WhitelistItem {
+interface WorkInfoItem {
   id: string;
+  prefix: string;
+  name: string;
   status: string;
-  ip: string;
-  createdAt: string;
-  browser: string;
-  os: string;
-  address: {
-    name: string;
-    nation: string;
-  };
+  descriptions: string;
+  priority: string;
+  startDate: string | null;
+  dueDate: string | null;
+  limitTimePerDay: number;
+  inspector: string;
+  startCredit: number;
+  totalCredit: number;
+  totalWorkHours: number;
+  payDay: string | null;
+  note: string;
+  createdAt: string | null;
 }
 
 const columns = [
-  { title: 'ไอพี', dataIndex: 'ip', link: '/admin/attendance/whitelist' },
-  { title: 'ไอเอสพี', dataIndex: 'isp' },
+  { title: 'ลำดับ', dataIndex: 'order', link: '/admin/attendance/work-info' },
+  { title: 'คำนำหน้า', dataIndex: 'prefix' },
+  { title: 'ชื่อ', dataIndex: 'name' },
   { title: 'สถานะ', dataIndex: 'status' },
-  { title: 'บราวเซอร์', dataIndex: 'browser' },
-  { title: 'ระบบปฏิบัติการ', dataIndex: 'os' },
-  { title: 'ที่อยู่', dataIndex: 'addressName' },
-  { title: 'ประเทศ', dataIndex: 'addressNation' },
+  { title: 'คำอธิบายงาน', dataIndex: 'descriptions' },
+  { title: 'ความสำคัญ', dataIndex: 'priority' },
+  { title: 'วันที่เริ่มต้น', dataIndex: 'startDate' },
+  { title: 'วันสิ้นสุด', dataIndex: 'dueDate' },
+  { title: 'เวลาจำกัดต่อวัน', dataIndex: 'limitTimePerDay' },
+  { title: 'ผู้ตรวจสอบ', dataIndex: 'inspector' },
+  { title: 'เครดิตเริ่มต้น', dataIndex: 'startCredit' },
+  { title: 'เครดิตรวม', dataIndex: 'totalCredit' },
+  { title: 'ชั่วโมงทำงานรวม', dataIndex: 'totalWorkHours' },
+  { title: 'วันที่จ่ายเงิน', dataIndex: 'payDay' },
+  { title: 'หมายเหตุ', dataIndex: 'note' },
   { title: 'สร้างวันที่', dataIndex: 'createdAt' },
 ];
 
-export default function WhitelistsPage() {
+export default function WorkInfoPage() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filters, setFilters] = useState<FilterState>({ ip: '', status: '' });
-  const [, setWhitelists] = useState<WhitelistItem[]>([]);
-  const [items, setItems] = useState<WhitelistItem[]>([]);
+  const [items, setItems] = useState<WorkInfoItem[]>([]);
   const [meta, setMeta] = useState<MetaData>({
     totalItems: 0,
     itemsPerPage: 10,
@@ -66,12 +79,9 @@ export default function WhitelistsPage() {
   });
   const [loading, setLoading] = useState(false);
 
-  const fetchWhitelists = async () => {
+  const fetchWorkInfo = async () => {
     setLoading(true);
     try {
-      const result = await getWhitelists();
-      setWhitelists(result.items);
-
       const { ip, status } = filters;
       const { items: fetchedItems, meta: fetchedMeta } = await pagination({
         page,
@@ -79,16 +89,22 @@ export default function WhitelistsPage() {
         ...(ip && { ip }),
         ...(status && { status }),
       });
+
       setItems(
-        fetchedItems.map((item: WhitelistItem) => ({
+        fetchedItems.map((item: WorkInfoItem , index: number) => ({
           ...item,
-          addressName: item.address.name || '',
-          addressNation: item.address.nation || '',
+
+          order: (page - 1) * rowsPerPage + index + 1,
+          createdAt: formatDate(item.createdAt),
+          dueDate: formatDate(item.dueDate),
+          startDate: formatDate(item.startDate),
+          payDay: formatDate(item.payDay),
+
         })),
       );
       setMeta(fetchedMeta);
     } catch (error) {
-      console.error('Error fetching whitelists:', error);
+      console.error('Error fetching work info:', error);
     } finally {
       setLoading(false);
     }
@@ -113,7 +129,7 @@ export default function WhitelistsPage() {
   };
 
   useEffect(() => {
-    fetchWhitelists();
+    fetchWorkInfo();
   }, [filters, page, rowsPerPage]);
 
   return (
@@ -122,14 +138,14 @@ export default function WhitelistsPage() {
         child={
           <div>
             <TopSection
-              title="การเข้าใช้งาน"
+              title="ข้อมูลการทำงาน"
               buttons={[
-                <Link href={'whitelist/create'} key={'create button'}>
+                <Link href={'workInfo/create'} key={'create button'}>
                   <Button
                     className="bg-accent1 text-white"
                     key={'create button'}
                   >
-                    สร้างการเข้าใช้งาน
+                    สร้างข้อมูลการทำงาน
                   </Button>
                 </Link>,
               ]}
@@ -165,7 +181,7 @@ export default function WhitelistsPage() {
                           onClick={() => handleStatusChange('')}
                           className="bg-accent1 text-white"
                         >
-                          All 
+                          All
                         </Button>
                       </PopoverTrigger>
                       <></>
