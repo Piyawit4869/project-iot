@@ -20,18 +20,13 @@ import {
 } from '@nextui-org/react';
 import React from 'react';
 import { createUser } from '@/pages/api/user/create';
+import { ModalVerify } from '@/components/setting/modalVerify';
+import { label } from 'framer-motion/client';
 
 export default function CreateUserPage() {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
-  const [formData, setFormData] = React.useState({
-    active: '',
-    email: '',
-    userName: '',
-    // password: '',
-    role: '',
-    note: '',
-  });
+  const [formData, setFormData] = React.useState({}) as any;
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent the form from submitting to the URL
@@ -62,6 +57,7 @@ export default function CreateUserPage() {
     onOpen: openCreate,
     onOpenChange: changeCreate,
   } = useDisclosure();
+
   const {
     isOpen: isDelete,
     onOpen: openDelete,
@@ -101,81 +97,35 @@ export default function CreateUserPage() {
                 ]}
               />
 
-              <Modal
+              <ModalVerify
                 isOpen={isCreate}
-                onOpenChange={changeCreate}
-                key={'create button'}
-              >
-                <ModalContent>
-                  {(onClose) => (
-                    <>
-                      <ModalHeader className="flex flex-col gap-1">
-                        คุณต้องการสร้างผู้ใช้งาน ใช่หรือไม่
-                      </ModalHeader>
-                      <ModalBody>
-                        <p>ข้อมูลที่คุณกรอกจะถูกบันทึก</p>
-                      </ModalBody>
-                      <ModalFooter>
-                        <Button
-                          className="bg-accent2 text-white"
-                          variant="light"
-                          onPress={onClose}
-                        >
-                          ยกเลิก
-                        </Button>
-                        <Button
-                          className="bg-accent1 text-white"
-                          variant="light"
-                          type="submit"
-                          key={'create button'}
-                          form="user"
-                          onPress={onClose}
-                        >
-                          ยืนยัน
-                        </Button>
-                      </ModalFooter>
-                    </>
-                  )}
-                </ModalContent>
-              </Modal>
+                title="คุณต้องการสร้างข้อมูลผู้ใช้งาน ใช่หรือไม่"
+                content="ข้อมูลที่คุณกรอกจะถูกบันทึก"
+                onClose={changeCreate}
+                CancelButton={{
+                  label: 'ยกเลิก',
+                  onClick: changeCreate,
+                }}
+                ConfirmButton={{
+                  label: 'บันทึก',
+                  onClick: changeCreate,
+                }}
+              />
 
-              <Modal
+              <ModalVerify
                 isOpen={isDelete}
-                onOpenChange={changeDelete}
-                key={'cancel button'}
-              >
-                <ModalContent>
-                  {(onClose) => (
-                    <>
-                      <ModalHeader className="flex flex-col gap-1">
-                        คุณต้องการเคลียร์ผู้ใช้งาน ใช่หรือไม่
-                      </ModalHeader>
-                      <ModalBody>
-                        <p>ข้อมูลที่คุณกรอกจะถูกเคลียร์</p>
-                      </ModalBody>
-                      <ModalFooter>
-                        <Button
-                          className="bg-accent2 text-white"
-                          variant="light"
-                          onPress={onClose}
-                        >
-                          ยกเลิก
-                        </Button>
-                        <Button
-                          className="bg-accent1 text-white"
-                          variant="light"
-                          onPress={() => {
-                            // resetForm("user");
-                            onClose();
-                          }}
-                        >
-                          ยืนยัน
-                        </Button>
-                      </ModalFooter>
-                    </>
-                  )}
-                </ModalContent>
-              </Modal>
+                title="คุณต้องการเคลียร์ข้อมูลผู้ใช้งาน ใช่หรือไม่"
+                content="ข้อมูลที่คุณกรอกจะถูกเคลียร์"
+                onClose={changeDelete}
+                CancelButton={{
+                  label: 'ยกเลิก',
+                  onClick: changeDelete,
+                }}
+                ConfirmButton={{
+                  label: 'ยืนยัน',
+                  onClick: changeDelete,
+                }}
+              />
 
               <div className="flex space-x-4 mt-6">
                 <div className="flex-1">

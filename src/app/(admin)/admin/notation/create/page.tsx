@@ -2,6 +2,7 @@
 
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
+import { ModalVerify } from '@/components/setting/modalVerify';
 import * as Icon from '@ant-design/icons';
 import { createNotation } from '@/pages/api/notations/create';
 import {
@@ -13,6 +14,7 @@ import {
   SelectItem,
   Switch,
   Textarea,
+  useDisclosure,
 } from '@nextui-org/react';
 import React from 'react';
 import { useRouter } from 'next/navigation';
@@ -111,6 +113,18 @@ export default function NotationCreatePage() {
     }
   };
 
+  const {
+    isOpen: isPending,
+    onOpen: openPending,
+    onOpenChange: changePending,
+  } = useDisclosure();
+
+  const {
+    isOpen: isDraft,
+    onOpen: openDraft,
+    onOpenChange: changeDraft,
+  } = useDisclosure();
+
   return (
     <Scaffold
       child={
@@ -119,14 +133,16 @@ export default function NotationCreatePage() {
             title="สร้างเอกสาร"
             backpath={'/admin/notation'}
             buttons={[
-              <a href={'/admin/notation'} key={'draft button'}>
+              // <a href={'/admin/notation'} key={'draft button'}>
+              <a key={'draft button'}>
                 <Button
                   className="bg-accent3 text-white"
-                  type="submit"
-                  form="notation"
-                  onClick={() => {
-                    setCreateStatus('draft');
-                  }}
+                  // type="submit"
+                  // form="notation"
+                  onPress={openDraft}
+                  // onClick={() => {
+                  //   setCreateStatus('draft');
+                  // }}
                 >
                   แบบร่าง
                 </Button>
@@ -134,17 +150,53 @@ export default function NotationCreatePage() {
               <a key={'create button'}>
                 <Button
                   className="bg-accent1 text-white"
-                  type="submit"
-                  form="notation"
-                  onClick={() => {
-                    setCreateStatus('pending');
-                  }}
+                  // type="submit"
+                  // form="notation"
+                  onPress={openPending}
+                  // onClick={() => {
+                  //   setCreateStatus('pending');
+                  // }}
                 >
                   สร้าง
                 </Button>
               </a>,
             ]}
           />
+
+          <ModalVerify
+            isOpen={isPending}
+            title="สร้างเอกสาร"
+            content="สร้างข้อมูลเอกสารในสถานะ Pending"
+            onClose={changePending}
+            CancelButton={{
+              label: 'ยกเลิก',
+              onClick: changePending,
+            }}
+            ConfirmButton={{
+              label: 'ยืนยัน',
+              type: 'submit',
+              form: 'notation',
+              onClick: () => setCreateStatus('pending'),
+            }}
+          />
+
+          <ModalVerify
+            isOpen={isDraft}
+            title="แบบร่างเอกสาร"
+            content="สร้างแบบร่างข้อมูลเอกสารในสถานะ Draft"
+            onClose={changeDraft}
+            CancelButton={{
+              label: 'ยกเลิก',
+              onClick: changeDraft,
+            }}
+            ConfirmButton={{
+              label: 'ยืนยัน',
+              type: 'submit',
+              form: 'notation',
+              onClick: () => setCreateStatus('draft'),
+            }}
+          />
+
           <div className="bg-gray-100  flex justify-center items-center pt-6">
             {/* A4 Paper Styled Container */}
             <div className="bg-white w-full border-gray-300 rounded overflow-hidden flex flex-row">
