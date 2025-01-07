@@ -1,105 +1,22 @@
 'use client';
 
-import CardComponent from '@/components/common/card';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Form, Input, Textarea } from '@nextui-org/react';
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React from 'react';
 import { Tabs, Tab } from '@nextui-org/react';
-import createWhitelists from '@/pages/api/whitelists/create';
 
-export default function CreateWhitelistsPage() {
-  const [formData, setFormData] = useState({
-    isp: '',
-    ip: '',
-    browser: '',
-    os: '',
-    addressName: '',
-    addressHouseNo: '',
-    addressRoad: '',
-    addressProvince: '',
-    addressSubdistrict: '',
-    addressPostalCode: '',
-    notes: '',
-    building: '',
-    roomNo: '',
-    floorNo: '',
-    village: '',
-    villageNo: '',
-    nation: '',
-    city: '',
-    regionName: '',
-    regionCode: '',
-    country: '',
-    countryCode: '',
-    organizationId: '',
-    branchId: '',
-  });
+export default function ConfigAttendancesPage() {
 
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Prevent the form from submitting to the URL
+    const formData = new FormData(e.currentTarget);
 
-  const handleSave = async () => {
-    setIsLoading(true);
-
-    const payload = {
-      isp: formData.isp,
-      ip: formData.ip,
-      browser: formData.browser,
-      os: formData.os,
-      notes: formData.notes,
-      address: {
-        name: formData.addressName,
-        houseNo: formData.addressHouseNo,
-        road: formData.addressRoad,
-        province: formData.addressProvince,
-        subDistrict: formData.addressSubdistrict,
-        postalCode: formData.addressPostalCode,
-        active: true,
-        building: formData.building,
-        roomNo: formData.roomNo,
-        floorNo: formData.floorNo,
-        village: formData.village,
-        villageNo: formData.villageNo,
-        nation: formData.nation,
-        city: formData.city,
-        regionName: formData.regionName,
-        regionCode: formData.regionCode,
-        country: formData.country,
-        countryCode: formData.countryCode,
-      },
-      organizationId: formData.organizationId || 'defaultOrganizationId',
-      branchId: formData.branchId || 'defaultBranchId',
-    };
-
-    try {
-      const response = await createWhitelists(null, payload);
-      if (response.success) {
-        alert('บันทึกไวท์ลิสต์สำเร็จ!');
-        router.push('/admin/attendance/whitelist');
-      } else {
-        alert(
-          `เกิดข้อผิดพลาด: ${response.message?.join(', ') || 'ไม่ทราบสาเหตุ'}`,
-        );
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('เกิดข้อผิดพลาดขณะบันทึกไวท์ลิสต์');
-    } finally {
-      setIsLoading(false);
-    }
-    console.log('Payload:', payload);
+    // Convert formData to an object
+    const data = Object.fromEntries(formData.entries());
+    console.log(data); // Log the form data for debugging
   };
 
   return (
@@ -107,22 +24,20 @@ export default function CreateWhitelistsPage() {
       child={
         <div>
           <TopSection
+            title="สร้างไวท์ลิสต์"
             backpath={'/admin/attendance/whitelist'}
-            title="หน้าสร้างไวท์ลิสต์"
+            title="การตั้งค่าการเข้าออกงาน"
             buttons={[
               <div key="action-buttons">
                 <Button
                   className="bg-accent2 text-white p-2 m-1"
-                  key="save-button"
-                  onClick={handleSave}
-                  isDisabled={isLoading}
+                  key={'save button'}
                 >
-                  {isLoading ? 'กำลังบันทึก...' : 'บันทึกการสร้าง'}
+                  บันทึกการตั้งค่า
                 </Button>
                 <Button
                   className="bg-accent3 text-white p-2 m-1"
-                  key="cancel-button"
-                  onClick={() => router.push('/admin/attendance/whitelist')}
+                  key={'cancel button'}
                 >
                   ยกเลิก
                 </Button>
@@ -134,68 +49,88 @@ export default function CreateWhitelistsPage() {
               <CardComponent
                 customCard
                 custom={
-                  <Form>
+                  <Form id="user" onSubmit={onSubmit} method="post">
                     <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
                       <Tabs variant="underlined">
-                        <Tab key="whitelists" title="ไวท์ลิสต์">
+                        <Tab key="address" title="ไวท์ลิสต์">
+                          {/* Content Section */}
                           <div className="mb-6">
                             <div className="grid grid-cols-2 gap-4">
+                              {/* Detail Section */}
                               <div>
                                 <h1 className="text-2xl font-bold text-headFont mb-10">
                                   Detail
                                 </h1>
                                 <div className="flex gap-4 mt-6">
                                   <Input
-                                    className="flex-1"
-                                    label="ไอเอสพี"
-                                    name="isp"
-                                    placeholder="ไอเอสพี"
-                                    value={formData.isp}
-                                    onChange={handleChange}
+                                    className="flex-1 "
+                                    label={
+                                      <span className="text-headFont">
+                                        สถานที่
+                                      </span>
+                                    }
+                                    labelPlacement="outside"
+                                    name="AddressName"
+                                    placeholder="สถานที่"
                                   />
                                   <Input
-                                    className="flex-1"
-                                    label="ไอพี"
-                                    name="ip"
+                                    className="flex-1 pt-2"
+                                    label={
+                                      <span className="text-headFont">
+                                        ไอพี
+                                      </span>
+                                    }
+                                    labelPlacement="outside"
+                                    name="AddressName"
                                     placeholder="ที่อยู่ไอพี"
-                                    value={formData.ip}
-                                    onChange={handleChange}
                                   />
                                 </div>
                                 <div className="flex gap-4 mt-6">
                                   <Input
-                                    className="flex-1"
-                                    label="บราวเซอร์"
-                                    name="browser"
+                                    className="flex-1 pt-2"
+                                    label={
+                                      <span className="text-headFont">
+                                        บราวเซอร์
+                                      </span>
+                                    }
+                                    labelPlacement="outside"
+                                    name="AddressName"
                                     placeholder="บราวเซอร์"
-                                    value={formData.browser}
-                                    onChange={handleChange}
                                   />
                                   <Input
-                                    className="flex-1"
-                                    label="ระบบปฏิบัติการ"
-                                    name="os"
+                                    className="flex-1 pt-2"
+                                    label={
+                                      <span className="text-headFont">
+                                        ระบบปฏิบัติการ
+                                      </span>
+                                    }
+                                    labelPlacement="outside"
+                                    name="AddressName"
                                     placeholder="ระบบปฏิบัติการ"
-                                    value={formData.os}
-                                    onChange={handleChange}
                                   />
                                 </div>
                               </div>
+
+                              {/* Map Section */}
                               <div>
                                 <h1 className="text-2xl font-bold text-headFont">
                                   Map
                                 </h1>
-                                <iframe
-                                  src="https://www.google.com/maps/embed?... (truncated for clarity)"
-                                  width="90%"
-                                  height="250"
-                                  className="rounded-md border m-auto"
-                                  allowFullScreen
-                                  loading="lazy"
-                                ></iframe>
+                                <div className="mt-4">
+                                  <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4596.320001693403!2d100.45844017573191!3d13.788879396432687!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29b1543350395%3A0x96f94cedda00d639!2sCK%20Service!5e1!3m2!1sth!2sth!4v1735121592706!5m2!1sth!2sth"
+                                    width="90%"
+                                    height="250"
+                                    className="rounded-md border m-auto"
+                                    allowFullScreen
+                                    loading="lazy"
+                                  ></iframe>
+                                </div>
                               </div>
                             </div>
                           </div>
+
+                          {/* Address Section */}
                           <div>
                             <h1 className="text-2xl font-bold text-headFont">
                               Address
@@ -203,185 +138,83 @@ export default function CreateWhitelistsPage() {
                             <div className="flex gap-4 mt-6">
                               <Input
                                 className="flex-1"
-                                label="ชื่อที่อยู่"
-                                name="addressName"
+                                label={
+                                  <span className="text-headFont">
+                                    ชื่อที่อยู่
+                                  </span>
+                                }
+                                labelPlacement="outside"
+                                name="AddressName"
                                 placeholder="ชื่อที่อยู่"
-                                value={formData.addressName}
-                                onChange={handleChange}
                               />
                               <Input
                                 className="flex-1"
-                                label="บ้านเลขที่"
-                                name="addressHouseNo"
-                                placeholder="บ้านเลขที่"
-                                value={formData.addressHouseNo}
-                                onChange={handleChange}
-                              />
-                            </div>
-                            <div className="flex gap-4 mt-6">
-                              <Input
-                                className="flex-1"
-                                label="ถนน"
-                                name="addressRoad"
-                                placeholder="ถนน"
-                                value={formData.addressRoad}
-                                onChange={handleChange}
-                              />
-                              <Input
-                                className="flex-1"
-                                label="จังหวัด"
-                                name="addressProvince"
-                                placeholder="จังหวัด"
-                                value={formData.addressProvince}
-                                onChange={handleChange}
-                              />
-                            </div>
-                            <div className="flex gap-4 mt-6">
-                              <Input
-                                className="flex-1"
-                                label="แขวง/ตำบล"
-                                name="addressSubdistrict"
-                                placeholder="แขวง/ตำบล"
-                                value={formData.addressSubdistrict}
-                                onChange={handleChange}
-                              />
-                              <Input
-                                className="flex-1"
-                                label="รหัสไปรษณีย์"
-                                name="addressPostalCode"
-                                placeholder="รหัสไปรษณีย์"
-                                value={formData.addressPostalCode}
-                                onChange={handleChange}
-                              />
-                            </div>
-
-                            {/* Additional Address Fields */}
-                            <div className="flex gap-4 mt-6">
-                              <Input
-                                className="flex-1"
-                                label="อาคาร"
-                                name="building"
-                                placeholder="อาคาร"
-                                value={formData.building}
-                                onChange={handleChange}
-                              />
-                              <Input
-                                className="flex-1"
-                                label="ห้อง"
-                                name="roomNo"
-                                placeholder="ห้อง"
-                                value={formData.roomNo}
-                                onChange={handleChange}
-                              />
-                            </div>
-                            <div className="flex gap-4 mt-6">
-                              <Input
-                                className="flex-1"
-                                label="ชั้น"
-                                name="floorNo"
-                                placeholder="ชั้น"
-                                value={formData.floorNo}
-                                onChange={handleChange}
-                              />
-                              <Input
-                                className="flex-1"
-                                label="หมู่บ้าน"
-                                name="village"
-                                placeholder="หมู่บ้าน"
-                                value={formData.village}
-                                onChange={handleChange}
-                              />
-                            </div>
-                            <div className="flex gap-4 mt-6">
-                              <Input
-                                className="flex-1"
-                                label="หมู่บ้านเลขที่"
-                                name="villageNo"
-                                placeholder="หมู่บ้านเลขที่"
-                                value={formData.villageNo}
-                                onChange={handleChange}
-                              />
-                              <Input
-                                className="flex-1"
-                                label="ชาติ"
-                                name="nation"
-                                placeholder="ชาติ"
-                                value={formData.nation}
-                                onChange={handleChange}
-                              />
-                            </div>
-                            <div className="flex gap-4 mt-6">
-                              <Input
-                                className="flex-1"
-                                label="เมือง"
+                                label={
+                                  <span className="text-headFont">เมือง</span>
+                                }
+                                labelPlacement="outside"
                                 name="city"
-                                placeholder="เมือง"
-                                value={formData.city}
-                                onChange={handleChange}
+                                placeholder="ชื่อเมือง"
+                              />
+                            </div>
+                            {/* More Address Fields */}
+                            <div className="flex gap-4 mt-6">
+                              <Input
+                                className="flex-1"
+                                label={
+                                  <span className="text-headFont">จังหวัด</span>
+                                }
+                                labelPlacement="outside"
+                                name="province"
+                                placeholder="ชื่อจังหวัด"
                               />
                               <Input
                                 className="flex-1"
-                                label="ภูมิภาค"
-                                name="regionName"
-                                placeholder="ภูมิภาค"
-                                value={formData.regionName}
-                                onChange={handleChange}
+                                label={
+                                  <span className="text-headFont">
+                                    รหัสไปรษณีย์
+                                  </span>
+                                }
+                                labelPlacement="outside"
+                                name="zipcode"
+                                placeholder="รหัสไปรษณีย์"
                               />
                             </div>
                             <div className="flex gap-4 mt-6">
                               <Input
                                 className="flex-1"
-                                label="รหัสภูมิภาค"
-                                name="regionCode"
-                                placeholder="รหัสภูมิภาค"
-                                value={formData.regionCode}
-                                onChange={handleChange}
+                                label={
+                                  <span className="text-headFont">เลขห้อง</span>
+                                }
+                                labelPlacement="outside"
+                                name="Roomnumber"
+                                placeholder="เลขห้อง"
                               />
                               <Input
                                 className="flex-1"
-                                label="ประเทศ (Code)"
-                                name="countryCode"
-                                placeholder="ประเทศ (Code)"
-                                value={formData.countryCode}
-                                onChange={handleChange}
+                                label={
+                                  <span className="text-headFont">
+                                    ชั้นที่อยู่
+                                  </span>
+                                }
+                                labelPlacement="outside"
+                                name="floor"
+                                placeholder="ชั้นที่อยู่"
                               />
                             </div>
+                            {/* Notes Section */}
                             <div className="flex gap-4 mt-6">
-                              <Input
-                                className="flex-1"
-                                label="ประเทศ"
-                                name="country"
-                                placeholder="ประเทศ"
-                                value={formData.country}
-                                onChange={handleChange}
+                              <Textarea
+                                classNames={{
+                                  base: '',
+                                  input: 'resize-y min-h-[50px]',
+                                }}
+                                label="หมายเหตุ"
+                                labelPlacement="outside"
+                                placeholder="หมายเหตุ"
+                                variant="bordered"
                               />
                             </div>
-                            <Textarea
-                              className="resize-y min-h-[50px] mt-6"
-                              label="หมายเหตุ"
-                              name="notes"
-                              placeholder="หมายเหตุ"
-                              value={formData.notes}
-                              onChange={handleChange}
-                            />
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <Input
-                              className="flex-1"
-                              label="ไอดีออแกไนซ์"
-                              name="organizationId"
-                              placeholder="ไอดีออแกไนซ์"
-                              value={formData.organizationId}
-                              onChange={handleChange}
-                            />
-                            <Input
-                              className="flex-1"
-                              label="ไอดีบรานซ์"
-                              name="branchId"
-                              placeholder="ไอดีบรานซ์"
-                              value={formData.branchId}
-                              onChange={handleChange}
-                            />
                           </div>
                         </Tab>
                       </Tabs>

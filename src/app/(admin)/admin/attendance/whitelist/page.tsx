@@ -4,13 +4,21 @@ import React, { useState, useEffect, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
-import { Input, Button, Link } from '@nextui-org/react';
+import {
+  Input,
+  Button,
+  Link,
+  Popover,
+  PopoverTrigger,
+} from '@nextui-org/react';
 import pagination from '@/pages/api/whitelists/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { getWhitelists } from '@/pages/api/whitelists/get';
+import * as Icon from '@ant-design/icons';
 
 interface FilterState {
   ip: string;
+  status: string;
 }
 
 interface MetaData {
@@ -33,22 +41,11 @@ interface WhitelistItem {
   };
 }
 
-const columns = [
-  { title: 'สถานะ', dataIndex: 'status' },
-  { title: 'ที่อยู่', dataIndex: 'addressName' },
-  { title: 'ประเทศ', dataIndex: 'addressNation' },
-  { title: 'ไอพี', dataIndex: 'ip' },
-  { title: 'สร้างวันที่', dataIndex: 'createdAt' },
-  { title: 'บราวเซอร์', dataIndex: 'browser' },
-  { title: 'ไอเอสพี', dataIndex: 'isp' },
-  { title: 'ระบบปฏิบัติการ', dataIndex: 'os' },
-];
-
 export default function WhitelistsPage() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [filters, setFilters] = useState<FilterState>({ ip: '' });
-  const [whitelists, setWhitelists] = useState<WhitelistItem[]>([]);
+  const [filters, setFilters] = useState<FilterState>({ ip: '', status: '' });
+  const [, setWhitelists] = useState<WhitelistItem[]>([]);
   const [items, setItems] = useState<WhitelistItem[]>([]);
   const [meta, setMeta] = useState<MetaData>({
     totalItems: 0,
@@ -64,16 +61,22 @@ export default function WhitelistsPage() {
       const result = await getWhitelists();
       const transformedItems = result.items.map((item: WhitelistItem) => ({
         ...item,
-        addressName: item.address.name || '',
-        addressNation: item.address.nation || '',
+        addressName: item.address.name || '',addressNation: item.address.nation || '',
       }));
+      console.log(result.items)
+      // console.log(result.items.address.name)
+      // console.log(result.items);
+      // const Items = result.items.map((v : any) =>  v)
+      // const Items = result.items[0].address.name
+      // console.log(Items)
       setWhitelists(result.items);
 
-      const { ip } = filters;
+      const { ip, status } = filters;
       const { items: fetchedItems, meta: fetchedMeta } = await pagination({
         page,
         limit: rowsPerPage,
         ...(ip && { ip }),
+        ...(status && { status }),
       });
       setItems(
         fetchedItems.map((item: WhitelistItem) => ({
@@ -91,18 +94,20 @@ export default function WhitelistsPage() {
   };
 
   const handleFilterChange = useCallback(
-    debounce((updatedFilters: FilterState) => {
+    debounce((updatedFilters) => {
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
-    }, 500), // Debounce delay (500ms)
+    }, 500),
     [],
   );
 
+  // Handle input changes
   const onInputChange = (key: keyof FilterState, value: string) => {
     const updatedFilters = { ...filters, [key]: value };
     handleFilterChange(updatedFilters);
   };
 
+  // Fetch data whenever filters, page, or rowsPerPage change
   useEffect(() => {
     fetchWhitelists();
   }, [filters, page, rowsPerPage]);
@@ -137,7 +142,8 @@ export default function WhitelistsPage() {
             </div>
             {loading ? (
               <div className="flex justify-center items-center h-64">
-                <div className="spinner"></div>
+                <div className="spinner"></div>{' '}
+                {/* Make sure to style this spinner */}
               </div>
             ) : (
               <TablePagination
@@ -146,7 +152,9 @@ export default function WhitelistsPage() {
                 rowsPerPage={rowsPerPage}
                 columns={columns}
                 onPageChange={(newPage) => setPage(newPage)}
-                onRowsPerPageChange={(newRowsPerPage) => setRowsPerPage(newRowsPerPage)}
+                onRowsPerPageChange={(newRowsPerPage) =>
+                  setRowsPerPage(newRowsPerPage)
+                }
               />
             )}
           </div>

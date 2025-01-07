@@ -7,6 +7,11 @@ import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
 import pagination from '@/pages/api/notations/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
+import {
+  handleDocumentStatusTag,
+  handleStatusTag,
+  handleTypeTag,
+} from '@/components/common/common';
 
 export default function NotationsPage() {
   const [page, setPage] = React.useState(1);
@@ -69,6 +74,14 @@ export default function NotationsPage() {
             <TopSection
               title="เอกสารทั้งหมด"
               buttons={[
+                <Link href={'notation/template'} key={'template index button'}>
+                  <Button
+                    className="bg-accent1 text-white"
+                    key={'create button'}
+                  >
+                    รูปแบบเอกสาร
+                  </Button>
+                </Link>,
                 <Link href={'notation/create'} key={'create button'}>
                   <Button
                     className="bg-accent1 text-white"
@@ -110,7 +123,7 @@ export default function NotationsPage() {
                 initialRows={items}
                 initialMeta={meta}
                 rowsPerPage={rowsPerPage}
-                columns={columns}
+                columns={columns as any}
                 onPageChange={(newPage) => setPage(newPage)}
                 onRowsPerPageChange={(newRowsPerPage) =>
                   setRowsPerPage(newRowsPerPage)
@@ -131,7 +144,26 @@ const columns = [
     dataIndex: 'docNo',
     link: '/admin/notation',
   },
-  { title: 'ประเภทเอกสาร', dataIndex: 'type' },
-  { title: 'การดำเนินการ', dataIndex: 'status' },
-  { title: 'สถานะเอกสาร', dataIndex: 'docStatus' },
+  {
+    title: 'ประเภทเอกสาร',
+    dataIndex: 'type',
+    align: 'center',
+    render: (value: string) => {
+      return handleTypeTag(value);
+    },
+  },
+  {
+    title: 'การดำเนินการ',
+    dataIndex: 'status',
+    render: (value: string) => {
+      return handleStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
 ];
