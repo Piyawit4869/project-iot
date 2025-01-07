@@ -180,7 +180,7 @@ export default function NotationCreatePage() {
             buttons={[
               <a href={'/admin/notation'} key={'draft button'}>
                 <Button
-                  className="bg-accent3 text-white"
+                  className="bg-accent3 text-white text-xs"
                   type="submit"
                   form="notation"
                   onClick={() => {
@@ -192,7 +192,7 @@ export default function NotationCreatePage() {
               </a>,
               <a key={'create button'}>
                 <Button
-                  className="bg-accent1 text-white"
+                  className="bg-accent1 text-white text-xs"
                   type="submit"
                   form="notation"
                   onClick={() => {
@@ -217,7 +217,7 @@ export default function NotationCreatePage() {
                   validationErrors={errors}
                 >
                   <div className="flex justify-between items-center">
-                    <h1 className="flex-1 text-2xl font-bold text-headFont">
+                    <h1 className="flex-1 text-xl font-bold text-headFont">
                       ข้อมูลเอกสาร
                     </h1>
                     <Select
@@ -237,7 +237,7 @@ export default function NotationCreatePage() {
                   {/* Notation Section */}
                   <div className="flex gap-4">
                     <div className="flex-1 flex items-center gap-4">
-                      <span className="text-headFont">แสดงผล</span>
+                      <span className="text-headFont text-xs">แสดงผล</span>
                       <Switch
                         name="active"
                         color="secondary"
@@ -248,7 +248,7 @@ export default function NotationCreatePage() {
                     </div>
                     <Input
                       className="flex-1"
-                      size="lg"
+                      size="sm"
                       label="หมายเลขอ้างอิง"
                       labelPlacement="outside"
                       name="refNo"
@@ -311,10 +311,10 @@ export default function NotationCreatePage() {
                     onChange={handleChange}
                   />
                   <div className="flex gap-4 mt-6">
-                    <h1 className="text-2xl font-bold text-headFont flex-1">
+                    <h1 className="text-base font-bold text-headFont flex-1">
                       ลูกค้า
                     </h1>
-                    <h1 className="text-2xl font-bold text-headFont flex-1">
+                    <h1 className="text-base font-bold text-headFont flex-1">
                       ที่อยู่
                     </h1>
                   </div>
@@ -344,7 +344,7 @@ export default function NotationCreatePage() {
                       ))}
                     </Select>
                   </div>
-                  <h1 className="text-2xl font-bold text-headFont mt-6">
+                  <h1 className="text-base font-bold text-headFont mt-6">
                     รายการ
                   </h1>
                   {items.map((_, index) => (
@@ -391,7 +391,7 @@ export default function NotationCreatePage() {
 
               {/* PDF Preview Section */}
               <div className="w-full lg:w-1/2 p-6 bg-gray-100 justify-center ">
-                <h1 className="text-2xl font-bold text-headFont mb-2">
+                <h1 className="text-base font-bold text-headFont mb-2">
                   ข้อมูลเอกสาร
                 </h1>
 
