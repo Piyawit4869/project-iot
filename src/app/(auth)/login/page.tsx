@@ -30,13 +30,14 @@ export default function LoginPage() {
         },
       }).then((response) => response.json());
 
+      localStorage.setItem('me', me);
       localStorage.setItem('accessToken', data.accessToken);
       localStorage.setItem('refreshToken', data.refreshToken);
 
-      if (me.role.name === 'super_admin') {
+      if (me.employeeRole.name === 'super_admin') {
         router.push('/superadmin');
       } else if (
-        me.role.name === 'employee' &&
+        me.employeeRole.name === 'employee' ||
         me.employeeRole.name === 'owner'
       ) {
         router.push('/admin');

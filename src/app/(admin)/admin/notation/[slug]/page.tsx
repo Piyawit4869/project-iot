@@ -467,9 +467,9 @@ export default function NotationSinglePage() {
             />
             <div className="bg-gray-100  flex justify-center items-center pt-6">
               {/* A4 Paper Styled Container */}
-              <div className="bg-white w-full border-gray-300 rounded overflow-hidden flex flex-row">
+              <div className="bg-white w-full border-gray-300 rounded-lg shadow-lg flex flex-wrap">
                 {/* Input Form Section */}
-                <div className="w-1/2 p-6 border-r border-gray-200 overflow-y-auto">
+                <div className="w-full lg:w-1/2 p-6 border-r border-gray-200 overflow-y-auto">
                   <Form
                     id="notation"
                     onSubmit={onSubmit}
@@ -675,24 +675,24 @@ export default function NotationSinglePage() {
                 </div>
 
                 {/* PDF Preview Section */}
-                <div className="w-1/2 p-6 bg-gray-100 flex justify-center">
-                  <div>
-                    <div className="w-[170mm] w-full flex justify-between items-center mb-4">
-                      <h1 className="text-2xl font-bold text-headFont">
-                        ข้อมูลเอกสาร
-                      </h1>
-                      {/* Dynamic Status Tag */}
-                      {handleDocumentStatusTag(data?.docStatus)}
-                      {/* <div
+                <div className="w-full lg:w-1/2 p-6 bg-gray-100 justify-center">
+                  <div className=" flex justify-between items-center mb-2">
+                    <h1 className="text-2xl font-bold text-headFont">
+                      ข้อมูลเอกสาร
+                    </h1>
+                    {/* Dynamic Status Tag */}
+                    {handleDocumentStatusTag(data?.docStatus)}
+                    {/* <div
                         className={`px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700 border border-gray`}
                       >
                         แบบร่าง
                       </div> */}
-                    </div>
+                  </div>
 
-                    {/* Render HTML Template Here */}
+                  {/* Render HTML Template Here */}
+                  <div className="flex justify-center">
                     <div
-                      className="bg-white w-[170mm] h-[240mm] shadow-lg border border-gray-300 rounded overflow-hidden p-6"
+                      className="bg-white w-full max-w-[170mm] h-[240mm] shadow-lg border border-gray-300 rounded p-6"
                       style={{
                         transform: `scale(${zoomLevel / 100})`,
                         transformOrigin: 'top left',
@@ -708,31 +708,31 @@ export default function NotationSinglePage() {
                         </p>
                       )}
                     </div>
-                    <div className="w-[170mm] w-full flex justify-center items-center mt-4">
-                      <div className="flex items-center gap-2">
-                        {/* Zoom Out Button */}
-                        <Button
-                          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
-                          aria-label="Zoom Out"
-                          onClick={handleZoomOut}
-                        >
-                          <Icon.MinusOutlined className="text-lg text-gray-700" />
-                        </Button>
+                  </div>
+                  <div className="w-[170mm] w-full flex justify-center items-center mt-4">
+                    <div className="flex items-center gap-2">
+                      {/* Zoom Out Button */}
+                      <Button
+                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
+                        aria-label="Zoom Out"
+                        onClick={handleZoomOut}
+                      >
+                        <Icon.MinusOutlined className="text-lg text-gray-700" />
+                      </Button>
 
-                        {/* Zoom Level Display */}
-                        <span className="text-sm font-medium text-gray-700">
-                          {zoomLevel}%
-                        </span>
+                      {/* Zoom Level Display */}
+                      <span className="text-sm font-medium text-gray-700">
+                        {zoomLevel}%
+                      </span>
 
-                        {/* Zoom In Button */}
-                        <Button
-                          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
-                          aria-label="Zoom In"
-                          onClick={handleZoomIn}
-                        >
-                          <Icon.PlusOutlined className="text-lg text-gray-700" />
-                        </Button>
-                      </div>
+                      {/* Zoom In Button */}
+                      <Button
+                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
+                        aria-label="Zoom In"
+                        onClick={handleZoomIn}
+                      >
+                        <Icon.PlusOutlined className="text-lg text-gray-700" />
+                      </Button>
                     </div>
                   </div>
                 </div>
