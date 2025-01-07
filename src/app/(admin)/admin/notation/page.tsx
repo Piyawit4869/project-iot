@@ -92,21 +92,21 @@ export default function NotationsPage() {
                 </Link>,
               ]}
             />
-            <div className="bg-white shadow rounded-lg mb-4 mt-4">
-              <div className="flex flex-wrap gap-4">
+            <div className="bg-white shadow rounded-lg mb-4 mt-4 ">
+              <div className="grid grid-cols-1 sm:grid-cols-2 ">
                 <Input
-                  className="flex-1 p-2 text-headFont"
+                  className="w-full p-2 text-headFont"
                   labelPlacement="outside"
-                  size="lg"
+                  size="sm"
                   name="name"
                   placeholder="ค้นหาชื่อ"
                   value={filters.name}
                   onChange={(e) => onInputChange('name', e.target.value)}
                 />
                 <Input
-                  className="flex-1 p-2 text-headFont"
+                  className="w-full p-2 text-headFont"
                   labelPlacement="outside"
-                  size="lg"
+                  size="sm"
                   name="docNo"
                   placeholder="ค้นหาหมายเลขเอกสาร"
                   value={filters.docNo}
@@ -114,6 +114,7 @@ export default function NotationsPage() {
                 />
               </div>
             </div>
+
             {loading ? (
               <div className="flex justify-center items-center h-64">
                 <div className="spinner"></div>

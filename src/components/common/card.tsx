@@ -21,7 +21,7 @@ export default function CardComponent({
   return (
     <Card className={className}>
       {customCard ? (
-        <div className="m-6">{custom}</div>
+        <div className="m-3">{custom}</div>
       ) : (
         <>
           <CardHeader className="flex gap-3">

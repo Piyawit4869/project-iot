@@ -195,26 +195,24 @@ export default function NotationCreatePage() {
               // <a href={'/admin/notation'} key={'draft button'}>
               <a key={'draft button'}>
                 <Button
-                  className="bg-accent3 text-white"
-                  // type="submit"
-                  // form="notation"
-                  onPress={openDraft}
-                  // onClick={() => {
-                  //   setCreateStatus('draft');
-                  // }}
+                  className="bg-accent3 text-white text-xs"
+                  type="submit"
+                  form="notation"
+                  onClick={() => {
+                    setCreateStatus('draft');
+                  }}
                 >
                   แบบร่าง
                 </Button>
               </a>,
               <a key={'create button'}>
                 <Button
-                  className="bg-accent1 text-white"
-                  // type="submit"
-                  // form="notation"
-                  onPress={openPending}
-                  // onClick={() => {
-                  //   setCreateStatus('pending');
-                  // }}
+                  className="bg-accent1 text-white text-xs"
+                  type="submit"
+                  form="notation"
+                  onClick={() => {
+                    setCreateStatus('pending');
+                  }}
                 >
                   สร้าง
                 </Button>
@@ -269,7 +267,7 @@ export default function NotationCreatePage() {
                   validationErrors={errors}
                 >
                   <div className="flex justify-between items-center">
-                    <h1 className="flex-1 text-2xl font-bold text-headFont">
+                    <h1 className="flex-1 text-xl font-bold text-headFont">
                       ข้อมูลเอกสาร
                     </h1>
                     <Select
@@ -289,7 +287,7 @@ export default function NotationCreatePage() {
                   {/* Notation Section */}
                   <div className="flex gap-4">
                     <div className="flex-1 flex items-center gap-4">
-                      <span className="text-headFont">แสดงผล</span>
+                      <span className="text-headFont text-xs">แสดงผล</span>
                       <Switch
                         name="active"
                         color="secondary"
@@ -300,7 +298,7 @@ export default function NotationCreatePage() {
                     </div>
                     <Input
                       className="flex-1"
-                      size="lg"
+                      size="sm"
                       label="หมายเลขอ้างอิง"
                       labelPlacement="outside"
                       name="refNo"
@@ -363,10 +361,10 @@ export default function NotationCreatePage() {
                     onChange={handleChange}
                   />
                   <div className="flex gap-4 mt-6">
-                    <h1 className="text-2xl font-bold text-headFont flex-1">
+                    <h1 className="text-base font-bold text-headFont flex-1">
                       ลูกค้า
                     </h1>
-                    <h1 className="text-2xl font-bold text-headFont flex-1">
+                    <h1 className="text-base font-bold text-headFont flex-1">
                       ที่อยู่
                     </h1>
                   </div>
@@ -396,7 +394,7 @@ export default function NotationCreatePage() {
                       ))}
                     </Select>
                   </div>
-                  <h1 className="text-2xl font-bold text-headFont mt-6">
+                  <h1 className="text-base font-bold text-headFont mt-6">
                     รายการ
                   </h1>
                   {items.map((_, index) => (
@@ -442,57 +440,51 @@ export default function NotationCreatePage() {
               </div>
 
               {/* PDF Preview Section */}
-              <div className="w-1/2 p-6 bg-gray-100 flex justify-center">
-                <div>
-                  <div className="w-[170mm] w-full flex justify-between items-center mb-4">
-                    <h1 className="text-2xl font-bold text-headFont">
-                      ข้อมูลเอกสาร
-                    </h1>
-                  </div>
+              <div className="w-full lg:w-1/2 p-6 bg-gray-100 justify-center ">
+                <h1 className="text-base font-bold text-headFont mb-2">
+                  ข้อมูลเอกสาร
+                </h1>
 
-                  {/* Render HTML Template Here */}
-                  <div
-                    className="bg-white w-[170mm] h-[240mm] shadow-lg border border-gray-300 rounded overflow-hidden p-6"
-                    style={{
-                      transform: `scale(${zoomLevel / 100})`,
-                      transformOrigin: 'top left',
-                    }}
-                  >
-                    {processedHtml ? (
-                      <div
-                        dangerouslySetInnerHTML={{ __html: processedHtml }}
-                      />
-                    ) : (
-                      <p className="text-center text-gray-500">
-                        กรุณาเลือกรูปแบบเอกสาร
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-[170mm] w-full flex justify-center items-center mt-4">
-                    <div className="flex items-center gap-2">
-                      {/* Zoom Out Button */}
-                      <Button
-                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
-                        aria-label="Zoom Out"
-                        onClick={handleZoomOut}
-                      >
-                        <Icon.MinusOutlined className="text-lg text-gray-700" />
-                      </Button>
+                {/* Render HTML Template Here */}
+                <div
+                  className="bg-white w-[170mm] h-[240mm] shadow-lg border border-gray-300 rounded overflow-hidden p-6"
+                  style={{
+                    transform: `scale(${zoomLevel / 100})`,
+                    transformOrigin: 'top left',
+                  }}
+                >
+                  {processedHtml ? (
+                    <div dangerouslySetInnerHTML={{ __html: processedHtml }} />
+                  ) : (
+                    <p className="text-center text-gray-500">
+                      กรุณาเลือกรูปแบบเอกสาร
+                    </p>
+                  )}
+                </div>
+                <div className="w-[170mm] w-full flex justify-center items-center mt-4">
+                  <div className="flex items-center gap-2">
+                    {/* Zoom Out Button */}
+                    <Button
+                      className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
+                      aria-label="Zoom Out"
+                      onClick={handleZoomOut}
+                    >
+                      <Icon.MinusOutlined className="text-lg text-gray-700" />
+                    </Button>
 
-                      {/* Zoom Level Display */}
-                      <span className="text-sm font-medium text-gray-700">
-                        {zoomLevel}%
-                      </span>
+                    {/* Zoom Level Display */}
+                    <span className="text-sm font-medium text-gray-700">
+                      {zoomLevel}%
+                    </span>
 
-                      {/* Zoom In Button */}
-                      <Button
-                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
-                        aria-label="Zoom In"
-                        onClick={handleZoomIn}
-                      >
-                        <Icon.PlusOutlined className="text-lg text-gray-700" />
-                      </Button>
-                    </div>
+                    {/* Zoom In Button */}
+                    <Button
+                      className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
+                      aria-label="Zoom In"
+                      onClick={handleZoomIn}
+                    >
+                      <Icon.PlusOutlined className="text-lg text-gray-700" />
+                    </Button>
                   </div>
                 </div>
               </div>

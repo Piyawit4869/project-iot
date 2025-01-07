@@ -16,8 +16,8 @@ export const Breadcrumb = () => {
       separator={<Icon.RightOutlined className="text-headFont text-xs" />}
     >
       <BreadcrumbItem>
-        <Link href="/">
-          <span className="text-headFont">Home</span>
+        <Link href="/admin">
+          <span className="text-headFont text-xs">Home</span>
         </Link>
       </BreadcrumbItem>
       {pathSegments.map((segment, index) => {
@@ -26,10 +26,10 @@ export const Breadcrumb = () => {
         return (
           <BreadcrumbItem key={href} isCurrent={isLast}>
             {isLast ? (
-              <span className="text-headFont">{segment}</span>
+              <span className="text-headFont text-xs">{segment}</span>
             ) : (
               <Link href={href}>
-                <span className="text-headFont">{segment}</span>
+                <span className="text-headFont text-xs">{segment}</span>
               </Link>
             )}
           </BreadcrumbItem>
