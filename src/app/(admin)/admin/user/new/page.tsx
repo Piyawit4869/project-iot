@@ -112,7 +112,7 @@ export default function CreateUserPage() {
       }
 
       const data = await createUser({}, payload);
-      console.log(payload);
+      console.log('Create User', data);
 
       if (data.success) {
         toast.success('🎉 สร้างผู้ใช้งานสำเร็จ!', {
@@ -244,7 +244,7 @@ export default function CreateUserPage() {
                             <span className="text-headFont">ชื่อผู้ใช้</span>
                           }
                           labelPlacement="outside"
-                          name="username"
+                          name="userName"
                           placeholder="กรอกชื่อผู้ใช้"
                           onChange={handleChange}
                           isRequired

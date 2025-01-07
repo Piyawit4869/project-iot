@@ -46,7 +46,7 @@ export default function RevenueSinglePage() {
                 className={'bg-secondary'}
                 customCard
                 custom={
-                  <div className="text-headFont">
+                  <div className="text-headFont text-white">
                     <div className="text-2xl">ประเภทรายได้</div>
                     <div className="text-lg">รายได้จากการขาย</div>
                   </div>

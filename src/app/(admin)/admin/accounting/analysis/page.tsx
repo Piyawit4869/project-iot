@@ -14,10 +14,10 @@ import {
   ArcElement,
 } from 'chart.js';
 import { TopSection } from '@/components/common/topSection';
-import NextTable from '@/components/common/nextTable';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 import CardComponent from '@/components/common/card';
+import { TablePagination } from '@/components/common/tablePagination';
 
 ChartJS.register(
   CategoryScale,
@@ -85,7 +85,44 @@ const columns = [
 ];
 
 export default function AccountSummaryPage() {
+  const [page, setPage] = React.useState(1);
   const [themeColor, setThemeColor] = React.useState({}) as any;
+  const [loading, setLoading] = React.useState(false);
+  const [items, setItems] = React.useState([]) as any;
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [meta, setMeta] = React.useState({
+    totalItems: 0,
+    itemsPerPage: 10,
+    totalPages: 0,
+    currentPage: 1,
+  });
+
+  /* Connect API Accounting Analysis Fetch data from the API
+  const fetchStatement = async () => {
+    setLoading(true);
+    try {
+      // const {} = filters;
+      const { items: fetchedItems, meta: fetchedMeta } = await  API Analysis ({
+        page,
+        limit: rowsPerPage,
+        // ...(name && { name }),
+        // ...(docNo && { docNo }),
+      });
+      setItems(fetchedItems);
+      setMeta(fetchedMeta);
+    } catch (error) {
+      console.error('Error fetching notations:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  */
+
+  /* ดึงข้อมูล API Fetch data whenever filters, page, or rowsPerPage change
+  React.useEffect(() => {
+      API Accounting();
+    }, [page, rowsPerPage]);
+  */
 
   React.useEffect(() => {
     const getCssVariable = (variableName: string) => {
@@ -161,13 +198,11 @@ export default function AccountSummaryPage() {
                 customCard
                 custom={
                   <div className="text-center">
-                    <div className="text-sm text-headFont">รายรับรวม</div>
-                    <div className="text-2xl font-bold text-headFont">
+                    <div className="text-sm text-white">รายรับรวม</div>
+                    <div className="text-2xl font-bold text-white">
                       ฿120,000
                     </div>
-                    <div className="text-xs text-headFont mt-1">
-                      เดือนปัจจุบัน
-                    </div>
+                    <div className="text-xs text-white mt-1">เดือนปัจจุบัน</div>
                   </div>
                 }
               />
@@ -335,9 +370,23 @@ export default function AccountSummaryPage() {
               }
             />
           </div>
-          <div className="flex space-x-4 mt-8">
-            <NextTable columns={columns} rows={initialData} />
-          </div>
+
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="spinner"></div>
+            </div>
+          ) : (
+            <TablePagination
+              initialRows={initialData}
+              initialMeta={meta}
+              rowsPerPage={rowsPerPage}
+              columns={columns}
+              onPageChange={(newPage) => setPage(newPage)}
+              onRowsPerPageChange={(newRowsPerPage) =>
+                setRowsPerPage(newRowsPerPage)
+              }
+            />
+          )}
         </div>
       }
     />

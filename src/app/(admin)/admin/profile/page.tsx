@@ -31,12 +31,6 @@ export default function CreateUserPage() {
     console.log(data); // Log the form data for debugging
   };
 
-  // const apiprefix: Record<string, string> = {
-  //   'Mr.': 'นาย',
-  //   'Ms.': 'นางสาว',
-  //   'Mrs.': 'นาง',
-  // };
-
   React.useEffect(() => {
     const getProfile = async () => {
       const profile = await get();
@@ -47,10 +41,6 @@ export default function CreateUserPage() {
     };
 
     getProfile();
-
-    // const fixprefix =
-    //   apiprefix[formData.profile?.prefix] || formData.profile?.prefix;
-    // setHonorific(fixprefix);
   }, []);
 
   return (
@@ -115,10 +105,10 @@ export default function CreateUserPage() {
                             <Select
                               className="flex-1  text-headFont"
                               name="prefix"
-                              placeholder={formData.profile?.prefix}
+                              placeholder="เลือกคำนำหน้า"
                               label="คำนำหน้า"
                               labelPlacement={'outside'}
-                              // defaultSelectedKeys={[formData.profile?.prefix]}
+                              defaultSelectedKeys={[formData.profile?.prefix]}
                             >
                               {prefix.map((item) => (
                                 <SelectItem key={item.value} value={item.value}>
@@ -196,7 +186,7 @@ export default function CreateUserPage() {
 }
 
 const prefix = [
-  { label: 'นาย', value: 'นาย' },
-  { label: 'นาง', value: 'นาง' },
-  { label: 'นางสาว', value: 'นางสาว' },
+  { label: 'นาย', value: 'Mr.' },
+  { label: 'นาง', value: 'Mrs.' },
+  { label: 'นางสาว', value: 'Ms.' },
 ];

@@ -55,12 +55,12 @@ export function AdminSideBar() {
             {
               name: 'ภาพรวม',
               path: '/admin/attendance/overview',
-              icon: <Icon.ScheduleOutlined />,
+              icon: <Icon.ClusterOutlined />,
             },
             {
               name: 'การตั้งค่า',
               path: '/admin/attendance/config_attendance',
-              icon: <Icon.ScheduleOutlined />,
+              icon: <Icon.SettingOutlined />,
             },
             {
               name: 'ไวท์ลิสต์',
@@ -139,11 +139,13 @@ export function AdminSideBar() {
                 className={`block px-4 py-2 rounded-md text-lg font-ibm cursor-pointer ${
                   pathname === item.path ||
                   (Array.isArray(item.relatedPaths) &&
-                    item.relatedPaths.some((p : any) => pathname.startsWith(p)))
+                    item.relatedPaths.some((p: any) => pathname.startsWith(p)))
                     ? 'bg-primaryFont text-secondaryFont'
                     : 'text-primaryFont hover:bg-primaryFont hover:text-secondaryFont'
                 }`}
-                onClick={item.subMenu ? () => toggleSubMenu(item.key) : undefined}
+                onClick={
+                  item.subMenu ? () => toggleSubMenu(item.key) : undefined
+                }
               >
                 <div className="flex justify-between">
                   <div>

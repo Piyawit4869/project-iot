@@ -28,7 +28,7 @@ export function TopSection({ title, subtitle, buttons, backpath }: any) {
 
   return (
     <CardComponent
-      className="sticky top-[-32px] shadow-md z-30"
+      className="sticky top-[-20px] shadow-md z-30"
       customCard
       custom={
         <div className="flex items-center justify-between" key={'title-card'}>

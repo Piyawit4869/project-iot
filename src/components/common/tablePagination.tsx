@@ -50,7 +50,10 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
 
   return (
     <div>
-      <Table aria-label="Paginated Table" className="w-full border-collapse">
+      <Table
+        aria-label="Paginated Table"
+        className="w-full border-collapse mt-6"
+      >
         <TableHeader>
           {columns.map((col: any) => (
             <TableColumn
