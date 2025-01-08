@@ -37,7 +37,7 @@ export const handleTypeTag = (type: string) => {
   return (
     <Chip
       style={{ width: 'auto', minWidth: '80px' }}
-      className={`px-3 py-1 rounded-full text-sm font-medium ${typeTags[type].bg} text-yellow-700 border border-gray`}
+      className={`px-3 py-1 rounded-full text-xs font-medium ${typeTags[type].bg} text-yellow-700 border border-gray`}
     >
       {typeTags[type].text}
     </Chip>
@@ -61,7 +61,7 @@ export const handleStatusTag = (status: string) => {
   return (
     <Chip
       style={{ width: 'auto', minWidth: '80px' }}
-      className={`px-3 py-1 rounded-full text-sm font-medium ${
+      className={`px-3 py-1 rounded-full text-xs font-medium ${
         statusTags[status as Status].bg
       } text-yellow-700 border border-gray`}
     >
@@ -93,7 +93,7 @@ export const handleDocumentStatusTag = (status: string) => {
 
   return (
     <Chip
-      className={`px-3 py-1 rounded-full text-sm font-medium ${
+      className={`px-3 py-1 rounded-full text-xs font-medium ${
         documentStatusTags[status as DocumentStatus].bg
       } text-yellow-700 border border-gray`}
     >

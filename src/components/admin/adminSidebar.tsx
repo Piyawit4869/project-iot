@@ -5,123 +5,260 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import * as Icon from '@ant-design/icons';
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from '@nextui-org/react';
 
 export function AdminSideBar() {
-  const pathname = usePathname() ?? ''; // Default value
+  const pathname = usePathname() ?? '';
   const [menuItems, setMenuItems] = useState([]);
   const [isSubMenuOpen, setIsSubMenuOpen] = useState<{
     [key: string]: boolean;
   }>({});
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Sidebar toggle state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Fetching menu items (mock data, replace with API if needed)
+  // Detect screen size for mobile responsiveness
   useEffect(() => {
-    const fetchMenuItems = async () => {
-      const menuData: any = [
-        {
-          name: 'บัญชี',
-          key: 'accounting',
-          path: '',
-          icon: <Icon.DollarOutlined />,
-          subMenu: [
-            {
-              name: 'ภาพรวม',
-              path: '/admin/accounting/statement',
-              icon: <Icon.FundProjectionScreenOutlined />,
-            },
-            {
-              name: 'รายได้',
-              path: '/admin/accounting/revenue',
-              icon: <Icon.RiseOutlined />,
-            },
-            {
-              name: 'รายจ่าย',
-              path: '/admin/accounting/expenses',
-              icon: <Icon.FallOutlined />,
-            },
-            {
-              name: 'วิเคราะห์',
-              path: '/admin/accounting/analysis',
-              icon: <Icon.AreaChartOutlined />,
-            },
-          ],
-        },
-        {
-          name: 'กิจกรรมการทำงาน',
-          key: 'attendance',
-          path: '',
-          icon: <Icon.UserOutlined />,
-          subMenu: [
-            {
-              name: 'ภาพรวม',
-              path: '/admin/attendance/overview',
-              icon: <Icon.ClusterOutlined />,
-            },
-            {
-              name: 'การตั้งค่า',
-              path: '/admin/attendance/config_attendance',
-              icon: <Icon.SettingOutlined />,
-            },
-            {
-              name: 'ไวท์ลิสต์',
-              path: '/admin/attendance/whitelist',
-              icon: <Icon.ScheduleOutlined />,
-            },
-            {
-              name: 'การลางาน',
-              path: '/admin/attendance/approval',
-              icon: <Icon.ScheduleOutlined />,
-            },
-          ],
-        },
-        {
-          name: 'เอกสาร',
-          key: 'notation',
-          icon: <Icon.FileTextOutlined />,
-          path: '',
-          subMenu: [
-            {
-              name: 'เอกสารทั้งหมด',
-              path: '/admin/notation',
-              icon: <Icon.FileSearchOutlined />,
-            },
-          ],
-        },
-        {
-          name: 'ผู้ใช้',
-          path: '/admin/user',
-          relatedPaths: ['/admin/user/new'],
-          icon: <Icon.UserOutlined />,
-        },
-        {
-          name: 'การตั้งค่า',
-          key: 'setting',
-          path: '/admin/organization',
-          icon: <Icon.SettingOutlined />,
-        },
-      ];
-      setMenuItems(menuData);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
     };
 
-    fetchMenuItems();
+    handleResize(); // Initial check
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Toggle Submenu
+  useEffect(() => {
+    const menuData: any = [
+      {
+        name: 'บัญชี',
+        key: 'accounting',
+        icon: <Icon.DollarOutlined />,
+        subMenu: [
+          {
+            name: 'ภาพรวม',
+            path: '/admin/accounting/statement',
+            icon: <Icon.FundProjectionScreenOutlined />,
+          },
+          {
+            name: 'รายได้',
+            path: '/admin/accounting/revenue',
+            icon: <Icon.RiseOutlined />,
+          },
+          {
+            name: 'รายจ่าย',
+            path: '/admin/accounting/expenses',
+            icon: <Icon.FallOutlined />,
+          },
+          {
+            name: 'วิเคราะห์',
+            path: '/admin/accounting/analysis',
+            icon: <Icon.AreaChartOutlined />,
+          },
+        ],
+      },
+      {
+        name: 'กิจกรรมการทำงาน',
+        key: 'attendance',
+        icon: <Icon.UserOutlined />,
+        subMenu: [
+          {
+            name: 'ภาพรวม',
+            path: '/admin/attendance/overview',
+            icon: <Icon.ClusterOutlined />,
+          },
+          {
+            name: 'การตั้งค่า',
+            path: '/admin/attendance/config_attendance',
+            icon: <Icon.SettingOutlined />,
+          },
+          {
+            name: 'ไวท์ลิสต์',
+            path: '/admin/attendance/whitelist',
+            icon: <Icon.ScheduleOutlined />,
+          },
+          {
+            name: 'การลางาน',
+            path: '/admin/attendance/approval',
+            icon: <Icon.ScheduleOutlined />,
+          },
+        ],
+      },
+      {
+        name: 'เอกสาร',
+        key: 'notation',
+        icon: <Icon.FileTextOutlined />,
+        subMenu: [
+          {
+            name: 'เอกสารทั้งหมด',
+            path: '/admin/notation',
+            icon: <Icon.FileSearchOutlined />,
+          },
+        ],
+      },
+      { name: 'ผู้ใช้', path: '/admin/user', icon: <Icon.UserOutlined /> },
+      {
+        name: 'การตั้งค่า',
+        key: 'setting',
+        path: '/admin/organization',
+        icon: <Icon.SettingOutlined />,
+      },
+    ];
+    setMenuItems(menuData);
+  }, []);
+
   const toggleSubMenu = (key: string) => {
     setIsSubMenuOpen((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  // Toggle Sidebar (Mobile & Desktop)
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
   return (
     <div className="relative flex">
-      {/* Sidebar Toggle Button (Visible on Mobile) */}
+      {/* Sidebar Wrapper */}
+      <div
+        className={`relative h-screen transition-all duration-300 z-50 ${
+          isSidebarOpen ? 'w-[230px]' : isMobile ? 'w-[0px]' : 'w-[80px]'
+        }`}
+      >
+        {/* Sidebar */}
+        <aside
+          className={`bg-primary shadow-md h-screen transition-all duration-300 fixed lg:relative transform flex flex-col overflow-y-auto ${
+            isSidebarOpen ? 'w-[230px]' : isMobile ? 'w-[0px]' : 'w-[80px]'
+          }`}
+        >
+          {/* Logo */}
+          <div className="flex flex-col items-center py-6">
+            <Image
+              src="/logoRome.png"
+              alt="Logo"
+              width={isSidebarOpen ? 150 : 50}
+              height={50}
+              className="mb-4"
+            />
+            <h1
+              className={`text-base font-bold text-primaryFont ${
+                isSidebarOpen ? 'block' : 'hidden'
+              }`}
+            >
+              Admin
+            </h1>
+          </div>
+
+          {/* Sidebar Menu */}
+          <nav
+            className={
+              isSidebarOpen ? 'm-4 space-y-1.5 -mt-4 pb-6' : 'space-y-1.5'
+            }
+          >
+            {menuItems.map((item: any, index) => (
+              <React.Fragment key={index}>
+                {/* Expanded Sidebar */}
+                {isSidebarOpen ? (
+                  <Link
+                    href={item.path || '#'}
+                    className={`block px-4 py-2 rounded-md text-sm font-ibm cursor-pointer flex items-center justify-between ${
+                      pathname === item.path
+                        ? 'bg-primaryFont text-secondaryFont'
+                        : 'text-primaryFont hover:bg-primaryFont hover:text-secondaryFont'
+                    }`}
+                    onClick={
+                      item.subMenu ? () => toggleSubMenu(item.key) : undefined
+                    }
+                  >
+                    <div className="flex items-center">
+                      {item.icon}
+                      <span className="ml-2">{item.name}</span>
+                    </div>
+                    {item.subMenu && (
+                      <div>
+                        {isSubMenuOpen[item.key] ? (
+                          <Icon.CaretUpOutlined />
+                        ) : (
+                          <Icon.CaretDownOutlined />
+                        )}
+                      </div>
+                    )}
+                  </Link>
+                ) : (
+                  /* Collapsed Sidebar (Use Dropdown) */
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button className="bg-transparent shadow-none hover:bg-gray-300 w-full flex items-center justify-center py-1 rounded-md">
+                        <div>{item.icon}</div>
+                      </Button>
+                    </DropdownTrigger>
+                    {item.subMenu && (
+                      <DropdownMenu
+                        aria-label="Submenu"
+                        className="bg-white shadow-lg rounded-md w-[200px] p-2"
+                      >
+                        {item.subMenu.map((subItem: any, subIndex: number) => (
+                          <DropdownItem
+                            key={subIndex}
+                            className="py-2 hover:bg-gray-100 rounded-md"
+                          >
+                            <Link
+                              href={subItem.path}
+                              className="flex items-center gap-3"
+                            >
+                              {subItem.icon}
+                              <span className="text-black">{subItem.name}</span>
+                            </Link>
+                          </DropdownItem>
+                        ))}
+                      </DropdownMenu>
+                    )}
+                  </Dropdown>
+                )}
+
+                {/* Submenu for Expanded Sidebar */}
+                {item.subMenu && isSubMenuOpen[item.key] && isSidebarOpen && (
+                  <div className="pl-4 space-y-1 transition-all">
+                    {item.subMenu.map((subItem: any, subIndex: number) => (
+                      <Link
+                        key={subIndex}
+                        href={subItem.path}
+                        className={`block px-4 py-2 rounded-md text-sm font-ibm flex items-center ${
+                          pathname === subItem.path
+                            ? 'bg-primaryFont text-secondaryFont'
+                            : 'text-primaryFont hover:bg-primaryFont hover:text-secondaryFont'
+                        }`}
+                      >
+                        {subItem.icon}
+                        <span className="ml-2">{subItem.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+          </nav>
+        </aside>
+      </div>
+
+      {/* Collapse Button - Adjusts on Mobile */}
       <button
-        className="lg:hidden fixed bottom-5 left-5 bg-primary text-secondary p-2 rounded-full z-50 shadow-md"
         onClick={toggleSidebar}
+        className="fixed top-[45px] bg-white text-gray-800 shadow-lg p-2 rounded-full hover:bg-gray-700 hover:text-white transition z-[100]"
+        style={{
+          transition: 'left 0.3s ease-in-out',
+          left: isSidebarOpen
+            ? isMobile
+              ? '230px'
+              : '240px'
+            : isMobile
+            ? '0px'
+            : '90px',
+        }}
       >
         {isSidebarOpen ? (
           <Icon.MenuFoldOutlined />
@@ -130,86 +267,10 @@ export function AdminSideBar() {
         )}
       </button>
 
-      {/* Sidebar */}
-      <aside
-        className={`bg-primary shadow-md h-screen lg:w-[230px] fixed lg:relative transition-transform transform ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 z-40 lg:block flex flex-col`}
-      >
-        {/* Logo */}
-        <div className="flex flex-col items-center py-6">
-          <Image
-            src="/logoRome.png"
-            alt="Logo"
-            width={150}
-            height={200}
-            className="mb-4"
-          />
-          <h1 className="text-base font-bold text-primaryFont">Admin</h1>
-        </div>
-
-        {/* Sidebar Menu with Scrolling */}
-        <nav className="m-4 space-y-1.5 overflow-y-auto max-h-screen -mt-4 pb-6">
-          {menuItems.map((item: any, index) => (
-            <React.Fragment key={index}>
-              {/* Main Menu Item */}
-              <Link
-                href={item.path}
-                className={`block px-4 py-2 rounded-md text-sm font-ibm cursor-pointer flex items-center justify-between ${
-                  pathname === item.path ||
-                  (Array.isArray(item.relatedPaths) &&
-                    item.relatedPaths.some((p: any) => pathname.startsWith(p)))
-                    ? 'bg-primaryFont text-secondaryFont'
-                    : 'text-primaryFont hover:bg-primaryFont hover:text-secondaryFont'
-                }`}
-                onClick={
-                  item.subMenu ? () => toggleSubMenu(item.key) : undefined
-                }
-              >
-                <div className="flex items-center">
-                  {item.icon}
-                  <span className="ml-2">{item.name}</span>
-                </div>
-                {item.subMenu && (
-                  <div>
-                    {isSubMenuOpen[item.key] ? (
-                      <Icon.CaretUpOutlined />
-                    ) : (
-                      <Icon.CaretDownOutlined />
-                    )}
-                  </div>
-                )}
-              </Link>
-
-              {/* Submenu */}
-              {item.subMenu && isSubMenuOpen[item.key] && (
-                <div className="px-2 space-y-1.5">
-                  {item.subMenu.map((subItem: any, subIndex: number) => (
-                    <Link
-                      key={subIndex}
-                      href={subItem.path}
-                      className={`block px-4 py-2 rounded-md text-sm font-ibm flex items-center ${
-                        pathname === subItem.path ||
-                        pathname.startsWith(subItem.path)
-                          ? 'bg-primaryFont text-secondaryFont'
-                          : 'text-primaryFont hover:bg-primaryFont hover:text-secondaryFont'
-                      }`}
-                    >
-                      {subItem.icon}
-                      <span className="ml-2">{subItem.name}</span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </React.Fragment>
-          ))}
-        </nav>
-      </aside>
-
-      {/* Overlay for Mobile (Click to close sidebar) */}
-      {isSidebarOpen && (
+      {/* Mobile Overlay */}
+      {isSidebarOpen && isMobile && (
         <div
-          className="lg:hidden fixed inset-0 bg-black opacity-50 z-30"
+          className="fixed inset-0 bg-black opacity-50 z-40"
           onClick={toggleSidebar}
         ></div>
       )}
