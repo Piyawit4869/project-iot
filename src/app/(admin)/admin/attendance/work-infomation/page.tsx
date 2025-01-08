@@ -13,11 +13,12 @@ import {
 } from '@nextui-org/react';
 import pagination from '@/pages/api/workinfos/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
-import { formatDate } from '@/utils/enums/date';
+import { formatDate } from '@/utils/enums/date'; // <-- Import formatDate here
 import * as Icon from '@ant-design/icons';
+import { Render } from '@measured/puck';
 
 interface FilterState {
-  ip: string;
+  name: string;  // Changed from 'ip' to 'name'
   status: string;
 }
 
@@ -48,9 +49,8 @@ interface WorkInfoItem {
 }
 
 const columns = [
-  { title: 'ลำดับ', dataIndex: 'order', link: '/admin/attendance/work-infomation' },
+  { title: 'ชื่อ', dataIndex: 'name', link: '/admin/attendance/work-infomation'  },
   { title: 'คำนำหน้า', dataIndex: 'prefix' },
-  { title: 'ชื่อ', dataIndex: 'name' },
   { title: 'สถานะ', dataIndex: 'status' },
   { title: 'คำอธิบายงาน', dataIndex: 'descriptions' },
   { title: 'ความสำคัญ', dataIndex: 'priority' },
@@ -61,15 +61,20 @@ const columns = [
   { title: 'เครดิตเริ่มต้น', dataIndex: 'startCredit' },
   { title: 'เครดิตรวม', dataIndex: 'totalCredit' },
   { title: 'ชั่วโมงทำงานรวม', dataIndex: 'totalWorkHours' },
-  { title: 'วันที่จ่ายเงิน', dataIndex: 'payDay' },
+  { title: 'วันที่จ่ายเงิน', dataIndex: 'payDayDate' },
+  { title: 'เวลาที่จ่ายเงิน', dataIndex: 'payDayTime' },
   { title: 'หมายเหตุ', dataIndex: 'note' },
-  { title: 'สร้างวันที่', dataIndex: 'createdAt' },
+  { title: 'active', dataIndex: 'active',
+    
+  },
+  { title: 'สร้างวันที่', dataIndex: 'createdAtDate' },
+  { title: 'เวลาที่สร้าง', dataIndex: 'createdAtTime' },
 ];
 
 export default function WorkInfoPage() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [filters, setFilters] = useState<FilterState>({ ip: '', status: '' });
+  const [filters, setFilters] = useState<FilterState>({ name: '', status: '' });  // Changed to 'name'
   const [items, setItems] = useState<WorkInfoItem[]>([]);
   const [meta, setMeta] = useState<MetaData>({
     totalItems: 0,
@@ -82,24 +87,23 @@ export default function WorkInfoPage() {
   const fetchWorkInfo = async () => {
     setLoading(true);
     try {
-      const { ip, status } = filters;
+      const { name, status } = filters;  // Changed from 'ip' to 'name'
       const { items: fetchedItems, meta: fetchedMeta } = await pagination({
         page,
         limit: rowsPerPage,
-        ...(ip && { ip }),
+        ...(name && { name }),  // Updated to filter by 'name'
         ...(status && { status }),
       });
 
       setItems(
-        fetchedItems.map((item: WorkInfoItem , index: number) => ({
+        fetchedItems.map((item: WorkInfoItem) => ({
           ...item,
-
-          order: (page - 1) * rowsPerPage + index + 1,
-          createdAt: formatDate(item.createdAt),
-          dueDate: formatDate(item.dueDate),
-          startDate: formatDate(item.startDate),
-          payDay: formatDate(item.payDay),
-
+          createdAtDate: formatDate(item.createdAt).date,
+          createdAtTime: formatDate(item.createdAt).time,  // <-- Use formatDate here
+          dueDate: formatDate(item.dueDate).date,      // <-- Use formatDate here
+          startDate: formatDate(item.startDate).date,  // <-- Use formatDate here
+          payDayDate: formatDate(item.payDay).date,
+          payDayTime: formatDate(item.payDay).time,
         })),
       );
       setMeta(fetchedMeta);
@@ -139,12 +143,9 @@ export default function WorkInfoPage() {
           <div>
             <TopSection
               title="ข้อมูลการทำงาน"
-              buttons={[
+              buttons={[  
                 <Link href={'work-infomation/create'} key={'create button'}>
-                  <Button
-                    className="bg-accent1 text-white"
-                    key={'create button'}
-                  >
+                  <Button className="bg-accent1 text-white" key={'create button'}>
                     สร้างข้อมูลการทำงาน
                   </Button>
                 </Link>,
@@ -167,10 +168,10 @@ export default function WorkInfoPage() {
                       className="flex-1 p-2 text-headFont"
                       labelPlacement="outside"
                       size="lg"
-                      name="name"
-                      placeholder="ค้นหา ip"
-                      value={filters.ip}
-                      onChange={(e) => onInputChange('ip', e.target.value)}
+                      name="name"  // Updated the name to 'name'
+                      placeholder="ค้นหาชื่อ"  // Updated the placeholder text
+                      value={filters.name}  // Updated to bind 'name' instead of 'ip'
+                      onChange={(e) => onInputChange('name', e.target.value)}  // Updated to handle 'name'
                     />
                   </div>
 

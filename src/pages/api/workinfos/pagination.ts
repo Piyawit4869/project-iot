@@ -3,7 +3,7 @@ import { base_url } from '@/constant/common';
 interface FetchWorkInfoParams {
   page: number;
   limit: number;
-  ip?: string;
+  name?: string;
   status?: string;
 }
 
@@ -20,7 +20,7 @@ interface FetchWorkInfoResponse {
 export default async function pagination({
   page,
   limit,
-  ip,
+  name,
   status,
 }: FetchWorkInfoParams): Promise<FetchWorkInfoResponse> {
   try {
@@ -30,8 +30,8 @@ export default async function pagination({
 
     const accessToken = localStorage.getItem('accessToken');
 
-    if (ip) {
-      url.searchParams.append('ip', ip);
+    if (name) {
+      url.searchParams.append('name', name);
     }
     if (status) {
       url.searchParams.append('status', status);

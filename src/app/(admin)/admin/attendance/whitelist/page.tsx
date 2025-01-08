@@ -4,13 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
-import {
-  Input,
-  Button,
-  Link,
-  Popover,
-  PopoverTrigger,
-} from '@nextui-org/react';
+import { Input, Button, Link, Tabs, Tab } from '@nextui-org/react';
 import pagination from '@/pages/api/whitelists/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { getWhitelists } from '@/pages/api/whitelists/get';
@@ -101,15 +95,15 @@ export default function WhitelistsPage() {
     }, 500),
     [],
   );
+  const colors = ['secondary'];
 
   const onInputChange = (key: keyof typeof filters, value: string) => {
     const updatedFilters = { ...filters, [key]: value };
     handleFilterChange(updatedFilters);
   };
 
-  const handleStatusChange = (status: string) => {
-    const updatedFilters = { ...filters, status };
-    handleFilterChange(updatedFilters); // This will trigger the debounced filter change
+  const handleTabChange = (status: string) => {
+    setFilters((prevFilters) => ({ ...prevFilters, status }));
   };
 
   useEffect(() => {
@@ -159,56 +153,22 @@ export default function WhitelistsPage() {
                   </div>
 
                   <div className="flex flex-wrap gap-4 p-4">
-                    <Popover placement="bottom" showArrow={true}>
-                      <PopoverTrigger>
-                        <Button
-                          onClick={() => handleStatusChange('')}
-                          className="bg-accent1 text-white"
-                        >
-                          All 
-                        </Button>
-                      </PopoverTrigger>
-                      <></>
-                    </Popover>
-
-                    <Popover placement="bottom" showArrow={true}>
-                      <PopoverTrigger>
-                        <Button
-                          onClick={() => handleStatusChange('pending')}
-                          className=""
-                        >
-                          <Icon.SyncOutlined spin />
-                          Pending
-                        </Button>
-                      </PopoverTrigger>
-                      <></>
-                    </Popover>
-
-                    <Popover placement="bottom" showArrow={true}>
-                      <PopoverTrigger>
-                        <Button
-                          onClick={() => handleStatusChange('approved')}
-                          className="bg-accent1 text-white"
-                        >
-                          <Icon.CheckOutlined />
-                          Approved
-                        </Button>
-                      </PopoverTrigger>
-                      <></>
-                    </Popover>
-
-                    <Popover placement="bottom" showArrow={true}>
-                      <PopoverTrigger>
-                        <Button
-                          onClick={() => handleStatusChange('rejected')}
-                          className="bg-accent2 text-white"
-                        >
-                          <Icon.CloseOutlined />
-                          Rejected
-                        </Button>
-                      </PopoverTrigger>
-                      <></>
-                    </Popover>
+                    {colors.map((color) => (
+                      <Tabs
+                        key={color}
+                        color={'secondary'}
+                        selectedKey={filters.status}
+                        className=""
+                        onSelectionChange={(key) =>
+                          handleTabChange(key as string)
+                        }
+                      >
+                        <Tab key="" title="All" />
+                        <Tab key="pending" title="Pending" />
+                        <Tab key="approved" title="Approved" />
+                        <Tab key="rejected" title="Rejected" />
+                      </Tabs>
+                    ))}
                   </div>
                 </div>
 

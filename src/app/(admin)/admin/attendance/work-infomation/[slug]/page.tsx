@@ -11,6 +11,7 @@ import {
   Select,
   SelectItem,
   Switch,
+  Textarea,
 } from '@nextui-org/react';
 import React from 'react';
 
@@ -200,7 +201,7 @@ export default function WorkInfonSinglePage() {
 
                   {/* หมายเหตุ */}
                   <h5>หมายเหตุ</h5>
-                  <Input
+                  <Textarea
                     className="flex-1 text-headFont"
                     labelPlacement="outside"
                     name="note"

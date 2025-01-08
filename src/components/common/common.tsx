@@ -23,6 +23,12 @@ export enum DocumentStatus {
   None = '',
 }
 
+export enum Priority {
+  High = 'high',
+  Medium = 'medium',
+  Low = 'low',
+}
+
 export const handleTypeTag = (type: string) => {
   const typeTags: Record<string, { text: string; bg: string }> = {
     invoice: { text: 'ใบแจ้งหนี้', bg: 'bg-yellow-100' },
@@ -98,6 +104,27 @@ export const handleDocumentStatusTag = (status: string) => {
       } text-yellow-700 border border-gray`}
     >
       {documentStatusTags[status as DocumentStatus].text}
+    </Chip>
+  );
+};
+
+export const handlePriority = (priority: string) => {
+  const priorityTags: Record<Priority, { text: string; bg: string }> = {
+    high: { text: 'High', bg: 'bg-gray-100' },
+    medium: { text: 'Medium', bg: 'bg-yellow-100' },
+    low: { text: 'Low', bg: 'bg-blue-100' },
+  };
+
+  if (!priorityTags[priority as Priority]) return null;
+
+  return (
+    <Chip
+      style={{ width: 'auto', minWidth: '80px' }}
+      className={`px-3 py-1 rounded-full text-sm font-medium ${
+        priorityTags[priority as Priority].bg
+      } text-yellow-700 border border-gray`}
+    >
+      {priorityTags[priority as Priority].text}
     </Chip>
   );
 };
