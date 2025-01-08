@@ -53,7 +53,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
       {/* ✅ Force Horizontal Scroll */}
       <div className="w-full overflow-x-auto">
         <div className="min-w-[300px] bg-white shadow-md rounded-lg">
-          <Table aria-label="Paginated Table" className="w-full">
+          <Table aria-label="Paginated Table" className="w-full mt-6">
             <TableHeader>
               {columns.map((col: any) => (
                 <TableColumn
