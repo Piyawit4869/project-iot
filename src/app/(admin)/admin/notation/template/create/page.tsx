@@ -1,7 +1,7 @@
 import { TemplateBuilder } from '@/components/builder/templateBuilder';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
-import { Card } from '@nextui-org/react';
+import { Card, Input } from '@nextui-org/react';
 
 export default function CreateTemplatePage() {
   return (

@@ -3,7 +3,7 @@
 import React from 'react';
 import { Config, Puck } from '@measured/puck';
 import '@measured/puck/puck.css';
-import { Card, Button } from '@nextui-org/react';
+import { Card, Button, Input } from '@nextui-org/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { createTemplate } from '@/pages/api/templates/create';
 import { useRouter } from 'next/navigation';
@@ -106,6 +106,9 @@ export const TemplateBuilder = ({
   });
   const [loading, setLoading] = React.useState(true);
   const router = useRouter();
+  const [formData, setFormData] = React.useState({
+    templateName: 'New Template',
+  }) as any;
 
   React.useEffect(() => {
     setLoading(true);
@@ -114,6 +117,7 @@ export const TemplateBuilder = ({
       setTimeout(() => setLoading(false), 100);
     } else if (initialData?.templateNotation) {
       const parsedData = parseHtmlToPuckData(initialData.templateNotation);
+      setFormData({ templateName: initialData.templateName || '' }); // Load existing template name
       setEditorContent(parsedData);
       setTimeout(() => setLoading(false), 100);
     } else {
@@ -163,7 +167,7 @@ export const TemplateBuilder = ({
     `;
 
     const payload = {
-      templateName: 'template name2',
+      templateName: formData.templateName ? formData.templateName : '',
       templateNotation: htmlContent,
     };
 
@@ -217,6 +221,47 @@ export const TemplateBuilder = ({
     }
   };
 
+  const handleNameChange = (e: any) => {
+    const { name, checked, type, value } = e.target;
+    setFormData((prevData: any) => ({
+      ...prevData,
+      [name]:
+        type === 'checkbox'
+          ? checked
+          : name === 'startDate' && value instanceof Date
+          ? value.toISOString()
+          : value,
+    }));
+  };
+
+  const headerActions = React.useCallback(() => {
+    return (
+      <div className="flex flex-row gap-2">
+        {/* Template Name Input in Header */}
+
+        {/* Buttons */}
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            className="bg-blue-400 text-white"
+            onClick={exportToHTML}
+          >
+            {isCreate ? 'สร้าง' : 'แก้ไข'}
+          </Button>
+          {!isCreate && initialData?.id && (
+            <Button
+              size="sm"
+              className="bg-red-500 text-white"
+              onClick={onTemplateDelete}
+            >
+              ลบ
+            </Button>
+          )}
+        </div>
+      </div>
+    );
+  }, [formData, isCreate, initialData?.id]);
+
   return (
     <Card style={{ zIndex: 0 }}>
       {loading ? (
@@ -232,43 +277,25 @@ export const TemplateBuilder = ({
           </div>
         </div>
       ) : (
-        <Puck
-          config={puckConfig}
-          data={editorContent}
-          onChange={(content: any) => {
-            console.log('Puck Editor Updated:', content);
-            setEditorContent(content);
-          }}
-          overrides={{
-            headerActions: () => (
-              <div className="flex gap-2">
-                {isCreate ? (
-                  <Button
-                    className="bg-blue-400 text-white"
-                    onClick={exportToHTML}
-                  >
-                    สร้าง
-                  </Button>
-                ) : (
-                  <Button
-                    className="bg-blue-400 text-white"
-                    onClick={exportToHTML}
-                  >
-                    แก้ไข
-                  </Button>
-                )}
-                {!isCreate && initialData?.id && (
-                  <Button
-                    className="bg-accent2 text-white"
-                    onClick={onTemplateDelete}
-                  >
-                    ลบ
-                  </Button>
-                )}
-              </div>
-            ),
-          }}
-        />
+        <>
+          <Input
+            size="md"
+            className="p-2"
+            fullWidth
+            name="templateName"
+            placeholder="กรอกชื่อรูปแบบเอกสาร"
+            defaultValue={formData?.templateName}
+            onChange={handleNameChange}
+          />
+          <Puck
+            config={puckConfig}
+            data={editorContent}
+            onChange={(content: any) => setEditorContent(content)}
+            overrides={{
+              headerActions,
+            }}
+          />
+        </>
       )}
     </Card>
   );
