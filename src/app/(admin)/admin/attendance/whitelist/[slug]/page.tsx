@@ -153,36 +153,40 @@ export default function WhitelistSinglePage() {
 
   const handleEditButton = (openEdit: boolean) => {
     return openEdit ? (
-      <Button
-        className={`bg-${
-          data?.docStatus === 'canceled'
-            ? 'gray-400 cursor-not-allowed'
-            : 'accent1'
-        } text-white p-2`}
-        key={'submit edit button'}
-        type="submit"
-        form="whitelist"
-        disabled={data?.docStatus === 'canceled'}
-      >
-        <Icon.CheckOutlined />
-        เสร็จสิ้น
-      </Button>
+      <a className="px-2 py-1">
+        <Button
+          className={`bg-${
+            data?.docStatus === 'rejected'
+              ? 'gray-400 cursor-not-allowed'
+              : 'accent1'
+          } text-white p-2`}
+          key={'submit edit button'}
+          type="submit"
+          form="whitelist"
+          disabled={data?.docStatus === 'rejected'}
+        >
+          <Icon.CheckOutlined />
+          เสร็จสิ้น
+        </Button>
+      </a>
     ) : (
-      <Button
-        className={`bg-${
-          data?.docStatus === 'canceled'
-            ? 'gray-400 cursor-not-allowed'
-            : 'accent3'
-        } text-white p-31`}
-        key={'edit button'}
-        onClick={() => {
-          setOpenEdit(true);
-        }}
-        disabled={data?.docStatus === 'canceled'}
-      >
-        <Icon.EditFilled />
-        แก้ไข
-      </Button>
+      <a className="px-2 py-1">
+        <Button
+          className={` bg-${
+            data?.docStatus === 'rejected'
+              ? 'gray-400 cursor-not-allowed'
+              : 'accent3'
+          } text-white p-31`}
+          key={'edit button'}
+          onClick={() => {
+            setOpenEdit(true);
+          }}
+          disabled={data?.docStatus === 'rejected'}
+        >
+          <Icon.EditFilled />
+          แก้ไข
+        </Button>
+      </a>
     );
   };
 
@@ -238,7 +242,7 @@ export default function WhitelistSinglePage() {
                       type="button"
                       onClick={onApproved}
                     >
-                     <Icon.CheckOutlined />
+                      <Icon.CheckOutlined />
                       อนุมัติ
                     </Button>
                   </a>
@@ -252,7 +256,7 @@ export default function WhitelistSinglePage() {
                       type="button"
                       onClick={onRejected}
                     >
-                       <Icon.CloseOutlined />
+                      <Icon.CloseOutlined />
                       ปฏิเสธ
                     </Button>
                   </a>

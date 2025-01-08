@@ -58,12 +58,12 @@ export function AdminSideBar() {
               icon: <Icon.ClusterOutlined />,
             },
             {
-              name: 'การตั้งค่า',
-              path: '/admin/attendance/config_attendance',
-              icon: <Icon.SettingOutlined />,
+              name: 'ข้อมูลการทำงาน',
+              path: '/admin/attendance/work-infomation',
+              icon: <Icon.ScheduleOutlined />,
             },
             {
-              name: 'ไวท์ลิสต์',
+              name: 'การเข้าใช้งาน',
               path: '/admin/attendance/whitelist',
               icon: <Icon.ScheduleOutlined />,
             },
@@ -78,14 +78,7 @@ export function AdminSideBar() {
           name: 'เอกสาร',
           key: 'notation',
           icon: <Icon.FileTextOutlined />,
-          path: '',
-          subMenu: [
-            {
-              name: 'เอกสารทั้งหมด',
-              path: '/admin/notation',
-              icon: <Icon.FileSearchOutlined />,
-            },
-          ],
+          path: '/admin/notation',
         },
         {
           name: 'ผู้ใช้',

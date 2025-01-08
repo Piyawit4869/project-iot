@@ -15,6 +15,7 @@
     "@million/lint": "^1.0.13",
     "@nextui-org/react": "^2.6.5",
     "chart.js": "^4.4.7",
+    "dayjs": "^1.11.13",
     "framer-motion": "^11.15.0",
     "iron-session": "^8.0.4",
     "lodash": "^4.17.21",
