@@ -1,16 +1,22 @@
 import { base_url } from '@/constant/common';
 
-export async function deleteWhitelists(id: any) {
-  const url = `${base_url}/whitelists/delete/${id}`;
+export default async function createWorkInfos(prevState: any, formData: any) {
+  const url = `${base_url}/crud/work-info/create/`;
+
+  const body = {
+    ...formData,
+  };
 
   const accessToken = localStorage.getItem('accessToken');
 
   const data = await fetch(url, {
-    method: `DELETE`,
+    method: `POST`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
+      // Authorization: `Bearer ${session.accessToken}`,
     },
+    body: JSON.stringify(body),
   });
 
   return await data.json();

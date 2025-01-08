@@ -1,13 +1,13 @@
 import { base_url } from '@/constant/common';
 
-interface FetchWhitelistsParams {
+interface FetchWorkInfoParams {
   page: number;
   limit: number;
-  ip?: string;
+  name?: string;
   status?: string;
 }
 
-interface FetchWhitelistsResponse {
+interface FetchWorkInfoResponse {
   items: any[];
   meta: {
     totalItems: number;
@@ -20,18 +20,18 @@ interface FetchWhitelistsResponse {
 export default async function pagination({
   page,
   limit,
-  ip,
+  name,
   status,
-}: FetchWhitelistsParams): Promise<FetchWhitelistsResponse> {
+}: FetchWorkInfoParams): Promise<FetchWorkInfoResponse> {
   try {
-    const url = new URL(`${base_url}/crud/whitelists`);
+    const url = new URL(`${base_url}/crud/work-info`);
     url.searchParams.append('page', page.toString());
     url.searchParams.append('limit', limit.toString());
 
     const accessToken = localStorage.getItem('accessToken');
 
-    if (ip) {
-      url.searchParams.append('ip', ip);
+    if (name) {
+      url.searchParams.append('name', name);
     }
     if (status) {
       url.searchParams.append('status', status);

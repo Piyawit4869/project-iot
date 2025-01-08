@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { TopSection } from '@/components/common/topSection';
-import NextTable from '@/components/common/nextTable';
 import Scaffold from '@/components/common/scaffold';
-import { Input, Select, SelectItem } from '@nextui-org/react';
+import { Input, Select, SelectItem, Tabs, Tab } from '@nextui-org/react';
 import { TablePagination } from '@/components/common/tablePagination';
+import { TabletFilled } from '@ant-design/icons';
 
 export default function RevenuePage() {
   const [page, setPage] = React.useState(1);
@@ -19,6 +19,7 @@ export default function RevenuePage() {
     totalPages: 0,
     currentPage: 1,
   });
+  const [selectedCategory, setSelectedCategory] = React.useState('all');
 
   // Fetch data from the API
   /*
@@ -67,6 +68,10 @@ export default function RevenuePage() {
     fetchNotations();
   }, [filters, page, rowsPerPage]);
   */
+
+  const filteredData = initialData.filter((item) =>
+    selectedCategory === 'all' ? true : item.category === selectedCategory,
+  );
 
   return (
     <Scaffold
@@ -133,6 +138,22 @@ export default function RevenuePage() {
               </Select>
             </div>
           </div>
+
+          {/* Tabs */}
+          <div className="flex flex-wrap gap-4">
+            <Tabs
+              color="secondary"
+              radius="full"
+              aria-label="Tabs colors"
+              selectedKey={selectedCategory}
+              onSelectionChange={(key) => setSelectedCategory(key.toString())}
+            >
+              {tabs.map((tab: any) => (
+                <Tab key={tab.value} title={tab.label} />
+              ))}
+            </Tabs>
+          </div>
+
           {/* Table */}
           {loading ? (
             <div className="flex justify-center items-center h-64">
@@ -140,7 +161,7 @@ export default function RevenuePage() {
             </div>
           ) : (
             <TablePagination
-              initialRows={initialData}
+              initialRows={filteredData}
               initialMeta={meta}
               rowsPerPage={rowsPerPage}
               columns={columns as any}

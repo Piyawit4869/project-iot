@@ -5,7 +5,6 @@ import { TopSection } from '@/components/common/topSection';
 import { Button, Form, Input, Textarea } from '@nextui-org/react';
 import createWhitelists from '@/pages/api/whitelists/create'; //API
 import CardComponent from '@/components/common/card';
-import { Switch } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import * as Icon from '@ant-design/icons';
 import React from 'react';
@@ -101,7 +100,7 @@ export default function WhitelistCreatePage() {
       child={
         <div>
           <TopSection
-            title="สร้างไวท์ลิสต์"
+            title="สร้างการเข้าใช้งาน"
             backpath={'/admin/attendance/whitelist'}
             buttons={[
               <div className="mx-2.5" key="save-button">
@@ -156,16 +155,6 @@ export default function WhitelistCreatePage() {
                               Detail
                             </h1>
                             {/* Whitelist Section */}
-                            <div className="flex-1 flex items-center gap-4">
-                              <span className="text-headFont">Active</span>
-                              <Switch
-                                name="active"
-                                color="secondary"
-                                onChange={handleChange}
-                                required
-                                defaultChecked
-                              />
-                            </div>
                             {/* GET API FOR SHOW DISPLAY */}
                             <div className="flex gap-4 mt-6">
                               <Input
