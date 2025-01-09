@@ -102,6 +102,30 @@ export function AdminSideBar() {
           },
         ],
       },
+      {
+        name: 'สินค้าและบริการ',
+        key: 'item',
+        icon: <Icon.ProductOutlined />,
+        subMenu: [
+          {
+            name: 'สินค้าและบริการทั้งหมด',
+            path: '/admin/item',
+            icon: <Icon.AppstoreOutlined />,
+          },
+        ],
+      },
+      {
+        name: 'ลูกค้า',
+        key: 'customer',
+        icon: <Icon.SmileOutlined />,
+        subMenu: [
+          {
+            name: 'ลูกค้าทั้งหมด',
+            path: '/admin/customer',
+            icon: <Icon.SmileOutlined />,
+          },
+        ],
+      },
       { name: 'ผู้ใช้', path: '/admin/user', icon: <Icon.UserOutlined /> },
       {
         name: 'การตั้งค่า',
