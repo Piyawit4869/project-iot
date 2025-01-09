@@ -17,86 +17,6 @@ interface BuilderTemplateProps {
   initialData?: any;
 }
 
-const parseHtmlToPuckData = (htmlString: string) => {
-  if (!htmlString) {
-    console.warn('Empty HTML string received!');
-    return { content: [] };
-  }
-
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(htmlString, 'text/html');
-
-  const puckData: any[] = [];
-
-  doc.querySelectorAll('img').forEach((img) => {
-    puckData.push({
-      id: uuidv4(),
-      type: 'Image',
-      props: {
-        src: img.getAttribute('src') || '',
-        style: { width: img.style.width || '300px' },
-        alt: img.getAttribute('alt') || 'Image',
-      },
-    });
-  });
-
-  doc.querySelectorAll('h1').forEach((header) => {
-    puckData.push({
-      id: uuidv4(),
-      type: 'HeaderBar',
-      props: { children: header.textContent || '' },
-    });
-  });
-
-  doc.querySelectorAll('p').forEach((paragraph) => {
-    puckData.push({
-      id: uuidv4(),
-      type: 'Text',
-      props: { children: paragraph.textContent || '' },
-    });
-  });
-
-  return { content: puckData };
-};
-
-const puckConfig: Config = {
-  components: {
-    HeaderBar: {
-      label: 'หัวข้อ',
-      fields: { children: { type: 'text' } },
-      render: ({ children, puck }: any) => (
-        <h1 key={puck?.id} style={{ padding: '20px', fontSize: '36px' }}>
-          {children}
-        </h1>
-      ),
-    },
-    Text: {
-      label: 'ข้อความ',
-      fields: { children: { type: 'text' } },
-      render: ({ children, puck }: any) => (
-        <p key={puck?.id} style={{ padding: '20px', fontSize: '18px' }}>
-          {children}
-        </p>
-      ),
-    },
-    Image: {
-      label: 'รูปภาพ',
-      fields: { src: { type: 'text' } },
-      render: ({ src, puck }: any) => (
-        <img
-          key={puck?.id}
-          src={
-            src ||
-            'https://static.vecteezy.com/system/resources/previews/016/916/479/original/placeholder-icon-design-free-vector.jpg'
-          }
-          style={{ width: '300px' }}
-          alt="Placeholder"
-        />
-      ),
-    },
-  },
-};
-
 export const TemplateBuilder = ({
   initialData,
   isCreate,
@@ -110,43 +30,136 @@ export const TemplateBuilder = ({
     templateName: 'New Template',
   }) as any;
 
+  const parseHtmlToPuckData = (htmlString: string) => {
+    if (!htmlString) {
+      console.warn('Empty HTML string received!');
+      return { content: [] };
+    }
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, 'text/html');
+
+    const puckData: any[] = [];
+
+    doc.querySelectorAll('img').forEach((img) => {
+      puckData.push({
+        id: uuidv4(),
+        type: 'Image',
+        props: {
+          src: img.getAttribute('src') || '',
+          style: { width: img.style.width || '300px' },
+          alt: img.getAttribute('alt') || 'Image',
+        },
+      });
+    });
+
+    doc.querySelectorAll('h1').forEach((header) => {
+      puckData.push({
+        id: uuidv4(),
+        type: 'HeaderBar',
+        props: { children: header.textContent || '' },
+      });
+    });
+
+    doc.querySelectorAll('p').forEach((paragraph) => {
+      puckData.push({
+        id: uuidv4(),
+        type: 'Text',
+        props: { children: paragraph.textContent || '' },
+      });
+    });
+
+    return { content: puckData };
+  };
+
+  const puckConfig: Config = {
+    components: {
+      HeaderBar: {
+        label: 'หัวข้อ',
+        fields: { children: { type: 'text' } },
+        render: ({ children, puck }: any) => (
+          <h1 key={uuidv4()} style={{ padding: '20px', fontSize: '36px' }}>
+            {children}
+          </h1>
+        ),
+      },
+      Text: {
+        label: 'ข้อความ',
+        fields: { children: { type: 'text' } },
+        render: ({ children, puck }: any) => (
+          <p key={uuidv4()} style={{ padding: '20px', fontSize: '18px' }}>
+            {children}
+          </p>
+        ),
+      },
+      Image: {
+        label: 'รูปภาพ',
+        fields: { src: { type: 'text' } },
+        render: ({ src, puck }: any) => (
+          <img
+            key={uuidv4()}
+            src={
+              src ||
+              'https://static.vecteezy.com/system/resources/previews/016/916/479/original/placeholder-icon-design-free-vector.jpg'
+            }
+            style={{ width: '300px' }}
+            alt="Placeholder"
+          />
+        ),
+      },
+    },
+  };
+
   React.useEffect(() => {
     setLoading(true);
     if (isCreate) {
+      console.log('in create');
+
       setEditorContent({ content: [] });
       setTimeout(() => setLoading(false), 100);
     } else if (initialData?.templateNotation) {
+      console.log('has templateNotation');
       const parsedData = parseHtmlToPuckData(initialData.templateNotation);
       setFormData({ templateName: initialData.templateName || '' }); // Load existing template name
       setEditorContent(parsedData);
       setTimeout(() => setLoading(false), 100);
     } else {
+      console.log('in else');
+
       setLoading(false);
     }
   }, [initialData, isCreate]);
 
   const exportToHTML = async () => {
+    // Function to convert Puck editor content into HTML
     const generateHTML = (data: any): string => {
-      const contentArray = data?.content || [];
+      if (!data?.content || data.content.length === 0) {
+        console.warn('⚠️ generateHTML: No content found!', data);
+        return '<!-- Empty template -->';
+      }
 
-      return contentArray
+      return data.content
         .map((item: any) => {
+          console.log('🔍 Processing item:', item);
+
           const component = puckConfig.components[item.type];
           if (!component) {
             console.warn(
-              `Component type "${item.type}" not found in puckConfig.`,
+              `⚠️ Component "${item.type}" not found in puckConfig.`,
             );
-            return '';
+            return `<!-- Missing component: ${item.type} -->`;
           }
 
-          const props = { ...item.props, puck: { id: item.id } };
+          const props = { ...item.props, puck: { id: item.id || uuidv4() } };
+
           try {
+            console.log('🛠 Rendering:', item.type, 'Props:', props);
             const reactElement = component.render(props);
             const htmlString = renderToStaticMarkup(reactElement);
-            return htmlString ? `<div id="${item.id}">${htmlString}</div>` : '';
+            return `<div id="${item.id}">${htmlString}</div>`;
           } catch (error) {
-            console.error(`Error rendering component "${item.type}":`, error);
-            return '';
+            console.error(`❌ Error rendering "${item.type}":`, error);
+            return `<!-- Error rendering: ${item.type} -->`;
           }
         })
         .join('');
@@ -158,13 +171,13 @@ export const TemplateBuilder = ({
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Exported Template</title>
+      <title>${formData.templateName}</title>
     </head>
     <body>
       ${generateHTML(editorContent)}
     </body>
     </html>
-    `;
+  `;
 
     const payload = {
       templateName: formData.templateName ? formData.templateName : '',
@@ -234,34 +247,6 @@ export const TemplateBuilder = ({
     }));
   };
 
-  const headerActions = React.useCallback(() => {
-    return (
-      <div className="flex flex-row gap-2">
-        {/* Template Name Input in Header */}
-
-        {/* Buttons */}
-        <div className="flex gap-2">
-          <Button
-            size="sm"
-            className="bg-blue-400 text-white"
-            onClick={exportToHTML}
-          >
-            {isCreate ? 'สร้าง' : 'แก้ไข'}
-          </Button>
-          {!isCreate && initialData?.id && (
-            <Button
-              size="sm"
-              className="bg-red-500 text-white"
-              onClick={onTemplateDelete}
-            >
-              ลบ
-            </Button>
-          )}
-        </div>
-      </div>
-    );
-  }, [formData, isCreate, initialData?.id]);
-
   return (
     <Card style={{ zIndex: 0 }}>
       {loading ? (
@@ -290,9 +275,53 @@ export const TemplateBuilder = ({
           <Puck
             config={puckConfig}
             data={editorContent}
-            onChange={(content: any) => setEditorContent(content)}
+            onChange={(content: any) => {
+              console.log('🔄 Puck Editor Updated:', content);
+
+              setEditorContent((prevState) => {
+                const updatedContent = content.content.map((item: any) => ({
+                  ...item,
+                  id: item.id || item.props.id || uuidv4(),
+                  props: {
+                    ...item.props,
+                    id: item.id || item.props.id || uuidv4(),
+                  },
+                }));
+
+                console.log(
+                  '✅ Updated editorContent before setting state:',
+                  updatedContent,
+                );
+
+                return { ...prevState, content: updatedContent };
+              });
+            }}
             overrides={{
-              headerActions,
+              headerActions: () => (
+                <div className="flex flex-row gap-2">
+                  {/* Template Name Input in Header */}
+
+                  {/* Buttons */}
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      className="bg-blue-400 text-white"
+                      onClick={exportToHTML}
+                    >
+                      {isCreate ? 'สร้าง' : 'แก้ไข'}
+                    </Button>
+                    {!isCreate && initialData?.id && (
+                      <Button
+                        size="sm"
+                        className="bg-red-500 text-white"
+                        onClick={onTemplateDelete}
+                      >
+                        ลบ
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ),
             }}
           />
         </>

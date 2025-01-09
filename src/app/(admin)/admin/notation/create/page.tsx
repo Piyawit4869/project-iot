@@ -153,7 +153,7 @@ export default function NotationCreatePage() {
 
       console.log({ payload });
 
-      // const { data } = await createNotation({}, payload);
+      const { data } = await createNotation({}, payload);
 
       toast.success('🎉 สร้างเอกสารสำเร็จ!', {
         duration: 3000,
@@ -161,7 +161,7 @@ export default function NotationCreatePage() {
         style: { fontFamily: 'var(--font-ibm-sans)' },
       });
 
-      // router.push(`/admin/notation/${data.id}`);
+      router.push(`/admin/notation/${data.id}`);
     } catch (err: any) {
       toast.error('❌ ไม่สามารถสร้างเอกสารได้', {
         duration: 3000,
