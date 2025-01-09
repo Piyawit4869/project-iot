@@ -346,6 +346,7 @@ export default function NotationSinglePage() {
             : 'accent1'
         } text-white text-xs`}
         key={'submit edit button'}
+        size="sm"
         type="submit"
         form="notation"
         disabled={data?.docStatus === 'canceled'}
@@ -358,8 +359,9 @@ export default function NotationSinglePage() {
           data?.docStatus === 'canceled'
             ? 'gray-400 cursor-not-allowed'
             : 'accent3'
-        } text-white text-xs`}
+        } text-white text-xs `}
         key={'edit button'}
+        size="sm"
         onClick={() => {
           setOpenEdit(true);
         }}
@@ -396,6 +398,7 @@ export default function NotationSinglePage() {
                     className=" text-white text-xs"
                     key={'cancel button'}
                     onClick={onCancel}
+                    size="sm"
                   >
                     ยกเลิก
                   </Button>
@@ -409,6 +412,7 @@ export default function NotationSinglePage() {
                     className={`bg-sky-400 text-white text-xs`}
                     key={'pending button'}
                     onClick={onPending}
+                    size="sm"
                   >
                     รอดำเนินการ
                   </Button>
@@ -420,6 +424,7 @@ export default function NotationSinglePage() {
                     className={`bg-sky-600 text-white text-xs`}
                     key={'waiting button'}
                     onClick={onWaiting}
+                    size="sm"
                   >
                     รอตรวจสอบ
                   </Button>
@@ -435,6 +440,7 @@ export default function NotationSinglePage() {
                   key={'reject button'}
                   disabled={data?.docStatus !== 'waiting_for_review'}
                   onClick={onRejected}
+                  size="sm"
                 >
                   ปฏิเสธ
                 </Button>,
@@ -447,6 +453,7 @@ export default function NotationSinglePage() {
                   key={'approve button'}
                   disabled={data?.docStatus !== 'waiting_for_review'}
                   onClick={onApproved}
+                  size="sm"
                 >
                   อนุมัติ
                 </Button>,
@@ -459,6 +466,7 @@ export default function NotationSinglePage() {
                   key={'delete button'}
                   onClick={onDelete}
                   disabled={data?.docStatus === 'canceled'}
+                  size="sm"
                 >
                   <Icon.DeleteFilled />
                   ลบ

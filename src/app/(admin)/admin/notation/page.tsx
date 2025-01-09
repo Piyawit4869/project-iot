@@ -77,6 +77,7 @@ export default function NotationsPage() {
                 <Link href={'notation/template'} key={'template index button'}>
                   <Button
                     className="bg-accent1 text-white"
+                    size="sm"
                     key={'create button'}
                   >
                     รูปแบบเอกสาร
@@ -85,6 +86,7 @@ export default function NotationsPage() {
                 <Link href={'notation/create'} key={'create button'}>
                   <Button
                     className="bg-accent1 text-white"
+                    size="sm"
                     key={'create button'}
                   >
                     สร้างเอกสาร
@@ -93,7 +95,7 @@ export default function NotationsPage() {
               ]}
             />
             <div className="bg-white shadow rounded-lg mb-4 mt-4 ">
-              <div className="grid grid-cols-1 sm:grid-cols-2 ">
+              <div className="grid grid-cols-1 sm:grid-cols-2">
                 <Input
                   className="w-full p-2 text-headFont"
                   labelPlacement="outside"

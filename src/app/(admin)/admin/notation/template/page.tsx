@@ -73,6 +73,7 @@ export default function TemplatesPage() {
                 <Link href={'template/create'} key={'create button'}>
                   <Button
                     className="bg-accent1 text-white"
+                    size="sm"
                     key={'create button'}
                   >
                     สร้างรูปแบบเอกสาร
@@ -81,11 +82,11 @@ export default function TemplatesPage() {
               ]}
             />
             <div className="bg-white shadow rounded-lg mb-4 mt-4">
-              <div className="flex flex-wrap gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2">
                 <Input
                   className="flex-1 p-2 text-headFont"
                   labelPlacement="outside"
-                  size="lg"
+                  size="sm"
                   name="templateName"
                   placeholder="ค้นหาชื่อรูปแบบเอกสาร"
                   value={filters.templateName}
@@ -96,7 +97,7 @@ export default function TemplatesPage() {
                 <Input
                   className="flex-1 p-2 text-headFont"
                   labelPlacement="outside"
-                  size="lg"
+                  size="sm"
                   name="docNo"
                   placeholder="ค้นหาหมายเลขเอกสาร"
                   value={filters.docNo}

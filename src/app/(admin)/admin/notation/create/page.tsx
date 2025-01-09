@@ -151,7 +151,9 @@ export default function NotationCreatePage() {
         payload.active = true;
       }
 
-      const { data } = await createNotation({}, payload);
+      console.log({ payload });
+
+      // const { data } = await createNotation({}, payload);
 
       toast.success('🎉 สร้างเอกสารสำเร็จ!', {
         duration: 3000,
@@ -159,7 +161,7 @@ export default function NotationCreatePage() {
         style: { fontFamily: 'var(--font-ibm-sans)' },
       });
 
-      router.push(`/admin/notation/${data.id}`);
+      // router.push(`/admin/notation/${data.id}`);
     } catch (err: any) {
       toast.error('❌ ไม่สามารถสร้างเอกสารได้', {
         duration: 3000,
@@ -196,6 +198,7 @@ export default function NotationCreatePage() {
               <a key={'draft button'}>
                 <Button
                   className="bg-accent3 text-white text-xs"
+                  size="sm"
                   type="submit"
                   form="notation"
                   onClick={() => {
@@ -208,6 +211,7 @@ export default function NotationCreatePage() {
               <a key={'create button'}>
                 <Button
                   className="bg-accent1 text-white text-xs"
+                  size="sm"
                   type="submit"
                   form="notation"
                   onClick={() => {
@@ -256,9 +260,9 @@ export default function NotationCreatePage() {
 
           <div className="bg-gray-100  flex justify-center items-center pt-6">
             {/* A4 Paper Styled Container */}
-            <div className="bg-white w-full border-gray-300 rounded overflow-hidden flex flex-row">
+            <div className="bg-white w-full border-gray-300 rounded-lg shadow-lg flex flex-wrap">
               {/* Input Form Section */}
-              <div className="w-1/2 p-6 border-r border-gray-200 overflow-y-auto">
+              <div className="w-full lg:w-1/2 p-6 border-r border-gray-200 overflow-y-auto">
                 <Form
                   id="notation"
                   onSubmit={onSubmit}
@@ -440,26 +444,30 @@ export default function NotationCreatePage() {
               </div>
 
               {/* PDF Preview Section */}
-              <div className="w-full lg:w-1/2 p-6 bg-gray-100 justify-center ">
+              <div className="w-full lg:w-1/2 p-6 bg-gray-100 justify-center">
                 <h1 className="text-base font-bold text-headFont mb-2">
                   ข้อมูลเอกสาร
                 </h1>
 
                 {/* Render HTML Template Here */}
-                <div
-                  className="bg-white w-[170mm] h-[240mm] shadow-lg border border-gray-300 rounded overflow-hidden p-6"
-                  style={{
-                    transform: `scale(${zoomLevel / 100})`,
-                    transformOrigin: 'top left',
-                  }}
-                >
-                  {processedHtml ? (
-                    <div dangerouslySetInnerHTML={{ __html: processedHtml }} />
-                  ) : (
-                    <p className="text-center text-gray-500">
-                      กรุณาเลือกรูปแบบเอกสาร
-                    </p>
-                  )}
+                <div className="flex justify-center">
+                  <div
+                    className="bg-white w-full max-w-[170mm] h-[240mm] shadow-lg border border-gray-300 rounded p-6"
+                    style={{
+                      transform: `scale(${zoomLevel / 100})`,
+                      transformOrigin: 'top left',
+                    }}
+                  >
+                    {processedHtml ? (
+                      <div
+                        dangerouslySetInnerHTML={{ __html: processedHtml }}
+                      />
+                    ) : (
+                      <p className="text-center text-gray-500">
+                        กรุณาเลือกรูปแบบเอกสาร
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <div className="w-[170mm] w-full flex justify-center items-center mt-4">
                   <div className="flex items-center gap-2">
