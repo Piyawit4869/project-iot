@@ -1,7 +1,7 @@
 'use client';
 
 import { Input, Textarea } from '@nextui-org/react';
-import get from '@/pages/api/setting/system/get';
+import get from '@/pages/api/setting/get';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 

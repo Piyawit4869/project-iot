@@ -22,21 +22,60 @@ import {
   useDisclosure,
   Select,
   SelectItem,
-  TimeInput
+  TimeInput,
 } from '@nextui-org/react';
 import React, { useState } from 'react';
-import { Tabs, Tab } from "@nextui-org/react";
+import { Tabs, Tab } from '@nextui-org/react';
+import { updatedetails } from '@/pages/api/setting/update-details';
+import { toast } from 'sonner';
 
 export default function OraganizationPage() {
+  const [loading, setLoading] = React.useState(false);
+  const [errors, setErrors] = React.useState({}) as any;
+  const [formData, setFormData] = React.useState({}) as any;
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the form from submitting to the URL
-    const formData = new FormData(e.currentTarget);
 
+    const formData = new FormData(e.currentTarget);
     // Convert formData to an object
     const data = Object.fromEntries(formData.entries());
     console.log(data); // Log the form data for debugging
   };
+
+  // const onSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+
+  //   try {
+  //     const payload = {
+  //       ...formData,
+  //     };
+
+  //     delete payload.data;
+
+  //     const res = await updatedetails({}, payload);
+
+  //     toast.success('📝 แก้ไขเอกสารสำเร็จ!', {
+  //       duration: 3000,
+  //       position: 'bottom-left',
+  //       style: { fontFamily: 'var(--font-ibm-sans)' },
+  //     });
+
+  //     // router.push(`/admin/notation/${res.data.id}`);
+  //   } catch (err: any) {
+  //     toast.error('❌ ไม่สามารถแก้ไขเอกสารได้', {
+  //       duration: 3000,
+  //       position: 'bottom-left',
+  //       style: { fontFamily: 'var(--font-ibm-sans)' },
+  //     });
+
+  //     console.error('Send FormData error:', err);
+  //     setErrors({ general: err.message || 'An unexpected error occurred.' });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   // Add Setting Time
@@ -50,18 +89,42 @@ export default function OraganizationPage() {
   };
 
   // Modal View Address
-  const { isOpen: isOpenAddress, onOpen: openAddress, onOpenChange: onChange1 } = useDisclosure();
+  const {
+    isOpen: isOpenAddress,
+    onOpen: openAddress,
+    onOpenChange: onChange1,
+  } = useDisclosure();
   // Modal Create Address
-  const { isOpen: isOpenAddress1, onOpen: openAddress1, onOpenChange: onChange2 } = useDisclosure();
+  const {
+    isOpen: isOpenAddress1,
+    onOpen: openAddress1,
+    onOpenChange: onChange2,
+  } = useDisclosure();
   // Modal View Detail Address
-  const { isOpen: isOpenAddress2, onOpen: openAddress2, onOpenChange: onChange3 } = useDisclosure();
+  const {
+    isOpen: isOpenAddress2,
+    onOpen: openAddress2,
+    onOpenChange: onChange3,
+  } = useDisclosure();
 
   // Modal View Setting
-  const { isOpen: isOpenSetting, onOpen: openSetting1, onOpenChange: onChangeSetting1 } = useDisclosure();
+  const {
+    isOpen: isOpenSetting,
+    onOpen: openSetting1,
+    onOpenChange: onChangeSetting1,
+  } = useDisclosure();
   // Modal Create Setting
-  const { isOpen: isOpenSetting1, onOpen: openSetting2, onOpenChange: onChangeSetting2 } = useDisclosure();
+  const {
+    isOpen: isOpenSetting1,
+    onOpen: openSetting2,
+    onOpenChange: onChangeSetting2,
+  } = useDisclosure();
   // Modal View Detail Setting
-  const { isOpen: isOpenSetting2, onOpen: openSetting3, onOpenChange: onChangeSetting3 } = useDisclosure();
+  const {
+    isOpen: isOpenSetting2,
+    onOpen: openSetting3,
+    onOpenChange: onChangeSetting3,
+  } = useDisclosure();
 
   const [selectedItem, setSelectedItem] = useState<any>(null);
 
@@ -75,7 +138,6 @@ export default function OraganizationPage() {
     openSetting3();
   };
 
-
   return (
     <Scaffold
       child={
@@ -83,45 +145,62 @@ export default function OraganizationPage() {
           <TopSection
             title="ข้อมูลองค์กร"
             buttons={[
-              <Link href={""} key={"organization"}>
-                <Button className="bg-accent1 text-white" key={"organization"} type='submit' form='organization'>
+              <Link href={''} key={'organization'}>
+                <Button
+                  className="bg-accent1 text-white"
+                  key={'organization'}
+                  type="submit"
+                  form="organization"
+                >
                   แก้ไขข้อมูลองค์กร
                 </Button>
               </Link>,
             ]}
           />
           <div className="flex space-x-4 mt-6">
-            <div className='flex-1'>
+            <div className="flex-1">
               <CardComponent
                 customCard
                 custom={
-                  <Form
-                    id="organization"
-                    onSubmit={onSubmit}
-                    method="post"
-                  >
+                  <Form id="organization" onSubmit={onSubmit} method="post">
                     <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
-                      <Tabs variant='underlined'>
+                      <Tabs variant="underlined">
                         <Tab key="setting" title="การตั้งค่าระบบ">
-                          <div className='flex justify-between'>
+                          <div className="flex justify-between">
                             <h1 className="text-2xl font-bold text-headFont">
                               ตั้งค่าระบบ
                             </h1>
-                            <div className=''>
-                              <Button className='bg-accent1 text-white' onPress={openSetting1}>ดูการตั้งค่าทั้งหมด</Button>
+                            <div className="">
+                              <Button
+                                className="bg-accent1 text-white"
+                                onPress={openSetting1}
+                              >
+                                ดูการตั้งค่าทั้งหมด
+                              </Button>
                             </div>
                           </div>
 
-                          <Modal size='5xl' isOpen={isOpenSetting} onOpenChange={onChangeSetting1}>
+                          <Modal
+                            size="5xl"
+                            isOpen={isOpenSetting}
+                            onOpenChange={onChangeSetting1}
+                          >
                             <ModalContent>
                               {() => (
                                 <>
-                                  <ModalHeader className="flex flex-col-1 gap-1">การตั้งค่าทั้งหมด</ModalHeader>
+                                  <ModalHeader className="flex flex-col-1 gap-1">
+                                    การตั้งค่าทั้งหมด
+                                  </ModalHeader>
                                   <ModalBody>
                                     <div>
-                                      <Button className='bg-accent1 text-white' onPress={openSetting2}>สร้างการตั้งค่าใหม่</Button>
+                                      <Button
+                                        className="bg-accent1 text-white"
+                                        onPress={openSetting2}
+                                      >
+                                        สร้างการตั้งค่าใหม่
+                                      </Button>
                                     </div>
-                                    <div className='mb-4'>
+                                    <div className="mb-4">
                                       <NextTable
                                         columns={columnsSet}
                                         rows={dataSet}
@@ -134,11 +213,18 @@ export default function OraganizationPage() {
                             </ModalContent>
                           </Modal>
 
-                          <Modal size='5xl' className='height-500' isOpen={isOpenSetting1} onOpenChange={onChangeSetting2}>
+                          <Modal
+                            size="5xl"
+                            className="height-500"
+                            isOpen={isOpenSetting1}
+                            onOpenChange={onChangeSetting2}
+                          >
                             <ModalContent>
                               {() => (
                                 <>
-                                  <ModalHeader className="flex flex-col gap-1">สร้างการตั้งค่าใหม่</ModalHeader>
+                                  <ModalHeader className="flex flex-col gap-1">
+                                    สร้างการตั้งค่าใหม่
+                                  </ModalHeader>
                                   <ModalBody>
                                     <Form
                                       id="create-setting"
@@ -202,7 +288,10 @@ export default function OraganizationPage() {
                                           </Select>
                                         </div>
                                         {items.map((_: any, index: any) => (
-                                          <div key={index} className="flex items-center gap-6 mt-6">
+                                          <div
+                                            key={index}
+                                            className="flex items-center gap-6 mt-6"
+                                          >
                                             <Select
                                               className="flex-1 text-headFont"
                                               name="day"
@@ -222,19 +311,29 @@ export default function OraganizationPage() {
                                             </Select>
                                             <TimeInput
                                               className="flex-1"
-                                              label={<span className="flex-1 text-headFont">เริ่มงาน</span>}
+                                              label={
+                                                <span className="flex-1 text-headFont">
+                                                  เริ่มงาน
+                                                </span>
+                                              }
                                               labelPlacement="outside"
                                               name="starttime"
                                             />
                                             <TimeInput
                                               className="flex-1"
-                                              label={<span className="flex-1 text-headFont">เลิกงาน</span>}
+                                              label={
+                                                <span className="flex-1 text-headFont">
+                                                  เลิกงาน
+                                                </span>
+                                              }
                                               labelPlacement="outside"
                                               name="outtime"
                                             />
                                             <a
                                               className="text-red-500 cursor-pointer mt-6"
-                                              onClick={() => handleRemoveItem(index)}
+                                              onClick={() =>
+                                                handleRemoveItem(index)
+                                              }
                                             >
                                               ลบรายการ
                                             </a>
@@ -254,7 +353,11 @@ export default function OraganizationPage() {
                                     </Form>
                                   </ModalBody>
                                   <ModalFooter>
-                                    <Button className="bg-accent1 text-white" type='submit' form='create-setting'>
+                                    <Button
+                                      className="bg-accent1 text-white"
+                                      type="submit"
+                                      form="create-setting"
+                                    >
                                       สร้าง
                                     </Button>
                                   </ModalFooter>
@@ -263,11 +366,18 @@ export default function OraganizationPage() {
                             </ModalContent>
                           </Modal>
 
-                          <Modal size='5xl' className='height-500' isOpen={isOpenSetting2} onOpenChange={onChangeSetting3}>
+                          <Modal
+                            size="5xl"
+                            className="height-500"
+                            isOpen={isOpenSetting2}
+                            onOpenChange={onChangeSetting3}
+                          >
                             <ModalContent>
                               {() => (
                                 <>
-                                  <ModalHeader className="flex flex-col gap-1">การตั้งค่าครั้งที่ {selectedItem?.id}</ModalHeader>
+                                  <ModalHeader className="flex flex-col gap-1">
+                                    การตั้งค่าครั้งที่ {selectedItem?.id}
+                                  </ModalHeader>
                                   <ModalBody>
                                     <Form
                                       id="edit-setting"
@@ -331,7 +441,10 @@ export default function OraganizationPage() {
                                           </Select>
                                         </div>
                                         {items.map((_: any, index: any) => (
-                                          <div key={index} className="flex items-center gap-6 mt-6">
+                                          <div
+                                            key={index}
+                                            className="flex items-center gap-6 mt-6"
+                                          >
                                             <Select
                                               className="flex-1 text-headFont"
                                               name="day"
@@ -351,19 +464,29 @@ export default function OraganizationPage() {
                                             </Select>
                                             <TimeInput
                                               className="flex-1"
-                                              label={<span className="flex-1 text-headFont">เริ่มงาน</span>}
+                                              label={
+                                                <span className="flex-1 text-headFont">
+                                                  เริ่มงาน
+                                                </span>
+                                              }
                                               labelPlacement="outside"
                                               name="starttime"
                                             />
                                             <TimeInput
                                               className="flex-1"
-                                              label={<span className="flex-1 text-headFont">เลิกงาน</span>}
+                                              label={
+                                                <span className="flex-1 text-headFont">
+                                                  เลิกงาน
+                                                </span>
+                                              }
                                               labelPlacement="outside"
                                               name="outtime"
                                             />
                                             <a
                                               className="text-red-500 cursor-pointer mt-6"
-                                              onClick={() => handleRemoveItem(index)}
+                                              onClick={() =>
+                                                handleRemoveItem(index)
+                                              }
                                             >
                                               ลบรายการ
                                             </a>
@@ -383,7 +506,11 @@ export default function OraganizationPage() {
                                     </Form>
                                   </ModalBody>
                                   <ModalFooter>
-                                    <Button className="bg-accent1 text-white" type='submit' form='edit-setting'>
+                                    <Button
+                                      className="bg-accent1 text-white"
+                                      type="submit"
+                                      form="edit-setting"
+                                    >
                                       แกไข
                                     </Button>
                                     <Button className="bg-accent2 text-white">
@@ -400,24 +527,40 @@ export default function OraganizationPage() {
                         {/* Setting Address */}
                         <Tab key="address" title="ข้อมูลที่อยู่องค์กร">
                           <div>
-                            <div className='flex justify-between'>
+                            <div className="flex justify-between">
                               <h1 className="text-2xl font-bold text-headFont">
                                 ข้อมูลที่อยู่องค์กร
                               </h1>
-                              <div className=''>
-                                <Button className='bg-accent1 text-white' onPress={openAddress}>ดูที่อยู่ทั้งหมด</Button>
+                              <div className="">
+                                <Button
+                                  className="bg-accent1 text-white"
+                                  onPress={openAddress}
+                                >
+                                  ดูที่อยู่ทั้งหมด
+                                </Button>
                               </div>
 
-                              <Modal size='5xl' isOpen={isOpenAddress} onOpenChange={onChange1}>
+                              <Modal
+                                size="5xl"
+                                isOpen={isOpenAddress}
+                                onOpenChange={onChange1}
+                              >
                                 <ModalContent>
                                   {() => (
                                     <>
-                                      <ModalHeader className="flex flex-col-1 gap-1">ที่อยู่ทั้งหมด</ModalHeader>
+                                      <ModalHeader className="flex flex-col-1 gap-1">
+                                        ที่อยู่ทั้งหมด
+                                      </ModalHeader>
                                       <ModalBody>
                                         <div>
-                                          <Button className='bg-accent1 text-white' onPress={openAddress1}>สร้างที่อยู่ใหม่</Button>
+                                          <Button
+                                            className="bg-accent1 text-white"
+                                            onPress={openAddress1}
+                                          >
+                                            สร้างที่อยู่ใหม่
+                                          </Button>
                                         </div>
-                                        <div className='mb-4'>
+                                        <div className="mb-4">
                                           <NextTable
                                             columns={columns}
                                             rows={data}
@@ -430,11 +573,18 @@ export default function OraganizationPage() {
                                 </ModalContent>
                               </Modal>
 
-                              <Modal size='5xl' className='height-500' isOpen={isOpenAddress1} onOpenChange={onChange2}>
+                              <Modal
+                                size="5xl"
+                                className="height-500"
+                                isOpen={isOpenAddress1}
+                                onOpenChange={onChange2}
+                              >
                                 <ModalContent>
                                   {() => (
                                     <>
-                                      <ModalHeader className="flex flex-col gap-1">สร้างที่อยู่ใหม่</ModalHeader>
+                                      <ModalHeader className="flex flex-col gap-1">
+                                        สร้างที่อยู่ใหม่
+                                      </ModalHeader>
                                       <ModalBody>
                                         <Form
                                           id="create-address"
@@ -446,7 +596,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">ชื่อที่อยู่</span>
+                                                  <span className="text-headFont">
+                                                    ชื่อที่อยู่
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="AddressName"
@@ -455,7 +607,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">เมือง</span>
+                                                  <span className="text-headFont">
+                                                    เมือง
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="city"
@@ -467,7 +621,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">จังหวัด</span>
+                                                  <span className="text-headFont">
+                                                    จังหวัด
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="province"
@@ -476,7 +632,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">รหัสไปรษณีย์</span>
+                                                  <span className="text-headFont">
+                                                    รหัสไปรษณีย์
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="zipcode"
@@ -488,7 +646,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">เลขห้อง</span>
+                                                  <span className="text-headFont">
+                                                    เลขห้อง
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="Roomnumber"
@@ -497,7 +657,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">ชั้นที่อยู่</span>
+                                                  <span className="text-headFont">
+                                                    ชั้นที่อยู่
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="floor"
@@ -506,7 +668,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">หมู่บ้าน</span>
+                                                  <span className="text-headFont">
+                                                    หมู่บ้าน
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="village"
@@ -515,7 +679,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">เลขหมู่บ้าน</span>
+                                                  <span className="text-headFont">
+                                                    เลขหมู่บ้าน
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="Villagenumber"
@@ -527,7 +693,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">บ้านเลขที่</span>
+                                                  <span className="text-headFont">
+                                                    บ้านเลขที่
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="housenumber"
@@ -536,7 +704,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">ตรอก</span>
+                                                  <span className="text-headFont">
+                                                    ตรอก
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="alley"
@@ -545,7 +715,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">ถนน</span>
+                                                  <span className="text-headFont">
+                                                    ถนน
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="road"
@@ -554,7 +726,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">อาคาร</span>
+                                                  <span className="text-headFont">
+                                                    อาคาร
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="building"
@@ -566,7 +740,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">ประเทศ</span>
+                                                  <span className="text-headFont">
+                                                    ประเทศ
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="country"
@@ -575,19 +751,23 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">เขต/อำเภอ</span>
+                                                  <span className="text-headFont">
+                                                    เขต/อำเภอ
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="district"
                                                 placeholder="เขต/อำเภอ"
                                               />
                                             </div>
-                                            <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center'>
+                                            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                                               <div className="flex gap-4 mt-6">
                                                 <Input
                                                   className="flex-1"
                                                   label={
-                                                    <span className="text-headFont">แขวง/ตำบล</span>
+                                                    <span className="text-headFont">
+                                                      แขวง/ตำบล
+                                                    </span>
                                                   }
                                                   labelPlacement="outside"
                                                   name="subdistrict"
@@ -597,10 +777,11 @@ export default function OraganizationPage() {
                                               <div className="flex gap-4 mt-6">
                                                 <Textarea
                                                   classNames={{
-                                                    base: "",
-                                                    input: "resize-y min-h-[50px]",
+                                                    base: '',
+                                                    input:
+                                                      'resize-y min-h-[50px]',
                                                   }}
-                                                  name='note'
+                                                  name="note"
                                                   label="หมายเหตุ"
                                                   labelPlacement="outside"
                                                   placeholder="หมายเหตุ"
@@ -612,7 +793,11 @@ export default function OraganizationPage() {
                                         </Form>
                                       </ModalBody>
                                       <ModalFooter>
-                                        <Button className="bg-accent1 text-white" type='submit' form='create-address'>
+                                        <Button
+                                          className="bg-accent1 text-white"
+                                          type="submit"
+                                          form="create-address"
+                                        >
                                           สร้าง
                                         </Button>
                                       </ModalFooter>
@@ -621,11 +806,18 @@ export default function OraganizationPage() {
                                 </ModalContent>
                               </Modal>
 
-                              <Modal size='5xl' className='height-500' isOpen={isOpenAddress2} onOpenChange={onChange3}>
+                              <Modal
+                                size="5xl"
+                                className="height-500"
+                                isOpen={isOpenAddress2}
+                                onOpenChange={onChange3}
+                              >
                                 <ModalContent>
                                   {() => (
                                     <>
-                                      <ModalHeader className="flex flex-col gap-1">ที่อยู่ที่ {selectedItem?.id}</ModalHeader>
+                                      <ModalHeader className="flex flex-col gap-1">
+                                        ที่อยู่ที่ {selectedItem?.id}
+                                      </ModalHeader>
                                       <ModalBody>
                                         <Form
                                           id="edit-address"
@@ -637,7 +829,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">ชื่อที่อยู่</span>
+                                                  <span className="text-headFont">
+                                                    ชื่อที่อยู่
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="AddressName"
@@ -646,7 +840,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">เมือง</span>
+                                                  <span className="text-headFont">
+                                                    เมือง
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="city"
@@ -658,7 +854,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">จังหวัด</span>
+                                                  <span className="text-headFont">
+                                                    จังหวัด
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="province"
@@ -667,7 +865,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">รหัสไปรษณีย์</span>
+                                                  <span className="text-headFont">
+                                                    รหัสไปรษณีย์
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="zipcode"
@@ -679,7 +879,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">เลขห้อง</span>
+                                                  <span className="text-headFont">
+                                                    เลขห้อง
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="Roomnumber"
@@ -688,7 +890,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">ชั้นที่อยู่</span>
+                                                  <span className="text-headFont">
+                                                    ชั้นที่อยู่
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="floor"
@@ -697,7 +901,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">หมู่บ้าน</span>
+                                                  <span className="text-headFont">
+                                                    หมู่บ้าน
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="village"
@@ -706,7 +912,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">เลขหมู่บ้าน</span>
+                                                  <span className="text-headFont">
+                                                    เลขหมู่บ้าน
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="Villagenumber"
@@ -718,7 +926,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">บ้านเลขที่</span>
+                                                  <span className="text-headFont">
+                                                    บ้านเลขที่
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="housenumber"
@@ -727,7 +937,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">ตรอก</span>
+                                                  <span className="text-headFont">
+                                                    ตรอก
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="alley"
@@ -736,7 +948,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">ถนน</span>
+                                                  <span className="text-headFont">
+                                                    ถนน
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="road"
@@ -745,7 +959,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">อาคาร</span>
+                                                  <span className="text-headFont">
+                                                    อาคาร
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="building"
@@ -757,7 +973,9 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">ประเทศ</span>
+                                                  <span className="text-headFont">
+                                                    ประเทศ
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="country"
@@ -766,19 +984,23 @@ export default function OraganizationPage() {
                                               <Input
                                                 className="flex-1"
                                                 label={
-                                                  <span className="text-headFont">เขต/อำเภอ</span>
+                                                  <span className="text-headFont">
+                                                    เขต/อำเภอ
+                                                  </span>
                                                 }
                                                 labelPlacement="outside"
                                                 name="district"
                                                 placeholder="เขต/อำเภอ"
                                               />
                                             </div>
-                                            <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center'>
+                                            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                                               <div className="flex gap-4 mt-6">
                                                 <Input
                                                   className="flex-1"
                                                   label={
-                                                    <span className="text-headFont">แขวง/ตำบล</span>
+                                                    <span className="text-headFont">
+                                                      แขวง/ตำบล
+                                                    </span>
                                                   }
                                                   labelPlacement="outside"
                                                   name="subdistrict"
@@ -788,10 +1010,11 @@ export default function OraganizationPage() {
                                               <div className="flex gap-4 mt-6">
                                                 <Textarea
                                                   classNames={{
-                                                    base: "",
-                                                    input: "resize-y min-h-[50px]",
+                                                    base: '',
+                                                    input:
+                                                      'resize-y min-h-[50px]',
                                                   }}
-                                                  name='note'
+                                                  name="note"
                                                   label="หมายเหตุ"
                                                   labelPlacement="outside"
                                                   placeholder="หมายเหตุ"
@@ -803,7 +1026,11 @@ export default function OraganizationPage() {
                                         </Form>
                                       </ModalBody>
                                       <ModalFooter>
-                                        <Button className="bg-accent1 text-white" type='submit' form='edit-address'>
+                                        <Button
+                                          className="bg-accent1 text-white"
+                                          type="submit"
+                                          form="edit-address"
+                                        >
                                           แก้ไข
                                         </Button>
                                         <Button className="bg-accent2 text-white">
@@ -869,12 +1096,11 @@ const data = [
     province: 'กรุงเทพมหานคร',
     district: 'บางนา',
   },
-
 ];
 
 // Table Setting
 const columnsSet: any = [
-  { title: 'ชื่อการตั้งค่า', dataIndex: 'setting'},
+  { title: 'ชื่อการตั้งค่า', dataIndex: 'setting' },
   { title: 'ภาษา', dataIndex: 'language' },
   { title: 'ธีมสี', dataIndex: 'theme' },
   { title: 'ขนาดตัวอักษร', dataIndex: 'fontsize' },

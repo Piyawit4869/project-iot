@@ -26,6 +26,7 @@ import { profile } from 'console';
 
 export default function CreateUserPage() {
   const [errors, setErrors] = React.useState({}) as any;
+  const [loading, setLoading] = React.useState(false);
   const [formData, setFormData] = React.useState({}) as any;
   const router = useRouter();
 
@@ -65,28 +66,101 @@ export default function CreateUserPage() {
     }));
   };
 
+  // const onSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setLoading(false);
+
+  //   const requiredFields = [
+  //     'email',
+  //     'username',
+  //     'password',
+  //     'position',
+  //     'firstName',
+  //   ];
+  //   const newErrors: any = {};
+
+  //   requiredFields.forEach((field) => {
+  //     if (!formData[field] || formData[field].trim() === '') {
+  //       newErrors[field] = `Field ${field} is required.`;
+  //     }
+  //   });
+
+  //   if (Object.keys(newErrors).length > 0) {
+  //     setErrors(newErrors);
+  //     return;
+  //   }
+
+  //   try {
+  //     const payload = {
+  //       profile: {
+  //         prefix: formData.prefix,
+  //         firstName: formData.firstName,
+  //         lastName: formData.lastName,
+  //         birthDate: formData.birthDate,
+  //         phone: formData.phone,
+  //       },
+  //       role: {
+  //         name: formData.position,
+  //       },
+  //       ...formData,
+  //       status: 'active',
+  //       // status: 'active',
+  //     };
+
+  //     if (!payload.active) {
+  //       payload.active = false;
+  //     } else {
+  //       payload.active = true;
+  //     }
+
+  //     const data = await createUser({}, payload);
+  //     console.log('Create User', data);
+
+  //     if (data.success) {
+  //       toast.success('🎉 สร้างผู้ใช้งานสำเร็จ!', {
+  //         duration: 3000,
+  //         position: 'bottom-left',
+  //         style: { fontFamily: 'var(--font-ibm-sans)' },
+  //       });
+  //     }
+
+  //     // router.push(`/admin/user/${data.data.id}`);
+  //   } catch (err: any) {
+  //     toast.error('❌ ไม่สามารถสร้างผู้ใช้งานได้', {
+  //       duration: 3000,
+  //       position: 'bottom-left',
+  //       style: { fontFamily: 'var(--font-ibm-sans)' },
+  //     });
+
+  //     console.error('Send FormData error:', err);
+  //     setErrors({ general: err.message || 'An unexpected error occurred.' });
+  //   }
+  // };
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(false);
 
-    const requiredFields = [
-      'email',
-      'username',
-      'password',
-      'position',
-      'firstName',
-    ];
-    const newErrors: any = {};
+    // const requiredFields = [
+    //   'email',
+    //   'username',
+    //   'password',
+    //   'position',
+    //   'firstName',
+    // ];
+    // const newErrors: any = {};
 
-    requiredFields.forEach((field) => {
-      if (!formData[field] || formData[field].trim() === '') {
-        newErrors[field] = `Field ${field} is required.`;
-      }
-    });
+    // requiredFields.forEach((field) => {
+    //   if (!formData[field] || formData[field].trim() === '') {
+    //     newErrors[field] = `Field ${field} is required.`;
+    //   }
+    // });
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+    // if (Object.keys(newErrors).length > 0) {
+    //   setErrors(newErrors);
+    //   setLoading(false);
+    //   return;
+    // }
 
     try {
       const payload = {
@@ -97,10 +171,9 @@ export default function CreateUserPage() {
           birthDate: formData.birthDate,
           phone: formData.phone,
         },
-
-        role: {
-          name: formData.position,
-        },
+        // role: {
+        //   name: formData.position,
+        // },
         ...formData,
         status: 'active',
       };
@@ -111,20 +184,19 @@ export default function CreateUserPage() {
         payload.active = true;
       }
 
-      const data = await createUser({}, payload);
-      console.log('Create User', data);
+      console.log(payload);
+      const res = await createUser({}, payload);
+      console.log('Create', res);
 
-      if (data.success) {
-        toast.success('🎉 สร้างผู้ใช้งานสำเร็จ!', {
-          duration: 3000,
-          position: 'bottom-left',
-          style: { fontFamily: 'var(--font-ibm-sans)' },
-        });
-      }
+      toast.success('📝 สร้างข้อมูลผู้ใช้งานสำเร็จ!', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
 
-      // router.push(`/admin/user/${data.data.id}`);
+      router.push(`/admin/user/${res.data.id}`);
     } catch (err: any) {
-      toast.error('❌ ไม่สามารถสร้างผู้ใช้งานได้', {
+      toast.error('❌ ไม่สามารถสร้างข้อมูลผู้ใช้งานได้', {
         duration: 3000,
         position: 'bottom-left',
         style: { fontFamily: 'var(--font-ibm-sans)' },
@@ -132,6 +204,8 @@ export default function CreateUserPage() {
 
       console.error('Send FormData error:', err);
       setErrors({ general: err.message || 'An unexpected error occurred.' });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -149,49 +223,11 @@ export default function CreateUserPage() {
                 type="submit"
                 form="user"
                 key={'create button'}
-                // onPress={openCreate}
               >
                 สร้าง
               </Button>,
             ]}
           />
-
-          {/* <Modal
-                isOpen={isCreate}
-                onOpenChange={changeCreate}
-                key={'create button'}
-              >
-                <ModalContent>
-                  {(onClose) => (
-                    <>
-                      <ModalHeader className="flex flex-col gap-1">
-                        คุณต้องการสร้างผู้ใช้งาน ใช่หรือไม่
-                      </ModalHeader>
-                      <ModalBody>
-                        <p>ข้อมูลที่คุณกรอกจะถูกบันทึก</p>
-                      </ModalBody>
-                      <ModalFooter>
-                        <Button
-                          className="bg-accent2 text-white"
-                          variant="light"
-                          onPress={onClose}
-                        >
-                          ยกเลิก
-                        </Button>
-                        <Button
-                          className="bg-accent1 text-white"
-                          variant="light"
-                          type="submit"
-                          key={'create button'}
-                          form="user"
-                        >
-                          ยืนยัน
-                        </Button>
-                      </ModalFooter>
-                    </>
-                  )}
-                </ModalContent>
-              </Modal> */}
 
           <div className="flex space-x-4 mt-6">
             <div className="flex-1">
@@ -207,7 +243,7 @@ export default function CreateUserPage() {
                     <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                       <div>
                         <h1 className="text-2xl font-bold text-headFont">
-                          ข้อมูลผู้ใข้
+                          ข้อมูลผู้ใช้
                         </h1>
                         <div className="font-bold text-headFon mt-10">
                           <p>รูปภาพผู้ใช้</p>
@@ -299,7 +335,7 @@ export default function CreateUserPage() {
                           {prefix.map((item: any) => (
                             <SelectItem
                               className="text-headFont"
-                              key={item.label}
+                              key={item.value}
                               value={item.value}
                             >
                               {item.label}
