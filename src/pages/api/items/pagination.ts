@@ -1,9 +1,10 @@
 import { base_url } from '@/constant/common';
 
 interface FetchTemplatesParams {
-  page: number;
-  limit: number;
+  page?: number;
+  limit?: number;
   name?: string;
+  isAll?: boolean;
 }
 
 interface FetchTemplatesResponse {
@@ -20,16 +21,26 @@ export default async function paginationItems({
   page,
   limit,
   name,
+  isAll,
 }: FetchTemplatesParams): Promise<FetchTemplatesResponse> {
   try {
     const url = new URL(`${base_url}/crud/items`);
-    url.searchParams.append('page', page.toString());
-    url.searchParams.append('limit', limit.toString());
 
     const accessToken = localStorage.getItem('accessToken');
 
     if (name) {
       url.searchParams.append('name', name);
+    }
+    if (page) {
+      url.searchParams.append('page', String(page));
+    }
+
+    if (limit) {
+      url.searchParams.append('limit', String(limit));
+    }
+
+    if (isAll) {
+      url.searchParams.append('isAll', String(isAll));
     }
 
     const response = await fetch(url.toString(), {
@@ -52,9 +63,9 @@ export default async function paginationItems({
       items: [],
       meta: {
         totalItems: 0,
-        itemsPerPage: limit,
+        itemsPerPage: 10,
         totalPages: 0,
-        currentPage: page,
+        currentPage: 1,
       },
     };
   }

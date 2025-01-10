@@ -89,8 +89,7 @@ export default function NotationSinglePage() {
   React.useEffect(() => {
     const fetchTemplate = async () => {
       const { items: fetchedItems } = await pagination({
-        page: 1,
-        limit: 20,
+        isAll: true,
       });
 
       setTemplates(fetchedItems);
@@ -122,13 +121,11 @@ export default function NotationSinglePage() {
       const { data } = await get(params.slug as string);
 
       const { items: fetchedItems } = await paginationItems({
-        page: 1,
-        limit: 20,
+        isAll: true,
       });
 
       const { items: fetchedCustomer } = await paginationCustomers({
-        page: 1,
-        limit: 20,
+        isAll: true,
       });
 
       const selectedItems = data?.itemsId.map((key: any) => {
@@ -231,13 +228,16 @@ export default function NotationSinglePage() {
       return;
     }
 
+    console.log({ formData });
+
     try {
       const payload = {
         ...formData,
         itemsId: formData.itemsId.map((item: any) => item.id),
+        customerId: formData.customer
+          ? formData.customer.id
+          : formData.customerId,
       };
-
-      delete payload.customerId;
 
       if (!payload.active) {
         payload.active = false;
@@ -263,7 +263,6 @@ export default function NotationSinglePage() {
         style: { fontFamily: 'var(--font-ibm-sans)' },
       });
 
-      console.error('Send FormData error:', err);
       setErrors({ general: err.message || 'An unexpected error occurred.' });
     } finally {
       setLoading(false);
@@ -578,6 +577,7 @@ export default function NotationSinglePage() {
                           onChange={handleChange}
                           required
                           isDisabled={!openEdit}
+                          isSelected={formData.active}
                         />
                       </div>
                       <Input
@@ -655,6 +655,7 @@ export default function NotationSinglePage() {
                       placeholder=""
                       onChange={handleChange}
                       isDisabled={!openEdit}
+                      defaultValue={formData.note}
                     />
                     <div className="flex gap-4 mt-6">
                       <h1 className="text-base font-bold text-headFont flex-1">

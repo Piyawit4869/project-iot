@@ -1,12 +1,13 @@
 import { base_url } from '@/constant/common';
 
 interface FetchTemplatesParams {
-  page: number;
-  limit: number;
+  page?: number;
+  limit?: number;
   firstName?: string;
   companyName?: string;
   contactEmail?: string;
   taxId?: string;
+  isAll?: boolean;
 }
 
 interface FetchTemplatesResponse {
@@ -26,13 +27,20 @@ export default async function paginationCustomers({
   companyName,
   contactEmail,
   taxId,
+  isAll,
 }: FetchTemplatesParams): Promise<FetchTemplatesResponse> {
   try {
     const url = new URL(`${base_url}/crud/customers`);
-    url.searchParams.append('page', page.toString());
-    url.searchParams.append('limit', limit.toString());
 
     const accessToken = localStorage.getItem('accessToken');
+
+    if (page) {
+      url.searchParams.append('page', String(page));
+    }
+
+    if (limit) {
+      url.searchParams.append('limit', String(limit));
+    }
 
     if (firstName) {
       url.searchParams.append('firstName', firstName);
@@ -45,6 +53,9 @@ export default async function paginationCustomers({
     }
     if (taxId) {
       url.searchParams.append('taxId', taxId);
+    }
+    if (isAll) {
+      url.searchParams.append('isAll', String(isAll));
     }
 
     const response = await fetch(url.toString(), {
@@ -67,9 +78,9 @@ export default async function paginationCustomers({
       items: [],
       meta: {
         totalItems: 0,
-        itemsPerPage: limit,
+        itemsPerPage: 10,
         totalPages: 0,
-        currentPage: page,
+        currentPage: 1,
       },
     };
   }

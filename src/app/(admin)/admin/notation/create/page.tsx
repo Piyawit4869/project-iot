@@ -95,8 +95,7 @@ export default function NotationCreatePage() {
   React.useEffect(() => {
     const fetchTemplate = async () => {
       const { items: fetchedTemplate } = await pagination({
-        page: 1,
-        limit: 20,
+        isAll: true,
       });
 
       setTemplates(fetchedTemplate);
@@ -104,8 +103,7 @@ export default function NotationCreatePage() {
 
     const fetchItem = async () => {
       const { items: fetchedItems } = await paginationItems({
-        page: 1,
-        limit: 20,
+        isAll: true,
       });
 
       setItemServices(fetchedItems);
@@ -113,8 +111,7 @@ export default function NotationCreatePage() {
 
     const fetchCustomer = async () => {
       const { items: fetchedCustomer } = await paginationCustomers({
-        page: 1,
-        limit: 20,
+        isAll: true,
       });
 
       setCustomers(fetchedCustomer);
