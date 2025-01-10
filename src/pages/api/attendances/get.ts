@@ -1,15 +1,18 @@
 import { base_url } from '@/constant/common';
 
-export default async function get(): Promise<any> {
-  console.log('await');
+export default async function getSingleAttendance(id: string): Promise<any> {
   try {
-    const response = await fetch(`${base_url}/attendances`, {
+    const accessToken = localStorage.getItem('accessToken');
+
+    //query params in this
+    const response = await fetch(`${base_url}/crud/attendances/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiZW1wbG95ZWUiLCJlbXBsb3llZVJvbGUiOiJvd25lciIsImlhdCI6MTczNTI4OTgxMSwiZXhwIjoxNzM1NTQ5MDExfQ.h-5zAbbhox5bWLpFk2wCTnTPSIrgeIeeKsubImoxE78`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
+
     if (!response.ok) {
       throw new Error('Failed to fetch data from external API');
     }

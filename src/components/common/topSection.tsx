@@ -14,7 +14,7 @@ import {
 import * as Icon from '@ant-design/icons';
 import Link from 'next/link';
 
-export function TopSection({ title, subtitle, buttons, backpath }: any) {
+export function TopSection({ title, subtitle, buttons = [], backpath }: any) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {

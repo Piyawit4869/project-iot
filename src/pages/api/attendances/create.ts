@@ -1,7 +1,7 @@
 import { base_url } from '@/constant/common';
 
-export async function update(prevState: any, formData: any, id: any) {
-  const url = `${base_url}/crud/work-info/edit/${id}`;
+export async function createAttendance(prevState: any, formData: any) {
+  const url = `${base_url}/crud/attendances/create/`;
 
   const body = {
     ...formData,
@@ -10,10 +10,11 @@ export async function update(prevState: any, formData: any, id: any) {
   const accessToken = localStorage.getItem('accessToken');
 
   const data = await fetch(url, {
-    method: `PUT`,
+    method: `POST`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
+      // Authorization: `Bearer ${session.accessToken}`,
     },
     body: JSON.stringify(body),
   });

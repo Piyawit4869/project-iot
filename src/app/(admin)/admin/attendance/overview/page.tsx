@@ -1,205 +1,172 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { TopSection } from '@/components/common/topSection';
-import NextTable from '@/components/common/nextTable';
+import React from 'react';
+import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
-import { useRouter } from 'next/navigation';
-import { Input, Select, SelectItem } from '@nextui-org/react';
-import CardComponent from '@/components/common/card';
+import { TopSection } from '@/components/common/topSection';
+import { Button, Input, Link } from '@nextui-org/react';
+import pagination from '@/pages/api/attendances/pagination';
+import { TablePagination } from '@/components/common/tablePagination';
+import {
+  handleDocumentStatusTag,
+  handleStatusTag,
+  handleTypeTag,
+} from '@/components/common/common';
 
-// Define TypeScript types
-interface EmployeeData {
-  id: number;
-  order: string;
-  name: string;
-  role: string;
-  status: string;
-  in: string;
-  break: string;
-  out: string;
-  summery: string;
-  note: string;
-}
+export default function NotationsPage() {
+  const [page, setPage] = React.useState(1);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [filters, setFilters] = React.useState({ name: '', docNo: '' });
+  const [items, setItems] = React.useState([]) as any;
+  const [meta, setMeta] = React.useState({
+    totalItems: 0,
+    itemsPerPage: 10,
+    totalPages: 0,
+    currentPage: 1,
+  });
+  const [loading, setLoading] = React.useState(false);
 
-interface FilterOption {
-  label: string;
-  value: string;
-}
-
-const filterOptions: FilterOption[] = [
-  { label: 'All', value: 'all' },
-  { label: 'Frontend', value: 'Frontend' },
-  { label: 'Backend', value: 'Backend' },
-  { label: 'Mobile', value: 'Mobile' },
-];
-
-const filterstatusOptions: FilterOption[] = [
-  { label: 'All', value: 'all' },
-  { label: 'In', value: 'in' },
-  { label: 'Break', value: 'break' },
-  { label: 'Out', value: 'out' },
-];
-
-export default function AttendancePage() {
-  const router = useRouter();
-
-  const [searchValue, setSearchValue] = useState('');
-  const [selectedRole, setSelectedRole] = useState('all');
-  const [selectedstatus, setSelectedstatus] = useState('all');
-  const [employeeData, ] = useState<EmployeeData[]>([]);
-  // State to hold JSON data
-
-  const handleRowClick = (row: EmployeeData) => {
-    router.push(`attendance/${row.id}`);
+  // Fetch data from the API
+  const fetchNotations = async () => {
+    setLoading(true);
+    try {
+      const { name, docNo } = filters;
+      const { items: fetchedItems, meta: fetchedMeta } = await pagination({
+        page,
+        limit: rowsPerPage,
+        ...(name && { name }),
+        ...(docNo && { docNo }),
+      });
+      setItems(fetchedItems);
+      setMeta(fetchedMeta);
+    } catch (error) {
+      console.error('Error fetching notations:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleRowClick1 = (row: EmployeeData) => {
-    router.push(`attendance/workInfo/${row.id}`);
+  // Debounced function to handle filter changes
+  const handleFilterChange = React.useCallback(
+    debounce((updatedFilters) => {
+      setPage(1); // Reset to the first page for new filters
+      setFilters(updatedFilters);
+    }),
+    [],
+  );
+
+  // Handle input changes
+  const onInputChange = (key: keyof typeof filters, value: string) => {
+    const updatedFilters = { ...filters, [key]: value };
+    handleFilterChange(updatedFilters);
   };
 
-  // Filter function to apply multiple filters
-  const filteredData = useMemo(() => {
-    if (!Array.isArray(employeeData)) return [];
-    return employeeData.filter((item) => {
-      const matchesRole =
-        selectedRole === 'all' ||
-        item.role.toLowerCase() === selectedRole.toLowerCase();
-      const matchesstatus =
-        selectedstatus === 'all' ||
-        item.status.toLowerCase() === selectedstatus.toLowerCase();
-      const matchesSearch =
-        !searchValue ||
-        item.name.toLowerCase().includes(searchValue.toLowerCase());
+  // Fetch data whenever filters, page, or rowsPerPage change
+  React.useEffect(() => {
+    fetchNotations();
+  }, [filters, page, rowsPerPage]);
 
-      return matchesRole && matchesstatus && matchesSearch;
-    });
-  }, [searchValue, selectedRole, selectedstatus, employeeData]);
+  return (
+    <div>
+      <Scaffold
+        child={
+          <div>
+            <TopSection
+              title="ภาพรวมองค์กรทั้งหมด"
+              buttons={[
+                <Link href={'notation/template'} key={'template index button'}>
+                  <Button
+                    className="bg-accent1 text-white"
+                    size="sm"
+                    key={'create button'}
+                  >
+                    รูปแบบเอกสาร
+                  </Button>
+                </Link>,
+                <Link href={'notation/create'} key={'create button'}>
+                  <Button
+                    className="bg-accent1 text-white"
+                    size="sm"
+                    key={'create button'}
+                  >
+                    สร้างเอกสาร
+                  </Button>
+                </Link>,
+              ]}
+            />
+            <div className="bg-white shadow rounded-lg mb-4 mt-4 ">
+              <div className="grid grid-cols-1 sm:grid-cols-2">
+                <Input
+                  className="w-full p-2 text-headFont"
+                  labelPlacement="outside"
+                  size="sm"
+                  name="name"
+                  placeholder="ค้นหาชื่อ"
+                  value={filters.name}
+                  onChange={(e) => onInputChange('name', e.target.value)}
+                />
+                <Input
+                  className="w-full p-2 text-headFont"
+                  labelPlacement="outside"
+                  size="sm"
+                  name="docNo"
+                  placeholder="ค้นหาหมายเลขเอกสาร"
+                  value={filters.docNo}
+                  onChange={(e) => onInputChange('docNo', e.target.value)}
+                />
+              </div>
+            </div>
 
-  const handleSearchChange = (value: string) => {
-    setSearchValue(value);
-  };
-
-  const handleRoleChange = (value: string) => {
-    setSelectedRole(value);
-  };
-
-  const handlestatusChange = (value: string) => {
-    setSelectedstatus(value);
-  };
-
-  const renderCard = (title: string, count: number, colorClass: string) => (
-    <div className="flex-1">
-      <CardComponent
-        className={colorClass}
-        customCard
-        custom={
-          <div className="text-center">
-            <div className="text-sm text-white">{title}</div>
-            <div className="text-2xl font-bold text-white">{count} คน</div>
-            <div className="text-xs text-white mt-1">วันนี้</div>
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="spinner"></div>
+              </div>
+            ) : (
+              <TablePagination
+                initialRows={items}
+                initialMeta={meta}
+                rowsPerPage={rowsPerPage}
+                columns={columns as any}
+                onPageChange={(newPage) => setPage(newPage)}
+                onRowsPerPageChange={(newRowsPerPage) =>
+                  setRowsPerPage(newRowsPerPage)
+                }
+              />
+            )}
           </div>
         }
+        backgroundColor={''}
       />
     </div>
   );
-
-  return (
-    <Scaffold
-      child={
-        <div>
-          <TopSection title="ภาพรวมการทำงานในองค์กรวันนี้" />
-          <div className="flex space-x-4 mt-8">
-            {renderCard('เข้างาน', 10, 'bg-accent1')}
-            {renderCard('ลาป่วย/ลากิจ', 0, 'bg-accent3')}
-            {renderCard('ขาด', 0, 'bg-accent2')}
-          </div>
-          <div className="bg-white shadow rounded-2xl mb-4 mt-4">
-            <div className="flex flex-wrap gap-4">
-              <Input
-                className="flex-1 p-2 text-headFont"
-                size="lg"
-                name="name"
-                placeholder="ค้นหาชื่อพนักงาน"
-                value={searchValue}
-                onChange={(e) => handleSearchChange(e.target.value)}
-              />
-              <Select
-                className="flex-1 p-2 text-headFont"
-                size="sm"
-                name="role"
-                label="เลือกตำแหน่ง"
-                value={selectedRole}
-                onChange={(r) => handleRoleChange(r.target.value)}
-              >
-                {filterOptions.map((option) => (
-                  <SelectItem
-                    key={option.value}
-                    className="text-headFont"
-                    value={option.value}
-                  >
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </Select>
-
-              <Select
-                className="flex-1 p-2 text-headFont"
-                size="sm"
-                name="status"
-                label="เลือกสถานะ"
-                value={selectedstatus}
-                onChange={(a) => handlestatusChange(a.target.value)}
-              >
-                {filterstatusOptions.map((option) => (
-                  <SelectItem
-                    key={option.value}
-                    className="text-headFont"
-                    value={option.value}
-                  >
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </Select>
-            </div>
-          </div>
-          <div>
-            <NextTable
-              rows={filteredData}
-              columns={columns}
-              rowClickHandler={handleRowClick}
-              tabFieldName="Overview Employee Table"
-            />
-          </div>
-          <div>
-            <NextTable
-              rows={filteredData}
-              columns={columns1}
-              rowClickHandler={handleRowClick1}
-              tabFieldName="Overview Workinfo Table"
-            />
-          </div>
-        </div>
-      }
-    />
-  );
 }
 
-const columns: any = [
-  { title: 'Order', dataIndex: 'order', align: 'center' },
-  { title: 'Full Name', dataIndex: 'name', align: 'left' },
-  { title: 'Role', dataIndex: 'role', align: 'center' },
-  { title: 'Status', dataIndex: 'status', align: 'center' },
-  { title: 'In', dataIndex: 'in', align: 'center' },
-  { title: 'Break', dataIndex: 'break', align: 'center' },
-  { title: 'Out', dataIndex: 'out', align: 'center' },
-  { title: 'Summary', dataIndex: 'summery', align: 'center' },
-  { title: 'Note', dataIndex: 'note', align: 'center' },
-];
-
-const columns1: any = [
-  { title: 'status', dataIndex: 'order', align: 'center' },
-  { title: 'Full Name', dataIndex: 'name', align: 'left' },
-  { title: 'WorkInfo', dataIndex: 'work', align: 'center' },
-  { title: 'Note', dataIndex: 'note', align: 'center' },
+const columns = [
+  {
+    title: 'รหัสเอกสาร',
+    dataIndex: 'docNo',
+    link: '/admin/notation',
+  },
+  {
+    title: 'ประเภทเอกสาร',
+    dataIndex: 'type',
+    align: 'center',
+    render: (value: string) => {
+      return handleTypeTag(value);
+    },
+  },
+  {
+    title: 'การดำเนินการ',
+    dataIndex: 'status',
+    render: (value: string) => {
+      return handleStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
 ];
