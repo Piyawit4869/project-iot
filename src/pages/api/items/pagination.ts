@@ -16,7 +16,7 @@ interface FetchTemplatesResponse {
   };
 }
 
-export default async function pagination({
+export default async function paginationItems({
   page,
   limit,
   name,

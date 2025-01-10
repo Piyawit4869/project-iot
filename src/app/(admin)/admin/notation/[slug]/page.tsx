@@ -25,11 +25,12 @@ import { changeStatusNotation } from '@/pages/api/notations/changeStatus';
 import { toast } from 'sonner';
 import pagination from '@/pages/api/templates/pagination';
 import { handleDocumentStatusTag } from '@/components/common/common';
+import paginationItems from '@/pages/api/items/pagination';
+import paginationCustomers from '@/pages/api/customer/pagination';
 
 export default function NotationSinglePage() {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   const [zoomLevel, setZoomLevel] = React.useState(100); // Default zoom level (100%)
-  const [data, setData] = React.useState() as any;
   const params = useParams<{ slug?: string }>();
   const [loading, setLoading] = React.useState(false);
   const [errors, setErrors] = React.useState({}) as any;
@@ -37,6 +38,8 @@ export default function NotationSinglePage() {
   const router = useRouter();
   const [openEdit, setOpenEdit] = React.useState(false);
   const [templates, setTemplates] = React.useState([]) as any;
+  const [itemServices, setItemServices] = React.useState([]) as any;
+  const [customers, setCustomers] = React.useState([]) as any;
   const [templateSelected, setTemplateSelected] = React.useState({}) as any;
   const [processedHtml, setProcessedHtml] = React.useState<string>('');
   const htmlTemplate = templateSelected.templateNotation;
@@ -50,6 +53,37 @@ export default function NotationSinglePage() {
       const { data } = await getTemplate(selectedId);
       setTemplateSelected(data);
     }
+  };
+
+  const handleCustomer = (e: any) => {
+    const selectedCustomerId = e.target.value;
+
+    const customer = customers.find(
+      (item: any) => item.id === selectedCustomerId,
+    );
+
+    setFormData((prevData: any) => ({
+      ...prevData,
+      customer,
+    }));
+  };
+
+  const handleMultipleSelect = (selectedKeys: Set<string>) => {
+    const selectedItems = Array.from(selectedKeys).map((key) => {
+      const item = itemServices.find((item: any) => item.id === key);
+      return {
+        id: item?.id || '',
+        name: item?.name || '',
+        quantity: item?.quantity || 0,
+        unitPrice: item?.unitPrice || 0,
+        total: item?.total || 0,
+      };
+    });
+
+    setFormData((prevData: any) => ({
+      ...prevData,
+      itemsId: selectedItems, // Store as array of objects
+    }));
   };
 
   React.useEffect(() => {
@@ -87,13 +121,42 @@ export default function NotationSinglePage() {
     const fetchData = async () => {
       const { data } = await get(params.slug as string);
 
-      setData(data);
-      setFormData(data);
+      const { items: fetchedItems } = await paginationItems({
+        page: 1,
+        limit: 20,
+      });
+
+      const { items: fetchedCustomer } = await paginationCustomers({
+        page: 1,
+        limit: 20,
+      });
+
+      const selectedItems = data?.itemsId.map((key: any) => {
+        const item = fetchedItems.find((item: any) => item.id === key);
+        return {
+          id: item?.id || '',
+          name: item?.name || '',
+          quantity: item?.quantity || 0,
+          unitPrice: item?.unitPrice || 0,
+          total: item?.total || 0,
+        };
+      });
+
+      setItemServices(fetchedItems);
+      setCustomers(fetchedCustomer);
+
+      setFormData({
+        ...data,
+        itemsId: selectedItems, // Store as array of objects
+      });
       setLoading(false);
     };
 
     fetchData();
   }, [params]);
+
+  console.log({ formData });
+  console.log({ itemServices });
 
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
@@ -140,14 +203,14 @@ export default function NotationSinglePage() {
     setZoomLevel((prevZoom) => Math.max(prevZoom - 10, 50)); // Min zoom 50%
   };
 
-  const handleAddItem = () => {
-    setItems([...items, { description: '', amount: '' }]);
-  };
+  // const handleAddItem = () => {
+  //   setItems([...items, { description: '', amount: '' }]);
+  // };
 
-  const handleRemoveItem = (index: number) => {
-    const updatedItems = items.filter((_, i) => i !== index);
-    setItems(updatedItems);
-  };
+  // const handleRemoveItem = (index: number) => {
+  //   const updatedItems = items.filter((_, i) => i !== index);
+  //   setItems(updatedItems);
+  // };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -170,11 +233,11 @@ export default function NotationSinglePage() {
 
     try {
       const payload = {
-        ...data,
         ...formData,
+        itemsId: formData.itemsId.map((item: any) => item.id),
       };
 
-      delete payload.data;
+      delete payload.customerId;
 
       if (!payload.active) {
         payload.active = false;
@@ -341,7 +404,7 @@ export default function NotationSinglePage() {
     return openEdit ? (
       <Button
         className={`bg-${
-          data?.docStatus === 'canceled'
+          formData?.docStatus === 'canceled'
             ? 'gray-400 cursor-not-allowed'
             : 'accent1'
         } text-white text-xs`}
@@ -349,14 +412,14 @@ export default function NotationSinglePage() {
         size="sm"
         type="submit"
         form="notation"
-        disabled={data?.docStatus === 'canceled'}
+        disabled={formData?.docStatus === 'canceled'}
       >
         เสร็จสิ้น
       </Button>
     ) : (
       <Button
         className={`bg-${
-          data?.docStatus === 'canceled'
+          formData?.docStatus === 'canceled'
             ? 'gray-400 cursor-not-allowed'
             : 'accent3'
         } text-white text-xs `}
@@ -365,7 +428,7 @@ export default function NotationSinglePage() {
         onClick={() => {
           setOpenEdit(true);
         }}
-        disabled={data?.docStatus === 'canceled'}
+        disabled={formData?.docStatus === 'canceled'}
       >
         แก้ไข
       </Button>
@@ -390,10 +453,10 @@ export default function NotationSinglePage() {
         ) : (
           <div>
             <TopSection
-              title={data?.docNo}
+              title={formData?.docNo}
               backpath={'/admin/notation'}
               buttons={[
-                data?.docStatus !== 'canceled' ? (
+                formData?.docStatus !== 'canceled' ? (
                   <Button
                     className=" text-white text-xs"
                     key={'cancel button'}
@@ -407,7 +470,7 @@ export default function NotationSinglePage() {
                 ),
 
                 handleEditButton(openEdit),
-                data?.docStatus === 'draft' ? (
+                formData?.docStatus === 'draft' ? (
                   <Button
                     className={`bg-sky-400 text-white text-xs`}
                     key={'pending button'}
@@ -419,7 +482,7 @@ export default function NotationSinglePage() {
                 ) : (
                   <div key={'empty pendding'}></div>
                 ),
-                data?.docStatus === 'pending' ? (
+                formData?.docStatus === 'pending' ? (
                   <Button
                     className={`bg-sky-600 text-white text-xs`}
                     key={'waiting button'}
@@ -433,12 +496,12 @@ export default function NotationSinglePage() {
                 ),
                 <Button
                   className={`bg-${
-                    data?.docStatus !== 'waiting_for_review'
+                    formData?.docStatus !== 'waiting_for_review'
                       ? 'gray-400 cursor-not-allowed'
                       : 'accent2'
                   } text-white text-xs`}
                   key={'reject button'}
-                  disabled={data?.docStatus !== 'waiting_for_review'}
+                  disabled={formData?.docStatus !== 'waiting_for_review'}
                   onClick={onRejected}
                   size="sm"
                 >
@@ -446,12 +509,12 @@ export default function NotationSinglePage() {
                 </Button>,
                 <Button
                   className={`bg-${
-                    data?.docStatus !== 'waiting_for_review'
+                    formData?.docStatus !== 'waiting_for_review'
                       ? 'gray-400 cursor-not-allowed'
                       : 'accent1'
                   } text-white text-xs`}
                   key={'approve button'}
-                  disabled={data?.docStatus !== 'waiting_for_review'}
+                  disabled={formData?.docStatus !== 'waiting_for_review'}
                   onClick={onApproved}
                   size="sm"
                 >
@@ -459,13 +522,13 @@ export default function NotationSinglePage() {
                 </Button>,
                 <Button
                   className={`bg-${
-                    data?.docStatus === 'canceled'
+                    formData?.docStatus === 'canceled'
                       ? 'gray-400 cursor-not-allowed'
                       : 'accent2'
                   } text-white text-xs`}
                   key={'delete button'}
                   onClick={onDelete}
-                  disabled={data?.docStatus === 'canceled'}
+                  disabled={formData?.docStatus === 'canceled'}
                   size="sm"
                 >
                   <Icon.DeleteFilled />
@@ -603,14 +666,24 @@ export default function NotationSinglePage() {
                     </div>
                     <div className="flex gap-4">
                       <Select
-                        size="sm"
                         name="customer"
+                        size="sm"
                         label="เลือกลูกค้า"
+                        onChange={handleCustomer}
+                        defaultSelectedKeys={[formData.customerId]}
                         isDisabled={!openEdit}
                       >
-                        {customer.map((item) => (
-                          <SelectItem key={item.value} value={item.value}>
-                            {item.label}
+                        {customers.map((item: any) => (
+                          <SelectItem key={item.id} value={item.id}>
+                            {`${
+                              item.firstName
+                                ? `คุณ ${item.firstName}`
+                                : 'ไม่มีชื่อ'
+                            }  ${
+                              item.companyName
+                                ? `จาก ${item.companyName}`
+                                : 'ไม่มีชื่อ'
+                            }`}
                           </SelectItem>
                         ))}
                       </Select>
@@ -628,6 +701,31 @@ export default function NotationSinglePage() {
                       </Select>
                     </div>
                     <h1 className="text-base font-bold text-headFont mt-6">
+                      รายการ
+                    </h1>
+                    <Select
+                      size="sm"
+                      name="itemsId"
+                      label="เลือกรายการ"
+                      className="flex-1"
+                      selectionMode="multiple"
+                      isDisabled={!openEdit}
+                      onSelectionChange={(keys: any) =>
+                        handleMultipleSelect(keys)
+                      }
+                      defaultSelectedKeys={
+                        formData?.itemsId
+                          ? formData.itemsId.map((item: any) => item.id)
+                          : []
+                      }
+                    >
+                      {itemServices.map((item: any) => (
+                        <SelectItem key={item.id} value={item.id}>
+                          {item.name}
+                        </SelectItem>
+                      ))}
+                    </Select>
+                    {/* <h1 className="text-base font-bold text-headFont mt-6">
                       รายการ
                     </h1>
                     {items.map((_, index) => (
@@ -678,7 +776,7 @@ export default function NotationSinglePage() {
                       </Button>
                     ) : (
                       <></>
-                    )}
+                    )} */}
                   </Form>
                 </div>
 
@@ -689,7 +787,7 @@ export default function NotationSinglePage() {
                       ข้อมูลเอกสาร
                     </h1>
                     {/* Dynamic Status Tag */}
-                    {handleDocumentStatusTag(data?.docStatus)}
+                    {handleDocumentStatusTag(formData?.docStatus)}
                     {/* <div
                         className={`px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700 border border-gray`}
                       >
@@ -771,14 +869,4 @@ const address = [
     label: 'โกดัง',
     value: '2',
   },
-];
-
-const customer = [
-  { label: 'ลูกค้าคนที่ 1', value: '1' },
-  { label: 'ลูกค้าคนที่ 2', value: '2' },
-];
-
-const selectItem = [
-  { label: 'รายการที่ 1', value: '1' },
-  { label: 'รายการที่ 2', value: '2' },
 ];

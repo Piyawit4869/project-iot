@@ -19,7 +19,7 @@ interface FetchTemplatesResponse {
   };
 }
 
-export default async function pagination({
+export default async function paginationCustomers({
   page,
   limit,
   firstName,
