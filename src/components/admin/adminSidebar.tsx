@@ -66,7 +66,7 @@ export function AdminSideBar() {
       {
         name: 'กิจกรรมการทำงาน',
         key: 'attendance',
-        icon: <Icon.UserOutlined />,
+        icon: <Icon.TeamOutlined />,
         subMenu: [
           {
             name: 'ภาพรวม',
@@ -74,19 +74,24 @@ export function AdminSideBar() {
             icon: <Icon.ClusterOutlined />,
           },
           {
+            name: 'การเข้าทำงาน',
+            path: '/admin/attendance/work-infomation',
+            icon: <Icon.AuditOutlined />,
+          },
+          {
+            name: 'การเข้าใช้งาน',
+            path: '/admin/attendance/whitelist',
+            icon: <Icon.FileDoneOutlined />
+          },
+          // {
+          //   name: 'การลางาน',
+          //   path: '/admin/attendance/approval',
+          //   icon: <Icon.FileExclamationOutlined />
+          // },
+          {
             name: 'การตั้งค่า',
             path: '/admin/attendance/config_attendance',
             icon: <Icon.SettingOutlined />,
-          },
-          {
-            name: 'ไวท์ลิสต์',
-            path: '/admin/attendance/whitelist',
-            icon: <Icon.ScheduleOutlined />,
-          },
-          {
-            name: 'การลางาน',
-            path: '/admin/attendance/approval',
-            icon: <Icon.ScheduleOutlined />,
           },
         ],
       },

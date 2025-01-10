@@ -13,10 +13,12 @@ import {
   Textarea,
 } from '@nextui-org/react';
 import createWorkInfos from '@/pages/api/workinfos/create'; //API
+import { getUserWorkinfo } from '@/pages/api/workinfos/get'; //API
 import CardComponent from '@/components/common/card';
 import { useRouter } from 'next/navigation';
 import * as Icon from '@ant-design/icons';
 import React from 'react';
+import { data } from 'framer-motion/client';
 
 export default function WorkinfoCreatePage() {
   const [errors, setErrors] = React.useState({}) as any;
@@ -24,13 +26,25 @@ export default function WorkinfoCreatePage() {
   const [, setLoading] = React.useState(false);
   const router = useRouter();
 
+  const priority = [
+    { value: 'low', label: 'Low ' },
+    { value: 'medium', label: 'Medium ' },
+    { value: 'high', label: 'High ' },
+  ]; // กำหนดค่าให้กับ priority
+  console.log(priority);
+
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
+
     setFormData((prevData: any) => ({
       ...prevData,
       [name]:
         type === 'checkbox'
           ? checked
+          : name === 'userIds'
+          ? value.split(',').map((id: string) => id.trim()) // Ensure it's an array of strings
+          : ['startCredit', 'totalCredit', 'totalWorkHours', 'limitTimePerDays'].includes(name)
+          ? parseFloat(value) || 0
           : name === 'startDate' && value instanceof Date
           ? value.toISOString()
           : value,
@@ -46,7 +60,7 @@ export default function WorkinfoCreatePage() {
       'prefix',
       'startDate',
       'dueDate',
-      'limitTimePerDay',
+      'limitTimePerDays',
       'inspector',
       'startCredit',
       'payDay',
@@ -54,17 +68,17 @@ export default function WorkinfoCreatePage() {
     const newErrors: any = {};
 
     requiredFields.forEach((field) => {
-      if (!formData[field] || formData[field].trim() === '') {
+      const value = formData[field];
+      if (
+        value === undefined ||
+        value === null ||
+        (typeof value === 'string' && value.trim() === '')
+      ) {
         newErrors[field] = `Field ${field} is required.`;
       }
     });
 
-    // ตรวจสอบว่า startCredit, totalCredit, totalWorkHours เป็นตัวเลข
-    ['startCredit', 'totalCredit', 'totalWorkHours'].forEach((field) => {
-      if (isNaN(formData[field])) {
-        newErrors[field] = `${field} must be a valid number.`;
-      }
-    });
+    
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -74,37 +88,28 @@ export default function WorkinfoCreatePage() {
 
     try {
       const payload = {
-        active: formData.active,
-        isCurrent: formData.isCurrent,
-        prefix: formData.prefix,
-        name: formData.name,
-        descriptions: formData.descriptions,
-        priority: formData.priority,
-        startDate: formData.startDate,
-        dueDate: formData.dueDate,
-        limitTimePerDay: formData.limitTimePerDay.toNumber(),
-        inspector: formData.inspector,
-        startCredit: formData.startCredit.toNumber(),
-        totalCredit: formData.totalCredit.toNumber(),
-        totalWorkHours: formData.totalWorkHours.toNumber(),
-        payDay: formData.payDay,
-        note: formData.note,
-
         ...formData,
       };
-
-      payload.active = !!payload.active; // Simplified active check
+      console.log(formData.items);
+      console.log(payload);
+      payload.active = !!payload.active;
 
       const { data } = await createWorkInfos({}, payload);
       console.log(payload);
-      router.push(`/admin/attendance/workinfomation/${data.id}`);
+      console.log(data)
+      router.push(`/admin/attendance/work-infomation/${data[0].id}`);
     } catch (err: any) {
-      console.error('Send FormData error:', err);
+      console.error('API Error:', err);
       setErrors({ general: err.message || 'An unexpected error occurred.' });
     } finally {
       setLoading(false);
     }
+
+    
   };
+  console.log()
+  console.log(formData)
+
 
   return (
     <Scaffold
@@ -112,7 +117,7 @@ export default function WorkinfoCreatePage() {
         <div>
           <TopSection
             title="การสร้างข้อมูลการทำงาน"
-            backpath={'/admin/attendance/Workinfo'}
+            backpath={'/admin/attendance/work-infomation'}
             buttons={[
               <div className="mx-2.5" key="save-button">
                 <a className="p-2">
@@ -130,7 +135,7 @@ export default function WorkinfoCreatePage() {
                 </a>
 
                 <a
-                  href={'/admin/attendance/Workinfo/'}
+                  href={'/admin/attendance/work-infomation/'}
                   key={'cancel-Workinfo-button'}
                 >
                   <Button
@@ -167,7 +172,7 @@ export default function WorkinfoCreatePage() {
                           {/* Workinfo Section */}
                           {/* GET API FOR SHOW DISPLAY */}
                           <div className="flex gap-4 mt-6">
-                            <div className="flex-1 flex items-center gap-4">
+                            <div className="flex-1 flex items-center gap-4 pt-6">
                               <span className="text-headFont text-xs">
                                 สถานะ
                               </span>
@@ -179,7 +184,7 @@ export default function WorkinfoCreatePage() {
                                 defaultChecked
                               />
                             </div>
-                            <div className="flex-1 flex items-center gap-4">
+                            <div className="flex-1 flex items-center gap-4 pt-6">
                               <span className="text-headFont text-xs">
                                 เป็นปัจจุบัน
                               </span>
@@ -215,7 +220,7 @@ export default function WorkinfoCreatePage() {
                             />
                           </div>
 
-                          <div className="flex-1 flex items-center gap-4">
+                          <div className="flex-1 flex items-center gap-4 pt-6">
                             <Input
                               className="flex-1"
                               size="lg"
@@ -228,13 +233,13 @@ export default function WorkinfoCreatePage() {
                             <Select
                               size="sm"
                               className="flex-1"
-                              name="type"
+                              name="priority"
                               label="priority"
                               onChange={handleChange}
                               isRequired
                               errorMessage={'priority'}
                             >
-                              {types.map((item) => (
+                              {priority.map((item) => (
                                 <SelectItem key={item.value} value={item.value}>
                                   {item.label}
                                 </SelectItem>
@@ -242,7 +247,7 @@ export default function WorkinfoCreatePage() {
                             </Select>
                           </div>
 
-                          <div className="flex-1 flex items-center gap-4">
+                          <div className="flex-1 flex items-center gap-4 pt-6">
                             <DatePicker
                               size="sm"
                               className="flex-1"
@@ -301,13 +306,14 @@ export default function WorkinfoCreatePage() {
                             />
                           </div>
 
-                          <div className="flex-1 flex items-center gap-4">
+                          <div className="flex-1 flex items-center gap-4 pt-6">
                             <Input
                               className="flex-1"
                               size="lg"
                               label="limitTimePerDay"
                               labelPlacement="outside"
                               name="limitTimePerDay"
+                              type="number"
                               placeholder="เวลาที่กำหนดต่อวัน"
                               onChange={handleChange}
                             />
@@ -321,13 +327,14 @@ export default function WorkinfoCreatePage() {
                               onChange={handleChange}
                             />
                           </div>
-                          <div className="flex-1 flex items-center gap-4">
+                          <div className="flex-1 flex items-center gap-4 pt-6">
                             <Input
                               className="flex-1"
                               size="lg"
                               label="startCredit"
                               labelPlacement="outside"
                               name="startCredit"
+                              type="number"
                               placeholder="เครดิตเริ่มต้น"
                               onChange={handleChange}
                             />
@@ -337,18 +344,20 @@ export default function WorkinfoCreatePage() {
                               label="totalCredit"
                               labelPlacement="outside"
                               name="totalCredit"
+                              type="number"
                               placeholder="เครดิสรวม"
                               onChange={handleChange}
                             />
                           </div>
 
-                          <div className="flex-1 flex items-center gap-4">
+                          <div className="flex-1 flex items-center gap-4 pt-6">
                             <Input
                               className="flex-1"
                               size="lg"
                               label="totalWorkHours"
                               labelPlacement="outside"
                               name="totalWorkHours"
+                              type="number"
                               placeholder="รวมเวลาทำงาน"
                               onChange={handleChange}
                             />
@@ -381,14 +390,25 @@ export default function WorkinfoCreatePage() {
                               }}
                             />
                           </div>
-                          <div className="flex-1 flex items-center gap-4">
+                          <div className="flex-1 flex items-center gap-4 pt-6">
                             <Textarea
-                              className="flex-1 pt-6"
+                              className="flex-1"
                               size="lg"
                               label="note"
                               labelPlacement="outside"
                               name="note"
                               placeholder="เหตุ"
+                              onChange={handleChange}
+                            />
+                          </div>
+                          <div className="flex-1 flex items-center gap-4 pt-6">
+                            <Input
+                              className="flex-1 "
+                              size="lg"
+                              label="userIds"
+                              labelPlacement="outside"
+                              name="userIds"
+                              placeholder="userId"
                               onChange={handleChange}
                             />
                           </div>
@@ -405,26 +425,3 @@ export default function WorkinfoCreatePage() {
     />
   );
 }
-
-const types = [
-  { label: 'ใบแจ้งหนี้', value: 'invoice' },
-  { label: 'ใบเสนอราคา', value: 'quotation' },
-  { label: 'ใบการจัดส่งคำสั่งซื้อ', value: 'delivery_order' },
-  { label: 'ใบสั่งซื้อ', value: 'purchase_order' },
-  { label: 'ใบเสร็จรับเงิน', value: 'receipt' },
-];
-
-const address = [
-  { label: 'ที่อยู่หลัก', value: '1' },
-  { label: 'โกดัง', value: '2' },
-];
-
-const customer = [
-  { label: 'ลูกค้าคนที่ 1', value: '1' },
-  { label: 'ลูกค้าคนที่ 2', value: '2' },
-];
-
-const selectItem = [
-  { label: 'รายการที่ 1', value: '1' },
-  { label: 'รายการที่ 2', value: '2' },
-];

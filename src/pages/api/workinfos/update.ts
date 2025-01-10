@@ -1,6 +1,6 @@
 import { base_url } from '@/constant/common';
 
-export async function updateWorkInfos(prevState: any, formData: any, id: any) {
+export async function update(prevState: any, formData: any, id: any) {
   const url = `${base_url}/crud/work-info/edit/${id}`;
 
   const body = {

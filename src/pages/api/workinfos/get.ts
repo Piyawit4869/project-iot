@@ -1,6 +1,6 @@
 import { base_url } from '@/constant/common';
 
-export default async function getSingleWorkinfo(id: string): Promise<any> {
+export default async function getSingle(id: string): Promise<any> {
   try {
     const accessToken = localStorage.getItem('accessToken');
 
@@ -26,8 +26,24 @@ export default async function getSingleWorkinfo(id: string): Promise<any> {
 } 
 
 
-export async function getWorkinfo() {
+export async function getAll() {
   const url = `${base_url}/crud/work-info/`;
+  const accessToken = localStorage.getItem('accessToken');
+
+  const data = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+      // Authorization: `Bearer ${session.accessToken}`,
+    },
+  });
+
+  return await data.json();
+}
+
+export async function getUserWorkinfo() {
+  const url = `${base_url}/crud/users/`;
   const accessToken = localStorage.getItem('accessToken');
 
   const data = await fetch(url, {
