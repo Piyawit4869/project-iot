@@ -23,59 +23,80 @@ import {
   Select,
   SelectItem,
   TimeInput,
+  FormContext,
 } from '@nextui-org/react';
-import React, { useState } from 'react';
+import React from 'react';
 import { Tabs, Tab } from '@nextui-org/react';
+import get from '@/pages/api/setting/get';
 import { updatedetails } from '@/pages/api/setting/update-details';
 import { toast } from 'sonner';
+import { log } from 'console';
+import { update } from 'lodash';
 
 export default function OraganizationPage() {
   const [loading, setLoading] = React.useState(false);
   const [errors, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
+  const [data, setData] = React.useState() as any;
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // Prevent the form from submitting to the URL
+  // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault(); // Prevent the form from submitting to the URL
 
-    const formData = new FormData(e.currentTarget);
-    // Convert formData to an object
-    const data = Object.fromEntries(formData.entries());
-    console.log(data); // Log the form data for debugging
+  //   const formData = new FormData(e.currentTarget);
+  //   // Convert formData to an object
+  //   const data = Object.fromEntries(formData.entries());
+  //   console.log(data); // Log the form data for debugging
+  // };
+
+  React.useEffect(() => {
+    const getAddress = async () => {
+      const { data } = await get();
+
+      setData(data);
+      setLoading(false);
+    };
+
+    getAddress();
+  }, []);
+
+  const handleUpadteForm = (updateData: any) => {
+    setFormData(updateData);
   };
 
-  // const onSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setLoading(true);
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
-  //   try {
-  //     const payload = {
-  //       ...formData,
-  //     };
+    try {
+      const payload = {
+        ...formData,
+      };
 
-  //     delete payload.data;
+      delete payload.data;
 
-  //     const res = await updatedetails({}, payload);
+      // const res = await updatedetails({}, payload, payload.id);
+      console.log('ข้อมูลที่จะส่ง', payload);
 
-  //     toast.success('📝 แก้ไขเอกสารสำเร็จ!', {
-  //       duration: 3000,
-  //       position: 'bottom-left',
-  //       style: { fontFamily: 'var(--font-ibm-sans)' },
-  //     });
+      toast.success('📝 แก้ไขเอกสารสำเร็จ!', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
 
-  //     // router.push(`/admin/notation/${res.data.id}`);
-  //   } catch (err: any) {
-  //     toast.error('❌ ไม่สามารถแก้ไขเอกสารได้', {
-  //       duration: 3000,
-  //       position: 'bottom-left',
-  //       style: { fontFamily: 'var(--font-ibm-sans)' },
-  //     });
+      // router.push(`/admin/notation/${res.data.id}`);
+    } catch (err: any) {
+      toast.error('❌ ไม่สามารถแก้ไขเอกสารได้', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
 
-  //     console.error('Send FormData error:', err);
-  //     setErrors({ general: err.message || 'An unexpected error occurred.' });
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      console.error('Send FormData error:', err);
+      setErrors({ general: err.message || 'An unexpected error occurred.' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   // Add Setting Time
@@ -126,7 +147,7 @@ export default function OraganizationPage() {
     onOpenChange: onChangeSetting3,
   } = useDisclosure();
 
-  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [selectedItem, setSelectedItem] = React.useState<any>(null);
 
   const handleRowAddress = (row: any) => {
     setSelectedItem(row);
@@ -521,7 +542,7 @@ export default function OraganizationPage() {
                               )}
                             </ModalContent>
                           </Modal>
-                          <InputSystem />
+                          <InputSystem data={data} />
                         </Tab>
 
                         {/* Setting Address */}
@@ -1042,7 +1063,10 @@ export default function OraganizationPage() {
                                 </ModalContent>
                               </Modal>
                             </div>
-                            <InputAddress />
+                            <InputAddress
+                              data={data}
+                              onChange={handleUpadteForm}
+                            />
                           </div>
                         </Tab>
 
@@ -1051,7 +1075,10 @@ export default function OraganizationPage() {
                           <h1 className="text-2xl font-bold text-headFont">
                             ข้อมูลองค์กร
                           </h1>
-                          <Inputorganization />
+                          <Inputorganization
+                            data={data}
+                            onChange={handleUpadteForm}
+                          />
                         </Tab>
                       </Tabs>
                     </div>

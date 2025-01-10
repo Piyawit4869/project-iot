@@ -39,19 +39,7 @@ export default function UserSinglePage() {
   const [roleData, setRoleData] = React.useState({}) as any;
   const router = useRouter();
 
-  // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault(); // Prevent the form from submitting to the URL
-  //   const formData = new FormData(e.currentTarget);
-
-  //   // Convert formData to an object]h
-  //   const data = Object.fromEntries(formData.entries());
-  //   console.log(data); // Log the form data for debugging
-  // };
-
   const params = useParams<{ slug: string }>();
-  // const [birthDate, setBirthDate] = React.useState<DateValue | null>(
-  //   parseAbsoluteToLocal(usersSingle?.profile?.birthDate),
-  // );
 
   React.useEffect(() => {
     if (!params || !params.slug) {
@@ -294,7 +282,7 @@ export default function UserSinglePage() {
                               name="position"
                               placeholder="กรุณาเลือกตำแหน่ง"
                               label="ตำแหน่ง"
-                              // selectedKeys={[roleData.name]}
+                              selectedKeys={[roleData.name]}
                               labelPlacement={'outside'}
                               onChange={handleChange}
                             >
