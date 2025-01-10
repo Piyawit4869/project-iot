@@ -32,12 +32,15 @@ import { updatedetails } from '@/pages/api/setting/update-details';
 import { toast } from 'sonner';
 import { log } from 'console';
 import { update } from 'lodash';
+import { organizationLoader } from '@/app/api/organization';
 
 export default function OraganizationPage() {
   const [loading, setLoading] = React.useState(false);
   const [errors, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [data, setData] = React.useState() as any;
+  const [organizationData, setOrganizationData] = React.useState() as any;
+  const [systemData, setSystemData] = React.useState() as any;
 
   // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault(); // Prevent the form from submitting to the URL
@@ -63,6 +66,14 @@ export default function OraganizationPage() {
     setFormData(updateData);
   };
 
+  const handleOrganization = (updatedData: any) => {
+    setOrganizationData(updatedData);
+  };
+
+  const handleSystem = (updatedData: any) => {
+    setSystemData(updatedData);
+  };
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -70,14 +81,19 @@ export default function OraganizationPage() {
     try {
       const payload = {
         ...formData,
+        ...data,
+        organization: {
+          ...organizationData,
+        },
       };
 
       delete payload.data;
 
-      // const res = await updatedetails({}, payload, payload.id);
-      console.log('ข้อมูลที่จะส่ง', payload);
+      const res = await updatedetails({}, payload, payload.id);
+      console.log('ข้อมูลที่จะส่ง', res);
+      console.log('ข้อมูลที่ ID จะส่ง', payload.id);
 
-      toast.success('📝 แก้ไขเอกสารสำเร็จ!', {
+      toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
         duration: 3000,
         position: 'bottom-left',
         style: { fontFamily: 'var(--font-ibm-sans)' },
@@ -85,7 +101,7 @@ export default function OraganizationPage() {
 
       // router.push(`/admin/notation/${res.data.id}`);
     } catch (err: any) {
-      toast.error('❌ ไม่สามารถแก้ไขเอกสารได้', {
+      toast.error('❌ ไม่สามารถแก้ไขข้อมูลได้', {
         duration: 3000,
         position: 'bottom-left',
         style: { fontFamily: 'var(--font-ibm-sans)' },
@@ -169,7 +185,7 @@ export default function OraganizationPage() {
               <Link href={''} key={'organization'}>
                 <Button
                   className="bg-accent1 text-white"
-                  key={'organization'}
+                  key={'Edit organization'}
                   type="submit"
                   form="organization"
                 >
@@ -542,7 +558,7 @@ export default function OraganizationPage() {
                               )}
                             </ModalContent>
                           </Modal>
-                          <InputSystem data={data} />
+                          <InputSystem data={data} onChange={handleSystem} />
                         </Tab>
 
                         {/* Setting Address */}
@@ -1077,7 +1093,7 @@ export default function OraganizationPage() {
                           </h1>
                           <Inputorganization
                             data={data}
-                            onChange={handleUpadteForm}
+                            onChange={handleOrganization}
                           />
                         </Tab>
                       </Tabs>

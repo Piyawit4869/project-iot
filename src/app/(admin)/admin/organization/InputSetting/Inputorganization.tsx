@@ -16,6 +16,7 @@ import {
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 import { parseAbsoluteToLocal, parseDate } from '@internationalized/date';
+import { cookies } from 'next/headers';
 
 interface Inputorganization {
   data: any;
@@ -32,7 +33,7 @@ export const Inputorganization = ({
 
   React.useEffect(() => {
     if (data) {
-      setFormData(data);
+      setFormData(data.organization);
     }
   }, [data]);
 
