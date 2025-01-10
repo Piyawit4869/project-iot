@@ -7,11 +7,22 @@ import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
 import pagination from '@/pages/api/attendances/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
-import {
-  handleDocumentStatusTag,
-  handleStatusTag,
-  handleTypeTag,
-} from '@/components/common/common';
+import { formatDate } from '@/utils/enums/date';
+
+interface AttendanceItem {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  status: string;
+  action: string;
+  active: boolean;
+  currentDate: string;
+  stamp: string;
+  reasons: string;
+  note: string;
+  workInfoId: string;
+}
 
 export default function NotationsPage() {
   const [page, setPage] = React.useState(1);
@@ -37,7 +48,13 @@ export default function NotationsPage() {
         ...(name && { name }),
         ...(docNo && { docNo }),
       });
-      setItems(fetchedItems);
+      setItems(
+        fetchedItems.map((item: AttendanceItem) => ({
+          ...item,
+          stampDate: formatDate(item.stamp).date,
+          stampTime: formatDate(item.stamp).time,
+        })),
+      );
       setMeta(fetchedMeta);
     } catch (error) {
       console.error('Error fetching notations:', error);
@@ -74,16 +91,7 @@ export default function NotationsPage() {
             <TopSection
               title="ภาพรวมองค์กรทั้งหมด"
               buttons={[
-                <Link href={'notation/template'} key={'template index button'}>
-                  <Button
-                    className="bg-accent1 text-white"
-                    size="sm"
-                    key={'create button'}
-                  >
-                    รูปแบบเอกสาร
-                  </Button>
-                </Link>,
-                <Link href={'notation/create'} key={'create button'}>
+                <Link href={'overview/create'} key={'create button'}>
                   <Button
                     className="bg-accent1 text-white"
                     size="sm"
@@ -143,30 +151,20 @@ export default function NotationsPage() {
 
 const columns = [
   {
-    title: 'รหัสเอกสาร',
-    dataIndex: 'docNo',
-    link: '/admin/notation',
-  },
-  {
-    title: 'ประเภทเอกสาร',
-    dataIndex: 'type',
-    align: 'center',
-    render: (value: string) => {
-      return handleTypeTag(value);
-    },
-  },
-  {
-    title: 'การดำเนินการ',
+    title: 'สถานะ',
     dataIndex: 'status',
-    render: (value: string) => {
-      return handleStatusTag(value);
-    },
+    Link: '/admin/attendance/overview',
   },
   {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
+    title: 'แอคชั่น',
+    dataIndex: 'action',
+  },
+  {
+    title: 'บันทึกเมื่อเวลา',
+    dataIndex: 'stampTime',
+  },
+  {
+    title: 'บันทึกเมื่อวันที่',
+    dataIndex: 'stampDate',
   },
 ];

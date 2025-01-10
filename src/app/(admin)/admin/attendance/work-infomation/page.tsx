@@ -14,8 +14,7 @@ import {
 import pagination from '@/pages/api/workinfos/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date'; // <-- Import formatDate here
-import * as Icon from '@ant-design/icons';
-import { Render } from '@measured/puck';
+// import * as Icon from '@ant-design/icons';
 
 interface FilterState {
   name: string;  // Changed from 'ip' to 'name'
@@ -122,15 +121,15 @@ export default function WorkInfoPage() {
     [],
   );
 
-  const onInputChange = (key: keyof typeof filters, value: string) => {
-    const updatedFilters = { ...filters, [key]: value };
-    handleFilterChange(updatedFilters);
-  };
+  // const onInputChange = (key: keyof typeof filters, value: string) => {
+  //   const updatedFilters = { ...filters, [key]: value };
+  //   handleFilterChange(updatedFilters);
+  // };
 
-  const handleStatusChange = (status: string) => {
-    const updatedFilters = { ...filters, status };
-    handleFilterChange(updatedFilters); // This will trigger the debounced filter change
-  };
+  // const handleStatusChange = (status: string) => {
+  //   const updatedFilters = { ...filters, status };
+  //   handleFilterChange(updatedFilters); // This will trigger the debounced filter change
+  // };
 
   useEffect(() => {
     fetchWorkInfo();
@@ -162,7 +161,7 @@ export default function WorkInfoPage() {
               </div>
             ) : (
               <>
-                <div className="bg-white shadow rounded-lg mb-4 mt-4">
+                {/* <div className="bg-white shadow rounded-lg mb-4 mt-4">
                   <div className="flex flex-wrap gap-4">
                     <Input
                       className="flex-1 p-2 text-headFont"
@@ -227,7 +226,7 @@ export default function WorkInfoPage() {
                       <></>
                     </Popover>
                   </div>
-                </div>
+                </div> */}
 
                 <TablePagination
                   initialRows={items}
