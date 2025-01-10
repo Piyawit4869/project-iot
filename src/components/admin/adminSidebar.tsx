@@ -126,7 +126,20 @@ export function AdminSideBar() {
           },
         ],
       },
-      { name: 'ผู้ใช้', path: '/admin/user', icon: <Icon.UserOutlined /> },
+      {
+        name: 'จัดการพนักงาน',
+        key: 'user',
+        icon: <Icon.UserSwitchOutlined />,
+        subMenu: [
+          { name: 'พนักงาน', path: '/admin/user', icon: <Icon.UserOutlined /> },
+          {
+            name: 'ตำแหน่ง',
+            path: '/admin/role',
+            icon: <Icon.ClusterOutlined />,
+          },
+        ],
+      },
+
       {
         name: 'การตั้งค่า',
         key: 'setting',

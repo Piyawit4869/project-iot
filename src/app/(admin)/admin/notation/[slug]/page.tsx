@@ -29,8 +29,7 @@ import paginationItems from '@/pages/api/items/pagination';
 import paginationCustomers from '@/pages/api/customer/pagination';
 
 export default function NotationSinglePage() {
-  const [items, setItems] = React.useState([{ description: '', amount: '' }]);
-  const [zoomLevel, setZoomLevel] = React.useState(100); // Default zoom level (100%)
+  const [zoomLevel, setZoomLevel] = React.useState(100);
   const params = useParams<{ slug?: string }>();
   const [loading, setLoading] = React.useState(false);
   const [errors, setErrors] = React.useState({}) as any;
@@ -82,7 +81,7 @@ export default function NotationSinglePage() {
 
     setFormData((prevData: any) => ({
       ...prevData,
-      itemsId: selectedItems, // Store as array of objects
+      itemsId: selectedItems,
     }));
   };
 
@@ -144,16 +143,13 @@ export default function NotationSinglePage() {
 
       setFormData({
         ...data,
-        itemsId: selectedItems, // Store as array of objects
+        itemsId: selectedItems,
       });
       setLoading(false);
     };
 
     fetchData();
   }, [params]);
-
-  console.log({ formData });
-  console.log({ itemServices });
 
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
@@ -193,11 +189,11 @@ export default function NotationSinglePage() {
   }, [formData, htmlTemplate]);
 
   const handleZoomIn = () => {
-    setZoomLevel((prevZoom) => Math.min(prevZoom + 10, 200)); // Max zoom 200%
+    setZoomLevel((prevZoom) => Math.min(prevZoom + 10, 200));
   };
 
   const handleZoomOut = () => {
-    setZoomLevel((prevZoom) => Math.max(prevZoom - 10, 50)); // Min zoom 50%
+    setZoomLevel((prevZoom) => Math.max(prevZoom - 10, 50));
   };
 
   // const handleAddItem = () => {
@@ -227,8 +223,6 @@ export default function NotationSinglePage() {
       setLoading(false);
       return;
     }
-
-    console.log({ formData });
 
     try {
       const payload = {
