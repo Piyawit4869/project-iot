@@ -3,40 +3,47 @@ import Scaffold from '@/components/common/scaffold';
 import * as Icon from '@ant-design/icons';
 import { Button, Select, SelectItem, TimeInput } from '@nextui-org/react';
 import React from 'react';
-import get from '@/pages/api/setting/system/get';
+import get from '@/pages/api/setting/get';
 import { parseTime } from '@internationalized/date';
 
-export const InputSystem = () => {
+interface InputSystem {
+  data: any;
+}
+
+export const InputSystem = ({
+  data,
+  onChange,
+}: {
+  data: any;
+  onChange: (updatedData: any) => void;
+}) => {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
-  const [loading, setLoading] = React.useState(false);
-  const [formData, setFormData] = React.useState({}) as any;
-  const [data, setData] = React.useState() as any;
+  const [formData, setFormData] = React.useState<any>(data);
   const [openDay, setOpenDay] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
-    const getSetting = async () => {
-      const { data } = await get();
-
-      setData(data);
+    if (data) {
       setFormData(data);
       setOpenDay(data.openDays);
-      setLoading(false);
-    };
-
-    getSetting();
-  }, []);
+    }
+  }, [data]);
 
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
+    const upadteData =
+      type === 'checkbox'
+        ? checked
+        : name === 'birthDate' && value instanceof Date
+        ? value.toISOString()
+        : value;
+
     setFormData((prevData: any) => ({
       ...prevData,
-      [name]:
-        type === 'checkbox'
-          ? checked
-          : name === 'startDate' && value instanceof Date
-          ? value.toISOString()
-          : value,
+      [name]: upadteData,
     }));
+
+    onChange({ ...formData, [name]: upadteData });
   };
 
   const handleAddItem = () => {
@@ -48,11 +55,11 @@ export const InputSystem = () => {
     setItems(updatedItems);
   };
 
-  // const handleItemChange = (index: number, value: string) => {
-  //   const updatedItems = [...items];
-  //   updatedItems[index].description = value;
-  //   setItems(updatedItems);
-  // };
+  const handleOpenDay = items.map((item: any) => ({
+    day: [item.day],
+    open: item.open,
+    colse: item.close,
+  }));
 
   return (
     <Scaffold
@@ -77,8 +84,8 @@ export const InputSystem = () => {
                 name="defaultLanguage"
                 placeholder="เลือกภาษา"
                 label="ภาษา"
-                onChange={handleChange}
                 labelPlacement={'outside'}
+                onChange={handleChange}
                 selectedKeys={[formData.defaultLanguage]}
               >
                 {language.map((item) => (
@@ -92,8 +99,8 @@ export const InputSystem = () => {
                 name="theme"
                 placeholder="เลือกธีม"
                 label="ธีมสี"
-                onChange={handleChange}
                 labelPlacement={'outside'}
+                onChange={handleChange}
                 selectedKeys={[formData.theme]}
               >
                 {themes.map((item) => (
@@ -113,8 +120,8 @@ export const InputSystem = () => {
                 name="textDisplay"
                 placeholder="เลือกขนาดตัวอักษร"
                 label="ขนาดตัวอักษร"
-                onChange={handleChange}
                 labelPlacement={'outside'}
+                onChange={handleChange}
                 selectedKeys={[formData.textDisplay]}
               >
                 {fontSize.map((item: any) => (
@@ -141,6 +148,7 @@ export const InputSystem = () => {
                       placeholder="เลือกวันทำงาน"
                       label="วันทำงาน"
                       labelPlacement={'outside'}
+                      onChange={handleChange}
                       selectedKeys={new Set([item.day[0]])}
                     >
                       {day.map((item: any) => (
@@ -220,40 +228,19 @@ export const InputSystem = () => {
 };
 
 const language = [
-  {
-    label: 'ภาษาไทย',
-    value: 'TH',
-  },
-  {
-    label: 'ภาษาอังกฤษ',
-    value: 'ENG',
-  },
+  { label: 'ภาษาไทย', value: 'TH' },
+  { label: 'ภาษาอังกฤษ', value: 'ENG' },
 ];
 
 const themes = [
-  {
-    label: 'สว่าง',
-    value: 'light',
-  },
-  {
-    label: 'มืด',
-    value: 'dark',
-  },
+  { label: 'สว่าง', value: 'light' },
+  { label: 'มืด', value: 'dark' },
 ];
 
 const fontSize = [
-  {
-    label: 'ขนาดใหญ่',
-    value: 'large',
-  },
-  {
-    label: 'ปกติ',
-    value: 'normal',
-  },
-  {
-    label: 'ขนาดเล็ก',
-    value: 'small',
-  },
+  { label: 'ขนาดใหญ่', value: 'large' },
+  { label: 'ปกติ', value: 'normal' },
+  { label: 'ขนาดเล็ก', value: 'small' },
 ];
 
 const day = [

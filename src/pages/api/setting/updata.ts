@@ -1,7 +1,7 @@
 import { base_url } from '@/constant/common';
 
-export async function createUser(prevState: any, formData: any) {
-  const url = `${base_url}/crud/users/create`;
+export async function updatesystem(prevState: any, formData: any) {
+  const url = `${base_url}/crud/settings/update`;
 
   const body = {
     ...formData,
@@ -10,14 +10,13 @@ export async function createUser(prevState: any, formData: any) {
   const accessToken = localStorage.getItem('accessToken');
 
   const data = await fetch(url, {
-    method: `POST`,
+    method: `PUT`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
-      // Authorization: `Bearer ${session.accessToken}`,
     },
     body: JSON.stringify(body),
   });
 
-  return await data.json();
+  return await data.json;
 }

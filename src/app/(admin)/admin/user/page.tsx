@@ -8,6 +8,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { TablePagination } from '@/components/common/tablePagination';
 import pagination from '@/pages/api/user/pagination';
+import { div } from 'framer-motion/client';
 // import { debounce } from 'lodash';
 
 export default function IndexPage() {
@@ -88,16 +89,18 @@ export default function IndexPage() {
                 <div className="spinner"></div>
               </div>
             ) : (
-              <TablePagination
-                initialRows={items}
-                initialMeta={meta}
-                rowsPerPage={rowsPerPage}
-                columns={columns}
-                onPageChange={(newPage) => setPage(newPage)}
-                onRowsPerPageChange={(newRowsPerPage) =>
-                  setRowsPerPage(newRowsPerPage)
-                }
-              />
+              <div className="mt-6">
+                <TablePagination
+                  initialRows={items}
+                  initialMeta={meta}
+                  rowsPerPage={rowsPerPage}
+                  columns={columns}
+                  onPageChange={(newPage) => setPage(newPage)}
+                  onRowsPerPageChange={(newRowsPerPage) =>
+                    setRowsPerPage(newRowsPerPage)
+                  }
+                />
+              </div>
             )}
           </div>
         }
