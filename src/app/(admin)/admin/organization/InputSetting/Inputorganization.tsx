@@ -14,7 +14,7 @@ import {
   InputOtp,
 } from '@nextui-org/react';
 import React from 'react';
-import get from '@/pages/api/setting/system/get';
+import get from '@/pages/api/setting/get';
 import Scaffold from '@/components/common/scaffold';
 import { parseAbsoluteToLocal, parseDate } from '@internationalized/date';
 

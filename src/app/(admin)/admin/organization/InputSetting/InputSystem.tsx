@@ -3,7 +3,7 @@ import Scaffold from '@/components/common/scaffold';
 import * as Icon from '@ant-design/icons';
 import { Button, Select, SelectItem, TimeInput } from '@nextui-org/react';
 import React from 'react';
-import get from '@/pages/api/setting/system/get';
+import get from '@/pages/api/setting/get';
 import { parseTime } from '@internationalized/date';
 
 export const InputSystem = () => {
@@ -27,15 +27,10 @@ export const InputSystem = () => {
   }, []);
 
   const handleChange = (e: any) => {
-    const { name, checked, type, value } = e.target;
+    const { name, value } = e.target;
     setFormData((prevData: any) => ({
       ...prevData,
-      [name]:
-        type === 'checkbox'
-          ? checked
-          : name === 'startDate' && value instanceof Date
-          ? value.toISOString()
-          : value,
+      [name]: value,
     }));
   };
 
@@ -53,6 +48,12 @@ export const InputSystem = () => {
   //   updatedItems[index].description = value;
   //   setItems(updatedItems);
   // };
+
+  const handleOpenDay = items.map((item: any) => ({
+    day: [item.day],
+    open: item.open,
+    colse: item.close,
+  }));
 
   return (
     <Scaffold
@@ -141,6 +142,7 @@ export const InputSystem = () => {
                       placeholder="เลือกวันทำงาน"
                       label="วันทำงาน"
                       labelPlacement={'outside'}
+                      onChange={handleChange}
                       selectedKeys={new Set([item.day[0]])}
                     >
                       {day.map((item: any) => (
