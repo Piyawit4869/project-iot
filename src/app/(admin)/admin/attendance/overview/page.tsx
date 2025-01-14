@@ -97,7 +97,7 @@ export default function NotationsPage() {
                     size="sm"
                     key={'create button'}
                   >
-                    สร้างเอกสาร
+                    สร้างกิจกรรม
                   </Button>
                 </Link>,
               ]}
@@ -156,7 +156,7 @@ const columns = [
     Link: '/admin/attendance/overview',
   },
   {
-    title: 'แอคชั่น',
+    title: 'กิจกรรม',
     dataIndex: 'action',
   },
   {
