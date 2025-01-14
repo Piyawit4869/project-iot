@@ -5,13 +5,15 @@ import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
-import paginationItems from '@/pages/api/items/pagination';
+import paginationCustomers from '@/pages/api/customer/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 
-export default function ItemsPage() {
+export default function RolesPage() {
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [filters, setFilters] = React.useState({ name: '', docNo: '' });
+  const [filters, setFilters] = React.useState({
+    name: '',
+  });
   const [items, setItems] = React.useState([]) as any;
   const [meta, setMeta] = React.useState({
     totalItems: 0,
@@ -22,20 +24,20 @@ export default function ItemsPage() {
   const [loading, setLoading] = React.useState(false);
 
   // Fetch data from the API
-  const fetchItems = async () => {
+  const fetchCustomer = async () => {
     setLoading(true);
     try {
-      const { name, docNo } = filters;
-      const { items: fetchedItems, meta: fetchedMeta } = await paginationItems({
-        page,
-        limit: rowsPerPage,
-        ...(name && { name }),
-        ...(docNo && { docNo }),
-      });
+      const { name } = filters;
+      const { items: fetchedItems, meta: fetchedMeta } =
+        await paginationCustomers({
+          page,
+          limit: rowsPerPage,
+          ...(name && { name }),
+        });
       setItems(fetchedItems);
       setMeta(fetchedMeta);
     } catch (error) {
-      console.error('Error fetching notations:', error);
+      console.log('Error fetching notations:', error);
     } finally {
       setLoading(false);
     }
@@ -58,7 +60,7 @@ export default function ItemsPage() {
 
   // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
-    fetchItems();
+    fetchCustomer();
   }, [filters, page, rowsPerPage]);
 
   return (
@@ -67,27 +69,28 @@ export default function ItemsPage() {
         child={
           <div>
             <TopSection
-              title="สินค้าและบริการทั้งหมด"
+              title="ตำแหน่งทั้งหมด"
               buttons={[
-                <Link href={'item/create'} key={'create button'}>
+                <Link href={'role/create'} key={'create button'}>
                   <Button
                     className="bg-accent1 text-white"
                     size="sm"
                     key={'create button'}
                   >
-                    สร้างสินค้าและบริการ
+                    สร้างตำแหน่ง
                   </Button>
                 </Link>,
               ]}
             />
-            <div className="bg-white shadow rounded-lg mb-4 mt-4 ">
+            <div className="bg-white shadow rounded-lg mb-4 mt-4 p-4">
               <div className="grid grid-cols-1 sm:grid-cols-1">
+                {/* 🔹 Filter by Company Name */}
                 <Input
-                  className="w-full p-2 text-headFont"
+                  className="w-full p-1 text-headFont"
                   labelPlacement="outside"
                   size="sm"
                   name="name"
-                  placeholder="ค้นหาชื่อ"
+                  placeholder="ค้นหาชื่อตำแหน่ง"
                   value={filters.name}
                   onChange={(e) => onInputChange('name', e.target.value)}
                 />
@@ -120,28 +123,35 @@ export default function ItemsPage() {
 
 const columns = [
   {
-    title: 'ชื่อสินค้าและบริการ',
+    title: 'ชื่อตำแหน่ง',
     dataIndex: 'name',
-    link: '/admin/item',
+    link: '/admin/role',
   },
-  {
-    title: 'จำนวน',
-    dataIndex: 'quantity',
-  },
-  {
-    title: 'ราคาต่อชิ้น',
-    dataIndex: 'unitPrice',
-  },
-  {
-    title: 'ราคารวม',
-    dataIndex: 'total',
-  },
-  {
-    title: 'ส่วนลด',
-    dataIndex: 'discount',
-  },
-  {
-    title: 'รายละเอียด',
-    dataIndex: 'description',
-  },
+  // {
+  //   title: 'หมายเลขผู้เสียภาษี',
+  //   dataIndex: 'taxId',
+  // },
+  // {
+  //   title: 'ชื่อ-นามสกุลผู้ติดต่อ',
+  //   dataIndex: 'firstName',
+  //   render: (value: any, record: any) => {
+  //     return (
+  //       <>
+  //         {value ? value : '-'} {record?.lastName ? record.lastName : '-'}
+  //       </>
+  //     );
+  //   },
+  // },
+  // {
+  //   title: 'อีเมลติดต่อ',
+  //   dataIndex: 'contactEmail',
+  // },
+  // {
+  //   title: 'เบอร์โทรติดต่อ',
+  //   dataIndex: 'contactPhone',
+  // },
+  // {
+  //   title: 'รายละเอียด',
+  //   dataIndex: 'description',
+  // },
 ];

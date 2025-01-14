@@ -3,11 +3,7 @@ import { base_url } from '@/constant/common';
 interface FetchTemplatesParams {
   page?: number;
   limit?: number;
-  firstName?: string;
-  companyName?: string;
-  contactEmail?: string;
-  taxId?: string;
-  isAll?: boolean;
+  name?: string;
 }
 
 interface FetchTemplatesResponse {
@@ -20,17 +16,13 @@ interface FetchTemplatesResponse {
   };
 }
 
-export default async function paginationCustomers({
+export default async function paginationRoles({
   page,
   limit,
-  firstName,
-  companyName,
-  contactEmail,
-  taxId,
-  isAll,
+  name,
 }: FetchTemplatesParams): Promise<FetchTemplatesResponse> {
   try {
-    const url = new URL(`${base_url}/crud/customers`);
+    const url = new URL(`${base_url}/crud/employee-roles`);
 
     const accessToken = localStorage.getItem('accessToken');
 
@@ -42,20 +34,8 @@ export default async function paginationCustomers({
       url.searchParams.append('limit', String(limit));
     }
 
-    if (firstName) {
-      url.searchParams.append('firstName', firstName);
-    }
-    if (companyName) {
-      url.searchParams.append('companyName', companyName);
-    }
-    if (contactEmail) {
-      url.searchParams.append('contactEmail', contactEmail);
-    }
-    if (taxId) {
-      url.searchParams.append('taxId', taxId);
-    }
-    if (isAll) {
-      url.searchParams.append('isAll', String(isAll));
+    if (name) {
+      url.searchParams.append('name', name);
     }
 
     const response = await fetch(url.toString(), {

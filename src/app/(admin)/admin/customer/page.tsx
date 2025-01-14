@@ -5,7 +5,7 @@ import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
-import pagination from '@/pages/api/customer/pagination';
+import paginationCustomers from '@/pages/api/customer/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 
 export default function CustomersPage() {
@@ -31,14 +31,15 @@ export default function CustomersPage() {
     setLoading(true);
     try {
       const { companyName, taxId, firstName, contactEmail } = filters;
-      const { items: fetchedItems, meta: fetchedMeta } = await pagination({
-        page,
-        limit: rowsPerPage,
-        ...(companyName && { companyName }),
-        ...(taxId && { taxId }),
-        ...(firstName && { firstName }),
-        ...(contactEmail && { contactEmail }),
-      });
+      const { items: fetchedItems, meta: fetchedMeta } =
+        await paginationCustomers({
+          page,
+          limit: rowsPerPage,
+          ...(companyName && { companyName }),
+          ...(taxId && { taxId }),
+          ...(firstName && { firstName }),
+          ...(contactEmail && { contactEmail }),
+        });
       setItems(fetchedItems);
       setMeta(fetchedMeta);
     } catch (error) {
