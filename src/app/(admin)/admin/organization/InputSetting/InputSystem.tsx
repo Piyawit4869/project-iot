@@ -12,12 +12,10 @@ interface InputSystem {
 
 export const InputSystem = ({
   data,
-  OpenDaydata,
   onChange,
 }: {
   data: any;
   onChange: (updatedData: any) => void;
-  OpenDaydata: (data: any[]) => void;
 }) => {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   const [formData, setFormData] = React.useState<any>(data);
@@ -45,21 +43,21 @@ export const InputSystem = ({
       [name]: upadteData,
     }));
 
-    onChange({ [name]: upadteData });
+    onChange({ ...formData, [name]: upadteData });
   };
 
-  const handleDayChange = (index: number, field: string, value: any) => {
-    const updatedOpenDay = [...openDay];
-    updatedOpenDay[index] = {
-      ...updatedOpenDay[index],
-      [field]: field === 'day' ? [value] : value,
-    };
+  // const handleDayChange = (index: number, field: string, value: any) => {
+  //   const updatedOpenDay = [...openDay];
+  //   updatedOpenDay[index] = {
+  //     ...updatedOpenDay[index],
+  //     [field]: field === 'day' ? [value] : value,
+  //   };
 
-    setOpenDay(updatedOpenDay);
-    OpenDaydata(updatedOpenDay);
-    setFormData(updatedOpenDay);
-    onChange({ openDays: updatedOpenDay });
-  };
+  //   setOpenDay(updatedOpenDay);
+  //   OpenDaydata(updatedOpenDay);
+  //   setFormData(updatedOpenDay);
+  //   onChange({ openDays: updatedOpenDay });
+  // };
 
   // const handleAddItem = () => {
   //   setItems([...items, { description: '', amount: '' }]);
@@ -176,10 +174,8 @@ export const InputSystem = ({
                       placeholder="เลือกวันทำงาน"
                       label="วันทำงาน"
                       labelPlacement={'outside'}
-                      onChange={(e) =>
-                        handleDayChange(index, 'day', e.target.value)
-                      }
-                      selectedKeys={new Set(item.day)}
+                      onChange={handleChange}
+                      defaultSelectedKeys={item.day}
                     >
                       {day.map((item: any) => (
                         <SelectItem
@@ -200,25 +196,12 @@ export const InputSystem = ({
                       }
                       labelPlacement="outside"
                       name="openTime"
-                      // defaultValue={
-                      //   item.openTime
-                      //     ? typeof item.openTime === 'string'
-                      //       ? parseTime(item.openTime.split('T')[0])
-                      //       : item.openTime instanceof Date
-                      //       ? parseTime(
-                      //           item.openTime.toISOString().split('T')[0],
-                      //         ) // แปลง Date เป็น string
-                      //       : undefined
-                      //     : undefined
-                      // }
                       defaultValue={
                         item.openTime
                           ? parseTime(item.openTime.split('T')[0])
                           : undefined
                       }
-                      onChange={(value) =>
-                        handleDayChange(index, 'openTime', value)
-                      }
+                      onChange={handleChange}
                     />
                     <TimeInput
                       className="col-span-1 w-full"
@@ -231,18 +214,13 @@ export const InputSystem = ({
                       name="closeTime"
                       defaultValue={
                         item.closeTime
-                          ? typeof item.closeTime === 'string'
-                            ? parseTime(item.closeTime.split('T')[0])
-                            : item.closeTime instanceof Date
-                            ? parseTime(
-                                item.closeTime.toISOString().split('T')[0],
-                              ) // แปลง Date เป็น string
-                            : undefined
+                          ? parseTime(item.closeTime.split('T')[0])
                           : undefined
                       }
-                      onChange={(value) =>
-                        handleDayChange(index, 'closeTime', value)
-                      }
+                      // onChange={(value) =>
+                      //   handleDayChange(index, 'closeTime', value)
+                      // }
+                      onChange={handleChange}
                     />
                     <a
                       className="col-span-1 w-full text-red-500 cursor-pointer mt-6"
