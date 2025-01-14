@@ -14,10 +14,11 @@ import {
 import pagination from '@/pages/api/workinfos/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date'; // <-- Import formatDate here
+import { render } from 'react-dom';
 // import * as Icon from '@ant-design/icons';
 
 interface FilterState {
-  name: string;  // Changed from 'ip' to 'name'
+  name: string; // Changed from 'ip' to 'name'
   status: string;
 }
 
@@ -33,6 +34,8 @@ interface WorkInfoItem {
   prefix: string;
   name: string;
   status: string;
+  active: boolean;
+  isCurrent: boolean;
   descriptions: string;
   priority: string;
   startDate: string | null;
@@ -48,7 +51,11 @@ interface WorkInfoItem {
 }
 
 const columns = [
-  { title: 'ชื่อ', dataIndex: 'name', link: '/admin/attendance/work-infomation'  },
+  {
+    title: 'ชื่อ',
+    dataIndex: 'name',
+    link: '/admin/attendance/work-infomation',
+  },
   { title: 'คำนำหน้า', dataIndex: 'prefix' },
   { title: 'สถานะ', dataIndex: 'status' },
   { title: 'คำอธิบายงาน', dataIndex: 'descriptions' },
@@ -63,9 +70,6 @@ const columns = [
   { title: 'วันที่จ่ายเงิน', dataIndex: 'payDayDate' },
   { title: 'เวลาที่จ่ายเงิน', dataIndex: 'payDayTime' },
   { title: 'หมายเหตุ', dataIndex: 'note' },
-  { title: 'active', dataIndex: 'active',
-    
-  },
   { title: 'สร้างวันที่', dataIndex: 'createdAtDate' },
   { title: 'เวลาที่สร้าง', dataIndex: 'createdAtTime' },
 ];
@@ -73,7 +77,7 @@ const columns = [
 export default function WorkInfoPage() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [filters, setFilters] = useState<FilterState>({ name: '', status: '' });  // Changed to 'name'
+  const [filters, setFilters] = useState<FilterState>({ name: '', status: '' }); // Changed to 'name'
   const [items, setItems] = useState<WorkInfoItem[]>([]);
   const [meta, setMeta] = useState<MetaData>({
     totalItems: 0,
@@ -86,11 +90,11 @@ export default function WorkInfoPage() {
   const fetchWorkInfo = async () => {
     setLoading(true);
     try {
-      const { name, status } = filters;  // Changed from 'ip' to 'name'
+      const { name, status } = filters; // Changed from 'ip' to 'name'
       const { items: fetchedItems, meta: fetchedMeta } = await pagination({
         page,
         limit: rowsPerPage,
-        ...(name && { name }),  // Updated to filter by 'name'
+        ...(name && { name }), // Updated to filter by 'name'
         ...(status && { status }),
       });
 
@@ -98,9 +102,9 @@ export default function WorkInfoPage() {
         fetchedItems.map((item: WorkInfoItem) => ({
           ...item,
           createdAtDate: formatDate(item.createdAt).date,
-          createdAtTime: formatDate(item.createdAt).time,  // <-- Use formatDate here
-          dueDate: formatDate(item.dueDate).date,      // <-- Use formatDate here
-          startDate: formatDate(item.startDate).date,  // <-- Use formatDate here
+          createdAtTime: formatDate(item.createdAt).time, // <-- Use formatDate here
+          dueDate: formatDate(item.dueDate).date, // <-- Use formatDate here
+          startDate: formatDate(item.startDate).date, // <-- Use formatDate here
           payDayDate: formatDate(item.payDay).date,
           payDayTime: formatDate(item.payDay).time,
         })),
@@ -142,9 +146,12 @@ export default function WorkInfoPage() {
           <div>
             <TopSection
               title="ข้อมูลการทำงาน"
-              buttons={[  
+              buttons={[
                 <Link href={'work-infomation/create'} key={'create button'}>
-                  <Button className="bg-accent1 text-white" key={'create button'}>
+                  <Button
+                    className="bg-accent1 text-white"
+                    key={'create button'}
+                  >
                     สร้างข้อมูลการทำงาน
                   </Button>
                 </Link>,

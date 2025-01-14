@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation';
 import * as Icon from '@ant-design/icons';
 import React from 'react';
 import { data } from 'framer-motion/client';
+import { log } from 'console';
 
 export default function WorkinfoCreatePage() {
   const [errors, setErrors] = React.useState({}) as any;
@@ -31,7 +32,6 @@ export default function WorkinfoCreatePage() {
     { value: 'medium', label: 'Medium ' },
     { value: 'high', label: 'High ' },
   ]; // กำหนดค่าให้กับ priority
-  console.log(priority);
 
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
@@ -43,7 +43,12 @@ export default function WorkinfoCreatePage() {
           ? checked
           : name === 'userIds'
           ? value.split(',').map((id: string) => id.trim()) // Ensure it's an array of strings
-          : ['startCredit', 'totalCredit', 'totalWorkHours', 'limitTimePerDays'].includes(name)
+          : [
+              'startCredit',
+              'totalCredit',
+              'totalWorkHours',
+              'limitTimePerDay',
+            ].includes(name)
           ? parseFloat(value) || 0
           : name === 'startDate' && value instanceof Date
           ? value.toISOString()
@@ -51,65 +56,76 @@ export default function WorkinfoCreatePage() {
     }));
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+ const onSubmit = async (e: React.FormEvent) => {
+  console.log('name');
+  
+  e.preventDefault();
+  setLoading(true);
 
-    const requiredFields = [
-      'name',
-      'prefix',
-      'startDate',
-      'dueDate',
-      'limitTimePerDays',
-      'inspector',
-      'startCredit',
-      'payDay',
-    ];
-    const newErrors: any = {};
+  const requiredFields = [
+    'name',
+    'prefix',
+    'startDate',
+    'dueDate',
+    'limitTimePerDay',
+    'inspector',
+    'startCredit',
+    'payDay',
+  ];
+  console.log('name2');
+  
+  const newErrors: any = {};
 
-    requiredFields.forEach((field) => {
-      const value = formData[field];
-      if (
-        value === undefined ||
-        value === null ||
-        (typeof value === 'string' && value.trim() === '')
-      ) {
-        newErrors[field] = `Field ${field} is required.`;
-      }
-    });
-
-    
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setLoading(false);
-      return;
+  requiredFields.forEach((field) => {
+    const value = formData[field];
+    if (!value || (typeof value === 'string' && value.trim() === '')) {
+      newErrors[field] = `Field ${field} is required.`;
     }
-
-    try {
-      const payload = {
-        ...formData,
-      };
-      console.log(formData.items);
-      console.log(payload);
-      payload.active = !!payload.active;
-
-      const { data } = await createWorkInfos({}, payload);
-      console.log(payload);
-      console.log(data)
-      router.push(`/admin/attendance/work-infomation/${data[0].id}`);
-    } catch (err: any) {
-      console.error('API Error:', err);
-      setErrors({ general: err.message || 'An unexpected error occurred.' });
-    } finally {
-      setLoading(false);
+    if (
+      ['limitTimePerDay', 'startCredit'].includes(field) &&
+      isNaN(Number(value))
+    ) {
+      newErrors[field] = `Field ${field} must be a valid number.`;
     }
+    if (
+      ['startDate', 'dueDate', 'payDay'].includes(field) &&
+      isNaN(Date.parse(value))
+    ) {
+      newErrors[field] = `Field ${field} must be a valid date.`;
+    }
+  });
 
-    
-  };
-  console.log()
-  console.log(formData)
+  // if (Object.keys(newErrors).length > 0) {
+  //   setErrors(newErrors);
+  //   setLoading(false);
+  //   return;
+  // }
 
+  try {
+    const payload = {
+      ...formData,
+      active: !!formData.active,
+      limitTimePerDay: Number(formData.limitTimePerDay) || 0,
+      startCredit: Number(formData.startCredit) || 0,
+      startDate: new Date(formData.startDate).toISOString(),
+      dueDate: new Date(formData.dueDate).toISOString(),
+      payDay: new Date(formData.payDay).toISOString(),
+    };
+
+    console.log('Payload:', payload);
+
+    const data = await createWorkInfos({},payload);
+    // router.push(`/admin/attendance/work-infomation/${data.id}`);
+  } catch (err: any) {
+    console.error('API Error:', err);
+    setErrors({ general: err.message });
+  } finally {
+    setLoading(false);
+  }
+  console.log({data});
+  console.log({createWorkInfos})
+  
+};
 
   return (
     <Scaffold
