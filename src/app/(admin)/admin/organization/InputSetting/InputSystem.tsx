@@ -12,10 +12,12 @@ interface InputSystem {
 
 export const InputSystem = ({
   data,
+  OpenDaydata,
   onChange,
 }: {
   data: any;
   onChange: (updatedData: any) => void;
+  OpenDaydata: (data: any[]) => void;
 }) => {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   const [formData, setFormData] = React.useState<any>(data);
@@ -43,23 +45,49 @@ export const InputSystem = ({
       [name]: upadteData,
     }));
 
-    onChange({ ...formData, [name]: upadteData });
+    onChange({ [name]: upadteData });
   };
 
-  const handleAddItem = () => {
-    setItems([...items, { description: '', amount: '' }]);
+  const handleDayChange = (index: number, field: string, value: any) => {
+    const updatedOpenDay = [...openDay];
+    updatedOpenDay[index] = {
+      ...updatedOpenDay[index],
+      [field]: field === 'day' ? [value] : value,
+    };
+
+    setOpenDay(updatedOpenDay);
+    OpenDaydata(updatedOpenDay);
+    setFormData(updatedOpenDay);
+    onChange({ openDays: updatedOpenDay });
   };
 
-  const handleRemoveItem = (index: number) => {
-    const updatedItems = items.filter((_, i) => i !== index);
-    setItems(updatedItems);
+  // const handleAddItem = () => {
+  //   setItems([...items, { description: '', amount: '' }]);
+  // };
+
+  const handleRemoveOpenDay = (index: number) => {
+    const updatedOpenDay = openDay.filter((_, i) => i !== index);
+    setOpenDay(updatedOpenDay);
+    onChange({ ...formData, openDay: updatedOpenDay });
   };
 
-  const handleOpenDay = items.map((item: any) => ({
-    day: [item.day],
-    open: item.open,
-    colse: item.close,
-  }));
+  // const handleRemoveItem = (index: number) => {
+  //   const updatedItems = items.filter((_, i) => i !== index);
+  //   setItems(updatedItems);
+  // };
+
+  const handleAddOpenDay = () => {
+    const newOpenDayItem = { day: [], openTime: '', closeTime: '' };
+    const updatedOpenDay = [...openDay, newOpenDayItem];
+    setOpenDay(updatedOpenDay);
+    onChange({ ...formData, openDay: updatedOpenDay });
+  };
+
+  // const handleOpenDay = items.map((item: any) => ({
+  //   day: [item.day],
+  //   open: item.openTime,
+  //   colse: item.closeTime,
+  // }));
 
   return (
     <Scaffold
@@ -86,7 +114,7 @@ export const InputSystem = ({
                 label="ภาษา"
                 labelPlacement={'outside'}
                 onChange={handleChange}
-                selectedKeys={[formData.defaultLanguage]}
+                selectedKeys={[formData?.defaultLanguage]}
               >
                 {language.map((item) => (
                   <SelectItem key={item.value} value={item.value}>
@@ -101,7 +129,7 @@ export const InputSystem = ({
                 label="ธีมสี"
                 labelPlacement={'outside'}
                 onChange={handleChange}
-                selectedKeys={[formData.theme]}
+                selectedKeys={[formData?.theme]}
               >
                 {themes.map((item) => (
                   <SelectItem
@@ -122,7 +150,7 @@ export const InputSystem = ({
                 label="ขนาดตัวอักษร"
                 labelPlacement={'outside'}
                 onChange={handleChange}
-                selectedKeys={[formData.textDisplay]}
+                selectedKeys={[formData?.textDisplay]}
               >
                 {fontSize.map((item: any) => (
                   <SelectItem
@@ -148,13 +176,15 @@ export const InputSystem = ({
                       placeholder="เลือกวันทำงาน"
                       label="วันทำงาน"
                       labelPlacement={'outside'}
-                      onChange={handleChange}
-                      selectedKeys={new Set([item.day[0]])}
+                      onChange={(e) =>
+                        handleDayChange(index, 'day', e.target.value)
+                      }
+                      selectedKeys={new Set(item.day)}
                     >
                       {day.map((item: any) => (
                         <SelectItem
                           className="col-span-1 w-full text-headFont"
-                          key={item.label}
+                          key={item.value}
                           value={item.value}
                         >
                           {item.label}
@@ -169,11 +199,25 @@ export const InputSystem = ({
                         </span>
                       }
                       labelPlacement="outside"
-                      name="open"
+                      name="openTime"
+                      // defaultValue={
+                      //   item.openTime
+                      //     ? typeof item.openTime === 'string'
+                      //       ? parseTime(item.openTime.split('T')[0])
+                      //       : item.openTime instanceof Date
+                      //       ? parseTime(
+                      //           item.openTime.toISOString().split('T')[0],
+                      //         ) // แปลง Date เป็น string
+                      //       : undefined
+                      //     : undefined
+                      // }
                       defaultValue={
-                        item.open
-                          ? parseTime(item.open.split('T')[0])
+                        item.openTime
+                          ? parseTime(item.openTime.split('T')[0])
                           : undefined
+                      }
+                      onChange={(value) =>
+                        handleDayChange(index, 'openTime', value)
                       }
                     />
                     <TimeInput
@@ -184,16 +228,25 @@ export const InputSystem = ({
                         </span>
                       }
                       labelPlacement="outside"
-                      name="close"
+                      name="closeTime"
                       defaultValue={
-                        item.close
-                          ? parseTime(item.close.split('T')[0])
+                        item.closeTime
+                          ? typeof item.closeTime === 'string'
+                            ? parseTime(item.closeTime.split('T')[0])
+                            : item.closeTime instanceof Date
+                            ? parseTime(
+                                item.closeTime.toISOString().split('T')[0],
+                              ) // แปลง Date เป็น string
+                            : undefined
                           : undefined
+                      }
+                      onChange={(value) =>
+                        handleDayChange(index, 'closeTime', value)
                       }
                     />
                     <a
                       className="col-span-1 w-full text-red-500 cursor-pointer mt-6"
-                      onClick={() => handleRemoveItem(index)}
+                      onClick={() => handleRemoveOpenDay(index)}
                     >
                       ลบวันทำงาน
                     </a>
@@ -205,7 +258,7 @@ export const InputSystem = ({
               <Button
                 type="button"
                 className="bg-accent3 text-white w-full"
-                onClick={handleAddItem}
+                onClick={handleAddOpenDay}
               >
                 <Icon.PlusSquareOutlined className="text-xl" />
                 เพิ่มวันทำงาน
@@ -228,8 +281,8 @@ export const InputSystem = ({
 };
 
 const language = [
-  { label: 'ภาษาไทย', value: 'TH' },
-  { label: 'ภาษาอังกฤษ', value: 'ENG' },
+  { label: 'ภาษาไทย', value: 'th' },
+  { label: 'ภาษาอังกฤษ', value: 'eng' },
 ];
 
 const themes = [

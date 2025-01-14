@@ -33,6 +33,7 @@ import { toast } from 'sonner';
 import { log } from 'console';
 import { update } from 'lodash';
 import { organizationLoader } from '@/app/api/organization';
+import { updatesystem } from '@/pages/api/setting/updata';
 
 export default function OraganizationPage() {
   const [loading, setLoading] = React.useState(false);
@@ -41,6 +42,7 @@ export default function OraganizationPage() {
   const [data, setData] = React.useState() as any;
   const [organizationData, setOrganizationData] = React.useState() as any;
   const [systemData, setSystemData] = React.useState() as any;
+  const [openDayData, setOpenDayData] = React.useState<any[]>([]);
 
   // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault(); // Prevent the form from submitting to the URL
@@ -74,6 +76,51 @@ export default function OraganizationPage() {
     setSystemData(updatedData);
   };
 
+  const handleOpenDayChange = (updatedOpenDay: any[]) => {
+    setOpenDayData(updatedOpenDay);
+    console.log('Updated openDay:', updatedOpenDay);
+  };
+
+  // const onSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+
+  //   try {
+  //     const payload = {
+  //       ...formData,
+  //       ...data,
+  //       organization: {
+  //         ...organizationData,
+  //       },
+  //     };
+
+  //     delete payload.data;
+
+  //     // const res = await updatedetails({}, payload, payload.id);
+  //     // console.log('ข้อมูลที่จะส่ง', res);
+  //     console.log('ข้อมูลที่ ID จะส่ง', payload);
+
+  //     toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
+  //       duration: 3000,
+  //       position: 'bottom-left',
+  //       style: { fontFamily: 'var(--font-ibm-sans)' },
+  //     });
+
+  //     // router.push(`/admin/notation/${res.data.id}`);
+  //   } catch (err: any) {
+  //     toast.error('❌ ไม่สามารถแก้ไขข้อมูลได้', {
+  //       duration: 3000,
+  //       position: 'bottom-left',
+  //       style: { fontFamily: 'var(--font-ibm-sans)' },
+  //     });
+
+  //     console.error('Send FormData error:', err);
+  //     setErrors({ general: err.message || 'An unexpected error occurred.' });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -82,16 +129,19 @@ export default function OraganizationPage() {
       const payload = {
         ...formData,
         ...data,
-        organization: {
-          ...organizationData,
-        },
+        ...systemData,
+        // openDays: [
+        //   {
+        //     ...systemData,
+        //   },
+        // ],
       };
 
       delete payload.data;
 
-      const res = await updatedetails({}, payload, payload.id);
-      console.log('ข้อมูลที่จะส่ง', res);
-      console.log('ข้อมูลที่ ID จะส่ง', payload.id);
+      // const res = await updatesystem({}, payload);
+      // console.log('ข้อมูลที่จะส่ง', res);
+      console.log('ข้อมูลที่ ID จะส่ง', payload);
 
       toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
         duration: 3000,
@@ -558,7 +608,11 @@ export default function OraganizationPage() {
                               )}
                             </ModalContent>
                           </Modal>
-                          <InputSystem data={data} onChange={handleSystem} />
+                          <InputSystem
+                            data={data}
+                            onChange={handleSystem}
+                            OpenDaydata={setOpenDayData}
+                          />
                         </Tab>
 
                         {/* Setting Address */}
