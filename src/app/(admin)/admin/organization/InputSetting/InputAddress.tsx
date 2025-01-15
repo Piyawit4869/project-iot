@@ -3,12 +3,16 @@
 import { Input, Textarea } from '@nextui-org/react';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
+<<<<<<< HEAD
+// import { update } from 'lodash';
+=======
 import { update } from 'lodash';
 import { address } from 'framer-motion/client';
+>>>>>>> 5dd16d6198a20eef23d9566ed75d7c39f72256b4
 
-interface InputAddressProps {
-  data: any;
-}
+// interface InputAddressProps {
+//   data: any;
+// }
 
 export const InputAddress = ({
   data,

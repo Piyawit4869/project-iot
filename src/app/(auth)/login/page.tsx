@@ -146,21 +146,24 @@ export default function LoginPage() {
                 required
                 errorMessage="กรุณาป้อนรหัสผ่าน"
               />
-              <a
-                href="#"
-                className="text-sm text-blue-500 hover:underline ml-2 text-nowrap"
-              >
-                ลืมรหัสผ่าน?
-              </a>
             </div>
           </div>
 
           {/* Remember Me Checkbox */}
-          <div className="flex items-center space-x-2">
-            <input type="checkbox" id="remember" className="form-checkbox" />
-            <label htmlFor="remember" className="text-sm">
-              จดจำรหัสผ่าน
-            </label>
+          <div className="flex items-center space-x-2 justify-between">
+            <div>
+              <input type="checkbox" id="remember" className="form-checkbox" />
+              <label htmlFor="remember" className="text-sm">
+                จดจำรหัสผ่าน
+              </label>
+            </div>
+
+            <a
+              href="#"
+              className="text-sm text-blue-500 hover:underline ml-2 text-nowrap pl-12"
+            >
+              ลืมรหัสผ่าน?
+            </a>
           </div>
 
           {/* Login Button */}
