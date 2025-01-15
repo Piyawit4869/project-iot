@@ -3,18 +3,18 @@
 import { Input, Textarea } from '@nextui-org/react';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
-import { update } from 'lodash';
+// import { update } from 'lodash';
 
-interface InputAddressProps {
-  data: any;
-}
+// interface InputAddressProps {
+//   data: any;
+// }
 
 export const InputAddress = ({
   data,
   onChange,
 }: {
   data: any;
-  onChange: (updatedData: any) => void;
+  onChange: (updatedData : string) => void;
 }) => {
   const [formData, setFormData] = React.useState<any>(data);
 
@@ -24,11 +24,11 @@ export const InputAddress = ({
     }
   }, [data]);
 
-  console.log();
+  console.log(onChange);
 
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
-    const upadteData =
+    const updatedData =
       type === 'checkbox'
         ? checked
         : name === 'birthDate' && value instanceof Date
@@ -37,10 +37,10 @@ export const InputAddress = ({
 
     setFormData((prevData: any) => ({
       ...prevData,
-      [name]: upadteData,
+      [name]: updatedData,
     }));
 
-    onChange({ ...formData, [name]: upadteData });
+    onChange({ ...formData, [name]: updatedData });
   };
 
   return (

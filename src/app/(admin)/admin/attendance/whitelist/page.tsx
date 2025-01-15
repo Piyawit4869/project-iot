@@ -7,7 +7,6 @@ import { TopSection } from '@/components/common/topSection';
 import { Input, Button, Link, Tabs, Tab } from '@nextui-org/react';
 import pagination from '@/pages/api/whitelists/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
-import { getWhitelists } from '@/pages/api/whitelists/get';
 // import * as Icon from '@ant-design/icons';
 
 interface FilterState {
@@ -50,7 +49,7 @@ export default function WhitelistsPage() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filters, setFilters] = useState<FilterState>({ ip: '', status: '' });
-  const [, setWhitelists] = useState<WhitelistItem[]>([]);
+  // const [, setWhitelists] = useState<WhitelistItem[]>([]);
   const [items, setItems] = useState<WhitelistItem[]>([]);
   console.log({setItems});
   const [meta, setMeta] = useState<MetaData>({
@@ -64,8 +63,6 @@ export default function WhitelistsPage() {
   const fetchWhitelists = async () => {
     setLoading(true);
     try {
-      const result = await getWhitelists();
-      setWhitelists(result.items);
 
       const { ip, status } = filters;
       const { items: fetchedItems, meta: fetchedMeta } = await pagination({

@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import debounce from 'lodash/debounce';
+import React, { useState, useEffect } from 'react';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Link, Input } from '@nextui-org/react';
@@ -70,7 +69,7 @@ const columns = [
 export default function WorkInfoPage() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [filters, setFilters] = useState<FilterState>({ name: '', status: '' }); // Changed to 'name'
+  const [filters,] = useState<FilterState>({ name: '', status: '' }); // Changed to 'name'
   const [items, setItems] = useState<WorkInfoItem[]>([]);
   const [meta, setMeta] = useState<MetaData>({
     totalItems: 0,
@@ -110,13 +109,13 @@ export default function WorkInfoPage() {
     }
   };
 
-  const handleFilterChange = useCallback(
-    debounce((updatedFilters) => {
-      setPage(1); // Reset to the first page for new filters
-      setFilters(updatedFilters);
-    }, 500),
-    [],
-  );
+  // const handleFilterChange = useCallback(
+  //   debounce((updatedFilters) => {
+  //     setPage(1); // Reset to the first page for new filters
+  //     setFilters(updatedFilters);
+  //   }, 500),
+  //   [],
+  // );
 
   // const onInputChange = (key: keyof typeof filters, value: string) => {
   //   const updatedFilters = { ...filters, [key]: value };
@@ -132,9 +131,9 @@ export default function WorkInfoPage() {
     fetchWorkInfo();
   }, [filters, page, rowsPerPage]);
 
-  function onInputChange(arg0: string, value: string): void {
-    throw new Error('Function not implemented.');
-  }
+  // function onInputChange(): void {
+  //   throw new Error('Function not implemented.');
+  // }
 
   return (
     <div>
@@ -162,10 +161,10 @@ export default function WorkInfoPage() {
                   labelPlacement="outside"
                   size="sm"
                   radius="sm"
-                  name="name" // Updated the name to 'name'
-                  placeholder="ค้นหาชื่อ" // Updated the placeholder text
-                  value={filters.name} // Updated to bind 'name' instead of 'ip'
-                  onChange={(e) => onInputChange('name', e.target.value)} // Updated to handle 'name'
+                  name="name"
+                  placeholder="ค้นหาชื่อ"
+                  value={filters.name} 
+                  // onChange={(e) => onInputChange('name', e.target.value)} 
                 />
               </div>
             </div>

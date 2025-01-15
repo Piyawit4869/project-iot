@@ -23,30 +23,24 @@ import {
   Select,
   SelectItem,
   TimeInput,
-  FormContext,
 } from '@nextui-org/react';
 import React from 'react';
 import { Tabs, Tab } from '@nextui-org/react';
 import get from '@/pages/api/setting/get';
 import { updatedetails } from '@/pages/api/setting/update-details';
 import { toast } from 'sonner';
-import { log } from 'console';
-import { update } from 'lodash';
-import { organizationLoader } from '@/app/api/organization';
-import { updatesystem } from '@/pages/api/setting/updata';
 import { TablePagination } from '@/components/common/tablePagination';
 
 export default function OraganizationPage() {
-  const [loading, setLoading] = React.useState(false);
-  const [errors, setErrors] = React.useState({}) as any;
+  const [, setLoading] = React.useState(false);
+  const [, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [data, setData] = React.useState() as any;
   const [organizationData, setOrganizationData] = React.useState() as any;
-  const [systemData, setSystemData] = React.useState() as any;
-  const [openDayData, setOpenDayData] = React.useState<any[]>([]);
-  const [page, setPage] = React.useState(1);
+  const [, setSystemData] = React.useState() as any;
+  const [, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [meta, setMeta] = React.useState({
+  const [meta] = React.useState({
     totalItems: 0,
     itemsPerPage: 10,
     totalPages: 0,
@@ -200,7 +194,7 @@ export default function OraganizationPage() {
   // Modal View Detail Address
   const {
     isOpen: isOpenAddress2,
-    onOpen: openAddress2,
+    // onOpen: openAddress2,
     onOpenChange: onChange3,
   } = useDisclosure();
 
@@ -225,10 +219,10 @@ export default function OraganizationPage() {
 
   const [selectedItem, setSelectedItem] = React.useState<any>(null);
 
-  const handleRowAddress = (row: any) => {
-    setSelectedItem(row);
-    openAddress2();
-  };
+  // const handleRowAddress = (row: any) => {
+  //   setSelectedItem(row);
+  //   openAddress2();
+  // };
 
   const handleRowSetting = (row: any) => {
     setSelectedItem(row);

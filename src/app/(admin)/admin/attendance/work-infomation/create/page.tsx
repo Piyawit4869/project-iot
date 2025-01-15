@@ -14,7 +14,7 @@ import {
 } from '@nextui-org/react';
 import createWorkInfos from '@/pages/api/workinfos/create'; //API
 import CardComponent from '@/components/common/card';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import * as Icon from '@ant-design/icons';
 import React from 'react';
 import { data } from 'framer-motion/client';

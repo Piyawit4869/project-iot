@@ -18,22 +18,19 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-  DateValue,
 } from '@nextui-org/react';
-import { parseDate, parseAbsoluteToLocal } from '@internationalized/date';
+import { parseDate } from '@internationalized/date';
 import getUser from '@/pages/api/user/get';
 import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { setDefaultAutoSelectFamily } from 'net';
 import { toast } from 'sonner';
-import { updateUser } from '@/pages/api/user/update';
 import { deleteUser } from '@/pages/api/user/delete';
 import { changePassword } from '@/pages/api/user/change-password';
 
 export default function UserSinglePage() {
   const [data, setData] = React.useState() as any;
-  const [loading, setLoading] = React.useState(false);
-  const [errors, setErrors] = React.useState({}) as any;
+  const [, setLoading] = React.useState(false);
+  const [, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [password, setPassword] = React.useState({}) as any;
   const [roleData, setRoleData] = React.useState({}) as any;
@@ -105,7 +102,7 @@ export default function UserSinglePage() {
         payload.active = true;
       }
 
-      const res = await updateUser({}, payload, params?.slug);
+      // const res = await updateUser({}, payload, params?.slug);
 
       toast.success('📝 แก้ไขข้อมูลผู้ใช้งานสำเร็จ!', {
         duration: 3000,

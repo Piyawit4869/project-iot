@@ -3,7 +3,6 @@ import Scaffold from '@/components/common/scaffold';
 import * as Icon from '@ant-design/icons';
 import { Button, Select, SelectItem, TimeInput } from '@nextui-org/react';
 import React from 'react';
-import get from '@/pages/api/setting/get';
 import { parseTime } from '@internationalized/date';
 
 interface InputSystem {
@@ -17,10 +16,10 @@ export const InputSystem = ({
   data: any;
   onChange: (updatedData: any) => void;
 }) => {
-  const [items, setItems] = React.useState([{ description: '', amount: '' }]);
+  const [items,] = React.useState([{ description: '', amount: '' }]);
   const [formData, setFormData] = React.useState<any>(data);
   const [openDay, setOpenDay] = React.useState<any[]>([]);
-  const [loading, setLoading] = React.useState(false);
+  const [loading,] = React.useState(false);
 
   React.useEffect(() => {
     if (data) {
@@ -112,11 +111,7 @@ export const InputSystem = ({
                 label="ภาษา"
                 labelPlacement={'outside'}
                 onChange={handleChange}
-<<<<<<< HEAD
                 selectedKeys={[formData?.defaultLanguage || '' ]}
-=======
-                selectedKeys={[formData?.defaultLanguage]}
->>>>>>> 5dd16d6198a20eef23d9566ed75d7c39f72256b4
               >
                 {language.map((item) => (
                   <SelectItem key={item.value} value={item.value}>
@@ -131,11 +126,7 @@ export const InputSystem = ({
                 label="ธีมสี"
                 labelPlacement={'outside'}
                 onChange={handleChange}
-<<<<<<< HEAD
                 selectedKeys={[formData?.theme || '']}
-=======
-                selectedKeys={[formData?.theme]}
->>>>>>> 5dd16d6198a20eef23d9566ed75d7c39f72256b4
               >
                 {themes.map((item) => (
                   <SelectItem
@@ -156,11 +147,7 @@ export const InputSystem = ({
                 label="ขนาดตัวอักษร"
                 labelPlacement={'outside'}
                 onChange={handleChange}
-<<<<<<< HEAD
                 selectedKeys={[formData?.textDisplay || '']}
-=======
-                selectedKeys={[formData?.textDisplay]}
->>>>>>> 5dd16d6198a20eef23d9566ed75d7c39f72256b4
               >
                 {fontSize.map((item: any) => (
                   <SelectItem

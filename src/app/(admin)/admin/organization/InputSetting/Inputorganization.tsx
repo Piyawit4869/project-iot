@@ -15,10 +15,7 @@ import {
 } from '@nextui-org/react';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
-import { parseAbsoluteToLocal, parseDate } from '@internationalized/date';
-import { cookies } from 'next/headers';
-import { log } from 'node:console';
-import { label } from 'framer-motion/client';
+import { parseDate } from '@internationalized/date';
 
 interface Inputorganization {
   data: any;
@@ -32,7 +29,6 @@ export const Inputorganization = ({
   onChange: (updatedData: any) => void;
 }) => {
   const [formData, setFormData] = React.useState<any>(data);
-  const [Formtype, setFormtype] = React.useState(formData.formType);
 
   React.useEffect(() => {
     if (data) {

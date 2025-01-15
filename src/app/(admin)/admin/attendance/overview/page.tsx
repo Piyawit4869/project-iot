@@ -6,7 +6,6 @@ import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link, Tab, Tabs } from '@nextui-org/react';
 import pagination from '@/pages/api/attendances/pagination';
-import getAttendances, { getAttendance } from '@/pages/api/attendances/get';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date';
 import {
@@ -31,7 +30,7 @@ export default function AttendancesPage() {
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [filters, setFilters] = React.useState({ name: '', docNo: '' });
-  const [, setAttendances] = React.useState<AttendanceItem[]>([]);
+  // const [, setAttendances] = React.useState<AttendanceItem[]>([]);
   const [items, setItems] = React.useState<AttendanceItem[]>([]);
   const [meta, setMeta] = React.useState({
     totalItems: 0,
@@ -41,56 +40,48 @@ export default function AttendancesPage() {
   });
   const [loading, setLoading] = React.useState(false);
 
-const columns = [
-  {
-    title: 'ชื่อ',
-    dataIndex: 'userName',
-    Link: '/admin/attendance/overview',
-  },
-  {
-    title: 'กิจกรรม',
-    dataIndex: 'action',
-  },
-  {
-    title: 'บันทึกเมื่อเวลา',
-    dataIndex: 'stampTime',
-  },
-  {
-    title: 'บันทึกเมื่อวันที่',
-    dataIndex: 'stampDate',
-  },
-];
+  const columns = [
+    {
+      title: 'ชื่อ',
+      dataIndex: 'userName',
+      Link: '/admin/attendance/overview',
+    },
+    {
+      title: 'กิจกรรม',
+      dataIndex: 'action',
+    },
+    {
+      title: 'บันทึกเมื่อเวลา',
+      dataIndex: 'stampTime',
+    },
+    {
+      title: 'บันทึกเมื่อวันที่',
+      dataIndex: 'stampDate',
+    },
+  ];
 
   // Fetch data from the API
   const fetchAttendances = async () => {
     setLoading(true);
     try {
-      const result = await getAttendance();
-      if (result?.items) {
-        setAttendances(result.items);
-      } else {
-        setAttendances([]); // Fallback to an empty array if result.items is undefined
-      }
-
       const { name, docNo } = filters;
-      const { items: fetchedItems = [], meta: fetchedMeta = {} } =
-        await pagination({
-          page,
-          limit: rowsPerPage,
-          ...(name && { name }),
-          ...(docNo && { docNo }),
-        });
+      const { items: fetchedItems, meta: fetchedMeta } = await pagination({
+        page,
+        limit: rowsPerPage,
+        ...(name && { name }),
+        ...(docNo && { docNo }),
+      });
 
       setItems(
         fetchedItems.map((item: AttendanceItem) => ({
           ...item,
           stampDate: formatDate(item.records.stamp).date,
           stampTime: formatDate(item.records.stamp).time,
-          userName: item.records.user?.userName || '', 
-          status: item.records.user?.userName || '', 
-          stamp: item.records?.currentDate || '', 
-          action: item.records?.currentDate || '', 
-          currentDate: item.records?.currentDate || '', 
+          userName: item.records.user?.userName || '',
+          status: item.records.user?.userName || '',
+          stamp: item.records?.currentDate || '',
+          action: item.records?.currentDate || '',
+          currentDate: item.records?.currentDate || '',
         })),
       );
 
@@ -112,7 +103,7 @@ const columns = [
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
     }),
-    [],
+    [filters],
   );
 
   // Handle input changes
@@ -246,5 +237,3 @@ const columns = [
     </div>
   );
 }
-
-
