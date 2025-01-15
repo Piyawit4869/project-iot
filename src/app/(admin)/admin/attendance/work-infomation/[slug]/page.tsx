@@ -69,19 +69,19 @@ export default function WhitelistSinglePage() {
     }));
   };
 
-  const handleDateChange = (name: string) => (date: any) => {
-    if (date?.year && date?.month && date?.day) {
-      const isoString = new Date(
-        date.year,
-        date.month - 1,
-        date.day,
-      ).toISOString();
-      setFormData((prevData: any) => ({
-        ...prevData,
-        [name]: isoString,
-      }));
-    }
-  };
+  // const handleDateChange = (name: string) => (date: any) => {
+  //   if (date?.year && date?.month && date?.day) {
+  //     const isoString = new Date(
+  //       date.year,
+  //       date.month - 1,
+  //       date.day,
+  //     ).toISOString();
+  //     setFormData((prevData: any) => ({
+  //       ...prevData,
+  //       [name]: isoString,
+  //     }));
+  //   }
+  // };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

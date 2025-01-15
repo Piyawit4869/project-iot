@@ -117,7 +117,11 @@ export const InputSystem = ({
                 label="ภาษา"
                 labelPlacement={'outside'}
                 onChange={handleChange}
+<<<<<<< HEAD
+                selectedKeys={[formData?.defaultLanguage || '' ]}
+=======
                 selectedKeys={[formData?.defaultLanguage]}
+>>>>>>> 5dd16d6198a20eef23d9566ed75d7c39f72256b4
               >
                 {language.map((item) => (
                   <SelectItem key={item.value} value={item.value}>
@@ -132,7 +136,11 @@ export const InputSystem = ({
                 label="ธีมสี"
                 labelPlacement={'outside'}
                 onChange={handleChange}
+<<<<<<< HEAD
+                selectedKeys={[formData?.theme || '']}
+=======
                 selectedKeys={[formData?.theme]}
+>>>>>>> 5dd16d6198a20eef23d9566ed75d7c39f72256b4
               >
                 {themes.map((item) => (
                   <SelectItem
@@ -153,7 +161,11 @@ export const InputSystem = ({
                 label="ขนาดตัวอักษร"
                 labelPlacement={'outside'}
                 onChange={handleChange}
+<<<<<<< HEAD
+                selectedKeys={[formData?.textDisplay || '']}
+=======
                 selectedKeys={[formData?.textDisplay]}
+>>>>>>> 5dd16d6198a20eef23d9566ed75d7c39f72256b4
               >
                 {fontSize.map((item: any) => (
                   <SelectItem

@@ -8,7 +8,7 @@ import { Input, Button, Link, Tabs, Tab } from '@nextui-org/react';
 import pagination from '@/pages/api/whitelists/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { getWhitelists } from '@/pages/api/whitelists/get';
-import * as Icon from '@ant-design/icons';
+// import * as Icon from '@ant-design/icons';
 
 interface FilterState {
   ip: string;

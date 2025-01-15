@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 8080",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -23,6 +23,7 @@
     "react": "19.0.0-rc-66855b96-20241106",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react-vertical-timeline-component": "^3.5.3",
     "sonner": "^1.7.1",
     "swr": "^2.3.0"
   },
@@ -30,6 +31,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-vertical-timeline-component": "^3.3.6",
     "@types/uuid": "^10.0.0",
     "eslint": "^8",
     "eslint-config-next": "15.0.3",
