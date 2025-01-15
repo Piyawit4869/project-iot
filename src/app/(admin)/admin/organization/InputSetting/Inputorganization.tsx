@@ -17,6 +17,8 @@ import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 import { parseAbsoluteToLocal, parseDate } from '@internationalized/date';
 import { cookies } from 'next/headers';
+import { log } from 'node:console';
+import { label } from 'framer-motion/client';
 
 interface Inputorganization {
   data: any;
@@ -30,12 +32,15 @@ export const Inputorganization = ({
   onChange: (updatedData: any) => void;
 }) => {
   const [formData, setFormData] = React.useState<any>(data);
+  const [Formtype, setFormtype] = React.useState(formData.formType);
 
   React.useEffect(() => {
     if (data) {
       setFormData(data.organization);
     }
   }, [data]);
+
+  console.log('data', data);
 
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
@@ -60,6 +65,8 @@ export const Inputorganization = ({
   //   setItems(updatedItems);
   // };
 
+  console.log(formData.openingDate);
+
   return (
     <Scaffold
       child={
@@ -81,6 +88,7 @@ export const Inputorganization = ({
                 title="ปิดองค์กร"
                 description="ใช้สำหรับการปิดหรือยุติการทำงานขององค์กรในระบบหรือเว็บไซต์<br>ซึ่งอาจรวมถึงการปิดการใช้งานบัญชีองค์กร"
                 control="ปิดองค์กร"
+                checked={data.active}
                 onChange={handleChange}
               />
             </div>
@@ -91,14 +99,14 @@ export const Inputorganization = ({
               color="secondary"
               label="ประเภทธุรกิจ"
               orientation="horizontal"
+              value={formData.fromType}
               onChange={handleChange}
             >
-              <Radio name="Individual" value="buenos-aires">
-                บุคคลธรรมดา
-              </Radio>
-              <Radio name="Legal-entity" value="sydney">
-                นิติบุคคล
-              </Radio>
+              {FormType.map((item) => (
+                <Radio key={item.value} value={item.value}>
+                  {item.label}
+                </Radio>
+              ))}
             </RadioGroup>
           </div>
 
@@ -109,6 +117,7 @@ export const Inputorganization = ({
               placeholder="สถานะธุรกิจ"
               label="สถานะธุรกิจ"
               labelPlacement={'outside'}
+              selectedKeys={[formData.status]}
               onChange={handleChange}
             >
               {BusinessStatus.map((item: any) => (
@@ -127,6 +136,7 @@ export const Inputorganization = ({
               placeholder="รูปแบบธุรกิจ"
               label="รูปแบบธุรกิจ"
               labelPlacement={'outside'}
+              selectedKeys={[formData.type]}
               onChange={handleChange}
             >
               {BusinessModel.map((item) => (
@@ -150,6 +160,7 @@ export const Inputorganization = ({
               labelPlacement="outside"
               name="nameTh"
               placeholder="กรอกชื่อกิจการ"
+              value={formData.nameTh}
               onChange={handleChange}
             />
             <Input
@@ -160,6 +171,7 @@ export const Inputorganization = ({
               labelPlacement="outside"
               name="nameEn"
               placeholder="Enter the business name"
+              value={formData.nameEn}
               onChange={handleChange}
             />
           </div>
@@ -171,7 +183,12 @@ export const Inputorganization = ({
                   ลงทะเบียนเลข 13 หลัก
                 </p>
                 <div className="gap-16">
-                  <InputOtp name="taxId" length={13} onChange={handleChange} />
+                  <InputOtp
+                    name="taxId"
+                    length={13}
+                    onChange={handleChange}
+                    value={formData.taxId}
+                  />
                 </div>
               </div>
             </div>
@@ -188,6 +205,7 @@ export const Inputorganization = ({
               placeholder="คำอธิบายธุรกิจ"
               name="descriptionsTh"
               variant="bordered"
+              // value={formData.descriptionsTh}
               onChange={handleChange}
             />
             <Textarea
@@ -200,6 +218,7 @@ export const Inputorganization = ({
               placeholder="Enter your Business Description"
               name="descriptionsEn"
               variant="bordered"
+              // value={formData.descriptionsEn}
               onChange={handleChange}
             />
           </div>
@@ -211,12 +230,17 @@ export const Inputorganization = ({
                 label="วันที่จดทะเบียน"
                 labelPlacement={'outside'}
                 disableAnimation
+                value={
+                  formData.openingDate
+                    ? parseDate(formData.openingDate.split('T')[0])
+                    : undefined
+                }
                 onChange={(date: any) => {
                   if (date?.year && date?.month && date?.day) {
                     // Convert the custom date object to a valid Date instance
                     const parsedDate = new Date(
                       date.year,
-                      date.month - 1,
+                      date.month,
                       date.day,
                     ); // month is 0-indexed
                     parsedDate.setHours(12);
@@ -225,7 +249,7 @@ export const Inputorganization = ({
                     // Update formData with the ISO string
                     setFormData((prevData: any) => ({
                       ...prevData,
-                      birthDate: isoString,
+                      openingDate: isoString,
                     }));
                   } else {
                     console.error('Invalid date object:', date);
@@ -242,6 +266,7 @@ export const Inputorganization = ({
                   defaultSelected
                   aria-label="Automatic updates"
                   color="secondary"
+                  checked={formData.registerVat}
                   onChange={handleChange}
                 />
               </div>
@@ -254,6 +279,7 @@ export const Inputorganization = ({
               labelPlacement="outside"
               name="websiteUrl"
               placeholder="www.three-chief.com"
+              value={formData.websiteUrl}
               onChange={handleChange}
             />
             <Input
@@ -262,6 +288,7 @@ export const Inputorganization = ({
               labelPlacement="outside"
               name="domainName"
               placeholder="threechief.com"
+              value={formData.domainName}
               onChange={handleChange}
             />
           </div>
@@ -276,6 +303,7 @@ export const Inputorganization = ({
               labelPlacement="outside"
               name="contactName"
               placeholder="ภูวิศ วัฒนะ"
+              // value={formData.contactName}
               onChange={handleChange}
             />
             <Input
@@ -284,6 +312,7 @@ export const Inputorganization = ({
               labelPlacement="outside"
               name="contactPhone"
               placeholder="+66 888 821 480"
+              value={formData.contactPhone}
               onChange={handleChange}
             />
           </div>
@@ -294,6 +323,7 @@ export const Inputorganization = ({
               labelPlacement="outside"
               name="contactEmail"
               placeholder="phuwis@threechief.com"
+              value={formData.contactEmail}
               onChange={handleChange}
             />
             <Input
@@ -302,6 +332,7 @@ export const Inputorganization = ({
               labelPlacement="outside"
               name="contactWebsite"
               placeholder="www.three-chief.com"
+              // value={formData.contactWebsite}
               onChange={handleChange}
             />
           </div>
@@ -312,6 +343,7 @@ export const Inputorganization = ({
               labelPlacement="outside"
               name="contactFacebook"
               placeholder="Phuwis Watthana"
+              // value={formData.contactFacebook}
               onChange={handleChange}
             />
             <Input
@@ -320,6 +352,7 @@ export const Inputorganization = ({
               labelPlacement="outside"
               name="contactLine"
               placeholder="0888821480"
+              // value={formData.contactLine}
               onChange={handleChange}
             />
           </div>
@@ -330,6 +363,7 @@ export const Inputorganization = ({
               labelPlacement="outside"
               name="contactWhatsapp"
               placeholder="0888821480"
+              // value={formData.contactWhatsapp}
               onChange={handleChange}
             />
             <Input
@@ -338,6 +372,7 @@ export const Inputorganization = ({
               labelPlacement="outside"
               name="contactinfo"
               placeholder="10 โมงถึง 6 โมงเย็น"
+              // value={formData.contactWebsite}
               onChange={handleChange}
             />
           </div>
@@ -382,4 +417,9 @@ const BusinessModel = [
   { label: 'สมาคม', value: '9' },
   { label: 'กิจกรรมร่วมค้า', value: '10' },
   { label: 'อื่นๆ', value: '11' },
+];
+
+const FormType = [
+  { label: 'นิติบุคคล', value: 'juristic_person' },
+  { label: 'บุคคลธรรมดา', value: 'individual' },
 ];
