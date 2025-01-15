@@ -14,6 +14,7 @@ import {
   DropdownSection,
 } from '@nextui-org/react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function AdminLayout({
   children,
@@ -21,6 +22,14 @@ export default function AdminLayout({
   children: React.ReactNode;
 }>) {
   const me = JSON.parse(localStorage.getItem('me') as any);
+
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (!me) {
+      router.push('/');
+    }
+  }, []);
 
   const items = [
     {
@@ -104,9 +113,9 @@ export default function AdminLayout({
                       className="w-8 h-8 rounded-full"
                     />
                     <span className="text-gray-800 text-xs">
-                      {`${me.profile.firstName ? me.profile.firstName : ''} ${
-                        me.profile.lastName ? me.profile.lastName : ''
-                      }`}
+                      {`${
+                        me?.profile?.firstName ? me?.profile?.firstName : ''
+                      } ${me?.profile?.lastName ? me?.profile?.lastName : ''}`}
                     </span>
                   </button>
                 </DropdownTrigger>
