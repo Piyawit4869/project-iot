@@ -5,7 +5,7 @@ export default async function getSingleAttendance(id: string): Promise<any> {
     const accessToken = localStorage.getItem('accessToken');
 
     //query params in this
-    const response = await fetch(`${base_url}/crud/attendances/${id}`, {
+    const response = await fetch(`${base_url}/crud/attendances/daily-attendances/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -23,4 +23,21 @@ export default async function getSingleAttendance(id: string): Promise<any> {
     console.error('Error fetching data:', error);
     return {};
   }
+} 
+
+
+export async function getAttendance(){
+  const url = `${base_url}/crud/attendances/daily-attendances/`;
+  const accessToken = localStorage.getItem('accessToken');
+
+  const data = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+      // Authorization: `Bearer ${session.accessToken}`,
+    },
+  });
+
+  return await data.json();
 }

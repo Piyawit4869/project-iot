@@ -22,7 +22,7 @@ export default async function pagination({
   docNo,
 }: FetchAttendancesParams): Promise<FetchAttendancesResponse> {
   try {
-    const url = new URL(`${base_url}/crud/attendances`);
+    const url = new URL(`${base_url}/crud/attendances/daily-attendances`);
     url.searchParams.append('page', page.toString());
     url.searchParams.append('limit', limit.toString());
 

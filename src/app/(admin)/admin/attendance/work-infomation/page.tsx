@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
-import { Button, Link } from '@nextui-org/react';
+import { Button, Link, Input } from '@nextui-org/react';
 import pagination from '@/pages/api/workinfos/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date'; // <-- Import formatDate here
@@ -110,13 +110,13 @@ export default function WorkInfoPage() {
     }
   };
 
-  // const handleFilterChange = useCallback(
-  //   debounce((updatedFilters) => {
-  //     setPage(1); // Reset to the first page for new filters
-  //     setFilters(updatedFilters);
-  //   }, 500),
-  //   [],
-  // );
+  const handleFilterChange = useCallback(
+    debounce((updatedFilters) => {
+      setPage(1); // Reset to the first page for new filters
+      setFilters(updatedFilters);
+    }, 500),
+    [],
+  );
 
   // const onInputChange = (key: keyof typeof filters, value: string) => {
   //   const updatedFilters = { ...filters, [key]: value };
@@ -132,6 +132,10 @@ export default function WorkInfoPage() {
     fetchWorkInfo();
   }, [filters, page, rowsPerPage]);
 
+  function onInputChange(arg0: string, value: string): void {
+    throw new Error('Function not implemented.');
+  }
+
   return (
     <div>
       <Scaffold
@@ -142,6 +146,7 @@ export default function WorkInfoPage() {
               buttons={[
                 <Link href={'work-infomation/create'} key={'create button'}>
                   <Button
+                    size="sm"
                     className="bg-accent1 text-white"
                     key={'create button'}
                   >
@@ -150,6 +155,20 @@ export default function WorkInfoPage() {
                 </Link>,
               ]}
             />
+            <div className="bg-white shadow rounded-2xl mb-4 mt-4">
+              <div className="flex flex-wrap gap-4">
+                <Input
+                  className="flex-1 p-2 text-headFont"
+                  labelPlacement="outside"
+                  size="sm"
+                  radius="sm"
+                  name="name" // Updated the name to 'name'
+                  placeholder="ค้นหาชื่อ" // Updated the placeholder text
+                  value={filters.name} // Updated to bind 'name' instead of 'ip'
+                  onChange={(e) => onInputChange('name', e.target.value)} // Updated to handle 'name'
+                />
+              </div>
+            </div>
             {loading ? (
               <div className="flex justify-center items-center h-[350px]">
                 <div className="relative flex flex-col items-center space-y-4">
@@ -161,73 +180,6 @@ export default function WorkInfoPage() {
               </div>
             ) : (
               <>
-                {/* <div className="bg-white shadow rounded-lg mb-4 mt-4">
-                  <div className="flex flex-wrap gap-4">
-                    <Input
-                      className="flex-1 p-2 text-headFont"
-                      labelPlacement="outside"
-                      size="lg"
-                      name="name"  // Updated the name to 'name'
-                      placeholder="ค้นหาชื่อ"  // Updated the placeholder text
-                      value={filters.name}  // Updated to bind 'name' instead of 'ip'
-                      onChange={(e) => onInputChange('name', e.target.value)}  // Updated to handle 'name'
-                    />
-                  </div>
-
-                  <div className="flex flex-wrap gap-4 p-4">
-                    <Popover placement="bottom" showArrow={true}>
-                      <PopoverTrigger>
-                        <Button
-                          onClick={() => handleStatusChange('')}
-                          className="bg-accent1 text-white"
-                        >
-                          All
-                        </Button>
-                      </PopoverTrigger>
-                      <></>
-                    </Popover>
-
-                    <Popover placement="bottom" showArrow={true}>
-                      <PopoverTrigger>
-                        <Button
-                          onClick={() => handleStatusChange('pending')}
-                          className=""
-                        >
-                          <Icon.SyncOutlined spin />
-                          Pending
-                        </Button>
-                      </PopoverTrigger>
-                      <></>
-                    </Popover>
-
-                    <Popover placement="bottom" showArrow={true}>
-                      <PopoverTrigger>
-                        <Button
-                          onClick={() => handleStatusChange('approved')}
-                          className="bg-accent1 text-white"
-                        >
-                          <Icon.CheckOutlined />
-                          Approved
-                        </Button>
-                      </PopoverTrigger>
-                      <></>
-                    </Popover>
-
-                    <Popover placement="bottom" showArrow={true}>
-                      <PopoverTrigger>
-                        <Button
-                          onClick={() => handleStatusChange('rejected')}
-                          className="bg-accent2 text-white"
-                        >
-                          <Icon.CloseOutlined />
-                          Rejected
-                        </Button>
-                      </PopoverTrigger>
-                      <></>
-                    </Popover>
-                  </div>
-                </div> */}
-
                 <TablePagination
                   initialRows={items}
                   initialMeta={meta}

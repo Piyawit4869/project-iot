@@ -6,6 +6,7 @@ import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link, Tab, Tabs } from '@nextui-org/react';
 import pagination from '@/pages/api/attendances/pagination';
+import getAttendances, { getAttendance } from '@/pages/api/attendances/get';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date';
 import {
@@ -15,25 +16,23 @@ import {
 import 'react-vertical-timeline-component/style.min.css';
 
 interface AttendanceItem {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string;
-  status: string;
-  action: string;
-  active: boolean;
-  currentDate: string;
-  stamp: string;
-  reasons: string;
-  note: string;
-  workInfoId: string;
+  records: {
+    status: string;
+    stamp: string;
+    action: string;
+    currentDate: string;
+    user: {
+      userName: string;
+    };
+  };
 }
 
-export default function NotationsPage() {
+export default function AttendancesPage() {
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [filters, setFilters] = React.useState({ name: '', docNo: '' });
-  const [items, setItems] = React.useState([]) as any;
+  const [, setAttendances] = React.useState<AttendanceItem[]>([]);
+  const [items, setItems] = React.useState<AttendanceItem[]>([]);
   const [meta, setMeta] = React.useState({
     totalItems: 0,
     itemsPerPage: 10,
@@ -42,27 +41,66 @@ export default function NotationsPage() {
   });
   const [loading, setLoading] = React.useState(false);
 
+const columns = [
+  {
+    title: 'ชื่อ',
+    dataIndex: 'userName',
+    Link: '/admin/attendance/overview',
+  },
+  {
+    title: 'กิจกรรม',
+    dataIndex: 'action',
+  },
+  {
+    title: 'บันทึกเมื่อเวลา',
+    dataIndex: 'stampTime',
+  },
+  {
+    title: 'บันทึกเมื่อวันที่',
+    dataIndex: 'stampDate',
+  },
+];
+
   // Fetch data from the API
-  const fetchNotations = async () => {
+  const fetchAttendances = async () => {
     setLoading(true);
     try {
+      const result = await getAttendance();
+      if (result?.items) {
+        setAttendances(result.items);
+      } else {
+        setAttendances([]); // Fallback to an empty array if result.items is undefined
+      }
+
       const { name, docNo } = filters;
-      const { items: fetchedItems, meta: fetchedMeta } = await pagination({
-        page,
-        limit: rowsPerPage,
-        ...(name && { name }),
-        ...(docNo && { docNo }),
-      });
+      const { items: fetchedItems = [], meta: fetchedMeta = {} } =
+        await pagination({
+          page,
+          limit: rowsPerPage,
+          ...(name && { name }),
+          ...(docNo && { docNo }),
+        });
+
       setItems(
         fetchedItems.map((item: AttendanceItem) => ({
           ...item,
-          stampDate: formatDate(item.stamp).date,
-          stampTime: formatDate(item.stamp).time,
+          stampDate: formatDate(item.records.stamp).date,
+          stampTime: formatDate(item.records.stamp).time,
+          userName: item.records.user?.userName || '', 
+          status: item.records.user?.userName || '', 
+          stamp: item.records?.currentDate || '', 
+          action: item.records?.currentDate || '', 
+          currentDate: item.records?.currentDate || '', 
         })),
       );
-      setMeta(fetchedMeta);
+
+      setMeta({
+        ...meta,
+        ...fetchedMeta,
+      });
     } catch (error) {
-      console.error('Error fetching notations:', error);
+      console.error('Error fetching attendances:', error);
+      setItems([]); // Set to an empty array on error to prevent further issues
     } finally {
       setLoading(false);
     }
@@ -85,7 +123,7 @@ export default function NotationsPage() {
 
   // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
-    fetchNotations();
+    fetchAttendances();
   }, [filters, page, rowsPerPage]);
 
   return (
@@ -107,12 +145,13 @@ export default function NotationsPage() {
                 </Link>,
               ]}
             />
-            <div className="bg-white shadow rounded-lg mb-4 mt-4 ">
+            <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
               <div className="grid grid-cols-1 sm:grid-cols-2">
                 <Input
                   className="w-full p-2 text-headFont"
                   labelPlacement="outside"
                   size="sm"
+                  radius="sm"
                   name="name"
                   placeholder="ค้นหาชื่อ"
                   value={filters.name}
@@ -150,261 +189,49 @@ export default function NotationsPage() {
                     />
                   )}
                 </Tab>
-                <Tab key="timeline" title="ไทม์ไลน์">
+                <Tab
+                  key="timeline"
+                  title="ไทม์ไลน์"
+                  className="grid grid-cols-1 sm:grid-cols-2"
+                >
                   <VerticalTimeline layout="1-column">
-                  <VerticalTimelineElement
-                      className="rounded-xl"
+                    <VerticalTimelineElement
+                      className=" min-w-80 w-max-120 "
                       contentStyle={{
-                        background: '#00a57c',
-                        color: '#fff',
-                        borderBottomLeftRadius: '25px', 
-                        borderBottomRightRadius: '25px', 
-                        borderTopRightRadius: '25px',
+                        background: '#fff',
+                        borderRight: '3px solid #00a57c',
+                        borderTop: '2px solid #00a57c',
+                        color: '#000',
+                        borderBottomLeftRadius: '15px',
+                        borderBottomRightRadius: '15px',
+                        borderTopRightRadius: '15px',
                       }}
                       contentArrowStyle={{
-                        borderRight: '7px solid  #00a57c',
+                        borderRight: '8px solid  #00a57c',
                       }}
-                      date="2011 - present"
-                      iconStyle={{
-                        background: '#00a57c',
-                        color: '#fff',
-                      }}
-                    >
-                      <h3 className="vertical-timeline-element-title">
-                        Creative Director
-                      </h3>
-                      <h4 className="vertical-timeline-element-subtitle">
-                        Miami, FL
-                      </h4>
-                      <p>
-                        Creative Direction, User Experience, Visual Design,
-                        Project Management, Team Leading
-                      </p>
-                    </VerticalTimelineElement>
-                  <VerticalTimelineElement
-                      className="rounded-xl"
-                      contentStyle={{
-                        background: '#00a57c',
-                        color: '#fff',
-                        borderBottomLeftRadius: '25px', 
-                        borderBottomRightRadius: '25px', 
-                        borderTopRightRadius: '25px',
-                      }}
-                      contentArrowStyle={{
-                        borderRight: '7px solid  #00a57c',
-                      }}
-                      date="2011 - present"
                       iconStyle={{
                         background: '#00a57c',
                         color: '#fff',
                       }}
                     >
-                      <h3 className="vertical-timeline-element-title">
-                        Creative Director
+                      <h3
+                        className="vertical-timeline-element-title"
+                        style={{
+                          wordBreak: 'break-word', // ตัดคำที่เกินขอบ
+                          whiteSpace: 'normal', // ให้ข้อความแสดงหลายบรรทัด
+                          overflowWrap: 'break-word',
+                        }}
+                      >
+                        Name :
                       </h3>
-                      <h4 className="vertical-timeline-element-subtitle">
-                        Miami, FL
-                      </h4>
-                      <p>
-                        Creative Direction, User Experience, Visual Design,
-                        Project Management, Team Leading
-                      </p>
-                    </VerticalTimelineElement>
-                    <VerticalTimelineElement
-                      className="rounded-xl"
-                      contentStyle={{
-                        background: '#00a57c',
-                        color: '#fff',
-                        borderBottomLeftRadius: '25px', 
-                        borderBottomRightRadius: '25px', 
-                        borderTopRightRadius: '25px',
-                      }}
-                      contentArrowStyle={{
-                        borderRight: '7px solid  #00a57c',
-                      }}
-                      date="2011 - present"
-                      iconStyle={{
-                        background: '#00a57c',
-                        color: '#fff',
-                      }}
-                    >
-                      <h3 className="vertical-timeline-element-title">
-                        Creative Director
-                      </h3>
-                      <h4 className="vertical-timeline-element-subtitle">
-                        Miami, FL
-                      </h4>
-                      <p>
-                        Creative Direction, User Experience, Visual Design,
-                        Project Management, Team Leading
-                      </p>
-                    </VerticalTimelineElement>
-                    <VerticalTimelineElement
-                      className="rounded-xl"
-                      contentStyle={{
-                        background: '#ffbe3d',
-                        color: '#fff',
-                        borderBottomLeftRadius: '25px', 
-                        borderBottomRightRadius: '25px', 
-                        borderTopRightRadius: '25px',
-                      }}
-                      contentArrowStyle={{
-                        borderRight: '7px solid  #ffbe3d',
-                      }}
-                      date="2011 - present"
-                      iconStyle={{
-                        background: '#ffbe3d',
-                        color: '#fff',
-                      }}
-                    >
-                      <h3 className="vertical-timeline-element-title">
-                        Art Director
-                      </h3>
-                      <h4 className="vertical-timeline-element-subtitle">
-                        San Francisco, CA
-                      </h4>
-                      <p>
-                        Creative Direction, User Experience, Visual Design, SEO,
-                        Online Marketing
-                      </p>
-                    </VerticalTimelineElement>
-                    <VerticalTimelineElement
-                      className="rounded-xl"
-                      contentStyle={{
-                        background: '#ffbe3d',
-                        color: '#fff',
-                        borderBottomLeftRadius: '25px', 
-                        borderBottomRightRadius: '25px', 
-                        borderTopRightRadius: '25px',
-                      }}
-                      contentArrowStyle={{
-                        borderRight: '7px solid  #ffbe3d',
-                      }}
-                      date="2011 - present"
-                      iconStyle={{
-                        background: '#ffbe3d',
-                        color: '#fff',
-                      }}
-                    >
-                      <h3 className="vertical-timeline-element-title">
-                        Web Designer
-                      </h3>
-                      <h4 className="vertical-timeline-element-subtitle">
-                        Los Angeles, CA
-                      </h4>
-                      <p>User Experience, Visual Design</p>
-                    </VerticalTimelineElement>
-                    <VerticalTimelineElement
-                      className="rounded-xl"
-                      contentStyle={{
-                        background: '#ffbe3d',
-                        color: '#fff',
-                        borderBottomLeftRadius: '25px', 
-                        borderBottomRightRadius: '25px', 
-                        borderTopRightRadius: '25px',
-                      }}
-                      contentArrowStyle={{
-                        borderRight: '7px solid  #ffbe3d',
-                      }}
-                      date="2011 - present"
-                      iconStyle={{
-                        background: '#ffbe3d',
-                        color: '#fff',
-                      }}
-                    >
-                      <h3 className="vertical-timeline-element-title">
-                        Web Designer
-                      </h3>
-                      <h4 className="vertical-timeline-element-subtitle">
-                        San Francisco, CA
-                      </h4>
-                      <p>User Experience, Visual Design</p>
-                    </VerticalTimelineElement>
-                    <VerticalTimelineElement
-                      className="rounded-xl"
-                      contentStyle={{
-                        background: '#c41e1e',
-                        color: '#fff',
-                        borderBottomLeftRadius: '25px', 
-                        borderBottomRightRadius: '25px', 
-                        borderTopRightRadius: '25px',
-                      }}
-                      contentArrowStyle={{
-                        borderRight: '7px solid  rgb(223, 25, 91)',
-                      }}
-                      date="2011 - present"
-                      iconStyle={{
-                        background: '#c41e1e',
-                        color: '#fff',
-                      }}
-                    >
-                      <h3 className="vertical-timeline-element-title">
-                        Content Marketing for Web, Mobile and Social Media
-                      </h3>
-                      <h4 className="vertical-timeline-element-subtitle">
-                        Online Course
-                      </h4>
-                      <p>Strategy, Social Media</p>
-                    </VerticalTimelineElement>
-                    <VerticalTimelineElement
-                      className="rounded-xl"
-                      contentStyle={{
-                        background: '#c41e1e',
-                        color: '#fff',
-                        borderBottomLeftRadius: '25px', 
-                        borderBottomRightRadius: '25px', 
-                        borderTopRightRadius: '25px',
-                      }}
-                      contentArrowStyle={{
-                        borderRight: '7px solid  rgb(223, 25, 91)',
-                      }}
-                      date="2011 - present"
-                      iconStyle={{
-                        background: '#c41e1e',
-                        color: '#fff',
-                      }}
-                    >
-                      <h3 className="vertical-timeline-element-title">
-                        Agile Development Scrum Master
-                      </h3>
-                      <h4 className="vertical-timeline-element-subtitle">
-                        Certification
-                      </h4>
-                      <p>Creative Direction, User Experience, Visual Design</p>
-                    </VerticalTimelineElement>
-                    <VerticalTimelineElement
-                      className="rounded-xl"
-                      contentStyle={{
-                        background: '#c41e1e',
-                        color: '#fff',
-                        borderBottomLeftRadius: '25px', 
-                        borderBottomRightRadius: '25px', 
-                        borderTopRightRadius: '25px',
-                      }}
-                      contentArrowStyle={{
-                        borderRight: '7px solid  rgb(223, 25, 91)',
-                      }}
-                      date="2011 - present"
-                      iconStyle={{
-                        background: '#c41e1e',
-                        color: '#fff',
-                      }}
-                    >
-                      <h3 className="vertical-timeline-element-title">
-                        Bachelor of Science in Interactive Digital Media Visual
-                        Imaging
-                      </h3>
-                      <h4 className="vertical-timeline-element-subtitle">
-                        Bachelor Degree
-                      </h4>
-                      <p>Creative Direction, Visual Design</p>
+                      <span>Time : 11:16</span>
                     </VerticalTimelineElement>
                     <VerticalTimelineElement
                       iconStyle={{
                         background: 'rgb(0, 0, 0)',
                         color: '#fff',
-                        borderBottomLeftRadius: '25px', 
-                        borderBottomRightRadius: '25px', 
+                        borderBottomLeftRadius: '25px',
+                        borderBottomRightRadius: '25px',
                         borderTopRightRadius: '25px',
                       }}
                     />
@@ -420,22 +247,4 @@ export default function NotationsPage() {
   );
 }
 
-const columns = [
-  {
-    title: 'สถานะ',
-    dataIndex: 'status',
-    Link: '/admin/attendance/overview',
-  },
-  {
-    title: 'กิจกรรม',
-    dataIndex: 'action',
-  },
-  {
-    title: 'บันทึกเมื่อเวลา',
-    dataIndex: 'stampTime',
-  },
-  {
-    title: 'บันทึกเมื่อวันที่',
-    dataIndex: 'stampDate',
-  },
-];
+
