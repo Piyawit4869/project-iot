@@ -1,21 +1,16 @@
 import { base_url } from '@/constant/common';
 
-export async function update(prevState: any, formData: any, id: any) {
-  const url = `${base_url}/crud/work-info/edit/${id}`;
-
-  const body = {
-    ...formData,
-  };
+export async function deleteRole(id: any) {
+  const url = `${base_url}/crud/employee-roles/${id}`;
 
   const accessToken = localStorage.getItem('accessToken');
 
   const data = await fetch(url, {
-    method: `PUT`,
+    method: `DELETE`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
     },
-    body: JSON.stringify(body),
   });
 
   return await data.json();

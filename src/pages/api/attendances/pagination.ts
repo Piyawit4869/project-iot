@@ -1,13 +1,12 @@
 import { base_url } from '@/constant/common';
 
-interface FetchTemplatesParams {
-  page?: number;
-  limit?: number;
-  templateName?: string;
-  isAll?: boolean;
+interface FetchAttendancesParams {
+  page: number;
+  limit: number;
+  docNo?: string;
 }
 
-interface FetchTemplatesResponse {
+interface FetchAttendancesResponse {
   items: any[];
   meta: {
     totalItems: number;
@@ -20,28 +19,17 @@ interface FetchTemplatesResponse {
 export default async function pagination({
   page,
   limit,
-  templateName,
-  isAll,
-}: FetchTemplatesParams): Promise<FetchTemplatesResponse> {
+  docNo,
+}: FetchAttendancesParams): Promise<FetchAttendancesResponse> {
   try {
-    const url = new URL(`${base_url}/crud/configure-notations`);
+    const url = new URL(`${base_url}/crud/attendances`);
+    url.searchParams.append('page', page.toString());
+    url.searchParams.append('limit', limit.toString());
 
     const accessToken = localStorage.getItem('accessToken');
 
-    if (page) {
-      url.searchParams.append('page', String(page));
-    }
-
-    if (limit) {
-      url.searchParams.append('limit', String(limit));
-    }
-
-    if (templateName) {
-      url.searchParams.append('templateName', templateName);
-    }
-
-    if (isAll) {
-      url.searchParams.append('isAll', String(isAll));
+    if (docNo) {
+      url.searchParams.append('docNo', docNo);
     }
 
     const response = await fetch(url.toString(), {
@@ -64,9 +52,9 @@ export default async function pagination({
       items: [],
       meta: {
         totalItems: 0,
-        itemsPerPage: 10,
+        itemsPerPage: limit,
         totalPages: 0,
-        currentPage: 1,
+        currentPage: page,
       },
     };
   }

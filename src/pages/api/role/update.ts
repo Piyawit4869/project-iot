@@ -1,7 +1,7 @@
 import { base_url } from '@/constant/common';
 
-export async function update(prevState: any, formData: any, id: any) {
-  const url = `${base_url}/crud/work-info/edit/${id}`;
+export async function updateRole(prevState: any, formData: any, id: any) {
+  const url = `${base_url}/crud/employee-roles/edit/${id}`;
 
   const body = {
     ...formData,

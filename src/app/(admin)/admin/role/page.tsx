@@ -5,29 +5,15 @@ import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
-import pagination from '@/pages/api/attendances/pagination';
+import paginationCustomers from '@/pages/api/customer/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
-import { formatDate } from '@/utils/enums/date';
 
-interface AttendanceItem {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string;
-  status: string;
-  action: string;
-  active: boolean;
-  currentDate: string;
-  stamp: string;
-  reasons: string;
-  note: string;
-  workInfoId: string;
-}
-
-export default function NotationsPage() {
+export default function RolesPage() {
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [filters, setFilters] = React.useState({ name: '', docNo: '' });
+  const [filters, setFilters] = React.useState({
+    name: '',
+  });
   const [items, setItems] = React.useState([]) as any;
   const [meta, setMeta] = React.useState({
     totalItems: 0,
@@ -38,26 +24,20 @@ export default function NotationsPage() {
   const [loading, setLoading] = React.useState(false);
 
   // Fetch data from the API
-  const fetchNotations = async () => {
+  const fetchCustomer = async () => {
     setLoading(true);
     try {
-      const { name, docNo } = filters;
-      const { items: fetchedItems, meta: fetchedMeta } = await pagination({
-        page,
-        limit: rowsPerPage,
-        ...(name && { name }),
-        ...(docNo && { docNo }),
-      });
-      setItems(
-        fetchedItems.map((item: AttendanceItem) => ({
-          ...item,
-          stampDate: formatDate(item.stamp).date,
-          stampTime: formatDate(item.stamp).time,
-        })),
-      );
+      const { name } = filters;
+      const { items: fetchedItems, meta: fetchedMeta } =
+        await paginationCustomers({
+          page,
+          limit: rowsPerPage,
+          ...(name && { name }),
+        });
+      setItems(fetchedItems);
       setMeta(fetchedMeta);
     } catch (error) {
-      console.error('Error fetching notations:', error);
+      console.log('Error fetching notations:', error);
     } finally {
       setLoading(false);
     }
@@ -80,7 +60,7 @@ export default function NotationsPage() {
 
   // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
-    fetchNotations();
+    fetchCustomer();
   }, [filters, page, rowsPerPage]);
 
   return (
@@ -89,38 +69,30 @@ export default function NotationsPage() {
         child={
           <div>
             <TopSection
-              title="ภาพรวมองค์กรทั้งหมด"
+              title="ตำแหน่งทั้งหมด"
               buttons={[
-                <Link href={'overview/create'} key={'create button'}>
+                <Link href={'role/create'} key={'create button'}>
                   <Button
                     className="bg-accent1 text-white"
                     size="sm"
                     key={'create button'}
                   >
-                    สร้างเอกสาร
+                    สร้างตำแหน่ง
                   </Button>
                 </Link>,
               ]}
             />
-            <div className="bg-white shadow rounded-lg mb-4 mt-4 ">
-              <div className="grid grid-cols-1 sm:grid-cols-2">
+            <div className="bg-white shadow rounded-lg mb-4 mt-4 p-4">
+              <div className="grid grid-cols-1 sm:grid-cols-1">
+                {/* 🔹 Filter by Company Name */}
                 <Input
-                  className="w-full p-2 text-headFont"
+                  className="w-full p-1 text-headFont"
                   labelPlacement="outside"
                   size="sm"
                   name="name"
-                  placeholder="ค้นหาชื่อ"
+                  placeholder="ค้นหาชื่อตำแหน่ง"
                   value={filters.name}
                   onChange={(e) => onInputChange('name', e.target.value)}
-                />
-                <Input
-                  className="w-full p-2 text-headFont"
-                  labelPlacement="outside"
-                  size="sm"
-                  name="docNo"
-                  placeholder="ค้นหาหมายเลขเอกสาร"
-                  value={filters.docNo}
-                  onChange={(e) => onInputChange('docNo', e.target.value)}
                 />
               </div>
             </div>
@@ -151,20 +123,35 @@ export default function NotationsPage() {
 
 const columns = [
   {
-    title: 'สถานะ',
-    dataIndex: 'status',
-    Link: '/admin/attendance/overview',
+    title: 'ชื่อตำแหน่ง',
+    dataIndex: 'name',
+    link: '/admin/role',
   },
-  {
-    title: 'แอคชั่น',
-    dataIndex: 'action',
-  },
-  {
-    title: 'บันทึกเมื่อเวลา',
-    dataIndex: 'stampTime',
-  },
-  {
-    title: 'บันทึกเมื่อวันที่',
-    dataIndex: 'stampDate',
-  },
+  // {
+  //   title: 'หมายเลขผู้เสียภาษี',
+  //   dataIndex: 'taxId',
+  // },
+  // {
+  //   title: 'ชื่อ-นามสกุลผู้ติดต่อ',
+  //   dataIndex: 'firstName',
+  //   render: (value: any, record: any) => {
+  //     return (
+  //       <>
+  //         {value ? value : '-'} {record?.lastName ? record.lastName : '-'}
+  //       </>
+  //     );
+  //   },
+  // },
+  // {
+  //   title: 'อีเมลติดต่อ',
+  //   dataIndex: 'contactEmail',
+  // },
+  // {
+  //   title: 'เบอร์โทรติดต่อ',
+  //   dataIndex: 'contactPhone',
+  // },
+  // {
+  //   title: 'รายละเอียด',
+  //   dataIndex: 'description',
+  // },
 ];

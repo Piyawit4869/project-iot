@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, Textarea } from '@nextui-org/react';
+import { Button, Form, Input, Textarea, Switch } from '@nextui-org/react';
 import { updateWhitelists } from '@/pages/api/whitelists/update'; // API update
 import { deleteWhitelists } from '@/pages/api/whitelists/delete'; // API delete
 import getSingleWhitelists from '@/pages/api/whitelists/get'; // API get
@@ -9,19 +9,17 @@ import { changeStatusRejectWhitelists } from '@/pages/api/whitelists/changestatu
 import { TopSection } from '@/components/common/topSection';
 import Scaffold from '@/components/common/scaffold';
 import CardComponent from '@/components/common/card';
-import { useRouter } from 'next/navigation';
-import { useParams } from 'next/navigation';
-import { Switch } from '@nextui-org/react';
+import { useRouter, useParams } from 'next/navigation';
 import * as Icon from '@ant-design/icons';
 import React from 'react';
 
 export default function WhitelistSinglePage() {
-  const [errors, setErrors] = React.useState({}) as any;
+  const router = useRouter();
+  const params = useParams<{ slug?: string }>();
   const [data, setData] = React.useState() as any;
   const [loading, setLoading] = React.useState(false);
   const [openEdit, setOpenEdit] = React.useState(false);
-  const params = useParams<{ slug?: string }>();
-  const router = useRouter();
+  const [errors, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({
     ip: '',
     isp: '',
@@ -95,10 +93,6 @@ export default function WhitelistSinglePage() {
 
     // Ensure address fields are validated as well
     const requiredFields = [
-      // 'ip',
-      // 'isp',
-      // 'browser',
-      // 'os',
       'address.name',
       'address.houseNo',
       'address.road',
@@ -397,7 +391,7 @@ export default function WhitelistSinglePage() {
                               name="name"
                               placeholder="กรอก สถานที่"
                               onChange={handleChange}
-                              defaultValue={formData.address.name}
+                              defaultValue={formData?.address?.name || ''}
                               isRequired
                               errorMessage={'กรุณากรอกสถานที่'}
                               isDisabled={!openEdit}
@@ -425,7 +419,7 @@ export default function WhitelistSinglePage() {
                               labelPlacement="outside"
                               name="road"
                               placeholder="กรอก ถนน"
-                              defaultValue={formData.address.road}
+                              defaultValue={formData.address.road || ''}
                               onChange={handleChange}
                               isRequired
                               isDisabled={!openEdit}
@@ -438,7 +432,7 @@ export default function WhitelistSinglePage() {
                               labelPlacement="outside"
                               name="province"
                               placeholder="กรอก จังหวัด"
-                              defaultValue={formData.address.province}
+                              defaultValue={formData.address.province || ''}
                               onChange={handleChange}
                               isRequired
                               isDisabled={!openEdit}
@@ -453,7 +447,7 @@ export default function WhitelistSinglePage() {
                               labelPlacement="outside"
                               name="city"
                               placeholder="กรอก เขต/อำเภอ"
-                              defaultValue={formData.address.city}
+                              defaultValue={formData.address.city || ''}
                               onChange={handleChange}
                               isRequired
                               isDisabled={!openEdit}
@@ -466,7 +460,7 @@ export default function WhitelistSinglePage() {
                               labelPlacement="outside"
                               name="subDistrict"
                               placeholder="กรอก แขวง/ตำบล"
-                              defaultValue={formData.address.subDistrict}
+                              defaultValue={formData.address.subDistrict || ''}
                               onChange={handleChange}
                               isRequired
                               isDisabled={!openEdit}
@@ -481,7 +475,7 @@ export default function WhitelistSinglePage() {
                               labelPlacement="outside"
                               name="building"
                               placeholder="กรอก ชื่ออาคาร"
-                              defaultValue={formData.address.building}
+                              defaultValue={formData.address.building || ''}
                               onChange={handleChange}
                               isDisabled={!openEdit}
                             />
@@ -492,7 +486,7 @@ export default function WhitelistSinglePage() {
                               labelPlacement="outside"
                               name="postalCode"
                               placeholder="กรอก postalcode"
-                              defaultValue={formData.address.postalCode}
+                              defaultValue={formData.address.postalCode || ''}
                               onChange={handleChange}
                               isDisabled={!openEdit}
                             />
@@ -505,7 +499,7 @@ export default function WhitelistSinglePage() {
                               labelPlacement="outside"
                               name="roomNo"
                               placeholder="กรอก เลขห้อง"
-                              defaultValue={formData.address.roomNo}
+                              defaultValue={formData.address.roomNo || ''}
                               onChange={handleChange}
                               isDisabled={!openEdit}
                             />
@@ -516,7 +510,7 @@ export default function WhitelistSinglePage() {
                               labelPlacement="outside"
                               name="floorNo"
                               placeholder="กรอก เลขชั้น"
-                              defaultValue={formData.address.floorNo}
+                              defaultValue={formData.address.floorNo || ''}
                               onChange={handleChange}
                               isDisabled={!openEdit}
                             />
@@ -529,7 +523,7 @@ export default function WhitelistSinglePage() {
                               labelPlacement="outside"
                               name="village"
                               placeholder="กรอก ชื่อหมู่บ้าน"
-                              defaultValue={formData.address.village}
+                              defaultValue={formData.address.village || ''}
                               onChange={handleChange}
                               isDisabled={!openEdit}
                             />
@@ -539,8 +533,9 @@ export default function WhitelistSinglePage() {
                               label="เลขที่หมู่บ้าน"
                               labelPlacement="outside"
                               name="villageNo"
+                              type="number"
                               placeholder="กรอก เลขที่หมู่บ้าน"
-                              defaultValue={formData.address.villageNo}
+                              defaultValue={formData.address.villageNo || ''}
                               onChange={handleChange}
                               isDisabled={!openEdit}
                             />
@@ -553,7 +548,9 @@ export default function WhitelistSinglePage() {
                               labelPlacement="outside"
                               name="organizationId"
                               placeholder="กรอก organizationId "
-                              defaultValue={formData.address.organizationId}
+                              defaultValue={
+                                formData.address.organizationId || ''
+                              }
                               onChange={handleChange}
                               isDisabled={!openEdit}
                             />
@@ -564,7 +561,7 @@ export default function WhitelistSinglePage() {
                               labelPlacement="outside"
                               name="branchId"
                               placeholder="กรอก branchId"
-                              defaultValue={formData.address.branchId}
+                              defaultValue={formData.address.branchId || ''}
                               onChange={handleChange}
                               isDisabled={!openEdit}
                             />
@@ -576,7 +573,7 @@ export default function WhitelistSinglePage() {
                               labelPlacement="outside"
                               name="note"
                               placeholder="หมายเหตุ"
-                              defaultValue={formData.address.note}
+                              defaultValue={formData.address.note || ''}
                               onChange={handleChange}
                               isDisabled={!openEdit}
                             />

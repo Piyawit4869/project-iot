@@ -86,7 +86,7 @@ export default function WhitelistCreatePage() {
 
       const { data } = await createWhitelists({}, payload);
       console.log(payload);
-      router.push(`/admin/attendance/whitelist/${data.id}`);
+      // router.push(`/admin/attendance/whitelist/${data.id}`);
     } catch (err: any) {
       console.error('Send FormData error:', err);
       setErrors({ general: err.message || 'An unexpected error occurred.' });

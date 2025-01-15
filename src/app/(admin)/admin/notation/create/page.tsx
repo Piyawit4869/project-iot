@@ -21,15 +21,18 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import pagination from '@/pages/api/templates/pagination';
 import getTemplate from '@/pages/api/templates/get';
+import paginationItems from '@/pages/api/items/pagination';
+import paginationCustomers from '@/pages/api/customer/pagination';
 
 export default function NotationCreatePage() {
-  const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   const [zoomLevel, setZoomLevel] = React.useState(100); // Default zoom level (100%)
   const [errors, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [createStatus, setCreateStatus] = React.useState('');
   const router = useRouter();
   const [templates, setTemplates] = React.useState([]) as any;
+  const [itemServices, setItemServices] = React.useState([]) as any;
+  const [customers, setCustomers] = React.useState([]) as any;
   const [templateSelected, setTemplateSelected] = React.useState({}) as any;
   const [processedHtml, setProcessedHtml] = React.useState<string>('');
   const htmlTemplate = templateSelected.templateNotation;
@@ -46,7 +49,8 @@ export default function NotationCreatePage() {
   };
 
   const handleChange = (e: any) => {
-    const { name, checked, type, value } = e.target;
+    const { name, type, checked, value } = e.target;
+
     setFormData((prevData: any) => ({
       ...prevData,
       [name]:
@@ -58,14 +62,64 @@ export default function NotationCreatePage() {
     }));
   };
 
+  const handleCustomer = (e: any) => {
+    const selectedCustomerId = e.target.value;
+
+    const customer = customers.find(
+      (item: any) => item.id === selectedCustomerId,
+    );
+
+    setFormData((prevData: any) => ({
+      ...prevData,
+      customer,
+    }));
+  };
+
+  const handleMultipleSelect = (selectedKeys: Set<string>) => {
+    const selectedItems = Array.from(selectedKeys).map((key) => {
+      const item = itemServices.find((item: any) => item.id === key);
+      return {
+        id: item?.id || '',
+        name: item?.name || '',
+        quantity: item?.quantity || 0,
+        unitPrice: item?.unitPrice || 0,
+        total: item?.total || 0,
+      };
+    });
+
+    setFormData((prevData: any) => ({
+      ...prevData,
+      itemsId: selectedItems, // Store as array of objects
+    }));
+  };
   React.useEffect(() => {
     const fetchTemplate = async () => {
-      const { items: fetchedItems } = await pagination({ page: 1, limit: 20 });
+      const { items: fetchedTemplate } = await pagination({
+        isAll: true,
+      });
 
-      setTemplates(fetchedItems);
+      setTemplates(fetchedTemplate);
     };
 
+    const fetchItem = async () => {
+      const { items: fetchedItems } = await paginationItems({
+        isAll: true,
+      });
+
+      setItemServices(fetchedItems);
+    };
+
+    const fetchCustomer = async () => {
+      const { items: fetchedCustomer } = await paginationCustomers({
+        isAll: true,
+      });
+
+      setCustomers(fetchedCustomer);
+    };
+
+    fetchCustomer();
     fetchTemplate();
+    fetchItem();
   }, []);
 
   React.useEffect(() => {
@@ -100,14 +154,16 @@ export default function NotationCreatePage() {
     setZoomLevel((prevZoom) => Math.max(prevZoom - 10, 50)); // Min zoom 50%
   };
 
-  const handleAddItem = () => {
-    setItems([...items, { description: '', amount: '' }]);
-  };
+  // const handleAddItem = () => {
+  //   setItems([...items, { description: '', amount: '' }]);
+  // };
 
-  const handleRemoveItem = (index: number) => {
-    const updatedItems = items.filter((_, i) => i !== index);
-    setItems(updatedItems);
-  };
+  // const handleRemoveItem = (index: number) => {
+  //   const updatedItems = items.filter((_, i) => i !== index);
+  //   setItems(updatedItems);
+  // };
+
+  console.log({ formData });
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -142,16 +198,30 @@ export default function NotationCreatePage() {
     try {
       const payload = {
         ...formData,
+        itemsId: formData.itemsId.map((item: any) => item.id),
+        customIssueTo: formData.customer.companyName || null,
+        customIssuePhone: formData.customer.contactPhone || null,
+        customIssueEmail: formData.customer.contactEmail || null,
+        customContactName: formData.customer.firstName
+          ? `${
+              formData.customer.firstName + formData.customer.lastName
+                ? ` ${formData.customer.lastName}`
+                : ''
+            }`
+          : null,
+        customContactEmail: formData.customer.contactEmail || null,
+        customContactPhone: formData.customer.contactPhone || null,
+        customerId: formData.customer.id || null,
         ...statusData,
       };
+
+      delete payload.customer;
 
       if (!payload.active) {
         payload.active = false;
       } else {
         payload.active = true;
       }
-
-      console.log({ payload });
 
       const { data } = await createNotation({}, payload);
 
@@ -377,11 +447,19 @@ export default function NotationCreatePage() {
                       name="customer"
                       size="sm"
                       label="เลือกลูกค้า"
-                      onChange={handleChange}
+                      onChange={handleCustomer}
                     >
-                      {customer.map((item) => (
-                        <SelectItem key={item.value} value={item.value}>
-                          {item.label}
+                      {customers.map((item: any) => (
+                        <SelectItem key={item.id} value={item.id}>
+                          {`${
+                            item.firstName
+                              ? `คุณ ${item.firstName}`
+                              : 'ไม่มีชื่อ'
+                          }  ${
+                            item.companyName
+                              ? `จาก ${item.companyName}`
+                              : 'ไม่มีชื่อ'
+                          }`}
                         </SelectItem>
                       ))}
                     </Select>
@@ -399,6 +477,31 @@ export default function NotationCreatePage() {
                     </Select>
                   </div>
                   <h1 className="text-base font-bold text-headFont mt-6">
+                    รายการ
+                  </h1>
+                  <Select
+                    size="sm"
+                    name="itemsId"
+                    label="เลือกรายการ"
+                    className="flex-1"
+                    selectionMode="multiple"
+                    onSelectionChange={(keys: any) =>
+                      handleMultipleSelect(keys)
+                    }
+                    defaultSelectedKeys={
+                      formData?.itemsId
+                        ? formData.itemsId.map((item: any) => item.id)
+                        : []
+                    }
+                  >
+                    {itemServices.map((item: any) => (
+                      <SelectItem key={item.id} value={item.id}>
+                        {item.name}
+                      </SelectItem>
+                    ))}
+                  </Select>
+
+                  {/* <h1 className="text-base font-bold text-headFont mt-6">
                     รายการ
                   </h1>
                   {items.map((_, index) => (
@@ -439,7 +542,7 @@ export default function NotationCreatePage() {
                   >
                     <Icon.PlusSquareOutlined className="text-xl" />
                     เพิ่มรายการ
-                  </Button>
+                  </Button> */}
                 </Form>
               </div>
 
@@ -516,14 +619,4 @@ const types = [
 const address = [
   { label: 'ที่อยู่หลัก', value: '1' },
   { label: 'โกดัง', value: '2' },
-];
-
-const customer = [
-  { label: 'ลูกค้าคนที่ 1', value: '1' },
-  { label: 'ลูกค้าคนที่ 2', value: '2' },
-];
-
-const selectItem = [
-  { label: 'รายการที่ 1', value: '1' },
-  { label: 'รายการที่ 2', value: '2' },
 ];

@@ -5,7 +5,7 @@ import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
-import pagination from '@/pages/api/items/pagination';
+import paginationItems from '@/pages/api/items/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 
 export default function ItemsPage() {
@@ -26,7 +26,7 @@ export default function ItemsPage() {
     setLoading(true);
     try {
       const { name, docNo } = filters;
-      const { items: fetchedItems, meta: fetchedMeta } = await pagination({
+      const { items: fetchedItems, meta: fetchedMeta } = await paginationItems({
         page,
         limit: rowsPerPage,
         ...(name && { name }),
