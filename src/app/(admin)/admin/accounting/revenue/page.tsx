@@ -5,13 +5,12 @@ import { TopSection } from '@/components/common/topSection';
 import Scaffold from '@/components/common/scaffold';
 import { Input, Select, SelectItem, Tabs, Tab } from '@nextui-org/react';
 import { TablePagination } from '@/components/common/tablePagination';
-import { TabletFilled } from '@ant-design/icons';
 
 export default function RevenuePage() {
   const [page, setPage] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
-  const [items, setItems] = React.useState([]) as any;
-  const [filters, setFilters] = React.useState({});
+  // const [items, setItems] = React.useState([]) as any;
+  // const [filters, setFilters] = React.useState({});
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [meta, setMeta] = React.useState({
     totalItems: 0,
@@ -20,6 +19,10 @@ export default function RevenuePage() {
     currentPage: 1,
   });
   const [selectedCategory, setSelectedCategory] = React.useState('all');
+
+  console.log(page);
+  console.log(setMeta);
+  console.log(setLoading);
 
   // Fetch data from the API
   /*
@@ -143,6 +146,7 @@ export default function RevenuePage() {
           <div className="flex flex-wrap gap-4">
             <Tabs
               color="secondary"
+              className="mb-4"
               radius="full"
               aria-label="Tabs colors"
               selectedKey={selectedCategory}

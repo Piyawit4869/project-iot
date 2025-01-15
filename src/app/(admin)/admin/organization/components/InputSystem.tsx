@@ -1,9 +1,14 @@
 'use client';
 import Scaffold from '@/components/common/scaffold';
 import * as Icon from '@ant-design/icons';
-import { Button, Select, SelectItem, TimeInput } from '@nextui-org/react';
+import {
+  Button,
+  Input,
+  Select,
+  SelectItem,
+  TimeInput,
+} from '@nextui-org/react';
 import React from 'react';
-import get from '@/pages/api/setting/get';
 import { parseTime } from '@internationalized/date';
 
 interface InputSystem {
@@ -13,9 +18,11 @@ interface InputSystem {
 export const InputSystem = ({
   data,
   onChange,
+  onChangeTime,
 }: {
   data: any;
   onChange: (updatedData: any) => void;
+  onChangeTime: (updatedOpenDay: any) => void;
 }) => {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   const [formData, setFormData] = React.useState<any>(data);
@@ -46,18 +53,16 @@ export const InputSystem = ({
     onChange({ ...formData, [name]: upadteData });
   };
 
-  // const handleDayChange = (index: number, field: string, value: any) => {
-  //   const updatedOpenDay = [...openDay];
-  //   updatedOpenDay[index] = {
-  //     ...updatedOpenDay[index],
-  //     [field]: field === 'day' ? [value] : value,
-  //   };
+  const handleDayChange = (index: number, field: string, value: any) => {
+    const updatedOpenDay = [...openDay];
+    updatedOpenDay[index] = {
+      ...updatedOpenDay[index],
+      [field]: field === 'day' ? [value] : value,
+    };
 
-  //   setOpenDay(updatedOpenDay);
-  //   OpenDaydata(updatedOpenDay);
-  //   setFormData(updatedOpenDay);
-  //   onChange({ openDays: updatedOpenDay });
-  // };
+    setOpenDay(updatedOpenDay);
+    onChangeTime({ openDays: updatedOpenDay });
+  };
 
   // const handleAddItem = () => {
   //   setItems([...items, { description: '', amount: '' }]);
@@ -66,7 +71,7 @@ export const InputSystem = ({
   const handleRemoveOpenDay = (index: number) => {
     const updatedOpenDay = openDay.filter((_, i) => i !== index);
     setOpenDay(updatedOpenDay);
-    onChange({ ...formData, openDay: updatedOpenDay });
+    onChangeTime({ ...formData, openDay: updatedOpenDay });
   };
 
   // const handleRemoveItem = (index: number) => {
@@ -78,7 +83,7 @@ export const InputSystem = ({
     const newOpenDayItem = { day: [], openTime: '', closeTime: '' };
     const updatedOpenDay = [...openDay, newOpenDayItem];
     setOpenDay(updatedOpenDay);
-    onChange({ ...formData, openDay: updatedOpenDay });
+    onChangeTime({ ...formData, openDay: updatedOpenDay });
   };
 
   // const handleOpenDay = items.map((item: any) => ({
@@ -174,7 +179,9 @@ export const InputSystem = ({
                       placeholder="เลือกวันทำงาน"
                       label="วันทำงาน"
                       labelPlacement={'outside'}
-                      onChange={handleChange}
+                      onChange={(e) =>
+                        handleDayChange(index, 'day', e.target.value)
+                      }
                       defaultSelectedKeys={item.day}
                     >
                       {day.map((item: any) => (
@@ -187,8 +194,9 @@ export const InputSystem = ({
                         </SelectItem>
                       ))}
                     </Select>
-                    <TimeInput
+                    <Input
                       className="col-span-1 w-full"
+                      type="time"
                       label={
                         <span className="col-span-1 w-full text-headFont">
                           เริ่มงาน
@@ -196,15 +204,14 @@ export const InputSystem = ({
                       }
                       labelPlacement="outside"
                       name="openTime"
-                      defaultValue={
-                        item.openTime
-                          ? parseTime(item.openTime.split('T')[0])
-                          : undefined
+                      defaultValue={item.openTime}
+                      onChange={(e) =>
+                        handleDayChange(index, 'openTime', e.target.value)
                       }
-                      onChange={handleChange}
                     />
-                    <TimeInput
+                    <Input
                       className="col-span-1 w-full"
+                      type="time"
                       label={
                         <span className="col-span-1 w-full text-headFont">
                           เลิกงาน
@@ -212,15 +219,10 @@ export const InputSystem = ({
                       }
                       labelPlacement="outside"
                       name="closeTime"
-                      defaultValue={
-                        item.closeTime
-                          ? parseTime(item.closeTime.split('T')[0])
-                          : undefined
+                      defaultValue={item.closeTime}
+                      onChange={(e) =>
+                        handleDayChange(index, 'closeTime', e.target.value)
                       }
-                      // onChange={(value) =>
-                      //   handleDayChange(index, 'closeTime', value)
-                      // }
-                      onChange={handleChange}
                     />
                     <a
                       className="col-span-1 w-full text-red-500 cursor-pointer mt-6"
@@ -260,7 +262,8 @@ export const InputSystem = ({
 
 const language = [
   { label: 'ภาษาไทย', value: 'th' },
-  { label: 'ภาษาอังกฤษ', value: 'eng' },
+  { label: 'ภาษาอังกฤษ', value: 'en' },
+  // { label: 'ภาษาญี่ปุ่น', value: 'jp' },
 ];
 
 const themes = [

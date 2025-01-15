@@ -43,6 +43,8 @@ export default function IndexPage() {
     }
   };
 
+  console.log('items', items);
+
   // Debounced function to handle filter changes
   // const handleFilterChange = React.useCallback(
   //   debounce((updatedFilters) => {

@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { TopSection } from '@/components/common/topSection';
-import NextTable from '@/components/common/nextTable';
 import Scaffold from '@/components/common/scaffold';
 import { Input, Select, SelectItem, Tab, Tabs } from '@nextui-org/react';
 import { TablePagination } from '@/components/common/tablePagination';
@@ -10,8 +9,8 @@ import { TablePagination } from '@/components/common/tablePagination';
 export default function ExpensesPage() {
   const [page, setPage] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
-  const [items, setItems] = React.useState([]) as any;
-  const [filters, setFilters] = React.useState({ name: '' });
+  // const [items, setItems] = React.useState([]) as any;
+  // const [filters, setFilters] = React.useState({ name: '' });
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [meta, setMeta] = React.useState({
     totalItems: 0,
@@ -20,6 +19,10 @@ export default function ExpensesPage() {
     currentPage: 1,
   });
   const [selectedCategory, setSelectedCategory] = React.useState('all');
+
+  console.log(page);
+  console.log(setMeta);
+  console.log(setLoading);
 
   /* Connect API Accounting Statemant Fetch data from the API
   const fetchStatement = async () => {

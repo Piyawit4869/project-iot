@@ -81,7 +81,7 @@ export function AdminSideBar() {
           {
             name: 'การเข้าใช้งาน',
             path: '/admin/attendance/whitelist',
-            icon: <Icon.FileDoneOutlined />
+            icon: <Icon.FileDoneOutlined />,
           },
           // {
           //   name: 'การลางาน',

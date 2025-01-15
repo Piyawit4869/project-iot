@@ -15,24 +15,18 @@ import {
 } from '@nextui-org/react';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
-import { parseAbsoluteToLocal, parseDate } from '@internationalized/date';
-import { cookies } from 'next/headers';
-import { log } from 'node:console';
-import { label } from 'framer-motion/client';
+import { parseDate } from '@internationalized/date';
 
-interface Inputorganization {
-  data: any;
-}
-
-export const Inputorganization = ({
-  data,
-  onChange,
-}: {
+interface InputorganizationProps {
   data: any;
   onChange: (updatedData: any) => void;
-}) => {
+}
+
+export default function Inputorganization({
+  data,
+  onChange,
+}: InputorganizationProps) {
   const [formData, setFormData] = React.useState<any>(data);
-  const [Formtype, setFormtype] = React.useState(formData.formType);
 
   React.useEffect(() => {
     if (data) {
@@ -40,23 +34,21 @@ export const Inputorganization = ({
     }
   }, [data]);
 
-  console.log('data', data);
-
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
-    const upadteData =
+    const updatedData =
       type === 'checkbox'
         ? checked
-        : name === 'birthDate' && value instanceof Date
+        : name === 'openingDate' && value instanceof Date
         ? value.toISOString()
         : value;
 
     setFormData((prevData: any) => ({
       ...prevData,
-      [name]: upadteData,
+      [name]: updatedData,
     }));
 
-    onChange({ ...formData, [name]: upadteData });
+    onChange({ ...formData, updatedData });
   };
 
   // const handleItemChange = (index: number, value: string) => {
@@ -64,8 +56,6 @@ export const Inputorganization = ({
   //   updatedItems[index].description = value;
   //   setItems(updatedItems);
   // };
-
-  console.log(formData.openingDate);
 
   return (
     <Scaffold
@@ -380,7 +370,7 @@ export const Inputorganization = ({
       }
     />
   );
-};
+}
 
 const BusinessStatus = [
   {
