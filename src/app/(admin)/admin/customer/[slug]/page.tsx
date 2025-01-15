@@ -215,7 +215,8 @@ export default function CustomerUpdatePage() {
               }
               backpath={'/admin/customer'}
               buttons={[
-                <Button
+                <Button 
+                key={'submit customer'}
                   className="bg-accent1 text-white text-xs"
                   size="sm"
                   type="submit"
@@ -224,6 +225,7 @@ export default function CustomerUpdatePage() {
                   แก้ไข
                 </Button>,
                 <Button
+                key={'edit customer'}
                   className="bg-accent2 text-white text-xs"
                   onClick={onDelete}
                   size="sm"

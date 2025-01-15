@@ -33,6 +33,8 @@ import { toast } from 'sonner';
 import { log } from 'console';
 import { update } from 'lodash';
 import { organizationLoader } from '@/app/api/organization';
+import { updatesystem } from '@/pages/api/setting/updata';
+import { TablePagination } from '@/components/common/tablePagination';
 
 export default function OraganizationPage() {
   const [loading, setLoading] = React.useState(false);
@@ -41,6 +43,15 @@ export default function OraganizationPage() {
   const [data, setData] = React.useState() as any;
   const [organizationData, setOrganizationData] = React.useState() as any;
   const [systemData, setSystemData] = React.useState() as any;
+  const [openDayData, setOpenDayData] = React.useState<any[]>([]);
+  const [page, setPage] = React.useState(1);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [meta, setMeta] = React.useState({
+    totalItems: 0,
+    itemsPerPage: 10,
+    totalPages: 0,
+    currentPage: 1,
+  });
 
   // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault(); // Prevent the form from submitting to the URL
@@ -68,11 +79,17 @@ export default function OraganizationPage() {
 
   const handleOrganization = (updatedData: any) => {
     setOrganizationData(updatedData);
+    console.log('organizationData', organizationData);
   };
 
   const handleSystem = (updatedData: any) => {
     setSystemData(updatedData);
   };
+
+  // const handleOpenDayChange = (updatedOpenDay: any[]) => {
+  //   setOpenDayData(updatedOpenDay);
+  //   console.log('Updated openDay:', updatedOpenDay);
+  // };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,7 +108,7 @@ export default function OraganizationPage() {
 
       const res = await updatedetails({}, payload, payload.id);
       console.log('ข้อมูลที่จะส่ง', res);
-      console.log('ข้อมูลที่ ID จะส่ง', payload.id);
+      console.log('ข้อมูลที่ ID จะส่ง', payload);
 
       toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
         duration: 3000,
@@ -113,6 +130,49 @@ export default function OraganizationPage() {
       setLoading(false);
     }
   };
+
+  // const onSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+
+  //   try {
+  //     const payload = {
+  //       ...formData,
+  //       ...data,
+  //       ...systemData,
+  //       // openDays: [
+  //       //   {
+  //       //     ...systemData,
+  //       //   },
+  //       // ],
+  //     };
+
+  //     delete payload.data;
+
+  //     // const res = await updatesystem({}, payload);
+  //     // console.log('ข้อมูลที่จะส่ง', res);
+  //     console.log('ข้อมูลที่ ID จะส่ง', payload);
+
+  //     toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
+  //       duration: 3000,
+  //       position: 'bottom-left',
+  //       style: { fontFamily: 'var(--font-ibm-sans)' },
+  //     });
+
+  //     // router.push(`/admin/notation/${res.data.id}`);
+  //   } catch (err: any) {
+  //     toast.error('❌ ไม่สามารถแก้ไขข้อมูลได้', {
+  //       duration: 3000,
+  //       position: 'bottom-left',
+  //       style: { fontFamily: 'var(--font-ibm-sans)' },
+  //     });
+
+  //     console.error('Send FormData error:', err);
+  //     setErrors({ general: err.message || 'An unexpected error occurred.' });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   // Add Setting Time
@@ -598,10 +658,22 @@ export default function OraganizationPage() {
                                           </Button>
                                         </div>
                                         <div className="mb-4">
-                                          <NextTable
+                                          {/* <NextTable
                                             columns={columns}
-                                            rows={data}
+                                            rows={dataAddress}
                                             rowClickHandler={handleRowAddress}
+                                          /> */}
+                                          <TablePagination
+                                            initialRows={dataAddress}
+                                            initialMeta={meta}
+                                            rowsPerPage={rowsPerPage}
+                                            columns={columns}
+                                            onPageChange={(newPage) =>
+                                              setPage(newPage)
+                                            }
+                                            onRowsPerPageChange={(
+                                              newRowsPerPage,
+                                            ) => setRowsPerPage(newRowsPerPage)}
                                           />
                                         </div>
                                       </ModalBody>
@@ -1117,7 +1189,7 @@ const columns: any = [
   { title: 'อำเภอ/เขต', dataIndex: 'district' },
 ];
 
-const data = [
+const dataAddress = [
   {
     id: 1,
     address: 'สำนักงานใหญ่',

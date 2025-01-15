@@ -3,7 +3,6 @@
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Form, Input, Textarea } from '@nextui-org/react';
-import createWhitelists from '@/pages/api/whitelists/create'; //API
 import CardComponent from '@/components/common/card';
 // import { useRouter } from 'next/navigation';
 import * as Icon from '@ant-design/icons';
@@ -101,7 +100,7 @@ export default function WhitelistCreatePage() {
         <div>
           <TopSection
             title="สร้างการเข้าใช้งาน"
-            backpath={'/admin/attendance/whitelist'}
+            backpath={'/admin/attendance/overview'}
             buttons={[
               <div className="mx-2.5" key="save-button">
                 <a className="p-2">
