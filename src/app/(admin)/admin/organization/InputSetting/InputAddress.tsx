@@ -3,11 +3,11 @@
 import { Input, Textarea } from '@nextui-org/react';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
-import { update } from 'lodash';
+// import { update } from 'lodash';
 
-interface InputAddressProps {
-  data: any;
-}
+// interface InputAddressProps {
+//   data: any;
+// }
 
 export const InputAddress = ({
   data,

@@ -4,17 +4,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
-import {
-  Input,
-  Button,
-  Link,
-  Popover,
-  PopoverTrigger,
-} from '@nextui-org/react';
+import { Button, Link } from '@nextui-org/react';
 import pagination from '@/pages/api/workinfos/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date'; // <-- Import formatDate here
-import { render } from 'react-dom';
 // import * as Icon from '@ant-design/icons';
 
 interface FilterState {
@@ -117,13 +110,13 @@ export default function WorkInfoPage() {
     }
   };
 
-  const handleFilterChange = useCallback(
-    debounce((updatedFilters) => {
-      setPage(1); // Reset to the first page for new filters
-      setFilters(updatedFilters);
-    }, 500),
-    [],
-  );
+  // const handleFilterChange = useCallback(
+  //   debounce((updatedFilters) => {
+  //     setPage(1); // Reset to the first page for new filters
+  //     setFilters(updatedFilters);
+  //   }, 500),
+  //   [],
+  // );
 
   // const onInputChange = (key: keyof typeof filters, value: string) => {
   //   const updatedFilters = { ...filters, [key]: value };

@@ -5,7 +5,7 @@ import { TopSection } from '@/components/common/topSection';
 import { Button, Form, Input, Textarea } from '@nextui-org/react';
 import createWhitelists from '@/pages/api/whitelists/create'; //API
 import CardComponent from '@/components/common/card';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import * as Icon from '@ant-design/icons';
 import React from 'react';
 
@@ -13,7 +13,7 @@ export default function WhitelistCreatePage() {
   const [errors, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [, setLoading] = React.useState(false);
-  const router = useRouter();
+  // const router = useRouter();
 
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
@@ -84,7 +84,7 @@ export default function WhitelistCreatePage() {
 
       payload.active = !!payload.active; // Simplified active check
 
-      const { data } = await createWhitelists({}, payload);
+      // const { data } = await createWhitelists({}, payload);
       console.log(payload);
       // router.push(`/admin/attendance/whitelist/${data.id}`);
     } catch (err: any) {

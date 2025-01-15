@@ -12,9 +12,7 @@ import {
   DropdownMenu,
   DropdownItem,
   DropdownSection,
-  Button,
 } from '@nextui-org/react';
-import CardComponent from '@/components/common/card';
 import Link from 'next/link';
 
 export default function AdminLayout({

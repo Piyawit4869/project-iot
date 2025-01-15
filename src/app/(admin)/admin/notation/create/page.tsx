@@ -246,13 +246,13 @@ export default function NotationCreatePage() {
 
   const {
     isOpen: isPending,
-    onOpen: openPending,
+    // onOpen: openPending,
     onOpenChange: changePending,
   } = useDisclosure();
 
   const {
     isOpen: isDraft,
-    onOpen: openDraft,
+    // onOpen: openDraft,
     onOpenChange: changeDraft,
   } = useDisclosure();
 

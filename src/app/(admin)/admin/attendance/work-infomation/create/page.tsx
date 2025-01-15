@@ -13,19 +13,17 @@ import {
   Textarea,
 } from '@nextui-org/react';
 import createWorkInfos from '@/pages/api/workinfos/create'; //API
-import { getUserWorkinfo } from '@/pages/api/workinfos/get'; //API
 import CardComponent from '@/components/common/card';
 import { useRouter } from 'next/navigation';
 import * as Icon from '@ant-design/icons';
 import React from 'react';
 import { data } from 'framer-motion/client';
-import { log } from 'console';
 
 export default function WorkinfoCreatePage() {
   const [errors, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [, setLoading] = React.useState(false);
-  const router = useRouter();
+  // const router = useRouter();
 
   const priority = [
     { value: 'low', label: 'Low ' },
@@ -114,7 +112,7 @@ export default function WorkinfoCreatePage() {
 
     console.log('Payload:', payload);
 
-    const data = await createWorkInfos({},payload);
+    // const data = await createWorkInfos({},payload);
     // router.push(`/admin/attendance/work-infomation/${data.id}`);
   } catch (err: any) {
     console.error('API Error:', err);
