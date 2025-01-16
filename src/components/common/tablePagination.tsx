@@ -4,14 +4,17 @@ import React from 'react';
 import {
   Table,
   TableHeader,
-  TableColumn,
   TableBody,
   TableRow,
   TableCell,
-  Button,
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import {
   Select,
+  SelectTrigger,
   SelectItem,
-} from '@nextui-org/react';
+  SelectContent,
+} from '@/components/ui/select';
 import Link from 'next/link';
 
 interface Column {
@@ -61,65 +64,50 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
 
   return (
     <div>
-      <div>
-        <div className="w-full overflow-x-auto">
-          <div className="w-full mx-auto">
-            <Table
-              aria-label="Paginated Table"
-              className="w-full min-w-[300px]"
-            >
-              <TableHeader>
-                {columns.map((col: any) => (
-                  <TableColumn
-                    key={col.dataIndex}
-                    className="border-b-2 border-gray-300 px-4 py-2 text-left whitespace-nowrap"
-                  >
-                    {col.title}
-                  </TableColumn>
-                ))}
-              </TableHeader>
-              <TableBody emptyContent={'ไม่พบข้อมูล'}>
-                {initialRows.map((row, idx) => (
-                  <TableRow
-                    key={idx}
-                    className="border-b border-gray-200 hover:bg-gray-100"
-                  >
-                    {columns.map((col, colIdx) => (
-                      <TableCell
-                        key={col.dataIndex}
-                        className={`px-4 py-2 whitespace-nowrap text-xs ${
-                          colIdx !== columns.length - 1
-                            ? 'border-r border-gray-200'
-                            : ''
-                        }`}
+      <Table>
+        <TableHeader>
+          <TableRow>
+            {columns.map((col) => (
+              <TableCell key={col.dataIndex} align={col.align || 'left'}>
+                {col.title}
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {initialRows.length > 0 ? (
+            initialRows.map((row, idx) => (
+              <TableRow key={idx}>
+                {columns.map((col) => (
+                  <TableCell key={col.dataIndex}>
+                    {col.render ? (
+                      col.render(row[col.dataIndex], row, idx)
+                    ) : col.link ? (
+                      <Link
+                        href={`${col.link}/${row.id}`}
+                        className="text-blue-500 hover:underline"
                       >
-                        {col.render ? (
-                          col.render(row[col.dataIndex], row, idx)
-                        ) : col.link ? (
-                          <Link
-                            href={`${col.link}/${row.id}`}
-                            className="text-blue-500 hover:underline"
-                          >
-                            {row[col.dataIndex] || '-'}
-                          </Link>
-                        ) : (
-                          row[col.dataIndex] || '-'
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
+                        {row[col.dataIndex] || '-'}
+                      </Link>
+                    ) : (
+                      row[col.dataIndex] || '-'
+                    )}
+                  </TableCell>
                 ))}
-              </TableBody>
-            </Table>
-          </div>
-        </div>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="text-center">
+                ไม่พบข้อมูล
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
 
-        {/* This wrapper forces horizontal scrolling */}
-      </div>
-
-      {/* ✅ Pagination Controls */}
-      <div className="flex flex-col md:flex-row justify-between items-center mt-4 p-4 bg-gray-100 rounded-lg shadow">
-        <div className="text-gray-700 text-xs">
+      <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
+        <div className="text-gray-700 text-sm">
           <strong>
             {Math.min(
               rowsPerPage * (initialMeta.currentPage - 1) + 1,
@@ -132,67 +120,91 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             )}
           </strong>{' '}
           จากทั้งหมด <strong>{initialMeta.totalItems}</strong> รายการ
-          {/* ✅ Rows Per Page Selector */}
-          {onRowsPerPageChange && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm">แสดง:</span>
-              <Select
-                size="sm"
-                className="w-[100px]"
-                onChange={(e) => {
-                  onRowsPerPageChange(Number(e.target.value));
-                }}
-              >
-                {limits.map((item: any) => (
+        </div>
+
+        {onRowsPerPageChange && (
+          <div className="flex items-center space-x-2">
+            <span>แสดง:</span>
+            <Select
+              onValueChange={(value) => onRowsPerPageChange(Number(value))}
+            >
+              <SelectTrigger className="w-[100px]" />
+              <SelectContent>
+                {limits.map((item) => (
                   <SelectItem key={item.value} value={item.value}>
                     {item.label} รายการ
                   </SelectItem>
                 ))}
-              </Select>
-            </div>
-          )}
-        </div>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
-        {/* ✅ Page Numbers */}
-        <div className="flex items-center gap-2 my-2 md:my-0">
-          {Array.from({ length: initialMeta.totalPages }, (_, index) => (
-            <button
-              key={index + 1}
-              onClick={() => handlePageChange(index + 1)}
-              className={`px-3 py-1 rounded-md text-sm font-medium transition ${
-                initialMeta.currentPage === index + 1
-                  ? 'bg-accent1 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-blue-300 hover:text-white'
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
-
-        {/* ✅ Navigation Buttons */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center space-x-2">
           <Button
-            size="sm"
+            size={'sm'}
             onClick={() => handlePageChange(initialMeta.currentPage - 1)}
             disabled={initialMeta.currentPage === 1}
-            className={`px-4 py-2 rounded-md text-xs font-medium transition ${
-              initialMeta.currentPage === 1
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-400'
-            }`}
+            className="text-gray-700 hover:text-blue-500 disabled:text-gray-400"
           >
             ย้อนกลับ
           </Button>
+
+          {initialMeta.currentPage > 2 && (
+            <Button
+              size={'sm'}
+              onClick={() => handlePageChange(1)}
+              className="text-gray-700 hover:text-blue-500"
+            >
+              1
+            </Button>
+          )}
+          {initialMeta.currentPage > 3 && <span className="px-2">...</span>}
+
+          {Array.from(
+            { length: 3 },
+            (_, index) => initialMeta.currentPage - 1 + index,
+          )
+            .filter(
+              (pageNumber) =>
+                pageNumber > 0 && pageNumber <= initialMeta.totalPages,
+            )
+            .map((pageNumber) => (
+              <Button
+                size={'sm'}
+                key={pageNumber}
+                onClick={() => handlePageChange(pageNumber)}
+                variant={
+                  initialMeta.currentPage === pageNumber ? 'default' : 'outline'
+                }
+                className={`${
+                  initialMeta.currentPage === pageNumber
+                    ? 'text-white bg-blue-500'
+                    : 'text-gray-700 hover:text-blue-500'
+                }`}
+              >
+                {pageNumber}
+              </Button>
+            ))}
+
+          {initialMeta.currentPage < initialMeta.totalPages - 2 && (
+            <span className="px-2">...</span>
+          )}
+          {initialMeta.currentPage < initialMeta.totalPages - 1 && (
+            <Button
+              size={'sm'}
+              onClick={() => handlePageChange(initialMeta.totalPages)}
+              className="text-gray-700 hover:text-blue-500"
+            >
+              {initialMeta.totalPages}
+            </Button>
+          )}
+
           <Button
-            size="sm"
+            size={'sm'}
             onClick={() => handlePageChange(initialMeta.currentPage + 1)}
             disabled={initialMeta.currentPage === initialMeta.totalPages}
-            className={`px-4 py-2 rounded-md text-xs font-medium transition ${
-              initialMeta.currentPage === initialMeta.totalPages
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-accent1 text-white hover:bg-blue-600'
-            }`}
+            className="text-gray-700 hover:text-blue-500 disabled:text-gray-400"
           >
             ถัดไป
           </Button>

@@ -150,7 +150,6 @@ const columns = [
   {
     title: 'ประเภทเอกสาร',
     dataIndex: 'type',
-    align: 'center',
     render: (value: string) => {
       return handleTypeTag(value);
     },
@@ -160,6 +159,181 @@ const columns = [
     dataIndex: 'status',
     render: (value: string) => {
       return handleStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
+    },
+  },
+  {
+    title: 'สถานะเอกสาร',
+    dataIndex: 'docStatus',
+    render: (value: any) => {
+      return handleDocumentStatusTag(value);
     },
   },
   {
