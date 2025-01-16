@@ -14,51 +14,46 @@ import {
 } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 
+interface FilterState {
+  name: string;
+  docNo: string;
+}
 interface AttendanceItem {
   records: {
     status: string;
     stamp: string;
     action: string;
     currentDate: string;
-    user: {
-      userName: string;
+    workInfo: {
+      user: {
+        userName: string;
+      };
     };
   };
 }
 
+interface MetaData {
+  totalItems: number;
+  itemsPerPage: number;
+  totalPages: number;
+  currentPage: number;
+}
+
 export default function AttendancesPage() {
   const [page, setPage] = React.useState(1);
+  const [loading, setLoading] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [filters, setFilters] = React.useState({ name: '', docNo: '' });
-  // const [, setAttendances] = React.useState<AttendanceItem[]>([]);
-  const [items, setItems] = React.useState<AttendanceItem[]>([]);
-  const [meta, setMeta] = React.useState({
+  const [filters, setFilters] = React.useState<FilterState>({
+    name: '',
+    docNo: '',
+  });
+  const [items, setItems] = React.useState<AttendanceItem[]>([]) as any;
+  const [meta, setMeta] = React.useState<MetaData>({
     totalItems: 0,
     itemsPerPage: 10,
     totalPages: 0,
     currentPage: 1,
   });
-  const [loading, setLoading] = React.useState(false);
-
-  const columns = [
-    {
-      title: 'ชื่อ',
-      dataIndex: 'userName',
-      Link: '/admin/attendance/overview',
-    },
-    {
-      title: 'กิจกรรม',
-      dataIndex: 'action',
-    },
-    {
-      title: 'บันทึกเมื่อเวลา',
-      dataIndex: 'stampTime',
-    },
-    {
-      title: 'บันทึกเมื่อวันที่',
-      dataIndex: 'stampDate',
-    },
-  ];
 
   // Fetch data from the API
   const fetchAttendances = async () => {
@@ -72,26 +67,38 @@ export default function AttendancesPage() {
         ...(docNo && { docNo }),
       });
 
-      setItems(
-        fetchedItems.map((item: AttendanceItem) => ({
-          ...item,
-          stampDate: formatDate(item.records.stamp).date,
-          stampTime: formatDate(item.records.stamp).time,
-          userName: item.records.user?.userName || '',
-          status: item.records.user?.userName || '',
-          stamp: item.records?.currentDate || '',
-          action: item.records?.currentDate || '',
-          currentDate: item.records?.currentDate || '',
-        })),
-      );
+      // Ensure fetchedMeta is not undefined or null, and set default values if needed
+      const metaData = fetchedMeta || {
+        totalItems: 0,
+        itemsPerPage: 10,
+        totalPages: 0,
+        currentPage: 1, // Default currentPage value
+      };
 
-      setMeta({
-        ...meta,
-        ...fetchedMeta,
-      });
+      // Update items if fetchedItems is an array
+      if (Array.isArray(fetchedItems)) {
+        setItems(
+          fetchedItems.map((item: AttendanceItem) => ({
+            ...item,
+            userName: item.records.workInfo.user.userName || '',
+            action: item.records.action || '',
+            currentDate: item.records.currentDate || '',
+            stampDate: formatDate(item.records.stamp).date || '',
+            stampTime: formatDate(item.records.stamp).time || '',
+          })),
+        );
+      } else {
+        setItems([]); // If fetchedItems is not an array, set items to an empty array
+      }
+            console.log(fetchedItems);
+      console.log(fetchedMeta);
+      console.log(fetchedItems)
+      console.log(items); // Log transformed items before setItems
+
+      // Set the meta state, ensuring it has default values
+      setMeta(metaData);
     } catch (error) {
-      console.error('Error fetching attendances:', error);
-      setItems([]); // Set to an empty array on error to prevent further issues
+      console.error('Error fetching attendance:', error);
     } finally {
       setLoading(false);
     }
@@ -117,8 +124,13 @@ export default function AttendancesPage() {
     fetchAttendances();
   }, [filters, page, rowsPerPage]);
 
+  console.log('Page:', page);
+  console.log('Filters:', filters);
+  console.log('Rows per page:', rowsPerPage);
+
   return (
     <div>
+      {/* Page Header */}
       <Scaffold
         child={
           <div>
@@ -237,3 +249,23 @@ export default function AttendancesPage() {
     </div>
   );
 }
+
+const columns = [
+  {
+    title: 'ชื่อ',
+    dataIndex: 'userName',
+    Link: '/admin/attendance/overview',
+  },
+  {
+    title: 'กิจกรรม',
+    dataIndex: 'action',
+  },
+  {
+    title: 'บันทึกเมื่อเวลา',
+    dataIndex: 'stampTime',
+  },
+  {
+    title: 'บันทึกเมื่อวันที่',
+    dataIndex: 'stampDate',
+  },
+];
