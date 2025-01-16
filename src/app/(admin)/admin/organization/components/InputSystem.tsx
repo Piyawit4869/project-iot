@@ -13,17 +13,17 @@ import { parseTime } from '@internationalized/date';
 
 interface InputSystem {
   data: any;
+  onChange: (updatedData: any) => void;
+  onChangeTime: (updatedOpenDay: any) => void;
+  openEdit: boolean;
 }
 
-export const InputSystem = ({
+export default function Inputorganization({
   data,
   onChange,
   onChangeTime,
-}: {
-  data: any;
-  onChange: (updatedData: any) => void;
-  onChangeTime: (updatedOpenDay: any) => void;
-}) => {
+  openEdit,
+}: InputSystem) {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   const [formData, setFormData] = React.useState<any>(data);
   const [openDay, setOpenDay] = React.useState<any[]>([]);
@@ -118,6 +118,7 @@ export const InputSystem = ({
                 labelPlacement={'outside'}
                 onChange={handleChange}
                 selectedKeys={[formData?.defaultLanguage]}
+                isDisabled={!openEdit}
               >
                 {language.map((item) => (
                   <SelectItem key={item.value} value={item.value}>
@@ -133,6 +134,7 @@ export const InputSystem = ({
                 labelPlacement={'outside'}
                 onChange={handleChange}
                 selectedKeys={[formData?.theme]}
+                isDisabled={!openEdit}
               >
                 {themes.map((item) => (
                   <SelectItem
@@ -154,6 +156,7 @@ export const InputSystem = ({
                 labelPlacement={'outside'}
                 onChange={handleChange}
                 selectedKeys={[formData?.textDisplay]}
+                isDisabled={!openEdit}
               >
                 {fontSize.map((item: any) => (
                   <SelectItem
@@ -183,6 +186,7 @@ export const InputSystem = ({
                         handleDayChange(index, 'day', e.target.value)
                       }
                       defaultSelectedKeys={item.day}
+                      isDisabled={!openEdit}
                     >
                       {day.map((item: any) => (
                         <SelectItem
@@ -208,6 +212,7 @@ export const InputSystem = ({
                       onChange={(e) =>
                         handleDayChange(index, 'openTime', e.target.value)
                       }
+                      isDisabled={!openEdit}
                     />
                     <Input
                       className="col-span-1 w-full"
@@ -223,6 +228,7 @@ export const InputSystem = ({
                       onChange={(e) =>
                         handleDayChange(index, 'closeTime', e.target.value)
                       }
+                      isDisabled={!openEdit}
                     />
                     <a
                       className="col-span-1 w-full text-red-500 cursor-pointer mt-6"
@@ -258,7 +264,7 @@ export const InputSystem = ({
       }
     />
   );
-};
+}
 
 const language = [
   { label: 'ภาษาไทย', value: 'th' },

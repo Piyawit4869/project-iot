@@ -3,9 +3,9 @@
 import CardComponent from '@/components/common/card';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
-import { InputSystem } from './components/InputSystem';
+import InputSystem from './components/InputSystem';
 import Inputorganization from './components/Inputorganization';
-import { InputAddressProps } from './components/InputAddress';
+import InputAddressProps from './components/InputAddress';
 import NextTable from '@/components/common/nextTable';
 import Link from 'next/link';
 import * as Icon from '@ant-design/icons';
@@ -53,6 +53,7 @@ export default function OraganizationPage() {
     totalPages: 0,
     currentPage: 1,
   });
+  const [openEdit, setOpenEdit] = React.useState(false);
 
   // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault(); // Prevent the form from submitting to the URL
@@ -92,46 +93,6 @@ export default function OraganizationPage() {
     // console.log('Updated openDay:', updatedOpenDay);
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const payload = {
-        ...formData,
-        ...data,
-        organization: {
-          ...organizationData,
-        },
-      };
-
-      delete payload.data;
-
-      // const res = await updatedetails({}, payload, dataorg.id);
-      // console.log('ข้อมูลที่จะส่ง', res);
-      console.log(payload);
-
-      toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
-        duration: 3000,
-        position: 'bottom-left',
-        style: { fontFamily: 'var(--font-ibm-sans)' },
-      });
-
-      // router.push(`/admin/notation/${res.data.id}`);
-    } catch (err: any) {
-      toast.error('❌ ไม่สามารถแก้ไขข้อมูลได้', {
-        duration: 3000,
-        position: 'bottom-left',
-        style: { fontFamily: 'var(--font-ibm-sans)' },
-      });
-
-      console.error('Send FormData error:', err);
-      setErrors({ general: err.message || 'An unexpected error occurred.' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // const onSubmit = async (e: React.FormEvent) => {
   //   e.preventDefault();
   //   setLoading(true);
@@ -140,14 +101,16 @@ export default function OraganizationPage() {
   //     const payload = {
   //       ...formData,
   //       ...data,
-  //       ...systemData,
-  //       ...openDayData,
+  //       organization: {
+  //         ...organizationData,
+  //       },
   //     };
 
   //     delete payload.data;
 
-  //     const res = await updatesystem({}, payload);
-  //     console.log('ข้อมูลที่จะส่ง', res);
+  //     // const res = await updatedetails({}, payload, dataorg.id);
+  //     // console.log('ข้อมูลที่จะส่ง', res);
+  //     console.log(payload);
 
   //     toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
   //       duration: 3000,
@@ -169,6 +132,44 @@ export default function OraganizationPage() {
   //     setLoading(false);
   //   }
   // };
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const payload = {
+        ...formData,
+        ...data,
+        ...systemData,
+        ...openDayData,
+      };
+
+      delete payload.data;
+
+      const res = await updatesystem({}, payload);
+      console.log('ข้อมูลที่จะส่ง', res);
+
+      toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
+      // router.push(`/admin/notation/${res.data.id}`);
+    } catch (err: any) {
+      toast.error('❌ ไม่สามารถแก้ไขข้อมูลได้', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
+      console.error('Send FormData error:', err);
+      setErrors({ general: err.message || 'An unexpected error occurred.' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   // Add Setting Time
@@ -231,8 +232,9 @@ export default function OraganizationPage() {
     openSetting3();
   };
 
-  const iconClasses =
-    'text-xl text-default-500 pointer-events-none flex-shrink-0';
+  const toggleInput = () => {
+    setOpenEdit((prev) => !prev);
+  };
 
   return (
     <Scaffold
@@ -267,6 +269,12 @@ export default function OraganizationPage() {
                               ตั้งค่าระบบ
                             </h1>
                             <div className="">
+                              <Button
+                                className="bg-accent3 text-white mr-3"
+                                onClick={toggleInput}
+                              >
+                                แก้ไข
+                              </Button>
                               <Button
                                 className="bg-accent1 text-white"
                                 onPress={openSetting1}
@@ -621,6 +629,7 @@ export default function OraganizationPage() {
                             data={data}
                             onChange={handleSystem}
                             onChangeTime={handleOpenDayChange}
+                            openEdit={openEdit}
                           />
                         </Tab>
 
@@ -632,6 +641,12 @@ export default function OraganizationPage() {
                                 ข้อมูลที่อยู่องค์กร
                               </h1>
                               <div className="mr-10">
+                                <Button
+                                  className="bg-accent3 text-white mr-3"
+                                  onClick={toggleInput}
+                                >
+                                  แก้ไข
+                                </Button>
                                 <Button
                                   className="bg-accent1 text-white"
                                   onPress={openAddress}
@@ -1157,18 +1172,30 @@ export default function OraganizationPage() {
                             <InputAddressProps
                               data={data}
                               onChange={handleUpadteForm}
+                              openEdit={openEdit}
                             />
                           </div>
                         </Tab>
 
                         {/* setting organization */}
                         <Tab key="organization" title="ข้อมูลองค์กร">
-                          <h1 className="text-2xl font-bold text-headFont">
-                            ข้อมูลองค์กร
-                          </h1>
+                          <div className="flex justify-between">
+                            <h1 className="text-2xl font-bold text-headFont">
+                              ข้อมูลองค์กร
+                            </h1>
+                            <div className="">
+                              <Button
+                                className="bg-accent3 text-white mr-3"
+                                onClick={toggleInput}
+                              >
+                                แก้ไข
+                              </Button>
+                            </div>
+                          </div>
                           <Inputorganization
                             data={data}
                             onChange={handleOrganization}
+                            openEdit={openEdit}
                           />
                         </Tab>
                       </Tabs>
@@ -1273,3 +1300,29 @@ const day = [
   { label: 'Friday', value: '6' },
   { label: 'Saturday', value: '7' },
 ];
+
+// Icon Edit
+export const EditDocumentIcon = (props: any) => {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      focusable="false"
+      height="1em"
+      role="presentation"
+      viewBox="0 0 24 24"
+      width="1em"
+      {...props}
+    >
+      <path
+        d="M15.48 3H7.52C4.07 3 2 5.06 2 8.52v7.95C2 19.94 4.07 22 7.52 22h7.95c3.46 0 5.52-2.06 5.52-5.52V8.52C21 5.06 18.93 3 15.48 3Z"
+        fill="currentColor"
+        opacity={0.4}
+      />
+      <path
+        d="M21.02 2.98c-1.79-1.8-3.54-1.84-5.38 0L14.51 4.1c-.1.1-.13.24-.09.37.7 2.45 2.66 4.41 5.11 5.11.03.01.08.01.11.01.1 0 .2-.04.27-.11l1.11-1.12c.91-.91 1.36-1.78 1.36-2.67 0-.9-.45-1.79-1.36-2.71ZM17.86 10.42c-.27-.13-.53-.26-.77-.41-.2-.12-.4-.25-.59-.39-.16-.1-.34-.25-.52-.4-.02-.01-.08-.06-.16-.14-.31-.25-.64-.59-.95-.96-.02-.02-.08-.08-.13-.17-.1-.11-.25-.3-.38-.51-.11-.14-.24-.34-.36-.55-.15-.25-.28-.5-.4-.76-.13-.28-.23-.54-.32-.79L7.9 10.72c-.35.35-.69 1.01-.76 1.5l-.43 2.98c-.09.63.08 1.22.47 1.61.33.33.78.5 1.28.5.11 0 .22-.01.33-.02l2.97-.42c.49-.07 1.15-.4 1.5-.76l5.38-5.38c-.25-.08-.5-.19-.78-.31Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+};
