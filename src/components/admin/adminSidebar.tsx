@@ -27,7 +27,9 @@ export function AdminSideBar() {
   const [isSubMenuOpen, setIsSubMenuOpen] = React.useState({}) as any;
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
   const [open, setOpen] = React.useState(true);
-  const me = JSON.parse(localStorage.getItem('me') as any);
+  const local =
+    typeof window !== 'undefined' ? window.localStorage.getItem('me') : '{}';
+  const me = JSON.parse(local || '');
 
   console.log({ me });
 
@@ -165,7 +167,7 @@ export function AdminSideBar() {
       <Sidebar>
         <div className="flex items-center justify-start p-2">
           <img
-            src={me.organization.logoUrl} // Replace with your actual logo path in the `public` folder
+            src={me?.organization?.logoUrl} // Replace with your actual logo path in the `public` folder
             alt="Logo"
             width={50}
             height={50}
@@ -173,7 +175,7 @@ export function AdminSideBar() {
           />
           {isSidebarOpen && (
             <span className="text-lg font-bold">
-              บริษัท {me.organization.nameTh} จำกัด
+              บริษัท {me?.organization?.nameTh} จำกัด
             </span>
           )}
         </div>

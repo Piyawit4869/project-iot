@@ -117,7 +117,7 @@ export default function Inputorganization({
                 label="ภาษา"
                 labelPlacement={'outside'}
                 onChange={handleChange}
-                selectedKeys={[formData?.defaultLanguage]}
+                selectedKeys={[formData?.defaultLanguage || '']}
                 isDisabled={!openEdit}
               >
                 {language.map((item) => (
@@ -133,7 +133,7 @@ export default function Inputorganization({
                 label="ธีมสี"
                 labelPlacement={'outside'}
                 onChange={handleChange}
-                selectedKeys={[formData?.theme]}
+                selectedKeys={[formData?.theme || '']}
                 isDisabled={!openEdit}
               >
                 {themes.map((item) => (
@@ -155,7 +155,7 @@ export default function Inputorganization({
                 label="ขนาดตัวอักษร"
                 labelPlacement={'outside'}
                 onChange={handleChange}
-                selectedKeys={[formData?.textDisplay]}
+                selectedKeys={[formData?.textDisplay || '']}
                 isDisabled={!openEdit}
               >
                 {fontSize.map((item: any) => (
