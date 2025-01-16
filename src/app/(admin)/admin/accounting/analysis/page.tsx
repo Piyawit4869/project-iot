@@ -85,16 +85,21 @@ const columns = [
 ];
 
 export default function AccountSummaryPage() {
-  const [, setPage] = React.useState(1);
+  const [page, setPage] = React.useState(1);
   const [themeColor, setThemeColor] = React.useState({}) as any;
-  const [loading, ] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  // const [items, setItems] = React.useState([]) as any;
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [meta, ] = React.useState({
+  const [meta, setMeta] = React.useState({
     totalItems: 0,
     itemsPerPage: 10,
     totalPages: 0,
     currentPage: 1,
   });
+
+  console.log(page);
+  console.log(setMeta);
+  console.log(setLoading);
 
   /* Connect API Accounting Analysis Fetch data from the API
   const fetchStatement = async () => {

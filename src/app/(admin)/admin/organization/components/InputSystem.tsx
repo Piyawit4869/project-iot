@@ -1,22 +1,29 @@
 'use client';
 import Scaffold from '@/components/common/scaffold';
 import * as Icon from '@ant-design/icons';
-import { Button, Select, SelectItem, TimeInput } from '@nextui-org/react';
+import {
+  Button,
+  Input,
+  Select,
+  SelectItem,
+  TimeInput,
+} from '@nextui-org/react';
 import React from 'react';
-import get from '@/pages/api/setting/get';
 import { parseTime } from '@internationalized/date';
 
 interface InputSystem {
   data: any;
+  onChange: (updatedData: any) => void;
+  onChangeTime: (updatedOpenDay: any) => void;
+  openEdit: boolean;
 }
 
-export const InputSystem = ({
+export default function Inputorganization({
   data,
   onChange,
-}: {
-  data: any;
-  onChange: (updatedData: any) => void;
-}) => {
+  onChangeTime,
+  openEdit,
+}: InputSystem) {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   const [formData, setFormData] = React.useState<any>(data);
   const [openDay, setOpenDay] = React.useState<any[]>([]);
@@ -46,18 +53,16 @@ export const InputSystem = ({
     onChange({ ...formData, [name]: upadteData });
   };
 
-  // const handleDayChange = (index: number, field: string, value: any) => {
-  //   const updatedOpenDay = [...openDay];
-  //   updatedOpenDay[index] = {
-  //     ...updatedOpenDay[index],
-  //     [field]: field === 'day' ? [value] : value,
-  //   };
+  const handleDayChange = (index: number, field: string, value: any) => {
+    const updatedOpenDay = [...openDay];
+    updatedOpenDay[index] = {
+      ...updatedOpenDay[index],
+      [field]: field === 'day' ? [value] : value,
+    };
 
-  //   setOpenDay(updatedOpenDay);
-  //   OpenDaydata(updatedOpenDay);
-  //   setFormData(updatedOpenDay);
-  //   onChange({ openDays: updatedOpenDay });
-  // };
+    setOpenDay(updatedOpenDay);
+    onChangeTime({ openDays: updatedOpenDay });
+  };
 
   // const handleAddItem = () => {
   //   setItems([...items, { description: '', amount: '' }]);
@@ -66,7 +71,7 @@ export const InputSystem = ({
   const handleRemoveOpenDay = (index: number) => {
     const updatedOpenDay = openDay.filter((_, i) => i !== index);
     setOpenDay(updatedOpenDay);
-    onChange({ ...formData, openDay: updatedOpenDay });
+    onChangeTime({ ...formData, openDay: updatedOpenDay });
   };
 
   // const handleRemoveItem = (index: number) => {
@@ -78,7 +83,7 @@ export const InputSystem = ({
     const newOpenDayItem = { day: [], openTime: '', closeTime: '' };
     const updatedOpenDay = [...openDay, newOpenDayItem];
     setOpenDay(updatedOpenDay);
-    onChange({ ...formData, openDay: updatedOpenDay });
+    onChangeTime({ ...formData, openDay: updatedOpenDay });
   };
 
   // const handleOpenDay = items.map((item: any) => ({
@@ -112,11 +117,8 @@ export const InputSystem = ({
                 label="ภาษา"
                 labelPlacement={'outside'}
                 onChange={handleChange}
-<<<<<<< HEAD
-                selectedKeys={[formData?.defaultLanguage || '' ]}
-=======
                 selectedKeys={[formData?.defaultLanguage]}
->>>>>>> 5dd16d6198a20eef23d9566ed75d7c39f72256b4
+                isDisabled={!openEdit}
               >
                 {language.map((item) => (
                   <SelectItem key={item.value} value={item.value}>
@@ -131,11 +133,8 @@ export const InputSystem = ({
                 label="ธีมสี"
                 labelPlacement={'outside'}
                 onChange={handleChange}
-<<<<<<< HEAD
-                selectedKeys={[formData?.theme || '']}
-=======
                 selectedKeys={[formData?.theme]}
->>>>>>> 5dd16d6198a20eef23d9566ed75d7c39f72256b4
+                isDisabled={!openEdit}
               >
                 {themes.map((item) => (
                   <SelectItem
@@ -156,11 +155,8 @@ export const InputSystem = ({
                 label="ขนาดตัวอักษร"
                 labelPlacement={'outside'}
                 onChange={handleChange}
-<<<<<<< HEAD
-                selectedKeys={[formData?.textDisplay || '']}
-=======
                 selectedKeys={[formData?.textDisplay]}
->>>>>>> 5dd16d6198a20eef23d9566ed75d7c39f72256b4
+                isDisabled={!openEdit}
               >
                 {fontSize.map((item: any) => (
                   <SelectItem
@@ -186,8 +182,11 @@ export const InputSystem = ({
                       placeholder="เลือกวันทำงาน"
                       label="วันทำงาน"
                       labelPlacement={'outside'}
-                      onChange={handleChange}
+                      onChange={(e) =>
+                        handleDayChange(index, 'day', e.target.value)
+                      }
                       defaultSelectedKeys={item.day}
+                      isDisabled={!openEdit}
                     >
                       {day.map((item: any) => (
                         <SelectItem
@@ -199,8 +198,9 @@ export const InputSystem = ({
                         </SelectItem>
                       ))}
                     </Select>
-                    <TimeInput
+                    <Input
                       className="col-span-1 w-full"
+                      type="time"
                       label={
                         <span className="col-span-1 w-full text-headFont">
                           เริ่มงาน
@@ -208,15 +208,15 @@ export const InputSystem = ({
                       }
                       labelPlacement="outside"
                       name="openTime"
-                      defaultValue={
-                        item.openTime
-                          ? parseTime(item.openTime.split('T')[0])
-                          : undefined
+                      defaultValue={item.openTime}
+                      onChange={(e) =>
+                        handleDayChange(index, 'openTime', e.target.value)
                       }
-                      onChange={handleChange}
+                      isDisabled={!openEdit}
                     />
-                    <TimeInput
+                    <Input
                       className="col-span-1 w-full"
+                      type="time"
                       label={
                         <span className="col-span-1 w-full text-headFont">
                           เลิกงาน
@@ -224,15 +224,11 @@ export const InputSystem = ({
                       }
                       labelPlacement="outside"
                       name="closeTime"
-                      defaultValue={
-                        item.closeTime
-                          ? parseTime(item.closeTime.split('T')[0])
-                          : undefined
+                      defaultValue={item.closeTime}
+                      onChange={(e) =>
+                        handleDayChange(index, 'closeTime', e.target.value)
                       }
-                      // onChange={(value) =>
-                      //   handleDayChange(index, 'closeTime', value)
-                      // }
-                      onChange={handleChange}
+                      isDisabled={!openEdit}
                     />
                     <a
                       className="col-span-1 w-full text-red-500 cursor-pointer mt-6"
@@ -268,11 +264,12 @@ export const InputSystem = ({
       }
     />
   );
-};
+}
 
 const language = [
   { label: 'ภาษาไทย', value: 'th' },
-  { label: 'ภาษาอังกฤษ', value: 'eng' },
+  { label: 'ภาษาอังกฤษ', value: 'en' },
+  // { label: 'ภาษาญี่ปุ่น', value: 'jp' },
 ];
 
 const themes = [

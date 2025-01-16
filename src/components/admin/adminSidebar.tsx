@@ -123,8 +123,14 @@ export function AdminSideBar() {
       {
         name: 'การตั้งค่า',
         key: 'setting',
-        path: '/admin/organization',
         icon: 'Settings',
+        subMenu: [
+          {
+            name: 'การตั้งค่าองค์กร',
+            path: '/admin/organization',
+            icon: 'Settings',
+          },
+        ],
       },
     ];
 
