@@ -1,48 +1,10 @@
 'use client';
 
-// import { signIn, signOut, useSession } from 'next-auth/react';
-
-// export default function AuthActions() {
-//   const { data: session, status } = useSession();
-
-//   const handleLogin = async () => {
-//     await signIn('credentials', {
-//       user: 'owner@utotech.org', // Replace with user input
-//       password: 'localpass', // Replace with user input
-//       callbackUrl: '/', // Redirect after successful login
-//     });
-//   };
-
-//   const handleLogout = async () => {
-//     await signOut({ callbackUrl: '/login' }); // Redirect after logout
-//   };
-
-//   if (status === 'loading') {
-//     return <p>Loading...</p>;
-//   }
-
-//   if (!session) {
-//     return (
-//       <div>
-//         <p>You are not logged in.</p>
-//         <button onClick={handleLogin}>Login</button>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div>
-//       <p>Welcome, {session.user?.name || 'User'}!</p>
-//       <button onClick={handleLogout}>Logout</button>
-//     </div>
-//   );
-// }
-
-import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
-const Login = () => {
+export const Form = (csrfToken: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -55,8 +17,8 @@ const Login = () => {
       redirect: false,
       user: 'owner@utotech.org',
       password: 'localpass',
+      // csrfToken,
     });
-    console.log({ result });
 
     if (result) {
       router.push('/dashboard');
@@ -67,6 +29,7 @@ const Login = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      {/* <input name="csrfToken" type="hidden" defaultValue={csrfToken} /> */}
       <div>
         <label>Email</label>
         <input
@@ -88,5 +51,3 @@ const Login = () => {
     </form>
   );
 };
-
-export default Login;
