@@ -1,42 +1,35 @@
 'use client';
 
-import { Input, Textarea } from '@nextui-org/react';
+import { Button, Input, Textarea } from '@nextui-org/react';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
-// import { update } from 'lodash';
-import { update } from 'lodash';
-import { address } from 'framer-motion/client';
 
-// interface InputAddressProps {
-//   data: any;
-// }
-
-export const InputAddress = ({
-  data,
-  onChange,
-}: {
+interface InpuAddressProps {
   data: any;
   onChange: (updatedData: any) => void;
-}) => {
+  openEdit: boolean;
+}
+
+export default function Inputorganization({
+  data,
+  onChange,
+  openEdit,
+}: InpuAddressProps) {
   const [formData, setFormData] = React.useState<any>(data);
   const [address, setAddress] = React.useState<any[]>([]);
 
   React.useEffect(() => {
     if (data) {
-      setFormData(data.organization.addresses);
       const filtered = data.organization.addresses.filter(
-        (address: any) => address.branchId !== undefined,
+        (address: any) => address.branchId === null,
       );
       setAddress(filtered);
     }
   }, [data]);
 
-  console.log('formData', formData);
-  console.log('address', address);
-
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
-    const upadteData =
+    const updatedData =
       type === 'checkbox'
         ? checked
         : name === 'birthDate' && value instanceof Date
@@ -45,10 +38,10 @@ export const InputAddress = ({
 
     setFormData((prevData: any) => ({
       ...prevData,
-      [name]: upadteData,
+      [name]: updatedData,
     }));
 
-    onChange({ ...formData, [name]: upadteData });
+    onChange({ ...formData, [name]: updatedData });
   };
 
   return (
@@ -66,6 +59,7 @@ export const InputAddress = ({
                   placeholder="ชื่อที่อยู่"
                   value={address.name}
                   onChange={handleChange}
+                  isDisabled={!openEdit}
                 />
                 <Input
                   className="flex-1"
@@ -73,11 +67,11 @@ export const InputAddress = ({
                   labelPlacement="outside"
                   name="city"
                   placeholder="ชื่อเมือง"
-                  value={formData.city}
+                  value={address.city}
                   onChange={handleChange}
+                  isDisabled={!openEdit}
                 />
               </div>
-
               <div className="flex gap-4 mt-6">
                 <Input
                   className="flex-1"
@@ -85,8 +79,9 @@ export const InputAddress = ({
                   labelPlacement="outside"
                   name="province"
                   placeholder="ชื่อจังหวัด"
-                  value={formData.province}
+                  value={address.province}
                   onChange={handleChange}
+                  isDisabled={!openEdit}
                 />
                 <Input
                   className="flex-1"
@@ -94,11 +89,11 @@ export const InputAddress = ({
                   labelPlacement="outside"
                   name="postalCode"
                   placeholder="ชื่อรหัสไปรษณีย์"
-                  value={formData.postalCode}
+                  value={address.postalCode}
                   onChange={handleChange}
+                  isDisabled={!openEdit}
                 />
               </div>
-
               <div className="flex gap-4 mt-6">
                 <Input
                   className="flex-1"
@@ -106,8 +101,9 @@ export const InputAddress = ({
                   labelPlacement="outside"
                   name="roomNo"
                   placeholder="เลขห้อง"
-                  value={formData.roomNonvm}
+                  value={address.roomNonvm}
                   onChange={handleChange}
+                  isDisabled={!openEdit}
                 />
                 <Input
                   className="flex-1"
@@ -115,7 +111,9 @@ export const InputAddress = ({
                   labelPlacement="outside"
                   name="floorNo"
                   placeholder="ชั้นที่อยู่"
+                  // value={address.floorNo}
                   onChange={handleChange}
+                  isDisabled={!openEdit}
                 />
                 <Input
                   className="flex-1"
@@ -123,7 +121,9 @@ export const InputAddress = ({
                   labelPlacement="outside"
                   name="village"
                   placeholder="หมู่บ้าน"
+                  value={address.village}
                   onChange={handleChange}
+                  isDisabled={!openEdit}
                 />
                 <Input
                   className="flex-1"
@@ -131,10 +131,11 @@ export const InputAddress = ({
                   labelPlacement="outside"
                   name="villageNo"
                   placeholder="เลขหมู่บ้าน"
+                  // value={address.villageNo}
                   onChange={handleChange}
+                  isDisabled={!openEdit}
                 />
               </div>
-
               <div className="flex gap-4 mt-6">
                 <Input
                   className="flex-1"
@@ -142,7 +143,9 @@ export const InputAddress = ({
                   labelPlacement="outside"
                   name="houseNo"
                   placeholder="บ้านเลขที่"
+                  value={address.houseNo}
                   onChange={handleChange}
+                  isDisabled={!openEdit}
                 />
                 <Input
                   className="flex-1"
@@ -150,7 +153,9 @@ export const InputAddress = ({
                   labelPlacement="outside"
                   name="alley"
                   placeholder="ตรอก"
+                  // value={address.alley}
                   onChange={handleChange}
+                  isDisabled={!openEdit}
                 />
                 <Input
                   className="flex-1"
@@ -158,7 +163,9 @@ export const InputAddress = ({
                   labelPlacement="outside"
                   name="road"
                   placeholder="ถนน"
+                  // value={address.road}
                   onChange={handleChange}
+                  isDisabled={!openEdit}
                 />
                 <Input
                   className="flex-1"
@@ -166,10 +173,11 @@ export const InputAddress = ({
                   labelPlacement="outside"
                   name="building"
                   placeholder="อาคาร"
+                  // value={address.building}
                   onChange={handleChange}
+                  isDisabled={!openEdit}
                 />
               </div>
-
               <div className="flex gap-4 mt-6">
                 <Input
                   className="flex-1"
@@ -177,7 +185,10 @@ export const InputAddress = ({
                   labelPlacement="outside"
                   name="country"
                   placeholder="ประเทศ"
+                  // value={address.country}
+                  value={address.nation}
                   onChange={handleChange}
+                  isDisabled={!openEdit}
                 />
                 <Input
                   className="flex-1"
@@ -185,8 +196,9 @@ export const InputAddress = ({
                   labelPlacement="outside"
                   name="district"
                   placeholder="เขต/อำเภอ"
-                  // value={formData.subDistrict}
+                  // value={address.district}
                   onChange={handleChange}
+                  isDisabled={!openEdit}
                 />
               </div>
               <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
@@ -197,7 +209,9 @@ export const InputAddress = ({
                     labelPlacement="outside"
                     name="subDistrict"
                     placeholder="แขวง/ตำบล"
+                    value={address.subDistrict}
                     onChange={handleChange}
+                    isDisabled={!openEdit}
                   />
                 </div>
                 <div className="flex gap-4 mt-6">
@@ -211,13 +225,11 @@ export const InputAddress = ({
                     labelPlacement="outside"
                     placeholder="หมายเหตุ"
                     variant="bordered"
-                    // value={formData.note}
+                    // value={address.note}
                     onChange={handleChange}
+                    isDisabled={!openEdit}
                   />
                 </div>
-              </div>
-              <div>
-                <hr className="mt-10 border-t-4 border-gray-500" />
               </div>
             </div>
           ))}
@@ -225,4 +237,4 @@ export const InputAddress = ({
       }
     />
   );
-};
+}

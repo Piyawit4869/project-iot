@@ -22,7 +22,9 @@ export default function AdminLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const me = JSON.parse(localStorage.getItem('me') as any);
+  const local =
+    typeof window !== 'undefined' ? window.localStorage.getItem('me') : '{}';
+  const me = JSON.parse(local || '');
 
   const router = useRouter();
 

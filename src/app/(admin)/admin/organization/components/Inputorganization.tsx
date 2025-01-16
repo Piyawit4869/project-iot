@@ -15,24 +15,20 @@ import {
 } from '@nextui-org/react';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
-import { parseAbsoluteToLocal, parseDate } from '@internationalized/date';
-import { cookies } from 'next/headers';
-import { log } from 'node:console';
-import { label } from 'framer-motion/client';
+import { parseDate } from '@internationalized/date';
 
-interface Inputorganization {
-  data: any;
-}
-
-export const Inputorganization = ({
-  data,
-  onChange,
-}: {
+interface InputorganizationProps {
   data: any;
   onChange: (updatedData: any) => void;
-}) => {
+  openEdit: boolean;
+}
+
+export default function Inputorganization({
+  data,
+  onChange,
+  openEdit,
+}: InputorganizationProps) {
   const [formData, setFormData] = React.useState<any>(data);
-  const [Formtype, setFormtype] = React.useState(formData.formType);
 
   React.useEffect(() => {
     if (data) {
@@ -40,23 +36,21 @@ export const Inputorganization = ({
     }
   }, [data]);
 
-  console.log('data', data);
-
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
-    const upadteData =
+    const updatedData =
       type === 'checkbox'
         ? checked
-        : name === 'birthDate' && value instanceof Date
+        : name === 'openingDate' && value instanceof Date
         ? value.toISOString()
         : value;
 
     setFormData((prevData: any) => ({
       ...prevData,
-      [name]: upadteData,
+      [name]: updatedData,
     }));
 
-    onChange({ ...formData, [name]: upadteData });
+    onChange({ ...formData, updatedData });
   };
 
   // const handleItemChange = (index: number, value: string) => {
@@ -64,8 +58,6 @@ export const Inputorganization = ({
   //   updatedItems[index].description = value;
   //   setItems(updatedItems);
   // };
-
-  console.log(formData.openingDate);
 
   return (
     <Scaffold
@@ -101,6 +93,7 @@ export const Inputorganization = ({
               orientation="horizontal"
               value={formData.fromType}
               onChange={handleChange}
+              isDisabled={!openEdit}
             >
               {FormType.map((item) => (
                 <Radio key={item.value} value={item.value}>
@@ -119,6 +112,7 @@ export const Inputorganization = ({
               labelPlacement={'outside'}
               selectedKeys={[formData.status]}
               onChange={handleChange}
+              isDisabled={!openEdit}
             >
               {BusinessStatus.map((item: any) => (
                 <SelectItem
@@ -138,6 +132,7 @@ export const Inputorganization = ({
               labelPlacement={'outside'}
               selectedKeys={[formData.type]}
               onChange={handleChange}
+              isDisabled={!openEdit}
             >
               {BusinessModel.map((item) => (
                 <SelectItem
@@ -162,6 +157,7 @@ export const Inputorganization = ({
               placeholder="กรอกชื่อกิจการ"
               value={formData.nameTh}
               onChange={handleChange}
+              isDisabled={!openEdit}
             />
             <Input
               className="flex-1"
@@ -173,6 +169,7 @@ export const Inputorganization = ({
               placeholder="Enter the business name"
               value={formData.nameEn}
               onChange={handleChange}
+              isDisabled={!openEdit}
             />
           </div>
 
@@ -188,6 +185,7 @@ export const Inputorganization = ({
                     length={13}
                     onChange={handleChange}
                     value={formData.taxId}
+                    isDisabled={!openEdit}
                   />
                 </div>
               </div>
@@ -207,6 +205,7 @@ export const Inputorganization = ({
               variant="bordered"
               // value={formData.descriptionsTh}
               onChange={handleChange}
+              isDisabled={!openEdit}
             />
             <Textarea
               classNames={{
@@ -220,6 +219,7 @@ export const Inputorganization = ({
               variant="bordered"
               // value={formData.descriptionsEn}
               onChange={handleChange}
+              isDisabled={!openEdit}
             />
           </div>
           <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
@@ -230,6 +230,7 @@ export const Inputorganization = ({
                 label="วันที่จดทะเบียน"
                 labelPlacement={'outside'}
                 disableAnimation
+                isDisabled={!openEdit}
                 value={
                   formData.openingDate
                     ? parseDate(formData.openingDate.split('T')[0])
@@ -265,9 +266,10 @@ export const Inputorganization = ({
                   className="mt-2"
                   defaultSelected
                   aria-label="Automatic updates"
-                  color="secondary"
+                  color="success"
                   checked={formData.registerVat}
                   onChange={handleChange}
+                  isDisabled={!openEdit}
                 />
               </div>
             </div>
@@ -281,6 +283,7 @@ export const Inputorganization = ({
               placeholder="www.three-chief.com"
               value={formData.websiteUrl}
               onChange={handleChange}
+              isDisabled={!openEdit}
             />
             <Input
               className="flex-1"
@@ -290,6 +293,7 @@ export const Inputorganization = ({
               placeholder="threechief.com"
               value={formData.domainName}
               onChange={handleChange}
+              isDisabled={!openEdit}
             />
           </div>
 
@@ -305,6 +309,7 @@ export const Inputorganization = ({
               placeholder="ภูวิศ วัฒนะ"
               // value={formData.contactName}
               onChange={handleChange}
+              isDisabled={!openEdit}
             />
             <Input
               className="flex-1"
@@ -314,6 +319,7 @@ export const Inputorganization = ({
               placeholder="+66 888 821 480"
               value={formData.contactPhone}
               onChange={handleChange}
+              isDisabled={!openEdit}
             />
           </div>
           <div className="flex gap-4 mt-6">
@@ -325,6 +331,7 @@ export const Inputorganization = ({
               placeholder="phuwis@threechief.com"
               value={formData.contactEmail}
               onChange={handleChange}
+              isDisabled={!openEdit}
             />
             <Input
               className="flex-1"
@@ -334,6 +341,7 @@ export const Inputorganization = ({
               placeholder="www.three-chief.com"
               // value={formData.contactWebsite}
               onChange={handleChange}
+              isDisabled={!openEdit}
             />
           </div>
           <div className="flex gap-4 mt-6">
@@ -345,6 +353,7 @@ export const Inputorganization = ({
               placeholder="Phuwis Watthana"
               // value={formData.contactFacebook}
               onChange={handleChange}
+              isDisabled={!openEdit}
             />
             <Input
               className="flex-1"
@@ -354,6 +363,7 @@ export const Inputorganization = ({
               placeholder="0888821480"
               // value={formData.contactLine}
               onChange={handleChange}
+              isDisabled={!openEdit}
             />
           </div>
           <div className="flex gap-4 mt-6">
@@ -365,6 +375,7 @@ export const Inputorganization = ({
               placeholder="0888821480"
               // value={formData.contactWhatsapp}
               onChange={handleChange}
+              isDisabled={!openEdit}
             />
             <Input
               className="flex-1"
@@ -374,13 +385,14 @@ export const Inputorganization = ({
               placeholder="10 โมงถึง 6 โมงเย็น"
               // value={formData.contactWebsite}
               onChange={handleChange}
+              isDisabled={!openEdit}
             />
           </div>
         </div>
       }
     />
   );
-};
+}
 
 const BusinessStatus = [
   {

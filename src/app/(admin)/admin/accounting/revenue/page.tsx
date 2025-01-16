@@ -7,16 +7,22 @@ import { Input, Select, SelectItem, Tabs, Tab } from '@nextui-org/react';
 import { TablePagination } from '@/components/common/tablePagination';
 
 export default function RevenuePage() {
-  const [, setPage] = React.useState(1);
-  const [loading, ] = React.useState(false);
+  const [page, setPage] = React.useState(1);
+  const [loading, setLoading] = React.useState(false);
+  // const [items, setItems] = React.useState([]) as any;
+  // const [filters, setFilters] = React.useState({});
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [meta, ] = React.useState({
+  const [meta, setMeta] = React.useState({
     totalItems: 0,
     itemsPerPage: 10,
     totalPages: 0,
     currentPage: 1,
   });
   const [selectedCategory, setSelectedCategory] = React.useState('all');
+
+  console.log(page);
+  console.log(setMeta);
+  console.log(setLoading);
 
   // Fetch data from the API
   /*
@@ -140,6 +146,7 @@ export default function RevenuePage() {
           <div className="flex flex-wrap gap-4">
             <Tabs
               color="secondary"
+              className="mb-4"
               radius="full"
               aria-label="Tabs colors"
               selectedKey={selectedCategory}

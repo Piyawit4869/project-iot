@@ -7,15 +7,21 @@ import { Input, Select, SelectItem } from '@nextui-org/react';
 import { TablePagination } from '@/components/common/tablePagination';
 
 export default function StatementPage() {
-  const [, setPage] = React.useState(1);
-  const [loading, ] = React.useState(false);
+  const [page, setPage] = React.useState(1);
+  const [loading, setLoading] = React.useState(false);
+  // const [items, setItems] = React.useState([]) as any;
+  // const [filters, setFilters] = React.useState({ name: '' });
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [meta, ] = React.useState({
+  const [meta, setMeta] = React.useState({
     totalItems: 0,
     itemsPerPage: 10,
     totalPages: 0,
     currentPage: 1,
   });
+
+  console.log(page);
+  console.log(setMeta);
+  console.log(setLoading);
 
   /* Connect API Accounting Statemant Fetch data from the API
   const fetchStatement = async () => {

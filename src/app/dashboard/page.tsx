@@ -1,5 +1,3 @@
-'use client';
-
 import {
   Card,
   CardHeader,
@@ -12,8 +10,8 @@ import { useSession } from 'next-auth/react';
 
 // export default function HomeAdminPage() {
 export default async function HomeAdminPage() {
-  const { data: session, status } = useSession();
-  console.log({ session });
+  // const { data: session, status } = useSession();
+  // console.log({ session });
 
   return (
     <div className="min-h-screen  bg-gray-50 flex flex-col justify-center items-center px-6 py-12 sm:py-16 lg:py-20 -mt-16">
