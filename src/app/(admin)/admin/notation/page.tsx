@@ -78,7 +78,6 @@ export default function NotationsPage() {
                   <Button
                     className="bg-accent1 text-white"
                     size="sm"
-                    key={'create button'}
                   >
                     รูปแบบเอกสาร
                   </Button>
@@ -87,7 +86,6 @@ export default function NotationsPage() {
                   <Button
                     className="bg-accent1 text-white"
                     size="sm"
-                    key={'create button'}
                   >
                     สร้างเอกสาร
                   </Button>
@@ -150,7 +148,6 @@ const columns = [
   {
     title: 'ประเภทเอกสาร',
     dataIndex: 'type',
-    align: 'center',
     render: (value: string) => {
       return handleTypeTag(value);
     },

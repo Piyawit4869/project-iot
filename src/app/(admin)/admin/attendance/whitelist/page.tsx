@@ -74,8 +74,8 @@ export default function WhitelistsPage() {
       setItems(
         fetchedItems.map((item: WhitelistItem) => ({
           ...item,
-          addressName: item.address.name || '',
-          addressNation: item.address.nation || '',
+          addressName: item?.address?.name || '',
+          addressNation: item?.address?.nation || '',
         })),
       );
       setMeta(fetchedMeta);

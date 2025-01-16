@@ -2,7 +2,6 @@
 
 import React from 'react';
 import debounce from 'lodash/debounce';
-import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link, Tab, Tabs } from '@nextui-org/react';
 import pagination from '@/pages/api/attendances/pagination';
@@ -13,7 +12,7 @@ import {
   VerticalTimelineElement,
 } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
-
+import { TimelineComponent } from '@/components/admin/adminTimeline';
 interface FilterState {
   name: string;
   docNo: string;
@@ -90,9 +89,9 @@ export default function AttendancesPage() {
       } else {
         setItems([]); // If fetchedItems is not an array, set items to an empty array
       }
-            console.log(fetchedItems);
+      console.log(fetchedItems);
       console.log(fetchedMeta);
-      console.log(fetchedItems)
+      console.log(fetchedItems);
       console.log(items); // Log transformed items before setItems
 
       // Set the meta state, ensuring it has default values
@@ -131,121 +130,117 @@ export default function AttendancesPage() {
   return (
     <div>
       {/* Page Header */}
-      <Scaffold
-        child={
-          <div>
-            <TopSection
-              title="ภาพรวมองค์กรทั้งหมด"
-              buttons={[
-                <Link href={'overview/create'} key={'create button'}>
-                  <Button
-                    className="bg-accent1 text-white"
-                    size="sm"
-                    key={'create button'}
-                  >
-                    สร้างกิจกรรม
-                  </Button>
-                </Link>,
-              ]}
+      <div>
+        <TopSection
+          title="ภาพรวมองค์กรทั้งหมด"
+          buttons={[
+            <Link href={'overview/create'} key={'create button'}>
+              <Button
+                className="bg-accent1 text-white"
+                size="sm"
+                key={'create button'}
+              >
+                สร้างกิจกรรม
+              </Button>
+            </Link>,
+          ]}
+        />
+        <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
+          <div className="grid grid-cols-1 sm:grid-cols-2">
+            <Input
+              className="w-full p-2 text-headFont"
+              labelPlacement="outside"
+              size="sm"
+              radius="sm"
+              name="name"
+              placeholder="ค้นหาชื่อ"
+              value={filters.name}
+              onChange={(e) => onInputChange('name', e.target.value)}
             />
-            <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
-              <div className="grid grid-cols-1 sm:grid-cols-2">
-                <Input
-                  className="w-full p-2 text-headFont"
-                  labelPlacement="outside"
-                  size="sm"
-                  radius="sm"
-                  name="name"
-                  placeholder="ค้นหาชื่อ"
-                  value={filters.name}
-                  onChange={(e) => onInputChange('name', e.target.value)}
-                />
-                <Input
-                  className="w-full p-2 text-headFont"
-                  labelPlacement="outside"
-                  size="sm"
-                  name="docNo"
-                  placeholder="ค้นหาหมายเลขเอกสาร"
-                  value={filters.docNo}
-                  onChange={(e) => onInputChange('docNo', e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div>
-              <Tabs variant="underlined">
-                <Tab key="table" title="ตาราง">
-                  {loading ? (
-                    <div className="flex justify-center items-center h-64">
-                      <div className="spinner"></div>
-                    </div>
-                  ) : (
-                    <TablePagination
-                      initialRows={items}
-                      initialMeta={meta}
-                      rowsPerPage={rowsPerPage}
-                      columns={columns as any}
-                      onPageChange={(newPage) => setPage(newPage)}
-                      onRowsPerPageChange={(newRowsPerPage) =>
-                        setRowsPerPage(newRowsPerPage)
-                      }
-                    />
-                  )}
-                </Tab>
-                <Tab
-                  key="timeline"
-                  title="ไทม์ไลน์"
-                  className="grid grid-cols-1 sm:grid-cols-2"
-                >
-                  <VerticalTimeline layout="1-column">
-                    <VerticalTimelineElement
-                      className=" min-w-80 w-max-120 "
-                      contentStyle={{
-                        background: '#fff',
-                        borderRight: '3px solid #00a57c',
-                        borderTop: '2px solid #00a57c',
-                        color: '#000',
-                        borderBottomLeftRadius: '15px',
-                        borderBottomRightRadius: '15px',
-                        borderTopRightRadius: '15px',
-                      }}
-                      contentArrowStyle={{
-                        borderRight: '8px solid  #00a57c',
-                      }}
-                      iconStyle={{
-                        background: '#00a57c',
-                        color: '#fff',
-                      }}
-                    >
-                      <h3
-                        className="vertical-timeline-element-title"
-                        style={{
-                          wordBreak: 'break-word', // ตัดคำที่เกินขอบ
-                          whiteSpace: 'normal', // ให้ข้อความแสดงหลายบรรทัด
-                          overflowWrap: 'break-word',
-                        }}
-                      >
-                        Name :
-                      </h3>
-                      <span>Time : 11:16</span>
-                    </VerticalTimelineElement>
-                    <VerticalTimelineElement
-                      iconStyle={{
-                        background: 'rgb(0, 0, 0)',
-                        color: '#fff',
-                        borderBottomLeftRadius: '25px',
-                        borderBottomRightRadius: '25px',
-                        borderTopRightRadius: '25px',
-                      }}
-                    />
-                  </VerticalTimeline>
-                </Tab>
-              </Tabs>
-            </div>
+            <Input
+              className="w-full p-2 text-headFont"
+              labelPlacement="outside"
+              size="sm"
+              name="docNo"
+              placeholder="ค้นหาหมายเลขเอกสาร"
+              value={filters.docNo}
+              onChange={(e) => onInputChange('docNo', e.target.value)}
+            />
           </div>
-        }
-        backgroundColor={''}
-      />
+        </div>
+
+        <div>
+          <Tabs variant="underlined">
+            <Tab key="table" title="ตาราง">
+              {loading ? (
+                <div className="flex justify-center items-center h-64">
+                  <div className="spinner"></div>
+                </div>
+              ) : (
+                <TablePagination
+                  initialRows={items}
+                  initialMeta={meta}
+                  rowsPerPage={rowsPerPage}
+                  columns={columns as any}
+                  onPageChange={(newPage) => setPage(newPage)}
+                  onRowsPerPageChange={(newRowsPerPage) =>
+                    setRowsPerPage(newRowsPerPage)
+                  }
+                />
+              )}
+            </Tab>
+            <Tab
+              key="timeline"
+              title="ไทม์ไลน์"
+              className="grid grid-cols-1 sm:grid-cols-2"
+            >
+              <TimelineComponent />
+              {/* <VerticalTimeline layout="1-column">
+                <VerticalTimelineElement
+                  className=" min-w-80 w-max-120 "
+                  contentStyle={{
+                    background: '#fff',
+                    borderRight: '3px solid #00a57c',
+                    borderTop: '2px solid #00a57c',
+                    color: '#000',
+                    borderBottomLeftRadius: '15px',
+                    borderBottomRightRadius: '15px',
+                    borderTopRightRadius: '15px',
+                  }}
+                  contentArrowStyle={{
+                    borderRight: '8px solid  #00a57c',
+                  }}
+                  iconStyle={{
+                    background: '#00a57c',
+                    color: '#fff',
+                  }}
+                >
+                  <h3
+                    className="vertical-timeline-element-title"
+                    style={{
+                      wordBreak: 'break-word', // ตัดคำที่เกินขอบ
+                      whiteSpace: 'normal', // ให้ข้อความแสดงหลายบรรทัด
+                      overflowWrap: 'break-word',
+                    }}
+                  >
+                    Name :
+                  </h3>
+                  <span>Time : 11:16</span>
+                </VerticalTimelineElement>
+                <VerticalTimelineElement
+                  iconStyle={{
+                    background: 'rgb(0, 0, 0)',
+                    color: '#fff',
+                    borderBottomLeftRadius: '25px',
+                    borderBottomRightRadius: '25px',
+                    borderTopRightRadius: '25px',
+                  }}
+                />
+              </VerticalTimeline> */}
+            </Tab>
+          </Tabs>
+        </div>
+      </div>
     </div>
   );
 }
