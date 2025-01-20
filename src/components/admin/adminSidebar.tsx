@@ -27,11 +27,9 @@ export function AdminSideBar() {
   const [isSubMenuOpen, setIsSubMenuOpen] = React.useState({}) as any;
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
   const [open, setOpen] = React.useState(true);
-  const local =
-    typeof window !== 'undefined' ? window.localStorage.getItem('me') : '{}';
-  const me = JSON.parse(local || '');
-
-  console.log({ me });
+  // const local =
+  //   typeof window !== 'undefined' ? window.localStorage.getItem('me') : '{}';
+  // const me = JSON.parse(local || '');
 
   React.useEffect(() => {
     const menuData: any = [
@@ -80,7 +78,7 @@ export function AdminSideBar() {
           },
           {
             name: 'การตั้งค่า',
-            path: '/admin/attendance/config_attendance',
+            path: '/admin/attendance/setting',
             icon: 'Settings',
           },
         ],
@@ -166,7 +164,7 @@ export function AdminSideBar() {
     >
       <Sidebar>
         <div className="flex items-center justify-start p-2">
-          <img
+          {/* <img
             src={me?.organization?.logoUrl} // Replace with your actual logo path in the `public` folder
             alt="Logo"
             width={50}
@@ -177,7 +175,7 @@ export function AdminSideBar() {
             <span className="text-lg font-bold">
               บริษัท {me?.organization?.nameTh} จำกัด
             </span>
-          )}
+          )} */}
         </div>
         <div className="flex items-center justify-between p-2">
           {isSidebarOpen && (

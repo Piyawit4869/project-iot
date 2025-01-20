@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 // Timeline wrapper component
 interface TimelineProps {
@@ -11,35 +11,45 @@ const Timeline: React.FC<TimelineProps> = ({ children, className }) => {
 };
 
 // Timeline item component
-const TimelineItem: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <div className="timeline-item flex items-start space-x-4">{children}</div>;
+const TimelineItem: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  return (
+    <div className=" pl-8 timeline-item flex items-start space-x-4">
+      {children}
+    </div>
+  );
 };
 
 // Timeline point component
 const TimelinePoint = () => {
   return (
-    <div className="timeline-point w-4 h-4 bg-blue-500 rounded-full mt-2.5"></div>
+    <div className="timeline-point w-4 h-4 bg-accent1 rounded-full mt-2.5 "></div>
   );
 };
 
 // Timeline content component
 interface TimelineContentProps {
-  date: string;
-  title: string;
-  description: string;
+  action: string;
+  name: string;
+  dateTime: string;
 }
 
-const TimelineContent: React.FC<TimelineContentProps> = ({ date, title, description }) => {
+const TimelineContent: React.FC<TimelineContentProps> = ({
+  action,
+  name,
+  dateTime,
+}) => {
   return (
-    <div className="timeline-content">
-      <p className="text-body-5 font-normal leading-[1.4] text-metal-400 dark:text-metal-300">
-        {date}
-      </p>
+    <div className="timeline-content mt-2">
       <h1 className="text-body-3 font-medium text-metal-900 dark:text-white">
-        {title}
+        {action}
       </h1>
-      <p className="text-body-4 font-normal text-metal-600 dark:text-metal-300">
-        {description}
+      <p className="text-body-3 font-medium text-metal-900 dark:text-white">
+        {name}
+      </p>
+      <p className="text-body-5 font-normal leading-[1.4] text-metal-400 dark:text-metal-300">
+        {dateTime}
       </p>
     </div>
   );
@@ -51,27 +61,27 @@ export const TimelineComponent = () => {
       <TimelineItem>
         <TimelinePoint />
         <TimelineContent
-          date="September 23, 2022"
-          title="Step 1 Completed"
-          description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, incidunt."
+          action="In"
+          name="FullName"
+          dateTime="09:00:00 , 20/01/2024"
         />
       </TimelineItem>
 
       <TimelineItem>
         <TimelinePoint />
         <TimelineContent
-          date="September 23, 2022"
-          title="Step 2 Completed"
-          description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, incidunt."
+          action="Break"
+          name="FullName"
+          dateTime="13:00:00 , 20/01/2024"
         />
       </TimelineItem>
 
       <TimelineItem>
         <TimelinePoint />
         <TimelineContent
-          date="September 23, 2022"
-          title="Step 3 Completed"
-          description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, incidunt."
+          action="Out"
+          name="FullName"
+          dateTime="17:00:00 , 20/01/2024"
         />
       </TimelineItem>
     </Timeline>

@@ -21,15 +21,16 @@ export default function AdminLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const me = JSON.parse(localStorage.getItem('me') as any);
+  // const local =
+  //   typeof window !== 'undefined' ? window.localStorage.getItem('me') : '{}';
+  // const me = JSON.parse(local || '');
+  // const router = useRouter();
 
-  const router = useRouter();
-
-  React.useEffect(() => {
-    if (!me) {
-      router.push('/');
-    }
-  }, []);
+  // React.useEffect(() => {
+  //   if (!me) {
+  //     router.push('/');
+  //   }
+  // }, []);
 
   const items = [
     {
@@ -116,13 +117,13 @@ export default function AdminLayout({
                         alt="Profile"
                         className="w-8 h-8 rounded-full"
                       />
-                      <span className="text-gray-800 text-xs">
+                      {/* <span className="text-gray-800 text-xs">
                         {`${
                           me?.profile?.firstName ? me?.profile?.firstName : ''
                         } ${
                           me?.profile?.lastName ? me?.profile?.lastName : ''
                         }`}
-                      </span>
+                      </span> */}
                     </button>
                   </DropdownTrigger>
                 </div>
