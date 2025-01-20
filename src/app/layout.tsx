@@ -4,6 +4,8 @@ import '@/styles/globals.css';
 import React from 'react';
 import { NextUIProvider } from '@nextui-org/react';
 import { Toaster } from 'sonner';
+import { SessionProvider } from 'next-auth/react';
+import { Providers } from './providers';
 
 const ibmPlexSans = localFont({
   src: '../assets/fonts/IBMPlexSansThai-Regular.ttf',
@@ -24,10 +26,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${ibmPlexSans.variable}  antialiased`}>
-        <NextUIProvider>
-          <Toaster position="bottom-left" richColors expand />
-          <main>{children}</main>
-        </NextUIProvider>
+        <Providers>
+          <NextUIProvider>
+            {/* <Toaster position="bottom-left" richColors expand /> */}
+            {/* <main>{children}</main> */}
+            <main>{children}</main>
+          </NextUIProvider>
+        </Providers>
       </body>
     </html>
   );
