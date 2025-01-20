@@ -24,16 +24,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${ibmPlexSans.variable}  antialiased`}>
-        <Providers>
+    <Providers>
+      <html lang="en">
+        <body className={`${ibmPlexSans.variable}  antialiased`}>
           <NextUIProvider>
             {/* <Toaster position="bottom-left" richColors expand /> */}
             {/* <main>{children}</main> */}
             <main>{children}</main>
           </NextUIProvider>
-        </Providers>
-      </body>
-    </html>
+        </body>
+      </html>
+    </Providers>
   );
 }

@@ -4,11 +4,6 @@ import axios from 'axios';
 
 import { base_url } from '@/constant/common';
 
-type JwtType = {
-  token: string;
-  user: any;
-};
-
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -27,25 +22,44 @@ export const authOptions: NextAuthOptions = {
           });
           console.log({ res });
           if (res.data) {
+            const { data } = res;
+            const meResponse = await axios(`${base_url}/auth/me/`, {
+              method: 'GET',
+              headers: {
+                'content-type': 'application/json',
+                Authorization: `Bearer ${data.accessToken}`,
+              },
+            });
+
+            if (meResponse.status !== 200) {
+              throw new Error('Failed to fetch user details');
+            }
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('me', JSON.stringify(meResponse.data));
+              localStorage.setItem('accessToken', data.accessToken);
+              localStorage.setItem('refreshToken', data.refreshToken);
+            }
             return res.data;
           }
           return null;
         } catch (error) {
+          console.log({ error });
           throw new Error('Invalid username or password');
         }
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: any) {
+    async jwt({ token, account, user }: any) {
+      console.log({ token, account, user });
       if (user) {
         token.accessToken = user.token;
-        token.user = user.user;
+        token.user = user;
       }
       return token;
     },
-    async session({ session, token, refreshToken }: any) {
-      // console.log({ session, token, refreshToken });
+    async session({ session, token, user, refreshToken }: any) {
+      console.log({ session, token, user, refreshToken });
 
       session.accessToken = token.accessToken as string;
       // session.user = token.user;
