@@ -22,9 +22,9 @@ export default function AdminLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const local =
-    typeof window !== 'undefined' ? window.localStorage.getItem('me') : '{}';
-  const me = JSON.parse(local || '');
+  // const local =
+  //   typeof window !== 'undefined' ? window.localStorage.getItem('me') : '{}';
+  // const me = JSON.parse(local || '');
 
   const router = useRouter();
 
@@ -33,12 +33,6 @@ export default function AdminLayout({
       callbackUrl: '/login', // Redirect to login page after logout
     });
   };
-
-  React.useEffect(() => {
-    if (!me) {
-      router.push('/');
-    }
-  }, []);
 
   const items = [
     {
@@ -126,11 +120,11 @@ export default function AdminLayout({
                       alt="Profile"
                       className="w-8 h-8 rounded-full"
                     />
-                    <span className="text-gray-800 text-xs">
+                    {/* <span className="text-gray-800 text-xs">
                       {`${
                         me?.profile?.firstName ? me?.profile?.firstName : ''
                       } ${me?.profile?.lastName ? me?.profile?.lastName : ''}`}
-                    </span>
+                    </span> */}
                   </button>
                 </DropdownTrigger>
               </div>
