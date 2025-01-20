@@ -15,6 +15,8 @@ import {
 } from '@nextui-org/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
+import path from 'path';
 
 export default function AdminLayout({
   children,
@@ -32,6 +34,12 @@ export default function AdminLayout({
   //   }
   // }, []);
 
+  const handleSignOut = async () => {
+    await signOut({
+      callbackUrl: '/login', // Redirect to login page after logout
+    });
+  };
+
   const items = [
     {
       key: 'profile',
@@ -48,7 +56,8 @@ export default function AdminLayout({
     {
       key: 'logout',
       label: 'ออกจากระบบ',
-      path: '/login',
+      onclick: handleSignOut,
+      path: '',
       icon: <Icon.LogoutOutlined />,
     },
   ];
@@ -130,7 +139,7 @@ export default function AdminLayout({
                     }
                     color={item.key === 'delete' ? 'danger' : 'default'}
                   >
-                    <Link href={item.path}>
+                    <Link href={item.path} onClick={item.onclick}>
                       <div className="flex">
                         {item.icon}
                         <div className="ml-3 text-xs">{item.label}</div>

@@ -9,7 +9,8 @@ export default async function get(): Promise<any> {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        // Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiZW1wbG95ZWUiLCJlbXBsb3llZVJvbGUiOiJvd25lciIsImlhdCI6MTczNzM0NDAxNSwiZXhwIjoxNzM3NjAzMjE1fQ.a7Yg6YLbgvbV4--45l8uMVuCO3bezk_Fqo_eqMust6Q`,
       },
     });
 
