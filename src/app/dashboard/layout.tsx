@@ -17,14 +17,23 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 
+import { useSession } from 'next-auth/react';
+
 export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const local =
-  //   typeof window !== 'undefined' ? window.localStorage.getItem('me') : '{}';
-  // const me = JSON.parse(local || '');
+  const { data: session, status } = useSession();
+
+  console.log({ session, status });
+
+  const local =
+    typeof window !== 'undefined' ? window.localStorage.getItem('me') : '{}';
+  const me = JSON.parse(local || '');
+  // const session = await getServerSession();
+
+  console.log({ me });
 
   const router = useRouter();
 
@@ -120,11 +129,11 @@ export default function AdminLayout({
                       alt="Profile"
                       className="w-8 h-8 rounded-full"
                     />
-                    {/* <span className="text-gray-800 text-xs">
+                    <span className="text-gray-800 text-xs">
                       {`${
                         me?.profile?.firstName ? me?.profile?.firstName : ''
                       } ${me?.profile?.lastName ? me?.profile?.lastName : ''}`}
-                    </span> */}
+                    </span>
                   </button>
                 </DropdownTrigger>
               </div>

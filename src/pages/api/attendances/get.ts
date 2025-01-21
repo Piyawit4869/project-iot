@@ -9,7 +9,7 @@ export default async function getSingleAttendance(id: string): Promise<any> {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiZW1wbG95ZWUiLCJlbXBsb3llZVJvbGUiOiJvd25lciIsImlhdCI6MTczNzQyNjg0NSwiZXhwIjoxNzM3Njg2MDQ1fQ.cGglgyxphCPaDeOV8eC7-ncVyB_4Rk8D4uBVr2iUV2E`,
       },
     });
 
@@ -34,7 +34,7 @@ export async function getAttendance(){
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiZW1wbG95ZWUiLCJlbXBsb3llZVJvbGUiOiJvd25lciIsImlhdCI6MTczNzQyNjg0NSwiZXhwIjoxNzM3Njg2MDQ1fQ.cGglgyxphCPaDeOV8eC7-ncVyB_4Rk8D4uBVr2iUV2E`,
       // Authorization: `Bearer ${session.accessToken}`,
     },
   });
