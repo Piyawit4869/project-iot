@@ -1,4 +1,5 @@
 import { base_url } from '@/constant/common';
+import { getServerSession } from '@/libs/auth';
 
 interface FetchWhitelistsParams {
   page: number;
@@ -28,7 +29,7 @@ export default async function pagination({
     url.searchParams.append('page', page.toString());
     url.searchParams.append('limit', limit.toString());
 
-    const accessToken = localStorage.getItem('accessToken');
+    const auth = await getServerSession();
 
     if (ip) {
       url.searchParams.append('ip', ip);
@@ -41,7 +42,7 @@ export default async function pagination({
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${auth.accessToken}`,
       },
     });
     

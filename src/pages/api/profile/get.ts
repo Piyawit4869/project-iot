@@ -1,15 +1,16 @@
 import { base_url } from '@/constant/common';
+import { getServerSession } from '@/libs/auth';
 
 export default async function get(): Promise<any> {
   try {
-    const accessToken = localStorage.getItem('accessToken');
+    const auth = await getServerSession();
 
     //query params in this
     const response = await fetch(`${base_url}/auth/me`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${auth.accessToken}`,
       },
     });
 

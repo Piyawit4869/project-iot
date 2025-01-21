@@ -3,13 +3,10 @@
 import React from 'react';
 import debounce from 'lodash/debounce';
 import { TopSection } from '@/components/common/topSection';
-import { Button, Input, Link, Tab, Tabs } from '@nextui-org/react';
+import { Button, Input, Link } from '@nextui-org/react';
 import pagination from '@/pages/api/attendances/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date';
-import { TimelineComponent } from '@/components/admin/adminTimeline';
-import { title } from 'process';
-import { data } from 'framer-motion/client';
 interface FilterState {
   name: string;
   docNo: string;
@@ -131,7 +128,7 @@ export default function SettingAttendancePage() {
         <TopSection
           title="การตั้งค่าการเข้าออกงาน"
           buttons={[
-            <Link href={'setting/create'} key={'create button'}>
+            <Link href={'setting/create'} key={'create-set-button'}>
               <Button className="bg-accent1 text-white" size="sm">
                 สร้างการตั้งค่า
               </Button>
@@ -163,8 +160,6 @@ export default function SettingAttendancePage() {
         </div>
 
         <div>
-          {/* <Tabs variant="underlined">
-            <Tab key="table" title="ตาราง"> */}
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <div className="spinner"></div>
@@ -179,15 +174,9 @@ export default function SettingAttendancePage() {
               onRowsPerPageChange={(newRowsPerPage) =>
                 setRowsPerPage(newRowsPerPage)
               }
+              
             />
           )}
-          {/* </Tab>
-            <Tab key="timeline"
-              title="ไทม์ไลน์"
-              className="grid grid-cols-1 sm:grid-cols-2"
-            > */}
-          {/* </Tab>
-          </Tabs> */}
         </div>
       </div>
     </div>

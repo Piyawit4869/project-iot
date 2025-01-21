@@ -1,4 +1,5 @@
 import { base_url } from '@/constant/common';
+import { getServerSession } from '@/libs/auth';
 
 interface FetchAttendancesParams {
   page: number;
@@ -26,7 +27,7 @@ export default async function pagination({
     url.searchParams.append('page', page.toString());
     url.searchParams.append('limit', limit.toString());
 
-    const accessToken = localStorage.getItem('accessToken');
+    const auth = await getServerSession();
 
     if (docNo) {
       url.searchParams.append('docNo', docNo);
@@ -36,7 +37,7 @@ export default async function pagination({
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM1ZmFlNS04NWRiLTQ1MzUtODkxYi1lYThkYmRhMzg3MzQiLCJyb2xlIjoiZW1wbG95ZWUiLCJlbXBsb3llZVJvbGUiOiJvd25lciIsImlhdCI6MTczNzQyNjg0NSwiZXhwIjoxNzM3Njg2MDQ1fQ.cGglgyxphCPaDeOV8eC7-ncVyB_4Rk8D4uBVr2iUV2E`,
+        Authorization: `Bearer  ${auth.accessToken}`,
       },
     });
 

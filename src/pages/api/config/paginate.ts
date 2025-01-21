@@ -1,4 +1,5 @@
 import { base_url } from '@/constant/common';
+import { getServerSession } from '@/libs/auth';
 
 interface FetchWorkInfoParams {
   page: number;
@@ -28,7 +29,7 @@ export default async function pagination({
     url.searchParams.append('page', page.toString());
     url.searchParams.append('limit', limit.toString());
 
-    const accessToken = localStorage.getItem('accessToken');
+    const auth = await getServerSession();
 
     if (name) {
       url.searchParams.append('name', name);
@@ -41,10 +42,9 @@ export default async function pagination({
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${auth.accessToken}`,
       },
     });
-    
 
     if (!response.ok) {
       throw new Error('Failed to fetch data from external API');

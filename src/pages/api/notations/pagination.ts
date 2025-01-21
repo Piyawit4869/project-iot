@@ -1,4 +1,5 @@
 import { base_url } from '@/constant/common';
+import { getServerSession } from '@/libs/auth';
 
 interface FetchNotationsParams {
   page: number;
@@ -26,7 +27,7 @@ export default async function pagination({
     url.searchParams.append('page', page.toString());
     url.searchParams.append('limit', limit.toString());
 
-    const accessToken = localStorage.getItem('accessToken');
+    const auth = await getServerSession();
 
     if (docNo) {
       url.searchParams.append('docNo', docNo);
@@ -36,7 +37,7 @@ export default async function pagination({
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${auth.accessToken}`,
       },
     });
 
