@@ -4,15 +4,9 @@ import axios from 'axios';
 
 import { base_url } from '@/constant/common';
 
-type JwtType = {
-  token: string;
-  user: any;
-};
-
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      // id: 'user-auth',
       name: 'Credentials',
       credentials: {
         user: { label: 'Username', type: 'text' },
@@ -27,28 +21,45 @@ export const authOptions: NextAuthOptions = {
           });
           console.log({ res });
           if (res.data) {
-            return res.data;
+            const { data } = res;
+            const { data: me } = await axios(`${base_url}/auth/me/`, {
+              method: 'GET',
+              headers: {
+                'content-type': 'application/json',
+                Authorization: `Bearer ${data.accessToken}`,
+              },
+            });
+
+            if (!me) {
+              throw new Error('Failed to fetch user details');
+            }
+
+            return { me, auth: res.data } as any;
           }
           return null;
         } catch (error) {
+          console.log({ error });
           throw new Error('Invalid username or password');
         }
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: any) {
-      if (user) {
-        token.accessToken = user.token;
-        token.user = user.user;
-      }
+    jwt: async ({ token, user }) => {
+      user && (token.user = user);
+
       return token;
     },
-    async session({ session, token, refreshToken }: any) {
-      // console.log({ session, token, refreshToken });
+    session: async ({ session, token }) => {
+      console.log({ session, token });
+      if (session) {
+        session = {
+          ...session,
+          ...token,
+          user: token.user,
+        } as any;
+      }
 
-      session.accessToken = token.accessToken as string;
-      // session.user = token.user;
       return session;
     },
   },
@@ -58,10 +69,6 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
   },
-
-  // jwt: {
-  //   secret: 'secret',
-  // },
 };
 
 export default NextAuth(authOptions);

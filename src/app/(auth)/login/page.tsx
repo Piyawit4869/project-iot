@@ -35,7 +35,7 @@
 
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { Button, Input } from '@nextui-org/react';
 import { toast } from 'sonner';
 
@@ -47,7 +47,9 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: any) => {
+    // 'use server';
     e.preventDefault();
+
     setLoading(true);
 
     const result: any = await signIn('credentials', {
@@ -64,7 +66,7 @@ const Login = () => {
         style: { fontFamily: 'var(--font-ibm-sans)' },
       });
 
-      router.push('/admin');
+      router.push('/test');
     } else {
       setError(result.error);
       setLoading(false);

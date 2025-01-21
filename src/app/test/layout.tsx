@@ -17,14 +17,18 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 
-export default function AdminLayout({
+import { useSession } from 'next-auth/react';
+import Loading from './loading';
+import { getClientSession } from '@/libs/auth';
+
+export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const local =
-  //   typeof window !== 'undefined' ? window.localStorage.getItem('me') : '{}';
-  // const me = JSON.parse(local || '');
+  const me = getClientSession();
+
+  console.log({ me });
 
   const router = useRouter();
 
@@ -50,7 +54,8 @@ export default function AdminLayout({
     {
       key: 'logout',
       label: 'ออกจากระบบ',
-      path: '/login',
+      onclick: handleSignOut,
+      path: '',
       icon: <Icon.LogoutOutlined />,
     },
   ];
@@ -62,9 +67,7 @@ export default function AdminLayout({
         <AdminSideBar />
       </aside>
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        {/* Header */}
         <header className="bg-white shadow p-4 flex items-center justify-between ">
           <Breadcrumb />
           <div className="flex items-center space-x-4">
@@ -120,11 +123,11 @@ export default function AdminLayout({
                       alt="Profile"
                       className="w-8 h-8 rounded-full"
                     />
-                    {/* <span className="text-gray-800 text-xs">
-                      {`${
+                    <span className="text-gray-800 text-xs">
+                      {/* {`${
                         me?.profile?.firstName ? me?.profile?.firstName : ''
-                      } ${me?.profile?.lastName ? me?.profile?.lastName : ''}`}
-                    </span> */}
+                      } ${me?.profile?.lastName ? me?.profile?.lastName : ''}`} */}
+                    </span>
                   </button>
                 </DropdownTrigger>
               </div>
@@ -137,7 +140,7 @@ export default function AdminLayout({
                     }
                     color={item.key === 'delete' ? 'danger' : 'default'}
                   >
-                    <Link href={item.path}>
+                    <Link href={item.path} onClick={item.onclick}>
                       <div className="flex">
                         {item.icon}
                         <div className="ml-3 text-xs">{item.label}</div>
@@ -150,25 +153,8 @@ export default function AdminLayout({
           </div>
         </header>
 
-        {/* Page Content */}
         <main className="bg-gray-100 flex-1 w-full overflow-y-auto">
-          <Suspense
-            fallback={
-              <div className="flex items-center justify-center min-h-screen">
-                <div className="relative flex flex-col items-center space-y-4">
-                  {/* Spinner */}
-                  <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-
-                  {/* Loading Text */}
-                  <p className="text-gray-600 text-lg font-semibold animate-pulse">
-                    Loading, please wait...
-                  </p>
-                </div>
-              </div>
-            }
-          >
-            {children}
-          </Suspense>
+          <Suspense fallback={<Loading />}>{children}</Suspense>
         </main>
       </div>
     </div>
