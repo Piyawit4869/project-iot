@@ -1,17 +1,17 @@
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Divider,
-  Button,
-  Link,
-} from '@nextui-org/react';
-import { useSession } from 'next-auth/react';
+'use client';
 
-// export default function HomeAdminPage() {
-export default async function HomeAdminPage() {
-  // const { data: session, status } = useSession();
-  // console.log({ session });
+import React from 'react';
+import { useSession } from 'next-auth/react';
+import FeatureCard from './FeatureCard';
+
+const PageLayout = () => {
+  const { data: session, status } = useSession();
+
+  const user: any = status === 'authenticated' && session && session.user;
+
+  const me = user && user.me ? user.me : null;
+
+  console.log({ me });
 
   return (
     <div className="min-h-screen  bg-gray-50 flex flex-col justify-center items-center px-6 py-12 sm:py-16 lg:py-20 -mt-16">
@@ -61,42 +61,6 @@ export default async function HomeAdminPage() {
       </div>
     </div>
   );
-}
+};
 
-/* Feature Card Component */
-function FeatureCard({
-  title,
-  description,
-  icon,
-  color,
-  link,
-}: {
-  title: string;
-  description: string;
-  icon: string;
-  color: 'primary' | 'success' | 'warning' | 'danger';
-  link: string;
-}) {
-  return (
-    <Link href={link}>
-      <Card
-        isPressable
-        shadow="md"
-        className="transition-transform transform hover:scale-105 duration-300"
-      >
-        <CardHeader className="flex flex-col items-center gap-2">
-          <div
-            className={`text-4xl p-4 rounded-full bg-${color}-200 text-${color}-700`}
-          >
-            {icon}
-          </div>
-          <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
-        </CardHeader>
-        <Divider />
-        <CardBody>
-          <p className="text-gray-600 text-center">{description}</p>
-        </CardBody>
-      </Card>
-    </Link>
-  );
-}
+export default PageLayout;
