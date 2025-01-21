@@ -8,7 +8,7 @@ export default function Loading() {
 
         {/* Loading Text */}
         <p className="text-gray-600 text-lg font-semibold animate-pulse">
-          Loading, please wait..
+          Loading, please wait...
         </p>
       </div>
     </div>
