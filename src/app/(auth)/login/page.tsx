@@ -66,7 +66,7 @@ const Login = () => {
         style: { fontFamily: 'var(--font-ibm-sans)' },
       });
 
-      router.push('/admin');
+      router.push('/test');
     } else {
       setError(result.error);
       setLoading(false);
