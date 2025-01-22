@@ -80,7 +80,7 @@ export default function Inputorganization({
                 title="ปิดองค์กร"
                 description="ใช้สำหรับการปิดหรือยุติการทำงานขององค์กรในระบบหรือเว็บไซต์<br>ซึ่งอาจรวมถึงการปิดการใช้งานบัญชีองค์กร"
                 control="ปิดองค์กร"
-                checked={data.active}
+                checked={data?.active}
                 onChange={handleChange}
               />
             </div>
@@ -88,7 +88,7 @@ export default function Inputorganization({
           <div className="flex gap-4 mt-6">
             <RadioGroup
               name="fromType"
-              color="secondary"
+              color="success"
               label="ประเภทธุรกิจ"
               orientation="horizontal"
               value={formData.fromType}

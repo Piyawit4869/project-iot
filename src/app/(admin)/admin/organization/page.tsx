@@ -27,20 +27,21 @@ import {
 } from '@nextui-org/react';
 import React from 'react';
 import { Tabs, Tab } from '@nextui-org/react';
-import get from '@/pages/api/setting/get';
-import { updatedetails } from '@/pages/api/setting/update-details';
+import get from '@/pages/api/organization/get';
+import { updatedetails } from '@/pages/api/organization/update-details';
 import { toast } from 'sonner';
 import { TablePagination } from '@/components/common/tablePagination';
-import { updatesystem } from '@/pages/api/setting/updata';
+import { updatesystem } from '@/pages/api/organization/updata';
 
 export default function OraganizationPage() {
-  const [, setLoading] = React.useState(false);
-  const [, setErrors] = React.useState({}) as any;
+  const [loading, setLoading] = React.useState(false);
+  const [error, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [data, setData] = React.useState() as any;
   const [dataorg, setDataorg] = React.useState() as any;
   const [organizationData, setOrganizationData] = React.useState() as any;
-  const [, setSystemData] = React.useState() as any;
+  const [systemData, setSystemData] = React.useState() as any;
+  const [openDayData, setOpenDayData] = React.useState<any[]>([]);
   const [, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [meta] = React.useState({
@@ -265,14 +266,14 @@ export default function OraganizationPage() {
             title="ข้อมูลองค์กร"
             buttons={[
               <Link href={''} key={'organization'}>
-                <Button
+                {/* <Button
                   className="bg-accent1 text-white"
                   key={'Edit organization'}
                   type="submit"
                   form="organization"
                 >
                   ยืนยันแก้ไขข้อมูล
-                </Button>
+                </Button> */}
               </Link>,
               handleEditButton(openEdit),
             ]}
@@ -291,12 +292,6 @@ export default function OraganizationPage() {
                               ตั้งค่าระบบ
                             </h1>
                             <div className="">
-                              <Button
-                                className="bg-accent3 text-white mr-3"
-                                onClick={toggleInput}
-                              >
-                                แก้ไข
-                              </Button>
                               <Button
                                 className="bg-accent1 text-white"
                                 onPress={openSetting1}
@@ -663,12 +658,6 @@ export default function OraganizationPage() {
                                 ข้อมูลที่อยู่องค์กร
                               </h1>
                               <div className="mr-10">
-                                <Button
-                                  className="bg-accent3 text-white mr-3"
-                                  onClick={toggleInput}
-                                >
-                                  แก้ไข
-                                </Button>
                                 <Button
                                   className="bg-accent1 text-white"
                                   onPress={openAddress}
@@ -1205,14 +1194,7 @@ export default function OraganizationPage() {
                             <h1 className="text-2xl font-bold text-headFont">
                               ข้อมูลองค์กร
                             </h1>
-                            <div className="">
-                              <Button
-                                className="bg-accent3 text-white mr-3"
-                                onClick={toggleInput}
-                              >
-                                แก้ไข
-                              </Button>
-                            </div>
+                            <div className=""></div>
                           </div>
                           <Inputorganization
                             data={data}

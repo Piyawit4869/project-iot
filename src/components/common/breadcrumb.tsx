@@ -8,9 +8,26 @@ import * as Icon from '@ant-design/icons';
 const translations: Record<string, string> = {
   admin: 'แอดมิน',
   dashboard: 'แดชบอร์ด',
-  settings: 'การตั้งค่า',
-  users: 'ผู้ใช้งาน',
+  setting: 'ตั้งค่า',
+  user: 'พนักงาน',
   profile: 'โปรไฟล์',
+  organization: 'องค์กร',
+  accounting: 'บัญชี',
+  statement: 'รายการ',
+  revenue: 'รายได้',
+  expenses: 'รายจ่าย',
+  analysis: 'วิเคราะห์',
+  attendance: 'การเข้างาน',
+  overview: 'ภาพรวม',
+  'work-infomation': 'ข้อมูลการทำงาน',
+  whitelist: 'การเข้าใช้งาน',
+  notation: 'เอกสาร',
+  role: 'ตำแหน่ง',
+  customer: 'ลูกค้า',
+  create: 'สร้าง',
+  item: 'สินค้าและรายการ',
+  template: 'รูปแบบเอกสาร',
+  new: 'สร้าง',
 };
 
 const translateSegment = (segment: string): string => {

@@ -5,11 +5,13 @@ import { TopSection } from '@/components/common/topSection';
 import * as Icon from '@ant-design/icons';
 import {
   Button,
+  Card,
   DatePicker,
   Form,
   Input,
   Select,
   SelectItem,
+  Skeleton,
   Switch,
   Textarea,
 } from '@nextui-org/react';
@@ -432,15 +434,25 @@ export default function NotationSinglePage() {
     <Scaffold
       child={
         loading ? (
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="relative flex flex-col items-center space-y-4">
-              {/* Spinner */}
-              <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          // <div className="flex items-center justify-center min-h-screen">
+          //   <div className="relative flex flex-col items-center space-y-4">
+          //     {/* Spinner */}
+          //     <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
 
-              {/* Loading Text */}
-              <p className="text-gray-600 text-lg font-semibold animate-pulse">
-                Loading, please wait...
-              </p>
+          //     {/* Loading Text */}
+          //     <p className="text-gray-600 text-lg font-semibold animate-pulse">
+          //       Loading, please wait...
+          //     </p>
+          //   </div>
+          // </div>
+          <div className="mb-6">
+            <div>
+              <Skeleton className="h-[64px] w-[1600px] rounded-xl" />
+            </div>
+            <div className="w-full flex gap-4 mt-6">
+              {/* <Skeleton className="h-3 w-3/5  rounded-lg" /> */}
+              <Skeleton className="h-[1047.08px] w-[800px] rounded-lg" />
+              <Skeleton className="h-[1047.08px] w-[800px] rounded-lg" />
             </div>
           </div>
         ) : (

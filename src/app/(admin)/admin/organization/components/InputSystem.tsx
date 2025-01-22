@@ -1,6 +1,5 @@
-<<<<<<< HEAD
-=======
 'use client';
+
 import Scaffold from '@/components/common/scaffold';
 import * as Icon from '@ant-design/icons';
 import {
@@ -173,73 +172,73 @@ export default function Inputorganization({
             </div>
             {items.map((_: any, index: any) => (
               <div key={index} className="items-center">
-                {/* {openDay.map((item, index) => ( */}
-                <div
-                  key={index}
-                  className="grid grid-cols-4 gap-4 mt-6 items-center text-headFont"
-                >
-                  <Select
-                    className="col-span-1 w-full text-headFont"
-                    name="day"
-                    placeholder="เลือกวันทำงาน"
-                    label="วันทำงาน"
-                    labelPlacement={'outside'}
-                    onChange={(e) =>
-                      handleDayChange(index, 'day', e.target.value)
-                    }
-                    // defaultSelectedKeys={item.day}
-                    isDisabled={!openEdit}
+                {openDay.map((item, index) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-4 gap-4 mt-6 items-center text-headFont"
                   >
-                    {day.map((item: any) => (
-                      <SelectItem
-                        className="col-span-1 w-full text-headFont"
-                        key={item.value}
-                        value={item.value}
-                      >
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                  <Input
-                    className="col-span-1 w-full"
-                    type="time"
-                    label={
-                      <span className="col-span-1 w-full text-headFont">
-                        เริ่มงาน
-                      </span>
-                    }
-                    labelPlacement="outside"
-                    name="openTime"
-                    // defaultValue={item.openTime}
-                    onChange={(e) =>
-                      handleDayChange(index, 'openTime', e.target.value)
-                    }
-                    isDisabled={!openEdit}
-                  />
-                  <Input
-                    className="col-span-1 w-full"
-                    type="time"
-                    label={
-                      <span className="col-span-1 w-full text-headFont">
-                        เลิกงาน
-                      </span>
-                    }
-                    labelPlacement="outside"
-                    name="closeTime"
-                    // defaultValue={item.closeTime}
-                    onChange={(e) =>
-                      handleDayChange(index, 'closeTime', e.target.value)
-                    }
-                    isDisabled={!openEdit}
-                  />
-                  <a
-                    className="col-span-1 w-full text-red-500 cursor-pointer mt-6"
-                    onClick={() => handleRemoveOpenDay(index)}
-                  >
-                    ลบวันทำงาน
-                  </a>
-                </div>
-                {/* ))} */}
+                    <Select
+                      className="col-span-1 w-full text-headFont"
+                      name="day"
+                      placeholder="เลือกวันทำงาน"
+                      label="วันทำงาน"
+                      labelPlacement={'outside'}
+                      onChange={(e) =>
+                        handleDayChange(index, 'day', e.target.value)
+                      }
+                      defaultSelectedKeys={item.day}
+                      isDisabled={!openEdit}
+                    >
+                      {day.map((item: any) => (
+                        <SelectItem
+                          className="col-span-1 w-full text-headFont"
+                          key={item.value}
+                          value={item.value}
+                        >
+                          {item.label}
+                        </SelectItem>
+                      ))}
+                    </Select>
+                    <Input
+                      className="col-span-1 w-full"
+                      type="time"
+                      label={
+                        <span className="col-span-1 w-full text-headFont">
+                          เริ่มงาน
+                        </span>
+                      }
+                      labelPlacement="outside"
+                      name="openTime"
+                      defaultValue={item.openTime}
+                      onChange={(e) =>
+                        handleDayChange(index, 'openTime', e.target.value)
+                      }
+                      isDisabled={!openEdit}
+                    />
+                    <Input
+                      className="col-span-1 w-full"
+                      type="time"
+                      label={
+                        <span className="col-span-1 w-full text-headFont">
+                          เลิกงาน
+                        </span>
+                      }
+                      labelPlacement="outside"
+                      name="closeTime"
+                      defaultValue={item.closeTime}
+                      onChange={(e) =>
+                        handleDayChange(index, 'closeTime', e.target.value)
+                      }
+                      isDisabled={!openEdit}
+                    />
+                    <a
+                      className="col-span-1 w-full text-red-500 cursor-pointer mt-6"
+                      onClick={() => handleRemoveOpenDay(index)}
+                    >
+                      ลบวันทำงาน
+                    </a>
+                  </div>
+                ))}
               </div>
             ))}
             <div className="flex  gap-4 mt-6">
@@ -294,4 +293,3 @@ const day = [
   { label: 'Friday', value: 'Friday' },
   { label: 'Saturday', value: 'Saturday' },
 ];
->>>>>>> 2b79e0c0bc19e8a6dc31a1bfaa0f07400b3014aa
