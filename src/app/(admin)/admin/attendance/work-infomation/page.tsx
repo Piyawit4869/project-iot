@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import debounce from 'lodash/debounce';
+import React, { useState, useEffect } from 'react';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
-import { Button, Link } from '@nextui-org/react';
+import { Button, Link, Input } from '@nextui-org/react';
 import pagination from '@/pages/api/workinfos/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date'; // <-- Import formatDate here
+// import debounce from 'lodash/debounce';
 // import * as Icon from '@ant-design/icons';
 
 interface FilterState {
@@ -69,27 +69,30 @@ const columns = [
 
 export default function WorkInfoPage() {
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [filters, setFilters] = useState<FilterState>({ name: '', status: '' }); // Changed to 'name'
   const [items, setItems] = useState<WorkInfoItem[]>([]);
+  const [filters, setFilters] = useState<FilterState>({ name: '', status: '' });
   const [meta, setMeta] = useState<MetaData>({
     totalItems: 0,
     itemsPerPage: 10,
     totalPages: 0,
     currentPage: 1,
   });
-  const [loading, setLoading] = useState(false);
 
   const fetchWorkInfo = async () => {
     setLoading(true);
     try {
-      const { name, status } = filters; // Changed from 'ip' to 'name'
+      const { name, status } = filters;
       const { items: fetchedItems, meta: fetchedMeta } = await pagination({
         page,
         limit: rowsPerPage,
-        ...(name && { name }), // Updated to filter by 'name'
+        ...(name && { name }),
         ...(status && { status }),
       });
+
+      console.log('Fetched Items:', fetchedItems);
+      console.log('Fetched Meta:', fetchedMeta);
 
       setItems(
         fetchedItems.map((item: WorkInfoItem) => ({
@@ -110,13 +113,13 @@ export default function WorkInfoPage() {
     }
   };
 
-  // const handleFilterChange = useCallback(
-  //   debounce((updatedFilters) => {
-  //     setPage(1); // Reset to the first page for new filters
-  //     setFilters(updatedFilters);
-  //   }, 500),
-  //   [],
-  // );
+  // const handleFilterChange = React.useCallback(
+  //     debounce((updatedFilters) => {
+  //       setPage(1); // Reset to the first page for new filters
+  //       setFilters(updatedFilters);
+  //     }),
+  //     [filters],
+  //   );
 
   // const onInputChange = (key: keyof typeof filters, value: string) => {
   //   const updatedFilters = { ...filters, [key]: value };
@@ -142,6 +145,7 @@ export default function WorkInfoPage() {
               buttons={[
                 <Link href={'work-infomation/create'} key={'create button'}>
                   <Button
+                    size="sm"
                     className="bg-accent1 text-white"
                     key={'create button'}
                   >
@@ -150,6 +154,20 @@ export default function WorkInfoPage() {
                 </Link>,
               ]}
             />
+            <div className="bg-white shadow rounded-2xl mb-4 mt-4">
+              <div className="flex flex-wrap gap-4">
+                <Input
+                  className="flex-1 p-2 text-headFont"
+                  labelPlacement="outside"
+                  size="sm"
+                  radius="sm"
+                  name="name"
+                  placeholder="ค้นหาชื่อ"
+                  value={filters.name}
+                  // onChange={(e) => onInputChange('name', e.target.value)}
+                />
+              </div>
+            </div>
             {loading ? (
               <div className="flex justify-center items-center h-[350px]">
                 <div className="relative flex flex-col items-center space-y-4">
@@ -161,73 +179,6 @@ export default function WorkInfoPage() {
               </div>
             ) : (
               <>
-                {/* <div className="bg-white shadow rounded-lg mb-4 mt-4">
-                  <div className="flex flex-wrap gap-4">
-                    <Input
-                      className="flex-1 p-2 text-headFont"
-                      labelPlacement="outside"
-                      size="lg"
-                      name="name"  // Updated the name to 'name'
-                      placeholder="ค้นหาชื่อ"  // Updated the placeholder text
-                      value={filters.name}  // Updated to bind 'name' instead of 'ip'
-                      onChange={(e) => onInputChange('name', e.target.value)}  // Updated to handle 'name'
-                    />
-                  </div>
-
-                  <div className="flex flex-wrap gap-4 p-4">
-                    <Popover placement="bottom" showArrow={true}>
-                      <PopoverTrigger>
-                        <Button
-                          onClick={() => handleStatusChange('')}
-                          className="bg-accent1 text-white"
-                        >
-                          All
-                        </Button>
-                      </PopoverTrigger>
-                      <></>
-                    </Popover>
-
-                    <Popover placement="bottom" showArrow={true}>
-                      <PopoverTrigger>
-                        <Button
-                          onClick={() => handleStatusChange('pending')}
-                          className=""
-                        >
-                          <Icon.SyncOutlined spin />
-                          Pending
-                        </Button>
-                      </PopoverTrigger>
-                      <></>
-                    </Popover>
-
-                    <Popover placement="bottom" showArrow={true}>
-                      <PopoverTrigger>
-                        <Button
-                          onClick={() => handleStatusChange('approved')}
-                          className="bg-accent1 text-white"
-                        >
-                          <Icon.CheckOutlined />
-                          Approved
-                        </Button>
-                      </PopoverTrigger>
-                      <></>
-                    </Popover>
-
-                    <Popover placement="bottom" showArrow={true}>
-                      <PopoverTrigger>
-                        <Button
-                          onClick={() => handleStatusChange('rejected')}
-                          className="bg-accent2 text-white"
-                        >
-                          <Icon.CloseOutlined />
-                          Rejected
-                        </Button>
-                      </PopoverTrigger>
-                      <></>
-                    </Popover>
-                  </div>
-                </div> */}
-
                 <TablePagination
                   initialRows={items}
                   initialMeta={meta}

@@ -68,21 +68,6 @@ export default function WhitelistSinglePage() {
           : value,
     }));
   };
-
-  // const handleDateChange = (name: string) => (date: any) => {
-  //   if (date?.year && date?.month && date?.day) {
-  //     const isoString = new Date(
-  //       date.year,
-  //       date.month - 1,
-  //       date.day,
-  //     ).toISOString();
-  //     setFormData((prevData: any) => ({
-  //       ...prevData,
-  //       [name]: isoString,
-  //     }));
-  //   }
-  // };
-
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -105,13 +90,6 @@ export default function WhitelistSinglePage() {
         newErrors[field] = `Field ${field} is required.`;
       }
     });
-
-    // if (Object.keys(newErrors).length > 0) {
-    //   setErrors(newErrors);
-    //   setLoading(false);
-    //   console.log('keys')
-    //   return;
-    // }
 
     try {
       console.log('try');

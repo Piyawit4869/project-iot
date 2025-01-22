@@ -1,6 +1,5 @@
 import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
-import { getSession } from 'next-auth/react';
 
 interface FetchWorkInfoParams {
   page: number;

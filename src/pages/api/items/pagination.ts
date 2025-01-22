@@ -1,4 +1,5 @@
 import { base_url } from '@/constant/common';
+import { getServerSession } from '@/libs/auth';
 
 interface FetchTemplatesParams {
   page?: number;
@@ -26,7 +27,7 @@ export default async function paginationItems({
   try {
     const url = new URL(`${base_url}/crud/items`);
 
-    const accessToken = localStorage.getItem('accessToken');
+    const auth = await getServerSession();
 
     if (name) {
       url.searchParams.append('name', name);
@@ -47,7 +48,7 @@ export default async function paginationItems({
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${auth.accessToken}`,
       },
     });
 

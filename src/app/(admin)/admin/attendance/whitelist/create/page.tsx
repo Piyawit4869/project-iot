@@ -3,12 +3,8 @@
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Form, Input, Textarea } from '@nextui-org/react';
-import createWhitelists from '@/pages/api/whitelists/create'; //API
+// import createWhitelists from '@/pages/api/whitelists/create'; //API
 import CardComponent from '@/components/common/card';
-<<<<<<< HEAD
-=======
-// import { useRouter } from 'next/navigation';
->>>>>>> 608563772733e04f9a7062147aebebad71e517cb
 import * as Icon from '@ant-design/icons';
 import React from 'react';
 
@@ -89,7 +85,6 @@ export default function WhitelistCreatePage() {
 
       // const { data } = await createWhitelists({}, payload);
       console.log(payload);
-      console.log(data);
       // router.push(`/admin/attendance/whitelist/${data.id}`);
     } catch (err: any) {
       console.error('Send FormData error:', err);

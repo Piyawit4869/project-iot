@@ -1,4 +1,5 @@
 import { base_url } from '@/constant/common';
+import { getServerSession } from '@/libs/auth';
 
 interface FetchTemplatesParams {
   page?: number;
@@ -26,7 +27,7 @@ export default async function pagination({
   try {
     const url = new URL(`${base_url}/crud/configure-notations`);
 
-    const accessToken = localStorage.getItem('accessToken');
+    const auth = await getServerSession();
 
     if (page) {
       url.searchParams.append('page', String(page));
@@ -48,7 +49,7 @@ export default async function pagination({
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${auth.accessToken}`,
       },
     });
 

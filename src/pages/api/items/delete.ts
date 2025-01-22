@@ -1,15 +1,16 @@
 import { base_url } from '@/constant/common';
+import { getServerSession } from '@/libs/auth';
 
 export async function deleteItem(id: any) {
   const url = `${base_url}/crud/items/delete/${id}`;
 
-  const accessToken = localStorage.getItem('accessToken');
+  const auth = await getServerSession();
 
   const data = await fetch(url, {
     method: `DELETE`,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${auth.accessToken}`,
     },
   });
 

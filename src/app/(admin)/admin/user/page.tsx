@@ -5,10 +5,9 @@ import { TopSection } from '@/components/common/topSection';
 import Link from 'next/link';
 import { Button, Chip } from '@nextui-org/react';
 import React from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { TablePagination } from '@/components/common/tablePagination';
 import pagination from '@/pages/api/user/pagination';
-import { div } from 'framer-motion/client';
 // import { debounce } from 'lodash';
 
 export default function IndexPage() {

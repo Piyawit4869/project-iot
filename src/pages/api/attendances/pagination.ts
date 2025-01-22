@@ -1,4 +1,5 @@
 import { base_url } from '@/constant/common';
+import { getServerSession } from '@/libs/auth';
 
 interface FetchAttendancesParams {
   page: number;
@@ -22,11 +23,11 @@ export default async function pagination({
   docNo,
 }: FetchAttendancesParams): Promise<FetchAttendancesResponse> {
   try {
-    const url = new URL(`${base_url}/crud/attendances`);
+    const url = new URL(`${base_url}/crud/attendances/daily-attendances/paginate`);
     url.searchParams.append('page', page.toString());
     url.searchParams.append('limit', limit.toString());
 
-    const accessToken = localStorage.getItem('accessToken');
+    const auth = await getServerSession();
 
     if (docNo) {
       url.searchParams.append('docNo', docNo);
@@ -36,7 +37,7 @@ export default async function pagination({
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer  ${auth.accessToken}`,
       },
     });
 

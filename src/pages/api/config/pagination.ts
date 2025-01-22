@@ -1,14 +1,14 @@
 import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
-interface FetchWhitelistsParams {
+interface FetchSettingParams {
   page: number;
   limit: number;
-  ip?: string;
+  name?: string;
   status?: string;
 }
 
-interface FetchWhitelistsResponse {
+interface FetchSettingResponse {
   items: any[];
   meta: {
     totalItems: number;
@@ -21,18 +21,18 @@ interface FetchWhitelistsResponse {
 export default async function pagination({
   page,
   limit,
-  ip,
+  name,
   status,
-}: FetchWhitelistsParams): Promise<FetchWhitelistsResponse> {
+}: FetchSettingParams): Promise<FetchSettingResponse> {
   try {
-    const url = new URL(`${base_url}/crud/whitelists`);
+    const url = new URL(`${base_url}/crud/config-setting/`);
     url.searchParams.append('page', page.toString());
     url.searchParams.append('limit', limit.toString());
 
     const auth = await getServerSession();
 
-    if (ip) {
-      url.searchParams.append('ip', ip);
+    if (name) {
+      url.searchParams.append('name', name);
     }
     if (status) {
       url.searchParams.append('status', status);
@@ -45,7 +45,6 @@ export default async function pagination({
         Authorization: `Bearer ${auth.accessToken}`,
       },
     });
-    
 
     if (!response.ok) {
       throw new Error('Failed to fetch data from external API');

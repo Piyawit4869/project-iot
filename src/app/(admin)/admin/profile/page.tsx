@@ -14,7 +14,6 @@ import {
 } from '@nextui-org/react';
 import React from 'react';
 import get from '@/pages/api/profile/get';
-import { profile } from 'console';
 import { parseDate } from '@internationalized/date';
 import { updateProfile } from '@/pages/api/profile/updata';
 import { toast } from 'sonner';
@@ -23,8 +22,7 @@ export default function CreateUserPage() {
   const [data, setData] = React.useState() as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [loading, setLoading] = React.useState(false);
-  const [honorific, setHonorific] = React.useState<string>();
-  const [errors, setErrors] = React.useState({}) as any;
+  const [, setErrors] = React.useState({}) as any;
 
   // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault(); // Prevent the form from submitting to the URL
@@ -157,8 +155,6 @@ export default function CreateUserPage() {
                     ยกเลิก
               </Button>,
               */
-
-                    ,
                   ]}
                 />
                 <div className="flex space-x-4 mt-6">

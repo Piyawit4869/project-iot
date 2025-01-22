@@ -23,7 +23,7 @@ export default function WorkinfoCreatePage() {
   const [errors, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [, setLoading] = React.useState(false);
-  // const router = useRouter();
+  const router = useRouter();
 
   const priority = [
     { value: 'low', label: 'Low ' },
@@ -54,76 +54,69 @@ export default function WorkinfoCreatePage() {
     }));
   };
 
- const onSubmit = async (e: React.FormEvent) => {
-  console.log('name');
-  
-  e.preventDefault();
-  setLoading(true);
+  const onSubmit = async (e: React.FormEvent) => {
+    console.log('name');
 
-  const requiredFields = [
-    'name',
-    'prefix',
-    'startDate',
-    'dueDate',
-    'limitTimePerDay',
-    'inspector',
-    'startCredit',
-    'payDay',
-  ];
-  console.log('name2');
-  
-  const newErrors: any = {};
+    e.preventDefault();
+    setLoading(true);
 
-  requiredFields.forEach((field) => {
-    const value = formData[field];
-    if (!value || (typeof value === 'string' && value.trim() === '')) {
-      newErrors[field] = `Field ${field} is required.`;
+    const requiredFields = [
+      'name',
+      'prefix',
+      'startDate',
+      'dueDate',
+      'limitTimePerDay',
+      'inspector',
+      'startCredit',
+      'payDay',
+    ];
+    console.log('name2');
+
+    const newErrors: any = {};
+
+    requiredFields.forEach((field) => {
+      const value = formData[field];
+      if (!value || (typeof value === 'string' && value.trim() === '')) {
+        newErrors[field] = `Field ${field} is required.`;
+      }
+      if (
+        ['limitTimePerDay', 'startCredit'].includes(field) &&
+        isNaN(Number(value))
+      ) {
+        newErrors[field] = `Field ${field} must be a valid number.`;
+      }
+      if (
+        ['startDate', 'dueDate', 'payDay'].includes(field) &&
+        isNaN(Date.parse(value))
+      ) {
+        newErrors[field] = `Field ${field} must be a valid date.`;
+      }
+    });
+
+    try {
+      const payload = {
+        ...formData,
+        active: !!formData.active,
+        limitTimePerDay: Number(formData.limitTimePerDay) || 0,
+        startCredit: Number(formData.startCredit) || 0,
+        startDate: new Date(formData.startDate).toISOString(),
+        dueDate: new Date(formData.dueDate).toISOString(),
+        payDay: new Date(formData.payDay).toISOString(),
+      };
+
+      console.log('Payload:', payload);
+
+      const data = await createWorkInfos({},payload);
+      router.push(`/admin/attendance/work-infomation/${data[0].id}`);
+    } catch (err: any) {
+      console.error('API Error:', err);
+      setErrors({ general: err.message });
+    } finally {
+      setLoading(false);
     }
-    if (
-      ['limitTimePerDay', 'startCredit'].includes(field) &&
-      isNaN(Number(value))
-    ) {
-      newErrors[field] = `Field ${field} must be a valid number.`;
-    }
-    if (
-      ['startDate', 'dueDate', 'payDay'].includes(field) &&
-      isNaN(Date.parse(value))
-    ) {
-      newErrors[field] = `Field ${field} must be a valid date.`;
-    }
-  });
-
-  // if (Object.keys(newErrors).length > 0) {
-  //   setErrors(newErrors);
-  //   setLoading(false);
-  //   return;
-  // }
-
-  try {
-    const payload = {
-      ...formData,
-      active: !!formData.active,
-      limitTimePerDay: Number(formData.limitTimePerDay) || 0,
-      startCredit: Number(formData.startCredit) || 0,
-      startDate: new Date(formData.startDate).toISOString(),
-      dueDate: new Date(formData.dueDate).toISOString(),
-      payDay: new Date(formData.payDay).toISOString(),
-    };
-
-    console.log('Payload:', payload);
-
-    // const data = await createWorkInfos({},payload);
-    // router.push(`/admin/attendance/work-infomation/${data.id}`);
-  } catch (err: any) {
-    console.error('API Error:', err);
-    setErrors({ general: err.message });
-  } finally {
-    setLoading(false);
-  }
-  console.log({data});
-  console.log({createWorkInfos})
-  
-};
+    console.log({ data });
+    console.log({ createWorkInfos });
+  };
 
   return (
     <Scaffold
