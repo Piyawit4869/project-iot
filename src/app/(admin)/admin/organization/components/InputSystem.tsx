@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 'use client';
 import Scaffold from '@/components/common/scaffold';
 import * as Icon from '@ant-design/icons';
@@ -292,3 +294,4 @@ const day = [
   { label: 'Friday', value: 'Friday' },
   { label: 'Saturday', value: 'Saturday' },
 ];
+>>>>>>> 2b79e0c0bc19e8a6dc31a1bfaa0f07400b3014aa

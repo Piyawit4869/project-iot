@@ -1,8 +1,8 @@
 import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
-export default async function createWorkInfos(prevState: any, formData: any) {
-  const url = `${base_url}/crud/work-info/create/`;
+export async function update(prevState: any, formData: any, id: any) {
+  const url = `${base_url}/crud/work-info/edit/${id}`;
 
   const body = {
     ...formData,
@@ -11,11 +11,10 @@ export default async function createWorkInfos(prevState: any, formData: any) {
   const auth = await getServerSession();
 
   const data = await fetch(url, {
-    method: `POST`,
+    method: `PUT`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${auth.accessToken}`,
-      // Authorization: `Bearer ${session.accessToken}`,
     },
     body: JSON.stringify(body),
   });

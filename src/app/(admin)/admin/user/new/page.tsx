@@ -22,11 +22,10 @@ import React from 'react';
 import { createUser } from '@/pages/api/user/create';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { profile } from 'console';
 
 export default function CreateUserPage() {
   const [errors, setErrors] = React.useState({}) as any;
-  const [loading, setLoading] = React.useState(false);
+  const [, setLoading] = React.useState(false);
   const [formData, setFormData] = React.useState({}) as any;
   const router = useRouter();
 

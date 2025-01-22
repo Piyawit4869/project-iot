@@ -159,6 +159,7 @@ export default function RoleUpdatePage() {
               backpath={'/admin/role'}
               buttons={[
                 <Button
+                  key="edit"
                   className="bg-accent1 text-white text-xs"
                   size="sm"
                   type="submit"
@@ -167,6 +168,7 @@ export default function RoleUpdatePage() {
                   แก้ไข
                 </Button>,
                 <Button
+                  key="delete"
                   className="bg-accent2 text-white text-xs"
                   onClick={onDelete}
                   size="sm"

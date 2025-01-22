@@ -1,7 +1,6 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import Image from 'next/image';
 import {
   Sidebar,
   SidebarMenu,
@@ -9,7 +8,6 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarProvider,
-  SidebarTrigger,
   SidebarMenuButton,
   SidebarGroupLabel,
 } from '@/components/ui/sidebar';
@@ -78,7 +76,7 @@ export function AdminSideBar() {
           },
           {
             name: 'การตั้งค่า',
-            path: '/admin/attendance/config_attendance',
+            path: '/admin/attendance/setting',
             icon: 'Settings',
           },
         ],

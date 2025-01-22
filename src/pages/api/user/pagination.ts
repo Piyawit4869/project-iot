@@ -24,13 +24,13 @@ export default async function pagination({
   limit,
 }: FetchNotationsParams): Promise<FetchNotationsResponse> {
   try {
-    const accessToken = localStorage.getItem('accessToken');
+    const auth = await getServerSession();
     //query params in this
     const response = await fetch(`${base_url}/crud/users`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${auth.accessToken}`,
       },
     });
 

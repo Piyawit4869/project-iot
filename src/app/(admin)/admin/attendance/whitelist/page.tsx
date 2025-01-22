@@ -7,7 +7,6 @@ import { TopSection } from '@/components/common/topSection';
 import { Input, Button, Link, Tabs, Tab } from '@nextui-org/react';
 import pagination from '@/pages/api/whitelists/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
-import { getWhitelists } from '@/pages/api/whitelists/get';
 // import * as Icon from '@ant-design/icons';
 
 interface FilterState {
@@ -48,9 +47,9 @@ const columns = [
 
 export default function WhitelistsPage() {
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filters, setFilters] = useState<FilterState>({ ip: '', status: '' });
-  const [, setWhitelists] = useState<WhitelistItem[]>([]);
   const [items, setItems] = useState<WhitelistItem[]>([]);
   const [meta, setMeta] = useState<MetaData>({
     totalItems: 0,
@@ -58,13 +57,10 @@ export default function WhitelistsPage() {
     totalPages: 0,
     currentPage: 1,
   });
-  const [loading, setLoading] = useState(false);
 
   const fetchWhitelists = async () => {
     setLoading(true);
     try {
-      const result = await getWhitelists();
-      setWhitelists(result.items);
 
       const { ip, status } = filters;
       const { items: fetchedItems, meta: fetchedMeta } = await pagination({
@@ -73,11 +69,15 @@ export default function WhitelistsPage() {
         ...(ip && { ip }),
         ...(status && { status }),
       });
+
+      console.log('Fetched Items:', fetchedItems);
+      console.log('Fetched Meta:', fetchedMeta);
+      
       setItems(
         fetchedItems.map((item: WhitelistItem) => ({
           ...item,
-          addressName: item.address.name || '',
-          addressNation: item.address.nation || '',
+          addressName: item?.address?.name || '',
+          addressNation: item?.address?.nation || '',
         })),
       );
       setMeta(fetchedMeta);
@@ -122,12 +122,48 @@ export default function WhitelistsPage() {
                   <Button
                     className="bg-accent1 text-white"
                     key={'create button'}
+                    size="sm"
                   >
                     สร้างการเข้าใช้งาน
                   </Button>
                 </Link>,
               ]}
             />
+
+            <div className="bg-white shadow rounded-lg mb-4 mt-4">
+              <div className="flex flex-wrap gap-4">
+                <Input
+                  className="flex-1 p-2 text-headFont"
+                  labelPlacement="outside"
+                  size="sm"
+                  name="name"
+                  placeholder="ค้นหา ip"
+                  value={filters.ip}
+                  onChange={(e) => onInputChange('ip', e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-4 p-2">
+              <div className="flex w-full flex-col">
+                {colors.map((color) => (
+                  <Tabs
+                    key={color}
+                    color={'secondary'}
+                    selectedKey={filters.status}
+                    radius="full"
+                    aria-label="Tabs colors"
+                    onSelectionChange={(key) => handleTabChange(key as string)}
+                  >
+                    <Tab key="" title="All" />
+                    <Tab key="pending" title="Pending" />
+                    <Tab key="approved" title="Approved" />
+                    <Tab key="rejected" title="Rejected" />
+                  </Tabs>
+                ))}
+              </div>
+            </div>
+
             {loading ? (
               <div className="flex justify-center items-center h-[350px]">
                 <div className="relative flex flex-col items-center space-y-4">
@@ -139,39 +175,6 @@ export default function WhitelistsPage() {
               </div>
             ) : (
               <>
-                <div className="bg-white shadow rounded-lg mb-4 mt-4">
-                  <div className="flex flex-wrap gap-4">
-                    <Input
-                      className="flex-1 p-2 text-headFont"
-                      labelPlacement="outside"
-                      size="lg"
-                      name="name"
-                      placeholder="ค้นหา ip"
-                      value={filters.ip}
-                      onChange={(e) => onInputChange('ip', e.target.value)}
-                    />
-                  </div>
-
-                  <div className="flex flex-wrap gap-4 p-4">
-                    {colors.map((color) => (
-                      <Tabs
-                        key={color}
-                        color={'secondary'}
-                        selectedKey={filters.status}
-                        className=""
-                        onSelectionChange={(key) =>
-                          handleTabChange(key as string)
-                        }
-                      >
-                        <Tab key="" title="All" />
-                        <Tab key="pending" title="Pending" />
-                        <Tab key="approved" title="Approved" />
-                        <Tab key="rejected" title="Rejected" />
-                      </Tabs>
-                    ))}
-                  </div>
-                </div>
-
                 <TablePagination
                   initialRows={items}
                   initialMeta={meta}

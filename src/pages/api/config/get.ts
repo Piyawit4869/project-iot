@@ -1,12 +1,12 @@
 import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
-export default async function getSingleWhitelists(id: string): Promise<any> {
+export default async function getSingle(id: string): Promise<any> {
   try {
     const auth = await getServerSession();
 
     //query params in this
-    const response = await fetch(`${base_url}/crud/whitelists/${id}`, {
+    const response = await fetch(`${base_url}/crud/work-info/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -24,11 +24,10 @@ export default async function getSingleWhitelists(id: string): Promise<any> {
     console.error('Error fetching data:', error);
     return {};
   }
-} 
+}
 
-
-export async function getWhitelists(){
-  const url = `${base_url}/crud/whitelists/`;
+export async function getAll() {
+  const url = `${base_url}/crud/work-info/`;
   const auth = await getServerSession();
 
   const data = await fetch(url, {

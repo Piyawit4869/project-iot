@@ -78,7 +78,6 @@ export default function NotationsPage() {
                   <Button
                     className="bg-accent1 text-white"
                     size="sm"
-                    key={'create button'}
                   >
                     รูปแบบเอกสาร
                   </Button>
@@ -87,7 +86,6 @@ export default function NotationsPage() {
                   <Button
                     className="bg-accent1 text-white"
                     size="sm"
-                    key={'create button'}
                   >
                     สร้างเอกสาร
                   </Button>
@@ -159,181 +157,6 @@ const columns = [
     dataIndex: 'status',
     render: (value: string) => {
       return handleStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
-    },
-  },
-  {
-    title: 'สถานะเอกสาร',
-    dataIndex: 'docStatus',
-    render: (value: any) => {
-      return handleDocumentStatusTag(value);
     },
   },
   {

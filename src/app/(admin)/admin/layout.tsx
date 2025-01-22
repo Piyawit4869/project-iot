@@ -17,7 +17,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 
-import { useSession } from 'next-auth/react';
+// import { useSession } from 'next-auth/react';
 import Loading from './loading';
 import { getClientSession } from '@/libs/auth';
 

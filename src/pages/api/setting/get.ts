@@ -1,8 +1,9 @@
 import { base_url } from '@/constant/common';
+import { getServerSession } from '@/libs/auth';
 
 export default async function get(): Promise<any> {
   try {
-    const accessToken = localStorage.getItem('accessToken');
+    const auth = await getServerSession();
 
     //query params in this
     const response = await fetch(`${base_url}/crud/settings`, {

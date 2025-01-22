@@ -77,7 +77,7 @@ export const TemplateBuilder = ({
       HeaderBar: {
         label: 'หัวข้อ',
         fields: { children: { type: 'text' } },
-        render: ({ children, puck }: any) => (
+        render: ({ children }: any) => (
           <h1 key={uuidv4()} style={{ padding: '20px', fontSize: '36px' }}>
             {children}
           </h1>
@@ -86,7 +86,7 @@ export const TemplateBuilder = ({
       Text: {
         label: 'ข้อความ',
         fields: { children: { type: 'text' } },
-        render: ({ children, puck }: any) => (
+        render: ({ children }: any) => (
           <p key={uuidv4()} style={{ padding: '20px', fontSize: '18px' }}>
             {children}
           </p>
@@ -95,7 +95,7 @@ export const TemplateBuilder = ({
       Image: {
         label: 'รูปภาพ',
         fields: { src: { type: 'text' } },
-        render: ({ src, puck }: any) => (
+        render: ({ src }: any) => (
           <img
             key={uuidv4()}
             src={

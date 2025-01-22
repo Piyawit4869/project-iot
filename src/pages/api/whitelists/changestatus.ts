@@ -1,15 +1,16 @@
 import { base_url } from '@/constant/common';
+import { getServerSession } from '@/libs/auth';
 
 export async function changeStatusApproveWhitelists(id: any,status: string) {
   const url = `${base_url}/whitelists/edit-status-approved/${status}/${id}`;
 
-  const accessToken = localStorage.getItem('accessToken');
+  const auth = await getServerSession();
 
   const data = await fetch(url, {
     method: `PATCH`,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${auth.accessToken}`,
       // Authorization: `Bearer ${session.accessToken}`,
     },
   });
@@ -20,13 +21,13 @@ export async function changeStatusApproveWhitelists(id: any,status: string) {
 export async function changeStatusRejectWhitelists(id: any,status: string) {
     const url = `${base_url}/whitelists/edit-status-rejected/${status}/${id}`;
   
-    const accessToken = localStorage.getItem('accessToken');
+    const auth = await getServerSession();
   
     const data = await fetch(url, {
       method: `PATCH`,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${auth.accessToken}`,
         // Authorization: `Bearer ${session.accessToken}`,
       },
     });
