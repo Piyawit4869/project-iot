@@ -38,10 +38,12 @@ import { signIn } from 'next-auth/react';
 import { redirect, useRouter } from 'next/navigation';
 import { Button, Input } from '@nextui-org/react';
 import { toast } from 'sonner';
+import Icon from '@ant-design/icons';
 
 const Login = () => {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
+  // const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -77,6 +79,10 @@ const Login = () => {
       });
     }
   };
+
+  // const togglePasswordVisibility = () => {
+  //   setShowPassword(!showPassword);
+  // }; // แก้ไขเป็นฟังก์ชันที่เปลี่ยนรหัสผ่านเป็น text และกลับเป็น password
 
   return (
     <div className="flex min-h-screen w-full">
@@ -183,7 +189,7 @@ const Login = () => {
             className={`w-full py-3 text-lg font-semibold text-white rounded-md transition ${
               loading
                 ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-secondary hover:bg-gray-500'
+                : 'bg-headFont hover:bg-gray-500'
             }`}
           >
             {loading ? (
