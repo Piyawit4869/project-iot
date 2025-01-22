@@ -1,25 +1,30 @@
 'use client';
 
 import { AdminSideBar } from '@/components/admin/adminSidebar';
-import Image from 'next/image';
+// import Image from 'next/image';
 import React, { Suspense } from 'react';
 import { Breadcrumb } from '@/components/common/breadcrumb';
-import * as Icon from '@ant-design/icons';
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  DropdownSection,
-  Button,
-} from '@nextui-org/react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { signOut } from 'next-auth/react';
+// import * as Icon from '@ant-design/icons';
+// import {
+//   Dropdown,
+//   DropdownTrigger,
+//   DropdownMenu,
+//   DropdownItem,
+//   DropdownSection,
+//   Button,
+//   Chip,
+//   DatePicker,
+//   Textarea,
+//   InputOtp,
+// } from '@nextui-org/react';
+// import Link from 'next/link';
+// import { useRouter } from 'next/navigation';
+// import { signOut } from 'next-auth/react';
 
-import { useSession } from 'next-auth/react';
+// import { useSession } from 'next-auth/react';
 import Loading from './loading';
 import { getClientSession } from '@/libs/auth';
+import { DropdownHead } from '@/components/admin/headDropdown';
 
 export default function DashboardLayout({
   children,
@@ -30,35 +35,37 @@ export default function DashboardLayout({
 
   console.log({ me });
 
-  const router = useRouter();
+  // const router = useRouter();
 
-  const handleSignOut = async () => {
-    await signOut({
-      callbackUrl: '/login', // Redirect to login page after logout
-    });
-  };
+  // const handleSignOut = async () => {
+  //   await signOut({
+  //     callbackUrl: '/login', // Redirect to login page after logout
+  //   });
+  // };
 
-  const items = [
-    {
-      key: 'profile',
-      label: 'โปรไฟล์',
-      path: '/admin/profile',
-      icon: <Icon.UserOutlined />,
-    },
-    {
-      key: 'setting',
-      label: 'ตั้งค่า',
-      path: '/admin/profile/setting',
-      icon: <Icon.SettingOutlined />,
-    },
-    {
-      key: 'logout',
-      label: 'ออกจากระบบ',
-      onclick: handleSignOut,
-      path: '',
-      icon: <Icon.LogoutOutlined />,
-    },
-  ];
+  // const [value, setValue] = React.useState('');
+
+  // const items = [
+  //   {
+  //     key: 'profile',
+  //     label: 'โปรไฟล์',
+  //     path: '/admin/profile',
+  //     icon: <Icon.UserOutlined />,
+  //   },
+  //   {
+  //     key: 'setting',
+  //     label: 'ตั้งค่า',
+  //     path: '/admin/profile/setting',
+  //     icon: <Icon.SettingOutlined />,
+  //   },
+  //   {
+  //     key: 'logout',
+  //     label: 'ออกจากระบบ',
+  //     onclick: handleSignOut,
+  //     path: '',
+  //     icon: <Icon.LogoutOutlined />,
+  //   },
+  // ];
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -71,20 +78,29 @@ export default function DashboardLayout({
         <header className="bg-white shadow p-4 flex items-center justify-between ">
           <Breadcrumb />
           <div className="flex items-center space-x-4">
-            <Button key="logout" onPress={handleSignOut}>
+            {/* <Button key="logout" onPress={handleSignOut}>
               Log Out
             </Button>
+            <Chip isDisabled color="danger">
+              Chip
+            </Chip>
+            <Link href="#">Default Link</Link>;
+            <InputOtp length={4} value={value} onValueChange={setValue} /> */}
+            {/* <Textarea
+              className="max-w-xs"
+              label="Description"
+              placeholder="Enter your description"
+            />
+            <DatePicker className="max-w-[284px]" label="Birth date" />;
             <Dropdown
               showArrow
               classNames={{
-                base: 'before:bg-default-200', // change arrow background
+                base: 'before:bg-default-200',
                 content:
                   'py-1 px-1 border border-default-200 bg-gradient-to-br from-white to-default-200 dark:from-default-50 dark:to-black',
               }}
             >
-              <DropdownTrigger>
-                <Icon.BellFilled className="text-headFont" />
-              </DropdownTrigger>
+              <DropdownTrigger>การแจ้งเตือน</DropdownTrigger>
               <DropdownMenu
                 aria-label="Dropdown menu with description"
                 variant="faded"
@@ -126,7 +142,7 @@ export default function DashboardLayout({
                     <span className="text-gray-800 text-xs">
                       {/* {`${
                         me?.profile?.firstName ? me?.profile?.firstName : ''
-                      } ${me?.profile?.lastName ? me?.profile?.lastName : ''}`} */}
+                      // } ${me?.profile?.lastName ? me?.profile?.lastName : ''}`} 
                     </span>
                   </button>
                 </DropdownTrigger>
@@ -149,7 +165,8 @@ export default function DashboardLayout({
                   </DropdownItem>
                 )}
               </DropdownMenu>
-            </Dropdown>
+            </Dropdown> */}
+            <DropdownHead />
           </div>
         </header>
 

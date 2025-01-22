@@ -236,6 +236,31 @@ export default function OraganizationPage() {
     setOpenEdit((prev) => !prev);
   };
 
+  const handleEditButton = (openEdit: boolean) => {
+    return openEdit ? (
+      <Button
+        className="bg-accent1 text-white text-xs"
+        key={'submit edit button'}
+        type="submit"
+        form="notation"
+        // disabled={formData?.docStatus === 'canceled'}
+      >
+        ยืนยันแก้ไขข้อมูล
+      </Button>
+    ) : (
+      <Button
+        className="bg-accent3 text-white text-xs"
+        key={'edit button'}
+        onClick={() => {
+          setOpenEdit(true);
+        }}
+        // disabled={formData?.docStatus === 'canceled'}
+      >
+        แก้ไขข้อมูล
+      </Button>
+    );
+  };
+
   return (
     <Scaffold
       child={
@@ -253,6 +278,7 @@ export default function OraganizationPage() {
                   ยืนยันแก้ไขข้อมูล
                 </Button>
               </Link>,
+              handleEditButton(openEdit),
             ]}
           />
           <div className="flex space-x-4 mt-6">
@@ -1211,12 +1237,32 @@ export default function OraganizationPage() {
   );
 }
 
+// const {
+//   isOpen: isMainModal,
+//   onOpen: ModalisMain,
+//   onOpenChange: onChangeSetting3,
+// } = useDisclosure();
+
 // Table Address
 const columns: any = [
   { title: 'ชื่อที่อยู่', dataIndex: 'address' },
   { title: 'บ้านเลขที่', dataIndex: 'housenumber' },
   { title: 'จังหวัด', dataIndex: 'province' },
   { title: 'อำเภอ/เขต', dataIndex: 'district' },
+  {
+    title: 'เปลี่ยนที่อยู่หลัก',
+    dataIndex: 'isMain',
+    // render: () => (
+    //   <Button className="bg-accent1 text-white" onPress={openAddress1}>
+    //     ตั้งเป็นที่อยู่หลัก
+    //   </Button>
+    // ),
+  },
+  {
+    title: 'ลบ',
+    dataIndex: 'delete',
+    render: () => <Icon.DeleteOutlined className="ml-0.5 text-red-500" />,
+  },
 ];
 
 const dataAddress = [
