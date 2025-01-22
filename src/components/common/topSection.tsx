@@ -41,7 +41,7 @@ export function TopSection({ title, subtitle, buttons = [], backpath }: any) {
             <h1 className="text-base font-bold text-headFont">{title}</h1>
           </div>
         ) : (
-          <h1 className="text-base font-bold text-headFont">{title}</h1>
+          <h1 className="text-base font-bold text-headFont text-xl">{title}</h1>
         )}
 
         {subtitle && <h1 className="text-sm">{subtitle}</h1>}

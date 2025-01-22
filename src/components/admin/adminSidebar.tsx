@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/sidebar';
 import React from 'react';
 import * as Icons from 'lucide-react';
+import { getClientSession } from '@/libs/auth';
 
 const renderIcon = (iconName: string) => {
   const IconComponent = Icons[iconName as keyof typeof Icons] as any;
@@ -30,6 +31,10 @@ export function AdminSideBar() {
   // const local =
   //   typeof window !== 'undefined' ? window.localStorage.getItem('me') : '{}';
   // const me = JSON.parse(local || '');
+
+  const me = getClientSession();
+
+  console.log({ me });
 
   React.useEffect(() => {
     const menuData: any = [
@@ -164,18 +169,18 @@ export function AdminSideBar() {
     >
       <Sidebar>
         <div className="flex items-center justify-start p-2">
-          {/* <img
+          <img
             src={me?.organization?.logoUrl} // Replace with your actual logo path in the `public` folder
             alt="Logo"
             width={50}
             height={50}
-            className="mr-2"
+            className="mr-2 w-10 h-10 rounded-lg"
           />
           {isSidebarOpen && (
             <span className="text-lg font-bold">
               บริษัท {me?.organization?.nameTh} จำกัด
             </span>
-          )} */}
+          )}
         </div>
         <div className="flex items-center justify-between p-2">
           {isSidebarOpen && (
