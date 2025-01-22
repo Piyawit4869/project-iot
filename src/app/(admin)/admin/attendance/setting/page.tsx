@@ -1,28 +1,18 @@
 'use client';
 
-import React from 'react';
-import debounce from 'lodash/debounce';
+import React, { useState, useEffect } from 'react';
+import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
-import pagination from '@/pages/api/attendances/pagination';
+import pagination from '@/pages/api/config/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
-import { formatDate } from '@/utils/enums/date';
+import { formatDate } from '@/utils/enums/date'; // <-- Import formatDate here
+import debounce from 'lodash/debounce';
+import * as Icon from '@ant-design/icons'
+
 interface FilterState {
-  name: string;
-  docNo: string;
-}
-interface AttendanceItem {
-  records: {
-    status: string;
-    stamp: string;
-    action: string;
-    currentDate: string;
-    workInfo: {
-      user: {
-        userName: string;
-      };
-    };
-  };
+  name: string; // Changed from 'ip' to 'name'
+  status: string;
 }
 
 interface MetaData {
@@ -32,103 +22,120 @@ interface MetaData {
   currentPage: number;
 }
 
-export default function SettingAttendancePage() {
-  const [page, setPage] = React.useState(1);
-  const [loading, setLoading] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [filters, setFilters] = React.useState<FilterState>({
-    name: '',
-    docNo: '',
-  });
-  const [items, setItems] = React.useState<AttendanceItem[]>([]) as any;
-  const [meta, setMeta] = React.useState<MetaData>({
+interface ConfigItem {
+  branchName: string;
+  workStartTime: string;
+  workEndTime: string;
+  breakStartTime: string;
+  breakEndTime: string;
+}
+
+const columns = [
+  // {
+  //   title: 'ชื่อสาขา',
+  //   dataIndex: '',
+  //   Link: '/admin/attendance/setting',
+  // },
+  {
+    title: 'เวลาเข้างาน',
+    dataIndex: 'workStartTime',
+  },
+  {
+    title: 'เวลาเริ่มพักเบรก',
+    dataIndex: 'breakStartTime',
+  },
+  {
+    title: 'เวลาเลิกพักเบรก',
+    dataIndex: 'breakEndTime',
+  },
+  {
+    title: 'เวลาเลิกงาน',
+    dataIndex: 'workEndTime',
+  },
+  {
+    title: '',
+    dataIndex: '',
+    render : (value : any) => {
+      return <Icon.EditOutlined />
+    },
+  },
+];
+
+export default function Page() {
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [items, setItems] = useState<ConfigItem[]>([]);
+  const [filters , setFilters] = useState<FilterState>({ name: '', status: '' });
+  const [meta, setMeta] = useState<MetaData>({
     totalItems: 0,
     itemsPerPage: 10,
     totalPages: 0,
     currentPage: 1,
   });
 
-  // Fetch data from the API
-  const fetchAttendances = async () => {
+  const fetchConfig = async () => {
     setLoading(true);
     try {
-      const { name, docNo } = filters;
+      const { name, status } = filters;
       const { items: fetchedItems, meta: fetchedMeta } = await pagination({
         page,
         limit: rowsPerPage,
         ...(name && { name }),
-        ...(docNo && { docNo }),
+        ...(status && { status }),
       });
 
-      // Ensure fetchedMeta is not undefined or null, and set default values if needed
-      const metaData = fetchedMeta || {
-        totalItems: 0,
-        itemsPerPage: 10,
-        totalPages: 0,
-        currentPage: 1, // Default currentPage value
-      };
+      console.log('Fetched Items:', fetchedItems);
+      console.log('Fetched Meta:', fetchedMeta);
 
-      // Update items if fetchedItems is an array
-      if (Array.isArray(fetchedItems)) {
-        setItems(
-          fetchedItems.map((item: AttendanceItem) => ({
-            ...item,
-            userName: item.records.workInfo.user.userName || '',
-            action: item.records.action || '',
-            currentDate: item.records.currentDate || '',
-            stampDate: formatDate(item.records.stamp).date || '',
-            stampTime: formatDate(item.records.stamp).time || '',
-          })),
-        );
-      } else {
-        setItems([]); // If fetchedItems is not an array, set items to an empty array
-      }
-      console.log(fetchedItems);
-      console.log(fetchedMeta);
-      console.log(fetchedItems);
-      console.log(items); // Log transformed items before setItems
-
-      // Set the meta state, ensuring it has default values
-      setMeta(metaData);
+      setItems(
+        fetchedItems.map((item: ConfigItem) => ({
+          ...item,
+          WorkStart: formatDate(item.workStartTime).time,
+          WorkEnd: formatDate(item.workEndTime).time,
+          BreakStart: formatDate(item.breakStartTime).time,
+          BreakEnd: formatDate(item.breakEndTime).time,
+        })),
+      );
+      setMeta(fetchedMeta);
     } catch (error) {
-      console.error('Error fetching attendance:', error);
+      console.error('Error fetching work info:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  // Debounced function to handle filter changes
   const handleFilterChange = React.useCallback(
-    debounce((updatedFilters) => {
-      setPage(1); // Reset to the first page for new filters
-      setFilters(updatedFilters);
-    }),
-    [filters],
-  );
+      debounce((updatedFilters) => {
+        setPage(1); // Reset to the first page for new filters
+        setFilters(updatedFilters);
+      }),
+      [filters],
+    );
 
-  // Handle input changes
   const onInputChange = (key: keyof typeof filters, value: string) => {
     const updatedFilters = { ...filters, [key]: value };
     handleFilterChange(updatedFilters);
   };
 
-  // Fetch data whenever filters, page, or rowsPerPage change
-  React.useEffect(() => {
-    fetchAttendances();
+  const handleStatusChange = (status: string) => {
+    const updatedFilters = { ...filters, status };
+    handleFilterChange(updatedFilters); // This will trigger the debounced filter change
+  };
+
+  useEffect(() => {
+    fetchConfig();
   }, [filters, page, rowsPerPage]);
 
-  console.log('Page:', page);
-  console.log('Filters:', filters);
-  console.log('Rows per page:', rowsPerPage);
-
   return (
-    <div>
-      {/* Page Header */}
       <div>
+        <Scaffold
+                child={
+                  <div>
         <TopSection
           title="การตั้งค่าการเข้าออกงาน"
           buttons={[
-            <Link href={'setting/create'} key={'create-set-button'}>
+            <Link href={'setting/create'} key={'create-set-button-unique'}>
               <Button className="bg-accent1 text-white" size="sm">
                 สร้างการตั้งค่า
               </Button>
@@ -153,8 +160,8 @@ export default function SettingAttendancePage() {
               size="sm"
               name="docNo"
               placeholder="ค้นหาหมายเลขเอกสาร"
-              value={filters.docNo}
-              onChange={(e) => onInputChange('docNo', e.target.value)}
+              value={filters.status}
+              onChange={(e) => onInputChange('status', e.target.value)}
             />
           </div>
         </div>
@@ -174,31 +181,14 @@ export default function SettingAttendancePage() {
               onRowsPerPageChange={(newRowsPerPage) =>
                 setRowsPerPage(newRowsPerPage)
               }
-              
             />
           )}
         </div>
       </div>
+      
+      }
+      backgroundColor={''}
+    />
     </div>
   );
 }
-
-const columns = [
-  {
-    title: 'ชื่อสาขา',
-    dataIndex: 'userName',
-    Link: '/admin/attendance/setting',
-  },
-  {
-    title: 'เข้างาน',
-    dataIndex: '',
-  },
-  {
-    title: 'พักเบรก',
-    dataIndex: '',
-  },
-  {
-    title: 'ออกงาน',
-    dataIndex: '',
-  },
-];

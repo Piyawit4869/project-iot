@@ -47,18 +47,16 @@ const columns = [
 
 export default function WhitelistsPage() {
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filters, setFilters] = useState<FilterState>({ ip: '', status: '' });
-  // const [, setWhitelists] = useState<WhitelistItem[]>([]);
   const [items, setItems] = useState<WhitelistItem[]>([]);
-  console.log({setItems});
   const [meta, setMeta] = useState<MetaData>({
     totalItems: 0,
     itemsPerPage: 10,
     totalPages: 0,
     currentPage: 1,
   });
-  const [loading, setLoading] = useState(false);
 
   const fetchWhitelists = async () => {
     setLoading(true);
@@ -71,6 +69,10 @@ export default function WhitelistsPage() {
         ...(ip && { ip }),
         ...(status && { status }),
       });
+
+      console.log('Fetched Items:', fetchedItems);
+      console.log('Fetched Meta:', fetchedMeta);
+      
       setItems(
         fetchedItems.map((item: WhitelistItem) => ({
           ...item,

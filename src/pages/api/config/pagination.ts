@@ -1,14 +1,14 @@
 import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
-interface FetchWorkInfoParams {
+interface FetchSettingParams {
   page: number;
   limit: number;
   name?: string;
   status?: string;
 }
 
-interface FetchWorkInfoResponse {
+interface FetchSettingResponse {
   items: any[];
   meta: {
     totalItems: number;
@@ -23,9 +23,9 @@ export default async function pagination({
   limit,
   name,
   status,
-}: FetchWorkInfoParams): Promise<FetchWorkInfoResponse> {
+}: FetchSettingParams): Promise<FetchSettingResponse> {
   try {
-    const url = new URL(`${base_url}/crud/work-info`);
+    const url = new URL(`${base_url}/crud/config-setting/`);
     url.searchParams.append('page', page.toString());
     url.searchParams.append('limit', limit.toString());
 

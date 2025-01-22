@@ -7,15 +7,22 @@ import { Button, Input, Link, Tab, Tabs } from '@nextui-org/react';
 import pagination from '@/pages/api/attendances/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date';
-import {
-  VerticalTimeline,
-  VerticalTimelineElement,
-} from 'react-vertical-timeline-component';
+// import {
+//   VerticalTimeline,
+//   VerticalTimelineElement,
+// } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import { TimelineComponent } from '@/components/admin/adminTimeline';
 interface FilterState {
   name: string;
   docNo: string;
+}
+
+interface MetaData {
+  totalItems: number;
+  itemsPerPage: number;
+  totalPages: number;
+  currentPage: number;
 }
 interface AttendanceItem {
   records: {
@@ -31,22 +38,32 @@ interface AttendanceItem {
   };
 }
 
-interface MetaData {
-  totalItems: number;
-  itemsPerPage: number;
-  totalPages: number;
-  currentPage: number;
-}
+const columns = [
+  {
+    title: 'ชื่อ',
+    dataIndex: 'userName',
+    Link: '/admin/attendance/overview',
+  },
+  {
+    title: 'กิจกรรม',
+    dataIndex: 'action',
+  },
+  {
+    title: 'บันทึกเมื่อเวลา',
+    dataIndex: 'stampTime',
+  },
+  {
+    title: 'บันทึกเมื่อวันที่',
+    dataIndex: 'stampDate',
+  },
+];
 
 export default function AttendancesPage() {
   const [page, setPage] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [filters, setFilters] = React.useState<FilterState>({
-    name: '',
-    docNo: '',
-  });
-  const [items, setItems] = React.useState<AttendanceItem[]>([]) as any;
+  const [filters, setFilters] = React.useState<FilterState>({ name: '',docNo: ''});
+  const [items, setItems] = React.useState<AttendanceItem[]>([]);
   const [meta, setMeta] = React.useState<MetaData>({
     totalItems: 0,
     itemsPerPage: 10,
@@ -54,7 +71,6 @@ export default function AttendancesPage() {
     currentPage: 1,
   });
 
-  // Fetch data from the API
   const fetchAttendances = async () => {
     setLoading(true);
     try {
@@ -66,16 +82,12 @@ export default function AttendancesPage() {
         ...(docNo && { docNo }),
       });
 
-      // Ensure fetchedMeta is not undefined or null, and set default values if needed
-      const metaData = fetchedMeta || {
-        totalItems: 0,
-        itemsPerPage: 10,
-        totalPages: 0,
-        currentPage: 1, // Default currentPage value
-      };
+      console.log('Fetched Items:', fetchedItems);
+      console.log('Fetched Meta:', fetchedMeta);
+
 
       // Update items if fetchedItems is an array
-      if (Array.isArray(fetchedItems)) {
+      // if (Array.isArray(fetchedItems)) {
         setItems(
           fetchedItems.map((item: AttendanceItem) => ({
             ...item,
@@ -86,16 +98,20 @@ export default function AttendancesPage() {
             stampTime: formatDate(item.records.stamp).time || '',
           })),
         );
-      } else {
-        setItems([]); // If fetchedItems is not an array, set items to an empty array
-      }
-      console.log(fetchedItems);
-      console.log(fetchedMeta);
-      console.log(fetchedItems);
-      console.log(items); // Log transformed items before setItems
+        console.log(fetchedItems);
+        console.log(setItems , 'setItems');
+        
+        
+      // } else {
+      //   setItems([]); // If fetchedItems is not an array, set items to an empty array
+      // }
+      // console.log(fetchedItems);
+      // console.log(fetchedMeta);
+      // console.log(fetchedItems);
+      // console.log(items); 
 
       // Set the meta state, ensuring it has default values
-      setMeta(metaData);
+      setMeta(fetchedMeta);
     } catch (error) {
       console.error('Error fetching attendance:', error);
     } finally {
@@ -118,14 +134,13 @@ export default function AttendancesPage() {
     handleFilterChange(updatedFilters);
   };
 
-  // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
     fetchAttendances();
   }, [filters, page, rowsPerPage]);
 
-  console.log('Page:', page);
-  console.log('Filters:', filters);
-  console.log('Rows per page:', rowsPerPage);
+  // console.log('Page:', page);
+  // console.log('Filters:', filters);
+  // console.log('Rows per page:', rowsPerPage);
 
   return (
     <div>
@@ -245,22 +260,4 @@ export default function AttendancesPage() {
   );
 }
 
-const columns = [
-  {
-    title: 'ชื่อ',
-    dataIndex: 'userName',
-    Link: '/admin/attendance/overview',
-  },
-  {
-    title: 'กิจกรรม',
-    dataIndex: 'action',
-  },
-  {
-    title: 'บันทึกเมื่อเวลา',
-    dataIndex: 'stampTime',
-  },
-  {
-    title: 'บันทึกเมื่อวันที่',
-    dataIndex: 'stampDate',
-  },
-];
+

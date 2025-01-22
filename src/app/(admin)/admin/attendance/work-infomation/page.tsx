@@ -7,6 +7,7 @@ import { Button, Link, Input } from '@nextui-org/react';
 import pagination from '@/pages/api/workinfos/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date'; // <-- Import formatDate here
+// import debounce from 'lodash/debounce';
 // import * as Icon from '@ant-design/icons';
 
 interface FilterState {
@@ -68,27 +69,30 @@ const columns = [
 
 export default function WorkInfoPage() {
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [filters,] = useState<FilterState>({ name: '', status: '' }); // Changed to 'name'
   const [items, setItems] = useState<WorkInfoItem[]>([]);
+  const [filters, setFilters] = useState<FilterState>({ name: '', status: '' });
   const [meta, setMeta] = useState<MetaData>({
     totalItems: 0,
     itemsPerPage: 10,
     totalPages: 0,
     currentPage: 1,
   });
-  const [loading, setLoading] = useState(false);
 
   const fetchWorkInfo = async () => {
     setLoading(true);
     try {
-      const { name, status } = filters; // Changed from 'ip' to 'name'
+      const { name, status } = filters;
       const { items: fetchedItems, meta: fetchedMeta } = await pagination({
         page,
         limit: rowsPerPage,
-        ...(name && { name }), // Updated to filter by 'name'
+        ...(name && { name }),
         ...(status && { status }),
       });
+
+      console.log('Fetched Items:', fetchedItems);
+      console.log('Fetched Meta:', fetchedMeta);
 
       setItems(
         fetchedItems.map((item: WorkInfoItem) => ({
@@ -109,13 +113,13 @@ export default function WorkInfoPage() {
     }
   };
 
-  // const handleFilterChange = useCallback(
-  //   debounce((updatedFilters) => {
-  //     setPage(1); // Reset to the first page for new filters
-  //     setFilters(updatedFilters);
-  //   }, 500),
-  //   [],
-  // );
+  // const handleFilterChange = React.useCallback(
+  //     debounce((updatedFilters) => {
+  //       setPage(1); // Reset to the first page for new filters
+  //       setFilters(updatedFilters);
+  //     }),
+  //     [filters],
+  //   );
 
   // const onInputChange = (key: keyof typeof filters, value: string) => {
   //   const updatedFilters = { ...filters, [key]: value };
@@ -130,10 +134,6 @@ export default function WorkInfoPage() {
   useEffect(() => {
     fetchWorkInfo();
   }, [filters, page, rowsPerPage]);
-
-  // function onInputChange(): void {
-  //   throw new Error('Function not implemented.');
-  // }
 
   return (
     <div>
@@ -163,8 +163,8 @@ export default function WorkInfoPage() {
                   radius="sm"
                   name="name"
                   placeholder="ค้นหาชื่อ"
-                  value={filters.name} 
-                  // onChange={(e) => onInputChange('name', e.target.value)} 
+                  value={filters.name}
+                  // onChange={(e) => onInputChange('name', e.target.value)}
                 />
               </div>
             </div>
