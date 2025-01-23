@@ -13,6 +13,8 @@ import { formatDate } from '@/utils/enums/date';
 // } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import { TimelineComponent } from '@/components/admin/adminTimeline';
+import { log } from 'node:console';
+import Scaffold from '@/components/common/scaffold';
 interface FilterState {
   name: string;
   docNo: string;
@@ -25,17 +27,18 @@ interface MetaData {
   currentPage: number;
 }
 interface AttendanceItem {
-  records: {
-    status: string;
-    stamp: string;
-    action: string;
-    currentDate: string;
-    workInfo: {
-      user: {
-        userName: string;
+  currentDate: string;
+  records: [
+    {
+      stamp: string;
+      action: string;
+      workInfo: {
+        user: {
+          userName: string;
+        };
       };
-    };
-  };
+    },
+  ];
 }
 
 const columns = [
@@ -49,12 +52,12 @@ const columns = [
     dataIndex: 'action',
   },
   {
-    title: 'บันทึกเมื่อเวลา',
-    dataIndex: 'stampTime',
-  },
-  {
     title: 'บันทึกเมื่อวันที่',
     dataIndex: 'stampDate',
+  },
+  {
+    title: 'วันล่าสุด',
+    dataIndex: 'currentDate',
   },
 ];
 
@@ -62,7 +65,10 @@ export default function AttendancesPage() {
   const [page, setPage] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [filters, setFilters] = React.useState<FilterState>({ name: '',docNo: ''});
+  const [filters, setFilters] = React.useState<FilterState>({
+    name: '',
+    docNo: '',
+  });
   const [items, setItems] = React.useState<AttendanceItem[]>([]);
   const [meta, setMeta] = React.useState<MetaData>({
     totalItems: 0,
@@ -74,47 +80,44 @@ export default function AttendancesPage() {
   const fetchAttendances = async () => {
     setLoading(true);
     try {
+      console.log('try');
+
       const { name, docNo } = filters;
-      const { items: fetchedItems, meta: fetchedMeta } = await pagination({
+
+      const { data } = (await pagination({
         page,
         limit: rowsPerPage,
         ...(name && { name }),
         ...(docNo && { docNo }),
-      });
+      })) as any;
+      const { items: fetchedItems, meta: fetchedMeta } = data;
 
+      console.log('items', items);
+      console.log('meta', meta);
       console.log('Fetched Items:', fetchedItems);
       console.log('Fetched Meta:', fetchedMeta);
 
-
-      // Update items if fetchedItems is an array
-      // if (Array.isArray(fetchedItems)) {
-        setItems(
-          fetchedItems.map((item: AttendanceItem) => ({
+      setItems(
+        fetchedItems.flatMap((item: AttendanceItem) =>
+          item.records.map((record) => ({
             ...item,
-            userName: item.records.workInfo.user.userName || '',
-            action: item.records.action || '',
-            currentDate: item.records.currentDate || '',
-            stampDate: formatDate(item.records.stamp).date || '',
-            stampTime: formatDate(item.records.stamp).time || '',
+            userName: record?.workInfo?.user?.userName || '',
+            action: record?.action || '',
+            stampDate: formatDate(record?.stamp).date || '',
+            currentDate: formatDate(item.currentDate).date || '',
           })),
-        );
-        console.log(fetchedItems);
-        console.log(setItems , 'setItems');
-        
-        
-      // } else {
-      //   setItems([]); // If fetchedItems is not an array, set items to an empty array
-      // }
-      // console.log(fetchedItems);
-      // console.log(fetchedMeta);
-      // console.log(fetchedItems);
-      // console.log(items); 
+        ),
+      );
 
       // Set the meta state, ensuring it has default values
       setMeta(fetchedMeta);
+      console.log('fetchedItems', fetchedItems);
     } catch (error) {
+      console.log('catch');
+
       console.error('Error fetching attendance:', error);
     } finally {
+      console.log('fimally');
       setLoading(false);
     }
   };
@@ -124,7 +127,7 @@ export default function AttendancesPage() {
     debounce((updatedFilters) => {
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
-    }),
+    }, 300),
     [filters],
   );
 
@@ -144,73 +147,74 @@ export default function AttendancesPage() {
 
   return (
     <div>
-      {/* Page Header */}
-      <div>
-        <TopSection
-          title="ภาพรวมองค์กรทั้งหมด"
-          buttons={[
-            <Link href={'overview/create'} key={'create button'}>
-              <Button
-                className="bg-accent1 text-white"
-                size="sm"
-                key={'create button'}
-              >
-                สร้างกิจกรรม
-              </Button>
-            </Link>,
-          ]}
-        />
-        <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
-          <div className="grid grid-cols-1 sm:grid-cols-2">
-            <Input
-              className="w-full p-2 text-headFont"
-              labelPlacement="outside"
-              size="sm"
-              radius="sm"
-              name="name"
-              placeholder="ค้นหาชื่อ"
-              value={filters.name}
-              onChange={(e) => onInputChange('name', e.target.value)}
+      <Scaffold
+        child={
+          <div>
+            <TopSection
+              title="ภาพรวมองค์กรทั้งหมด"
+              // buttons={[
+              //   <Link href={'overview/create'} key={'create button'}>
+              //     <Button
+              //       className="bg-accent1 text-white"
+              //       size="sm"
+              //       key={'create button'}
+              //     >
+              //       สร้างกิจกรรม
+              //     </Button>
+              //   </Link>,
+              // ]}
             />
-            <Input
-              className="w-full p-2 text-headFont"
-              labelPlacement="outside"
-              size="sm"
-              name="docNo"
-              placeholder="ค้นหาหมายเลขเอกสาร"
-              value={filters.docNo}
-              onChange={(e) => onInputChange('docNo', e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div>
-          <Tabs variant="underlined">
-            <Tab key="table" title="ตาราง">
-              {loading ? (
-                <div className="flex justify-center items-center h-64">
-                  <div className="spinner"></div>
-                </div>
-              ) : (
-                <TablePagination
-                  initialRows={items}
-                  initialMeta={meta}
-                  rowsPerPage={rowsPerPage}
-                  columns={columns as any}
-                  onPageChange={(newPage) => setPage(newPage)}
-                  onRowsPerPageChange={(newRowsPerPage) =>
-                    setRowsPerPage(newRowsPerPage)
-                  }
+            <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
+              <div className="grid grid-cols-1 sm:grid-cols-2">
+                <Input
+                  className="w-full p-2 text-headFont"
+                  labelPlacement="outside"
+                  size="sm"
+                  radius="sm"
+                  name="name"
+                  placeholder="ค้นหาชื่อ"
+                  value={filters.name}
+                  onChange={(e) => onInputChange('name', e.target.value)}
                 />
-              )}
-            </Tab>
-            <Tab
-              key="timeline"
-              title="ไทม์ไลน์"
-              className="grid grid-cols-1 sm:grid-cols-2"
-            >
-              <TimelineComponent />
-              {/* <VerticalTimeline layout="1-column">
+                <Input
+                  className="w-full p-2 text-headFont"
+                  labelPlacement="outside"
+                  size="sm"
+                  name="docNo"
+                  placeholder="ค้นหาหมายเลขเอกสาร"
+                  value={filters.docNo}
+                  onChange={(e) => onInputChange('docNo', e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div>
+              <Tabs variant="underlined">
+                <Tab key="table" title="ตาราง">
+                  {loading ? (
+                    <div className="flex justify-center items-center h-64">
+                      <div className="spinner"></div>
+                    </div>
+                  ) : (
+                    <TablePagination
+                      initialRows={items}
+                      initialMeta={meta}
+                      rowsPerPage={rowsPerPage}
+                      columns={columns as any}
+                      onPageChange={(newPage) => setPage(newPage)}
+                      onRowsPerPageChange={(newRowsPerPage) =>
+                        setRowsPerPage(newRowsPerPage)
+                      }
+                    />
+                  )}
+                </Tab>
+                <Tab
+                  key="timeline"
+                  title="ไทม์ไลน์"
+                  className="grid grid-cols-1 sm:grid-cols-2"
+                >
+                  <TimelineComponent />
+                  {/* <VerticalTimeline layout="1-column">
                 <VerticalTimelineElement
                   className=" min-w-80 w-max-120 "
                   contentStyle={{
@@ -252,12 +256,13 @@ export default function AttendancesPage() {
                   }}
                 />
               </VerticalTimeline> */}
-            </Tab>
-          </Tabs>
-        </div>
-      </div>
+                </Tab>
+              </Tabs>
+            </div>
+          </div>
+        }
+        backgroundColor={''}
+      />
     </div>
   );
 }
-
-

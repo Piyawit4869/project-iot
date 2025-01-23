@@ -58,7 +58,9 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   const limits = [
     { label: '5', value: '5' },
     { label: '10', value: '10' },
+    { label: '15', value: '15' },
     { label: '20', value: '20' },
+    { label: '25', value: '25' },
     { label: '50', value: '50' },
   ];
 
@@ -85,7 +87,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
                     ) : col.link ? (
                       <Link
                         href={`${col.link}/${row.id}`}
-                        className="text-blue-500 hover:underline"
+                        className="text-black hover:underline hover:text-accent1"
                       >
                         {row[col.dataIndex] || '-'}
                       </Link>
@@ -145,7 +147,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             size={'sm'}
             onClick={() => handlePageChange(initialMeta.currentPage - 1)}
             disabled={initialMeta.currentPage === 1}
-            className="text-gray-700 hover:text-blue-500 disabled:text-gray-400"
+            className="text-gray-700 hover:text-accent1 disabled:text-gray-400"
           >
             ย้อนกลับ
           </Button>
@@ -154,7 +156,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             <Button
               size={'sm'}
               onClick={() => handlePageChange(1)}
-              className="text-gray-700 hover:text-blue-500"
+              className="text-gray-700 hover:text-accent1"
             >
               1
             </Button>
@@ -179,8 +181,8 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
                 }
                 className={`${
                   initialMeta.currentPage === pageNumber
-                    ? 'text-white bg-blue-500'
-                    : 'text-gray-700 hover:text-blue-500'
+                    ? 'text-white bg-accent1'
+                    : 'text-gray-700 hover:text-accent1'
                 }`}
               >
                 {pageNumber}
@@ -194,7 +196,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             <Button
               size={'sm'}
               onClick={() => handlePageChange(initialMeta.totalPages)}
-              className="text-gray-700 hover:text-blue-500"
+              className="text-gray-700 hover:text-accent1"
             >
               {initialMeta.totalPages}
             </Button>
@@ -204,7 +206,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             size={'sm'}
             onClick={() => handlePageChange(initialMeta.currentPage + 1)}
             disabled={initialMeta.currentPage === initialMeta.totalPages}
-            className="text-gray-700 hover:text-blue-500 disabled:text-gray-400"
+            className="text-gray-700 hover:text-accent1 disabled:text-gray-400"
           >
             ถัดไป
           </Button>

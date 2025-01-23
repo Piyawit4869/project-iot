@@ -1,5 +1,14 @@
 'use client';
 
+import Scaffold from '@/components/common/scaffold';
+import CardComponent from '@/components/common/card';
+import { update } from '@/pages/api/workinfos/update'; // API update
+import getSingle from '@/pages/api/workinfos/get'; // API get
+import { TopSection } from '@/components/common/topSection';
+import { useRouter, useParams } from 'next/navigation';
+import { parseDate } from '@internationalized/date';
+import * as Icon from '@ant-design/icons';
+import React from 'react';
 import {
   Button,
   Form,
@@ -10,17 +19,8 @@ import {
   SelectItem,
   DatePicker,
 } from '@nextui-org/react';
-import { update } from '@/pages/api/workinfos/update'; // API update
-import getSingle from '@/pages/api/workinfos/get'; // API get
-import { TopSection } from '@/components/common/topSection';
-import { useRouter, useParams } from 'next/navigation';
-import CardComponent from '@/components/common/card';
-import Scaffold from '@/components/common/scaffold';
-import { parseDate } from '@internationalized/date';
-import * as Icon from '@ant-design/icons';
-import React from 'react';
 
-export default function WhitelistSinglePage() {
+export default function WorkInfomationSinglePage() {
   const router = useRouter();
   const params = useParams<{ slug?: string }>();
   const [data, setData] = React.useState() as any;
@@ -40,13 +40,13 @@ export default function WhitelistSinglePage() {
     const fetchData = async () => {
       try {
         const response = await getSingle(params.slug as string);
+        console.log(response , 'response');
         if (!response?.data) {
           throw new Error('No data found for the given slug');
         }
         setData(response.data);
         setFormData(response.data);
       } catch (error) {
-        // อัปเดต formData    } catch (error) {
         console.error('Error fetching work-infomation:', error);
       } finally {
         setLoading(false);

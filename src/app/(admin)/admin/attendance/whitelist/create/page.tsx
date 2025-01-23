@@ -1,18 +1,19 @@
 'use client';
 
 import Scaffold from '@/components/common/scaffold';
-import { TopSection } from '@/components/common/topSection';
-import { Button, Form, Input, Textarea } from '@nextui-org/react';
-// import createWhitelists from '@/pages/api/whitelists/create'; //API
 import CardComponent from '@/components/common/card';
+import { TopSection } from '@/components/common/topSection';
+import createWhitelists from '@/pages/api/whitelists/create'; //API
 import * as Icon from '@ant-design/icons';
+import { useRouter } from 'next/navigation';
 import React from 'react';
+import { Button, Form, Input, Textarea } from '@nextui-org/react';
 
-export default function WhitelistCreatePage() {
+export default function CreateWhitelistPage() {
   const [errors, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [, setLoading] = React.useState(false);
-  // const router = useRouter();
+  const router = useRouter();
 
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
@@ -83,9 +84,9 @@ export default function WhitelistCreatePage() {
 
       payload.active = !!payload.active; // Simplified active check
 
-      // const { data } = await createWhitelists({}, payload);
+      const { data } = await createWhitelists({}, payload);
       console.log(payload);
-      // router.push(`/admin/attendance/whitelist/${data.id}`);
+      router.push(`/admin/attendance/whitelist/${data.id}`);
     } catch (err: any) {
       console.error('Send FormData error:', err);
       setErrors({ general: err.message || 'An unexpected error occurred.' });
@@ -147,10 +148,10 @@ export default function WhitelistCreatePage() {
                     <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
                       {/* Content Section */}
                       <div className="mb-6">
-                        <div className="grid grid-cols-2 gap-6">
+                        <div className="grid grid-cols-2 gap-6 px-5">
                           {/* Detail Section */}
                           <div>
-                            <h1 className="text-2xl font-bold text-headFont mb-10">
+                            <h1 className="text-2xl font-bold text-headFont mb-10 py-5">
                               Detail
                             </h1>
                             {/* Whitelist Section */}
@@ -199,10 +200,10 @@ export default function WhitelistCreatePage() {
 
                           {/* Map Section */}
                           <div className="px-2">
-                            <h1 className="text-2xl font-bold text-headFont pl-10 ">
+                            <h1 className="text-2xl font-bold text-headFont pl-10 py-5 ">
                               Map
                             </h1>
-                            <div className="mt-4">
+                            {/* <div className="mt-4">
                               <iframe
                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4596.320001693403!2d100.45844017573191!3d13.788879396432687!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29b1543350395%3A0x96f94cedda00d639!2sCK%20Service!5e1!3m2!1sth!2sth!4v1735121592706!5m2!1sth!2sth"
                                 width="90%"
@@ -211,13 +212,13 @@ export default function WhitelistCreatePage() {
                                 allowFullScreen
                                 loading="lazy"
                               ></iframe>
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                       </div>
 
                       {/* Address Section */}
-                      <div>
+                      <div className='px-5 py-5'>
                         <h1 className="text-2xl font-bold text-headFont">
                           Address
                         </h1>
