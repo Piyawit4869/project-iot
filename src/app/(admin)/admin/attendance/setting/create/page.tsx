@@ -177,7 +177,7 @@ export default function CreateSettingPage() {
                         <div className="grid grid-cols-2 gap-6 px-5 py-5">
                           {/* Detail Section */}
                           <div>
-                            {/* <h1 className="text-xl font-bold text-headFont mb-5">
+                             <h1 className="text-xl font-bold text-headFont mb-5">
                               เลือกวันทำงาน
                             </h1>
                             <Button
@@ -188,13 +188,9 @@ export default function CreateSettingPage() {
                               <Icon.PlusSquareOutlined className="text-lg" />
                               เพิ่มวันทำงาน
                             </Button>
-                            {items.map((_: any, index: any) => (
-                              <div key={index} className=" gap-4 mt-6">
-                                {/* {items.map((item, index) => ()
-                                <div
-                                  key={index}
-                                  className="flex w-[80%] gap-4 mt-6"
-                                >
+                            {items.map((item: any, index: any) => (
+                              <div key={index} className="gap-4 mt-6">
+                                <div className="flex w-[80%] gap-4 mt-6">
                                   <Select
                                     className="col-span-1 w-full text-headFont"
                                     name="day"
@@ -209,13 +205,13 @@ export default function CreateSettingPage() {
                                     //   )
                                     // }
                                   >
-                                    {day.map((item: any) => (
+                                    {day.map((dayItem: any) => (
                                       <SelectItem
                                         className="col-span-1 w-full text-headFont"
-                                        key={item.value}
-                                        value={item.value}
+                                        key={dayItem.value}
+                                        value={dayItem.value}
                                       >
-                                        {item.label}
+                                        {dayItem.label}
                                       </SelectItem>
                                     ))}
                                   </Select>
@@ -226,10 +222,8 @@ export default function CreateSettingPage() {
                                     ลบวันทำงาน
                                   </Button>
                                 </div>
-                                {/* ))} 
-                              </div> 
-                            // ))}
-                            */}
+                              </div>
+                            ))}
                           </div>
                           <div>
                             <h1 className="text-xl font-bold text-headFont mb-5">
@@ -267,7 +261,7 @@ export default function CreateSettingPage() {
                               label="เวลาเลิกพักเบรก"
                               onChange={handleChange}
                             />
-                            {/* <div>
+                            <div>
                               <h1 className="text-xl font-bold text-headFont py-5">
                                 เพิ่มพนักงาน
                               </h1>
@@ -317,7 +311,7 @@ export default function CreateSettingPage() {
                                   </SelectItem>
                                 )}
                               </Select>
-                            </div> */}
+                            </div>
                           </div>
                         </div>
                       </div>

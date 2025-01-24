@@ -197,7 +197,7 @@ export default function SingleSettingPage() {
                         <div className="grid grid-cols-2 gap-6 px-5 py-5">
                           {/* Detail Section */}
                           <div>
-                             <h1 className="text-xl font-bold text-headFont mb-5">
+                            <h1 className="text-xl font-bold text-headFont mb-5">
                               เลือกวันทำงาน
                             </h1>
                             <Button
@@ -237,7 +237,6 @@ export default function SingleSettingPage() {
                                 </div>
                               </div>
                             ))}
-                            
                           </div>
                           <div>
                             <h1 className="text-xl font-bold text-headFont mb-5">
@@ -248,7 +247,7 @@ export default function SingleSettingPage() {
                               className="px-2 py-2"
                               type="time"
                               name="workStartTime"
-                              label="เวลาเลิกงาน"
+                              label="เวลาเข้างาน"
                               value={formData.workStartTime}
                               onChange={handleChange}
                             />
@@ -333,16 +332,25 @@ export default function SingleSettingPage() {
                           </div>
                         </div>
                       </div>
-                      <div className="px-5 pb-5">
-                        <Input
-                          size="lg"
-                          label="branchId"
-                          labelPlacement="outside"
-                          name="branchId"
-                          value={formData.branchId}
-                          placeholder="กรอก branchId"
-                          onChange={handleChange}
-                        />
+                      <div className="flex gap-4 mt-6 px-5 pb-5">
+                          <Input
+                            size="lg"
+                            label="branchId"
+                            labelPlacement="outside"
+                            name="branchId"
+                            value={formData.branchId}
+                            placeholder="กรอก branchId"
+                            onChange={handleChange}
+                          />
+                          <Input
+                            size="lg"
+                            label="branchName"
+                            labelPlacement="outside"
+                            name="branchName"
+                            value={formData.branchName}
+                            placeholder="กรอก branchName"
+                            onChange={handleChange}
+                          />
                       </div>
                     </div>
                   </Form>

@@ -7,6 +7,7 @@ import createWhitelists from '@/pages/api/whitelists/create'; //API
 import * as Icon from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import Map from '@/components/map/map';
 import { Button, Form, Input, Textarea } from '@nextui-org/react';
 
 export default function CreateWhitelistPage() {
@@ -108,6 +109,7 @@ export default function CreateWhitelistPage() {
                   <Button
                     className="bg-accent1 text-white p-2 gap-2"
                     type="submit"
+                    size="sm"
                     form="whitelist"
                     onClick={() => {
                       // setCreateStatus('pending');
@@ -125,6 +127,7 @@ export default function CreateWhitelistPage() {
                   <Button
                     className="bg-accent2 text-white p-2 gap-2"
                     type="reset"
+                    size="sm"
                     form="whitelists"
                   >
                     <Icon.CloseOutlined />
@@ -200,25 +203,19 @@ export default function CreateWhitelistPage() {
 
                           {/* Map Section */}
                           <div className="px-2">
-                            <h1 className="text-2xl font-bold text-headFont pl-10 py-5 ">
+                            <h1 className="text-2xl font-bold text-headFont pl-5 py-5 ">
                               Map
                             </h1>
-                            {/* <div className="mt-4">
-                              <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4596.320001693403!2d100.45844017573191!3d13.788879396432687!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29b1543350395%3A0x96f94cedda00d639!2sCK%20Service!5e1!3m2!1sth!2sth!4v1735121592706!5m2!1sth!2sth"
-                                width="90%"
-                                height="250"
-                                className="rounded-md border m-auto"
-                                allowFullScreen
-                                loading="lazy"
-                              ></iframe>
-                            </div> */}
+                            {/* <Map /> */}
+                            <div>
+                              <Map />
+                            </div>
                           </div>
                         </div>
                       </div>
 
                       {/* Address Section */}
-                      <div className='px-5 py-5'>
+                      <div className="px-5 py-5">
                         <h1 className="text-2xl font-bold text-headFont">
                           Address
                         </h1>
