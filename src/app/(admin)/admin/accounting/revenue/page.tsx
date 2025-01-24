@@ -80,7 +80,7 @@ export default function RevenuePage() {
     <Scaffold
       child={
         <div>
-          <TopSection title={'รายได้'} />
+          <TopSection title={'ข้อมูลรายได้'} />
           {/* Filter Bar */}
           <div className="bg-white shadow rounded-lg  mb-4 mt-4">
             <div className="flex flex-wrap gap-4">
@@ -146,7 +146,7 @@ export default function RevenuePage() {
           <div className="flex flex-wrap gap-4">
             <Tabs
               color="secondary"
-              className="mb-4"
+              className="mb-4 mt-2 text-white"
               radius="full"
               aria-label="Tabs colors"
               selectedKey={selectedCategory}
@@ -290,15 +290,15 @@ const initialData = [
 ];
 
 const columns = [
-  { title: 'รายการที่', dataIndex: 'id', align: 'center' },
+  { title: 'รายการที่', dataIndex: 'id' },
   { title: 'ชื่อ', dataIndex: 'name', link: '/admin/accounting/revenue' },
   {
     title: 'ประเภทรายได้',
     dataIndex: 'category',
     render: (text: string) => <span>{handleCategory(text)}</span>,
   },
-  { title: 'จำนวนเงิน', dataIndex: 'amount', align: 'center' },
-  { title: 'สถานะ', dataIndex: 'status', align: 'center' },
+  { title: 'จำนวนเงิน', dataIndex: 'amount' },
+  { title: 'สถานะ', dataIndex: 'status' },
 ];
 
 const tabs: any = [

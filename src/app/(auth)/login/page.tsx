@@ -44,39 +44,45 @@ const Login = () => {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
   // const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: any) => {
-    // 'use server';
     e.preventDefault();
-
+    setError(null);
     setLoading(true);
 
-    const result: any = await signIn('credentials', {
-      redirect: false,
-      user,
-      password,
-    });
-    console.log({ result });
-
-    if (result) {
-      toast.success('🎉 เข้าสู่ระบบสำเร็จ!', {
-        description: `ยินดีต้อนรับ, ${user}`,
-        duration: 3000,
-        style: { fontFamily: 'var(--font-ibm-sans)' },
+    try {
+      const result: any = await signIn('credentials', {
+        redirect: false,
+        user,
+        password,
       });
+      console.log({ result });
 
-      router.push('/admin');
-    } else {
-      setError(result.error);
-      setLoading(false);
+      if (result?.ok) {
+        console.log('Toast success triggered');
+        toast.success('🎉 เข้าสู่ระบบสำเร็จ!', {
+          description: `ยินดีต้อนรับ, ${user}`,
+          duration: 3000,
+          style: { fontFamily: 'var(--font-ibm-sans)' },
+        });
+
+        router.push('/admin');
+      } else {
+        console.log('Toast error triggered');
+        throw new Error(result?.error || 'Invalid credentials');
+      }
+    } catch (error: any) {
+      setError(error.message || 'An unexpected error occurred.');
       toast.error('❌ เข้าสู่ระบบล้มเหลว!', {
         description: 'อีเมล ชื่อผู้ใช้ หรือรหัสผ่านไม่ถูกต้อง โปรดลองอีกครั้ง',
         duration: 3000,
         style: { fontFamily: 'var(--font-ibm-sans)' },
       });
+    } finally {
+      setLoading(false);
     }
   };
 

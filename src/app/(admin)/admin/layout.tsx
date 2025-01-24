@@ -1,56 +1,18 @@
 'use client';
 
 import { AdminSideBar } from '@/components/admin/adminSidebar';
-import Image from 'next/image';
 import React, { Suspense } from 'react';
 import { Breadcrumb } from '@/components/common/breadcrumb';
-import * as Icon from '@ant-design/icons';
 import { DropdownHead } from '@/components/admin/headDropdown';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { signOut } from 'next-auth/react';
 
 // import { useSession } from 'next-auth/react';
 import Loading from './loading';
-import { getClientSession } from '@/libs/auth';
 
 export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const me = getClientSession();
-
-  const router = useRouter();
-
-  const handleSignOut = async () => {
-    await signOut({
-      callbackUrl: '/login', // Redirect to login page after logout
-    });
-  };
-
-  const items = [
-    {
-      key: 'profile',
-      label: 'โปรไฟล์',
-      path: '/admin/profile',
-      icon: <Icon.UserOutlined />,
-    },
-    {
-      key: 'setting',
-      label: 'ตั้งค่า',
-      path: '/admin/profile/setting',
-      icon: <Icon.SettingOutlined />,
-    },
-    {
-      key: 'logout',
-      label: 'ออกจากระบบ',
-      onclick: handleSignOut,
-      path: '',
-      icon: <Icon.LogoutOutlined />,
-    },
-  ];
-
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}

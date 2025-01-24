@@ -13,7 +13,7 @@ const translations: Record<string, string> = {
   profile: 'โปรไฟล์',
   organization: 'องค์กร',
   accounting: 'บัญชี',
-  statement: 'รายการ',
+  statement: 'ภาพรวม',
   revenue: 'รายได้',
   expenses: 'รายจ่าย',
   analysis: 'วิเคราะห์',

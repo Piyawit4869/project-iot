@@ -47,8 +47,8 @@ export default function RevenueSinglePage() {
                 customCard
                 custom={
                   <div className="text-headFont text-white">
-                    <div className="text-2xl">ประเภทรายได้</div>
-                    <div className="text-lg">รายได้จากการขาย</div>
+                    <div className="text-xl">ประเภทรายได้</div>
+                    <div className="text-sm mt-2">รายได้จากการขาย</div>
                   </div>
                 }
               />
@@ -59,9 +59,9 @@ export default function RevenueSinglePage() {
                 customCard
                 custom={
                   <div className="text-white">
-                    <div className="text-2xl">สถานะ</div>
-                    <div>
-                      <span className="font-bold text-lg">สำเร็จ</span>
+                    <div className="text-xl">สถานะ</div>
+                    <div className="mt-1">
+                      <span className="font-bold text-sm mt-2">สำเร็จ</span>
                     </div>
                   </div>
                 }
@@ -73,9 +73,9 @@ export default function RevenueSinglePage() {
                 customCard
                 custom={
                   <div className="text-white">
-                    <div className="text-2xl">จำนวนเงิน</div>
-                    <div>
-                      <span className="font-bold text-lg">฿50,000</span>
+                    <div className="text-xl">จำนวนเงิน</div>
+                    <div className="mt-1">
+                      <span className="font-bold text-sm mt-2">฿50,000</span>
                     </div>
                   </div>
                 }
@@ -95,7 +95,7 @@ export default function RevenueSinglePage() {
                         </h2>
                         <button
                           onClick={exportData}
-                          className="mt-4 px-4 py-2 bg-primary text-white rounded shadow hover:bg-gray-600"
+                          className="mt-4 px-4 py-2 bg-secondary text-white rounded-lg shadow hover:bg-gray-600"
                         >
                           ดาวน์โหลดข้อมูล
                         </button>

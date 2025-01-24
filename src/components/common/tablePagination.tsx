@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectItem,
   SelectContent,
+  SelectValue,
 } from '@/components/ui/select';
 import Link from 'next/link';
 
@@ -128,7 +129,9 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             <Select
               onValueChange={(value) => onRowsPerPageChange(Number(value))}
             >
-              <SelectTrigger className="w-[100px]" />
+              <SelectTrigger className="w-[120px]">
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 {limits.map((item) => (
                   <SelectItem key={item.value} value={item.value}>

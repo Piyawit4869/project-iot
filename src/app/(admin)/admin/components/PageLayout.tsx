@@ -34,7 +34,7 @@ const PageLayout = () => {
           เพื่อให้แน่ใจว่ามีความโปร่งใสและความรับผิดชอบ"
           icon="📅"
           color="primary"
-          link="/admin/attendance"
+          link="/admin/attendance/overview"
         />
 
         {/* Feature 2: Notation Management */}
@@ -54,7 +54,7 @@ const PageLayout = () => {
           และสร้างรายงานเพื่อรักษาความถูกต้องของบัญชีของธุรกิจคุณ"
           icon="💰"
           color="warning"
-          link="/admin/accounting"
+          link="/admin/accounting/analysis"
         />
       </div>
     </div>

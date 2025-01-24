@@ -10,7 +10,7 @@ import {
   TimeInput,
 } from '@nextui-org/react';
 import React from 'react';
-import { parseTime } from '@internationalized/date';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface InputSystem {
   data: any;
@@ -97,15 +97,22 @@ export default function Inputorganization({
     <Scaffold
       child={
         loading ? (
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="relative flex flex-col items-center space-y-4">
-              {/* Spinner */}
-              <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          // <div className="flex items-center justify-center min-h-screen">
+          //   <div className="relative flex flex-col items-center space-y-4">
+          //     {/* Spinner */}
+          //     <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
 
-              {/* Loading Text */}
-              <p className="text-gray-600 text-lg font-semibold animate-pulse">
-                Loading, please wait...
-              </p>
+          //     {/* Loading Text */}
+          //     <p className="text-gray-600 text-lg font-semibold animate-pulse">
+          //       Loading, please wait...
+          //     </p>
+          //   </div>
+          // </div>
+          <div className="flex items-center space-x-4">
+            <Skeleton className="h-12 w-12 rounded-full" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-[250px]" />
+              <Skeleton className="h-4 w-[200px]" />
             </div>
           </div>
         ) : (
@@ -127,6 +134,7 @@ export default function Inputorganization({
                   </SelectItem>
                 ))}
               </Select>
+
               <Select
                 className="flex-1  text-headFont"
                 name="theme"
