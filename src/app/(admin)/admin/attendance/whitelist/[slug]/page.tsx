@@ -11,6 +11,7 @@ import Scaffold from '@/components/common/scaffold';
 import CardComponent from '@/components/common/card';
 import { useRouter, useParams } from 'next/navigation';
 import * as Icon from '@ant-design/icons';
+import Map from '@/components/map/map';
 import React from 'react';
 
 export default function WhitelistSinglePage() {
@@ -147,7 +148,7 @@ export default function WhitelistSinglePage() {
 
   const handleEditButton = (openEdit: boolean) => {
     return openEdit ? (
-      <a className="px-2 py-1">
+      <a className="">
         <Button
           className={`bg-${
             data?.docStatus === 'rejected'
@@ -155,6 +156,7 @@ export default function WhitelistSinglePage() {
               : 'accent1'
           } text-white p-2`}
           key={'submit edit button'}
+          size="sm"
           type="submit"
           form="whitelist"
           disabled={data?.docStatus === 'rejected'}
@@ -164,7 +166,7 @@ export default function WhitelistSinglePage() {
         </Button>
       </a>
     ) : (
-      <a className="px-2 py-1">
+      <a className="">
         <Button
           className={` bg-${
             data?.docStatus === 'rejected'
@@ -172,6 +174,7 @@ export default function WhitelistSinglePage() {
               : 'accent3'
           } text-white p-31`}
           key={'edit button'}
+          size="sm"
           onClick={() => {
             setOpenEdit(true);
           }}
@@ -222,53 +225,44 @@ export default function WhitelistSinglePage() {
         ) : (
           <div>
             <TopSection
-              title="แก้ไขไวท์ลิสต์"
+              title="แก้ไขการเข้าใช้งาน"
               backpath={'/admin/attendance/whitelist'}
               buttons={[
-                <div className="mx-2.5 gap-2" key="edit-delete-buttons">
-                  <a
-                    className="px-2 py-1"
+                <div className="mx-2.5 gap-2">
+                  <Button
                     key={'approve whitelist button'}
+                    className="bg-accent1 text-white m-1"
+                    type="button"
+                    size="sm"
                     onClick={onApproved}
                   >
-                    <Button
-                      className="bg-accent1 text-white p-3 m-1"
-                      type="button"
-                      onClick={onApproved}
-                    >
-                      <Icon.CheckOutlined />
-                      อนุมัติ
-                    </Button>
-                  </a>
-                  <a
-                    className="px-2 py-1"
+                    <Icon.CheckOutlined />
+                    อนุมัติ
+                  </Button>
+
+                  <Button
                     key={'reject whitelist button'}
+                    className="bg-accent2 text-white m-1"
+                    type="button"
+                    size="sm"
                     onClick={onRejected}
                   >
-                    <Button
-                      className="bg-accent2 text-white p-3 m-1"
-                      type="button"
-                      onClick={onRejected}
-                    >
-                      <Icon.CloseOutlined />
-                      ปฏิเสธ
-                    </Button>
-                  </a>
+                    <Icon.CloseOutlined />
+                    ปฏิเสธ
+                  </Button>
+
                   {handleEditButton(openEdit)}
-                  <a
-                    className="px-2 py-1"
+
+                  <Button
                     key={'cancel whitelist button'}
+                    className="bg-accent2 text-white m-1"
+                    type="button"
+                    size="sm"
                     onClick={onDelete}
                   >
-                    <Button
-                      className="bg-accent2 text-white p-3 m-1"
-                      type="button"
-                      onClick={onDelete}
-                    >
-                      <Icon.DeleteFilled />
-                      ลบ
-                    </Button>
-                  </a>
+                    <Icon.DeleteFilled />
+                    ลบ
+                  </Button>
                 </div>,
               ]}
             />
@@ -286,14 +280,14 @@ export default function WhitelistSinglePage() {
                       <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
                         {/* Content Section */}
                         <div className="mb-6">
-                          <div className="grid grid-cols-2 gap-6">
+                          <div className="grid grid-cols-2 gap-6 px-5">
                             {/* Detail Section */}
                             <div>
-                              <h1 className="text-2xl font-bold text-headFont mb-10">
+                              <h1 className="text-2xl font-bold text-headFont mb-10 py-5">
                                 Detail
                               </h1>
                               {/* Whitelist Section */}
-                              <div className="flex-1 flex items-center gap-4">
+                              {/* <div className="flex-1 flex items-center gap-4">
                                 <span className="text-headFont">Active</span>
                                 <Switch
                                   name="active"
@@ -302,7 +296,7 @@ export default function WhitelistSinglePage() {
                                   required
                                   isDisabled={!openEdit}
                                 />
-                              </div>
+                              </div> */}
                               {/* GET API FOR SHOW DISPLAY */}
                               <div className="flex gap-4 mt-6">
                                 <Input
@@ -359,26 +353,19 @@ export default function WhitelistSinglePage() {
                             </div>
 
                             {/* Map Section */}
-                            <div className="px-2">
-                              <h1 className="text-2xl font-bold text-headFont pl-10 ">
+                            <div className="">
+                              <h1 className="text-2xl font-bold text-headFont pl-5 py-5  ">
                                 Map
                               </h1>
-                              <div className="mt-4">
-                                <iframe
-                                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4596.320001693403!2d100.45844017573191!3d13.788879396432687!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29b1543350395%3A0x96f94cedda00d639!2sCK%20Service!5e1!3m2!1sth!2sth!4v1735121592706!5m2!1sth!2sth"
-                                  width="90%"
-                                  height="250"
-                                  className="rounded-md border m-auto"
-                                  allowFullScreen
-                                  loading="lazy"
-                                ></iframe>
+                              <div>
+                                <Map />
                               </div>
                             </div>
                           </div>
                         </div>
 
                         {/* Address Section */}
-                        <div>
+                        <div className="px-5 py-5">
                           <h1 className="text-2xl font-bold text-headFont">
                             Address
                           </h1>
