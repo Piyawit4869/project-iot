@@ -47,8 +47,8 @@ export default function StatementSinglePage() {
                 customCard
                 custom={
                   <div className="text-headFont text-white">
-                    <div className="text-2xl">เงินเข้า</div>
-                    <div className="text-lg">รายได้จากการให้บริการ</div>
+                    <div className="text-xl">เงินเข้า</div>
+                    <div className="text-sm mt-2">รายได้จากการให้บริการ</div>
                   </div>
                 }
               />
@@ -59,9 +59,9 @@ export default function StatementSinglePage() {
                 customCard
                 custom={
                   <div className="text-white">
-                    <div className="text-2xl">สถานะ</div>
-                    <div>
-                      <span className="font-bold text-lg">สำเร็จ</span>
+                    <div className="text-xl">สถานะ</div>
+                    <div className="mt-1">
+                      <span className="font-bold text-sm">สำเร็จ</span>
                     </div>
                   </div>
                 }
@@ -73,9 +73,9 @@ export default function StatementSinglePage() {
                 customCard
                 custom={
                   <div className="text-white">
-                    <div className="text-2xl">จำนวนเงิน</div>
-                    <div>
-                      <span className="font-bold text-lg">฿2,000</span>
+                    <div className="text-xl">จำนวนเงิน</div>
+                    <div className="mt-1">
+                      <span className="font-bold text-sm">฿2,000</span>
                     </div>
                   </div>
                 }

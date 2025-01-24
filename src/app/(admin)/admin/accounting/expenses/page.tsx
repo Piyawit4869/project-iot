@@ -142,6 +142,7 @@ export default function ExpensesPage() {
           <div className="flex flex-wrap gap-4">
             <Tabs
               color="secondary"
+              className="mt-2 mb-4"
               radius="full"
               aria-label="Tabs colors"
               selectedKey={selectedCategory}
@@ -271,15 +272,15 @@ const initialData = [
 ];
 
 const columns = [
-  { title: 'รายการที่', dataIndex: 'id', align: 'center' },
+  { title: 'รายการที่', dataIndex: 'id' },
   { title: 'ชื่อ', dataIndex: 'name', link: '/admin/accounting/expenses' },
   {
     title: 'ประเภทรายจ่าย',
     dataIndex: 'category',
     render: (text: string) => <span>{handleCategory(text)}</span>,
   },
-  { title: 'จำนวนเงิน', dataIndex: 'amount', align: 'center' },
-  { title: 'สถานะ', dataIndex: 'status', align: 'center' },
+  { title: 'จำนวนเงิน', dataIndex: 'amount' },
+  { title: 'สถานะ', dataIndex: 'status' },
 ];
 
 const tabs: any = [

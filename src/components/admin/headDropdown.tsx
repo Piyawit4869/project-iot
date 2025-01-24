@@ -45,10 +45,10 @@ export function DropdownHead() {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Icon.BellOutlined />
+          <Icon.BellOutlined className="mr-5" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
-          <DropdownMenuLabel>Appearance</DropdownMenuLabel>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>การแจ้งเตือน</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>New User</DropdownMenuItem>
           <DropdownMenuItem>Delete Notation</DropdownMenuItem>
@@ -71,24 +71,22 @@ export function DropdownHead() {
       <DropdownMenu>
         <div className="relative">
           <DropdownMenuTrigger>
-            <button className="flex items-center space-x-2">
-              <Image
-                width={100}
-                height={100}
-                src={'/logo.png'} // Replace with the path to your profile image
-                alt="Profile"
-                className="w-8 h-8 rounded-full"
-              />
-              <span className="text-gray-800 text-xs">
-                {/* {`${
+            <Image
+              width={100}
+              height={100}
+              src={'/logo.png'} // Replace with the path to your profile image
+              alt="Profile"
+              className="w-10 h-10 rounded-full"
+            />
+            <span className="text-gray-800 text-xs">
+              {/* {`${
                         me?.profile?.firstName ? me?.profile?.firstName : ''
                       // } ${me?.profile?.lastName ? me?.profile?.lastName : ''}`} */}
-              </span>
-            </button>
+            </span>
           </DropdownMenuTrigger>
         </div>
-        <DropdownMenuContent aria-label="Dynamic Actions">
-          <DropdownMenuLabel>Profile</DropdownMenuLabel>
+        <DropdownMenuContent className="w-40">
+          <DropdownMenuLabel>โปรไฟล์ผู้ใช้งาน</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {items.map((item: any) => (
             <DropdownMenuItem

@@ -1,6 +1,11 @@
 import { Card, CardHeader, CardBody, Switch } from '@nextui-org/react';
 
-export const CardControl = ({ title, description, control }: any) => {
+export const CardControl = ({
+  title,
+  description,
+  control,
+  isDisabled,
+}: any) => {
   return (
     <Card className="py-4 bg-primary" isHoverable isPressable>
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
@@ -10,7 +15,7 @@ export const CardControl = ({ title, description, control }: any) => {
         <p dangerouslySetInnerHTML={{ __html: description }} />
         <br />
         <p>{control}</p>
-        <Switch className="mt-3" defaultSelected color="danger"></Switch>
+        <Switch className="mt-3" defaultSelected color="success"></Switch>
       </CardBody>
     </Card>
   );

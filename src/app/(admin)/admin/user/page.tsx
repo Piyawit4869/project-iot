@@ -8,6 +8,7 @@ import React from 'react';
 // import { useRouter } from 'next/navigation';
 import { TablePagination } from '@/components/common/tablePagination';
 import pagination from '@/pages/api/user/pagination';
+import { span } from 'framer-motion/client';
 // import { debounce } from 'lodash';
 
 export default function IndexPage() {
@@ -132,8 +133,20 @@ const columns: any = [
     },
   },
   { title: 'อีเมล', dataIndex: 'email' },
-  { title: 'ตำแหน่ง', dataIndex: 'position' },
-  { title: 'เบอร์โทรศัพท์', dataIndex: 'phone' },
+  {
+    title: 'ตำแหน่ง',
+    dataIndex: 'position',
+    render: (_: any, record: any) => {
+      return <span>{record.role?.name}</span>;
+    },
+  },
+  {
+    title: 'เบอร์โทรศัพท์',
+    dataIndex: 'phone',
+    render: (_: any, record: any) => {
+      return <span>{record.profile.phone}</span>;
+    },
+  },
   {
     title: 'สถานะ',
     dataIndex: 'status',

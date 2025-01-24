@@ -5,6 +5,35 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as Icon from '@ant-design/icons';
 
+const translations: Record<string, string> = {
+  admin: 'แอดมิน',
+  dashboard: 'แดชบอร์ด',
+  setting: 'ตั้งค่า',
+  user: 'พนักงาน',
+  profile: 'โปรไฟล์',
+  organization: 'องค์กร',
+  accounting: 'บัญชี',
+  statement: 'ภาพรวม',
+  revenue: 'รายได้',
+  expenses: 'รายจ่าย',
+  analysis: 'วิเคราะห์',
+  attendance: 'การเข้างาน',
+  overview: 'ภาพรวม',
+  'work-infomation': 'ข้อมูลการทำงาน',
+  whitelist: 'การเข้าใช้งาน',
+  notation: 'เอกสาร',
+  role: 'ตำแหน่ง',
+  customer: 'ลูกค้า',
+  create: 'สร้าง',
+  item: 'สินค้าและรายการ',
+  template: 'รูปแบบเอกสาร',
+  new: 'สร้าง',
+};
+
+const translateSegment = (segment: string): string => {
+  return translations[segment] || segment;
+};
+
 export const Breadcrumb = () => {
   const pathname = usePathname() as string;
 
@@ -17,19 +46,22 @@ export const Breadcrumb = () => {
     >
       <BreadcrumbItem>
         <Link href="/admin">
-          <span className="text-headFont text-xs">Home</span>
+          <span className="text-headFont text-xs">หน้าแรก</span>
         </Link>
       </BreadcrumbItem>
       {pathSegments.map((segment, index) => {
+        const translatedSegment = translateSegment(segment);
         const href = '/' + pathSegments.slice(0, index + 1).join('/');
         const isLast = index === pathSegments.length - 1;
         return (
           <BreadcrumbItem key={href} isCurrent={isLast}>
             {isLast ? (
-              <span className="text-headFont text-xs">{segment}</span>
+              <span className="text-headFont text-xs">{translatedSegment}</span>
             ) : (
               <Link href={href}>
-                <span className="text-headFont text-xs">{segment}</span>
+                <span className="text-headFont text-xs">
+                  {translatedSegment}
+                </span>
               </Link>
             )}
           </BreadcrumbItem>

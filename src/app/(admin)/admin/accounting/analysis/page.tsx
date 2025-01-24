@@ -198,7 +198,7 @@ export default function AccountSummaryPage() {
             {/* Income */}
             <div className="flex-1">
               <CardComponent
-                className={'bg-secondary'}
+                className={'bg-headFont'}
                 customCard
                 custom={
                   <div className="text-center">
@@ -269,7 +269,7 @@ export default function AccountSummaryPage() {
               className={'basis-2/3'}
               customCard
               custom={
-                <div>
+                <div className="p-6">
                   <h3 className="text-lg font-semibold mb-4 text-headFont">
                     รายรับรายเดือน
                   </h3>
@@ -281,7 +281,7 @@ export default function AccountSummaryPage() {
               className={'basis-1/3'}
               customCard
               custom={
-                <div>
+                <div className="p-6">
                   <h3 className="text-lg font-semibold mb-4 text-headFont">
                     รายจ่ายรายสัปดาห์
                   </h3>
@@ -314,7 +314,7 @@ export default function AccountSummaryPage() {
               className={'flex-1'}
               customCard
               custom={
-                <div>
+                <div className="flex-1 rounded-lg p-6">
                   <h3 className="text-lg font-semibold mb-4 text-headFont">
                     หมวดหมู่ค่าใช้จ่าย
                   </h3>
@@ -326,7 +326,7 @@ export default function AccountSummaryPage() {
               className={'flex-1'}
               customCard
               custom={
-                <div>
+                <div className="flex-1 rounded-lg p-6">
                   <h3 className="text-lg font-semibold mb-4 text-headFont">
                     แนวโน้มรายจ่าย
                   </h3>
@@ -380,16 +380,18 @@ export default function AccountSummaryPage() {
               <div className="spinner"></div>
             </div>
           ) : (
-            <TablePagination
-              initialRows={initialData}
-              initialMeta={meta}
-              rowsPerPage={rowsPerPage}
-              columns={columns}
-              onPageChange={(newPage) => setPage(newPage)}
-              onRowsPerPageChange={(newRowsPerPage) =>
-                setRowsPerPage(newRowsPerPage)
-              }
-            />
+            <div className="mt-8">
+              <TablePagination
+                initialRows={initialData}
+                initialMeta={meta}
+                rowsPerPage={rowsPerPage}
+                columns={columns}
+                onPageChange={(newPage) => setPage(newPage)}
+                onRowsPerPageChange={(newRowsPerPage) =>
+                  setRowsPerPage(newRowsPerPage)
+                }
+              />
+            </div>
           )}
         </div>
       }

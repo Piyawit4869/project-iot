@@ -18,7 +18,5 @@ export const getClientSession = () => {
 
   const me = user && user.me ? user.me : null;
 
-  console.log({ me });
-
   return me;
 };

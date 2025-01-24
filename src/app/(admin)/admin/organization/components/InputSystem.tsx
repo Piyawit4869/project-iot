@@ -1,4 +1,5 @@
 'use client';
+
 import Scaffold from '@/components/common/scaffold';
 import * as Icon from '@ant-design/icons';
 import {
@@ -9,7 +10,7 @@ import {
   TimeInput,
 } from '@nextui-org/react';
 import React from 'react';
-import { parseTime } from '@internationalized/date';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface InputSystem {
   data: any;
@@ -96,15 +97,22 @@ export default function Inputorganization({
     <Scaffold
       child={
         loading ? (
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="relative flex flex-col items-center space-y-4">
-              {/* Spinner */}
-              <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          // <div className="flex items-center justify-center min-h-screen">
+          //   <div className="relative flex flex-col items-center space-y-4">
+          //     {/* Spinner */}
+          //     <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
 
-              {/* Loading Text */}
-              <p className="text-gray-600 text-lg font-semibold animate-pulse">
-                Loading, please wait...
-              </p>
+          //     {/* Loading Text */}
+          //     <p className="text-gray-600 text-lg font-semibold animate-pulse">
+          //       Loading, please wait...
+          //     </p>
+          //   </div>
+          // </div>
+          <div className="flex items-center space-x-4">
+            <Skeleton className="h-12 w-12 rounded-full" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-[250px]" />
+              <Skeleton className="h-4 w-[200px]" />
             </div>
           </div>
         ) : (
@@ -126,6 +134,7 @@ export default function Inputorganization({
                   </SelectItem>
                 ))}
               </Select>
+
               <Select
                 className="flex-1  text-headFont"
                 name="theme"
@@ -171,73 +180,73 @@ export default function Inputorganization({
             </div>
             {items.map((_: any, index: any) => (
               <div key={index} className="items-center">
-                {/* {openDay.map((item, index) => ( */}
-                <div
-                  key={index}
-                  className="grid grid-cols-4 gap-4 mt-6 items-center text-headFont"
-                >
-                  <Select
-                    className="col-span-1 w-full text-headFont"
-                    name="day"
-                    placeholder="เลือกวันทำงาน"
-                    label="วันทำงาน"
-                    labelPlacement={'outside'}
-                    onChange={(e) =>
-                      handleDayChange(index, 'day', e.target.value)
-                    }
-                    // defaultSelectedKeys={item.day}
-                    isDisabled={!openEdit}
+                {openDay.map((item, index) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-4 gap-4 mt-6 items-center text-headFont"
                   >
-                    {day.map((item: any) => (
-                      <SelectItem
-                        className="col-span-1 w-full text-headFont"
-                        key={item.value}
-                        value={item.value}
-                      >
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                  <Input
-                    className="col-span-1 w-full"
-                    type="time"
-                    label={
-                      <span className="col-span-1 w-full text-headFont">
-                        เริ่มงาน
-                      </span>
-                    }
-                    labelPlacement="outside"
-                    name="openTime"
-                    // defaultValue={item.openTime}
-                    onChange={(e) =>
-                      handleDayChange(index, 'openTime', e.target.value)
-                    }
-                    isDisabled={!openEdit}
-                  />
-                  <Input
-                    className="col-span-1 w-full"
-                    type="time"
-                    label={
-                      <span className="col-span-1 w-full text-headFont">
-                        เลิกงาน
-                      </span>
-                    }
-                    labelPlacement="outside"
-                    name="closeTime"
-                    // defaultValue={item.closeTime}
-                    onChange={(e) =>
-                      handleDayChange(index, 'closeTime', e.target.value)
-                    }
-                    isDisabled={!openEdit}
-                  />
-                  <a
-                    className="col-span-1 w-full text-red-500 cursor-pointer mt-6"
-                    onClick={() => handleRemoveOpenDay(index)}
-                  >
-                    ลบวันทำงาน
-                  </a>
-                </div>
-                {/* ))} */}
+                    <Select
+                      className="col-span-1 w-full text-headFont"
+                      name="day"
+                      placeholder="เลือกวันทำงาน"
+                      label="วันทำงาน"
+                      labelPlacement={'outside'}
+                      onChange={(e) =>
+                        handleDayChange(index, 'day', e.target.value)
+                      }
+                      defaultSelectedKeys={item.day}
+                      isDisabled={!openEdit}
+                    >
+                      {day.map((item: any) => (
+                        <SelectItem
+                          className="col-span-1 w-full text-headFont"
+                          key={item.value}
+                          value={item.value}
+                        >
+                          {item.label}
+                        </SelectItem>
+                      ))}
+                    </Select>
+                    <Input
+                      className="col-span-1 w-full"
+                      type="time"
+                      label={
+                        <span className="col-span-1 w-full text-headFont">
+                          เริ่มงาน
+                        </span>
+                      }
+                      labelPlacement="outside"
+                      name="openTime"
+                      defaultValue={item.openTime}
+                      onChange={(e) =>
+                        handleDayChange(index, 'openTime', e.target.value)
+                      }
+                      isDisabled={!openEdit}
+                    />
+                    <Input
+                      className="col-span-1 w-full"
+                      type="time"
+                      label={
+                        <span className="col-span-1 w-full text-headFont">
+                          เลิกงาน
+                        </span>
+                      }
+                      labelPlacement="outside"
+                      name="closeTime"
+                      defaultValue={item.closeTime}
+                      onChange={(e) =>
+                        handleDayChange(index, 'closeTime', e.target.value)
+                      }
+                      isDisabled={!openEdit}
+                    />
+                    <a
+                      className="col-span-1 w-full text-red-500 cursor-pointer mt-6"
+                      onClick={() => handleRemoveOpenDay(index)}
+                    >
+                      ลบวันทำงาน
+                    </a>
+                  </div>
+                ))}
               </div>
             ))}
             <div className="flex  gap-4 mt-6">

@@ -3,7 +3,7 @@
 import React from 'react';
 import { TopSection } from '@/components/common/topSection';
 import Scaffold from '@/components/common/scaffold';
-import { Input, Select, SelectItem } from '@nextui-org/react';
+import { Input, Select, SelectItem, Tab, Tabs } from '@nextui-org/react';
 import { TablePagination } from '@/components/common/tablePagination';
 
 export default function StatementPage() {
@@ -18,6 +18,7 @@ export default function StatementPage() {
     totalPages: 0,
     currentPage: 1,
   });
+  const [selectedCategory, setSelectedCategory] = React.useState('all');
 
   console.log(page);
   console.log(setMeta);
@@ -66,6 +67,10 @@ export default function StatementPage() {
       API Accounting();
     }, [page, rowsPerPage]);
   */
+
+  const filteredData = initialData.filter((item) =>
+    selectedCategory === 'all' ? true : item.category === selectedCategory,
+  );
 
   return (
     <Scaffold
@@ -132,6 +137,23 @@ export default function StatementPage() {
               </Select>
             </div>
           </div>
+
+          {/* Tabs */}
+          <div className="flex flex-wrap gap-4">
+            <Tabs
+              color="secondary"
+              className="mb-4 mt-2 text-white"
+              radius="full"
+              aria-label="Tabs colors"
+              selectedKey={selectedCategory}
+              onSelectionChange={(key) => setSelectedCategory(key.toString())}
+            >
+              {tabs.map((tab: any) => (
+                <Tab key={tab.value} title={tab.label} />
+              ))}
+            </Tabs>
+          </div>
+
           {/* Table */}
           {loading ? (
             <div className="flex justify-center items-center h-64">
@@ -139,7 +161,7 @@ export default function StatementPage() {
             </div>
           ) : (
             <TablePagination
-              initialRows={initialData}
+              initialRows={filteredData}
               initialMeta={meta}
               rowsPerPage={rowsPerPage}
               columns={columns as any}
@@ -383,12 +405,11 @@ const initialData = [
 ];
 
 const columns = [
-  { title: 'รายการที่', dataIndex: 'id', align: 'center' },
+  { title: 'รายการที่', dataIndex: 'id' },
   { title: 'ชื่อ', dataIndex: 'name', link: '/admin/accounting/statement' },
   {
     title: 'เงินเข้า-ออก',
     dataIndex: 'type',
-    align: 'center',
     render: (text: string) => (
       <span>{text === 'revenue' ? 'เงินเข้า' : 'เงินออก'}</span>
     ),
@@ -398,8 +419,21 @@ const columns = [
     dataIndex: 'category',
     render: (text: string) => <span>{handleCategory(text)}</span>,
   },
-  { title: 'จำนวนเงิน', dataIndex: 'amount', align: 'center' },
-  { title: 'สถานะ', dataIndex: 'status', align: 'center' },
+  { title: 'จำนวนเงิน', dataIndex: 'amount' },
+  { title: 'สถานะ', dataIndex: 'status' },
+];
+
+const tabs: any = [
+  { label: 'ทั้งหมด', value: 'all' },
+  { label: 'รายได้จากการขาย', value: 'sale' },
+  { label: 'รายได้จากการให้บริการ', value: 'service' },
+  { label: 'รายได้ดอกเบี้ย', value: 'interest' },
+  { label: 'รายได้จากการลงทุน', value: 'yield' },
+  { label: 'งบบุคลากร', value: 'human' },
+  { label: 'งบดำเนินงาน', value: 'operaion' },
+  { label: 'งบลงทุน', value: 'invest' },
+  { label: 'งบเงินอุดหนุน', value: 'subsidy' },
+  { label: 'งบและรายได้อื่นๆ', value: 'other' },
 ];
 
 const handleCategory = (category: string): string => {

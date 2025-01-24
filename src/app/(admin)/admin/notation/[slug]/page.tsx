@@ -10,6 +10,7 @@ import {
   Input,
   Select,
   SelectItem,
+  Skeleton,
   Switch,
   Textarea,
 } from '@nextui-org/react';
@@ -27,6 +28,7 @@ import pagination from '@/pages/api/templates/pagination';
 import { handleDocumentStatusTag } from '@/components/common/common';
 import paginationItems from '@/pages/api/items/pagination';
 import paginationCustomers from '@/pages/api/customer/pagination';
+import { span } from 'framer-motion/client';
 
 export default function NotationSinglePage() {
   const [zoomLevel, setZoomLevel] = React.useState(100);
@@ -431,120 +433,129 @@ export default function NotationSinglePage() {
   return (
     <Scaffold
       child={
-        loading ? (
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="relative flex flex-col items-center space-y-4">
-              {/* Spinner */}
-              <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        // loading ? (
+        //   <div className="flex items-center justify-center min-h-screen">
+        //     <div className="relative flex flex-col items-center space-y-4">
+        //       {/* Spinner */}
+        //       <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
 
-              {/* Loading Text */}
-              <p className="text-gray-600 text-lg font-semibold animate-pulse">
-                Loading, please wait...
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div>
-            <TopSection
-              title={formData?.docNo}
-              backpath={'/admin/notation'}
-              buttons={[
-                formData?.docStatus !== 'canceled' ? (
-                  <Button
-                    className=" text-white text-xs"
-                    key={'cancel button'}
-                    onClick={onCancel}
-                    size="sm"
-                  >
-                    ยกเลิก
-                  </Button>
-                ) : (
-                  <div key={'empty cancel'}></div>
-                ),
+        //       {/* Loading Text */}
+        //       <p className="text-gray-600 text-lg font-semibold animate-pulse">
+        //         Loading, please wait...
+        //       </p>
+        //     </div>
+        //   </div>
+        // ) : (
+        <div>
+          <TopSection
+            title={
+              loading ? (
+                <Skeleton className="h-6 w-[180px] rounded-lg" />
+              ) : (
+                <span>{formData?.docNo}</span>
+              )
+            }
+            backpath={'/admin/notation'}
+            buttons={[
+              formData?.docStatus !== 'canceled' ? (
+                <Button
+                  className=" text-white text-xs"
+                  key={'cancel button'}
+                  onClick={onCancel}
+                  size="sm"
+                >
+                  ยกเลิก
+                </Button>
+              ) : (
+                <div key={'empty cancel'}></div>
+              ),
 
-                handleEditButton(openEdit),
-                formData?.docStatus === 'draft' ? (
-                  <Button
-                    className={`bg-sky-400 text-white text-xs`}
-                    key={'pending button'}
-                    onClick={onPending}
-                    size="sm"
-                  >
-                    รอดำเนินการ
-                  </Button>
-                ) : (
-                  <div key={'empty pendding'}></div>
-                ),
-                formData?.docStatus === 'pending' ? (
-                  <Button
-                    className={`bg-sky-600 text-white text-xs`}
-                    key={'waiting button'}
-                    onClick={onWaiting}
-                    size="sm"
-                  >
-                    รอตรวจสอบ
-                  </Button>
-                ) : (
-                  <div key={'empty waiting'}></div>
-                ),
+              handleEditButton(openEdit),
+              formData?.docStatus === 'draft' ? (
                 <Button
-                  className={`bg-${
-                    formData?.docStatus !== 'waiting_for_review'
-                      ? 'gray-400 cursor-not-allowed'
-                      : 'accent2'
-                  } text-white text-xs`}
-                  key={'reject button'}
-                  disabled={formData?.docStatus !== 'waiting_for_review'}
-                  onClick={onRejected}
+                  className={`bg-sky-400 text-white text-xs`}
+                  key={'pending button'}
+                  onClick={onPending}
                   size="sm"
                 >
-                  ปฏิเสธ
-                </Button>,
+                  รอดำเนินการ
+                </Button>
+              ) : (
+                <div key={'empty pendding'}></div>
+              ),
+              formData?.docStatus === 'pending' ? (
                 <Button
-                  className={`bg-${
-                    formData?.docStatus !== 'waiting_for_review'
-                      ? 'gray-400 cursor-not-allowed'
-                      : 'accent1'
-                  } text-white text-xs`}
-                  key={'approve button'}
-                  disabled={formData?.docStatus !== 'waiting_for_review'}
-                  onClick={onApproved}
+                  className={`bg-sky-600 text-white text-xs`}
+                  key={'waiting button'}
+                  onClick={onWaiting}
                   size="sm"
                 >
-                  อนุมัติ
-                </Button>,
-                <Button
-                  className={`bg-${
-                    formData?.docStatus === 'canceled'
-                      ? 'gray-400 cursor-not-allowed'
-                      : 'accent2'
-                  } text-white text-xs`}
-                  key={'delete button'}
-                  onClick={onDelete}
-                  disabled={formData?.docStatus === 'canceled'}
-                  size="sm"
+                  รอตรวจสอบ
+                </Button>
+              ) : (
+                <div key={'empty waiting'}></div>
+              ),
+              <Button
+                className={`bg-${
+                  formData?.docStatus !== 'waiting_for_review'
+                    ? 'gray-400 cursor-not-allowed'
+                    : 'accent2'
+                } text-white text-xs`}
+                key={'reject button'}
+                disabled={formData?.docStatus !== 'waiting_for_review'}
+                onClick={onRejected}
+                size="sm"
+              >
+                ปฏิเสธ
+              </Button>,
+              <Button
+                className={`bg-${
+                  formData?.docStatus !== 'waiting_for_review'
+                    ? 'gray-400 cursor-not-allowed'
+                    : 'accent1'
+                } text-white text-xs`}
+                key={'approve button'}
+                disabled={formData?.docStatus !== 'waiting_for_review'}
+                onClick={onApproved}
+                size="sm"
+              >
+                อนุมัติ
+              </Button>,
+              <Button
+                className={`bg-${
+                  formData?.docStatus === 'canceled'
+                    ? 'gray-400 cursor-not-allowed'
+                    : 'accent2'
+                } text-white text-xs`}
+                key={'delete button'}
+                onClick={onDelete}
+                disabled={formData?.docStatus === 'canceled'}
+                size="sm"
+              >
+                <Icon.DeleteFilled />
+                ลบ
+              </Button>,
+            ]}
+          />
+          <div className="bg-gray-100  flex justify-center items-center pt-6">
+            {/* A4 Paper Styled Container */}
+            <div className="bg-white w-full border-gray-300 rounded-lg shadow-lg flex flex-wrap">
+              {/* Input Form Section */}
+              <div className="w-full lg:w-1/2 p-6 border-r border-gray-200 overflow-y-auto">
+                <Form
+                  id="notation"
+                  onSubmit={onSubmit}
+                  method="post"
+                  className="grid grid-cols-1 gap-4"
+                  validationErrors={errors}
                 >
-                  <Icon.DeleteFilled />
-                  ลบ
-                </Button>,
-              ]}
-            />
-            <div className="bg-gray-100  flex justify-center items-center pt-6">
-              {/* A4 Paper Styled Container */}
-              <div className="bg-white w-full border-gray-300 rounded-lg shadow-lg flex flex-wrap">
-                {/* Input Form Section */}
-                <div className="w-full lg:w-1/2 p-6 border-r border-gray-200 overflow-y-auto">
-                  <Form
-                    id="notation"
-                    onSubmit={onSubmit}
-                    method="post"
-                    className="grid grid-cols-1 gap-4"
-                    validationErrors={errors}
-                  >
-                    <div className="flex justify-between items-center">
-                      <h1 className="flex-1 text-xl font-bold text-headFont">
-                        ข้อมูลเอกสาร
-                      </h1>
+                  <div className="flex justify-between items-center">
+                    <h1 className="flex-1 text-xl font-bold text-headFont">
+                      ข้อมูลเอกสาร
+                    </h1>
+                    {loading ? (
+                      <Skeleton className="h-12 w-[360px] rounded-lg" />
+                    ) : (
                       <Select
                         size="sm"
                         className="flex-1"
@@ -560,20 +571,28 @@ export default function NotationSinglePage() {
                           </SelectItem>
                         ))}
                       </Select>
-                    </div>
-                    {/* Notation Section */}
-                    <div className="flex gap-4">
-                      <div className="flex-1 flex items-center gap-4">
-                        <span className="text-headFont text-xs">แสดงผล</span>
+                    )}
+                  </div>
+                  {/* Notation Section */}
+                  <div className="flex gap-4">
+                    <div className="flex-1 flex items-center gap-4">
+                      <span className="text-headFont text-xs">แสดงผล</span>
+                      {loading ? (
+                        <Skeleton className="h-8 w-[55px] rounded-full" />
+                      ) : (
                         <Switch
                           name="active"
-                          color="secondary"
+                          color="success"
                           onChange={handleChange}
                           required
                           isDisabled={!openEdit}
                           isSelected={formData.active}
                         />
-                      </div>
+                      )}
+                    </div>
+                    {loading ? (
+                      <Skeleton className="h-8 w-[360px] rounded-lg mt-5" />
+                    ) : (
                       <Input
                         className="flex-1"
                         size="sm"
@@ -587,9 +606,13 @@ export default function NotationSinglePage() {
                         errorMessage={'กรุณากรอกหมายเลขอ้างอิง'}
                         isDisabled={!openEdit}
                       />
-                      {/* {formData.status} */}
-                    </div>
-                    <div className="flex gap-4">
+                    )}
+                    {/* {formData.status} */}
+                  </div>
+                  <div className="flex gap-4">
+                    {loading ? (
+                      <Skeleton className="h-12 w-[360px] rounded-lg" />
+                    ) : (
                       <DatePicker
                         size="sm"
                         className="flex-1"
@@ -624,6 +647,10 @@ export default function NotationSinglePage() {
                           }
                         }}
                       />
+                    )}
+                    {loading ? (
+                      <Skeleton className="h-12 w-[360px] rounded-lg" />
+                    ) : (
                       <Select
                         size="sm"
                         className="flex-1"
@@ -641,7 +668,11 @@ export default function NotationSinglePage() {
                           </SelectItem>
                         ))}
                       </Select>
-                    </div>
+                    )}
+                  </div>
+                  {loading ? (
+                    <Skeleton className="h-24 w-full rounded-lg mt-6" />
+                  ) : (
                     <Textarea
                       label="หมายเหตุ"
                       labelPlacement="outside"
@@ -651,15 +682,19 @@ export default function NotationSinglePage() {
                       isDisabled={!openEdit}
                       defaultValue={formData.note}
                     />
-                    <div className="flex gap-4 mt-6">
-                      <h1 className="text-base font-bold text-headFont flex-1">
-                        ลูกค้า
-                      </h1>
-                      <h1 className="text-base font-bold text-headFont flex-1">
-                        ที่อยู่
-                      </h1>
-                    </div>
-                    <div className="flex gap-4">
+                  )}
+                  <div className="flex gap-4 mt-6">
+                    <h1 className="text-base font-bold text-headFont flex-1">
+                      ลูกค้า
+                    </h1>
+                    <h1 className="text-base font-bold text-headFont flex-1">
+                      ที่อยู่
+                    </h1>
+                  </div>
+                  <div className="flex gap-4">
+                    {loading ? (
+                      <Skeleton className="h-12 w-[360px] rounded-lg" />
+                    ) : (
                       <Select
                         name="customer"
                         size="sm"
@@ -682,6 +717,10 @@ export default function NotationSinglePage() {
                           </SelectItem>
                         ))}
                       </Select>
+                    )}
+                    {loading ? (
+                      <Skeleton className="h-12 w-[360px] rounded-lg" />
+                    ) : (
                       <Select
                         size="sm"
                         name="address"
@@ -694,10 +733,14 @@ export default function NotationSinglePage() {
                           </SelectItem>
                         ))}
                       </Select>
-                    </div>
-                    <h1 className="text-base font-bold text-headFont mt-6">
-                      รายการ
-                    </h1>
+                    )}
+                  </div>
+                  <h1 className="text-base font-bold text-headFont mt-6">
+                    รายการ
+                  </h1>
+                  {loading ? (
+                    <Skeleton className="h-12 w-full rounded-lg" />
+                  ) : (
                     <Select
                       size="sm"
                       name="itemsId"
@@ -720,7 +763,8 @@ export default function NotationSinglePage() {
                         </SelectItem>
                       ))}
                     </Select>
-                    {/* <h1 className="text-base font-bold text-headFont mt-6">
+                  )}
+                  {/* <h1 className="text-base font-bold text-headFont mt-6">
                       รายการ
                     </h1>
                     {items.map((_, index) => (
@@ -772,25 +816,32 @@ export default function NotationSinglePage() {
                     ) : (
                       <></>
                     )} */}
-                  </Form>
-                </div>
+                </Form>
+              </div>
 
-                {/* PDF Preview Section */}
-                <div className="w-full lg:w-1/2 p-6 bg-gray-100 justify-center">
-                  <div className=" flex justify-between items-center mb-2">
-                    <h1 className="text-base font-bold text-headFont">
-                      ข้อมูลเอกสาร
-                    </h1>
-                    {/* Dynamic Status Tag */}
-                    {handleDocumentStatusTag(formData?.docStatus)}
-                    {/* <div
+              {/* PDF Preview Section */}
+              <div className="w-full lg:w-1/2 p-6 bg-gray-100 justify-center">
+                <div className=" flex justify-between items-center mb-2">
+                  <h1 className="text-base font-bold text-headFont">
+                    ข้อมูลเอกสาร
+                  </h1>
+                  {/* Dynamic Status Tag */}
+                  {loading ? (
+                    <Skeleton className="h-7 w-[130px] rounded-full" />
+                  ) : (
+                    <span>{handleDocumentStatusTag(formData?.docStatus)}</span>
+                  )}
+                  {/* <div
                         className={`px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700 border border-gray`}
                       >
                         แบบร่าง
                       </div> */}
-                  </div>
+                </div>
 
-                  {/* Render HTML Template Here */}
+                {/* Render HTML Template Here */}
+                {loading ? (
+                  <Skeleton className="w-full max-w-[170mm] h-[240mm] rounded-sm ml-11" />
+                ) : (
                   <div className="flex justify-center">
                     <div
                       className="bg-white w-full max-w-[170mm] h-[240mm] shadow-lg border border-gray-300 rounded p-6"
@@ -810,37 +861,38 @@ export default function NotationSinglePage() {
                       )}
                     </div>
                   </div>
-                  <div className="w-[170mm] w-full flex justify-center items-center mt-4">
-                    <div className="flex items-center gap-2">
-                      {/* Zoom Out Button */}
-                      <Button
-                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
-                        aria-label="Zoom Out"
-                        onClick={handleZoomOut}
-                      >
-                        <Icon.MinusOutlined className="text-lg text-gray-700" />
-                      </Button>
+                )}
+                <div className="w-[170mm] w-full flex justify-center items-center mt-4">
+                  <div className="flex items-center gap-2">
+                    {/* Zoom Out Button */}
+                    <Button
+                      className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
+                      aria-label="Zoom Out"
+                      onClick={handleZoomOut}
+                    >
+                      <Icon.MinusOutlined className="text-lg text-gray-700" />
+                    </Button>
 
-                      {/* Zoom Level Display */}
-                      <span className="text-sm font-medium text-gray-700">
-                        {zoomLevel}%
-                      </span>
+                    {/* Zoom Level Display */}
+                    <span className="text-sm font-medium text-gray-700">
+                      {zoomLevel}%
+                    </span>
 
-                      {/* Zoom In Button */}
-                      <Button
-                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
-                        aria-label="Zoom In"
-                        onClick={handleZoomIn}
-                      >
-                        <Icon.PlusOutlined className="text-lg text-gray-700" />
-                      </Button>
-                    </div>
+                    {/* Zoom In Button */}
+                    <Button
+                      className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
+                      aria-label="Zoom In"
+                      onClick={handleZoomIn}
+                    >
+                      <Icon.PlusOutlined className="text-lg text-gray-700" />
+                    </Button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        )
+        </div>
+        // )
       }
       backgroundColor={''}
     />

@@ -279,7 +279,7 @@ export default function UserSinglePage() {
                               name="position"
                               placeholder="กรุณาเลือกตำแหน่ง"
                               label="ตำแหน่ง"
-                              selectedKeys={[roleData.name]}
+                              selectedKeys={[roleData?.name]}
                               labelPlacement={'outside'}
                               onChange={handleChange}
                             >

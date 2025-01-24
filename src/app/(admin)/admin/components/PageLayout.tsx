@@ -11,8 +11,6 @@ const PageLayout = () => {
 
   const me = user && user.me ? user.me : null;
 
-  console.log({ me });
-
   return (
     <div className="min-h-screen  bg-gray-50 flex flex-col justify-center items-center px-6 py-12 sm:py-16 lg:py-20 -mt-16">
       {/* Header Section */}
@@ -36,7 +34,7 @@ const PageLayout = () => {
           เพื่อให้แน่ใจว่ามีความโปร่งใสและความรับผิดชอบ"
           icon="📅"
           color="primary"
-          link="/admin/attendance"
+          link="/admin/attendance/overview"
         />
 
         {/* Feature 2: Notation Management */}
@@ -56,7 +54,7 @@ const PageLayout = () => {
           และสร้างรายงานเพื่อรักษาความถูกต้องของบัญชีของธุรกิจคุณ"
           icon="💰"
           color="warning"
-          link="/admin/accounting"
+          link="/admin/accounting/analysis"
         />
       </div>
     </div>
