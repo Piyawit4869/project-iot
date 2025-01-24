@@ -549,18 +549,36 @@ export default function NotationSinglePage() {
                   className="grid grid-cols-1 gap-4"
                   validationErrors={errors}
                 >
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center mb-5">
                     <h1 className="flex-1 text-xl font-bold text-headFont">
                       ข้อมูลเอกสาร
                     </h1>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-headFont text-sm">แสดงผลเอกสาร</p>
+                      {loading ? (
+                        <Skeleton className="h-8 w-[55px] rounded-full" />
+                      ) : (
+                        <Switch
+                          className="mt-2"
+                          name="active"
+                          color="secondary"
+                          onChange={handleChange}
+                          required
+                          isDisabled={!openEdit}
+                          isSelected={formData.active}
+                        />
+                      )}
+                    </div>
                     {loading ? (
                       <Skeleton className="h-12 w-[360px] rounded-lg" />
                     ) : (
                       <Select
-                        size="sm"
-                        className="flex-1"
                         name="templateId"
+                        placeholder="เลือกรูปแบบเอกสาร"
                         label="เลือกรูปแบบเอกสาร"
+                        labelPlacement={'outside'}
                         onChange={handleTemplateChange}
                         defaultSelectedKeys={[formData.templateId]}
                         isDisabled={!openEdit}
@@ -574,28 +592,52 @@ export default function NotationSinglePage() {
                     )}
                   </div>
                   {/* Notation Section */}
-                  <div className="flex gap-4">
-                    <div className="flex-1 flex items-center gap-4">
-                      <span className="text-headFont text-xs">แสดงผล</span>
-                      {loading ? (
-                        <Skeleton className="h-8 w-[55px] rounded-full" />
-                      ) : (
-                        <Switch
-                          name="active"
-                          color="success"
-                          onChange={handleChange}
-                          required
-                          isDisabled={!openEdit}
-                          isSelected={formData.active}
-                        />
-                      )}
-                    </div>
+                  <div className="flex gap-6 mt-8">
                     {loading ? (
-                      <Skeleton className="h-8 w-[360px] rounded-lg mt-5" />
+                      <Skeleton className="h-12 w-[360px] rounded-lg" />
                     ) : (
                       <Input
                         className="flex-1"
-                        size="sm"
+                        label="ชื่อเอกสาร"
+                        labelPlacement="outside"
+                        name="name"
+                        placeholder="กรอกหมายขื่อเอกสาร"
+                        onChange={handleChange}
+                        // defaultValue={formData.name}
+                        isRequired
+                        errorMessage={'กรุณากรอกชื่อเอกสาร'}
+                        isDisabled={!openEdit}
+                      />
+                    )}
+                    {loading ? (
+                      <Skeleton className="h-12 w-[360px] rounded-lg" />
+                    ) : (
+                      <Select
+                        className="flex-1"
+                        name="type"
+                        label="เลือกประเภทเอกสาร"
+                        labelPlacement={'outside'}
+                        placeholder="กรุณาเลือกประเภทเอกสาร"
+                        onChange={handleChange}
+                        isRequired
+                        errorMessage={'กรุณาเลือกประเภทเอกสาร'}
+                        defaultSelectedKeys={[formData.type]}
+                        isDisabled={!openEdit}
+                      >
+                        {types.map((item) => (
+                          <SelectItem key={item.value} value={item.value}>
+                            {item.label}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                    )}
+                  </div>
+                  <div className="flex gap-4 mt-6">
+                    {loading ? (
+                      <Skeleton className="h-12 w-[360px] rounded-lg mt-5" />
+                    ) : (
+                      <Input
+                        className="flex-1"
                         label="หมายเลขอ้างอิง"
                         labelPlacement="outside"
                         name="refNo"
@@ -607,17 +649,14 @@ export default function NotationSinglePage() {
                         isDisabled={!openEdit}
                       />
                     )}
-                    {/* {formData.status} */}
-                  </div>
-                  <div className="flex gap-4">
                     {loading ? (
                       <Skeleton className="h-12 w-[360px] rounded-lg" />
                     ) : (
                       <DatePicker
-                        size="sm"
                         className="flex-1"
                         name="startDate"
                         label="วันที่สร้าง"
+                        labelPlacement={'outside'}
                         disableAnimation
                         isRequired
                         errorMessage={'กรุณาเลือกวันที่สร้าง'}
@@ -648,27 +687,7 @@ export default function NotationSinglePage() {
                         }}
                       />
                     )}
-                    {loading ? (
-                      <Skeleton className="h-12 w-[360px] rounded-lg" />
-                    ) : (
-                      <Select
-                        size="sm"
-                        className="flex-1"
-                        name="type"
-                        label="เลือกประเภทเอกสาร"
-                        onChange={handleChange}
-                        isRequired
-                        errorMessage={'กรุณาเลือกประเภทเอกสาร'}
-                        defaultSelectedKeys={[formData.type]}
-                        isDisabled={!openEdit}
-                      >
-                        {types.map((item) => (
-                          <SelectItem key={item.value} value={item.value}>
-                            {item.label}
-                          </SelectItem>
-                        ))}
-                      </Select>
-                    )}
+                    {/* {formData.status} */}
                   </div>
                   {loading ? (
                     <Skeleton className="h-24 w-full rounded-lg mt-6" />

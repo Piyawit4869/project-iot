@@ -2,7 +2,7 @@ import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
 export async function createItem(prevState: any, formData: any) {
-  const url = `${base_url}/crud/items`;
+  const url = `${base_url}/crud/items/create`;
 
   const body = {
     ...formData,

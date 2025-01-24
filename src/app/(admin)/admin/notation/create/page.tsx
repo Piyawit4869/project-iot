@@ -340,15 +340,28 @@ export default function NotationCreatePage() {
                   className="grid grid-cols-1 gap-4"
                   validationErrors={errors}
                 >
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center mb-5">
                     <h1 className="flex-1 text-xl font-bold text-headFont">
                       ข้อมูลเอกสาร
                     </h1>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-headFont text-sm">แสดงผลเอกสาร</p>
+                      <Switch
+                        className="mt-2"
+                        name="active"
+                        color="secondary"
+                        onChange={handleChange}
+                        required
+                        defaultChecked
+                      />
+                    </div>
                     <Select
-                      size="sm"
-                      className="flex-1"
                       name="templateId"
-                      label="เลือกรูปแบบเอกสาร"
+                      label="รูปแบบเอกสาร"
+                      placeholder="เลือกรูปแบบเอกสาร"
+                      labelPlacement={'outside'}
                       onChange={handleTemplateChange}
                     >
                       {templates.map((item: any) => (
@@ -358,21 +371,38 @@ export default function NotationCreatePage() {
                       ))}
                     </Select>
                   </div>
-                  {/* Notation Section */}
-                  <div className="flex gap-4">
-                    <div className="flex-1 flex items-center gap-4">
-                      <span className="text-headFont text-xs">แสดงผล</span>
-                      <Switch
-                        name="active"
-                        color="secondary"
-                        onChange={handleChange}
-                        required
-                        defaultChecked
-                      />
-                    </div>
+                  <div className="flex gap-6 mt-8">
                     <Input
                       className="flex-1"
-                      size="sm"
+                      label="ชื่อเอกสาร"
+                      labelPlacement="outside"
+                      name="name"
+                      placeholder="กรอกหมายขื่อเอกสาร"
+                      onChange={handleChange}
+                      isRequired
+                      errorMessage={'กรุณากรอกชื่อเอกสาร'}
+                    />
+                    <Select
+                      className="flex-1"
+                      name="type"
+                      label="เลือกประเภทเอกสาร"
+                      placeholder="กรุณาเลือกประเภทเอกสาร"
+                      labelPlacement={'outside'}
+                      onChange={handleChange}
+                      isRequired
+                      errorMessage={'กรุณาเลือกประเภทเอกสาร'}
+                    >
+                      {types.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
+                    </Select>
+                  </div>
+                  {/* Notation Section */}
+                  <div className="flex gap-4 mt-6">
+                    <Input
+                      className="flex-1"
                       label="หมายเลขอ้างอิง"
                       labelPlacement="outside"
                       name="refNo"
@@ -381,13 +411,11 @@ export default function NotationCreatePage() {
                       isRequired
                       errorMessage={'กรุณากรอกหมายเลขอ้างอิง'}
                     />
-                  </div>
-                  <div className="flex gap-4">
                     <DatePicker
-                      size="sm"
                       className="flex-1"
                       name="startDate"
                       label="วันที่สร้าง"
+                      labelPlacement={'outside'}
                       disableAnimation
                       isRequired
                       errorMessage={'กรุณาเลือกวันที่สร้าง'}
@@ -411,22 +439,8 @@ export default function NotationCreatePage() {
                         }
                       }}
                     />
-                    <Select
-                      size="sm"
-                      className="flex-1"
-                      name="type"
-                      label="เลือกประเภทเอกสาร"
-                      onChange={handleChange}
-                      isRequired
-                      errorMessage={'กรุณาเลือกประเภทเอกสาร'}
-                    >
-                      {types.map((item) => (
-                        <SelectItem key={item.value} value={item.value}>
-                          {item.label}
-                        </SelectItem>
-                      ))}
-                    </Select>
                   </div>
+                  <div className="flex gap-4"></div>
                   <Textarea
                     label="หมายเหตุ"
                     labelPlacement="outside"

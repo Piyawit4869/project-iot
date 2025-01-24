@@ -88,11 +88,11 @@ export default function CustomersPage() {
                 </Link>,
               ]}
             />
-            <div className="bg-white shadow rounded-lg mb-4 mt-4 p-4">
+            <div className="bg-white shadow rounded-lg mb-4 mt-4">
               <div className="grid grid-cols-1 sm:grid-cols-4">
                 {/* 🔹 Filter by Company Name */}
                 <Input
-                  className="w-full p-1 text-headFont"
+                  className="w-full p-2 text-headFont"
                   labelPlacement="outside"
                   size="sm"
                   name="companyName"
@@ -103,7 +103,7 @@ export default function CustomersPage() {
 
                 {/* 🔹 Filter by Tax ID */}
                 <Input
-                  className="w-full p-1 text-headFont"
+                  className="w-full p-2 text-headFont"
                   labelPlacement="outside"
                   size="sm"
                   name="taxId"
@@ -114,7 +114,7 @@ export default function CustomersPage() {
 
                 {/* 🔹 Filter by First Name */}
                 <Input
-                  className="w-full p-1 text-headFont"
+                  className="w-full p-2 text-headFont"
                   labelPlacement="outside"
                   size="sm"
                   name="firstName"
@@ -125,7 +125,7 @@ export default function CustomersPage() {
 
                 {/* 🔹 Filter by Contact Email */}
                 <Input
-                  className="w-full p-1 text-headFont"
+                  className="w-full p-2 text-headFont"
                   labelPlacement="outside"
                   size="sm"
                   name="contactEmail"

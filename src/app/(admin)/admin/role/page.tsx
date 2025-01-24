@@ -82,11 +82,11 @@ export default function RolesPage() {
                 </Link>,
               ]}
             />
-            <div className="bg-white shadow rounded-lg mb-4 mt-4 p-4">
+            <div className="bg-white shadow rounded-lg mb-4 mt-4">
               <div className="grid grid-cols-1 sm:grid-cols-1">
                 {/* 🔹 Filter by Company Name */}
                 <Input
-                  className="w-full p-1 text-headFont"
+                  className="w-full p-2 text-headFont"
                   labelPlacement="outside"
                   size="sm"
                   name="name"
