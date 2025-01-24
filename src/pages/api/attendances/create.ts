@@ -1,7 +1,7 @@
 import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
-export async function createAttendance(prevState: any, formData: any) {
+export async function create(prevState: any, formData: any) {
   const url = `${base_url}/crud/attendances/create/`;
 
   const body = {

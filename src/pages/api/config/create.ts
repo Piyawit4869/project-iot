@@ -2,7 +2,7 @@ import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
 export default async function create(prevState: any, formData: any) {
-  const url = `${base_url}/crud/work-info/create/`;
+  const url = `${base_url}/crud/config-setting/create`;
 
   const body = {
     ...formData,

@@ -1,29 +1,79 @@
 'use client';
 
-import CardComponent from '@/components/common/card';
 import Scaffold from '@/components/common/scaffold';
+import CardComponent from '@/components/common/card';
 import { TopSection } from '@/components/common/topSection';
+import { update } from '@/pages/api/config/update'; //API
+import getSingle from '@/pages/api/config/get'; //API
 import * as Icon from '@ant-design/icons';
+import { useParams, useRouter } from 'next/navigation';
+import React from 'react';
 import {
   Button,
   Form,
+  Input,
   Select,
   SelectItem,
+  TimeInput,
   Avatar,
-  Input,
   Chip,
+  form,
 } from '@nextui-org/react';
-import React, { useState } from 'react';
-import { Tabs, Tab } from '@nextui-org/react';
+import { parseZonedDateTime } from '@internationalized/date';
 
-export default function ConfigAttendanceDetailPage() {
+export default function SingleSettingPage() {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
-  const [selectedEmployees, setSelectedEmployees] = useState<number[]>([]); // Initialize state for selected employees
-  const [workHours, setWorkHours] = useState({
-    clockIn: '',
-    breakTime: '',
-    clockOut: '',
-  });
+  const [data, setData] = React.useState() as any;
+  const params = useParams<{ slug?: string }>();
+  const [openEdit, setOpenEdit] = React.useState(false);
+  const [errors, setErrors] = React.useState({}) as any;
+  const [formData, setFormData] = React.useState({}) as any;
+  const [, setLoading] = React.useState(false);
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (!params || !params.slug) {
+      console.error('No slug provided in the URL parameters.');
+      return;
+    }
+
+    setLoading(true);
+
+    const fetchData = async () => {
+      try {
+        const response = await getSingle(params.slug as string);
+        console.log('response', response);
+
+        // if (!response?.data) {
+        //   throw new Error('No data found for the given slug');
+        // }
+        // console.log('name', data);
+        // console.log('anna');
+
+        setData(response?.data);
+        setFormData(response);
+      } catch (error) {
+        console.error('Error fetching setting:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [params]);
+
+  const handleChange = (e: any) => {
+    const { name, checked, type, value } = e.target;
+    setFormData((prevData: any) => ({
+      ...prevData,
+      [name]:
+        type === 'checkbox'
+          ? checked
+          : name === 'startDate' && value instanceof Date
+          ? value.toISOString()
+          : value,
+    }));
+  };
 
   const handleAddItem = () => {
     setItems([...items, { description: '', amount: '' }]);
@@ -34,49 +84,100 @@ export default function ConfigAttendanceDetailPage() {
     setItems(updatedItems);
   };
 
-  const handleAvatarClick = (employeeId: number) => {
-    if (selectedEmployees.includes(employeeId)) {
-      setSelectedEmployees(selectedEmployees.filter((id) => id !== employeeId));
-    } else {
-      setSelectedEmployees([...selectedEmployees, employeeId]);
+  const handleEditButton = (openEdit: boolean) => {
+    return openEdit ? (
+      <a className="px-1">
+        <Button
+          className={`bg-${
+            data?.docStatus === 'rejected'
+              ? 'gray-400 cursor-not-allowed'
+              : 'accent1'
+          } text-white p-2`}
+          key={'submit edit button'}
+          type="submit"
+          size="sm"
+          form="setting"
+          disabled={data?.docStatus === 'rejected'}
+        >
+          <Icon.CheckOutlined />
+          เสร็จสิ้น
+        </Button>
+      </a>
+    ) : (
+      <a className="px-1">
+        <Button
+          className={` bg-${
+            data?.docStatus === 'rejected'
+              ? 'gray-400 cursor-not-allowed'
+              : 'accent3'
+          } text-white p-31`}
+          key={'edit button'}
+          size="sm"
+          onClick={() => {
+            setOpenEdit(true);
+          }}
+          disabled={data?.docStatus === 'rejected'}
+        >
+          <Icon.EditFilled />
+          แก้ไข
+        </Button>
+      </a>
+    );
+  };
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      console.log('name :');
+
+      const payload = {
+        ...data,
+        ...formData, // All data including the updated address fields
+      };
+
+      console.log('payload :', payload);
+
+      const res = await update({}, payload, params?.slug);
+      setOpenEdit(false);
+      console.log({ res });
+      router.push(`/admin/attendance/setting/${res.data.id}`);
+    } catch (err: any) {
+      console.error('Send FormData error:', err);
+      setErrors({ general: err.message || 'An unexpected error occurred.' });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-    console.log(data);
-  };
-
-  const handleTimeChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    field: string,
-  ) => {
-    setWorkHours({ ...workHours, [field]: e.target.value });
-  };
-
-  const [showEmployeeList, setShowEmployeeList] = useState(false); // State to toggle employee list
-
-  const toggleEmployeeList = () => {
-    setShowEmployeeList(!showEmployeeList);
-  };
+  console.log('NAME', formData.workStartTime);
 
   return (
     <Scaffold
       child={
         <div>
           <TopSection
+            title="สร้างการตั้งค่าการเข้าทำงาน"
             backpath={'/admin/attendance/setting'}
-            title="การตั้งค่าการเข้าออกงาน"
             buttons={[
-              <div key={'btnConfig'}>
-                <Button className="bg-accent1 text-white p-2 m-1 " size="sm">
-                  บันทึกการตั้งค่า
-                </Button>
-                <Button className="bg-accent2 text-white p-2 m-1 " size="sm">
-                  ยกเลิก
-                </Button>
+              <div className="mx-2.5" key="save-button">
+                {handleEditButton(openEdit)}
+
+                <a
+                  href={'/admin/attendance/setting/'}
+                  key={'cancel-setting-button'}
+                >
+                  <Button
+                    className="bg-accent2 text-white p-2 gap-2"
+                    size="sm"
+                    type="reset"
+                    form="setting"
+                  >
+                    <Icon.CloseOutlined />
+                    ยกเลิกการสร้าง
+                  </Button>
+                </a>
               </div>,
             ]}
           />
@@ -85,44 +186,45 @@ export default function ConfigAttendanceDetailPage() {
               <CardComponent
                 customCard
                 custom={
-                  <Form id="user" onSubmit={onSubmit} method="post">
+                  <Form
+                    id="setting"
+                    onSubmit={onSubmit}
+                    method="post"
+                    validationErrors={errors}
+                  >
                     <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
-                      <Tabs variant="underlined">
-                        <Tab key="setting" title="การตั้งค่าการทำงาน">
-                          <div className="grid grid-cols-2 gap-4">
-                            {/* เลือกวันทำงาน */}
-                            <div>
-                              <h1 className="text-2xl font-bold text-headFont">
-                                เลือกวันทำงาน
-                              </h1>
-                              <div className="flex gap-4 mt-6">
-                                <Button
-                                  type="button"
-                                  className="bg-accent1 text-white w-50%"
-                                  onClick={handleAddItem}
-                                >
-                                  <Icon.PlusSquareOutlined className="text-xl" />
-                                  เพิ่มวันทำงาน
-                                </Button>
-                              </div>
-                              {items.map((_: any, index: number) => (
-                                <div
-                                  key={index}
-                                  className="flex w-[80%] gap-4 mt-6"
-                                >
+                      <div className="mb-6">
+                        <div className="grid grid-cols-2 gap-6 px-5 py-5">
+                          {/* Detail Section */}
+                          <div>
+                            <h1 className="text-xl font-bold text-headFont mb-5">
+                              เลือกวันทำงาน
+                            </h1>
+                            <Button
+                              type="button"
+                              className="bg-accent1 text-white w-50%"
+                              onClick={handleAddItem}
+                            >
+                              <Icon.PlusSquareOutlined className="text-lg" />
+                              เพิ่มวันทำงาน
+                            </Button>
+                            {items.map((item: any, index: number) => (
+                              <div key={index} className="gap-4 mt-6">
+                                <div className="flex w-[80%] gap-4 mt-6">
                                   <Select
-                                    className="flex-1 text-headFont"
+                                    className="col-span-1 w-full text-headFont"
                                     name="day"
+                                    placeholder="เลือกวันทำงาน"
                                     label="วันทำงาน"
                                     labelPlacement={'outside'}
                                   >
-                                    {day.map((item: any) => (
+                                    {day.map((dayItem: any) => (
                                       <SelectItem
-                                        className="flex-1 text-headFont"
-                                        key={item.value}
-                                        value={item.value}
+                                        className="col-span-1 w-full text-headFont"
+                                        key={dayItem.value}
+                                        value={dayItem.value}
                                       >
-                                        {item.label}
+                                        {dayItem.label}
                                       </SelectItem>
                                     ))}
                                   </Select>
@@ -130,140 +232,126 @@ export default function ConfigAttendanceDetailPage() {
                                     className="bg-accent2 text-white mt-6"
                                     onClick={() => handleRemoveItem(index)}
                                   >
-                                    ลบรายการ
+                                    ลบวันทำงาน
                                   </Button>
                                 </div>
-                              ))}
-                            </div>
-
-                            {/* เพิ่มพนักงาน */}
-                            <div>
-                              {/* เวลาในการทำงาน */}
-                              <div className="mt-6">
-                                <h1 className="text-2xl font-bold text-headFont">
-                                  เวลาในการทำงาน
-                                </h1>
-                                <Input
-                                  label="เวลาเข้างาน"
-                                  type="time"
-                                  value={workHours.clockIn}
-                                  onChange={(e) =>
-                                    handleTimeChange(e, 'clockIn')
-                                  }
-                                />
-                                <Input
-                                  label="พักเบรก"
-                                  type="time"
-                                  value={workHours.breakTime}
-                                  onChange={(e) =>
-                                    handleTimeChange(e, 'breakTime')
-                                  }
-                                  className="mt-4"
-                                />
-                                <Input
-                                  label="เวลาออกงาน"
-                                  type="time"
-                                  value={workHours.clockOut}
-                                  onChange={(e) =>
-                                    handleTimeChange(e, 'clockOut')
-                                  }
-                                  className="mt-4"
-                                />
                               </div>
-                              <h1 className="text-2xl font-bold text-headFont mt-5">
+                            ))}
+                          </div>
+                          <div>
+                            <h1 className="text-xl font-bold text-headFont mb-5">
+                              เวลาการทำงาน
+                            </h1>
+
+                            <Input
+                              className="px-2 py-2"
+                              type="time"
+                              name="workStartTime"
+                              label="เวลาเข้างาน"
+                              value={formData.workStartTime}
+                              onChange={handleChange}
+                            />
+                            <Input
+                              className="px-2 py-2"
+                              type="time"
+                              name="workEndTime"
+                              label="เวลาเลิกงาน"
+                              value={formData.workEndTime}
+                              onChange={handleChange}
+                            />
+
+                            {/* More Address Fields */}
+
+                            <Input
+                              className="px-2 py-2"
+                              type="time"
+                              name="breakStartTime"
+                              label="เวลาพักเบรก"
+                              value={formData.breakStartTime}
+                              onChange={handleChange}
+                            />
+                            <Input
+                              className="px-2 py-2"
+                              type="time"
+                              name="breakEndTime"
+                              label="เวลาเลิกพักเบรก"
+                              value={formData.breakEndTime}
+                              onChange={handleChange}
+                            />
+                            <div>
+                              <h1 className="text-xl font-bold text-headFont py-5">
                                 เพิ่มพนักงาน
                               </h1>
-                              <div className="mt-6">
-                                <Select
-                                  classNames={{
-                                    trigger: 'min-h-12 py-2',
-                                  }}
-                                  isMultiline={true}
-                                  items={users}
-                                  label="Assigned to"
-                                  labelPlacement="outside"
-                                  placeholder="Select a user"
-                                  renderValue={(items) => {
-                                    return (
-                                      <div className="flex flex-wrap gap-2">
-                                        {items.map((item) => (
-                                          <Chip key={item.key}>
-                                            {item.data?.name ?? 'Unknown'}
-                                          </Chip>
-                                        ))}
-                                      </div>
-                                    );
-                                  }}
-                                  selectionMode="multiple"
-                                  variant="bordered"
-                                >
-                                  {(user) => (
-                                    <SelectItem
-                                      key={user.id}
-                                      textValue={user.name}
-                                    >
-                                      <div className="flex gap-2 items-center">
-                                        <Avatar
-                                          alt={user.name}
-                                          className="flex-shrink-0"
-                                          size="sm"
-                                          src={user.avatar}
-                                        />
-                                        <div className="flex flex-col">
-                                          <span className="text-small">
-                                            {user.name}
-                                          </span>
-                                          <span className="text-tiny text-default-400">
-                                            {user.email}
-                                          </span>
-                                        </div>
-                                      </div>
-                                    </SelectItem>
-                                  )}
-                                </Select>
-                              </div>
-                              {/* แสดงพนักงานที่เลือกแล้ว */}
-                              {selectedEmployees.length > 0 && (
-                                <div className="mt-6">
-                                  <h2 className="text-xl font-semibold text-headFont">
-                                    พนักงานที่เลือกแล้ว
-                                  </h2>
-                                  <div className="flex flex-wrap gap-4 mt-4">
-                                    {employees
-                                      .filter((employee) =>
-                                        selectedEmployees.includes(employee.id),
-                                      )
-                                      .map((employee) => (
-                                        <div
-                                          key={employee.id}
-                                          className="flex items-center gap-4 p-2 border border-accent1 rounded-md"
-                                        >
-                                          <Avatar
-                                            src={employee.avatar}
-                                            size="md"
-                                            className="border border-gray-300"
-                                          />
-                                          <span className="text-headFont">
-                                            {employee.name}
-                                          </span>
-                                          <Button
-                                            size="sm"
-                                            className="bg-accent2 text-white"
-                                            onClick={() =>
-                                              handleAvatarClick(employee.id)
-                                            }
-                                          >
-                                            ลบ
-                                          </Button>
-                                        </div>
+                              <Select
+                                classNames={{
+                                  trigger: 'min-h-12 py-2',
+                                }}
+                                isMultiline={true}
+                                items={users}
+                                labelPlacement="outside"
+                                placeholder="Select a user"
+                                renderValue={(items) => {
+                                  return (
+                                    <div className="flex flex-wrap gap-2">
+                                      {items.map((item) => (
+                                        <Chip key={item.key}>
+                                          {item.data?.name ?? 'Unknown'}
+                                        </Chip>
                                       ))}
-                                  </div>
-                                </div>
-                              )}
+                                    </div>
+                                  );
+                                }}
+                                selectionMode="multiple"
+                                variant="bordered"
+                              >
+                                {(user) => (
+                                  <SelectItem
+                                    key={user.id}
+                                    textValue={user.name}
+                                  >
+                                    <div className="flex gap-2 items-center">
+                                      <Avatar
+                                        alt={user.name}
+                                        className="flex-shrink-0"
+                                        size="sm"
+                                        src={user.avatar}
+                                      />
+                                      <div className="flex flex-col">
+                                        <span className="text-small">
+                                          {user.name}
+                                        </span>
+                                        <span className="text-tiny text-default-400">
+                                          {user.email}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </SelectItem>
+                                )}
+                              </Select>
                             </div>
                           </div>
-                        </Tab>
-                      </Tabs>
+                        </div>
+                      </div>
+                      <div className="flex gap-4 mt-6 px-5 pb-5">
+                          <Input
+                            size="lg"
+                            label="branchId"
+                            labelPlacement="outside"
+                            name="branchId"
+                            value={formData.branchId}
+                            placeholder="กรอก branchId"
+                            onChange={handleChange}
+                          />
+                          <Input
+                            size="lg"
+                            label="branchName"
+                            labelPlacement="outside"
+                            name="branchName"
+                            value={formData.branchName}
+                            placeholder="กรอก branchName"
+                            onChange={handleChange}
+                          />
+                      </div>
                     </div>
                   </Form>
                 }
@@ -275,21 +363,6 @@ export default function ConfigAttendanceDetailPage() {
     />
   );
 }
-
-const day = [
-  { label: 'Sunday', value: '1' },
-  { label: 'Monday', value: '2' },
-  { label: 'Tuesday', value: '3' },
-  { label: 'Wednesday', value: '4' },
-  { label: 'Thursday', value: '5' },
-  { label: 'Friday', value: '6' },
-  { label: 'Saturday', value: '7' },
-];
-const employees = [
-  { id: 1, name: 'John Doe', avatar: '/path/to/avatar1.jpg' },
-  { id: 2, name: 'Jane Smith', avatar: '/path/to/avatar2.jpg' },
-  // Add more employees here
-];
 
 export const users = [
   {
@@ -392,4 +465,14 @@ export const users = [
     avatar: 'https://d2u8k2ocievbld.cloudfront.net/memojis/female/5.png',
     email: 'emma.adams@example.com',
   },
+];
+
+const day = [
+  { value: 'monday', label: 'Monday' },
+  { value: 'tuesday', label: 'Tuesday' },
+  { value: 'wednesday', label: 'Wednesday' },
+  { value: 'thursday', label: 'Thursday' },
+  { value: 'friday', label: 'Friday' },
+  { value: 'saturday', label: 'Saturday' },
+  { value: 'sunday', label: 'Sunday' },
 ];
