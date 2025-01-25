@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, Textarea, Switch } from '@nextui-org/react';
+import { Button, Form, Input, Textarea } from '@nextui-org/react';
 import { updateWhitelists } from '@/pages/api/whitelists/update'; // API update
 import { deleteWhitelists } from '@/pages/api/whitelists/delete'; // API delete
 import getSingleWhitelists from '@/pages/api/whitelists/get'; // API get

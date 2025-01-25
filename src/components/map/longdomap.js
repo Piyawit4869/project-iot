@@ -4,23 +4,22 @@ export let longdo;
 export let map;
 
 export class LongdoMap extends Component {
-
   constructor(props) {
     super(props);
     this.mapCallback = this.mapCallback.bind(this);
   }
 
   mapCallback() {
-    longdo = window.longdo
+    longdo = window.longdo;
     map = new window.longdo.Map({
       placeholder: document.getElementById(this.props.id),
-      language: 'en'
+      language: 'en',
     });
   }
 
   componentDidMount() {
     const existingScript = document.getElementById('longdoMapScript');
-    const callback = this.props.callback
+    const callback = this.props.callback;
 
     if (!existingScript) {
       const script = document.createElement('script');
@@ -40,12 +39,12 @@ export class LongdoMap extends Component {
 
   render() {
     return (
-        <div id={this.props.id} style={{width:'100%',height:'100%'}}>
-        
-        </div>
+      <div id={this.props.id} style={{ width: '100%', height: '100%' }}></div>
     );
   }
-
 }
 
-<script src="https://api.longdo.com/map/?key=ab4012a2349af846d0698a8e9b7bca8f"></script>
+{
+  /* <script src="https://api.longdo.com/map/?key=ab4012a2349af846d0698a8e9b7bca8f" async></script> */
+}
+<script src="https://api.longdo.com/map/?key=ab4012a2349af846d0698a8e9b7bca8f"></script>;

@@ -35,10 +35,9 @@
 
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Button, Input } from '@nextui-org/react';
 import { toast } from 'sonner';
-import Icon from '@ant-design/icons';
 
 const Login = () => {
   const [user, setUser] = useState('');
@@ -71,6 +70,7 @@ const Login = () => {
 
         router.push('/admin');
       } else {
+        router.push('/');
         console.log('Toast error triggered');
         throw new Error(result?.error || 'Invalid credentials');
       }

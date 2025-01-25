@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { updateTemplate } from '@/pages/api/templates/update';
 import { deleteTemplate } from '@/pages/api/templates/delete';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
 interface BuilderTemplateProps {
   isCreate: boolean;
@@ -96,7 +97,7 @@ export const TemplateBuilder = ({
         label: 'รูปภาพ',
         fields: { src: { type: 'text' } },
         render: ({ src }: any) => (
-          <img
+          <Image
             key={uuidv4()}
             src={
               src ||

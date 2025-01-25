@@ -8,9 +8,6 @@ import pagination from '@/pages/api/config/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date'; // <-- Import formatDate here
 import debounce from 'lodash/debounce';
-import * as Icon from '@ant-design/icons';
-import { title } from 'process';
-import { data } from 'framer-motion/client';
 
 interface FilterState {
   name: string; // Changed from 'ip' to 'name'
@@ -117,7 +114,7 @@ export default function SettingAttendancePage() {
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
     }),
-    [filters],
+    [filters, setPage, setFilters],
   );
 
   const onInputChange = (key: keyof typeof filters, value: string) => {
@@ -125,10 +122,10 @@ export default function SettingAttendancePage() {
     handleFilterChange(updatedFilters);
   };
 
-  const handleStatusChange = (status: string) => {
-    const updatedFilters = { ...filters, status };
-    handleFilterChange(updatedFilters); // This will trigger the debounced filter change
-  };
+  // const handleStatusChange = (status: string) => {
+  //   const updatedFilters = { ...filters, status };
+  //   handleFilterChange(updatedFilters); // This will trigger the debounced filter change
+  // };
 
   useEffect(() => {
     fetchConfig();

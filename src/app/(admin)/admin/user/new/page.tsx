@@ -12,7 +12,6 @@ import {
   Input,
   DatePicker,
 } from '@nextui-org/react';
-import Image from 'next/image';
 import React from 'react';
 import { createUser } from '@/pages/api/user/create';
 import { toast } from 'sonner';

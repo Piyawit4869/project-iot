@@ -36,6 +36,8 @@ export default function Inputorganization({
     }
   }, [data]);
 
+  console.log(formData);
+
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
     const updatedData =
@@ -74,7 +76,7 @@ export default function Inputorganization({
                 height={100}
               ></Image>
             </div>
-            <div className="flex gap-4 mt-6 ">
+            <div className="flex gap-4">
               <CardControl
                 name="active"
                 title="ปิดองค์กร"
@@ -85,13 +87,13 @@ export default function Inputorganization({
               />
             </div>
           </div>
-          <div className="flex gap-4 mt-6">
+          <div className="flex gap-4">
             <RadioGroup
               name="fromType"
-              color="success"
+              color="secondary"
               label="ประเภทธุรกิจ"
               orientation="horizontal"
-              value={formData.fromType}
+              value={formData?.fromType}
               onChange={handleChange}
               isDisabled={!openEdit}
             >

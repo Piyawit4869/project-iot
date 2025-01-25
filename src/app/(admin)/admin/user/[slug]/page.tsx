@@ -26,13 +26,12 @@ import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { deleteUser } from '@/pages/api/user/delete';
 import { changePassword } from '@/pages/api/user/change-password';
-import { div } from 'framer-motion/client';
 import { updateUser } from '@/pages/api/user/update';
 
 export default function UserSinglePage() {
   const [data, setData] = React.useState() as any;
-  const [loading, setLoading] = React.useState(false);
-  const [error, setErrors] = React.useState({}) as any;
+  const [, setLoading] = React.useState(false);
+  const [, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [password, setPassword] = React.useState({}) as any;
   const [roleData, setRoleData] = React.useState({}) as any;
@@ -105,6 +104,7 @@ export default function UserSinglePage() {
       }
 
       const res = await updateUser({}, payload, params?.slug);
+      console.log(res);
 
       toast.success('📝 แก้ไขข้อมูลผู้ใช้งานสำเร็จ!', {
         duration: 3000,

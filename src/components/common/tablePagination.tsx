@@ -69,8 +69,8 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
     <div>
       <div>
         <Table>
-          <TableHeader>
-            <TableRow className="bg-accent1 rounded-lg">
+          <TableHeader className="bg-accent1 rounded-lg p-3 text-white">
+            <TableRow className="text-white">
               {columns.map((col) => (
                 <TableCell
                   key={col.dataIndex}
@@ -82,14 +82,14 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
               ))}
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody className="bg-white">
             {initialRows.length > 0 ? (
               initialRows.map((row, idx) => (
-                <TableRow key={idx} className="border-b border-gray-300">
+                <TableRow key={idx} className="border border-gray-300">
                   {columns.map((col) => (
                     <TableCell
                       key={col.dataIndex}
-                      className="border border-gray-300"
+                      className="border border-gray-300 hover:bg-gray-100"
                     >
                       {col.render ? (
                         col.render(row[col.dataIndex], row, idx)

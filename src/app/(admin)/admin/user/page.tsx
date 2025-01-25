@@ -8,7 +8,6 @@ import { Button, Chip } from '@nextui-org/react';
 import React from 'react';
 import { TablePagination } from '@/components/common/tablePagination';
 import pagination from '@/pages/api/user/pagination';
-import { span } from 'framer-motion/client';
 
 export default function IndexPage() {
   const [page, setPage] = React.useState(1);

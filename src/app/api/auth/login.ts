@@ -1,6 +1,6 @@
 'use server';
 
-const base_url = process.env.NEXT_PUBLIC_API_BASE_URL;
+import { base_url } from '@/constant/common';
 
 export const login = async (prevState: any, formData: any) => {
   const username = formData.get('username') as string;

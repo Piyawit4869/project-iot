@@ -3,7 +3,6 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import axios from 'axios';
 
 import { base_url } from '@/constant/common';
-import { getServerSession } from '@/libs/auth';
 
 export const authOptions: NextAuthOptions = {
   providers: [

@@ -61,7 +61,6 @@ export default function WhitelistsPage() {
   const fetchWhitelists = async () => {
     setLoading(true);
     try {
-
       const { ip, status } = filters;
       const { items: fetchedItems, meta: fetchedMeta } = await pagination({
         page,
@@ -72,7 +71,7 @@ export default function WhitelistsPage() {
 
       console.log('Fetched Items:', fetchedItems);
       console.log('Fetched Meta:', fetchedMeta);
-      
+
       setItems(
         fetchedItems.map((item: WhitelistItem) => ({
           ...item,
@@ -93,7 +92,7 @@ export default function WhitelistsPage() {
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
     }, 500),
-    [],
+    [setPage, setFilters],
   );
   const colors = ['secondary'];
 

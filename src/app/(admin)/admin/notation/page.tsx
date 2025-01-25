@@ -134,6 +134,11 @@ export default function NotationsPage() {
 }
 
 const columns = [
+  // {
+  //   title: 'รหัสเอกสาร',
+  //   dataIndex: 'docNo',
+  //   link: '/admin/notation',
+  // },
   {
     title: 'รหัสเอกสาร',
     dataIndex: 'docNo',

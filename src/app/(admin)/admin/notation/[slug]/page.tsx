@@ -8,11 +8,17 @@ import {
   DatePicker,
   Form,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Select,
   SelectItem,
   Skeleton,
   Switch,
   Textarea,
+  useDisclosure,
 } from '@nextui-org/react';
 import { parseDate } from '@internationalized/date';
 import React from 'react';
@@ -28,7 +34,7 @@ import pagination from '@/pages/api/templates/pagination';
 import { handleDocumentStatusTag } from '@/components/common/common';
 import paginationItems from '@/pages/api/items/pagination';
 import paginationCustomers from '@/pages/api/customer/pagination';
-import { span } from 'framer-motion/client';
+import { div } from 'framer-motion/client';
 
 export default function NotationSinglePage() {
   const [zoomLevel, setZoomLevel] = React.useState(100);
@@ -429,6 +435,8 @@ export default function NotationSinglePage() {
       </Button>
     );
   };
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Scaffold
@@ -839,10 +847,20 @@ export default function NotationSinglePage() {
               </div>
 
               {/* PDF Preview Section */}
-              <div className="w-full lg:w-1/2 p-6 bg-gray-100 justify-center">
+              <div className="w-full lg:w-1/2 p-4 bg-gray-100 justify-center">
                 <div className=" flex justify-between items-center mb-2">
                   <h1 className="text-base font-bold text-headFont">
                     ข้อมูลเอกสาร
+                    {/* <div className="flex flex-wrap gap-3"> */}
+                    <Button
+                      color="secondary"
+                      className="ml-3"
+                      onPress={onOpen}
+                      size="sm"
+                    >
+                      กดดูเอกสาร
+                    </Button>
+                    {/* </div> */}
                   </h1>
                   {/* Dynamic Status Tag */}
                   {loading ? (
@@ -859,11 +877,12 @@ export default function NotationSinglePage() {
 
                 {/* Render HTML Template Here */}
                 {loading ? (
-                  <Skeleton className="w-full max-w-[170mm] h-[240mm] rounded-sm ml-11" />
+                  <Skeleton className="w-90% max-w-[170mm] h-[240mm] rounded-sm ml-11" />
                 ) : (
                   <div className="flex justify-center">
                     <div
-                      className="bg-white w-full max-w-[170mm] h-[240mm] shadow-lg border border-gray-300 rounded p-6"
+                      // className="bg-white w-[260mm] h-[300mm] shadow-lg border border-gray-300 rounded p-1"
+                      className="bg-white overflow-hidden shadow-lg border border-gray-300 rounded"
                       style={{
                         transform: `scale(${zoomLevel / 100})`,
                         transformOrigin: 'top left',
@@ -879,6 +898,44 @@ export default function NotationSinglePage() {
                         </p>
                       )}
                     </div>
+
+                    <Modal
+                      isOpen={isOpen}
+                      onClose={onClose}
+                      scrollBehavior="inside"
+                      size="4xl"
+                    >
+                      <ModalContent>
+                        {(onClose) => (
+                          <>
+                            <ModalHeader className="flex flex-col gap-1">
+                              เอกสาร
+                            </ModalHeader>
+                            <ModalBody>
+                              <div
+                                className="rounded"
+                                style={{
+                                  transform: `scale(${zoomLevel / 100})`,
+                                  transformOrigin: 'top left',
+                                }}
+                              >
+                                {processedHtml ? (
+                                  <div
+                                    dangerouslySetInnerHTML={{
+                                      __html: processedHtml,
+                                    }}
+                                  />
+                                ) : (
+                                  <p className="text-center text-gray-500">
+                                    กรุณาเลือกรูปแบบเอกสาร
+                                  </p>
+                                )}
+                              </div>
+                            </ModalBody>
+                          </>
+                        )}
+                      </ModalContent>
+                    </Modal>
                   </div>
                 )}
                 <div className="w-[170mm] w-full flex justify-center items-center mt-4">
