@@ -44,7 +44,3 @@ export class LongdoMap extends Component {
   }
 }
 
-{
-  /* <script src="https://api.longdo.com/map/?key=ab4012a2349af846d0698a8e9b7bca8f" async></script> */
-}
-<script src="https://api.longdo.com/map/?key=ab4012a2349af846d0698a8e9b7bca8f"></script>;

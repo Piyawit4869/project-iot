@@ -1,7 +1,7 @@
 import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
-export async function updateWhitelists(prevState: any, formData: any, id: any) {
+export async function update(prevState: any, formData: any, id: any) {
   const url = `${base_url}/crud/whitelists/edit/${id}`;
 
   const body = {

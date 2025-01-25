@@ -7,6 +7,7 @@ import { TopSection } from '@/components/common/topSection';
 import { Input, Button, Link, Tabs, Tab } from '@nextui-org/react';
 import pagination from '@/pages/api/whitelists/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
+import { formatDate } from '@/utils/enums/date';
 // import * as Icon from '@ant-design/icons';
 
 interface FilterState {
@@ -29,8 +30,14 @@ interface WhitelistItem {
   browser: string;
   os: string;
   address: {
+    country: string;
+    province: string;
+    city: string;
+    subDistrict: string;
+    road: string;
+    alley: string;
     name: string;
-    nation: string;
+    houseNo: string;
   };
 }
 
@@ -41,8 +48,14 @@ const columns = [
   { title: 'บราวเซอร์', dataIndex: 'browser' },
   { title: 'ระบบปฏิบัติการ', dataIndex: 'os' },
   { title: 'ที่อยู่', dataIndex: 'addressName' },
-  { title: 'ประเทศ', dataIndex: 'addressNation' },
-  { title: 'สร้างวันที่', dataIndex: 'createdAt' },
+  { title: 'บ้านเลขที', dataIndex: 'addressHouseNo' },
+  { title: 'ประเทศ', dataIndex: 'addressCountry' },
+  { title: 'จังหวัด', dataIndex: 'addressProvince' },
+  { title: 'เขต/อำเภอ', dataIndex: 'addressCity' },
+  { title: 'แขวง/ตำบล', dataIndex: 'addressSubdistrict' },
+  { title: 'ซอย', dataIndex: 'addressAlley' },
+  { title: 'ถนน', dataIndex: 'addressRoad' },
+  { title: 'สร้างวันที่', dataIndex: 'createdAtDate' },
 ];
 
 export default function WhitelistsPage() {
@@ -75,8 +88,15 @@ export default function WhitelistsPage() {
       setItems(
         fetchedItems.map((item: WhitelistItem) => ({
           ...item,
+          addressCountry: item?.address?.country || '',
+          addressProvince: item?.address?.province || '',
+          addressCity: item?.address?.city || '',
+          addressSubdistrict: item?.address?.subDistrict || '',
+          addressRoad: item?.address?.road || '',
+          addressAlley: item?.address?.alley || '',
+          addressHouseNo: item?.address?.houseNo || '',
           addressName: item?.address?.name || '',
-          addressNation: item?.address?.nation || '',
+          createdAtDate: formatDate(item?.createdAt).date,
         })),
       );
       setMeta(fetchedMeta);

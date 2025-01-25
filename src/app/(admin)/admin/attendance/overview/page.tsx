@@ -55,8 +55,8 @@ const columns = [
     dataIndex: 'stampDate',
   },
   {
-    title: 'วันล่าสุด',
-    dataIndex: 'currentDate',
+    title: 'เวลาที่บันทึก',
+    dataIndex: 'stampTime',
   },
 ];
 
@@ -103,6 +103,7 @@ export default function AttendancesPage() {
             userName: record?.workInfo?.user?.userName || '',
             action: record?.action || '',
             stampDate: formatDate(record?.stamp).date || '',
+            stampTime: formatDate(record?.stamp).time || '',
             currentDate: formatDate(item.currentDate).date || '',
           })),
         ),
@@ -188,32 +189,32 @@ export default function AttendancesPage() {
             </div>
 
             <div>
-              <Tabs variant="underlined">
-                <Tab key="table" title="ตาราง">
-                  {loading ? (
-                    <div className="flex justify-center items-center h-64">
-                      <div className="spinner"></div>
-                    </div>
-                  ) : (
-                    <TablePagination
-                      initialRows={items}
-                      initialMeta={meta}
-                      rowsPerPage={rowsPerPage}
-                      columns={columns as any}
-                      onPageChange={(newPage) => setPage(newPage)}
-                      onRowsPerPageChange={(newRowsPerPage) =>
-                        setRowsPerPage(newRowsPerPage)
-                      }
-                    />
-                  )}
-                </Tab>
-                <Tab
+              {/* <Tabs variant="underlined">
+                <Tab key="table" title="ตาราง"> */}
+              {loading ? (
+                <div className="flex justify-center items-center h-64">
+                  <div className="spinner"></div>
+                </div>
+              ) : (
+                <TablePagination
+                  initialRows={items}
+                  initialMeta={meta}
+                  rowsPerPage={rowsPerPage}
+                  columns={columns as any}
+                  onPageChange={(newPage) => setPage(newPage)}
+                  onRowsPerPageChange={(newRowsPerPage) =>
+                    setRowsPerPage(newRowsPerPage)
+                  }
+                />
+              )}
+              {/* </Tab> */}
+              {/* <Tab
                   key="timeline"
                   title="ไทม์ไลน์"
                   className="grid grid-cols-1 sm:grid-cols-2"
                 >
-                  <TimelineComponent />
-                  {/* <VerticalTimeline layout="1-column">
+                  <TimelineComponent /> */}
+              {/* <VerticalTimeline layout="1-column">
                 <VerticalTimelineElement
                   className=" min-w-80 w-max-120 "
                   contentStyle={{
@@ -255,8 +256,8 @@ export default function AttendancesPage() {
                   }}
                 />
               </VerticalTimeline> */}
-                </Tab>
-              </Tabs>
+              {/* </Tab>
+              </Tabs> */}
             </div>
           </div>
         }
