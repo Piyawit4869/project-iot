@@ -112,7 +112,7 @@ export default function WhitelistsPage() {
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
     }, 500),
-    [],
+    [setPage, setFilters],
   );
   const colors = ['secondary'];
 

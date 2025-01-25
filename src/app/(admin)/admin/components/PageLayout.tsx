@@ -10,6 +10,7 @@ const PageLayout = () => {
   const user: any = status === 'authenticated' && session && session.user;
 
   const me = user && user.me ? user.me : null;
+  console.log(me);
 
   return (
     <div className="min-h-screen  bg-gray-50 flex flex-col justify-center items-center px-6 py-12 sm:py-16 lg:py-20 -mt-16">

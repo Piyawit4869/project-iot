@@ -83,12 +83,12 @@ export default function RevenuePage() {
           <TopSection title={'ข้อมูลรายได้'} />
           {/* Filter Bar */}
           <div className="bg-white shadow rounded-lg  mb-4 mt-4">
-            <div className="flex flex-wrap gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3">
               {/* Search Bar */}
               <Input
-                className="flex-1 p-2 text-headFont"
+                className="w-full p-2 text-headFont"
                 labelPlacement="outside"
-                size="lg"
+                size="sm"
                 name="name"
                 placeholder="ค้นหาชื่อ"
                 // value={filters.name}
@@ -99,10 +99,10 @@ export default function RevenuePage() {
               {/* Category Filter */}
 
               <Select
-                className="flex-1 p-2 text-headFont"
+                className="w-full p-2 text-headFont"
                 size="sm"
                 name="category"
-                label="เลือกประเภท"
+                placeholder="เลือกประเภท"
                 // value={filters.type}
                 // onChange={(e) => onInputChange('type', e.target.value)}
                 isDisabled
@@ -121,10 +121,10 @@ export default function RevenuePage() {
               {/* Status Filter */}
 
               <Select
-                className="flex-1 p-2 text-headFont"
+                className="w-full p-2 text-headFont"
                 size="sm"
                 name="status"
-                label="เลือกสถานะ"
+                placeholder="เลือกสถานะ"
                 // value={filters.status}
                 // onChange={(e) => onInputChange('status', e.target.value)}
                 isDisabled

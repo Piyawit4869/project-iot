@@ -1,5 +1,4 @@
 import { base_url } from '@/constant/common';
-import { getServerSession } from '@/libs/auth';
 
 export default async function Update(id: string, formData: any): Promise<any> {
   try {

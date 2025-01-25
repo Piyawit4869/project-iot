@@ -1,10 +1,8 @@
 // 'use server';
-
+import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
 // import { useRouter } from 'next/router';
-
-const base_url = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface FetchNotationsParams {
   page: number;
@@ -26,9 +24,13 @@ export default async function pagination({
   limit,
 }: FetchNotationsParams): Promise<FetchNotationsResponse> {
   try {
+    const url = new URL(`${base_url}/crud/users`);
+    url.searchParams.append('page', page.toString());
+    url.searchParams.append('limit', limit.toString());
+
     const auth = await getServerSession();
     //query params in this
-    const response = await fetch(`${base_url}/crud/users`, {
+    const response = await fetch(url.toString(), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

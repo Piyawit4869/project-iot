@@ -22,7 +22,7 @@ import {
 export default function WorkinfoCreatePage() {
   const [errors, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
-  const [loading, setLoading] = React.useState(false);
+  const [, setLoading] = React.useState(false);
   const router = useRouter();
 
   const priority = [

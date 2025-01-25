@@ -13,12 +13,9 @@ import {
   Input,
   Select,
   SelectItem,
-  TimeInput,
   Avatar,
   Chip,
-  form,
 } from '@nextui-org/react';
-import { parseZonedDateTime } from '@internationalized/date';
 
 export default function CreateSettingPage() {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
@@ -93,7 +90,6 @@ export default function CreateSettingPage() {
         branchId: formData.branchId,
       };
       // console.log('NAME',formData);
-      
 
       console.log('payload :', payload);
 
@@ -103,18 +99,13 @@ export default function CreateSettingPage() {
 
       router.push(`/admin/attendance/setting/${data.id}`);
       console.log('data :', data.id);
-      console.log(data , "data");
-      
-
-      
+      console.log(data, 'data');
     } catch (err: any) {
       console.error('Send FormData error:', err);
       setErrors({ general: err.message || 'An unexpected error occurred.' });
     } finally {
       setLoading(false);
     }
-    
-    
   };
 
   // console.log('NAME',formData);
@@ -177,7 +168,7 @@ export default function CreateSettingPage() {
                         <div className="grid grid-cols-2 gap-6 px-5 py-5">
                           {/* Detail Section */}
                           <div>
-                             <h1 className="text-xl font-bold text-headFont mb-5">
+                            <h1 className="text-xl font-bold text-headFont mb-5">
                               เลือกวันทำงาน
                             </h1>
                             <Button

@@ -1,8 +1,8 @@
 import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
-export async function createItem(prevState: any, formData: any) {
-  const url = `${base_url}/crud/items/create`;
+export async function updatedetails(prevState: any, formData: any, id: any) {
+  const url = `${base_url}/crud/settings/addresses/${id}`;
 
   const body = {
     ...formData,
@@ -11,14 +11,13 @@ export async function createItem(prevState: any, formData: any) {
   const auth = await getServerSession();
 
   const data = await fetch(url, {
-    method: `POST`,
+    method: `PUT`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${auth.accessToken}`,
-      // Authorization: `Bearer ${session.accessToken}`,
     },
     body: JSON.stringify(body),
   });
 
-  return await data.json();
+  return await data.json;
 }
