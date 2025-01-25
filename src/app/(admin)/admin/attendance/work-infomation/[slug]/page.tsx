@@ -112,7 +112,6 @@ export default function WorkInfomationSinglePage() {
 
       const res = await update({}, payload, params?.slug);
       setOpenEdit(false);
-      console.log({ res });
       router.push(`/admin/attendance/work-infomation/${res.data.id}`);
     } catch (err: any) {
       console.error('Send FormData error:', err);

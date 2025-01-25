@@ -3,18 +3,75 @@
 import Scaffold from '@/components/common/scaffold';
 import CardComponent from '@/components/common/card';
 import { TopSection } from '@/components/common/topSection';
+import pagination from '@/pages/api/whitelists/pagination';
 import createWhitelists from '@/pages/api/whitelists/create'; //API
 import * as Icon from '@ant-design/icons';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import React from 'react';
 import Map from '@/components/map/map';
 import { Button, Form, Input, Textarea } from '@nextui-org/react';
 
 export default function CreateWhitelistPage() {
   const [errors, setErrors] = React.useState({}) as any;
+  const [data, setData] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
+  const params = useParams<{ slug?: string }>();
   const [, setLoading] = React.useState(false);
   const router = useRouter();
+  const [meta, setMeta] = React.useState<any>({
+    totalItems: 0,
+    itemsPerPage: 10,
+    totalPages: 0,
+    currentPage: 1,
+  });
+  const [page, setPage] = React.useState(1);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  // const [latLon, setLatLon] = React.useState() as any;
+
+  // React.useEffect(() => {
+
+  //   setLoading(true);
+
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await pagination();
+  //       // if (!response?.data) {
+  //       //   throw new Error('No data found for the given slug');
+  //       // }
+  //       setData(response);
+  //     } catch (error) {
+  //       console.error('Error fetching whitelist:', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+  React.useEffect(() => {
+    const fetchWhitelists = async () => {
+      setLoading(true);
+      try {
+        const { items: fetchedItems, meta: fetchedMeta } = await pagination({
+          page,
+          limit: rowsPerPage,
+        });
+
+        setData(fetchedItems[0]);
+      } catch (error) {
+        console.error('Error fetching whitelists:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWhitelists();
+  }, []);
+
+  console.log(data);
+  console.log(data?.address?.organizationId);
 
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
@@ -28,18 +85,20 @@ export default function CreateWhitelistPage() {
           : value,
     }));
   };
+  // console.log('formData' , formData);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     const requiredFields = [
-      'name',
-      'houseNo',
-      'road',
-      'province',
-      'city',
-      'subDistrict',
+      // 'name',
+      // 'houseNo',
+      // 'road',
+      // 'province',
+      // 'city',
+      // 'subDistrict',
+      '',
     ];
     const newErrors: any = {};
 
@@ -48,12 +107,6 @@ export default function CreateWhitelistPage() {
         newErrors[field] = `Field ${field} is required.`;
       }
     });
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setLoading(false);
-      return;
-    }
 
     // const handleCreateStatus = (status: string) => {
     //   switch (status) {
@@ -67,25 +120,36 @@ export default function CreateWhitelistPage() {
     // const statusData = handleCreateStatus(createStatus);
 
     try {
+      console.log('name');
+
       const payload = {
         address: {
+          active: formData.active !== undefined ? formData.active : false,
           name: formData.name,
           houseNo: formData.houseNo,
-          road: formData.road,
+          country: formData.country,
           province: formData.province,
           city: formData.city,
-          subDistrict: formData.subdistrict,
-          active: formData.active !== undefined ? formData.active : false,
+          subDistrict: formData.subDistrict,
+          alley: formData.alley,
+          building: formData.building,
+          road: formData.road,
           postalCode: formData.postalCode,
+          roomNo: formData.roomNo,
+          floorNo: formData.floorNo,
+          village: formData.village,
+          villageNo: formData.villageNo,
           organizationId: formData.organizationId,
           branchId: formData.branchId,
+          // organizationId: data?.address?.organizationId,
+          // branchId: data.branchId,
         },
         ...formData,
       };
 
       payload.active = !!payload.active; // Simplified active check
 
-      const { data } = await createWhitelists({}, payload);
+      const data = await createWhitelists({}, payload);
       console.log(payload);
       router.push(`/admin/attendance/whitelist/${data.id}`);
     } catch (err: any) {
@@ -96,6 +160,7 @@ export default function CreateWhitelistPage() {
     }
   };
 
+  // console.log(data?.address?.organizationId);
   return (
     <Scaffold
       child={
@@ -194,7 +259,7 @@ export default function CreateWhitelistPage() {
                                 size="lg"
                                 label="OS"
                                 labelPlacement="outside"
-                                name="OS"
+                                name="os"
                                 placeholder="Enter your OS "
                                 onChange={handleChange}
                               />
@@ -248,13 +313,13 @@ export default function CreateWhitelistPage() {
                           <Input
                             className="flex-1"
                             size="lg"
-                            label="ถนน"
+                            label="ประเทศ"
                             labelPlacement="outside"
-                            name="road"
-                            placeholder="กรอก ถนน"
+                            name="country"
+                            placeholder="กรอก ประเทศ"
                             onChange={handleChange}
                             isRequired
-                            errorMessage={'กรุณากรอก ถนน'}
+                            errorMessage={'กรุณากรอก ประเทศ'}
                           />
                           <Input
                             className="flex-1"
@@ -266,6 +331,30 @@ export default function CreateWhitelistPage() {
                             onChange={handleChange}
                             isRequired
                             errorMessage={'กรุณากรอก จังหวัด'}
+                          />
+                        </div>
+                        <div className="flex gap-4 mt-6">
+                          <Input
+                            className="flex-1"
+                            size="lg"
+                            label="ถนน"
+                            labelPlacement="outside"
+                            name="road"
+                            placeholder="กรอก ถนน"
+                            onChange={handleChange}
+                            isRequired
+                            errorMessage={'กรุณากรอก ถนน'}
+                          />
+                          <Input
+                            className="flex-1"
+                            size="lg"
+                            label="ซอย"
+                            labelPlacement="outside"
+                            name="alley"
+                            placeholder="กรอก ซอย"
+                            onChange={handleChange}
+                            isRequired
+                            errorMessage={'กรุณากรอก ซอย'}
                           />
                         </div>
                         <div className="flex gap-4 mt-6">

@@ -1,7 +1,7 @@
 import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
-export default async function getSingleWhitelists(id: string): Promise<any> {
+export default async function getSingle(id: string): Promise<any> {
   try {
     const auth = await getServerSession();
 
