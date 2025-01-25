@@ -215,8 +215,8 @@ export default function CustomerUpdatePage() {
               }
               backpath={'/admin/customer'}
               buttons={[
-                <Button 
-                key={'submit customer'}
+                <Button
+                  key={'submit customer'}
                   className="bg-accent1 text-white text-xs"
                   size="sm"
                   type="submit"
@@ -225,7 +225,7 @@ export default function CustomerUpdatePage() {
                   แก้ไข
                 </Button>,
                 <Button
-                key={'edit customer'}
+                  key={'edit customer'}
                   className="bg-accent2 text-white text-xs"
                   onClick={onDelete}
                   size="sm"
@@ -341,7 +341,7 @@ export default function CustomerUpdatePage() {
                   />
                 </div>
 
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center mt-4">
                   <h1 className="flex-1 text-xl font-bold text-headFont">
                     ที่อยู่
                   </h1>
@@ -370,7 +370,8 @@ export default function CustomerUpdatePage() {
                       />
                     ))}
                     <Button
-                      className="bg-accent2 text-white text-xs mt-2"
+                      className="bg-accent2 text-white text-xs mt-5"
+                      size="sm"
                       onClick={() => removeAddress(index)}
                     >
                       ลบที่อยู่

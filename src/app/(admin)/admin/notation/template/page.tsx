@@ -47,7 +47,7 @@ export default function TemplatesPage() {
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
     }),
-    [],
+    [setPage, setFilters],
   );
 
   // Handle input changes
@@ -59,7 +59,7 @@ export default function TemplatesPage() {
   // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
     fetchNotations();
-  }, [filters, page, rowsPerPage]);
+  }, [filters, page, rowsPerPage, fetchNotations]);
 
   return (
     <div>

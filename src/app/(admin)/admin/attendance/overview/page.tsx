@@ -3,7 +3,7 @@
 import React from 'react';
 import debounce from 'lodash/debounce';
 import { TopSection } from '@/components/common/topSection';
-import { Button, Input, Link, Tab, Tabs } from '@nextui-org/react';
+import { Input, Tab, Tabs } from '@nextui-org/react';
 import pagination from '@/pages/api/attendances/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date';
@@ -13,7 +13,6 @@ import { formatDate } from '@/utils/enums/date';
 // } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import { TimelineComponent } from '@/components/admin/adminTimeline';
-import { log } from 'node:console';
 import Scaffold from '@/components/common/scaffold';
 interface FilterState {
   name: string;

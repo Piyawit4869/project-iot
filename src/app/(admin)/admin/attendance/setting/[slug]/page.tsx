@@ -14,12 +14,9 @@ import {
   Input,
   Select,
   SelectItem,
-  TimeInput,
   Avatar,
   Chip,
-  form,
 } from '@nextui-org/react';
-import { parseZonedDateTime } from '@internationalized/date';
 
 export default function SingleSettingPage() {
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
@@ -333,24 +330,24 @@ export default function SingleSettingPage() {
                         </div>
                       </div>
                       <div className="flex gap-4 mt-6 px-5 pb-5">
-                          <Input
-                            size="lg"
-                            label="branchId"
-                            labelPlacement="outside"
-                            name="branchId"
-                            value={formData.branchId}
-                            placeholder="กรอก branchId"
-                            onChange={handleChange}
-                          />
-                          <Input
-                            size="lg"
-                            label="branchName"
-                            labelPlacement="outside"
-                            name="branchName"
-                            value={formData.branchName}
-                            placeholder="กรอก branchName"
-                            onChange={handleChange}
-                          />
+                        <Input
+                          size="lg"
+                          label="branchId"
+                          labelPlacement="outside"
+                          name="branchId"
+                          value={formData.branchId}
+                          placeholder="กรอก branchId"
+                          onChange={handleChange}
+                        />
+                        <Input
+                          size="lg"
+                          label="branchName"
+                          labelPlacement="outside"
+                          name="branchName"
+                          value={formData.branchName}
+                          placeholder="กรอก branchName"
+                          onChange={handleChange}
+                        />
                       </div>
                     </div>
                   </Form>

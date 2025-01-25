@@ -38,7 +38,9 @@ export function TopSection({ title, subtitle, buttons = [], backpath }: any) {
             <Link href={backpath} passHref>
               <Icon.LeftOutlined className="text-base cursor-pointer" />
             </Link>
-            <h1 className="text-base font-bold text-headFont">{title}</h1>
+            <h1 className="text-base font-bold text-headFont text-xl">
+              {title}
+            </h1>
           </div>
         ) : (
           <h1 className="text-base font-bold text-headFont text-xl">{title}</h1>

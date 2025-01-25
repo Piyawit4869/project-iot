@@ -26,6 +26,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { deleteUser } from '@/pages/api/user/delete';
 import { changePassword } from '@/pages/api/user/change-password';
+import { updateUser } from '@/pages/api/user/update';
 
 export default function UserSinglePage() {
   const [data, setData] = React.useState() as any;
@@ -102,7 +103,8 @@ export default function UserSinglePage() {
         payload.active = true;
       }
 
-      // const res = await updateUser({}, payload, params?.slug);
+      const res = await updateUser({}, payload, params?.slug);
+      console.log(res);
 
       toast.success('📝 แก้ไขข้อมูลผู้ใช้งานสำเร็จ!', {
         duration: 3000,
@@ -200,8 +202,8 @@ export default function UserSinglePage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50">
+      <div className=" mx-auto">
         {/* Page Header */}
         <Scaffold
           child={
@@ -246,219 +248,226 @@ export default function UserSinglePage() {
                   <CardComponent
                     customCard
                     custom={
-                      <Form id="user" onSubmit={onSubmit} method="post">
-                        <h1 className="text-2xl font-bold text-headFont">
-                          ข้อมูลผู้ใช้
-                        </h1>
-                        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                          <div className="font-bold text-headFon mt-10">
-                            <p>รูปภาพผู้ใช้งาน</p>
-                            <Image
-                              className="mt-3"
-                              src="/logo.png"
-                              alt="logo"
-                              width={100}
-                              height={100}
-                            ></Image>
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <div>
-                              <CardControl
-                                name="active"
-                                title="เปิดใช้งาน"
-                                description="ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน"
-                                control="เปิดใช้งาน"
+                      <div className="p-8">
+                        <Form id="user" onSubmit={onSubmit} method="post">
+                          <h1 className="text-2xl font-bold text-headFont">
+                            ข้อมูลผู้ใช้
+                          </h1>
+                          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                            <div className="font-bold text-headFon mt-10">
+                              <p>รูปภาพผู้ใช้งาน</p>
+                              <Image
+                                className="mt-3"
+                                src="/logo.png"
+                                alt="logo"
+                                width={100}
+                                height={100}
+                              ></Image>
+                            </div>
+                            <div className="flex gap-4 mt-6">
+                              <div>
+                                <CardControl
+                                  name="active"
+                                  title="เปิดใช้งาน"
+                                  description="ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน"
+                                  control="เปิดใช้งาน"
+                                  onChange={handleChange}
+                                />
+                              </div>
+                            </div>
+
+                            <div className="flex gap-4 mt-6">
+                              <Select
+                                className="flex-1  text-headFont"
+                                name="position"
+                                placeholder="กรุณาเลือกตำแหน่ง"
+                                label="ตำแหน่ง"
+                                selectedKeys={[roleData?.name]}
+                                labelPlacement={'outside'}
+                                onChange={handleChange}
+                              >
+                                {position.map((item) => (
+                                  <SelectItem
+                                    className="text-headFont"
+                                    key={item.value}
+                                    value={item.value}
+                                  >
+                                    {item.label}
+                                  </SelectItem>
+                                ))}
+                              </Select>
+                            </div>
+                            <div className="flex gap-4 mt-6">
+                              <Select
+                                className="flex-1  text-headFont"
+                                name="prefix"
+                                placeholder="กรุณาเลือกคำนำหน้า"
+                                label="คำนำหน้า"
+                                selectedKeys={[formData.prefix]}
+                                labelPlacement={'outside'}
+                                onChange={handleChange}
+                              >
+                                {prefix.map((item) => (
+                                  <SelectItem
+                                    className="text-headFont"
+                                    key={item.value}
+                                    value={item.value}
+                                  >
+                                    {item.label}
+                                  </SelectItem>
+                                ))}
+                              </Select>
+                            </div>
+                            <div className="flex gap-4 mt-6">
+                              <Input
+                                className="flex-1"
+                                label={
+                                  <span className="text-headFont">ชื่อ</span>
+                                }
+                                labelPlacement="outside"
+                                name="firstName"
+                                placeholder="กรอกชื่อ"
+                                value={formData.firstName}
                                 onChange={handleChange}
                               />
                             </div>
-                          </div>
-
-                          <div className="flex gap-4 mt-6">
-                            <Select
-                              className="flex-1  text-headFont"
-                              name="position"
-                              placeholder="กรุณาเลือกตำแหน่ง"
-                              label="ตำแหน่ง"
-                              selectedKeys={[roleData?.name]}
-                              labelPlacement={'outside'}
-                              onChange={handleChange}
-                            >
-                              {position.map((item) => (
-                                <SelectItem
-                                  className="text-headFont"
-                                  key={item.value}
-                                  value={item.value}
-                                >
-                                  {item.label}
-                                </SelectItem>
-                              ))}
-                            </Select>
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <Select
-                              className="flex-1  text-headFont"
-                              name="prefix"
-                              placeholder="กรุณาเลือกคำนำหน้า"
-                              label="คำนำหน้า"
-                              selectedKeys={[formData.prefix]}
-                              labelPlacement={'outside'}
-                              onChange={handleChange}
-                            >
-                              {prefix.map((item) => (
-                                <SelectItem
-                                  className="text-headFont"
-                                  key={item.value}
-                                  value={item.value}
-                                >
-                                  {item.label}
-                                </SelectItem>
-                              ))}
-                            </Select>
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <Input
-                              className="flex-1"
-                              label={
-                                <span className="text-headFont">ชื่อ</span>
-                              }
-                              labelPlacement="outside"
-                              name="firstName"
-                              placeholder="กรอกชื่อ"
-                              value={formData.firstName}
-                              onChange={handleChange}
-                            />
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <Input
-                              className="flex-1"
-                              label={
-                                <span className="text-headFont">นามสกุล</span>
-                              }
-                              labelPlacement="outside"
-                              name="lastName"
-                              placeholder="กรอกนามสกุล"
-                              value={formData.lastName}
-                              onChange={handleChange}
-                            />
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <DatePicker
-                              className="flex-1  text-headFont"
-                              name="birthDate"
-                              label="วัน/เดือน/ปีเกิด"
-                              labelPlacement="outside"
-                              disableAnimation
-                              value={
-                                formData.birthDate
-                                  ? parseDate(formData.birthDate.split('T')[0])
-                                  : undefined
-                              }
-                              onChange={(date: any) => {
-                                if (date?.year && date?.month && date?.day) {
-                                  // Convert the custom date object to a valid Date instance
-                                  const parsedDate = new Date(
-                                    date.year,
-                                    date.month - 1,
-                                    date.day,
-                                  ); // month is 0-indexed
-                                  parsedDate.setHours(12);
-                                  const isoString = parsedDate.toISOString();
-
-                                  // Update formData with the ISO string
-                                  setFormData((prevData: any) => ({
-                                    ...prevData,
-                                    birthDate: isoString,
-                                  }));
-                                } else {
-                                  console.error('Invalid date object:', date);
+                            <div className="flex gap-4 mt-6">
+                              <Input
+                                className="flex-1"
+                                label={
+                                  <span className="text-headFont">นามสกุล</span>
                                 }
-                              }}
-                            />
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <Input
-                              className="flex-1"
-                              label={
-                                <span className="text-headFont">
-                                  เบอร์โทรศัพท์
-                                </span>
-                              }
-                              labelPlacement="outside"
-                              name="phone"
-                              placeholder="กรอกเบอร์โทรศัพท์"
-                              value={formData.phone}
-                              onChange={handleChange}
-                            />
-                          </div>
+                                labelPlacement="outside"
+                                name="lastName"
+                                placeholder="กรอกนามสกุล"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                              />
+                            </div>
+                            <div className="flex gap-4 mt-6">
+                              <DatePicker
+                                className="flex-1  text-headFont"
+                                name="birthDate"
+                                label="วัน/เดือน/ปีเกิด"
+                                labelPlacement="outside"
+                                disableAnimation
+                                value={
+                                  formData.birthDate
+                                    ? parseDate(
+                                        formData.birthDate.split('T')[0],
+                                      )
+                                    : undefined
+                                }
+                                onChange={(date: any) => {
+                                  if (date?.year && date?.month && date?.day) {
+                                    // Convert the custom date object to a valid Date instance
+                                    const parsedDate = new Date(
+                                      date.year,
+                                      date.month - 1,
+                                      date.day,
+                                    ); // month is 0-indexed
+                                    parsedDate.setHours(12);
+                                    const isoString = parsedDate.toISOString();
 
-                          <div className="gap-4 mt-6 flex">
-                            <Button onPress={onOpen}>เปลี่ยนรหัสผ่าน</Button>
-                            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-                              <Form
-                                id="password"
-                                onSubmit={Change}
-                                method="post"
+                                    // Update formData with the ISO string
+                                    setFormData((prevData: any) => ({
+                                      ...prevData,
+                                      birthDate: isoString,
+                                    }));
+                                  } else {
+                                    console.error('Invalid date object:', date);
+                                  }
+                                }}
+                              />
+                            </div>
+                            <div className="flex gap-4 mt-6">
+                              <Input
+                                className="flex-1"
+                                label={
+                                  <span className="text-headFont">
+                                    เบอร์โทรศัพท์
+                                  </span>
+                                }
+                                labelPlacement="outside"
+                                name="phone"
+                                placeholder="กรอกเบอร์โทรศัพท์"
+                                value={formData.phone}
+                                onChange={handleChange}
+                              />
+                            </div>
+
+                            <div className="gap-4 mt-6 flex">
+                              <Button onPress={onOpen}>เปลี่ยนรหัสผ่าน</Button>
+                              <Modal
+                                isOpen={isOpen}
+                                onOpenChange={onOpenChange}
                               >
-                                <ModalContent>
-                                  {(onClose) => (
-                                    <>
-                                      <ModalHeader className="flex gap-1">
-                                        เปลี่ยนรหัสผ่าน
-                                      </ModalHeader>
-                                      <ModalBody>
-                                        <Input
-                                          className=""
-                                          label={
-                                            <span className="text-headFont">
-                                              รหัสผ่าน
-                                            </span>
-                                          }
-                                          labelPlacement="outside"
-                                          name="password"
-                                          placeholder="กรอกรหัสผ่าน"
-                                          onChange={handleChangePass}
-                                        />
-                                        <Input
-                                          className=""
-                                          label={
-                                            <span className="text-headFont">
-                                              รหัสผ่านใหม่
-                                            </span>
-                                          }
-                                          labelPlacement="outside"
-                                          name="newPassword"
-                                          placeholder="กรอกรหัสผ่านใหม่"
-                                          onChange={handleChangePass}
-                                        />
-                                      </ModalBody>
-                                      <ModalFooter>
-                                        <Button
-                                          className="bg-accent1 text-white"
-                                          color="success"
-                                          variant="light"
-                                          onClick={Change}
-                                          form="password"
-                                          type="submit"
-                                        >
-                                          ยืนยัน
-                                        </Button>
-                                        <Button
-                                          className="bg-accent2 text-white"
-                                          color="danger"
-                                          variant="light"
-                                          onPress={onClose}
-                                        >
-                                          ยกเลิก
-                                        </Button>
-                                      </ModalFooter>
-                                    </>
-                                  )}
-                                </ModalContent>
-                              </Form>
-                            </Modal>
+                                <Form
+                                  id="password"
+                                  onSubmit={Change}
+                                  method="post"
+                                >
+                                  <ModalContent>
+                                    {(onClose) => (
+                                      <>
+                                        <ModalHeader className="flex gap-1">
+                                          เปลี่ยนรหัสผ่าน
+                                        </ModalHeader>
+                                        <ModalBody>
+                                          <Input
+                                            className=""
+                                            label={
+                                              <span className="text-headFont">
+                                                รหัสผ่าน
+                                              </span>
+                                            }
+                                            labelPlacement="outside"
+                                            name="password"
+                                            placeholder="กรอกรหัสผ่าน"
+                                            onChange={handleChangePass}
+                                          />
+                                          <Input
+                                            className=""
+                                            label={
+                                              <span className="text-headFont">
+                                                รหัสผ่านใหม่
+                                              </span>
+                                            }
+                                            labelPlacement="outside"
+                                            name="newPassword"
+                                            placeholder="กรอกรหัสผ่านใหม่"
+                                            onChange={handleChangePass}
+                                          />
+                                        </ModalBody>
+                                        <ModalFooter>
+                                          <Button
+                                            className="bg-accent1 text-white"
+                                            color="success"
+                                            variant="light"
+                                            onClick={Change}
+                                            form="password"
+                                            type="submit"
+                                          >
+                                            ยืนยัน
+                                          </Button>
+                                          <Button
+                                            className="bg-accent2 text-white"
+                                            color="danger"
+                                            variant="light"
+                                            onPress={onClose}
+                                          >
+                                            ยกเลิก
+                                          </Button>
+                                        </ModalFooter>
+                                      </>
+                                    )}
+                                  </ModalContent>
+                                </Form>
+                              </Modal>
+                            </div>
                           </div>
-                        </div>
-                      </Form>
+                        </Form>
+                      </div>
                     }
                   />
                 </div>

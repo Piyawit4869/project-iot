@@ -75,18 +75,12 @@ export default function NotationsPage() {
               title="เอกสารทั้งหมด"
               buttons={[
                 <Link href={'notation/template'} key={'template index button'}>
-                  <Button
-                    className="bg-accent1 text-white"
-                    size="sm"
-                  >
+                  <Button className="bg-accent1 text-white" size="sm">
                     รูปแบบเอกสาร
                   </Button>
                 </Link>,
                 <Link href={'notation/create'} key={'create button'}>
-                  <Button
-                    className="bg-accent1 text-white"
-                    size="sm"
-                  >
+                  <Button className="bg-accent1 text-white" size="sm">
                     สร้างเอกสาร
                   </Button>
                 </Link>,
@@ -140,6 +134,11 @@ export default function NotationsPage() {
 }
 
 const columns = [
+  // {
+  //   title: 'รหัสเอกสาร',
+  //   dataIndex: 'docNo',
+  //   link: '/admin/notation',
+  // },
   {
     title: 'รหัสเอกสาร',
     dataIndex: 'docNo',

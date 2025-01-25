@@ -7,14 +7,7 @@ import { create } from '@/pages/api/attendances/create'; //API
 import * as Icon from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import {
-  Button,
-  Form,
-  Input,
-  Select,
-  SelectItem,
-  Textarea,
-} from '@nextui-org/react';
+import { Button, Form, Input, Select, SelectItem } from '@nextui-org/react';
 
 export default function CreateWhitelistPage() {
   const [errors, setErrors] = React.useState({}) as any;

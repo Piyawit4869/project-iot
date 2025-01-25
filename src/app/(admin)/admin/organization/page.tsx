@@ -6,7 +6,6 @@ import { TopSection } from '@/components/common/topSection';
 import InputSystem from './components/InputSystem';
 import Inputorganization from './components/Inputorganization';
 import InputAddressProps from './components/InputAddress';
-import NextTable from '@/components/common/nextTable';
 import Link from 'next/link';
 import * as Icon from '@ant-design/icons';
 import {
@@ -23,7 +22,6 @@ import {
   Select,
   SelectItem,
   TimeInput,
-  FormContext,
 } from '@nextui-org/react';
 import React from 'react';
 import { Tabs, Tab } from '@nextui-org/react';
@@ -31,11 +29,12 @@ import get from '@/pages/api/organization/get';
 import { updatedetails } from '@/pages/api/organization/update-details';
 import { toast } from 'sonner';
 import { TablePagination } from '@/components/common/tablePagination';
-import { updatesystem } from '@/pages/api/organization/updata';
+import InputBranch from './components/InputBranch';
+// import { updatesystem } from '@/pages/api/organization/updata';
 
 export default function OraganizationPage() {
-  const [loading, setLoading] = React.useState(false);
-  const [error, setErrors] = React.useState({}) as any;
+  const [, setLoading] = React.useState(false);
+  const [, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [data, setData] = React.useState() as any;
   const [dataorg, setDataorg] = React.useState() as any;
@@ -51,6 +50,8 @@ export default function OraganizationPage() {
     currentPage: 1,
   });
   const [openEdit, setOpenEdit] = React.useState(false);
+  console.log(systemData);
+  console.log(openDayData);
 
   // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault(); // Prevent the form from submitting to the URL
@@ -211,23 +212,20 @@ export default function OraganizationPage() {
     onOpenChange: onChangeSetting2,
   } = useDisclosure();
   // Modal View Detail Setting
-  const {
-    isOpen: isOpenSetting2,
-    onOpen: openSetting3,
-    onOpenChange: onChangeSetting3,
-  } = useDisclosure();
+  const { isOpen: isOpenSetting2, onOpenChange: onChangeSetting3 } =
+    useDisclosure();
 
-  const [selectedItem, setSelectedItem] = React.useState<any>(null);
+  const [selectedItem] = React.useState<any>(null);
 
   // const handleRowAddress = (row: any) => {
   //   setSelectedItem(row);
   //   openAddress2();
   // };
 
-  const handleRowSetting = (row: any) => {
-    setSelectedItem(row);
-    openSetting3();
-  };
+  // const handleRowSetting = (row: any) => {
+  //   setSelectedItem(row);
+  //   openSetting3();
+  // };
 
   const toggleInput = () => {
     setOpenEdit((prev) => !prev);
@@ -286,7 +284,7 @@ export default function OraganizationPage() {
                     <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
                       <Tabs variant="underlined">
                         <Tab key="setting" title="การตั้งค่าระบบ">
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-6">
                             <h1 className="text-2xl font-bold text-headFont">
                               ตั้งค่าระบบ
                             </h1>
@@ -667,7 +665,7 @@ export default function OraganizationPage() {
                         {/* Setting Address */}
                         <Tab key="address" title="ข้อมูลที่อยู่">
                           <div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between p-6">
                               <h1 className="text-2xl font-bold text-headFont">
                                 ข้อมูลที่อยู่องค์กร
                               </h1>
@@ -1209,11 +1207,11 @@ export default function OraganizationPage() {
                         </Tab>
 
                         {/* setting Branch */}
-                        <Tab key="branch" title="ข้อมูลที่อยู่สาขา">
+                        <Tab key="branch" title="ข้อมูลสาขา">
                           <div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between p-6">
                               <h1 className="text-2xl font-bold text-headFont">
-                                ข้อมูลที่อยู่สาขา
+                                ข้อมูลสาขา
                               </h1>
                               <div className="mr-10">
                                 <Button
@@ -1221,12 +1219,6 @@ export default function OraganizationPage() {
                                   onClick={toggleInput}
                                 >
                                   แก้ไข
-                                </Button>
-                                <Button
-                                  className="bg-accent1 text-white"
-                                  onPress={openAddress}
-                                >
-                                  ดูที่อยู่สาขาทั้งหมด
                                 </Button>
                               </div>
 
@@ -1744,7 +1736,7 @@ export default function OraganizationPage() {
                                 </ModalContent>
                               </Modal>
                             </div>
-                            <InputAddressProps
+                            <InputBranch
                               data={data}
                               onChange={handleUpadteForm}
                               openEdit={openEdit}
@@ -1754,7 +1746,7 @@ export default function OraganizationPage() {
 
                         {/* Setting organization */}
                         <Tab key="organization" title="ข้อมูลองค์กร">
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-6">
                             <h1 className="text-2xl font-bold text-headFont">
                               ข้อมูลองค์กร
                             </h1>

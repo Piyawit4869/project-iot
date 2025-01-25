@@ -6,7 +6,6 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  useDisclosure,
 } from '@nextui-org/react';
 import * as Icon from '@ant-design/icons';
 
@@ -15,19 +14,14 @@ export const ModalVerify = ({
   content,
   isOpen,
   onClose,
-  modalFooter,
-  label,
-  onClick,
   CancelButton,
   ConfirmButton,
-  type,
-  form,
 }: any) => {
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader className="flex gap-1">
                 <Icon.ExclamationOutlined color="accent2" />

@@ -1,15 +1,13 @@
 'use client';
 
 import Scaffold from '@/components/common/scaffold';
+// import debounce from 'lodash/debounce';
 import { TopSection } from '@/components/common/topSection';
 import Link from 'next/link';
 import { Button, Chip } from '@nextui-org/react';
 import React from 'react';
-// import { useRouter } from 'next/navigation';
 import { TablePagination } from '@/components/common/tablePagination';
 import pagination from '@/pages/api/user/pagination';
-import { span } from 'framer-motion/client';
-// import { debounce } from 'lodash';
 
 export default function IndexPage() {
   const [page, setPage] = React.useState(1);
@@ -24,7 +22,7 @@ export default function IndexPage() {
     currentPage: 1,
   });
 
-  const fetchNotations = async () => {
+  const fetchUser = async () => {
     setLoading(true);
     try {
       // const {} = filters;
@@ -43,8 +41,6 @@ export default function IndexPage() {
     }
   };
 
-  console.log('items', items);
-
   // Debounced function to handle filter changes
   // const handleFilterChange = React.useCallback(
   //   debounce((updatedFilters) => {
@@ -62,7 +58,7 @@ export default function IndexPage() {
 
   // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
-    fetchNotations();
+    fetchUser();
   }, [page, rowsPerPage]);
   // }, [filters, page, rowsPerPage]);
 
@@ -96,7 +92,7 @@ export default function IndexPage() {
                   initialRows={items}
                   initialMeta={meta}
                   rowsPerPage={rowsPerPage}
-                  columns={columns}
+                  columns={columns as any}
                   onPageChange={(newPage) => setPage(newPage)}
                   onRowsPerPageChange={(newRowsPerPage) =>
                     setRowsPerPage(newRowsPerPage)
@@ -112,7 +108,7 @@ export default function IndexPage() {
   );
 }
 
-const columns: any = [
+const columns = [
   {
     title: 'รูปภาพ',
     dataIndex: 'image',

@@ -11,12 +11,6 @@ import {
   SelectItem,
   Input,
   DatePicker,
-  // Modal,
-  // ModalContent,
-  // ModalHeader,
-  // ModalBody,
-  // ModalFooter,
-  // useDisclosure,
 } from '@nextui-org/react';
 import React from 'react';
 import { createUser } from '@/pages/api/user/create';
@@ -140,26 +134,29 @@ export default function CreateUserPage() {
     e.preventDefault();
     setLoading(false);
 
-    // const requiredFields = [
-    //   'email',
-    //   'username',
-    //   'password',
-    //   'position',
-    //   'firstName',
-    // ];
-    // const newErrors: any = {};
+    const requiredFields = [
+      'email',
+      'userName',
+      'prefix',
+      'position',
+      'firstNameEn',
+      'firstName',
+      'lastNameEn',
+      'lastName',
+    ];
+    const newErrors: any = {};
 
-    // requiredFields.forEach((field) => {
-    //   if (!formData[field] || formData[field].trim() === '') {
-    //     newErrors[field] = `Field ${field} is required.`;
-    //   }
-    // });
+    requiredFields.forEach((field) => {
+      if (!formData[field] || formData[field].trim() === '') {
+        newErrors[field] = `Field ${field} is required.`;
+      }
+    });
 
-    // if (Object.keys(newErrors).length > 0) {
-    //   setErrors(newErrors);
-    //   setLoading(false);
-    //   return;
-    // }
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setLoading(false);
+      return;
+    }
 
     try {
       const payload = {
@@ -239,13 +236,20 @@ export default function CreateUserPage() {
                     method="post"
                     validationErrors={errors}
                   >
-                    <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                    <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center p-6">
                       <div>
                         <h1 className="text-2xl font-bold text-headFont">
                           ข้อมูลผู้ใช้
                         </h1>
                         <div className="font-bold text-headFon mt-10">
-                          <p>รูปภาพผู้ใช้</p>
+                          <span>รูปภาพผู้ใช้งาน</span>
+                          {/* <Image
+                            className="mt-3"
+                            src={'/logo.png'}
+                            alt="User Image"
+                            width={100}
+                            height={100}
+                          /> */}
                         </div>
                       </div>
                       <div className="flex gap-4 mt-6">
@@ -259,7 +263,6 @@ export default function CreateUserPage() {
                           />
                         </div>
                       </div>
-
                       <div className="flex gap-4 mt-6">
                         <Input
                           className="flex-1"
@@ -288,7 +291,7 @@ export default function CreateUserPage() {
                       </div>
                       <div className="flex gap-4 mt-6">
                         <Input
-                          className="flex-1"
+                          className=""
                           label={
                             <span className="text-headFont">รหัสผ่าน</span>
                           }
@@ -296,13 +299,17 @@ export default function CreateUserPage() {
                           name="password"
                           placeholder="กรอกรหัสผ่าน"
                           onChange={handleChange}
-                          isRequired
                           errorMessage={'กรุณากรอกรหัสผ่าน'}
+                          description={
+                            <span className="text-red-500 ml-2 text-sm">
+                              * ถ้าไม่ใส่รหัสผ่าน รหัสจะถูกสร้างจากชื่อ
+                            </span>
+                          }
                         />
                       </div>
-                      <div className="flex gap-4 mt-6">
+                      <div className="flex">
                         <Select
-                          className="flex-1  text-headFont"
+                          className="flex-1 text-headFont"
                           name="position"
                           placeholder="เลือกตำแหน่ง"
                           label="ตำแหน่ง"
@@ -330,6 +337,8 @@ export default function CreateUserPage() {
                           label="คำนำหน้า"
                           labelPlacement={'outside'}
                           onChange={handleChange}
+                          isRequired
+                          errorMessage={'กรุณาเลือกคำนำหน้า'}
                         >
                           {prefix.map((item: any) => (
                             <SelectItem
@@ -341,28 +350,6 @@ export default function CreateUserPage() {
                             </SelectItem>
                           ))}
                         </Select>
-                      </div>
-                      <div className="flex gap-4 mt-6">
-                        <Input
-                          className="flex-1"
-                          label={<span className="text-headFont">ชื่อ</span>}
-                          labelPlacement="outside"
-                          name="firstName"
-                          placeholder="กรอกชื่อ"
-                          onChange={handleChange}
-                          isRequired
-                          errorMessage={'กรุณากรอกชื่อ'}
-                        />
-                      </div>
-                      <div className="flex gap-4 mt-6">
-                        <Input
-                          className="flex-1"
-                          label={<span className="text-headFont">นามสกุล</span>}
-                          labelPlacement="outside"
-                          name="lastName"
-                          placeholder="กรอกนามสกุล"
-                          onChange={handleChange}
-                        />
                       </div>
                       <div className="flex gap-4 mt-6">
                         <DatePicker
@@ -390,6 +377,60 @@ export default function CreateUserPage() {
                               console.error('Invalid date object:', date);
                             }
                           }}
+                        />
+                      </div>
+                      <div className="flex gap-4 mt-6">
+                        <Input
+                          className="flex-1"
+                          label={<span className="text-headFont">ชื่อ</span>}
+                          labelPlacement="outside"
+                          name="firstName"
+                          placeholder="กรอกชื่อ"
+                          onChange={handleChange}
+                          isRequired
+                          errorMessage={'กรุณากรอกชื่อ'}
+                        />
+                      </div>
+                      <div className="flex gap-4 mt-6">
+                        <Input
+                          className="flex-1"
+                          label={
+                            <span className="text-headFont">
+                              ชื่อภาษาอังกฤษ
+                            </span>
+                          }
+                          labelPlacement="outside"
+                          name="firstNameEn"
+                          placeholder="กรอกชื่อภาษาอังกฤษ"
+                          onChange={handleChange}
+                          isRequired
+                        />
+                      </div>
+                      <div className="flex gap-4 mt-6">
+                        <Input
+                          className="flex-1"
+                          label={<span className="text-headFont">นามสกุล</span>}
+                          labelPlacement="outside"
+                          name="lastName"
+                          placeholder="กรอกชื่อ"
+                          onChange={handleChange}
+                          isRequired
+                          errorMessage={'กรุณากรอกชื่อ'}
+                        />
+                      </div>
+                      <div className="flex gap-4 mt-6">
+                        <Input
+                          className="flex-1"
+                          label={
+                            <span className="text-headFont">
+                              นามสกุลภาษาอังกฤษ
+                            </span>
+                          }
+                          labelPlacement="outside"
+                          name="lastNameEn"
+                          placeholder="กรอกนามสกุลภาษาอังกฤษ"
+                          onChange={handleChange}
+                          isRequired
                         />
                       </div>
                       <div className="flex gap-4 mt-6">

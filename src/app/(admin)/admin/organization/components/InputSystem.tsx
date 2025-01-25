@@ -117,7 +117,7 @@ export default function Inputorganization({
           </div>
         ) : (
           <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
-            <div className="flex gap-4 mt-6">
+            <div className="flex gap-4">
               <Select
                 className="flex-1  text-headFont"
                 name="defaultLanguage"

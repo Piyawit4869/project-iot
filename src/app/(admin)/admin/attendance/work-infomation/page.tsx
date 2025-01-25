@@ -72,7 +72,7 @@ export default function WorkInfoPage() {
   const [loading, setLoading] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [items, setItems] = useState<WorkInfoItem[]>([]);
-  const [filters, setFilters] = useState<FilterState>({ name: '', status: '' });
+  // const [filters, setFilters] = useState<FilterState>({ name: '', status: '' });
   const [meta, setMeta] = useState<MetaData>({
     totalItems: 0,
     itemsPerPage: 10,
@@ -83,12 +83,12 @@ export default function WorkInfoPage() {
   const fetchWorkInfo = async () => {
     setLoading(true);
     try {
-      const { name, status } = filters;
+      // const { name, status } = filters;
       const { items: fetchedItems, meta: fetchedMeta } = await pagination({
         page,
         limit: rowsPerPage,
-        ...(name && { name }),
-        ...(status && { status }),
+        // ...(name && { name }),
+        // ...(status && { status }),
       });
 
       console.log('Fetched Items:', fetchedItems);
@@ -133,7 +133,7 @@ export default function WorkInfoPage() {
 
   useEffect(() => {
     fetchWorkInfo();
-  }, [filters, page, rowsPerPage]);
+  }, [page, rowsPerPage]);
 
   return (
     <div>
@@ -163,7 +163,7 @@ export default function WorkInfoPage() {
                   radius="sm"
                   name="name"
                   placeholder="ค้นหาชื่อ"
-                  value={filters.name}
+                  // value={filters.name}
                   // onChange={(e) => onInputChange('name', e.target.value)}
                 />
               </div>
