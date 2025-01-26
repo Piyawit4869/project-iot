@@ -17,8 +17,8 @@ const translations: Record<string, string> = {
   revenue: 'รายได้',
   expenses: 'รายจ่าย',
   analysis: 'วิเคราะห์',
-  attendance: 'การเข้างาน',
-  overview: 'ภาพรวม',
+  attendance: 'การเข้าทำงาน',
+  overview: 'ภาพรวมการเข้าทำงาน',
   'work-infomation': 'ข้อมูลการทำงาน',
   whitelist: 'การเข้าใช้งาน',
   notation: 'เอกสาร',
@@ -39,14 +39,15 @@ export const Breadcrumb = () => {
 
   // Split the pathname into segments
   const pathSegments = pathname.split('/').filter((segment) => segment);
-
   return (
     <Breadcrumbs
       separator={<Icon.RightOutlined className="text-headFont text-xs" />}
     >
       <BreadcrumbItem>
         <Link href="/admin">
-          <span className="text-headFont text-xs">หน้าแรก</span>
+          <span className="text-headFont hover:text-accent1 text-xs">
+            หน้าแรก
+          </span>
         </Link>
       </BreadcrumbItem>
       {pathSegments.map((segment, index) => {
@@ -54,12 +55,16 @@ export const Breadcrumb = () => {
         const href = '/' + pathSegments.slice(0, index + 1).join('/');
         const isLast = index === pathSegments.length - 1;
         return (
-          <BreadcrumbItem key={href} isCurrent={isLast}>
+          <BreadcrumbItem key={href}>
             {isLast ? (
-              <span className="text-headFont text-xs">{translatedSegment}</span>
+              <Link href={href}>
+                <span className="text-accent1 text-headFont-accent1 text-xs  ">
+                  {translatedSegment}
+                </span>
+              </Link>
             ) : (
               <Link href={href}>
-                <span className="text-headFont text-xs">
+                <span className="text-headFont hover:text-accent1 text-xs">
                   {translatedSegment}
                 </span>
               </Link>

@@ -21,8 +21,10 @@ export default function DashboardLayout({
       </aside>
 
       <div className="flex-1 flex flex-col">
-        <header className="bg-white shadow p-4 flex items-center justify-between ">
-          <Breadcrumb />
+        <header className="bg-white shadow p-4  flex justify-between ">
+          <div className=" justify-items-center">
+            <Breadcrumb />
+          </div>
           <div className="flex items-center space-x-4">
             <DropdownHead />
           </div>

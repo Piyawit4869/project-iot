@@ -7,16 +7,12 @@ import { Input, Tab, Tabs } from '@nextui-org/react';
 import pagination from '@/pages/api/attendances/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date';
-// import {
-//   VerticalTimeline,
-//   VerticalTimelineElement,
-// } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
-import { TimelineComponent } from '@/components/admin/adminTimeline';
+// import { TimelineComponent } from '@/components/admin/adminTimeline';
 import Scaffold from '@/components/common/scaffold';
+import CardComponent from '@/components/common/card';
 interface FilterState {
-  name: string;
-  docNo: string;
+  userName: string;
 }
 
 interface MetaData {
@@ -65,8 +61,7 @@ export default function AttendancesPage() {
   const [loading, setLoading] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [filters, setFilters] = React.useState<FilterState>({
-    name: '',
-    docNo: '',
+    userName: '',
   });
   const [items, setItems] = React.useState<AttendanceItem[]>([]);
   const [meta, setMeta] = React.useState<MetaData>({
@@ -81,13 +76,12 @@ export default function AttendancesPage() {
     try {
       console.log('try');
 
-      const { name, docNo } = filters;
+      const { userName } = filters;
 
       const { data } = (await pagination({
         page,
         limit: rowsPerPage,
-        ...(name && { name }),
-        ...(docNo && { docNo }),
+        ...(userName && { userName }),
       })) as any;
       const { items: fetchedItems, meta: fetchedMeta } = data;
 
@@ -127,8 +121,8 @@ export default function AttendancesPage() {
     debounce((updatedFilters) => {
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
-    }, 300),
-    [filters],
+    }),
+    [],
   );
 
   // Handle input changes
@@ -137,13 +131,26 @@ export default function AttendancesPage() {
     handleFilterChange(updatedFilters);
   };
 
+
   React.useEffect(() => {
     fetchAttendances();
   }, [filters, page, rowsPerPage]);
 
-  // console.log('Page:', page);
-  // console.log('Filters:', filters);
-  // console.log('Rows per page:', rowsPerPage);
+  const renderCard = (title: string, count: number, colorClass: string) => (
+    <div className="flex-1">
+      <CardComponent
+        className={colorClass}
+        customCard
+        custom={
+          <div className="text-center">
+            <div className="text-sm text-white">{title}</div>
+            <div className="text-2xl font-bold text-white">{count} คน</div>
+            <div className="text-xs text-white mt-1">วันนี้</div>
+          </div>
+        }
+      />
+    </div>
+  );
 
   return (
     <div>
@@ -151,7 +158,7 @@ export default function AttendancesPage() {
         child={
           <div>
             <TopSection
-              title="ภาพรวมองค์กรทั้งหมด"
+              title="ภาพรวมการทำงานในองค์กร"
               // buttons={[
               //   <Link href={'overview/create'} key={'create button'}>
               //     <Button
@@ -164,26 +171,25 @@ export default function AttendancesPage() {
               //   </Link>,
               // ]}
             />
-            <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
-              <div className="grid grid-cols-1 sm:grid-cols-2">
+            <div className="flex space-x-4 mt-8">
+              {renderCard('เข้างาน', 10, 'bg-accent1')}
+              {renderCard('ลาป่วย/ลากิจ', 0, 'bg-accent3')}
+              {renderCard('มาสาย', 10, 'bg-accent2')}
+              {renderCard('ขาด', 0, 'bg-secondary')}
+            </div>
+            <div className="bg-white shadow rounded-xl mb-4 mt-4 ">
+              <div
+              // className="grid grid-cols-1 sm:grid-cols-2"
+              >
                 <Input
                   className="w-full p-2 text-headFont"
                   labelPlacement="outside"
                   size="sm"
                   radius="sm"
-                  name="name"
-                  placeholder="ค้นหาชื่อ"
-                  value={filters.name}
-                  onChange={(e) => onInputChange('name', e.target.value)}
-                />
-                <Input
-                  className="w-full p-2 text-headFont"
-                  labelPlacement="outside"
-                  size="sm"
-                  name="docNo"
-                  placeholder="ค้นหาหมายเลขเอกสาร"
-                  value={filters.docNo}
-                  onChange={(e) => onInputChange('docNo', e.target.value)}
+                  name="userName"
+                  placeholder="ค้นหาชื่อพนักงาน"
+                  value={filters.userName}
+                  onChange={(e) => onInputChange('userName', e.target.value)}
                 />
               </div>
             </div>
