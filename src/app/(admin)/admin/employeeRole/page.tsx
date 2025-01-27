@@ -5,7 +5,7 @@ import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
-import paginationRoles from '@/pages/api/role/pagination';
+import paginationEmployeeRole from '@/pages/api/employeeRole/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 
 export default function RolesPage() {
@@ -28,7 +28,7 @@ export default function RolesPage() {
     setLoading(true);
     try {
       // const { name } = filters;
-      const { items: fetchedItems } = await paginationRoles({
+      const { items: fetchedItems } = await paginationEmployeeRole({
         page,
         limit: rowsPerPage,
         // ...(name && { name }),
@@ -68,7 +68,7 @@ export default function RolesPage() {
         child={
           <div>
             <TopSection
-              title="ตำแหน่งทั้งหมด"
+              title="ตำแหน่งพนักงาน"
               buttons={[
                 <Link href={'role/create'} key={'create button'}>
                   <Button

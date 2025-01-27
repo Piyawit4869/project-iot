@@ -19,13 +19,13 @@ interface FetchTemplatesResponse {
   };
 }
 
-export default async function paginationRoles({
+export default async function paginationEmployeeRole({
   page,
   limit,
   name,
 }: FetchTemplatesParams): Promise<FetchTemplatesResponse> {
   try {
-    const url = new URL(`${base_url}/crud/roles/paginate`);
+    const url = new URL(`${base_url}/crud/employee-roles/paginate`);
 
     const auth = await getServerSession();
 
