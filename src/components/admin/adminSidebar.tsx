@@ -114,6 +114,7 @@ export function AdminSideBar() {
       subMenu: [
         { name: 'พนักงาน', path: '/admin/user', icon: 'UserCheck' },
         { name: 'ตำแหน่ง', path: '/admin/role', icon: 'Grid' },
+        { name: 'ตำแหน่งพนักงาน', path: '/admin/employeeRole', icon: 'Grid' },
       ],
     },
     {
