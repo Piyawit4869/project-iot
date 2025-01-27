@@ -6,7 +6,7 @@ import { TopSection } from '@/components/common/topSection';
 import pagination from '@/pages/api/whitelists/pagination';
 import createWhitelists from '@/pages/api/whitelists/create'; //API
 import * as Icon from '@ant-design/icons';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import Map from '@/components/map/map';
 import { Button, Form, Input, Textarea } from '@nextui-org/react';
@@ -15,17 +15,17 @@ export default function CreateWhitelistPage() {
   const [errors, setErrors] = React.useState({}) as any;
   const [data, setData] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
-  const params = useParams<{ slug?: string }>();
+  // const params = useParams<{ slug?: string }>();
   const [, setLoading] = React.useState(false);
   const router = useRouter();
-  const [meta, setMeta] = React.useState<any>({
-    totalItems: 0,
-    itemsPerPage: 10,
-    totalPages: 0,
-    currentPage: 1,
-  });
-  const [page, setPage] = React.useState(1);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  // const [meta, setMeta] = React.useState<any>({
+  //   totalItems: 0,
+  //   itemsPerPage: 10,
+  //   totalPages: 0,
+  //   currentPage: 1,
+  // });
+  const [page] = React.useState(1);
+  const [rowsPerPage] = React.useState(10);
 
   // const [latLon, setLatLon] = React.useState() as any;
 
@@ -54,7 +54,7 @@ export default function CreateWhitelistPage() {
     const fetchWhitelists = async () => {
       setLoading(true);
       try {
-        const { items: fetchedItems, meta: fetchedMeta } = await pagination({
+        const { items: fetchedItems } = await pagination({
           page,
           limit: rowsPerPage,
         });
@@ -68,7 +68,7 @@ export default function CreateWhitelistPage() {
     };
 
     fetchWhitelists();
-  }, []);
+  });
 
   console.log(data);
   console.log(data?.address?.organizationId);

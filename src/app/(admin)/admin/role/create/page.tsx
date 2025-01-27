@@ -4,7 +4,6 @@ import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Card, Form, Input, Switch, Textarea } from '@nextui-org/react';
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { createRole } from '@/pages/api/role/create';
 
@@ -12,8 +11,6 @@ export default function RoleCreatePage() {
   // 🔹 State for form data and errors
   const [errors, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
-
-  const router = useRouter();
 
   // 🔹 Handles input changes
   const handleChange = (e: any) => {

@@ -42,13 +42,12 @@ export default function TemplatesPage() {
   };
 
   // Debounced function to handle filter changes
-  const handleFilterChange = React.useCallback(
-    debounce((updatedFilters) => {
+  const handleFilterChange = React.useCallback((updatedFilters: any) => {
+    debounce(() => {
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
-    }),
-    [setPage, setFilters],
-  );
+    }, 300)();
+  }, []);
 
   // Handle input changes
   const onInputChange = (key: keyof typeof filters, value: string) => {
@@ -59,7 +58,7 @@ export default function TemplatesPage() {
   // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
     fetchNotations();
-  }, [filters, page, rowsPerPage, fetchNotations]);
+  });
 
   return (
     <div>
