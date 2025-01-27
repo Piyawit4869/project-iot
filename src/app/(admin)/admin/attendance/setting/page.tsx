@@ -109,13 +109,12 @@ export default function SettingAttendancePage() {
     }
   };
 
-  const handleFilterChange = React.useCallback(
-    debounce((updatedFilters) => {
+  const handleFilterChange = React.useCallback((updatedFilters: any) => {
+    debounce(() => {
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
-    }),
-    [filters, setPage, setFilters],
-  );
+    }, 300)();
+  }, []);
 
   const onInputChange = (key: keyof typeof filters, value: string) => {
     const updatedFilters = { ...filters, [key]: value };
@@ -129,7 +128,7 @@ export default function SettingAttendancePage() {
 
   useEffect(() => {
     fetchConfig();
-  }, [filters, page, rowsPerPage]);
+  });
 
   return (
     <div>

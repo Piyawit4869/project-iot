@@ -43,7 +43,7 @@ const Login = () => {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
   // const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 

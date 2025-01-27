@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
@@ -107,13 +107,14 @@ export default function WhitelistsPage() {
     }
   };
 
-  const handleFilterChange = useCallback(
-    debounce((updatedFilters) => {
+  // Debounced function to handle filter changes
+  const handleFilterChange = React.useCallback((updatedFilters: any) => {
+    debounce(() => {
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
-    }, 500),
-    [setPage, setFilters],
-  );
+    }, 300)();
+  }, []);
+
   const colors = ['secondary'];
 
   const onInputChange = (key: keyof typeof filters, value: string) => {
@@ -127,7 +128,7 @@ export default function WhitelistsPage() {
 
   useEffect(() => {
     fetchWhitelists();
-  }, [filters, page, rowsPerPage]);
+  });
 
   return (
     <div>

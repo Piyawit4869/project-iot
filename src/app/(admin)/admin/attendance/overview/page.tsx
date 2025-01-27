@@ -3,16 +3,11 @@
 import React from 'react';
 import debounce from 'lodash/debounce';
 import { TopSection } from '@/components/common/topSection';
-import { Input, Tab, Tabs } from '@nextui-org/react';
+import { Input } from '@nextui-org/react';
 import pagination from '@/pages/api/attendances/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date';
-// import {
-//   VerticalTimeline,
-//   VerticalTimelineElement,
-// } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
-import { TimelineComponent } from '@/components/admin/adminTimeline';
 import Scaffold from '@/components/common/scaffold';
 interface FilterState {
   name: string;
@@ -79,8 +74,6 @@ export default function AttendancesPage() {
   const fetchAttendances = async () => {
     setLoading(true);
     try {
-      console.log('try');
-
       const { name, docNo } = filters;
 
       const { data } = (await pagination({
@@ -90,11 +83,6 @@ export default function AttendancesPage() {
         ...(docNo && { docNo }),
       })) as any;
       const { items: fetchedItems, meta: fetchedMeta } = data;
-
-      console.log('items', items);
-      console.log('meta', meta);
-      console.log('Fetched Items:', fetchedItems);
-      console.log('Fetched Meta:', fetchedMeta);
 
       setItems(
         fetchedItems.flatMap((item: AttendanceItem) =>
@@ -123,13 +111,12 @@ export default function AttendancesPage() {
   };
 
   // Debounced function to handle filter changes
-  const handleFilterChange = React.useCallback(
-    debounce((updatedFilters) => {
+  const handleFilterChange = React.useCallback((updatedFilters: any) => {
+    debounce(() => {
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
-    }, 300),
-    [filters],
-  );
+    }, 300)();
+  }, []);
 
   // Handle input changes
   const onInputChange = (key: keyof typeof filters, value: string) => {
@@ -139,31 +126,14 @@ export default function AttendancesPage() {
 
   React.useEffect(() => {
     fetchAttendances();
-  }, [filters, page, rowsPerPage]);
-
-  // console.log('Page:', page);
-  // console.log('Filters:', filters);
-  // console.log('Rows per page:', rowsPerPage);
+  });
 
   return (
     <div>
       <Scaffold
         child={
           <div>
-            <TopSection
-              title="ภาพรวมองค์กรทั้งหมด"
-              // buttons={[
-              //   <Link href={'overview/create'} key={'create button'}>
-              //     <Button
-              //       className="bg-accent1 text-white"
-              //       size="sm"
-              //       key={'create button'}
-              //     >
-              //       สร้างกิจกรรม
-              //     </Button>
-              //   </Link>,
-              // ]}
-            />
+            <TopSection title="ภาพรวมองค์กรทั้งหมด" />
             <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
               <div className="grid grid-cols-1 sm:grid-cols-2">
                 <Input

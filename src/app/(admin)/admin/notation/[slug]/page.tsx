@@ -11,7 +11,6 @@ import {
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   Select,
   SelectItem,
@@ -34,7 +33,6 @@ import pagination from '@/pages/api/templates/pagination';
 import { handleDocumentStatusTag } from '@/components/common/common';
 import paginationItems from '@/pages/api/items/pagination';
 import paginationCustomers from '@/pages/api/customer/pagination';
-import { div } from 'framer-motion/client';
 
 export default function NotationSinglePage() {
   const [zoomLevel, setZoomLevel] = React.useState(100);
@@ -907,7 +905,7 @@ export default function NotationSinglePage() {
                       size="4xl"
                     >
                       <ModalContent>
-                        {(onClose) => (
+                        {() => (
                           <>
                             <ModalHeader className="flex flex-col gap-1">
                               เอกสาร

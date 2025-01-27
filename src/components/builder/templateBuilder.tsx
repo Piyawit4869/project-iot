@@ -206,6 +206,7 @@ export const TemplateBuilder = ({
         router.push(`/admin/notation/template/${data.id}`);
       }
     } catch (error) {
+      console.error('Save error:', error);
       toast.error('❌ ไม่สามารถบันทึกรูปแบบเอกสารได้', {
         duration: 3000,
         position: 'bottom-left',

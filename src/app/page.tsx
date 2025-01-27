@@ -77,7 +77,7 @@ import { toast } from 'sonner';
 const Login = () => {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+  const [, setError] = useState(null);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 

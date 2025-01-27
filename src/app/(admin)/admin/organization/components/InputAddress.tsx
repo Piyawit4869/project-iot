@@ -4,8 +4,8 @@ import { Button, Input, Textarea } from '@nextui-org/react';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 import { TablePagination } from '@/components/common/tablePagination';
-import { updateIsmain } from '@/pages/api/organization/update-address';
-import { toast } from 'sonner';
+// import { updateIsmain } from '@/pages/api/organization/update-address';
+// import { toast } from 'sonner';
 
 interface InpuAddressProps {
   data: any;
@@ -22,9 +22,10 @@ export default function Inputorganization({
   const [formData, setFormData] = React.useState<any>(data);
   const [address, setAddress] = React.useState<any[]>([]);
   const [tableAddress, setTableAddress] = React.useState<any[]>([]);
-  const [page, setPage] = React.useState(1);
+  // eslint-disable-next-line no-unused-vars
+  const [, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [meta, setMeta] = React.useState({
+  const [meta] = React.useState({
     totalItems: 0,
     itemsPerPage: 10,
     totalPages: 0,
@@ -62,31 +63,31 @@ export default function Inputorganization({
     onChange({ ...formData, [name]: updatedData });
   };
 
-  const onIsMain = async () => {
-    try {
-      const payload = {
-        ...tableAddress,
-        ...data,
-      };
+  // const onIsMain = async () => {
+  //   try {
+  //     const payload = {
+  //       ...tableAddress,
+  //       ...data,
+  //     };
 
-      delete payload.data;
+  //     delete payload.data;
 
-      // await updateIsmain(payload);
+  //     // await updateIsmain(payload);
 
-      toast.success('เอกสารถูกเปลี่ยนเป็นรอตรวจสอบแล้ว!', {
-        duration: 3000,
-        position: 'bottom-left',
-        style: { fontFamily: 'var(--font-ibm-sans)' },
-      });
-    } catch (error) {
-      toast.error('❌ ไม่สามารถเปลี่ยนเอกสารเป็นรอตรวจสอบได้', {
-        duration: 3000,
-        position: 'bottom-left',
-        style: { fontFamily: 'var(--font-ibm-sans)' },
-      });
-      console.error('Waiting error:', error);
-    }
-  };
+  //     toast.success('เอกสารถูกเปลี่ยนเป็นรอตรวจสอบแล้ว!', {
+  //       duration: 3000,
+  //       position: 'bottom-left',
+  //       style: { fontFamily: 'var(--font-ibm-sans)' },
+  //     });
+  //   } catch (error) {
+  //     toast.error('❌ ไม่สามารถเปลี่ยนเอกสารเป็นรอตรวจสอบได้', {
+  //       duration: 3000,
+  //       position: 'bottom-left',
+  //       style: { fontFamily: 'var(--font-ibm-sans)' },
+  //     });
+  //     console.error('Waiting error:', error);
+  //   }
+  // };
 
   return (
     <Scaffold

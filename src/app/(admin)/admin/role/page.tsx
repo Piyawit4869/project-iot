@@ -11,7 +11,7 @@ import { TablePagination } from '@/components/common/tablePagination';
 export default function RolesPage() {
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [filters, setFilters] = React.useState({
+  const [filters] = React.useState({
     name: '',
   });
   const [items, setItems] = React.useState([]) as any;
@@ -60,7 +60,7 @@ export default function RolesPage() {
   // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
     fetchCustomer();
-  }, [filters, page, rowsPerPage]);
+  });
 
   return (
     <div>
