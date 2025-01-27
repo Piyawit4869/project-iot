@@ -30,6 +30,8 @@ export enum DocumentStatus {
 //   Low = 'low',
 // }
 
+
+
 export const handleTypeTag = (type: string) => {
   const typeTags: Record<string, { text: string; bg: string }> = {
     invoice: { text: 'ใบแจ้งหนี้', bg: 'bg-yellow-100' },
@@ -105,6 +107,25 @@ export const handleDocumentStatusTag = (status: string) => {
       } text-yellow-700 border border-gray`}
     >
       {documentStatusTags[status as DocumentStatus].text}
+    </Chip>
+  );
+};
+
+export const handleAction = (actions: string) => {
+  const action: Record<string, { text: string; bg: string }> = {
+    in: { text: 'เข้างานแล้ว', bg: 'bg-green-100' },
+    break: { text: 'พักเบรก', bg: 'bg-yellow-100' },
+    out: { text: 'ออกงานแล้ว', bg: 'bg-red-100' },
+  };
+
+  if (!action[actions]) return null;
+
+  return (
+    <Chip
+      style={{ width: 'auto', minWidth: '80px' }}
+      className={`px-3 py-1 rounded-full text-xs font-medium ${action[actions].bg} text-yellow-700 border border-gray`}
+    >
+      {action[actions].text}
     </Chip>
   );
 };

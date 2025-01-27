@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+// import Image from 'next/image';
 import { CardControl } from '@/components/setting/card-organization';
 import {
   Select,
@@ -16,8 +16,8 @@ import {
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 import { parseDate } from '@internationalized/date';
-import { Skeleton } from '@/components/ui/skeleton';
-import { div } from 'framer-motion/client';
+// import { Skeleton } from '@/components/ui/skeleton';
+// import { div } from 'framer-motion/client';
 
 interface InputorBranchProps {
   data: any;
@@ -32,7 +32,7 @@ export default function InputBranch({
 }: InputorBranchProps) {
   const [formData, setFormData] = React.useState<any>(data);
   const [branch, setBranch] = React.useState<any[]>([]);
-  const [loading, setLoading] = React.useState(false);
+  // const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     if (data) {

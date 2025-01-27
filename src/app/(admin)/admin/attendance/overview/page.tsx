@@ -3,7 +3,7 @@
 import React from 'react';
 import debounce from 'lodash/debounce';
 import { TopSection } from '@/components/common/topSection';
-import { Input, Tab, Tabs } from '@nextui-org/react';
+import { Input } from '@nextui-org/react';
 import pagination from '@/pages/api/attendances/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date';
@@ -11,6 +11,7 @@ import 'react-vertical-timeline-component/style.min.css';
 // import { TimelineComponent } from '@/components/admin/adminTimeline';
 import Scaffold from '@/components/common/scaffold';
 import CardComponent from '@/components/common/card';
+import { handleAction } from '@/components/common/common';
 interface FilterState {
   userName: string;
 }
@@ -41,10 +42,15 @@ const columns = [
     title: 'ชื่อ',
     dataIndex: 'userName',
     Link: '/admin/attendance/overview',
+    align: 'left',
   },
   {
     title: 'กิจกรรม',
     dataIndex: 'action',
+    align: 'center',
+    render: (value: string) => {
+      return handleAction(value);
+    },
   },
   {
     title: 'บันทึกเมื่อวันที่',
@@ -122,7 +128,7 @@ export default function AttendancesPage() {
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
     }),
-    [],
+    [filters],
   );
 
   // Handle input changes
@@ -131,10 +137,9 @@ export default function AttendancesPage() {
     handleFilterChange(updatedFilters);
   };
 
-
   React.useEffect(() => {
     fetchAttendances();
-  }, [filters, page, rowsPerPage]);
+  }, [filters]);
 
   const renderCard = (title: string, count: number, colorClass: string) => (
     <div className="flex-1">
@@ -177,7 +182,7 @@ export default function AttendancesPage() {
               {renderCard('มาสาย', 10, 'bg-accent2')}
               {renderCard('ขาด', 0, 'bg-secondary')}
             </div>
-            <div className="bg-white shadow rounded-xl mb-4 mt-4 ">
+            <div className="bg-white shadow rounded-lg mb-4 mt-4 ">
               <div
               // className="grid grid-cols-1 sm:grid-cols-2"
               >

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, Textarea, Switch } from '@nextui-org/react';
+import { Button, Form, Input, Textarea } from '@nextui-org/react';
 import { update } from '@/pages/api/whitelists/update'; // API update
 import { deleteWhitelists } from '@/pages/api/whitelists/delete'; // API delete
 import getSingle from '@/pages/api/whitelists/get'; // API get
@@ -171,7 +171,7 @@ export default function WhitelistSinglePage() {
 
   const onApproved = async () => {
     try {
-      await changeStatusApproveWhitelists(params?.slug, 'approved');
+      await changeStatusApproveWhitelists(params?.slug);
 
       router.push(`/admin/attendance/whitelist/${params?.slug}`);
     } catch (error) {
@@ -181,7 +181,7 @@ export default function WhitelistSinglePage() {
 
   const onRejected = async () => {
     try {
-      await changeStatusRejectWhitelists(params?.slug, 'Rejected');
+      await changeStatusRejectWhitelists(params?.slug);
 
       router.push(`/admin/attendance/whitelist/${params?.slug}`);
     } catch (error) {
@@ -210,7 +210,7 @@ export default function WhitelistSinglePage() {
               title="แก้ไขการเข้าใช้งาน"
               backpath={'/admin/attendance/whitelist'}
               buttons={[
-                <div className="mx-2.5 gap-2">
+                <div className="mx-2.5 gap-2" key="status button">
                   <Button
                     key={'approve whitelist button'}
                     className="bg-accent1 text-white m-1"

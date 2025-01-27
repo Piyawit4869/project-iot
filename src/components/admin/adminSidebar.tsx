@@ -22,7 +22,7 @@ const renderIcon = (iconName: string) => {
 
 export function AdminSideBar() {
   const pathname = usePathname() ?? '';
-  const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
+  const [isSidebarOpen,] = React.useState(true);
   const [open, setOpen] = React.useState(true);
 
   const me = getClientSession();

@@ -7,7 +7,6 @@ import {
   Input,
   Select,
   SelectItem,
-  TimeInput,
 } from '@nextui-org/react';
 import React from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -25,10 +24,10 @@ export default function Inputorganization({
   onChangeTime,
   openEdit,
 }: InputSystem) {
-  const [items, setItems] = React.useState([{ description: '', amount: '' }]);
+  const [items] = React.useState([{ description: '', amount: '' }]);
   const [formData, setFormData] = React.useState<any>(data);
   const [openDay, setOpenDay] = React.useState<any[]>([]);
-  const [loading, setLoading] = React.useState(false);
+  const [loading] = React.useState(false);
 
   React.useEffect(() => {
     if (data) {

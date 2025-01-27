@@ -4,7 +4,7 @@ import { Button, Input, Textarea } from '@nextui-org/react';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 import { TablePagination } from '@/components/common/tablePagination';
-import Icon from '@ant-design/icons';
+// import Icon from '@ant-design/icons';
 
 interface InpuAddressProps {
   data: any;
@@ -21,9 +21,9 @@ export default function Inputorganization({
   const [formData, setFormData] = React.useState<any>(data);
   const [address, setAddress] = React.useState<any[]>([]);
   const [tableAddress, setTableAddress] = React.useState<any[]>([]);
-  const [page, setPage] = React.useState(1);
+  const [, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [meta, setMeta] = React.useState({
+  const [meta,] = React.useState({
     totalItems: 0,
     itemsPerPage: 10,
     totalPages: 0,

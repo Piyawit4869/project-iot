@@ -76,13 +76,13 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
 
   return (
     <div>
-      <div className="overflow-x-auto overscroll-auto rounded-2xl border-gray-25 shadow-md">
-        <Table className="bg-white rounded-2xl flex-1">
-          <TableHeader className="bg-accent1 text-white rounded-2xl flex-1">
-            <TableRow className=" text-white flex-1 hover:bg-accent1" >
+      <div className="overflow-x-auto rounded-xl border-collapse">
+        <Table className="bg-white rounded-xl flex-1">
+          <TableHeader className="bg-accent1 text-white rounded-xl flex-1">
+            <TableRow className="text-white text-sm flex-1 hover:bg-accent1 divide-x divide">
               {columns.map((col) => (
                 <TableCell
-                  className="p-2.5 mx-4 font-semibold whitespace-nowrap"
+                  className="py-2.5 px-4 font-semibold whitespace-nowrap border-collapse"
                   key={col.dataIndex}
                   align={col.align || 'left'}
                 >
@@ -91,14 +91,15 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
               ))}
             </TableRow>
           </TableHeader>
-          <TableBody className="">
+          <TableBody>
             {initialRows.length > 0 ? (
               initialRows.map((row, idx) => (
-                <TableRow key={idx} className="hover:bg-gray-100">
+                <TableRow key={idx} className="hover:bg-gray-50 ">
                   {columns.map((col) => (
                     <TableCell
                       key={col.dataIndex}
-                      className="p-3 border border-gray-300"
+                      className="p-3 border border-collapse-secondary text-sm"
+                      align={col.align || 'left'}
                     >
                       {col.render ? (
                         col.render(row[col.dataIndex], row, idx)
@@ -120,7 +121,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="text-center text-gray-500 p-4"
+                  className=" text-center text-gray-500 p-4 border border-gray-300 "
                 >
                   ไม่พบข้อมูล
                 </TableCell>
@@ -129,7 +130,6 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
           </TableBody>
         </Table>
       </div>
-
       <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
         <div className="text-gray-700 text-sm">
           <strong>
