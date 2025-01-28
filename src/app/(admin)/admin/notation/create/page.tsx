@@ -92,6 +92,7 @@ export default function NotationCreatePage() {
       itemsId: selectedItems, // Store as array of objects
     }));
   };
+
   React.useEffect(() => {
     const fetchTemplate = async () => {
       const { items: fetchedTemplate } = await pagination({

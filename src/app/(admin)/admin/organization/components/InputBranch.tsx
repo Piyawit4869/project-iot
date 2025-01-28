@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+// import Image from 'next/image';
 import { CardControl } from '@/components/setting/card-organization';
 import {
   Select,
@@ -90,7 +90,7 @@ export default function InputBranch({
               <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                 <div>
                   <p>รูปภาพสาขา</p>
-                  <Image
+                  <img
                     src={branch?.logoUrl} // Replace with your actual logo path in the `public` folder
                     alt="Logo"
                     width={100}

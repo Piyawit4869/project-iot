@@ -16,150 +16,96 @@ import React from 'react';
 import { createUser } from '@/pages/api/user/create';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import paginationRoles from '@/pages/api/role/pagination';
+import paginationEmployeeRole from '@/pages/api/employeeRole/pagination';
+import { useClientSession } from '@/libs/auth';
 
 export default function CreateUserPage() {
   const [errors, setErrors] = React.useState({}) as any;
-  const [, setLoading] = React.useState(false);
   const [formData, setFormData] = React.useState({}) as any;
+  const [role, setRole] = React.useState([]) as any;
+  const [EmployeeRole, setEmployeeRole] = React.useState([]) as any;
+  const [roleSelect, setRoleSelect] = React.useState<string>('');
+  const [employeeRoleSelect, setEmployeeRoleSelect] =
+    React.useState<string>('');
   const router = useRouter();
 
-  // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault(); // Prevent the form from submitting to the URL
-  //   const formData = new FormData(e.currentTarget);
-
-  //   // Convert formData to an object
-  //   const data = Object.fromEntries(formData.entries());
-  //   console.log(data); // Log the form data for debugging
-  // };
-
-  // const resetForm = (formId: string): void => {
-  //   const form = document.getElementById(formId) as HTMLFormElement | null;
-  //   if (form) {
-  //     form.reset();
-  //     console.log(`Form with ID "${formId}" has been cleared.`);
-  //   }
-  // };
-
-  // const {
-  //   isOpen: isCreate,
-  //   onOpen: openCreate,
-  //   onOpenChange: changeCreate,
-  // } = useDisclosure();
+  const me = useClientSession();
 
   const handleChange = (e: any) => {
-    const { name, checked, type, value } = e.target;
+    const { name, type, value, checked } = e.target;
+
     setFormData((prevData: any) => ({
       ...prevData,
       [name]:
         type === 'checkbox'
           ? checked
-          : name === 'birthDate' && value instanceof Date
+          : name === 'startDate' && value instanceof Date
           ? value.toISOString()
           : value,
     }));
   };
 
-  // const onSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setLoading(false);
+  const handleRoleChange = (value: string) => {
+    setRoleSelect(value);
+    setEmployeeRoleSelect('');
+  };
 
-  //   const requiredFields = [
-  //     'email',
-  //     'username',
-  //     'password',
-  //     'position',
-  //     'firstName',
-  //   ];
-  //   const newErrors: any = {};
+  const handleEmployeeRoleChange = (value: string) => {
+    setEmployeeRoleSelect(value);
+  };
 
-  //   requiredFields.forEach((field) => {
-  //     if (!formData[field] || formData[field].trim() === '') {
-  //       newErrors[field] = `Field ${field} is required.`;
-  //     }
-  //   });
+  React.useEffect(() => {
+    const fetchRole = async () => {
+      const { items: fetchedItems } = await paginationRoles({});
+      setRole(fetchedItems.items);
+    };
 
-  //   if (Object.keys(newErrors).length > 0) {
-  //     setErrors(newErrors);
-  //     return;
-  //   }
+    const fetchEmployeeRole = async () => {
+      const { items: fetchedItems } = await paginationEmployeeRole({});
+      setEmployeeRole(fetchedItems.items);
+    };
 
-  //   try {
-  //     const payload = {
-  //       profile: {
-  //         prefix: formData.prefix,
-  //         firstName: formData.firstName,
-  //         lastName: formData.lastName,
-  //         birthDate: formData.birthDate,
-  //         phone: formData.phone,
-  //       },
-  //       role: {
-  //         name: formData.position,
-  //       },
-  //       ...formData,
-  //       status: 'active',
-  //       // status: 'active',
-  //     };
-
-  //     if (!payload.active) {
-  //       payload.active = false;
-  //     } else {
-  //       payload.active = true;
-  //     }
-
-  //     const data = await createUser({}, payload);
-  //     console.log('Create User', data);
-
-  //     if (data.success) {
-  //       toast.success('🎉 สร้างผู้ใช้งานสำเร็จ!', {
-  //         duration: 3000,
-  //         position: 'bottom-left',
-  //         style: { fontFamily: 'var(--font-ibm-sans)' },
-  //       });
-  //     }
-
-  //     // router.push(`/admin/user/${data.data.id}`);
-  //   } catch (err: any) {
-  //     toast.error('❌ ไม่สามารถสร้างผู้ใช้งานได้', {
-  //       duration: 3000,
-  //       position: 'bottom-left',
-  //       style: { fontFamily: 'var(--font-ibm-sans)' },
-  //     });
-
-  //     console.error('Send FormData error:', err);
-  //     setErrors({ general: err.message || 'An unexpected error occurred.' });
-  //   }
-  // };
+    fetchRole();
+    fetchEmployeeRole();
+  }, []);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(false);
 
-    const requiredFields = [
-      'email',
-      'userName',
-      'prefix',
-      'position',
-      'firstNameEn',
-      'firstName',
-      'lastNameEn',
-      'lastName',
-    ];
-    const newErrors: any = {};
+    // const requiredFields = [
+    //   'email',
+    //   'userName',
+    //   'prefix',
+    //   'position',
+    //   'firstNameEn',
+    //   'firstName',
+    //   'lastNameEn',
+    //   'lastName',
+    // ];
+    // const newErrors: any = {};
 
-    requiredFields.forEach((field) => {
-      if (!formData[field] || formData[field].trim() === '') {
-        newErrors[field] = `Field ${field} is required.`;
-      }
-    });
+    // requiredFields.forEach((field) => {
+    //   if (!formData[field] || formData[field].trim() === '') {
+    //     newErrors[field] = `Field ${field} is required.`;
+    //   }
+    // });
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setLoading(false);
-      return;
-    }
+    // if (Object.keys(newErrors).length > 0) {
+    //   setErrors(newErrors);
+    //   return;
+    // }
 
     try {
       const payload = {
+        email: formData.email,
+        userName: formData.userName,
+        password: formData.password,
+        active: formData.active,
+        status: 'active',
+        roleId: roleSelect,
+        employeeRoleId: employeeRoleSelect,
+        branchId: me?.branchId,
         profile: {
           prefix: formData.prefix,
           firstName: formData.firstName,
@@ -167,11 +113,6 @@ export default function CreateUserPage() {
           birthDate: formData.birthDate,
           phone: formData.phone,
         },
-        // role: {
-        //   name: formData.position,
-        // },
-        ...formData,
-        status: 'active',
       };
 
       if (!payload.active) {
@@ -181,7 +122,7 @@ export default function CreateUserPage() {
       }
 
       console.log(payload);
-      const res = await createUser({}, payload);
+      // const res = await createUser({}, payload);
       console.log('Create', res);
 
       toast.success('📝 สร้างข้อมูลผู้ใช้งานสำเร็จ!', {
@@ -200,8 +141,6 @@ export default function CreateUserPage() {
 
       console.error('Send FormData error:', err);
       setErrors({ general: err.message || 'An unexpected error occurred.' });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -289,7 +228,8 @@ export default function CreateUserPage() {
                           errorMessage={'กรุณากรอกชื่อผู้ใช้'}
                         />
                       </div>
-                      <div className="flex gap-4 mt-6">
+
+                      <div className="flex gap-4 mt-7">
                         <Input
                           className=""
                           label={
@@ -302,32 +242,62 @@ export default function CreateUserPage() {
                           errorMessage={'กรุณากรอกรหัสผ่าน'}
                           description={
                             <span className="text-red-500 ml-2 text-sm">
-                              * ถ้าไม่ใส่รหัสผ่าน รหัสจะถูกสร้างจากชื่อ
+                              * ถ้าไม่ใส่รหัสผ่าน รหัสจะถูกสร้างจากชื่อและอีเมล
                             </span>
                           }
                         />
                       </div>
+
                       <div className="flex">
                         <Select
                           className="flex-1 text-headFont"
-                          name="position"
+                          name="role"
                           placeholder="เลือกตำแหน่ง"
                           label="ตำแหน่ง"
                           labelPlacement={'outside'}
-                          onChange={handleChange}
+                          // onChange={handleChange}
+                          onChange={(e) => handleRoleChange(e.target.value)}
                           isRequired
                           errorMessage={'กรุณาเลือกตำแหน่ง'}
                         >
-                          {position.map((item: any) => (
+                          {role.map((item: any) => (
                             <SelectItem
                               className="text-headFont"
-                              key={item.label}
-                              value={item.value}
+                              key={item.id}
+                              value={item.id}
                             >
-                              {item.label}
+                              {item.name}
                             </SelectItem>
                           ))}
                         </Select>
+                      </div>
+
+                      <div className="flex mt-6">
+                        {roleSelect ===
+                          '3ef9313d-cd11-4449-86e4-ec55dd8f23a7' && (
+                          <Select
+                            className="flex-1 text-headFont"
+                            name="employeeRole"
+                            placeholder="เลือกตำแหน่งพนักงาน"
+                            label="ตำแหน่งพนักงาน"
+                            labelPlacement={'outside'}
+                            onChange={(e) =>
+                              handleEmployeeRoleChange(e.target.value)
+                            }
+                            isRequired
+                            errorMessage={'กรุณาเลือกตำแหน่งพนักงาน'}
+                          >
+                            {EmployeeRole.map((item: any) => (
+                              <SelectItem
+                                className="text-headFont"
+                                key={item.id}
+                                value={item.id}
+                              >
+                                {item.name}
+                              </SelectItem>
+                            ))}
+                          </Select>
+                        )}
                       </div>
                       <div className="flex gap-4 mt-6">
                         <Select
@@ -456,11 +426,6 @@ export default function CreateUserPage() {
     />
   );
 }
-
-const position = [
-  { label: 'Employee', value: 'employee' },
-  { label: 'Owner', value: 'owner' },
-];
 
 const prefix = [
   { label: 'นาย', value: 'Mr.' },

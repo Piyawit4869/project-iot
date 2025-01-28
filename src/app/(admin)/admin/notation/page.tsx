@@ -63,7 +63,7 @@ export default function NotationsPage() {
   // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
     fetchNotations();
-  });
+  }, []);
 
   return (
     <div>

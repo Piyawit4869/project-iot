@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/sidebar';
 import React, { useCallback } from 'react';
 import * as Icons from 'lucide-react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { useClientSession } from '@/libs/auth';
 
 const renderIcon = (iconName: string) => {
@@ -27,7 +27,6 @@ export function AdminSideBar() {
   const [open, setOpen] = React.useState(true);
 
   const me = useClientSession();
-  console.log(me);
 
   const menuData: any = React.useMemo(
     () => [
@@ -163,7 +162,7 @@ export function AdminSideBar() {
     >
       <Sidebar>
         <div className="flex items-center justify-start p-2">
-          <Image
+          <img
             src={me?.organization?.logoUrl} // Replace with your actual logo path in the `public` folder
             alt="Logo"
             width={50}

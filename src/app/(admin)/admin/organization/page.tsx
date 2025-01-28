@@ -705,11 +705,6 @@ export default function OraganizationPage() {
                                           </Button>
                                         </div>
                                         <div className="mb-4">
-                                          {/* <NextTable
-                                            columns={columns}
-                                            rows={dataAddress}
-                                            rowClickHandler={handleRowAddress}
-                                          /> */}
                                           <TablePagination
                                             initialRows={dataAddress}
                                             initialMeta={meta}

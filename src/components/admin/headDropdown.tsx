@@ -15,7 +15,7 @@ import Link from 'next/link';
 export function DropdownHead() {
   const handleSignOut = async () => {
     await signOut({
-      callbackUrl: '/login', // Redirect to login page after logout
+      callbackUrl: '/', // Redirect to login page after logout
     });
   };
 
