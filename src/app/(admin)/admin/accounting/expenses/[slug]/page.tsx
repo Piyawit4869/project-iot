@@ -1,5 +1,3 @@
-'use client';
-
 import CardComponent from '@/components/common/card';
 import Scaffold from '@/components/common/scaffold';
 import { Spacer } from '@nextui-org/react';

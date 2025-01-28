@@ -1,17 +1,17 @@
 'use client';
 
 import React from 'react';
-import debounce from 'lodash/debounce';
+// import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
-import paginationCustomers from '@/pages/api/customer/pagination';
+import paginationRoles from '@/pages/api/role/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 
 export default function RolesPage() {
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [filters, setFilters] = React.useState({
+  const [filters] = React.useState({
     name: '',
   });
   const [items, setItems] = React.useState([]) as any;
@@ -27,15 +27,14 @@ export default function RolesPage() {
   const fetchCustomer = async () => {
     setLoading(true);
     try {
-      const { name } = filters;
-      const { items: fetchedItems, meta: fetchedMeta } =
-        await paginationCustomers({
-          page,
-          limit: rowsPerPage,
-          ...(name && { name }),
-        });
-      setItems(fetchedItems);
-      setMeta(fetchedMeta);
+      // const { name } = filters;
+      const { items: fetchedItems } = await paginationRoles({
+        page,
+        limit: rowsPerPage,
+        // ...(name && { name }),
+      });
+      setItems(fetchedItems.items);
+      setMeta(fetchedItems.meta);
     } catch (error) {
       console.log('Error fetching notations:', error);
     } finally {
@@ -44,24 +43,24 @@ export default function RolesPage() {
   };
 
   // Debounced function to handle filter changes
-  const handleFilterChange = React.useCallback(
-    debounce((updatedFilters) => {
-      setPage(1); // Reset to the first page for new filters
-      setFilters(updatedFilters);
-    }),
-    [setPage, setFilters],
-  );
+  // const handleFilterChange = React.useCallback(
+  //   debounce((updatedFilters) => {
+  //     setPage(1); // Reset to the first page for new filters
+  //     setFilters(updatedFilters);
+  //   }),
+  //   [],
+  // );
 
   // Handle input changes
-  const onInputChange = (key: keyof typeof filters, value: string) => {
-    const updatedFilters = { ...filters, [key]: value };
-    handleFilterChange(updatedFilters);
-  };
+  // const onInputChange = (key: keyof typeof filters, value: string) => {
+  //   const updatedFilters = { ...filters, [key]: value };
+  //   handleFilterChange(updatedFilters);
+  // };
 
   // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
     fetchCustomer();
-  }, [filters, page, rowsPerPage]);
+  });
 
   return (
     <div>
@@ -92,7 +91,8 @@ export default function RolesPage() {
                   name="name"
                   placeholder="ค้นหาชื่อตำแหน่ง"
                   value={filters.name}
-                  onChange={(e) => onInputChange('name', e.target.value)}
+                  isDisabled
+                  // onChange={(e) => onInputChange('name', e.target.value)}
                 />
               </div>
             </div>

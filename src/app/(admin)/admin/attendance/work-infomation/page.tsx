@@ -10,11 +10,6 @@ import { formatDate } from '@/utils/enums/date'; // <-- Import formatDate here
 // import debounce from 'lodash/debounce';
 // import * as Icon from '@ant-design/icons';
 
-// interface FilterState {
-//   name: string; // Changed from 'ip' to 'name'
-//   status: string;
-// }
-
 interface MetaData {
   totalItems: number;
   itemsPerPage: number;
@@ -133,7 +128,7 @@ export default function WorkInfoPage() {
 
   useEffect(() => {
     fetchWorkInfo();
-  }, [page, rowsPerPage]);
+  });
 
   return (
     <div>

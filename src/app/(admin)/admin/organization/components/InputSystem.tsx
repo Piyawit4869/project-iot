@@ -2,12 +2,7 @@
 
 import Scaffold from '@/components/common/scaffold';
 import * as Icon from '@ant-design/icons';
-import {
-  Button,
-  Input,
-  Select,
-  SelectItem,
-} from '@nextui-org/react';
+import { Button, Input, Select, SelectItem } from '@nextui-org/react';
 import React from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 

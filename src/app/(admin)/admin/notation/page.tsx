@@ -47,13 +47,12 @@ export default function NotationsPage() {
   };
 
   // Debounced function to handle filter changes
-  const handleFilterChange = React.useCallback(
-    debounce((updatedFilters) => {
+  const handleFilterChange = React.useCallback((updatedFilters: any) => {
+    debounce(() => {
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
-    }),
-    [],
-  );
+    }, 300)();
+  }, []);
 
   // Handle input changes
   const onInputChange = (key: keyof typeof filters, value: string) => {
@@ -64,7 +63,7 @@ export default function NotationsPage() {
   // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
     fetchNotations();
-  }, [filters, page, rowsPerPage]);
+  });
 
   return (
     <div>

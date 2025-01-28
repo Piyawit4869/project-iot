@@ -28,6 +28,7 @@ const translations: Record<string, string> = {
   item: 'สินค้าและรายการ',
   template: 'รูปแบบเอกสาร',
   new: 'สร้าง',
+  employeeRole: 'ตำแหน่งพนักงาน',
 };
 
 const translateSegment = (segment: string): string => {

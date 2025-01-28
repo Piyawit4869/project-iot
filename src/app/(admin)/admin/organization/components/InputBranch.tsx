@@ -16,8 +16,6 @@ import {
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 import { parseDate } from '@internationalized/date';
-// import { Skeleton } from '@/components/ui/skeleton';
-// import { div } from 'framer-motion/client';
 
 interface InputorBranchProps {
   data: any;
@@ -32,7 +30,6 @@ export default function InputBranch({
 }: InputorBranchProps) {
   const [formData, setFormData] = React.useState<any>(data);
   const [branch, setBranch] = React.useState<any[]>([]);
-  // const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     if (data) {
@@ -93,7 +90,7 @@ export default function InputBranch({
               <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                 <div>
                   <p>รูปภาพสาขา</p>
-                  <img
+                  <Image
                     src={branch?.logoUrl} // Replace with your actual logo path in the `public` folder
                     alt="Logo"
                     width={100}

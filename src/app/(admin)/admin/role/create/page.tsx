@@ -4,28 +4,27 @@ import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Card, Form, Input, Switch, Textarea } from '@nextui-org/react';
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { createRole } from '@/pages/api/role/create';
 
 export default function RoleCreatePage() {
   // 🔹 State for form data and errors
   const [errors, setErrors] = React.useState({}) as any;
-  const [formData, setFormData] = React.useState({
-    active: false,
-    name: '',
-    description: '',
-    // addresses: [], // Uncomment if needed later
-  }) as any;
-
-  const router = useRouter();
+  const [formData, setFormData] = React.useState({}) as any;
 
   // 🔹 Handles input changes
   const handleChange = (e: any) => {
-    const { name, value } = e.target;
+    const { name, checked, type, value } = e.target;
     setFormData((prevData: any) => ({
       ...prevData,
-      [name]: value,
+      [name]:
+        type === 'checkbox'
+          ? checked
+            ? 'active'
+            : 'false'
+          : name === 'birthDate' && value instanceof Date
+          ? value.toISOString()
+          : value,
     }));
   };
 
@@ -50,23 +49,23 @@ export default function RoleCreatePage() {
 
     try {
       const payload = {
-        companyName: formData.companyName,
-        taxId: formData.taxId,
+        ...formData,
       };
 
       // 🔹 Send data to API
-      const { data } = await createRole({}, payload);
+      const data = await createRole({}, payload);
+      console.log(data);
 
-      toast.success('🎉 ลูกค้าถูกสร้างสำเร็จ!', {
+      toast.success('🎉 ตำแหน่งใหม่ถูกสร้าง!', {
         duration: 3000,
         position: 'bottom-left',
         style: { fontFamily: 'var(--font-ibm-sans)' },
       });
 
       // 🔹 Redirect after successful creation
-      router.push(`/admin/customer/${data.id}`);
+      // router.push(`/admin/customer/${data.id}`);
     } catch (err: any) {
-      toast.error('❌ ไม่สามารถสร้างลูกค้าได้', {
+      toast.error('❌ ไม่สามารถสร้างตำแหน่งใหม่ได้ได้', {
         duration: 3000,
         position: 'bottom-left',
         style: { fontFamily: 'var(--font-ibm-sans)' },
@@ -83,7 +82,7 @@ export default function RoleCreatePage() {
         <div>
           {/* 🔹 Page Header */}
           <TopSection
-            title="สร้างตำแหน่งงานใหม่"
+            title="สร้างตำแหน่ง"
             backpath={'/admin/role'}
             buttons={[
               <a key={'create button'}>
@@ -100,7 +99,7 @@ export default function RoleCreatePage() {
           />
 
           {/* 🔹 Form Section */}
-          <Card className="p-6 mt-6">
+          <Card className="p-6 mt-8">
             <Form
               id="roleForm"
               onSubmit={onSubmit}
@@ -114,10 +113,11 @@ export default function RoleCreatePage() {
                   ข้อมูลตำแหน่งงาน
                 </h1>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 mt-4">
                 <span className="text-headFont text-xs">สถานะการใช้งาน</span>
                 <Switch
-                  name="active"
+                  type="checkbox"
+                  name="status"
                   color="secondary"
                   onChange={handleChange}
                   required
@@ -126,7 +126,7 @@ export default function RoleCreatePage() {
               </div>
 
               {/* 🔹 Company Name */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4 mt-4">
                 <Input
                   className="w-full"
                   size="sm"
@@ -141,7 +141,7 @@ export default function RoleCreatePage() {
               </div>
 
               {/* 🔹 Tax ID */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4 mt-5">
                 <Textarea
                   className="w-full"
                   size="sm"

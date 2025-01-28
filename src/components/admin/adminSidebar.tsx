@@ -13,7 +13,8 @@ import {
 } from '@/components/ui/sidebar';
 import React, { useCallback } from 'react';
 import * as Icons from 'lucide-react';
-import { getClientSession } from '@/libs/auth';
+import Image from 'next/image';
+import { useClientSession } from '@/libs/auth';
 
 const renderIcon = (iconName: string) => {
   const IconComponent = Icons[iconName as keyof typeof Icons] as any;
@@ -22,113 +23,117 @@ const renderIcon = (iconName: string) => {
 
 export function AdminSideBar() {
   const pathname = usePathname() ?? '';
-  const [isSidebarOpen,] = React.useState(true);
+  const [isSidebarOpen] = React.useState(true);
   const [open, setOpen] = React.useState(true);
 
-  const me = getClientSession();
+  const me = useClientSession();
   console.log(me);
 
-  const menuData: any = [
-    {
-      name: 'บัญชี',
-      key: 'accounting',
-      icon: 'DollarSign',
-      subMenu: [
-        {
-          name: 'ภาพรวม',
-          path: '/admin/accounting/statement',
-          icon: 'BarChart2',
-        },
-        {
-          name: 'รายได้',
-          path: '/admin/accounting/revenue',
-          icon: 'TrendingUp',
-        },
-        {
-          name: 'รายจ่าย',
-          path: '/admin/accounting/expenses',
-          icon: 'TrendingDown',
-        },
-        {
-          name: 'วิเคราะห์',
-          path: '/admin/accounting/analysis',
-          icon: 'PieChart',
-        },
-      ],
-    },
-    {
-      name: 'กิจกรรมการทำงาน',
-      key: 'attendance',
-      icon: 'Users',
-      subMenu: [
-        { name: 'ภาพรวม', path: '/admin/attendance/overview', icon: 'Grid' },
-        {
-          name: 'การเข้าทำงาน',
-          path: '/admin/attendance/work-infomation',
-          icon: 'Briefcase',
-        },
-        {
-          name: 'การเข้าใช้งาน',
-          path: '/admin/attendance/whitelist',
-          icon: 'FileText',
-        },
-        {
-          name: 'การตั้งค่า',
-          path: '/admin/attendance/setting',
-          icon: 'Settings',
-        },
-      ],
-    },
-    {
-      name: 'เอกสาร',
-      key: 'notation',
-      icon: 'File',
-      subMenu: [
-        { name: 'เอกสารทั้งหมด', path: '/admin/notation', icon: 'Folder' },
-      ],
-    },
-    {
-      name: 'สินค้าและบริการ',
-      key: 'item',
-      icon: 'Package',
-      subMenu: [
-        {
-          name: 'สินค้าและบริการทั้งหมด',
-          path: '/admin/item',
-          icon: 'Archive',
-        },
-      ],
-    },
-    {
-      name: 'ลูกค้า',
-      key: 'customer',
-      icon: 'Smile',
-      subMenu: [
-        { name: 'ลูกค้าทั้งหมด', path: '/admin/customer', icon: 'Users' },
-      ],
-    },
-    {
-      name: 'จัดการพนักงาน',
-      key: 'user',
-      icon: 'User',
-      subMenu: [
-        { name: 'พนักงาน', path: '/admin/user', icon: 'UserCheck' },
-        { name: 'ตำแหน่ง', path: '/admin/role', icon: 'Grid' },
-      ],
-    },
-    {
-      name: 'การตั้งค่า',
-      key: 'setting',
-      icon: 'Settings',
-      subMenu: [
-        {
-          name: 'การตั้งค่าองค์กร',
-          path: '/admin/organization',
-          icon: 'Settings',
-        },
-      ],
-    },
-  ];
+  const menuData: any = React.useMemo(
+    () => [
+      {
+        name: 'บัญชี',
+        key: 'accounting',
+        icon: 'DollarSign',
+        subMenu: [
+          {
+            name: 'ภาพรวม',
+            path: '/admin/accounting/statement',
+            icon: 'BarChart2',
+          },
+          {
+            name: 'รายได้',
+            path: '/admin/accounting/revenue',
+            icon: 'TrendingUp',
+          },
+          {
+            name: 'รายจ่าย',
+            path: '/admin/accounting/expenses',
+            icon: 'TrendingDown',
+          },
+          {
+            name: 'วิเคราะห์',
+            path: '/admin/accounting/analysis',
+            icon: 'PieChart',
+          },
+        ],
+      },
+      {
+        name: 'กิจกรรมการทำงาน',
+        key: 'attendance',
+        icon: 'Users',
+        subMenu: [
+          { name: 'ภาพรวม', path: '/admin/attendance/overview', icon: 'Grid' },
+          {
+            name: 'การเข้าทำงาน',
+            path: '/admin/attendance/work-infomation',
+            icon: 'Briefcase',
+          },
+          {
+            name: 'การเข้าใช้งาน',
+            path: '/admin/attendance/whitelist',
+            icon: 'FileText',
+          },
+          {
+            name: 'การตั้งค่า',
+            path: '/admin/attendance/setting',
+            icon: 'Settings',
+          },
+        ],
+      },
+      {
+        name: 'เอกสาร',
+        key: 'notation',
+        icon: 'File',
+        subMenu: [
+          { name: 'เอกสารทั้งหมด', path: '/admin/notation', icon: 'Folder' },
+        ],
+      },
+      {
+        name: 'สินค้าและบริการ',
+        key: 'item',
+        icon: 'Package',
+        subMenu: [
+          {
+            name: 'สินค้าและบริการทั้งหมด',
+            path: '/admin/item',
+            icon: 'Archive',
+          },
+        ],
+      },
+      {
+        name: 'ลูกค้า',
+        key: 'customer',
+        icon: 'Smile',
+        subMenu: [
+          { name: 'ลูกค้าทั้งหมด', path: '/admin/customer', icon: 'Users' },
+        ],
+      },
+      {
+        name: 'จัดการพนักงาน',
+        key: 'user',
+        icon: 'User',
+        subMenu: [
+          { name: 'พนักงาน', path: '/admin/user', icon: 'UserCheck' },
+          { name: 'ตำแหน่ง', path: '/admin/role', icon: 'Grid' },
+          { name: 'ตำแหน่งพนักงาน', path: '/admin/employeeRole', icon: 'Grid' },
+        ],
+      },
+      {
+        name: 'การตั้งค่า',
+        key: 'setting',
+        icon: 'Settings',
+        subMenu: [
+          {
+            name: 'การตั้งค่าองค์กร',
+            path: '/admin/organization',
+            icon: 'Settings',
+          },
+        ],
+      },
+    ],
+    [],
+  );
 
   const initialSubMenuState = React.useMemo(() => {
     const state: any = {};
@@ -158,7 +163,7 @@ export function AdminSideBar() {
     >
       <Sidebar>
         <div className="flex items-center justify-start p-2">
-          <img
+          <Image
             src={me?.organization?.logoUrl} // Replace with your actual logo path in the `public` folder
             alt="Logo"
             width={50}
