@@ -271,11 +271,33 @@ export default function UserSinglePage() {
                                   title="เปิดใช้งาน"
                                   description="ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน"
                                   control="เปิดใช้งาน"
+                                  checked
                                   onChange={handleChange}
                                 />
                               </div>
                             </div>
 
+                            <div className="flex gap-4 mt-6">
+                              <Select
+                                className="flex-1  text-headFont"
+                                name="position"
+                                placeholder="กรุณาเลือกตำแหน่ง"
+                                label="ตำแหน่ง"
+                                selectedKeys={[roleData?.name]}
+                                labelPlacement={'outside'}
+                                onChange={handleChange}
+                              >
+                                {position.map((item) => (
+                                  <SelectItem
+                                    className="text-headFont"
+                                    key={item.value}
+                                    value={item.value}
+                                  >
+                                    {item.label}
+                                  </SelectItem>
+                                ))}
+                              </Select>
+                            </div>
                             <div className="flex gap-4 mt-6">
                               <Select
                                 className="flex-1  text-headFont"

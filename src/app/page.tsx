@@ -73,7 +73,6 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@nextui-org/react';
 import { toast } from 'sonner';
-// import Icon from '@ant-design/icons';
 
 const Login = () => {
   const [user, setUser] = useState('');
@@ -185,7 +184,7 @@ const Login = () => {
           </div>
 
           {/* Password Input */}
-          <div>
+          <div className="relative w-full">
             <label className="text-sm font-medium">รหัสผ่าน</label>
             <div className="flex justify-between items-center">
               <Input
@@ -200,10 +199,11 @@ const Login = () => {
                 required
                 errorMessage="กรุณาป้อนรหัสผ่าน"
               />
-              <Button
+              <button
                 type="button"
                 aria-label={showPassword ? 'แสดง' : 'ซ่อน'}
-                className="text-black dark:text-white"
+                // className="text-black dark:text-white ml-3"
+                className="absolute right-0 items-center pr-5 cursor-pointer"
                 onClick={() => {
                   setShowPassword((prev) => !prev);
                 }}
@@ -215,7 +215,7 @@ const Login = () => {
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
-                    className="w-6 select-none  cursor-pointer h-6 absolute top-2 right-2"
+                    className="w-6 select-none  cursor-pointer h-6 top-2 right-2 hover:text-accent2 transition-colors duration-200"
                     tabIndex={-1}
                   >
                     <path
@@ -236,7 +236,7 @@ const Login = () => {
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
-                    className="w-6 select-none cursor-pointer h-6 absolute top-2 right-2"
+                    className="w-6 select-none cursor-pointer h-6 top-2 right-2 hover:text-accent1 transition-colors duration-200"
                   >
                     <path
                       strokeLinecap="round"
@@ -245,8 +245,9 @@ const Login = () => {
                     ></path>
                   </svg>
                 )}
-              </Button>
-              {/* <span>
+              </button>
+            </div>
+            {/* <span>
                 {
                   <div>
                     <button
@@ -260,7 +261,6 @@ const Login = () => {
                   </div>
                 }
               </span> */}
-            </div>
           </div>
 
           {/* Remember Me Checkbox */}

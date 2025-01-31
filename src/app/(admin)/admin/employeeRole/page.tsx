@@ -60,7 +60,7 @@ export default function RolesPage() {
   // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
     fetchCustomer();
-  });
+  }, []);
 
   return (
     <div>
@@ -70,7 +70,7 @@ export default function RolesPage() {
             <TopSection
               title="ตำแหน่งพนักงาน"
               buttons={[
-                <Link href={'role/create'} key={'create button'}>
+                <Link href={'employeeRole/create'} key={'create button'}>
                   <Button
                     className="bg-accent1 text-white"
                     size="sm"

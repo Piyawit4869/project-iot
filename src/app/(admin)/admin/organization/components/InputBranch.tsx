@@ -16,6 +16,7 @@ import {
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 import { parseDate } from '@internationalized/date';
+import Image from 'next/image';
 
 interface InputorBranchProps {
   data: any;
@@ -90,13 +91,13 @@ export default function InputBranch({
               <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                 <div>
                   <p>รูปภาพสาขา</p>
-                  <img
-                    src={branch?.logoUrl} // Replace with your actual logo path in the `public` folder
-                    alt="Logo"
+                  <Image
+                    className="mt-3"
+                    src={'/logo.png'}
+                    alt="image organization"
                     width={100}
                     height={100}
-                    className="mr-2 mt-3 rounded-lg"
-                  />
+                  ></Image>
                 </div>
                 <div className="flex gap-4 ">
                   <CardControl

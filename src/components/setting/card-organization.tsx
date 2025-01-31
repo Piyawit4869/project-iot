@@ -6,6 +6,7 @@ interface CardControlProps {
   control: string;
   name: string;
   onChange?: (e: any) => void;
+  checked: boolean;
 }
 
 export const CardControl = ({
@@ -14,6 +15,7 @@ export const CardControl = ({
   control,
   name,
   onChange,
+  checked,
 }: CardControlProps) => {
   return (
     <Card className="py-4 bg-primary" isHoverable isPressable>
@@ -29,6 +31,7 @@ export const CardControl = ({
           className="mt-3"
           color="secondary"
           defaultSelected={false}
+          checked={checked}
           onChange={(e) => {
             if (onChange) {
               onChange(e as any);
