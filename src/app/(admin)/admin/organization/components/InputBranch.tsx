@@ -12,6 +12,7 @@ import {
   DatePicker,
   Textarea,
   InputOtp,
+  Image,
 } from '@nextui-org/react';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';

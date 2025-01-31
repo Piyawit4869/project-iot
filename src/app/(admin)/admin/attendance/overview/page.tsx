@@ -8,10 +8,9 @@ import pagination from '@/pages/api/attendances/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date';
 import 'react-vertical-timeline-component/style.min.css';
-import { TimelineComponent } from '@/components/admin/adminTimeline';
 import Scaffold from '@/components/common/scaffold';
-import CardComponent from '@/components/common/card';
 import { handleAction } from '@/components/common/common';
+import CardComponent from '@/components/common/card';
 interface FilterState {
   userName: string;
 }
@@ -64,7 +63,7 @@ const columns = [
 
 export default function AttendancesPage() {
   const [page, setPage] = React.useState(1);
-  const [loading, setLoading] = React.useState(false);
+  // const [loading, setLoading] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [filters, setFilters] = React.useState<FilterState>({
     userName: '',
@@ -78,11 +77,9 @@ export default function AttendancesPage() {
   });
 
   const fetchAttendances = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
-      console.log('try');
-
-      const { name, docNo } = filters;
+      const { userName } = filters;
 
       const { data } = (await pagination({
         page,
@@ -113,7 +110,7 @@ export default function AttendancesPage() {
       console.error('Error fetching attendance:', error);
     } finally {
       console.log('fimally');
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -122,9 +119,8 @@ export default function AttendancesPage() {
     debounce(() => {
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
-    }, 300),
-    [filters],
-  );
+    }, 300)();
+  }, []);
 
   // Handle input changes
   const onInputChange = (key: keyof typeof filters, value: string) => {
@@ -134,31 +130,36 @@ export default function AttendancesPage() {
 
   React.useEffect(() => {
     fetchAttendances();
-  }, [filters, page, rowsPerPage]);
+  });
 
-  // console.log('Page:', page);
-  // console.log('Filters:', filters);
-  // console.log('Rows per page:', rowsPerPage);
+  const renderCard = (title: string, count: number, colorClass: string) => (
+    <div className="flex-1">
+      <CardComponent
+        className={colorClass}
+        customCard
+        custom={
+          <div className="text-center">
+            <div className="text-sm text-white">{title}</div>
+            <div className="text-2xl font-bold text-white">{count} คน</div>
+            <div className="text-xs text-white mt-1">วันนี้</div>
+          </div>
+        }
+      />
+    </div>
+  );
 
   return (
     <div>
       <Scaffold
         child={
           <div>
-            <TopSection
-              title="ภาพรวมองค์กรทั้งหมด"
-              // buttons={[
-              //   <Link href={'overview/create'} key={'create button'}>
-              //     <Button
-              //       className="bg-accent1 text-white"
-              //       size="sm"
-              //       key={'create button'}
-              //     >
-              //       สร้างกิจกรรม
-              //     </Button>
-              //   </Link>,
-              // ]}
-            />
+            <TopSection title="ภาพรวมองค์กรทั้งหมด" />
+            <div className="flex space-x-4 mt-8">
+              {renderCard('เข้างาน', 10, 'bg-accent1')}
+              {renderCard('ลาป่วย/ลากิจ', 0, 'bg-accent3')}
+              {renderCard('มาสาย', 10, 'bg-accent2')}
+              {renderCard('ขาด', 0, 'bg-secondary')}
+            </div>
             <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
               <div className="grid grid-cols-1 sm:grid-cols-2">
                 <Input
@@ -177,22 +178,22 @@ export default function AttendancesPage() {
             <div>
               {/* <Tabs variant="underlined">
                 <Tab key="table" title="ตาราง"> */}
-              {loading ? (
+              {/* {loading ? (
                 <div className="flex justify-center items-center h-64">
                   <div className="spinner"></div>
                 </div>
-              ) : (
-                <TablePagination
-                  initialRows={items}
-                  initialMeta={meta}
-                  rowsPerPage={rowsPerPage}
-                  columns={columns as any}
-                  onPageChange={(newPage) => setPage(newPage)}
-                  onRowsPerPageChange={(newRowsPerPage) =>
-                    setRowsPerPage(newRowsPerPage)
-                  }
-                />
-              )}
+              ) : ( */}
+              <TablePagination
+                initialRows={items}
+                initialMeta={meta}
+                rowsPerPage={rowsPerPage}
+                columns={columns as any}
+                onPageChange={(newPage) => setPage(newPage)}
+                onRowsPerPageChange={(newRowsPerPage) =>
+                  setRowsPerPage(newRowsPerPage)
+                }
+              />
+              {/* )} */}
               {/* </Tab> */}
               {/* <Tab
                   key="timeline"

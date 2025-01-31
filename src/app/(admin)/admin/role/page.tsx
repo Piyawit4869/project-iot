@@ -60,7 +60,7 @@ export default function RolesPage() {
   // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
     fetchCustomer();
-  });
+  },);
 
   return (
     <div>

@@ -58,7 +58,7 @@ export default function ItemsPage() {
   // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
     fetchItems();
-  });
+  },);
 
   return (
     <div>

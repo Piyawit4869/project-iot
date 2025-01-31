@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/sidebar';
 import React, { useCallback } from 'react';
 import * as Icons from 'lucide-react';
-import Image from 'next/image';
 import { useClientSession } from '@/libs/auth';
 
 const renderIcon = (iconName: string) => {
@@ -61,32 +60,36 @@ export function AdminSideBar() {
       {
         name: 'กิจกรรมการทำงาน',
         key: 'attendance',
-        icon: 'Users',
+        icon: 'UsersRound',
         subMenu: [
-          { name: 'ภาพรวม', path: '/admin/attendance/overview', icon: 'Grid' },
+          {
+            name: 'ภาพรวม',
+            path: '/admin/attendance/overview',
+            icon: 'LayoutPanelLeft',
+          },
           {
             name: 'การเข้าทำงาน',
             path: '/admin/attendance/work-infomation',
-            icon: 'Briefcase',
+            icon: 'BriefcaseBusiness',
           },
           {
             name: 'การเข้าใช้งาน',
             path: '/admin/attendance/whitelist',
-            icon: 'FileText',
+            icon: 'ShieldCheck',
           },
           {
             name: 'การตั้งค่า',
             path: '/admin/attendance/setting',
-            icon: 'Settings',
+            icon: 'Settings2',
           },
         ],
       },
       {
         name: 'เอกสาร',
         key: 'notation',
-        icon: 'File',
+        icon: 'Folder',
         subMenu: [
-          { name: 'เอกสารทั้งหมด', path: '/admin/notation', icon: 'Folder' },
+          { name: 'เอกสารทั้งหมด', path: '/admin/notation', icon: 'FileType2' },
         ],
       },
       {
@@ -97,37 +100,45 @@ export function AdminSideBar() {
           {
             name: 'สินค้าและบริการทั้งหมด',
             path: '/admin/item',
-            icon: 'Archive',
+            icon: 'Package2',
           },
         ],
       },
       {
         name: 'ลูกค้า',
         key: 'customer',
-        icon: 'Smile',
+        icon: 'UserRound',
         subMenu: [
-          { name: 'ลูกค้าทั้งหมด', path: '/admin/customer', icon: 'Users' },
+          {
+            name: 'ลูกค้าทั้งหมด',
+            path: '/admin/customer',
+            icon: 'UsersRound',
+          },
         ],
       },
       {
         name: 'จัดการพนักงาน',
         key: 'user',
-        icon: 'User',
+        icon: 'UserRoundPen',
         subMenu: [
-          { name: 'พนักงาน', path: '/admin/user', icon: 'UserCheck' },
-          { name: 'ตำแหน่ง', path: '/admin/role', icon: 'Grid' },
-          { name: 'ตำแหน่งพนักงาน', path: '/admin/employeeRole', icon: 'Grid' },
+          { name: 'พนักงาน', path: '/admin/user', icon: 'UserRoundCheck' },
+          { name: 'ตำแหน่ง', path: '/admin/role', icon: 'UserRoundCog' },
+          {
+            name: 'ตำแหน่งพนักงาน',
+            path: '/admin/employeeRole',
+            icon: 'UserRoundCog',
+          },
         ],
       },
       {
         name: 'การตั้งค่า',
         key: 'setting',
-        icon: 'Settings',
+        icon: 'Bolt',
         subMenu: [
           {
             name: 'การตั้งค่าองค์กร',
             path: '/admin/organization',
-            icon: 'Settings',
+            icon: 'Settings2',
           },
         ],
       },
@@ -162,27 +173,32 @@ export function AdminSideBar() {
       }}
     >
       <Sidebar>
-        <div className="flex items-center justify-start p-2">
-          <Image
-            src={me?.organization?.logoUrl} // Replace with your actual logo path in the `public` folder
+        <div className="flex items-center justify-start py-5 px-5">
+          <img
+            src={me?.organization?.logoUrl}
             alt="Logo"
             width={50}
             height={50}
-            className="mr-2 w-10 h-10 rounded-lg"
+            className="mr-2 w-10 h-10 rounded-xl"
           />
           {isSidebarOpen && (
-            <span className="text-lg font-bold">
+            <span className="font-bold text-lg ">
               บริษัท {me?.organization?.nameTh} จำกัด
             </span>
           )}
         </div>
-        <div className="flex items-center justify-between p-2">
+        <div className="flex items-center justify-between px-4">
           {isSidebarOpen && (
             <SidebarMenu>
-              <SidebarGroupLabel>Core features</SidebarGroupLabel>
+              <SidebarGroupLabel className="text-accent1 py-2">
+                All features
+              </SidebarGroupLabel>
               {menuData.map((item: any) => (
                 <SidebarMenuItem key={item.key}>
-                  <SidebarMenuButton onClick={() => toggleSubMenu(item.key)}>
+                  <SidebarMenuButton
+                    onClick={() => toggleSubMenu(item.key)}
+                    className="py-5"
+                  >
                     {renderIcon(item.icon)}
                     <span>{item.name}</span>
                   </SidebarMenuButton>
@@ -193,6 +209,7 @@ export function AdminSideBar() {
                           key={subItem.path}
                           href={subItem.path}
                           isActive={pathname === subItem.path}
+                          className="py-4"
                         >
                           {renderIcon(subItem.icon)}
                           <span>{subItem.name}</span>

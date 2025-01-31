@@ -50,7 +50,10 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   onRowsPerPageChange,
   columns,
 }) => {
-  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(rowsPerPage);
+  const [
+    currentRowsPerPage,
+    // setCurrentRowsPerPage
+  ] = useState(rowsPerPage);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= initialMeta.totalPages) {
@@ -58,12 +61,12 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
     }
   };
 
-  const handleRowsPerPageChange = (value: number) => {
-    setCurrentRowsPerPage(value); // อัปเดต state
-    if (onRowsPerPageChange) {
-      onRowsPerPageChange(value); // เรียก callback ที่ส่งมาจาก props
-    }
-  };
+  // const handleRowsPerPageChange = (value: number) => {
+  //   setCurrentRowsPerPage(value); // อัปเดต state
+  //   if (onRowsPerPageChange) {
+  //     onRowsPerPageChange(value); // เรียก callback ที่ส่งมาจาก props
+  //   }
+  // };
 
   const limits = [
     { label: '5', value: '5' },
