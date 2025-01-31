@@ -68,7 +68,7 @@
 //   );
 // }
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@nextui-org/react';
@@ -81,12 +81,15 @@ const Login = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [progress, setProgress] = useState(0); // Progress bar (0-100%)
+  const [statusMessage, setStatusMessage] = useState('');
 
   const handleSubmit = async (e: any) => {
     // 'use server';
     e.preventDefault();
     setError(null);
     setLoading(true);
+    setProgress(0);
 
     try {
       const result: any = await signIn('credentials', {
@@ -103,6 +106,8 @@ const Login = () => {
           style: { fontFamily: 'var(--font-ibm-sans)' },
         });
 
+        await checkServerReady();
+
         router.push('/admin');
       } else {
         setError(result.error);
@@ -118,6 +123,40 @@ const Login = () => {
       });
     } finally {
       setLoading(false);
+      setProgress(0);
+    }
+  };
+
+  const checkServerReady = async (): Promise<void> => {
+    let isReady = false;
+    const maxRetries = 10; // ตรวจสอบได้สูงสุด 10 ครั้ง
+    let retries = 0;
+
+    while (!isReady && retries < maxRetries) {
+      try {
+        setStatusMessage(
+          `กำลังตรวจสอบเซิร์ฟเวอร์... (${retries + 1}/${maxRetries})`,
+        );
+        setProgress(((retries + 1) / maxRetries) * 100);
+
+        // ตรวจสอบเซิร์ฟเวอร์โดยส่ง request ไปยัง /admin
+        const response = await fetch('/admin', { method: 'GET' });
+        if (response.ok) {
+          isReady = true;
+          setStatusMessage('เซิร์ฟเวอร์พร้อมแล้ว!');
+        } else {
+          throw new Error('Server not ready');
+        }
+      } catch (error: any) {
+        console.log(error);
+        retries += 1;
+        console.log(`Retry ${retries}: Server not ready, waiting...`);
+        await new Promise((resolve) => setTimeout(resolve, 3000)); // รอ 3 วินาทีแล้วลองใหม่
+      }
+    }
+
+    if (!isReady) {
+      throw new Error('Server is still not ready after multiple retries.');
     }
   };
 
@@ -318,6 +357,31 @@ const Login = () => {
               'เข้าสู่ระบบ'
             )}
           </Button>
+
+          {loading && (
+            <div style={{ marginTop: '20px' }}>
+              <p>{statusMessage}</p>
+              <div
+                style={{
+                  width: '100%',
+                  backgroundColor: '#e0e0e0',
+                  borderRadius: '5px',
+                  height: '10px',
+                  marginTop: '10px',
+                }}
+              >
+                <div
+                  style={{
+                    width: `${progress}%`,
+                    backgroundColor: '#007bff',
+                    height: '100%',
+                    borderRadius: '5px',
+                    transition: 'width 0.5s ease',
+                  }}
+                ></div>
+              </div>
+            </div>
+          )}
 
           {/* Signup Link */}
           {/* <p className="text-sm text-gray-600">
