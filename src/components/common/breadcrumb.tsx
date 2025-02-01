@@ -11,7 +11,7 @@ const translations: Record<string, string> = {
   setting: 'ตั้งค่า',
   user: 'พนักงาน',
   profile: 'โปรไฟล์',
-  organization: 'องค์กร',
+  organization: 'การตั้งค่าองค์กร',
   accounting: 'บัญชี',
   statement: 'ภาพรวม',
   revenue: 'รายได้',

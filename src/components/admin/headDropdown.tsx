@@ -69,14 +69,14 @@ export function DropdownHead() {
       </DropdownSection> */}
 
       <DropdownMenu>
-        <div className="relative">
+        <div className="flex items-center">
           <DropdownMenuTrigger>
             <Image
-              width={100}
-              height={100}
+              width={50}
+              height={50}
               src={'/logo.png'} // Replace with the path to your profile image
               alt="Profile"
-              className="w-8 h-8 rounded-full"
+              className="w-8 h-8s rounded-full "
             />
             <span className="text-gray-800 text-xs">
               {/* {`${

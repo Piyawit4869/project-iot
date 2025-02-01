@@ -1,33 +1,32 @@
-'use client';
-
-import { usePathname } from 'next/navigation';
 import {
   Sidebar,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
+  SidebarContent,
+  SidebarMenuButton,
   SidebarMenuSub,
   SidebarMenuSubButton,
-  SidebarProvider,
-  SidebarMenuButton,
+  SidebarGroup,
   SidebarGroupLabel,
 } from '@/components/ui/sidebar';
+import { usePathname } from 'next/navigation';
 import React, { useCallback } from 'react';
 import * as Icons from 'lucide-react';
 import { useClientSession } from '@/libs/auth';
 
 const renderIcon = (iconName: string) => {
   const IconComponent = Icons[iconName as keyof typeof Icons] as any;
-  return IconComponent ? <IconComponent className="w-4 h-4" /> : null;
+  return IconComponent ? <IconComponent className="w-10 h-10" /> : null;
 };
 
-export function AdminSideBar() {
+export function AdminSideBar({
+  isSidebarOpen,
+  ...props
+}: { isSidebarOpen: boolean } & React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname() ?? '';
-  const [isSidebarOpen] = React.useState(true);
-  const [open, setOpen] = React.useState(true);
-
   const me = useClientSession();
-  console.log(me);
-
+  console.log(me?.organization?.logoUrl);
   const menuData: any = React.useMemo(
     () => [
       {
@@ -157,72 +156,94 @@ export function AdminSideBar() {
   }, [menuData]);
   const [isSubMenuOpen, setIsSubMenuOpen] = React.useState(initialSubMenuState);
 
-  const toggleSubMenu = useCallback((key: string) => {
+  const toggleSubMenu = useCallback((key: string, open?: boolean) => {
     setIsSubMenuOpen((prev: any) => ({
       ...prev,
-      [key]: !prev[key],
+      [key]: open !== undefined ? open : !prev[key],
     }));
   }, []);
 
   return (
-    <SidebarProvider
-      defaultOpen={true}
-      open={open}
-      onOpenChange={() => {
-        setOpen((prev) => !prev);
-      }}
-    >
-      <Sidebar>
-        <div className="flex items-center justify-start py-5 px-5">
+    <Sidebar collapsible="icon" {...props}>
+      <SidebarHeader>
+        <div
+          className={`flex items-center py-4 transition-all duration-300 ${
+            isSidebarOpen ? 'justify-start px-2' : 'justify-center'
+          }`}
+        >
           <img
-            src={me?.organization?.logoUrl}
+            src={me?.organization?.logoUrl || '/path/to/fallback-logo.png'}
             alt="Logo"
-            width={50}
-            height={50}
-            className="mr-2 w-10 h-10 rounded-xl"
+            className="w-12  rounded-xl "
           />
           {isSidebarOpen && (
-            <span className="font-bold text-lg ">
+            <span className="ml-2 font-bold text-lg transition-opacity duration-300 opacity-100">
               บริษัท {me?.organization?.nameTh} จำกัด
             </span>
           )}
         </div>
-        <div className="flex items-center justify-between px-4">
-          {isSidebarOpen && (
-            <SidebarMenu>
-              <SidebarGroupLabel className="text-accent1 py-2">
-                All features
-              </SidebarGroupLabel>
-              {menuData.map((item: any) => (
-                <SidebarMenuItem key={item.key}>
-                  <SidebarMenuButton
-                    onClick={() => toggleSubMenu(item.key)}
-                    className="py-5"
+      </SidebarHeader>
+
+      {/* SidebarContent section */}
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-accent1 py-2">
+            All features
+          </SidebarGroupLabel>
+          <SidebarMenu>
+            {menuData.map((item: any) => (
+              <SidebarMenuItem key={item.key}>
+                <SidebarMenuButton
+                  onMouseEnter={() => {
+                    if (!isSidebarOpen) toggleSubMenu(item.key, true);
+                  }}
+                  onMouseLeave={() => {
+                    if (!isSidebarOpen) toggleSubMenu(item.key, false);
+                  }}
+                  onClick={() => {
+                    if (isSidebarOpen) toggleSubMenu(item.key);
+                  }}
+                  className="py-5"
+                >
+                  {renderIcon(item.icon)}
+                  <span
+                    className={`transition-all duration-300 ${
+                      isSidebarOpen ? 'opacity-100' : 'opacity-0 hidden'
+                    }`}
                   >
-                    {renderIcon(item.icon)}
-                    <span>{item.name}</span>
-                  </SidebarMenuButton>
-                  {item.subMenu && isSubMenuOpen[item.key] && (
-                    <SidebarMenuSub>
-                      {item.subMenu.map((subItem: any) => (
-                        <SidebarMenuSubButton
-                          key={subItem.path}
-                          href={subItem.path}
-                          isActive={pathname === subItem.path}
-                          className="py-4"
+                    {item.name}
+                  </span>
+                </SidebarMenuButton>
+
+                {item.subMenu && isSubMenuOpen[item.key] && (
+                  <SidebarMenuSub>
+                    {item.subMenu.map((subItem: any) => (
+                      <SidebarMenuSubButton
+                        key={subItem.path}
+                        href={subItem.path}
+                        isActive={pathname === subItem.path}
+                        className="py-4"
+                      >
+                        {renderIcon(subItem.icon)}
+                        <span
+                          className={`transition-all duration-300 ${
+                            isSidebarOpen ? 'opacity-100' : 'opacity-0 hidden'
+                          }`}
                         >
-                          {renderIcon(subItem.icon)}
-                          <span>{subItem.name}</span>
-                        </SidebarMenuSubButton>
-                      ))}
-                    </SidebarMenuSub>
-                  )}
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          )}
+                          {subItem.name}
+                        </span>
+                      </SidebarMenuSubButton>
+                    ))}
+                  </SidebarMenuSub>
+                )}
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+        <div className="py-5 px-5">
+          <hr />
         </div>
-      </Sidebar>
-    </SidebarProvider>
+      </SidebarContent>
+    </Sidebar>
   );
 }
