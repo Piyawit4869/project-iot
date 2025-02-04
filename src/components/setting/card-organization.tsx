@@ -22,7 +22,7 @@ export const CardControl = ({
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
         <h4 className="font-bold text-large">{title}</h4>
       </CardHeader>
-      <CardBody className=" overflow-visible py-2">
+      <CardBody className="">
         <p dangerouslySetInnerHTML={{ __html: description }} />
         <br />
         <p>{control}</p>
@@ -30,7 +30,6 @@ export const CardControl = ({
           name={name}
           className="mt-3"
           color="secondary"
-          defaultSelected={false}
           checked={checked}
           onChange={(e) => {
             if (onChange) {

@@ -6,9 +6,11 @@ import { Button, Card, Form, Input, Switch, Textarea } from '@nextui-org/react';
 import React from 'react';
 import { toast } from 'sonner';
 import { createRole } from '@/pages/api/role/create';
+// import { useRouter } from 'next/navigation';
 
 export default function RoleCreatePage() {
   // 🔹 State for form data and errors
+  // const router = useRouter();
   const [errors, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
 
@@ -62,7 +64,6 @@ export default function RoleCreatePage() {
         style: { fontFamily: 'var(--font-ibm-sans)' },
       });
 
-      // 🔹 Redirect after successful creation
       // router.push(`/admin/customer/${data.id}`);
     } catch (err: any) {
       toast.error('❌ ไม่สามารถสร้างตำแหน่งใหม่ได้ได้', {

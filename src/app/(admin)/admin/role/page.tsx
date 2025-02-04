@@ -23,24 +23,29 @@ export default function RolesPage() {
   });
   const [loading, setLoading] = React.useState(false);
 
-  // Fetch data from the API
-  const fetchCustomer = async () => {
-    setLoading(true);
-    try {
-      // const { name } = filters;
-      const { items: fetchedItems } = await paginationRoles({
-        page,
-        limit: rowsPerPage,
-        // ...(name && { name }),
-      });
-      setItems(fetchedItems.items);
-      setMeta(fetchedItems.meta);
-    } catch (error) {
-      console.log('Error fetching notations:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  React.useEffect(() => {
+    // Fetch data from the API
+    const fetchRole = async () => {
+      setLoading(true);
+      try {
+        // const { name } = filters;
+        const { items: fetchedItems, items: fetchedMeta } =
+          await paginationRoles({
+            page,
+            limit: rowsPerPage,
+            // ...(name && { name }),
+          });
+        setItems(fetchedItems.items);
+        setMeta(fetchedMeta.meta);
+      } catch (error) {
+        console.log('Error fetching notations:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRole();
+  }, [page, rowsPerPage]);
 
   // Debounced function to handle filter changes
   // const handleFilterChange = React.useCallback(
@@ -56,11 +61,6 @@ export default function RolesPage() {
   //   const updatedFilters = { ...filters, [key]: value };
   //   handleFilterChange(updatedFilters);
   // };
-
-  // Fetch data whenever filters, page, or rowsPerPage change
-  React.useEffect(() => {
-    fetchCustomer();
-  }, []);
 
   return (
     <div>

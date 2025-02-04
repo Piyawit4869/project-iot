@@ -1,13 +1,15 @@
+// 'use server';
 import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
-interface FetchTemplatesParams {
-  page?: number;
-  limit?: number;
-  name?: string;
+// import { useRouter } from 'next/router';
+
+interface FetchRoleParams {
+  page: number;
+  limit: number;
 }
 
-interface FetchTemplatesResponse {
+interface FetchRoleResponse {
   items: {
     items: any[];
     meta: {
@@ -19,28 +21,17 @@ interface FetchTemplatesResponse {
   };
 }
 
-export default async function paginationRoles({
+export default async function pagination({
   page,
   limit,
-  name,
-}: FetchTemplatesParams): Promise<FetchTemplatesResponse> {
+}: FetchRoleParams): Promise<FetchRoleResponse> {
   try {
     const url = new URL(`${base_url}/crud/roles/paginate`);
+    url.searchParams.append('page', page?.toString());
+    url.searchParams.append('limit', limit?.toString());
 
     const auth = await getServerSession();
-
-    if (page) {
-      url.searchParams.append('page', String(page));
-    }
-
-    if (limit) {
-      url.searchParams.append('limit', String(limit));
-    }
-
-    if (name) {
-      url.searchParams.append('name', name);
-    }
-
+    //query params in this
     const response = await fetch(url.toString(), {
       method: 'GET',
       headers: {
@@ -62,9 +53,9 @@ export default async function paginationRoles({
         items: [],
         meta: {
           totalItems: 0,
-          itemsPerPage: 10,
+          itemsPerPage: limit,
           totalPages: 0,
-          currentPage: 1,
+          currentPage: page,
         },
       },
     };

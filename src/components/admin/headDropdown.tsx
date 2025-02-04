@@ -45,7 +45,7 @@ export function DropdownHead() {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Icon.BellOutlined className="mr-5 mb-0.5 text-xl items-center" />
+          <Icon.BellOutlined className="mr-5 mb-1 text-lg items-center hover:text-accent1 hover:scale-110" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel>การแจ้งเตือน</DropdownMenuLabel>
@@ -70,10 +70,10 @@ export function DropdownHead() {
 
       <DropdownMenu>
         <div className="relative">
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger className="hover:scale-110">
             <Image
-              width={100}
-              height={100}
+              width={30}
+              height={30}
               src={'/logo.png'} // Replace with the path to your profile image
               alt="Profile"
               className="rounded-full items-center"

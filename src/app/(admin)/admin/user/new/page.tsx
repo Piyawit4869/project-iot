@@ -21,6 +21,8 @@ import paginationEmployeeRole from '@/pages/api/employeeRole/pagination';
 import { useClientSession } from '@/libs/auth';
 
 export default function CreateUserPage() {
+  const [page] = React.useState(1);
+  const [rowsPerPage] = React.useState(10);
   const [errors, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [role, setRole] = React.useState([]) as any;
@@ -43,18 +45,18 @@ export default function CreateUserPage() {
           : name === 'startDate' && value instanceof Date
           ? value.toISOString()
           : value,
+      handleRoleChange,
+      handleEmployeeRoleChange,
     }));
   };
 
   const handleRoleChange = (value: string) => {
     setRoleSelect(value);
     setEmployeeRoleSelect('');
-    setFormData(value);
   };
 
   const handleEmployeeRoleChange = (value: string) => {
     setEmployeeRoleSelect(value);
-    setFormData(value);
   };
 
   const selectedRole = role.find((item: any) => item.id === roleSelect);
@@ -62,18 +64,24 @@ export default function CreateUserPage() {
 
   React.useEffect(() => {
     const fetchRole = async () => {
-      const { items: fetchedItems } = await paginationRoles({});
+      const { items: fetchedItems } = await paginationRoles({
+        page,
+        limit: rowsPerPage,
+      });
       setRole(fetchedItems.items);
     };
 
     const fetchEmployeeRole = async () => {
-      const { items: fetchedItems } = await paginationEmployeeRole({});
+      const { items: fetchedItems } = await paginationEmployeeRole({
+        page,
+        limit: rowsPerPage,
+      });
       setEmployeeRole(fetchedItems.items);
     };
 
     fetchRole();
     fetchEmployeeRole();
-  }, []);
+  }, [page, rowsPerPage]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,10 +119,13 @@ export default function CreateUserPage() {
         roleId: roleSelect,
         employeeRoleId: employeeRoleSelect,
         branchId: me?.branchId,
+        // organizationId: me?.organizationId,
         profile: {
           prefix: formData.prefix,
           firstName: formData.firstName,
           lastName: formData.lastName,
+          firstNameEn: formData.firstNameEn,
+          lastNameEn: formData.lastNameEn,
           birthDate: formData.birthDate,
           phone: formData.phone,
         },
@@ -278,7 +289,8 @@ export default function CreateUserPage() {
                         </Select>
                       </div>
 
-                      {selectedRoleName === 'employee' && (
+                      {(selectedRoleName === 'employee' ||
+                        selectedRoleName === 'Internship') && (
                         <div className="flex mt-6">
                           <Select
                             className="flex-1 text-headFont"
@@ -328,6 +340,60 @@ export default function CreateUserPage() {
                         </Select>
                       </div>
                       <div className="flex gap-4 mt-6">
+                        <Input
+                          className="flex-1"
+                          label={<span className="text-headFont">ชื่อ</span>}
+                          labelPlacement="outside"
+                          name="firstName"
+                          placeholder="กรอกชื่อ"
+                          onChange={handleChange}
+                          isRequired
+                          errorMessage={'กรุณากรอกชื่อ'}
+                        />
+                      </div>
+                      <div className="flex gap-4 mt-6">
+                        <Input
+                          className="flex-1"
+                          label={<span className="text-headFont">นามสกุล</span>}
+                          labelPlacement="outside"
+                          name="lastName"
+                          placeholder="กรอกชื่อ"
+                          onChange={handleChange}
+                          isRequired
+                          errorMessage={'กรุณากรอกชื่อ'}
+                        />
+                      </div>
+                      <div className="flex gap-4 mt-6">
+                        <Input
+                          className="flex-1"
+                          label={
+                            <span className="text-headFont">
+                              ชื่อภาษาอังกฤษ
+                            </span>
+                          }
+                          labelPlacement="outside"
+                          name="firstNameEn"
+                          placeholder="กรอกชื่อภาษาอังกฤษ"
+                          onChange={handleChange}
+                          isRequired
+                        />
+                      </div>
+                      <div className="flex gap-4 mt-6">
+                        <Input
+                          className="flex-1"
+                          label={
+                            <span className="text-headFont">
+                              นามสกุลภาษาอังกฤษ
+                            </span>
+                          }
+                          labelPlacement="outside"
+                          name="lastNameEn"
+                          placeholder="กรอกนามสกุลภาษาอังกฤษ"
+                          onChange={handleChange}
+                          isRequired
+                        />
+                      </div>
+                      <div className="flex gap-4 mt-6">
                         <DatePicker
                           className="flex-1  text-headFont"
                           name="birthDate"
@@ -353,60 +419,6 @@ export default function CreateUserPage() {
                               console.error('Invalid date object:', date);
                             }
                           }}
-                        />
-                      </div>
-                      <div className="flex gap-4 mt-6">
-                        <Input
-                          className="flex-1"
-                          label={<span className="text-headFont">ชื่อ</span>}
-                          labelPlacement="outside"
-                          name="firstName"
-                          placeholder="กรอกชื่อ"
-                          onChange={handleChange}
-                          isRequired
-                          errorMessage={'กรุณากรอกชื่อ'}
-                        />
-                      </div>
-                      <div className="flex gap-4 mt-6">
-                        <Input
-                          className="flex-1"
-                          label={
-                            <span className="text-headFont">
-                              ชื่อภาษาอังกฤษ
-                            </span>
-                          }
-                          labelPlacement="outside"
-                          name="firstNameEn"
-                          placeholder="กรอกชื่อภาษาอังกฤษ"
-                          onChange={handleChange}
-                          isRequired
-                        />
-                      </div>
-                      <div className="flex gap-4 mt-6">
-                        <Input
-                          className="flex-1"
-                          label={<span className="text-headFont">นามสกุล</span>}
-                          labelPlacement="outside"
-                          name="lastName"
-                          placeholder="กรอกชื่อ"
-                          onChange={handleChange}
-                          isRequired
-                          errorMessage={'กรุณากรอกชื่อ'}
-                        />
-                      </div>
-                      <div className="flex gap-4 mt-6">
-                        <Input
-                          className="flex-1"
-                          label={
-                            <span className="text-headFont">
-                              นามสกุลภาษาอังกฤษ
-                            </span>
-                          }
-                          labelPlacement="outside"
-                          name="lastNameEn"
-                          placeholder="กรอกนามสกุลภาษาอังกฤษ"
-                          onChange={handleChange}
-                          isRequired
                         />
                       </div>
                       <div className="flex gap-4 mt-6">

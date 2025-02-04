@@ -71,7 +71,7 @@
 import React, { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Button, Input } from '@nextui-org/react';
+import { Button, Input, Spinner } from '@nextui-org/react';
 import { toast } from 'sonner';
 
 const Login = () => {
@@ -81,15 +81,12 @@ const Login = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [progress, setProgress] = useState(0); // Progress bar (0-100%)
-  const [statusMessage, setStatusMessage] = useState('');
 
   const handleSubmit = async (e: any) => {
     // 'use server';
     e.preventDefault();
     setError(null);
     setLoading(true);
-    setProgress(0);
 
     try {
       const result: any = await signIn('credentials', {
@@ -123,35 +120,24 @@ const Login = () => {
       });
     } finally {
       setLoading(false);
-      setProgress(0);
     }
   };
 
   const checkServerReady = async (): Promise<void> => {
     let isReady = false;
-    const maxRetries = 10; // ตรวจสอบได้สูงสุด 10 ครั้ง
-    let retries = 0;
 
-    while (!isReady && retries < maxRetries) {
+    while (!isReady) {
       try {
-        setStatusMessage(
-          `กำลังตรวจสอบเซิร์ฟเวอร์... (${retries + 1}/${maxRetries})`,
-        );
-        setProgress(((retries + 1) / maxRetries) * 100);
-
-        // ตรวจสอบเซิร์ฟเวอร์โดยส่ง request ไปยัง /admin
         const response = await fetch('/admin', { method: 'GET' });
         if (response.ok) {
           isReady = true;
-          setStatusMessage('เซิร์ฟเวอร์พร้อมแล้ว!');
         } else {
           throw new Error('Server not ready');
         }
       } catch (error: any) {
         console.log(error);
-        retries += 1;
-        console.log(`Retry ${retries}: Server not ready, waiting...`);
-        await new Promise((resolve) => setTimeout(resolve, 3000)); // รอ 3 วินาทีแล้วลองใหม่
+        console.log(`Retry: Server not ready, waiting...`);
+        await new Promise((resolve) => setTimeout(resolve, 3000));
       }
     }
 
@@ -359,26 +345,31 @@ const Login = () => {
           </Button>
 
           {loading && (
-            <div style={{ marginTop: '20px' }}>
-              <p>{statusMessage}</p>
-              <div
-                style={{
-                  width: '100%',
-                  backgroundColor: '#e0e0e0',
-                  borderRadius: '5px',
-                  height: '10px',
-                  marginTop: '10px',
-                }}
-              >
-                <div
-                  style={{
-                    width: `${progress}%`,
-                    backgroundColor: '#007bff',
-                    height: '100%',
-                    borderRadius: '5px',
-                    transition: 'width 0.5s ease',
-                  }}
-                ></div>
+            <div
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                padding: 0,
+                margin: 0,
+                width: '100vw',
+                height: '100vh',
+                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 1000,
+              }}
+            >
+              <div style={{ textAlign: 'center', display: 'flex' }}>
+                <p style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
+                  กำลังเข้าสู่ระบบ กรุณารอสักครู่
+                </p>
+                <div style={{ marginLeft: '8px' }}>
+                  <div>
+                    <Spinner />
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -386,7 +377,7 @@ const Login = () => {
           {/* Signup Link */}
           {/* <p className="text-sm text-gray-600">
             ยังไม่มีบัญชี?{' '}
-            <a href="#" className="text-blue-500 hover:underline">
+            <a href="#" className="text-blue-500 hover:underline">a
               สมัครสมาชิก
             </a>
           </p> */}

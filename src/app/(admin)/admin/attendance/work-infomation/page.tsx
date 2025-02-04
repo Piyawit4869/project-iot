@@ -128,7 +128,7 @@ export default function WorkInfoPage() {
 
   useEffect(() => {
     fetchWorkInfo();
-  });
+  }, []);
 
   return (
     <div>

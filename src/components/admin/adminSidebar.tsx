@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/sidebar';
 import React, { useCallback } from 'react';
 import * as Icons from 'lucide-react';
-// import Image from 'next/image';
+import Image from 'next/image';
 import { useClientSession } from '@/libs/auth';
 
 const renderIcon = (iconName: string) => {
@@ -30,12 +30,12 @@ export function AdminSideBar() {
 
   const menuData: any = React.useMemo(
     () => [
-      // {
-      //   name: 'หน้าแรก',
-      //   kay: 'home',
-      //   icon: 'House',
-      //   path: '/admin',
-      // },
+      {
+        name: 'หน้าแรก',
+        key: 'home',
+        icon: 'House',
+        path: '/admin',
+      },
       {
         name: 'บัญชี',
         key: 'accounting',
@@ -168,8 +168,8 @@ export function AdminSideBar() {
     >
       <Sidebar>
         <div className="flex items-center justify-start p-2">
-          <img
-            src={me?.organization?.logoUrl} // Replace with your actual logo path in the `public` folder
+          <Image
+            src={me?.organization?.logoUrl || '/Logo'} // Replace with your actual logo path in the `public` folder
             alt="Logo"
             width={50}
             height={50}
@@ -181,20 +181,18 @@ export function AdminSideBar() {
             </span>
           )}
         </div>
+
         <div className="flex items-center justify-between p-2">
           {isSidebarOpen && (
             <SidebarMenu>
               <SidebarGroupLabel>Core features</SidebarGroupLabel>
               {menuData.map((item: any) => (
                 <SidebarMenuItem key={item.key}>
-                  <SidebarMenuButton
-                    onClick={() => toggleSubMenu(item.key)}
-                    // key={item.path}
-                  >
-                    {/* <a href={item.path} className="flex"> */}
-                    {renderIcon(item.icon)}
-                    <span className="ml-3">{item.name}</span>
-                    {/* </a> */}
+                  <SidebarMenuButton onClick={() => toggleSubMenu(item.key)}>
+                    <a href={item.path} className="flex">
+                      {renderIcon(item.icon)}
+                      <span className="ml-3">{item.name}</span>
+                    </a>
                   </SidebarMenuButton>
                   {item.subMenu && isSubMenuOpen[item.key] && (
                     <SidebarMenuSub>
