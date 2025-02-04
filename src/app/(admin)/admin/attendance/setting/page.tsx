@@ -58,11 +58,6 @@ const columns = [
     title: 'เวลาเลิกงาน',
     dataIndex: 'workEndTime',
   },
-  {
-    title: '',
-    dataIndex: 'branchId',
-    link: '/admin/attendance/setting',
-  },
 ];
 
 export default function SettingAttendancePage() {

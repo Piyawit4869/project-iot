@@ -9,9 +9,11 @@ import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date';
 import 'react-vertical-timeline-component/style.min.css';
 import Scaffold from '@/components/common/scaffold';
+import { handleAction } from '@/components/common/common';
+import CardComponent from '@/components/common/card';
+import * as Icons from 'lucide-react';
 interface FilterState {
-  name: string;
-  docNo: string;
+  userName: string;
 }
 
 interface MetaData {
@@ -40,10 +42,15 @@ const columns = [
     title: 'ชื่อ',
     dataIndex: 'userName',
     Link: '/admin/attendance/overview',
+    align: 'left',
   },
   {
     title: 'กิจกรรม',
     dataIndex: 'action',
+    align: 'center',
+    render: (value: string) => {
+      return handleAction(value);
+    },
   },
   {
     title: 'บันทึกเมื่อวันที่',
@@ -57,11 +64,10 @@ const columns = [
 
 export default function AttendancesPage() {
   const [page, setPage] = React.useState(1);
-  const [loading, setLoading] = React.useState(false);
+  // const [loading, setLoading] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [filters, setFilters] = React.useState<FilterState>({
-    name: '',
-    docNo: '',
+    userName: '',
   });
   const [items, setItems] = React.useState<AttendanceItem[]>([]);
   const [meta, setMeta] = React.useState<MetaData>({
@@ -72,15 +78,14 @@ export default function AttendancesPage() {
   });
 
   const fetchAttendances = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
-      const { name, docNo } = filters;
+      const { userName } = filters;
 
       const { data } = (await pagination({
         page,
         limit: rowsPerPage,
-        ...(name && { name }),
-        ...(docNo && { docNo }),
+        ...(userName && { userName }),
       })) as any;
       const { items: fetchedItems, meta: fetchedMeta } = data;
 
@@ -106,7 +111,7 @@ export default function AttendancesPage() {
       console.error('Error fetching attendance:', error);
     } finally {
       console.log('fimally');
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -128,12 +133,85 @@ export default function AttendancesPage() {
     fetchAttendances();
   });
 
+  const renderCard = (
+    title: string,
+    count: number,
+    colorClass: string,
+    Icon: React.ReactNode,
+  ) => (
+    <div className="flex-1">
+      <CardComponent
+        className={colorClass}
+        customCard
+        custom={
+          <div className="p-4 bg-white grid grid-cols-3 flex justify-between">
+            <div className="col-span-2">
+              <div className="text-4xl font-extrabold text-gray-900">
+                {count}
+              </div>
+              <div className="text-sm font-extrabold text-gray-600 mt-2">
+                {title}
+              </div>
+            </div>
+            <div className="flex items-start justify-end">
+              <div className="bg-gray-100 p-3 rounded-full">{Icon}</div>
+            </div>
+          </div>
+        }
+      />
+    </div>
+  );
+
   return (
     <div>
       <Scaffold
         child={
           <div>
             <TopSection title="ภาพรวมองค์กรทั้งหมด" />
+            <div className=" grid grid-cols-4 gap-4">
+              <div className="col-span-3">
+                <div className="flex space-x-4 mt-8  ">
+                  {renderCard(
+                    'พนักงานทั้งหมด',
+                    10,
+                    'bg-white text-blue-500',
+                    <Icons.UsersRound />,
+                  )}
+                  {renderCard(
+                    'เข้างานแล้ว',
+                    0,
+                    'bg-white text-accent1',
+                    <Icons.UserRoundCheck />,
+                  )}
+                  {renderCard(
+                    'ยังไม่เข้างาน',
+                    10,
+                    'bg-white text-red-500',
+                    <Icons.UserRoundMinus />,
+                  )}
+                </div>
+                <div className="flex space-x-4 mt-8">
+                  {renderCard(
+                    'เข้างาน',
+                    10,
+                    'bg-white text-orange-500',
+                    <Icons.ClockAlert />,
+                  )}
+                  {renderCard(
+                    'ลาป่วย/ลากิจ',
+                    0,
+                    'bg-white text-accent3',
+                    <Icons.Moon />,
+                  )}
+                  {renderCard(
+                    'มาสาย',
+                    10,
+                    'bg-white text-red-500',
+                    <Icons.LogOut />,
+                  )}
+                </div>
+              </div>
+            </div>
             <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
               <div className="grid grid-cols-1 sm:grid-cols-2">
                 <Input
@@ -141,19 +219,10 @@ export default function AttendancesPage() {
                   labelPlacement="outside"
                   size="sm"
                   radius="sm"
-                  name="name"
-                  placeholder="ค้นหาชื่อ"
-                  value={filters.name}
-                  onChange={(e) => onInputChange('name', e.target.value)}
-                />
-                <Input
-                  className="w-full p-2 text-headFont"
-                  labelPlacement="outside"
-                  size="sm"
-                  name="docNo"
-                  placeholder="ค้นหาหมายเลขเอกสาร"
-                  value={filters.docNo}
-                  onChange={(e) => onInputChange('docNo', e.target.value)}
+                  name="userName"
+                  placeholder="ค้นหาชื่อพนักงาน"
+                  value={filters.userName}
+                  onChange={(e) => onInputChange('userName', e.target.value)}
                 />
               </div>
             </div>
@@ -161,22 +230,22 @@ export default function AttendancesPage() {
             <div>
               {/* <Tabs variant="underlined">
                 <Tab key="table" title="ตาราง"> */}
-              {loading ? (
+              {/* {loading ? (
                 <div className="flex justify-center items-center h-64">
                   <div className="spinner"></div>
                 </div>
-              ) : (
-                <TablePagination
-                  initialRows={items}
-                  initialMeta={meta}
-                  rowsPerPage={rowsPerPage}
-                  columns={columns as any}
-                  onPageChange={(newPage) => setPage(newPage)}
-                  onRowsPerPageChange={(newRowsPerPage) =>
-                    setRowsPerPage(newRowsPerPage)
-                  }
-                />
-              )}
+              ) : ( */}
+              <TablePagination
+                initialRows={items}
+                initialMeta={meta}
+                rowsPerPage={rowsPerPage}
+                columns={columns as any}
+                onPageChange={(newPage) => setPage(newPage)}
+                onRowsPerPageChange={(newRowsPerPage) =>
+                  setRowsPerPage(newRowsPerPage)
+                }
+              />
+              {/* )} */}
               {/* </Tab> */}
               {/* <Tab
                   key="timeline"

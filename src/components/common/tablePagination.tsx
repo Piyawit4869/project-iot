@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableHeader,
@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import Link from 'next/link';
+// import { Input } from '@nextui-org/react';
 
 interface Column {
   title: string;
@@ -50,11 +51,23 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   onRowsPerPageChange,
   columns,
 }) => {
+  const [
+    currentRowsPerPage,
+    // setCurrentRowsPerPage
+  ] = useState(rowsPerPage);
+
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= initialMeta.totalPages) {
       onPageChange(newPage);
     }
   };
+
+  // const handleRowsPerPageChange = (value: number) => {
+  //   setCurrentRowsPerPage(value); // อัปเดต state
+  //   if (onRowsPerPageChange) {
+  //     onRowsPerPageChange(value); // เรียก callback ที่ส่งมาจาก props
+  //   }
+  // };
 
   const limits = [
     { label: '5', value: '5' },
@@ -66,37 +79,42 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   ];
 
   return (
-    <div>
-      <div>
-        <Table>
-          <TableHeader className="bg-accent1 rounded-lg p-3 text-white">
-            <TableRow className="text-white">
+    <div className="bg-white p-5 rounded-xl ">
+      <div className="grid grid-cols-1 sm:grid-cols-2">
+        <span>ภาพรวม การเข้าทำงาน</span>
+        {/* <Input className="p-5"></Input> */}
+      </div>
+      <div className="overflow-x-auto rounded-xl border-collapse">
+        <Table className="bg-white rounded-xl flex-1">
+          <TableHeader className="bg-accent1 text-white rounded-xl flex-1">
+            <TableRow className="text-white text-sm flex-1 hover:bg-accent1 divide-x divide">
               {columns.map((col) => (
                 <TableCell
+                  className="py-2.5 px-4 font-semibold whitespace-nowrap border-collapse"
                   key={col.dataIndex}
                   align={col.align || 'left'}
-                  className="border border-gray-300"
                 >
                   {col.title}
                 </TableCell>
               ))}
             </TableRow>
           </TableHeader>
-          <TableBody className="bg-white">
+          <TableBody>
             {initialRows.length > 0 ? (
               initialRows.map((row, idx) => (
-                <TableRow key={idx} className="border border-gray-300">
+                <TableRow key={idx} className="hover:bg-gray-50 ">
                   {columns.map((col) => (
                     <TableCell
                       key={col.dataIndex}
-                      className="border border-gray-300 hover:bg-gray-100"
+                      className="p-3 border border-collapse-secondary text-sm"
+                      align={col.align || 'left'}
                     >
                       {col.render ? (
                         col.render(row[col.dataIndex], row, idx)
                       ) : col.link ? (
                         <Link
                           href={`${col.link}/${row.id}`}
-                          className="text-black hover:underline hover:text-accent1"
+                          className="text-accent1 hover:underline"
                         >
                           {row[col.dataIndex] || '-'}
                         </Link>
@@ -111,7 +129,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="text-center border border-gray-300"
+                  className=" text-center text-gray-500 p-4 border border-gray-300 "
                 >
                   ไม่พบข้อมูล
                 </TableCell>
@@ -120,17 +138,16 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
           </TableBody>
         </Table>
       </div>
-
       <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
         <div className="text-gray-700 text-sm">
           <strong>
             {Math.min(
-              rowsPerPage * (initialMeta.currentPage - 1) + 1,
+              currentRowsPerPage * (initialMeta.currentPage - 1) + 1,
               initialMeta.totalItems,
             )}{' '}
             -{' '}
             {Math.min(
-              rowsPerPage * initialMeta.currentPage,
+              currentRowsPerPage * initialMeta.currentPage,
               initialMeta.totalItems,
             )}
           </strong>{' '}
@@ -139,12 +156,15 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
 
         {onRowsPerPageChange && (
           <div className="flex items-center space-x-2">
-            <span>แสดง:</span>
+            <span className="text-sm">แสดง:</span>
             <Select
               onValueChange={(value) => onRowsPerPageChange(Number(value))}
             >
-              <SelectTrigger className="w-[120px]">
-                <SelectValue />
+              <SelectTrigger className="w-[120px] text-sm">
+                <SelectValue
+                  placeholder={`${currentRowsPerPage} รายการ`}
+                  className="text-sm"
+                />
               </SelectTrigger>
               <SelectContent>
                 {limits.map((item) => (

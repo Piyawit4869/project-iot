@@ -25,8 +25,8 @@ export default function CreateWhitelistPage() {
   //   currentPage: 1,
   // });
   const [page] = React.useState(1);
-  const [rowsPerPage] = React.useState(10);
 
+  const [rowsPerPage] = React.useState(10);
   // const [latLon, setLatLon] = React.useState() as any;
 
   // React.useEffect(() => {

@@ -10,7 +10,7 @@
 //       password: 'localpass', // Replace with user input
 //       callbackUrl: '/', // Redirect after successful login
 //     });
-//   };
+//   };error
 //   const handleLogout = async () => {
 //     await signOut({ callbackUrl: '/login' }); // Redirect after logout
 //   };

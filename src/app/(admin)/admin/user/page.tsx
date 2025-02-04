@@ -59,7 +59,7 @@ export default function IndexPage() {
   // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
     fetchUser();
-  });
+  },);
   // }, [filters, page, rowsPerPage]);
 
   return (

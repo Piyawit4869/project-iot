@@ -24,11 +24,11 @@ export default function NotationsPage() {
     totalPages: 0,
     currentPage: 1,
   });
-  const [loading, setLoading] = React.useState(false);
+  // const [loading, setLoading] = React.useState(false);
 
   // Fetch data from the API
   const fetchNotations = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const { name, docNo } = filters;
       const { items: fetchedItems, meta: fetchedMeta } = await pagination({
@@ -42,7 +42,7 @@ export default function NotationsPage() {
     } catch (error) {
       console.error('Error fetching notations:', error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -108,11 +108,11 @@ export default function NotationsPage() {
               </div>
             </div>
 
-            {loading ? (
+            {/* {loading ? (
               <div className="flex justify-center items-center h-64">
                 <div className="spinner"></div>
               </div>
-            ) : (
+            ) : ( */}
               <TablePagination
                 initialRows={items}
                 initialMeta={meta}
@@ -123,7 +123,7 @@ export default function NotationsPage() {
                   setRowsPerPage(newRowsPerPage)
                 }
               />
-            )}
+            {/* )} */}
           </div>
         }
         backgroundColor={''}

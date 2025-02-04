@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+// import Image from 'next/image';
 import { CardControl } from '@/components/setting/card-organization';
 import {
   Select,
@@ -12,6 +12,7 @@ import {
   DatePicker,
   Textarea,
   InputOtp,
+  Image,
 } from '@nextui-org/react';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';

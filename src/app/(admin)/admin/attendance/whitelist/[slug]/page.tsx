@@ -210,7 +210,10 @@ export default function WhitelistSinglePage() {
               title="แก้ไขการเข้าใช้งาน"
               backpath={'/admin/attendance/whitelist'}
               buttons={[
-                <div className="mx-2.5 gap-2" key="control-section">
+                <div
+                  className="mx-2.5 gap-2"
+                  key={'button approved and rejected'}
+                >
                   <Button
                     key={'approve whitelist button'}
                     className="bg-accent1 text-white m-1"

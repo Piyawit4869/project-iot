@@ -112,7 +112,8 @@ export default function AttendancePage() {
           <div className="flex space-x-4 mt-8">
             {renderCard('เข้างาน', 10, 'bg-accent1')}
             {renderCard('ลาป่วย/ลากิจ', 0, 'bg-accent3')}
-            {renderCard('ขาด', 0, 'bg-accent2')}
+            {renderCard('มาสาย', 10, 'bg-accent2')}
+            {renderCard('ขาด', 0, 'bg-secondary')}
           </div>
           <div className="bg-white shadow rounded-2xl mb-4 mt-4">
             <div className="flex flex-wrap gap-4">

@@ -64,7 +64,7 @@ const columns = [
 
 export default function WorkInfoPage() {
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [items, setItems] = useState<WorkInfoItem[]>([]);
   // const [filters, setFilters] = useState<FilterState>({ name: '', status: '' });
@@ -76,7 +76,7 @@ export default function WorkInfoPage() {
   });
 
   const fetchWorkInfo = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       // const { name, status } = filters;
       const { items: fetchedItems, meta: fetchedMeta } = await pagination({
@@ -104,7 +104,7 @@ export default function WorkInfoPage() {
     } catch (error) {
       console.error('Error fetching work info:', error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -163,7 +163,7 @@ export default function WorkInfoPage() {
                 />
               </div>
             </div>
-            {loading ? (
+            {/* {loading ? (
               <div className="flex justify-center items-center h-[350px]">
                 <div className="relative flex flex-col items-center space-y-4">
                   <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -172,7 +172,7 @@ export default function WorkInfoPage() {
                   </p>
                 </div>
               </div>
-            ) : (
+            ) : ( */}
               <>
                 <TablePagination
                   initialRows={items}
@@ -185,7 +185,7 @@ export default function WorkInfoPage() {
                   }
                 />
               </>
-            )}
+            {/* )} */}
           </div>
         }
         backgroundColor={''}
