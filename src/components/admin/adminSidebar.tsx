@@ -26,7 +26,6 @@ export function AdminSideBar({
 }: { isSidebarOpen: boolean } & React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname() ?? '';
   const me = useClientSession();
-  console.log(me?.organization?.logoUrl);
   const menuData: any = React.useMemo(
     () => [
       {
@@ -149,12 +148,17 @@ export function AdminSideBar({
     const state: any = {};
     menuData.forEach((item: any) => {
       if (item.subMenu) {
-        state[item.key] = true;
+        state[item.key] = item.subMenu.some((subItem: any) =>
+          pathname.startsWith(subItem.path),
+        );
       }
     });
     return state;
-  }, [menuData]);
+  }, [menuData, pathname]);
+
   const [isSubMenuOpen, setIsSubMenuOpen] = React.useState(initialSubMenuState);
+
+  const isMenuActive = (path: string) => pathname.startsWith(path);
 
   const toggleSubMenu = useCallback((key: string, open?: boolean) => {
     setIsSubMenuOpen((prev: any) => ({
@@ -174,7 +178,7 @@ export function AdminSideBar({
           <img
             src={me?.organization?.logoUrl || '/path/to/fallback-logo.png'}
             alt="Logo"
-            className="w-12  rounded-xl "
+            className="w-10  rounded-xl "
           />
           {isSidebarOpen && (
             <span className="ml-2 font-bold text-lg transition-opacity duration-300 opacity-100">
@@ -194,16 +198,12 @@ export function AdminSideBar({
             {menuData.map((item: any) => (
               <SidebarMenuItem key={item.key}>
                 <SidebarMenuButton
-                  onMouseEnter={() => {
-                    if (!isSidebarOpen) toggleSubMenu(item.key, true);
-                  }}
-                  onMouseLeave={() => {
-                    if (!isSidebarOpen) toggleSubMenu(item.key, false);
-                  }}
                   onClick={() => {
                     if (isSidebarOpen) toggleSubMenu(item.key);
                   }}
-                  className="py-5"
+                  className={`py-5 ${
+                    isMenuActive(item.subMenu[0]?.path) ? '' : ''
+                  }`}
                 >
                   {renderIcon(item.icon)}
                   <span
@@ -221,8 +221,10 @@ export function AdminSideBar({
                       <SidebarMenuSubButton
                         key={subItem.path}
                         href={subItem.path}
-                        isActive={pathname === subItem.path}
-                        className="py-4"
+                        isActive={pathname === subItem.path} // ทำให้แสดง active
+                        className={`py-4 ${
+                          pathname === subItem.path ? 'bg-blue-100' : ''
+                        }`}
                       >
                         {renderIcon(subItem.icon)}
                         <span

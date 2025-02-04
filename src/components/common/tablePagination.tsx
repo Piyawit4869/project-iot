@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import Link from 'next/link';
+// import { Input } from '@nextui-org/react';
 
 interface Column {
   title: string;
@@ -78,7 +79,11 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   ];
 
   return (
-    <div>
+    <div className="bg-white p-5 rounded-xl ">
+      <div className="grid grid-cols-1 sm:grid-cols-2">
+        <span>ภาพรวม การเข้าทำงาน</span>
+        {/* <Input className="p-5"></Input> */}
+      </div>
       <div className="overflow-x-auto rounded-xl border-collapse">
         <Table className="bg-white rounded-xl flex-1">
           <TableHeader className="bg-accent1 text-white rounded-xl flex-1">
