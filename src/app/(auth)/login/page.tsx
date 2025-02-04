@@ -10,7 +10,7 @@
 //       password: 'localpass', // Replace with user input
 //       callbackUrl: '/', // Redirect after successful login
 //     });
-//   };
+//   };error
 //   const handleLogout = async () => {
 //     await signOut({ callbackUrl: '/login' }); // Redirect after logout
 //   };
@@ -68,7 +68,7 @@ const Login = () => {
           style: { fontFamily: 'var(--font-ibm-sans)' },
         });
 
-        router.push('/admin');
+        router.push('/backoffice');
       } else {
         router.push('/');
         console.log('Toast error triggered');

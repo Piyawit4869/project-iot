@@ -2,7 +2,7 @@ import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
 export async function updateRole(prevState: any, formData: any, id: any) {
-  const url = `${base_url}/crud/employee-roles/edit/${id}`;
+  const url = `${base_url}/crud/roles/edit/${id}`;
 
   const body = {
     ...formData,

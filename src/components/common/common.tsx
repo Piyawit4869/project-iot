@@ -109,6 +109,25 @@ export const handleDocumentStatusTag = (status: string) => {
   );
 };
 
+export const handleAction = (actions: string) => {
+  const action: Record<string, { text: string; bg: string }> = {
+    in: { text: 'เข้างานแล้ว', bg: 'bg-green-100' },
+    break: { text: 'พักเบรก', bg: 'bg-yellow-100' },
+    out: { text: 'ออกงานแล้ว', bg: 'bg-red-100' },
+  };
+
+  if (!action[actions]) return null;
+
+  return (
+    <Chip
+      style={{ width: 'auto', minWidth: '80px' }}
+      className={`px-3 py-1 rounded-full text-xs font-medium ${action[actions].bg} text-yellow-700 border border-gray`}
+    >
+      {action[actions].text}
+    </Chip>
+  );
+};
+
 // export const handlePriority = (priority: string) => {
 //   const priorityTags: Record<Priority, { text: string; bg: string }> = {
 //     high: { text: 'High', bg: 'bg-gray-100' },
@@ -129,3 +148,32 @@ export const handleDocumentStatusTag = (status: string) => {
 //     </Chip>
 //   );
 // };
+
+export function isMenuActive(currentPath: string, pathName: string) {
+  const splitPath = pathName.split('/');
+  let subFeatureName = '';
+
+  if (currentPath) {
+    if (splitPath.length > 2) {
+      subFeatureName = splitPath[3];
+
+      console.log('in if');
+
+      console.log('current: ', currentPath);
+      console.log('feature: ', subFeatureName);
+
+      return currentPath.startsWith(subFeatureName);
+    } else {
+      const featureName = splitPath[2] ?? 'backoffice';
+
+      console.log('in else');
+
+      console.log('current: ', currentPath);
+      console.log('feature: ', featureName);
+
+      return currentPath.startsWith(featureName);
+    }
+  } else {
+    return false;
+  }
+}

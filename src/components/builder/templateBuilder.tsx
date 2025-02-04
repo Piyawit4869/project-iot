@@ -194,7 +194,7 @@ export const TemplateBuilder = ({
           position: 'bottom-left',
           style: { fontFamily: 'var(--font-ibm-sans)' },
         });
-        router.push(`/admin/notation/template/${data.id}`);
+        router.push(`/backoffice/notation/template/${data.id}`);
       } else if (!isCreate && initialData?.id) {
         const { data } = await updateTemplate({}, payload, initialData?.id);
 
@@ -203,7 +203,7 @@ export const TemplateBuilder = ({
           position: 'bottom-left',
           style: { fontFamily: 'var(--font-ibm-sans)' },
         });
-        router.push(`/admin/notation/template/${data.id}`);
+        router.push(`/backoffice/notation/template/${data.id}`);
       }
     } catch (error) {
       console.error('Save error:', error);
@@ -225,7 +225,7 @@ export const TemplateBuilder = ({
         style: { fontFamily: 'var(--font-ibm-sans)' },
       });
 
-      router.push(`/admin/notation/template`);
+      router.push(`/backoffice/notation/template`);
     } catch (error) {
       toast.error('❌ ไม่สามารถลบรูปแบบเอกสารได้', {
         duration: 3000,

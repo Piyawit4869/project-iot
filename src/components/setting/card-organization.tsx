@@ -6,7 +6,7 @@ interface CardControlProps {
   control: string;
   name: string;
   onChange?: (e: any) => void;
-  checked: boolean;
+  isSelected: boolean;
 }
 
 export const CardControl = ({
@@ -15,14 +15,14 @@ export const CardControl = ({
   control,
   name,
   onChange,
-  checked,
+  isSelected,
 }: CardControlProps) => {
   return (
     <Card className="py-4 bg-primary" isHoverable isPressable>
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
         <h4 className="font-bold text-large">{title}</h4>
       </CardHeader>
-      <CardBody className="">
+      <CardBody className=" overflow-visible py-2">
         <p dangerouslySetInnerHTML={{ __html: description }} />
         <br />
         <p>{control}</p>
@@ -30,7 +30,7 @@ export const CardControl = ({
           name={name}
           className="mt-3"
           color="secondary"
-          checked={checked}
+          checked={isSelected}
           onChange={(e) => {
             if (onChange) {
               onChange(e as any);
