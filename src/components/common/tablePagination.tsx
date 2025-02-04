@@ -79,11 +79,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   ];
 
   return (
-    <div className="bg-white p-5 rounded-xl ">
-      <div className="grid grid-cols-1 sm:grid-cols-2">
-        <span>ภาพรวม การเข้าทำงาน</span>
-        {/* <Input className="p-5"></Input> */}
-      </div>
+    <div className="bg-white px-5 py-4 rounded-xl ">
       <div className="overflow-x-auto rounded-xl border-collapse">
         <Table className="bg-white rounded-xl flex-1">
           <TableHeader className="bg-accent1 text-white rounded-xl flex-1">
@@ -138,7 +134,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
           </TableBody>
         </Table>
       </div>
-      <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
+      <div className="flex flex-col md:flex-row gap-5 justify-end items-center mt-4 space-y-4 md:space-y-0">
         <div className="text-gray-700 text-sm">
           <strong>
             {Math.min(
@@ -160,7 +156,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             <Select
               onValueChange={(value) => onRowsPerPageChange(Number(value))}
             >
-              <SelectTrigger className="w-[120px] text-sm">
+              <SelectTrigger className="w-[120px] h-[28px] p-1 text-sm">
                 <SelectValue
                   placeholder={`${currentRowsPerPage} รายการ`}
                   className="text-sm"

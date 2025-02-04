@@ -1,89 +1,65 @@
 import React from 'react';
+import { CardContent } from '@/components/ui/card';
+import * as Icons from 'lucide-react';
 
-// Timeline wrapper component
-interface TimelineProps {
-  children: React.ReactNode;
-  className?: string;
+interface TimelineItem {
+  date: string;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
 }
 
-const Timeline: React.FC<TimelineProps> = ({ children, className }) => {
-  return <div className={`timeline ${className}`}>{children}</div>;
-};
+const timelineData: TimelineItem[] = [
+  {
+    date: 'Today',
+    title: 'Pending Approval',
+    description: 'This request requires your approval.',
+    icon: <Icons.UserRoundCheck className="text-blue-500" size={16} />,
+  },
+  {
+    date: 'May 19, 2018',
+    title: 'Approval Requested',
+    description: 'John Lloyd has requested your approval.',
+    icon: <Icons.ClockAlert className="text-blue-500" size={16} />,
+  },
+  {
+    date: '2018',
+    title: 'Request Created',
+    description: 'Request created by Kim May.',
+    icon: <Icons.MapPin className="text-blue-500" size={16} />,
+  },
+];
 
-// Timeline item component
-const TimelineItem: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const TimelineComponent: React.FC = () => {
   return (
-    <div className=" pl-8 timeline-item flex items-start space-x-4">
-      {children}
-    </div>
+    <CardContent>
+      <h2 className="text-xl font-semibold text-center mb-4">Timeline</h2>
+      {/* Vertical line */}
+      <div className="absolute left-4 top-0 h-full border-l-2 border-gray-200" />
+
+      {timelineData.map((item, index) => (
+        <div key={index} className="flex items-start space-x-4">
+          {/* Icon with connecting line */}
+          <div className="relative flex items-center">
+            <div className="z-10 flex items-center justify-center w-8 h-8 bg-white border-2 border-blue-500 rounded-full">
+              {item.icon}
+            </div>
+            {/* Connecting line for icons, except the last one */}
+            {index !== timelineData.length - 1 && (
+              <div className="absolute top-8 left-1/2 w-[2px] h-full bg-gray-200" />
+            )}
+          </div>
+
+          {/* Timeline content */}
+          <div className="text-sm">
+            <p className="text-xs text-gray-500">{item.date}</p>
+            <p className="font-medium text-gray-900">{item.title}</p>
+            <p className="text-xs text-gray-600">{item.description}</p>
+          </div>
+        </div>
+      ))}
+    </CardContent>
   );
 };
 
-// Timeline point component
-const TimelinePoint = () => {
-  return (
-    <div className="timeline-point w-4 h-4 bg-accent1 rounded-full mt-2.5 "></div>
-  );
-};
-
-// Timeline content component
-interface TimelineContentProps {
-  action: string;
-  name: string;
-  dateTime: string;
-}
-
-const TimelineContent: React.FC<TimelineContentProps> = ({
-  action,
-  name,
-  dateTime,
-}) => {
-  return (
-    <div className="timeline-content mt-2">
-      <h1 className="text-body-3 font-medium text-metal-900 dark:text-white">
-        {action}
-      </h1>
-      <p className="text-body-3 font-medium text-metal-900 dark:text-white">
-        {name}
-      </p>
-      <p className="text-body-5 font-normal leading-[1.4] text-metal-400 dark:text-metal-300">
-        {dateTime}
-      </p>
-    </div>
-  );
-};
-
-export const TimelineComponent = () => {
-  return (
-    <Timeline className="border-dotted">
-      <TimelineItem>
-        <TimelinePoint />
-        <TimelineContent
-          action="In"
-          name="FullName"
-          dateTime="09:00:00 , 20/01/2024"
-        />
-      </TimelineItem>
-
-      <TimelineItem>
-        <TimelinePoint />
-        <TimelineContent
-          action="Break"
-          name="FullName"
-          dateTime="13:00:00 , 20/01/2024"
-        />
-      </TimelineItem>
-
-      <TimelineItem>
-        <TimelinePoint />
-        <TimelineContent
-          action="Out"
-          name="FullName"
-          dateTime="17:00:00 , 20/01/2024"
-        />
-      </TimelineItem>
-    </Timeline>
-  );
-};
+export default TimelineComponent;
