@@ -27,27 +27,30 @@ export default function CustomersPage() {
   const [loading, setLoading] = React.useState(false);
 
   // Fetch data from the API
-  const fetchCustomer = async () => {
-    setLoading(true);
-    try {
-      const { companyName, taxId, firstName, contactEmail } = filters;
-      const { items: fetchedItems, meta: fetchedMeta } =
-        await paginationCustomers({
-          page,
-          limit: rowsPerPage,
-          ...(companyName && { companyName }),
-          ...(taxId && { taxId }),
-          ...(firstName && { firstName }),
-          ...(contactEmail && { contactEmail }),
-        });
-      setItems(fetchedItems);
-      setMeta(fetchedMeta);
-    } catch (error) {
-      console.log('Error fetching notations:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  React.useEffect(() => {
+    const fetchCustomer = async () => {
+      setLoading(true);
+      try {
+        const { companyName, taxId, firstName, contactEmail } = filters;
+        const { items: fetchedItems, meta: fetchedMeta } =
+          await paginationCustomers({
+            page,
+            limit: rowsPerPage,
+            ...(companyName && { companyName }),
+            ...(taxId && { taxId }),
+            ...(firstName && { firstName }),
+            ...(contactEmail && { contactEmail }),
+          });
+        setItems(fetchedItems);
+        setMeta(fetchedMeta);
+      } catch (error) {
+        console.log('Error fetching notations:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCustomer();
+  }, [page, rowsPerPage, filters]);
 
   // Debounced function to handle filter changes
   const handleFilterChange = React.useCallback((updatedFilters: any) => {
@@ -64,9 +67,6 @@ export default function CustomersPage() {
   };
 
   // Fetch data whenever filters, page, or rowsPerPage change
-  React.useEffect(() => {
-    fetchCustomer();
-  }, []);
 
   return (
     <div>

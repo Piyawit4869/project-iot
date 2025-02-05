@@ -22,24 +22,28 @@ export default function ItemsPage() {
   const [loading, setLoading] = React.useState(false);
 
   // Fetch data from the API
-  const fetchItems = async () => {
-    setLoading(true);
-    try {
-      const { name, docNo } = filters;
-      const { items: fetchedItems, meta: fetchedMeta } = await paginationItems({
-        page,
-        limit: rowsPerPage,
-        ...(name && { name }),
-        ...(docNo && { docNo }),
-      });
-      setItems(fetchedItems);
-      setMeta(fetchedMeta);
-    } catch (error) {
-      console.error('Error fetching notations:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  React.useEffect(() => {
+    const fetchItems = async () => {
+      setLoading(true);
+      try {
+        const { name, docNo } = filters;
+        const { items: fetchedItems, meta: fetchedMeta } =
+          await paginationItems({
+            page,
+            limit: rowsPerPage,
+            ...(name && { name }),
+            ...(docNo && { docNo }),
+          });
+        setItems(fetchedItems);
+        setMeta(fetchedMeta);
+      } catch (error) {
+        console.error('Error fetching notations:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchItems();
+  }, [page, rowsPerPage, filters]);
 
   // Debounced function to handle filter changes
   const handleFilterChange = React.useCallback((updatedFilters: any) => {
@@ -54,11 +58,6 @@ export default function ItemsPage() {
     const updatedFilters = { ...filters, [key]: value };
     handleFilterChange(updatedFilters);
   };
-
-  // Fetch data whenever filters, page, or rowsPerPage change
-  React.useEffect(() => {
-    fetchItems();
-  }, []);
 
   return (
     <div>

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 export default function TemplateLoader() {
-  const [template, setTemplate] = useState('');
+  const [template, setTemplate] = React.useState('');
 
-  useEffect(() => {
+  React.useEffect(() => {
     // Fetch the template
     fetch('src/assets/templates/quotation.html')
       .then((response) => {

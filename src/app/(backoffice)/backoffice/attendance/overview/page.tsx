@@ -3,7 +3,7 @@
 import React from 'react';
 import debounce from 'lodash/debounce';
 import { TopSection } from '@/components/common/topSection';
-import { Input } from '@nextui-org/react';
+import { DatePicker, Input, Select, SelectItem } from '@nextui-org/react';
 import pagination from '@/pages/api/attendances/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date';
@@ -12,6 +12,9 @@ import Scaffold from '@/components/common/scaffold';
 import { handleAction } from '@/components/common/common';
 import CardComponent from '@/components/common/card';
 import * as Icons from 'lucide-react';
+import TimelineComponent from '@/components/backoffice/timeline';
+import ChartComponent from '@/components/backoffice/garphRateAll';
+import WeeklyAttendanceChart from '@/components/backoffice/garphRateDepartment';
 interface FilterState {
   userName: string;
 }
@@ -26,11 +29,15 @@ interface AttendanceItem {
   currentDate: string;
   records: [
     {
+      status: string;
       stamp: string;
       action: string;
       workInfo: {
+        prefix: string;
+        totalWorkHours: number;
         user: {
           userName: string;
+          employeeRoleId: string;
         };
       };
     },
@@ -39,10 +46,20 @@ interface AttendanceItem {
 
 const columns = [
   {
-    title: 'ชื่อ',
+    title: 'ชื่อพนักงาน',
     dataIndex: 'userName',
     Link: '/backoffice/attendance/overview',
     align: 'left',
+  },
+  {
+    title: 'ข้อมูลการทำงาน',
+    dataIndex: 'prefix',
+    align: 'left',
+  },
+  {
+    title: 'สถานะ',
+    dataIndex: 'status',
+    align: 'center',
   },
   {
     title: 'กิจกรรม',
@@ -55,10 +72,17 @@ const columns = [
   {
     title: 'บันทึกเมื่อวันที่',
     dataIndex: 'stampDate',
+    align: 'center',
   },
   {
     title: 'เวลาที่บันทึก',
     dataIndex: 'stampTime',
+    align: 'center',
+  },
+  {
+    title: 'รวมเวลาการเข้าทำงาน',
+    dataIndex: 'totalWorkHours',
+    align: 'center',
   },
 ];
 
@@ -77,46 +101,52 @@ export default function AttendancesPage() {
     currentPage: 1,
   });
 
-  const fetchAttendances = async () => {
-    // setLoading(true);
-    try {
-      const { userName } = filters;
+  React.useEffect(() => {
+    const fetchAttendances = async () => {
+      // setLoading(true);
+      try {
+        const { userName } = filters;
 
-      const { data } = (await pagination({
-        page,
-        limit: rowsPerPage,
-        ...(userName && { userName }),
-      })) as any;
-      const { items: fetchedItems, meta: fetchedMeta } = data;
+        const { data } = (await pagination({
+          page,
+          limit: rowsPerPage,
+          ...(userName && { userName }),
+        })) as any;
+        const { items: fetchedItems, meta: fetchedMeta } = data;
 
-      setItems(
-        fetchedItems.flatMap((item: AttendanceItem) =>
-          item.records.map((record) => ({
-            ...item,
-            userName: record?.workInfo?.user?.userName || '',
-            action: record?.action || '',
-            stampDate: formatDate(record?.stamp).date || '',
-            stampTime: formatDate(record?.stamp).time || '',
-            currentDate: formatDate(item.currentDate).date || '',
-          })),
-        ),
-      );
+        setItems(
+          fetchedItems.flatMap((item: AttendanceItem) =>
+            item.records.map((record) => ({
+              ...item,
+              status: record?.status || '',
+              action: record?.action || '',
+              prefix: record?.workInfo?.prefix || '',
+              totalWorkHours: record?.workInfo?.totalWorkHours || '',
+              userName: record?.workInfo?.user?.userName || '',
+              stampDate: formatDate(record?.stamp).date || '',
+              stampTime: formatDate(record?.stamp).time || '',
+              currentDate: formatDate(item.currentDate).date || '',
+            })),
+          ),
+        );
 
-      // Set the meta state, ensuring it has default values
-      setMeta(fetchedMeta);
-    } catch (error) {
-      console.error('Error fetching attendance:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+        // Set the meta state, ensuring it has default values
+        setMeta(fetchedMeta);
+      } catch (error) {
+        console.error('Error fetching attendance:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAttendances();
+  }, [page, rowsPerPage, filters]);
 
   // Debounced function to handle filter changes
   const handleFilterChange = React.useCallback((updatedFilters: any) => {
     debounce(() => {
       setPage(1); // Reset to the first page for new filters
       setFilters(updatedFilters);
-    }, 300)();
+    }, 1)();
   }, []);
 
   // Handle input changes
@@ -124,10 +154,6 @@ export default function AttendancesPage() {
     const updatedFilters = { ...filters, [key]: value };
     handleFilterChange(updatedFilters);
   };
-
-  React.useEffect(() => {
-    fetchAttendances();
-  });
 
   const renderCard = (
     title: string,
@@ -163,136 +189,136 @@ export default function AttendancesPage() {
       <Scaffold
         child={
           <div>
-            <TopSection title="ภาพรวมองค์กรทั้งหมด" />
-            <div className=" grid grid-cols-4 gap-4">
+            <TopSection title="ภาพรวมการเข้าทำงานทั้งหมด" />
+            <div className=" grid grid-cols-4 gap-5">
               <div className="col-span-3">
-                <div className="flex space-x-4 mt-8  ">
+                <div className="flex space-x-5 mt-8  ">
                   {renderCard(
                     'พนักงานทั้งหมด',
-                    10,
+                    15,
                     'bg-white text-blue-500',
                     <Icons.UsersRound />,
                   )}
                   {renderCard(
                     'เข้างานแล้ว',
-                    0,
+                    10,
                     'bg-white text-accent1',
                     <Icons.UserRoundCheck />,
                   )}
                   {renderCard(
                     'ยังไม่เข้างาน',
-                    10,
+                    1,
                     'bg-white text-red-500',
                     <Icons.UserRoundMinus />,
                   )}
                 </div>
                 <div className="flex space-x-4 mt-8">
                   {renderCard(
-                    'เข้างาน',
-                    10,
+                    'เข้างานสาย',
+                    1,
                     'bg-white text-orange-500',
                     <Icons.ClockAlert />,
                   )}
                   {renderCard(
                     'ลาป่วย/ลากิจ',
-                    0,
+                    2,
                     'bg-white text-accent3',
                     <Icons.Moon />,
                   )}
                   {renderCard(
-                    'มาสาย',
-                    10,
+                    'เลิกงานแล้ว',
+                    1,
                     'bg-white text-red-500',
                     <Icons.LogOut />,
                   )}
                 </div>
               </div>
+              <div className=" flex space-x-4 mt-8 bg-white rounded-xl ">
+                <h3 className="flex items-center justify-items-center px-10">
+                  <TimelineComponent />
+                </h3>
+              </div>
             </div>
-            <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
-              <div className="grid grid-cols-1 sm:grid-cols-2">
-                <Input
-                  className="w-full p-2 text-headFont"
-                  labelPlacement="outside"
-                  size="sm"
-                  radius="sm"
-                  name="userName"
-                  placeholder="ค้นหาชื่อพนักงาน"
-                  value={filters.userName}
-                  onChange={(e) => onInputChange('userName', e.target.value)}
-                />
+
+            <div className=" grid grid-cols-5 gap-4">
+              <div className="col-span-3 mt-8">
+                <div className="bg-white rounded-xl p-5 ">
+                  <ChartComponent />
+                </div>
+              </div>
+              <div className="col-span-2 mt-8">
+                <div className="bg-white rounded-xl p-5">
+                  <WeeklyAttendanceChart />
+                </div>
               </div>
             </div>
 
             <div>
-              {/* <Tabs variant="underlined">
-                <Tab key="table" title="ตาราง"> */}
               {/* {loading ? (
                 <div className="flex justify-center items-center h-64">
                   <div className="spinner"></div>
                 </div>
-              ) : ( */}
-              <TablePagination
-                initialRows={items}
-                initialMeta={meta}
-                rowsPerPage={rowsPerPage}
-                columns={columns as any}
-                onPageChange={(newPage) => setPage(newPage)}
-                onRowsPerPageChange={(newRowsPerPage) =>
-                  setRowsPerPage(newRowsPerPage)
-                }
-              />
-              {/* )} */}
-              {/* </Tab> */}
-              {/* <Tab
-                  key="timeline"
-                  title="ไทม์ไลน์"
-                  className="grid grid-cols-1 sm:grid-cols-2"
-                >
-                  <TimelineComponent /> */}
-              {/* <VerticalTimeline layout="1-column">
-                <VerticalTimelineElement
-                  className=" min-w-80 w-max-120 "
-                  contentStyle={{
-                    background: '#fff',
-                    borderRight: '3px solid #00a57c',
-                    borderTop: '2px solid #00a57c',
-                    color: '#000',
-                    borderBottomLeftRadius: '15px',
-                    borderBottomRightRadius: '15px',
-                    borderTopRightRadius: '15px',
-                  }}
-                  contentArrowStyle={{
-                    borderRight: '8px solid  #00a57c',
-                  }}
-                  iconStyle={{
-                    background: '#00a57c',
-                    color: '#fff',
-                  }}
-                >
-                  <h3
-                    className="vertical-timeline-element-title"
-                    style={{
-                      wordBreak: 'break-word', // ตัดคำที่เกินขอบ
-                      whiteSpace: 'normal', // ให้ข้อความแสดงหลายบรรทัด
-                      overflowWrap: 'break-word',
-                    }}
+              ) : (
+                <> */}
+              <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
+                <div className="grid grid-cols-1 sm:grid-cols-5 p-4 flex justify-between items-center">
+                  <div className=" px-3">
+                    <h6>ภาพรวมการเข้าทำงาน</h6>
+                  </div>
+                  <Input
+                    className="w-[90%] p-2 text-headFont col-span-2"
+                    startContent={<Icons.Search className="p-1" />}
+                    size="sm"
+                    radius="sm"
+                    name="userName"
+                    // label="ค้นหาด้วยชื่อพนักงาน"
+                    // labelPlacement="outside"
+                    placeholder="ชื่อพนักงาน"
+                    variant="bordered"
+                    value={filters.userName}
+                    onChange={(e) => onInputChange('userName', e.target.value)}
+                  />
+                  <Select
+                    className="w-[90%] p-2 text-headFont"
+                    startContent={<Icons.UserRound className="p-1" />}
+                    size="sm"
+                    radius="sm"
+                    name="userName"
+                    // label="ค้นหาด้วยตำแหน่งพนักงาน"
+                    // labelPlacement="outside"
+                    placeholder="เลือกตำแหน่ง"
+                    variant="bordered"
+                    value={filters.userName}
+                    onChange={(e) => onInputChange('userName', e.target.value)}
                   >
-                    Name :
-                  </h3>
-                  <span>Time : 11:16</span>
-                </VerticalTimelineElement>
-                <VerticalTimelineElement
-                  iconStyle={{
-                    background: 'rgb(0, 0, 0)',
-                    color: '#fff',
-                    borderBottomLeftRadius: '25px',
-                    borderBottomRightRadius: '25px',
-                    borderTopRightRadius: '25px',
-                  }}
+                    <SelectItem>
+                      <div>1</div>
+                    </SelectItem>
+                  </Select>
+                  <DatePicker
+                    className="w-[90%] p-2 text-headFont"
+                    size="sm"
+                    radius="sm"
+                    name=""
+                    variant="bordered"
+                    selectorButtonPlacement="start"
+                    // label="ค้นหาด้วยวันที่"
+                    // labelPlacement="outside"
+                  />
+                </div>
+                <TablePagination
+                  initialRows={items}
+                  initialMeta={meta}
+                  rowsPerPage={rowsPerPage}
+                  columns={columns as any}
+                  onPageChange={(newPage) => setPage(newPage)}
+                  onRowsPerPageChange={(newRowsPerPage) =>
+                    setRowsPerPage(newRowsPerPage)
+                  }
                 />
-              </VerticalTimeline> */}
-              {/* </Tab>
-              </Tabs> */}
+              </div>
+              {/* </>
+              )} */}
             </div>
           </div>
         }

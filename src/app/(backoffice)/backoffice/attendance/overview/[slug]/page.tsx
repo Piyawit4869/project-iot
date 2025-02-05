@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { TopSection } from '@/components/common/topSection';
 import NextTable from '@/components/common/nextTable';
 import Scaffold from '@/components/common/scaffold';
@@ -36,10 +36,10 @@ const filterActivityOptions: FilterOption[] = [
 ];
 
 export default function AttendanceDetailPage() {
-  const [selectedActivity, setSelectedActivity] = useState('all');
-  const [employeeData, setEmployeeData] = useState<EmployeeData[]>([]); // State to hold JSON data
+  const [selectedActivity, setSelectedActivity] = React.useState('all');
+  const [employeeData, setEmployeeData] = React.useState<EmployeeData[]>([]); // State to hold JSON data
 
-  useEffect(() => {
+  React.useEffect(() => {
     // Fetch JSON data from public directory
     fetch('/test.json') // ชื่อไฟล์เป็น test.json
       .then((response) => response.json())

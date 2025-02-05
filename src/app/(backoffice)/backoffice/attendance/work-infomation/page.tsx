@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Link, Input } from '@nextui-org/react';
@@ -75,35 +75,38 @@ export default function WorkInfoPage() {
     currentPage: 1,
   });
 
-  const fetchWorkInfo = async () => {
-    // setLoading(true);
-    try {
-      // const { name, status } = filters;
-      const { items: fetchedItems, meta: fetchedMeta } = await pagination({
-        page,
-        limit: rowsPerPage,
-        // ...(name && { name }),
-        // ...(status && { status }),
-      });
+  React.useEffect(() => {
+    const fetchWorkInfo = async () => {
+      // setLoading(true);
+      try {
+        // const { name, status } = filters;
+        const { items: fetchedItems, meta: fetchedMeta } = await pagination({
+          page,
+          limit: rowsPerPage,
+          // ...(name && { name }),
+          // ...(status && { status }),
+        });
 
-      setItems(
-        fetchedItems.map((item: WorkInfoItem) => ({
-          ...item,
-          createdAtDate: formatDate(item.createdAt).date,
-          createdAtTime: formatDate(item.createdAt).time, // <-- Use formatDate here
-          dueDate: formatDate(item.dueDate).date, // <-- Use formatDate here
-          startDate: formatDate(item.startDate).date, // <-- Use formatDate here
-          payDayDate: formatDate(item.payDay).date,
-          payDayTime: formatDate(item.payDay).time,
-        })),
-      );
-      setMeta(fetchedMeta);
-    } catch (error) {
-      console.error('Error fetching work info:', error);
-    } finally {
-      // setLoading(false);
-    }
-  };
+        setItems(
+          fetchedItems.map((item: WorkInfoItem) => ({
+            ...item,
+            createdAtDate: formatDate(item.createdAt).date,
+            createdAtTime: formatDate(item.createdAt).time, // <-- Use formatDate here
+            dueDate: formatDate(item.dueDate).date, // <-- Use formatDate here
+            startDate: formatDate(item.startDate).date, // <-- Use formatDate here
+            payDayDate: formatDate(item.payDay).date,
+            payDayTime: formatDate(item.payDay).time,
+          })),
+        );
+        setMeta(fetchedMeta);
+      } catch (error) {
+        console.error('Error fetching work info:', error);
+      } finally {
+        // setLoading(false);
+      }
+    };
+    fetchWorkInfo();
+  }, [page, rowsPerPage]);
 
   // const handleFilterChange = React.useCallback(
   //     debounce((updatedFilters) => {
@@ -122,10 +125,6 @@ export default function WorkInfoPage() {
   //   const updatedFilters = { ...filters, status };
   //   handleFilterChange(updatedFilters); // This will trigger the debounced filter change
   // };
-
-  useEffect(() => {
-    fetchWorkInfo();
-  }, []);
 
   return (
     <div>

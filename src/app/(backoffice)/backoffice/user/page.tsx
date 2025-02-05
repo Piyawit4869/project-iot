@@ -1,11 +1,11 @@
 'use client';
 
+import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 // import debounce from 'lodash/debounce';
 import { TopSection } from '@/components/common/topSection';
 import Link from 'next/link';
 import { Button, Chip } from '@nextui-org/react';
-import React from 'react';
 import { TablePagination } from '@/components/common/tablePagination';
 import pagination from '@/pages/api/user/pagination';
 
@@ -43,6 +43,7 @@ export default function IndexPage() {
 
     fetchUser();
   }, [page, rowsPerPage]);
+  // }, [filters, page, rowsPerPage]);
 
   return (
     <div>

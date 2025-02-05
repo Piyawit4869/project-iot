@@ -1,5 +1,5 @@
 'use client';
-
+import * as Icons from 'lucide-react';
 import React, { useState } from 'react';
 import {
   Table,
@@ -78,31 +78,36 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
     { label: '50', value: '50' },
   ];
 
+  const handleEdit = (id: string) => {
+    console.log(`Editing row with ID: ${id}`);
+  };
+
   return (
-    <div className="bg-white p-5 rounded-xl ">
-      <div className="overflow-x-auto rounded-xl border-collapse">
-        <Table className="bg-white rounded-xl flex-1">
-          <TableHeader className="bg-accent1 text-white rounded-xl flex-1">
-            <TableRow className="text-white text-sm flex-1 hover:bg-accent1 divide-x divide">
+    <div className="bg-white px-5 py-4 rounded-xl ">
+      <div className="overflow-x-auto rounded-xl ">
+        <Table className="bg-white rounded-xl">
+          <TableHeader className="rounded-t-xl">
+            <TableRow className=" text-sm hover:bg-gray-50 divide-x">
               {columns.map((col) => (
                 <TableCell
-                  className="py-2.5 px-4 font-semibold whitespace-nowrap border-collapse"
                   key={col.dataIndex}
+                  className="py-2.5 px-4 font-semibold text-left whitespace-nowrap"
                   align={col.align || 'left'}
                 >
                   {col.title}
                 </TableCell>
               ))}
+              <TableCell className="py-2.5 px-4 font-semibold text-left"></TableCell>
             </TableRow>
           </TableHeader>
           <TableBody>
             {initialRows.length > 0 ? (
               initialRows.map((row, idx) => (
-                <TableRow key={idx} className="hover:bg-gray-50 ">
+                <TableRow key={idx} className="hover:bg-gray-50">
                   {columns.map((col) => (
                     <TableCell
                       key={col.dataIndex}
-                      className="p-3 border border-collapse-secondary text-sm"
+                      className="p-3 border border-gray-200 text-sm"
                       align={col.align || 'left'}
                     >
                       {col.render ? (
@@ -119,13 +124,21 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
                       )}
                     </TableCell>
                   ))}
+                  <TableCell className="p-3 text-center">
+                    <Button
+                      className="bg-accent3 hover:bg-yellow-400 rounded-lg transition-colors duration-200"
+                      onClick={() => handleEdit(row.id)}
+                    >
+                      <Icons.PencilLine />
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
-                  className=" text-center text-gray-500 p-4 border border-gray-300 "
+                  colSpan={columns.length + 1}
+                  className="text-center text-gray-500 p-4"
                 >
                   ไม่พบข้อมูล
                 </TableCell>
@@ -134,7 +147,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
           </TableBody>
         </Table>
       </div>
-      <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
+      <div className="flex flex-col md:flex-row gap-5 justify-end items-center mt-4 space-y-4 md:space-y-0">
         <div className="text-gray-700 text-sm">
           <strong>
             {Math.min(
@@ -156,7 +169,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             <Select
               onValueChange={(value) => onRowsPerPageChange(Number(value))}
             >
-              <SelectTrigger className="w-[120px] text-sm">
+              <SelectTrigger className="w-[110px] h-[30px] p-1 text-sm">
                 <SelectValue
                   placeholder={`${currentRowsPerPage} รายการ`}
                   className="text-sm"

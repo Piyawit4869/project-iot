@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
@@ -61,12 +61,15 @@ const columns = [
 ];
 
 export default function SettingAttendancePage() {
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [items, setItems] = useState<ConfigItem[]>([]);
-  const [filters, setFilters] = useState<FilterState>({ name: '', status: '' });
-  const [meta, setMeta] = useState<MetaData>({
+  const [page, setPage] = React.useState(1);
+  const [loading, setLoading] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [items, setItems] = React.useState<ConfigItem[]>([]);
+  const [filters, setFilters] = React.useState<FilterState>({
+    name: '',
+    status: '',
+  });
+  const [meta, setMeta] = React.useState<MetaData>({
     totalItems: 0,
     itemsPerPage: 10,
     totalPages: 0,
@@ -118,9 +121,9 @@ export default function SettingAttendancePage() {
   //   handleFilterChange(updatedFilters); // This will trigger the debounced filter change
   // };
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchConfig();
-  });
+  }, [page, rowsPerPage, filters]);
 
   return (
     <div>

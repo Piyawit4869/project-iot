@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
@@ -59,12 +59,15 @@ const columns = [
 ];
 
 export default function WhitelistsPage() {
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [filters, setFilters] = useState<FilterState>({ ip: '', status: '' });
-  const [items, setItems] = useState<WhitelistItem[]>([]);
-  const [meta, setMeta] = useState<MetaData>({
+  const [page, setPage] = React.useState(1);
+  const [loading, setLoading] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [filters, setFilters] = React.useState<FilterState>({
+    ip: '',
+    status: '',
+  });
+  const [items, setItems] = React.useState<WhitelistItem[]>([]);
+  const [meta, setMeta] = React.useState<MetaData>({
     totalItems: 0,
     itemsPerPage: 10,
     totalPages: 0,
@@ -123,9 +126,9 @@ export default function WhitelistsPage() {
     setFilters((prevFilters) => ({ ...prevFilters, status }));
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchWhitelists();
-  });
+  }, [page, rowsPerPage, filters]);
 
   return (
     <div>
