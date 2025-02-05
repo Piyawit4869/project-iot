@@ -233,10 +233,10 @@ export default function AttendancesPage() {
                   )}
                 </div>
               </div>
-              <div className=" flex space-x-4 mt-8 bg-white rounded-xl ">
-                <h3 className="flex items-center justify-items-center px-10">
+              <div className="col-span-1">
+                <div className=" flex space-x-4 mt-8 bg-white rounded-xl ">
                   <TimelineComponent />
-                </h3>
+                </div>
               </div>
             </div>
 
