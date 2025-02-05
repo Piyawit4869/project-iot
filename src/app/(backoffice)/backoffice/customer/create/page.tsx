@@ -110,8 +110,6 @@ export default function CustomerCreatePage() {
         // addresses: formData.addresses.length > 0 ? formData.addresses : undefined,
       };
 
-      console.log({ payload });
-
       // 🔹 Send data to API
       const { data } = await createCustomer({}, payload);
 

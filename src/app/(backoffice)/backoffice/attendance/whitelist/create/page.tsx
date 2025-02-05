@@ -13,7 +13,7 @@ import { Button, Form, Input, Textarea } from '@nextui-org/react';
 
 export default function CreateWhitelistPage() {
   const [errors, setErrors] = React.useState({}) as any;
-  const [data, setData] = React.useState({}) as any;
+  const [, setData] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   // const params = useParams<{ slug?: string }>();
   const [, setLoading] = React.useState(false);
@@ -70,9 +70,6 @@ export default function CreateWhitelistPage() {
     fetchWhitelists();
   });
 
-  console.log(data);
-  console.log(data?.address?.organizationId);
-
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
     setFormData((prevData: any) => ({
@@ -85,7 +82,6 @@ export default function CreateWhitelistPage() {
           : value,
     }));
   };
-  // console.log('formData' , formData);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,8 +116,6 @@ export default function CreateWhitelistPage() {
     // const statusData = handleCreateStatus(createStatus);
 
     try {
-      console.log('name');
-
       const payload = {
         address: {
           active: formData.active !== undefined ? formData.active : false,
@@ -150,7 +144,6 @@ export default function CreateWhitelistPage() {
       payload.active = !!payload.active; // Simplified active check
 
       const data = await createWhitelists({}, payload);
-      console.log(payload);
       router.push(`/backoffice/attendance/whitelist/${data.id}`);
     } catch (err: any) {
       console.error('Send FormData error:', err);
@@ -160,7 +153,6 @@ export default function CreateWhitelistPage() {
     }
   };
 
-  // console.log(data?.address?.organizationId);
   return (
     <Scaffold
       child={

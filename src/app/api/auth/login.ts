@@ -15,8 +15,6 @@ export const login = async (prevState: any, formData: any) => {
     password: password,
   };
 
-  console.log({ body });
-
   try {
     const response = await fetch(`${base_url}/auth/signin/`, {
       method: 'POST',
@@ -26,15 +24,11 @@ export const login = async (prevState: any, formData: any) => {
       body: JSON.stringify(body),
     });
 
-    console.log(response); // Logs the response object
-
     if (!response.ok) {
       return { error: `Login failed: ${response.statusText}` };
     }
 
     const data = await response.json(); // Parse JSON response
-
-    console.log({ data }); // Logs the actual data
 
     return { data }; // Return the actual response data
   } catch (error) {

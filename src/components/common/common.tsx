@@ -157,19 +157,19 @@ export function isMenuActive(currentPath: string, pathName: string) {
     if (splitPath.length > 2) {
       subFeatureName = splitPath[3];
 
-      console.log('in if');
+      // console.log('in if');
 
-      console.log('current: ', currentPath);
-      console.log('feature: ', subFeatureName);
+      // console.log('current: ', currentPath);
+      // console.log('feature: ', subFeatureName);
 
       return currentPath.startsWith(subFeatureName);
     } else {
       const featureName = splitPath[2] ?? 'backoffice';
 
-      console.log('in else');
+      // console.log('in else');
 
-      console.log('current: ', currentPath);
-      console.log('feature: ', featureName);
+      // console.log('current: ', currentPath);
+      // console.log('feature: ', featureName);
 
       return currentPath.startsWith(featureName);
     }

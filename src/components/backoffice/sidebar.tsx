@@ -9,6 +9,7 @@ import {
   SidebarMenuSubButton,
   SidebarGroup,
   SidebarGroupLabel,
+  SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 import { usePathname } from 'next/navigation';
 import React, { useCallback } from 'react';
@@ -17,6 +18,12 @@ import { useClientSession } from '@/libs/auth';
 import Image from 'next/image';
 import Link from 'next/link';
 import { isMenuActive } from '../common/common';
+import {
+  Collapsible,
+  // CollapsibleContent,
+  CollapsibleTrigger,
+} from '../ui/collapsible';
+import { ChevronRight } from 'lucide-react';
 
 const renderIcon = (iconName: string) => {
   const IconComponent = Icons[iconName as keyof typeof Icons] as any;
@@ -234,7 +241,7 @@ export function AdminSideBar({
               alt="Logo"
               width={40}
               height={40}
-              className="rounded-xl"
+              className="rounded-xl hover:scale-110"
             />
           </Link>
           {isSidebarOpen && (
@@ -254,55 +261,70 @@ export function AdminSideBar({
           <SidebarMenu>
             {menuData.map((item: any) => {
               return (
-                <SidebarMenuItem key={item.key}>
-                  <SidebarMenuButton
-                    onClick={() => {
-                      if (isSidebarOpen) toggleSubMenu(item.key);
-                    }}
-                    className={`py-5 ${
-                      isMenuActive(item.subMenu?.path, pathname) ? '' : ''
-                    }`}
-                  >
-                    {renderIcon(item.icon)}
-                    <span
-                      className={`transition-all duration-300 ${
-                        isSidebarOpen ? 'opacity-100' : 'opacity-0 hidden'
-                      }`}
-                    >
-                      <a href={item.path}>{item.name}</a>
-                    </span>
-                  </SidebarMenuButton>
+                <Collapsible
+                  key={item.key}
+                  defaultOpen={item.isActive}
+                  className="group/collapsible"
+                >
+                  <SidebarMenuItem key={item.key}>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuButton
+                        onClick={() => {
+                          if (isSidebarOpen) toggleSubMenu(item.key);
+                        }}
+                        className={`py-5 ${
+                          isMenuActive(item.subMenu?.path, pathname) ? '' : ''
+                        }`}
+                      >
+                        {renderIcon(item.icon)}
+                        <span
+                          className={`transition-all duration-300 ${
+                            isSidebarOpen ? 'opacity-100' : 'opacity-0 hidden'
+                          }`}
+                        >
+                          <a href={item.path}>{item.name}</a>
+                        </span>
+                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                      </SidebarMenuButton>
+                    </CollapsibleTrigger>
 
-                  {item.subMenu && isSubMenuOpen[item.key] && (
-                    <SidebarMenuSub>
-                      {item.subMenu.map((subItem: any) => {
-                        console.log(item.name);
-                        console.log(subItem.name);
-                        return (
-                          <SidebarMenuSubButton
-                            key={subItem.path}
-                            href={subItem.path}
-                            isActive={pathname === subItem.path}
-                            className={`py-4 ${
-                              pathname === subItem.name ? 'bg-blue-100' : ''
-                            }`}
-                          >
-                            {renderIcon(subItem.icon)}
-                            <span
-                              className={`transition-all duration-300 ${
-                                isSidebarOpen
-                                  ? 'opacity-100'
-                                  : 'opacity-0 hidden'
-                              }`}
-                            >
-                              {subItem.name}
-                            </span>
-                          </SidebarMenuSubButton>
-                        );
-                      })}
-                    </SidebarMenuSub>
-                  )}
-                </SidebarMenuItem>
+                    {item.subMenu && isSubMenuOpen[item.key] && (
+                      // <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {item.subMenu?.map((subItem: any) => {
+                          // if (pathname === subItem.path) {
+                          //   console.log(subItem.name);
+                          // }
+                          // console.log(isSubMenuOpen);
+                          return (
+                            <SidebarMenuSubItem key={subItem.name}>
+                              <SidebarMenuSubButton
+                                key={subItem.path}
+                                href={subItem.path}
+                                isActive={pathname === subItem.path}
+                                className={`py-4 ${
+                                  pathname === subItem.path ? 'bg-blue-100' : ''
+                                }`}
+                              >
+                                {renderIcon(subItem.icon)}
+                                <span
+                                  className={`transition-all duration-300 ${
+                                    isSidebarOpen
+                                      ? 'opacity-100'
+                                      : 'opacity-0 hidden'
+                                  }`}
+                                >
+                                  {subItem.name}
+                                </span>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          );
+                        })}
+                      </SidebarMenuSub>
+                      // </CollapsibleContent>
+                    )}
+                  </SidebarMenuItem>
+                </Collapsible>
               );
             })}
           </SidebarMenu>

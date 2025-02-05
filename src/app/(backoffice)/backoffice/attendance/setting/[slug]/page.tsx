@@ -152,7 +152,6 @@ export default function SingleSettingPage() {
     const fetchData = async () => {
       try {
         const response = await getSingle(params.slug as string);
-        console.log('response', response);
 
         // if (!response?.data) {
         //   throw new Error('No data found for the given slug');
@@ -240,18 +239,13 @@ export default function SingleSettingPage() {
     setLoading(true);
 
     try {
-      console.log('name :');
-
       const payload = {
         ...data,
         ...formData, // All data including the updated address fields
       };
 
-      console.log('payload :', payload);
-
       const res = await update({}, payload, params?.slug);
       setOpenEdit(false);
-      console.log({ res });
       router.push(`/backoffice/attendance/setting/${res.data.id}`);
     } catch (err: any) {
       console.error('Send FormData error:', err);
@@ -260,8 +254,6 @@ export default function SingleSettingPage() {
       setLoading(false);
     }
   };
-
-  console.log('NAME', formData.workStartTime);
 
   return (
     <Scaffold

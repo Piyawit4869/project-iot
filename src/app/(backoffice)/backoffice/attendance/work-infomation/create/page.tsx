@@ -7,7 +7,6 @@ import CardComponent from '@/components/common/card';
 import { useRouter } from 'next/navigation';
 import * as Icon from '@ant-design/icons';
 import React from 'react';
-import { data } from 'framer-motion/client';
 import {
   Button,
   DatePicker,
@@ -55,8 +54,6 @@ export default function WorkinfoCreatePage() {
   };
 
   const onSubmit = async (e: React.FormEvent) => {
-    console.log('name');
-
     e.preventDefault();
     setLoading(true);
 
@@ -70,7 +67,6 @@ export default function WorkinfoCreatePage() {
       'startCredit',
       'payDay',
     ];
-    console.log('name2');
 
     const newErrors: any = {};
 
@@ -104,8 +100,6 @@ export default function WorkinfoCreatePage() {
         payDay: new Date(formData.payDay).toISOString(),
       };
 
-      console.log('Payload:', payload);
-
       const data = await createWorkInfos({}, payload);
       router.push(`/backoffice/attendance/work-infomation/${data[0].id}`);
     } catch (err: any) {
@@ -114,8 +108,6 @@ export default function WorkinfoCreatePage() {
     } finally {
       setLoading(false);
     }
-    console.log({ data });
-    console.log({ createWorkInfos });
   };
 
   return (

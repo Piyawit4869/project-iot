@@ -95,7 +95,6 @@ const Login = () => {
         user,
         password,
       });
-      console.log({ result });
 
       if (result?.ok) {
         toast.success('🎉 เข้าสู่ระบบสำเร็จ!', {
@@ -136,8 +135,7 @@ const Login = () => {
           throw new Error('Server not ready');
         }
       } catch (error: any) {
-        console.log(error);
-        console.log(`Retry: Server not ready, waiting...`);
+        console.log(`Retry: Server not ready, waiting...`, error);
         await new Promise((resolve) => setTimeout(resolve, 3000));
       }
     }

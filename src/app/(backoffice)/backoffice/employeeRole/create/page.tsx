@@ -56,7 +56,6 @@ export default function RoleCreatePage() {
 
       // 🔹 Send data to API
       const data = await createEmployeeRole({}, payload);
-      console.log(data);
 
       toast.success('🎉 ตำแหน่งพนักงานใหม่ถูกสร้าง!', {
         duration: 3000,

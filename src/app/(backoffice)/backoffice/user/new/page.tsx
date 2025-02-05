@@ -137,9 +137,7 @@ export default function CreateUserPage() {
         payload.active = true;
       }
 
-      console.log(payload);
       const res = await createUser({}, payload);
-      console.log('Create', res);
 
       toast.success('📝 สร้างข้อมูลผู้ใช้งานสำเร็จ!', {
         duration: 3000,

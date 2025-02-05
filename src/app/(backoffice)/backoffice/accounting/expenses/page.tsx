@@ -7,12 +7,12 @@ import { Input, Select, SelectItem, Tab, Tabs } from '@nextui-org/react';
 import { TablePagination } from '@/components/common/tablePagination';
 
 export default function ExpensesPage() {
-  const [page, setPage] = React.useState(1);
-  const [loading, setLoading] = React.useState(false);
+  const [, setPage] = React.useState(1);
+  const [loading] = React.useState(false);
   // const [items, setItems] = React.useState([]) as any;
   // const [filters, setFilters] = React.useState({ name: '' });
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [meta, setMeta] = React.useState({
+  const [meta] = React.useState({
     totalItems: 0,
     itemsPerPage: 10,
     totalPages: 0,

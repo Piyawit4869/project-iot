@@ -26,7 +26,7 @@ import {
 import React from 'react';
 import { Tabs, Tab } from '@nextui-org/react';
 import get from '@/pages/api/organization/get';
-import { updatedetails } from '@/pages/api/organization/update-details';
+// import { updatedetails } from '@/pages/api/organization/update-details';
 import { toast } from 'sonner';
 import { TablePagination } from '@/components/common/tablePagination';
 import InputBranch from './components/InputBranch';
@@ -37,10 +37,10 @@ export default function OraganizationPage() {
   const [, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [data, setData] = React.useState() as any;
-  const [dataorg, setDataorg] = React.useState() as any;
+  // const [dataorg, setDataorg] = React.useState() as any;
   const [organizationData, setOrganizationData] = React.useState() as any;
-  const [systemData, setSystemData] = React.useState() as any;
-  const [openDayData, setOpenDayData] = React.useState<any[]>([]);
+  const [, setSystemData] = React.useState() as any;
+  const [, setOpenDayData] = React.useState<any[]>([]);
   const [, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [meta] = React.useState({
@@ -50,8 +50,6 @@ export default function OraganizationPage() {
     currentPage: 1,
   });
   const [openEdit, setOpenEdit] = React.useState(false);
-  console.log(systemData);
-  console.log(openDayData);
 
   // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault(); // Prevent the form from submitting to the URL
@@ -67,7 +65,7 @@ export default function OraganizationPage() {
       const { data } = await get();
 
       setData(data);
-      setDataorg(data.organization);
+      // setDataorg(data.organization);
       setLoading(false);
     };
 
@@ -88,7 +86,6 @@ export default function OraganizationPage() {
 
   const handleOpenDayChange = (updatedOpenDay: any) => {
     setOpenDayData(updatedOpenDay);
-    // console.log('Updated openDay:', updatedOpenDay);
   };
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -106,9 +103,7 @@ export default function OraganizationPage() {
 
       delete payload.data;
 
-      const res = await updatedetails({}, payload, dataorg.id);
-      console.log('ข้อมูลที่จะส่ง', res);
-      console.log(payload);
+      // const res = await updatedetails({}, payload, dataorg.id);
 
       toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
         duration: 3000,

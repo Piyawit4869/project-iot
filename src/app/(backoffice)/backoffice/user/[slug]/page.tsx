@@ -44,7 +44,6 @@ export default function UserSinglePage() {
 
   React.useEffect(() => {
     if (!params || !params.slug) {
-      console.log('Waiting for params.id to be ready...');
       return;
     }
 
@@ -73,7 +72,6 @@ export default function UserSinglePage() {
         isAll: true,
       });
       setEmployeeRole(fetchedItems.items);
-      console.log(fetchedItems.items);
     };
 
     fetchRole();
@@ -109,8 +107,7 @@ export default function UserSinglePage() {
         payload.active = true;
       }
 
-      const res = await updateUser({}, payload, params?.slug);
-      console.log(res);
+      await updateUser({}, payload, params?.slug);
 
       toast.success('📝 แก้ไขข้อมูลผู้ใช้งานสำเร็จ!', {
         duration: 3000,
@@ -140,8 +137,7 @@ export default function UserSinglePage() {
         ...password,
       };
 
-      const res = await changePassword({}, payload, params?.slug);
-      console.log(res);
+      await changePassword({}, payload, params?.slug);
 
       toast.success('📝 เปลี่ยนรหัสผ่านสำเร็จงานสำเร็จ!', {
         duration: 3000,

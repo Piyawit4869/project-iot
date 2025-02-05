@@ -37,8 +37,6 @@ export default function CustomerUpdatePage() {
     }));
   };
 
-  console.log({ formData });
-
   // 🔹 Fetch customer data on component mount
   React.useEffect(() => {
     if (!params || !params.slug) {
@@ -139,8 +137,6 @@ export default function CustomerUpdatePage() {
         contactEmail: formData.contactEmail,
         contactPhone: formData.contactPhone,
       };
-
-      console.log({ payload });
 
       // 🔹 Send update request to API
       const { data } = await updateCustomer({}, payload, params?.slug);

@@ -4,7 +4,6 @@ import { organizationsLoader } from '@/app/api/organization';
 
 export default async function IndexPage() {
   const organizations = await organizationsLoader();
-  console.log(organizations);
 
   return (
     <div className="bg-gray-50 p-8">

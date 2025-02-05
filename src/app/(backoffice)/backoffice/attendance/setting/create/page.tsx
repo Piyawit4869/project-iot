@@ -182,8 +182,6 @@ export default function CreateSettingPage() {
     // const statusData = handleCreateStatus(createStatus);
 
     try {
-      // console.log('name :');
-
       const payload = {
         ...formData,
         workStartTime: formData.workStartTime,
@@ -192,17 +190,12 @@ export default function CreateSettingPage() {
         breakEndTime: formData.breakEndTime,
         branchId: formData.branchId,
       };
-      // console.log('NAME',formData);
-
-      console.log('payload :', payload);
 
       payload.active = !!payload.active; // Simplified active check
 
       const { data } = await create({}, payload);
 
       router.push(`/backoffice/attendance/setting/${data.id}`);
-      console.log('data :', data.id);
-      console.log(data, 'data');
     } catch (err: any) {
       console.error('Send FormData error:', err);
       setErrors({ general: err.message || 'An unexpected error occurred.' });
@@ -210,8 +203,6 @@ export default function CreateSettingPage() {
       setLoading(false);
     }
   };
-
-  // console.log('NAME',formData);
 
   return (
     <Scaffold

@@ -12,7 +12,6 @@ import {
   DatePicker,
   Textarea,
   InputOtp,
-  Image,
 } from '@nextui-org/react';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
@@ -106,7 +105,7 @@ export default function InputBranch({
                     title="ปิดสาขา"
                     description="ใช้สำหรับการปิดหรือยุติการทำงานของสาขาในระบบหรือเว็บไซต์<br>ซึ่งอาจรวมถึงการปิดการใช้งานบัญชีสาขา"
                     control="ปิดสาขา"
-                    checked={data?.active}
+                    isSelected
                     onChange={handleChange}
                   />
                 </div>

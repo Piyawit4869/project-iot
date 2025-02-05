@@ -44,7 +44,6 @@ export default function CreateWhitelistPage() {
       payload.active = !!payload.active; // Simplified active check
 
       const { data } = await create({}, payload);
-      console.log(payload);
       router.push(`/backoffice/attendance/overview/${data.id}`);
     } catch (err: any) {
       console.error('Send FormData error:', err);

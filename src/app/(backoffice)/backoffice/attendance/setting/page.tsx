@@ -84,9 +84,6 @@ export default function SettingAttendancePage() {
         ...(status && { status }),
       });
 
-      console.log('Fetched Items:', fetchedItems);
-      console.log('Fetched Meta:', fetchedMeta);
-
       setItems(
         fetchedItems.map((item: ConfigItem) => ({
           ...item,

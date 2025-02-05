@@ -86,9 +86,6 @@ export default function WorkInfoPage() {
         // ...(status && { status }),
       });
 
-      console.log('Fetched Items:', fetchedItems);
-      console.log('Fetched Meta:', fetchedMeta);
-
       setItems(
         fetchedItems.map((item: WorkInfoItem) => ({
           ...item,

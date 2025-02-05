@@ -164,8 +164,6 @@ export default function NotationCreatePage() {
   //   setItems(updatedItems);
   // };
 
-  console.log({ formData });
-
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 

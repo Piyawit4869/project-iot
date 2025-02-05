@@ -96,13 +96,10 @@ export default function WhitelistSinglePage() {
     });
 
     try {
-      console.log('name');
-
       const payload = {
         ...data,
         ...formData, // All data including the updated address fields
       };
-      console.log('Payload:', payload);
 
       const res = await update({}, payload, params?.slug);
       setOpenEdit(false);
@@ -110,10 +107,8 @@ export default function WhitelistSinglePage() {
     } catch (err: any) {
       console.error('Send FormData error:', err);
       setErrors({ general: err.message || 'An unexpected error occurred.' });
-      console.log('name2');
     } finally {
       setLoading(false);
-      console.log('name3');
     }
   };
 

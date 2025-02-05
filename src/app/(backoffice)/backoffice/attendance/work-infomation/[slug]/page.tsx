@@ -40,7 +40,6 @@ export default function WorkInfomationSinglePage() {
     const fetchData = async () => {
       try {
         const response = await getSingle(params.slug as string);
-        console.log(response, 'response');
         if (!response?.data) {
           throw new Error('No data found for the given slug');
         }
@@ -71,7 +70,6 @@ export default function WorkInfomationSinglePage() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    console.log('onSubmit');
     // Ensure address fields are validated as well
     const requiredFields = [
       // 'prefix',
@@ -92,7 +90,6 @@ export default function WorkInfomationSinglePage() {
     });
 
     try {
-      console.log('try');
       const payload = {
         ...data,
         ...formData, // All data including the updated address fields
@@ -107,8 +104,6 @@ export default function WorkInfomationSinglePage() {
       delete payload.openDays;
       delete payload.userId;
       delete payload.projectId;
-
-      console.log('Payload:', payload);
 
       const res = await update({}, payload, params?.slug);
       setOpenEdit(false);

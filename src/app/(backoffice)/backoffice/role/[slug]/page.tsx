@@ -28,7 +28,6 @@ export default function RoleCreatePage() {
 
   React.useEffect(() => {
     if (!params || !params.slug) {
-      console.log('Waiting for params.id to be ready...');
       return;
     }
 
@@ -40,8 +39,6 @@ export default function RoleCreatePage() {
 
     fetchRoleSingle();
   }, [params]);
-
-  console.log(formData);
 
   // 🔹 Handles form submission
   const onSubmit = async (e: React.FormEvent) => {
@@ -68,9 +65,7 @@ export default function RoleCreatePage() {
       };
 
       // 🔹 Send data to API
-      const data = await updateRole({}, payload, params?.slug);
-      console.log(data);
-      console.log('payload', payload);
+      await updateRole({}, payload, params?.slug);
 
       toast.success('🎉 แก้ไขตำแหน่งเรียบร้อย!', {
         duration: 3000,

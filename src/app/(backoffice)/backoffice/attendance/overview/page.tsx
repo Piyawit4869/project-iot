@@ -64,7 +64,7 @@ const columns = [
 
 export default function AttendancesPage() {
   const [page, setPage] = React.useState(1);
-  // const [loading, setLoading] = React.useState(false);
+  const [, setLoading] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [filters, setFilters] = React.useState<FilterState>({
     userName: '',
@@ -104,14 +104,10 @@ export default function AttendancesPage() {
 
       // Set the meta state, ensuring it has default values
       setMeta(fetchedMeta);
-      console.log('fetchedItems', fetchedItems);
     } catch (error) {
-      console.log('catch');
-
       console.error('Error fetching attendance:', error);
     } finally {
-      console.log('fimally');
-      // setLoading(false);
+      setLoading(false);
     }
   };
 

@@ -36,8 +36,6 @@ export default function Inputorganization({
     }
   }, [data]);
 
-  console.log(formData);
-
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
     const updatedData =
@@ -82,7 +80,7 @@ export default function Inputorganization({
                 title="ปิดองค์กร"
                 description="ใช้สำหรับการปิดหรือยุติการทำงานขององค์กรในระบบหรือเว็บไซต์<br>ซึ่งอาจรวมถึงการปิดการใช้งานบัญชีองค์กร"
                 control="ปิดองค์กร"
-                checked={data?.active}
+                isSelected
                 onChange={handleChange}
               />
             </div>

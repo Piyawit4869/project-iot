@@ -114,18 +114,18 @@ export const TemplateBuilder = ({
   React.useEffect(() => {
     setLoading(true);
     if (isCreate) {
-      console.log('in create');
+      // console.log('in create');
 
       setEditorContent({ content: [] });
       setTimeout(() => setLoading(false), 100);
     } else if (initialData?.templateNotation) {
-      console.log('has templateNotation');
+      // console.log('has templateNotation');
       const parsedData = parseHtmlToPuckData(initialData.templateNotation);
       setFormData({ templateName: initialData.templateName || '' }); // Load existing template name
       setEditorContent(parsedData);
       setTimeout(() => setLoading(false), 100);
     } else {
-      console.log('in else');
+      // console.log('in else');
 
       setLoading(false);
     }
@@ -141,7 +141,7 @@ export const TemplateBuilder = ({
 
       return data.content
         .map((item: any) => {
-          console.log('🔍 Processing item:', item);
+          // console.log('🔍 Processing item:', item);
 
           const component = puckConfig.components[item.type];
           if (!component) {
@@ -154,7 +154,7 @@ export const TemplateBuilder = ({
           const props = { ...item.props, puck: { id: item.id || uuidv4() } };
 
           try {
-            console.log('🛠 Rendering:', item.type, 'Props:', props);
+            // console.log('🛠 Rendering:', item.type, 'Props:', props);
             const reactElement = component.render(props);
             const htmlString = renderToStaticMarkup(reactElement);
             return `<div id="${item.id}">${htmlString}</div>`;
@@ -278,7 +278,7 @@ export const TemplateBuilder = ({
             config={puckConfig}
             data={editorContent}
             onChange={(content: any) => {
-              console.log('🔄 Puck Editor Updated:', content);
+              // console.log('🔄 Puck Editor Updated:', content);
 
               setEditorContent((prevState) => {
                 const updatedContent = content.content.map((item: any) => ({
@@ -290,10 +290,10 @@ export const TemplateBuilder = ({
                   },
                 }));
 
-                console.log(
-                  '✅ Updated editorContent before setting state:',
-                  updatedContent,
-                );
+                // console.log(
+                //   '✅ Updated editorContent before setting state:',
+                //   updatedContent,
+                // );
 
                 return { ...prevState, content: updatedContent };
               });

@@ -9,11 +9,10 @@ import React from 'react';
 export default function SettingPage() {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the form from submitting to the URL
-    const formData = new FormData(e.currentTarget);
+    // const formData = new FormData(e.currentTarget);
 
     // Convert formData to an object
-    const data = Object.fromEntries(formData.entries());
-    console.log(data); // Log the form data for debugging
+    // const data = Object.fromEntries(formData.entries());
   };
 
   return (

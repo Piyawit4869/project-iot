@@ -1,16 +1,15 @@
 'use client';
 
 import React from 'react';
-import { useSession } from 'next-auth/react';
+// import { useSession } from 'next-auth/react';
 import FeatureCard from './FeatureCard';
 
 const PageLayout = () => {
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
 
-  const user: any = status === 'authenticated' && session && session.user;
+  // const user: any = status === 'authenticated' && session && session.user;
 
-  const me = user && user.me ? user.me : null;
-  console.log(me);
+  // const me = user && user.me ? user.me : null;
 
   return (
     <div className="h-full bg-gray-50 flex flex-col justify-center items-center px-6 py-12 sm:py-16 lg:py-20">

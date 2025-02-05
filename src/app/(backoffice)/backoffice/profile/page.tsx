@@ -89,8 +89,8 @@ export default function CreateUserPage() {
 
       delete payload.data;
 
-      const res = await updateProfile({}, payload, payload.id);
-      console.log('Update', res);
+      // const res = await updateProfile({}, payload, payload.id);
+      await updateProfile({}, payload, payload.id);
 
       toast.success('📝 แก้ไขเอกสารสำเร็จ!', {
         duration: 3000,
