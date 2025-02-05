@@ -46,7 +46,7 @@ const TimelineComponent: React.FC = () => {
             </div>
             {/* Connecting line for icons, except the last one */}
             {index !== timelineData.length - 1 && (
-              <div className="absolute top-8 left-1 w-[2px] h-full bg-gray-200" />
+              <div className="absolute top-8 left-1/2 w-[2px] h-full bg-gray-200" />
             )}
           </div>
 

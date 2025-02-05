@@ -1,92 +1,89 @@
 import React from 'react';
-import {
-  getEmployeeSummary,
-  EmployeeSummary,
-} from '@/pages/api/services/apiService';
 import * as Icons from 'lucide-react';
+import CardComponent from '../common/card';
 
-const EmployeeWidget: React.FC = () => {
-  const [summary, setSummary] = React.useState<EmployeeSummary | null>(null);
-  const [loading, setLoading] = React.useState<boolean>(true);
+interface EmAttendanceCardProps {
+  users: any[];
+}
 
-  React.useEffect(() => {
-    const fetchSummary = async () => {
-      try {
-        const data = await getEmployeeSummary();
-        setSummary(data);
-      } catch (error) {
-        console.error('Failed to fetch employee summary:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSummary();
-  }, []);
-
-  if (loading) {
-    return;
-  }
-
-  if (!summary) {
-    return <div>Error loading employee data</div>;
-  }
+const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users }) => {
+  const totalEmployees = users.length || 10;
+  const checkedInCount =
+    users.filter((user) => user.status === 'active').length || 4;
+  const lateCount = users.filter((user) => user.status === 'late').length || 2;
+  const onLeaveCount =
+    users.filter((user) => user.status === 'on_leave').length || 2;
+  const checkedOutCount =
+    users.filter((user) => user.status === 'checked_out').length || 1;
+  const notCheckedInCount = totalEmployees - checkedInCount - lateCount - onLeaveCount - checkedOutCount ;
 
   const renderCard = (
     title: string,
-    value: number,
-    styleClass: string,
-    icon: React.ReactNode,
+    count: number,
+    colorClass: string,
+    Icon: React.ReactNode,
   ) => (
-    <div className={`p-4 rounded-lg shadow-md ${styleClass}`}>
-      <div className="flex items-center space-x-4">
-        {icon}
-        <div>
-          <div className="text-lg font-semibold">{title}</div>
-          <div className="text-2xl font-bold">{value}</div>
-        </div>
-      </div>
+    <div className="flex-1">
+      <CardComponent
+        className={colorClass}
+        customCard
+        custom={
+          <div className="p-4 bg-white grid grid-cols-3 flex justify-between">
+            <div className="col-span-2">
+              <div className="text-4xl font-extrabold text-gray-900">
+                {count}
+              </div>
+              <div className="text-sm font-extrabold text-gray-600 mt-2">
+                {title}
+              </div>
+            </div>
+            <div className="flex items-start justify-end">
+              <div className="bg-gray-100 p-3 rounded-full">{Icon}</div>
+            </div>
+          </div>
+        }
+      />
     </div>
   );
 
   return (
-    <div className="space-y-8">
-      <div className="flex space-x-5">
+    <div>
+      <div className="flex space-x-5 mt-8">
         {renderCard(
           'พนักงานทั้งหมด',
-          summary.totalEmployees,
+          totalEmployees,
           'bg-white text-blue-500',
           <Icons.UsersRound />,
         )}
         {renderCard(
           'เข้างานแล้ว',
-          summary.checkedIn,
+          checkedInCount,
           'bg-white text-accent1',
           <Icons.UserRoundCheck />,
         )}
         {renderCard(
           'ยังไม่เข้างาน',
-          summary.notCheckedIn,
+          notCheckedInCount,
           'bg-white text-red-500',
           <Icons.UserRoundMinus />,
         )}
       </div>
-      <div className="flex space-x-4">
+      <div className="flex space-x-4 mt-8">
         {renderCard(
           'เข้างานสาย',
-          summary.lateCheckIn,
+          lateCount,
           'bg-white text-orange-500',
           <Icons.ClockAlert />,
         )}
         {renderCard(
           'ลาป่วย/ลากิจ',
-          summary.onLeave,
+          onLeaveCount,
           'bg-white text-accent3',
           <Icons.Moon />,
         )}
         {renderCard(
           'เลิกงานแล้ว',
-          summary.checkedOut,
+          checkedOutCount,
           'bg-white text-red-500',
           <Icons.LogOut />,
         )}
@@ -95,4 +92,4 @@ const EmployeeWidget: React.FC = () => {
   );
 };
 
-export default EmployeeWidget;
+export default EmAttendanceCard;

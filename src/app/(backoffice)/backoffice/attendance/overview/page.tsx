@@ -5,16 +5,17 @@ import debounce from 'lodash/debounce';
 import { TopSection } from '@/components/common/topSection';
 import { DatePicker, Input, Select, SelectItem } from '@nextui-org/react';
 import pagination from '@/pages/api/attendances/pagination';
+import { getAll } from '@/pages/api/user/getAll';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date';
 import 'react-vertical-timeline-component/style.min.css';
 import Scaffold from '@/components/common/scaffold';
 import { handleAction } from '@/components/common/common';
-import CardComponent from '@/components/common/card';
 import * as Icons from 'lucide-react';
 import TimelineComponent from '@/components/backoffice/timeline';
 import ChartComponent from '@/components/backoffice/garphRateAll';
 import WeeklyAttendanceChart from '@/components/backoffice/garphRateDepartment';
+import EmAttendanceCard from '@/components/backoffice/cardAttedanceEm';
 interface FilterState {
   userName: string;
 }
@@ -100,6 +101,7 @@ export default function AttendancesPage() {
     totalPages: 0,
     currentPage: 1,
   });
+  const [userList, setUserList] = React.useState<any[]>([]);
 
   React.useEffect(() => {
     const fetchAttendances = async () => {
@@ -141,6 +143,21 @@ export default function AttendancesPage() {
     fetchAttendances();
   }, [page, rowsPerPage, filters]);
 
+  React.useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await getAll();
+        console.log('API Response:', response); // ตรวจสอบข้อมูลที่ได้จาก API
+        setUserList(response.data || []);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+    console.log('name', fetchUsers);
+  }, []);
+
   // Debounced function to handle filter changes
   const handleFilterChange = React.useCallback((updatedFilters: any) => {
     debounce(() => {
@@ -155,86 +172,21 @@ export default function AttendancesPage() {
     handleFilterChange(updatedFilters);
   };
 
-  const renderCard = (
-    title: string,
-    count: number,
-    colorClass: string,
-    Icon: React.ReactNode,
-  ) => (
-    <div className="flex-1">
-      <CardComponent
-        className={colorClass}
-        customCard
-        custom={
-          <div className="p-4 bg-white grid grid-cols-3 flex justify-between">
-            <div className="col-span-2">
-              <div className="text-4xl font-extrabold text-gray-900">
-                {count}
-              </div>
-              <div className="text-sm font-extrabold text-gray-600 mt-2">
-                {title}
-              </div>
-            </div>
-            <div className="flex items-start justify-end">
-              <div className="bg-gray-100 p-3 rounded-full">{Icon}</div>
-            </div>
-          </div>
-        }
-      />
-    </div>
-  );
-
   return (
     <div>
       <Scaffold
         child={
           <div>
             <TopSection title="ภาพรวมการเข้าทำงานทั้งหมด" />
-            <div className=" grid grid-cols-4 gap-5">
+
+            <div className=" grid grid-cols-4 gap-5 flex justify-between">
               <div className="col-span-3">
-                <div className="flex space-x-5 mt-8  ">
-                  {renderCard(
-                    'พนักงานทั้งหมด',
-                    15,
-                    'bg-white text-blue-500',
-                    <Icons.UsersRound />,
-                  )}
-                  {renderCard(
-                    'เข้างานแล้ว',
-                    10,
-                    'bg-white text-accent1',
-                    <Icons.UserRoundCheck />,
-                  )}
-                  {renderCard(
-                    'ยังไม่เข้างาน',
-                    1,
-                    'bg-white text-red-500',
-                    <Icons.UserRoundMinus />,
-                  )}
-                </div>
-                <div className="flex space-x-4 mt-8">
-                  {renderCard(
-                    'เข้างานสาย',
-                    1,
-                    'bg-white text-orange-500',
-                    <Icons.ClockAlert />,
-                  )}
-                  {renderCard(
-                    'ลาป่วย/ลากิจ',
-                    2,
-                    'bg-white text-accent3',
-                    <Icons.Moon />,
-                  )}
-                  {renderCard(
-                    'เลิกงานแล้ว',
-                    1,
-                    'bg-white text-red-500',
-                    <Icons.LogOut />,
-                  )}
+                <div>
+                  <EmAttendanceCard users={userList || []} />
                 </div>
               </div>
               <div className="col-span-1">
-                <div className=" flex space-x-4 mt-8 bg-white rounded-xl ">
+                <div className=" flex space-x-4 mt-8 bg-white rounded-xl  h-[90%]">
                   <TimelineComponent />
                 </div>
               </div>
