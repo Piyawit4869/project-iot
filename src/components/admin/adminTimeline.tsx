@@ -33,12 +33,12 @@ const timelineData: TimelineItem[] = [
 const TimelineComponent: React.FC = () => {
   return (
     <CardContent>
-      <h2 className="text-xl font-semibold text-center mb-4">Timeline</h2>
+      <h2 className="text-xl font-semibold text-start mb-4">Timeline</h2>
       {/* Vertical line */}
       <div className="absolute left-4 top-0 h-full border-l-2 border-gray-200" />
 
       {timelineData.map((item, index) => (
-        <div key={index} className="flex items-start space-x-4">
+        <div key={index} className="flex items-start space-x-4 py-2">
           {/* Icon with connecting line */}
           <div className="relative flex items-center">
             <div className="z-10 flex items-center justify-center w-8 h-8 bg-white border-2 border-blue-500 rounded-full">

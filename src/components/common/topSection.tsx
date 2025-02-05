@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  useState,
-  useEffect,
-  ReactNode,
-  cloneElement,
-  isValidElement,
-} from 'react';
+import React, { ReactNode, cloneElement, isValidElement } from 'react';
 import {
   Popover,
   PopoverTrigger,
@@ -17,9 +11,9 @@ import * as Icon from '@ant-design/icons';
 import Link from 'next/link';
 
 export function TopSection({ title, subtitle, buttons = [], backpath }: any) {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 851);
     };

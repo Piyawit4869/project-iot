@@ -66,7 +66,7 @@ export default function CustomersPage() {
   // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
     fetchCustomer();
-  });
+  }, [page, rowsPerPage, filters]);
 
   return (
     <div>

@@ -49,7 +49,7 @@ const ChartComponent: React.FC = () => {
         <div className="grid grid-cols-6 gap-4">
           <div className="col-span-3 mt-8">
             <span className="text-xl font-semibold text-center mb-4">
-              กราฟ แสดงอัตราการเข้าร่วมงาน
+              กราฟแสดงอัตราการเข้าร่วมงาน
             </span>
           </div>
           <div className="col-span-3 mt-8">
@@ -90,7 +90,7 @@ const ChartComponent: React.FC = () => {
             <Line
               type="monotone"
               dataKey="percentage"
-              stroke="#4f46e5"
+              stroke="#00a57c"
               strokeWidth={3}
               dot={{ r: 6 }}
             />
