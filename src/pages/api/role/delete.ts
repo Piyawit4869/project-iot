@@ -2,7 +2,7 @@ import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
 export async function deleteRole(id: any) {
-  const url = `${base_url}/crud/employee-roles/${id}`;
+  const url = `${base_url}/crud/roles/delete/${id}`;
 
   const auth = await getServerSession();
 

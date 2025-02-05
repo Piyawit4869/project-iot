@@ -66,7 +66,7 @@ export const LoginComponent = () => {
         me.employeeRole.name === 'employee' ||
         me.employeeRole.name === 'owner'
       ) {
-        router.push('/admin');
+        router.push('/backoffice');
       } else {
         router.push('/');
       }

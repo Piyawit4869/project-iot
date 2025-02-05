@@ -26,7 +26,7 @@ export default function RootLayout({
     <Providers>
       <html lang="en">
         <body className={`${ibmPlexSans.variable}  antialiased`}>
-          <NextUIProvider>
+          <NextUIProvider locale="en-GB">
             <Toaster position="bottom-left" richColors expand />
             {/* <main>{children}</main> */}
             <main>{children}</main>

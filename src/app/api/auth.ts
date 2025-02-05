@@ -32,8 +32,8 @@ export const login = async (prevState: any, formData: any) => {
       session.refreshToken = data.refreshToken;
 
       return data;
-    })
-    .catch((e) => console.log({ e }));
+    });
+  // .catch((e) => console.log({ e }));
 
   session.save();
 

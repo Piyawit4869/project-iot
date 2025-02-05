@@ -58,20 +58,17 @@ const Login = () => {
         user,
         password,
       });
-      console.log({ result });
 
       if (result?.ok) {
-        console.log('Toast success triggered');
         toast.success('🎉 เข้าสู่ระบบสำเร็จ!', {
           description: `ยินดีต้อนรับ, ${user}`,
           duration: 3000,
           style: { fontFamily: 'var(--font-ibm-sans)' },
         });
 
-        router.push('/admin');
+        router.push('/backoffice');
       } else {
         router.push('/');
-        console.log('Toast error triggered');
         throw new Error(result?.error || 'Invalid credentials');
       }
     } catch (error: any) {

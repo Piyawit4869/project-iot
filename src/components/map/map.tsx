@@ -26,14 +26,13 @@ class Map extends Component<MapProps, MapState> {
     // console.log(props.data);
     // console.log(props.lat)
     // console.log(props.lon)
-    
   }
-  
+
   // Initialize the map with a base layer
   initMap = (): void => {
     if (map) {
       map.Layers.setBase(longdo.Layers.GRAY);
-      console.log('Map initialized with GRAY layer');
+      // console.log('Map initialized with GRAY layer');
     } else {
       console.error('Map object is not available.');
     }

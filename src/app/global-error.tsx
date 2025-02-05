@@ -1,13 +1,13 @@
 'use client'; // Error boundaries must be Client Components
 
 export default function GlobalError({
-  error,
+  // error,
   reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  console.log({ error });
+  // console.log({ error });
 
   return (
     // global-error must include html and body tags

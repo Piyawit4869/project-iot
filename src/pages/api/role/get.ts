@@ -6,7 +6,7 @@ export default async function getRole(id: string): Promise<any> {
     const auth = await getServerSession();
 
     //query params in this
-    const response = await fetch(`${base_url}/crud/employee-roles/${id}`, {
+    const response = await fetch(`${base_url}/crud/roles/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

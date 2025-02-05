@@ -29,6 +29,7 @@ const translations: Record<string, string> = {
   template: 'รูปแบบเอกสาร',
   new: 'สร้าง',
   employeeRole: 'ตำแหน่งพนักงาน',
+  backoffice: 'หลังบ้าน',
 };
 
 const translateSegment = (segment: string): string => {
@@ -46,9 +47,9 @@ export const Breadcrumb = () => {
         separator={<Icon.RightOutlined className="text-xs items-center" />}
       >
         <BreadcrumbItem>
-          <Link href="/admin">
+          <Link href="/backoffice">
             <span className="text-headFont hover:text-accent1 text-xs">
-              หน้าแรก
+              ภาพรวม
             </span>
           </Link>
         </BreadcrumbItem>
