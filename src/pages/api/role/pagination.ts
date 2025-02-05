@@ -1,13 +1,16 @@
+// 'use server';
 import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
-interface FetchTemplatesParams {
+// import { useRouter } from 'next/router';
+
+interface FetchRoleParams {
   page?: number;
   limit?: number;
-  name?: string;
+  isAll?: boolean;
 }
 
-interface FetchTemplatesResponse {
+interface FetchRoleResponse {
   items: {
     items: any[];
     meta: {
@@ -19,11 +22,11 @@ interface FetchTemplatesResponse {
   };
 }
 
-export default async function paginationRoles({
+export default async function pagination({
   page,
   limit,
-  name,
-}: FetchTemplatesParams): Promise<FetchTemplatesResponse> {
+  isAll,
+}: FetchRoleParams): Promise<FetchRoleResponse> {
   try {
     const url = new URL(`${base_url}/crud/roles/paginate`);
 
@@ -37,10 +40,11 @@ export default async function paginationRoles({
       url.searchParams.append('limit', String(limit));
     }
 
-    if (name) {
-      url.searchParams.append('name', name);
+    if (isAll) {
+      url.searchParams.append('isAll', String(isAll));
     }
 
+    //query params in this
     const response = await fetch(url.toString(), {
       method: 'GET',
       headers: {

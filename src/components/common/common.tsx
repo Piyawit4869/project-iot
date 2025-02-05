@@ -30,8 +30,6 @@ export enum DocumentStatus {
 //   Low = 'low',
 // }
 
-
-
 export const handleTypeTag = (type: string) => {
   const typeTags: Record<string, { text: string; bg: string }> = {
     invoice: { text: 'ใบแจ้งหนี้', bg: 'bg-yellow-100' },
@@ -150,3 +148,32 @@ export const handleAction = (actions: string) => {
 //     </Chip>
 //   );
 // };
+
+export function isMenuActive(currentPath: string, pathName: string) {
+  const splitPath = pathName.split('/');
+  let subFeatureName = '';
+
+  if (currentPath) {
+    if (splitPath.length > 2) {
+      subFeatureName = splitPath[3];
+
+      // console.log('in if');
+
+      // console.log('current: ', currentPath);
+      // console.log('feature: ', subFeatureName);
+
+      return currentPath.startsWith(subFeatureName);
+    } else {
+      const featureName = splitPath[2] ?? 'backoffice';
+
+      // console.log('in else');
+
+      // console.log('current: ', currentPath);
+      // console.log('feature: ', featureName);
+
+      return currentPath.startsWith(featureName);
+    }
+  } else {
+    return false;
+  }
+}

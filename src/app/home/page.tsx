@@ -6,7 +6,7 @@ export default async function Homepage() {
   //     case 'super_admin':
   //       return '/superadmin';
   //     case 'owner':
-  //       return '/admin';
+  //       return '/backoffice';
   //     default:
   //       return '/';
   //   }
