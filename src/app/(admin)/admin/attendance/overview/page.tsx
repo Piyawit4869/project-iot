@@ -46,7 +46,7 @@ interface AttendanceItem {
 
 const columns = [
   {
-    title: 'ชื่อ',
+    title: 'ชื่อพนักงาน',
     dataIndex: 'userName',
     Link: '/admin/attendance/overview',
     align: 'left',
@@ -82,7 +82,6 @@ const columns = [
   {
     title: 'รวมเวลาการเข้าทำงาน',
     dataIndex: 'totalWorkHours',
-    Link: '/admin/attendance/overview',
     align: 'center',
   },
 ];
@@ -196,44 +195,44 @@ export default function AttendancesPage() {
         child={
           <div>
             <TopSection title="ภาพรวมการเข้าทำงานทั้งหมด" />
-            <div className=" grid grid-cols-4 gap-4">
+            <div className=" grid grid-cols-4 gap-5">
               <div className="col-span-3">
-                <div className="flex space-x-4 mt-8  ">
+                <div className="flex space-x-5 mt-8  ">
                   {renderCard(
                     'พนักงานทั้งหมด',
-                    10,
+                    15,
                     'bg-white text-blue-500',
                     <Icons.UsersRound />,
                   )}
                   {renderCard(
                     'เข้างานแล้ว',
-                    0,
+                    10,
                     'bg-white text-accent1',
                     <Icons.UserRoundCheck />,
                   )}
                   {renderCard(
                     'ยังไม่เข้างาน',
-                    10,
+                    1,
                     'bg-white text-red-500',
                     <Icons.UserRoundMinus />,
                   )}
                 </div>
                 <div className="flex space-x-4 mt-8">
                   {renderCard(
-                    'เข้างาน',
-                    10,
+                    'เข้างานสาย',
+                    1,
                     'bg-white text-orange-500',
                     <Icons.ClockAlert />,
                   )}
                   {renderCard(
                     'ลาป่วย/ลากิจ',
-                    0,
+                    2,
                     'bg-white text-accent3',
                     <Icons.Moon />,
                   )}
                   {renderCard(
-                    'มาสาย',
-                    10,
+                    'เลิกงานแล้ว',
+                    1,
                     'bg-white text-red-500',
                     <Icons.LogOut />,
                   )}
@@ -269,7 +268,7 @@ export default function AttendancesPage() {
               <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
                 <div className="grid grid-cols-1 sm:grid-cols-5 p-4 flex justify-between items-center">
                   <div className=" px-3">
-                    <h6>ภาพรวม การเข้าทำงาน</h6>
+                    <h6>ภาพรวมการเข้าทำงาน</h6>
                   </div>
                   <Input
                     className="w-[90%] p-2 text-headFont col-span-2"
@@ -297,7 +296,9 @@ export default function AttendancesPage() {
                     value={filters.userName}
                     onChange={(e) => onInputChange('userName', e.target.value)}
                   >
-                    <SelectItem></SelectItem>
+                    <SelectItem>
+                      <div>1</div>
+                    </SelectItem>
                   </Select>
                   <DatePicker
                     className="w-[90%] p-2 text-headFont"

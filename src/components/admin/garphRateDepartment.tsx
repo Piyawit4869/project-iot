@@ -27,7 +27,7 @@ const WeeklyAttendanceChart: React.FC = () => {
   return (
     <Card className="p-4">
       <CardContent>
-        <p className="text-xl font-semibold text-center mb-4 p-5">
+        <p className="text-xl font-semibold text-start mb-4 p-5">
           การเข้าทำงาน รายสัปดาห์ ของแต่ละแผนก
         </p>
         <ResponsiveContainer width="100%" height={300}>
@@ -39,7 +39,7 @@ const WeeklyAttendanceChart: React.FC = () => {
             <XAxis dataKey="department" tick={{ fontSize: 12 }} />
             <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
             <Tooltip formatter={(value) => `${value}%`} />
-            <Bar dataKey="attendance" fill="#4f46e5" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="attendance" fill="#00a57c" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>
