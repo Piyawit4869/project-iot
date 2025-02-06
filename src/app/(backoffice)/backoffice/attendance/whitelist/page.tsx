@@ -74,38 +74,41 @@ export default function WhitelistsPage() {
     currentPage: 1,
   });
 
-  const fetchWhitelists = async () => {
-    setLoading(true);
-    try {
-      const { ip, status } = filters;
-      const { items: fetchedItems, meta: fetchedMeta } = await pagination({
-        page,
-        limit: rowsPerPage,
-        ...(ip && { ip }),
-        ...(status && { status }),
-      });
+  React.useEffect(() => {
+    const fetchWhitelists = async () => {
+      setLoading(true);
+      try {
+        const { ip, status } = filters;
+        const { items: fetchedItems, meta: fetchedMeta } = await pagination({
+          page,
+          limit: rowsPerPage,
+          ...(ip && { ip }),
+          ...(status && { status }),
+        });
 
-      setItems(
-        fetchedItems.map((item: WhitelistItem) => ({
-          ...item,
-          addressCountry: item?.address?.country || '',
-          addressProvince: item?.address?.province || '',
-          addressCity: item?.address?.city || '',
-          addressSubdistrict: item?.address?.subDistrict || '',
-          addressRoad: item?.address?.road || '',
-          addressAlley: item?.address?.alley || '',
-          addressHouseNo: item?.address?.houseNo || '',
-          addressName: item?.address?.name || '',
-          createdAtDate: formatDate(item?.createdAt).date,
-        })),
-      );
-      setMeta(fetchedMeta);
-    } catch (error) {
-      console.error('Error fetching whitelists:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+        setItems(
+          fetchedItems.map((item: WhitelistItem) => ({
+            ...item,
+            addressCountry: item?.address?.country || '',
+            addressProvince: item?.address?.province || '',
+            addressCity: item?.address?.city || '',
+            addressSubdistrict: item?.address?.subDistrict || '',
+            addressRoad: item?.address?.road || '',
+            addressAlley: item?.address?.alley || '',
+            addressHouseNo: item?.address?.houseNo || '',
+            addressName: item?.address?.name || '',
+            createdAtDate: formatDate(item?.createdAt).date,
+          })),
+        );
+        setMeta(fetchedMeta);
+      } catch (error) {
+        console.error('Error fetching whitelists:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchWhitelists();
+  }, [page, rowsPerPage, filters]);
 
   // Debounced function to handle filter changes
   const handleFilterChange = React.useCallback((updatedFilters: any) => {
@@ -125,10 +128,6 @@ export default function WhitelistsPage() {
   const handleTabChange = (status: string) => {
     setFilters((prevFilters) => ({ ...prevFilters, status }));
   };
-
-  React.useEffect(() => {
-    fetchWhitelists();
-  }, [page, rowsPerPage, filters]);
 
   return (
     <div>

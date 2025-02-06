@@ -1,5 +1,5 @@
 'use client';
-import * as Icons from 'lucide-react';
+// import * as Icons from 'lucide-react';
 import React, { useState } from 'react';
 import {
   Table,
@@ -78,10 +78,6 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
     { label: '50', value: '50' },
   ];
 
-  const handleEdit = (id: string) => {
-    console.log(`Editing row with ID: ${id}`);
-  };
-
   return (
     <div className="bg-white px-5 py-4 rounded-xl ">
       <div className="overflow-x-auto rounded-xl ">
@@ -124,14 +120,25 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
                       )}
                     </TableCell>
                   ))}
-                  <TableCell className="p-3 text-center">
-                    <Button
-                      className="bg-accent3 hover:bg-yellow-400 rounded-lg transition-colors duration-200"
-                      onClick={() => handleEdit(row.id)}
-                    >
-                      <Icons.PencilLine />
-                    </Button>
-                  </TableCell>
+                  {/* 
+                  {columns.map((col) => (
+                    <TableCell key={col.link} className="p-3 text-center">
+                      {col.render ? (
+                        col.render(row[col.dataIndex], row, idx)
+                      ) : col.link ? (
+                        <Link href={`${col.link}/${row.id}`}>
+                          <Button
+                            size="sm"
+                            className="bg-accent3 hover:bg-yellow-400 rounded-lg transition-colors duration-200"
+                          >
+                            <Icons.PencilLine />
+                          </Button>
+                        </Link>
+                      ) : (
+                        row[col.dataIndex] || '-'
+                      )}
+                    </TableCell>
+                  ))} */}
                 </TableRow>
               ))
             ) : (

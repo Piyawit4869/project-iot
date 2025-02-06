@@ -17,13 +17,14 @@ import * as Icons from 'lucide-react';
 import { useClientSession } from '@/libs/auth';
 import Image from 'next/image';
 import Link from 'next/link';
-import { isMenuActive } from '../common/common';
+// import { isMenuActive } from '../common/common';
 import {
   Collapsible,
   // CollapsibleContent,
   CollapsibleTrigger,
 } from '../ui/collapsible';
 import { ChevronRight } from 'lucide-react';
+import { Button } from '@nextui-org/react';
 
 const renderIcon = (iconName: string) => {
   const IconComponent = Icons[iconName as keyof typeof Icons] as any;
@@ -35,6 +36,11 @@ export function AdminSideBar({
   ...props
 }: { isSidebarOpen: boolean } & React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname() ?? '';
+  const pathUrl = pathname.split('/');
+  const pathFeature = pathUrl && pathUrl[2];
+  const pathSubFeature = pathUrl && pathUrl[3];
+  console.log({ pathSubFeature });
+
   const me = useClientSession();
   const menuData: any = React.useMemo(
     () => [
@@ -195,6 +201,44 @@ export function AdminSideBar({
     [],
   );
 
+  const menuSetting: any = React.useMemo(
+    () => [
+      {
+        name: 'การตั้งค่า',
+        key: 'setting',
+        icon: 'Bolt',
+        isActive: false,
+        subMenu: [
+          {
+            name: 'การตั้งค่าระบบ',
+            path: '/backoffice/accounting/statement',
+            icon: 'BarChart2',
+            isActive: false,
+          },
+          {
+            name: 'ข้อมูลที่อยู่',
+            path: '/backoffice/accounting/revenue',
+            icon: 'MapPinHouse',
+            isActive: false,
+          },
+          {
+            name: 'ข้อมูลสาขา',
+            path: '/backoffice/accounting/expenses',
+            icon: 'TrendingDown',
+            isActive: false,
+          },
+          {
+            name: 'ข้อมูลองค์กร',
+            path: '/backoffice/accounting/analysis',
+            icon: 'PieChart',
+            isActive: false,
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
   const initialSubMenuState = React.useMemo(() => {
     const state: any = {};
     menuData.forEach((item: any) => {
@@ -207,7 +251,12 @@ export function AdminSideBar({
     return state;
   }, [menuData, pathname]);
 
+  console.log({ pathname });
+
   const [isSubMenuOpen, setIsSubMenuOpen] = React.useState(initialSubMenuState);
+  const [menuSidebar, setMenuSidebar] = React.useState('main');
+
+  const menuItem = menuSidebar === 'main' ? menuData : menuSetting;
 
   // const isMenuActive = (path: string) => pathname.startsWith(path);
 
@@ -228,6 +277,113 @@ export function AdminSideBar({
   }, []);
 
   return (
+    // <Sidebar collapsible="icon" {...props}>
+    //   <SidebarHeader>
+    //     <div
+    //       className={`flex items-center py-4 transition-all duration-300 ${
+    //         isSidebarOpen ? 'justify-start px-2' : 'justify-center'
+    //       }`}
+    //     >
+    //       <Link href="/backoffice">
+    //         <Image
+    //           src={me?.organization?.logoUrl || '/path/to/fallback-logo.png'}
+    //           alt="Logo"
+    //           width={40}
+    //           height={40}
+    //           className="rounded-xl hover:scale-110"
+    //         />
+    //       </Link>
+    //       {isSidebarOpen && (
+    //         <span className="ml-2 font-bold text-lg transition-opacity duration-300 opacity-100">
+    //           บริษัท {me?.organization?.nameTh} จำกัด
+    //         </span>
+    //       )}
+    //     </div>
+    //   </SidebarHeader>
+
+    //   {/* SidebarContent section */}
+    //   <SidebarContent>
+    //     <SidebarGroup>
+    //       <SidebarGroupLabel className="text-accent1 py-2">
+    //         เมนูหลัก
+    //       </SidebarGroupLabel>
+    //       <SidebarMenu>
+    //         {menuData.map((item: any) => {
+    //           return (
+    //             <Collapsible
+    //               key={item.key}
+    //               defaultOpen={item.isActive}
+    //               className="group/collapsible"
+    //             >
+    //               <SidebarMenuItem key={item.key}>
+    //                 <CollapsibleTrigger asChild>
+    //                   <SidebarMenuButton
+    //                     onClick={() => {
+    //                       if (isSidebarOpen) toggleSubMenu(item.key);
+    //                     }}
+    //                     className={`py-5 ${
+    //                       isMenuActive(item.subMenu?.path, pathname) ? '' : ''
+    //                     }`}
+    //                   >
+    //                     {renderIcon(item.icon)}
+    //                     <span
+    //                       className={`transition-all duration-300 ${
+    //                         isSidebarOpen ? 'opacity-100' : 'opacity-0 hidden'
+    //                       }`}
+    //                     >
+    //                       <a href={item.path}>{item.name}</a>
+    //                     </span>
+    //                     <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+    //                   </SidebarMenuButton>
+    //                 </CollapsibleTrigger>
+
+    //                 {item.subMenu && isSubMenuOpen[item.key] && (
+    //                   // <CollapsibleContent>
+    //                   <SidebarMenuSub>
+    //                     {item.subMenu?.map((subItem: any) => {
+    //                       // if (pathname === subItem.path) {
+    //                       //   console.log(subItem.name);
+    //                       // }
+    //                       // console.log(isSubMenuOpen);
+    //                       return (
+    //                         <SidebarMenuSubItem key={subItem.name}>
+    //                           <SidebarMenuSubButton
+    //                             key={subItem.path}
+    //                             href={subItem.path}
+    //                             isActive={pathname === subItem.path}
+    //                             className={`py-4 ${
+    //                               pathname === subItem.path ? 'bg-blue-100' : ''
+    //                             }`}
+    //                           >
+    //                             {renderIcon(subItem.icon)}
+    //                             <span
+    //                               className={`transition-all duration-300 ${
+    //                                 isSidebarOpen
+    //                                   ? 'opacity-100'
+    //                                   : 'opacity-0 hidden'
+    //                               }`}
+    //                             >
+    //                               {subItem.name}
+    //                             </span>
+    //                           </SidebarMenuSubButton>
+    //                         </SidebarMenuSubItem>
+    //                       );
+    //                     })}
+    //                   </SidebarMenuSub>
+    //                   // </CollapsibleContent>
+    //                 )}
+    //               </SidebarMenuItem>
+    //             </Collapsible>
+    //           );
+    //         })}
+    //       </SidebarMenu>
+    //     </SidebarGroup>
+    //     <div className="py-5 px-5">
+    //       <hr />
+    //     </div>
+    //   </SidebarContent>
+    // </Sidebar>
+
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <div
@@ -259,7 +415,7 @@ export function AdminSideBar({
             เมนูหลัก
           </SidebarGroupLabel>
           <SidebarMenu>
-            {menuData.map((item: any) => {
+            {menuItem.map((item: any) => {
               return (
                 <Collapsible
                   key={item.key}
@@ -272,9 +428,10 @@ export function AdminSideBar({
                         onClick={() => {
                           if (isSidebarOpen) toggleSubMenu(item.key);
                         }}
-                        className={`py-5 ${
-                          isMenuActive(item.subMenu?.path, pathname) ? '' : ''
-                        }`}
+                        // className={`py-5 ${
+                        //   isMenuActive(item.subMenu?.path, pathname) ? '' : ''
+                        // }`}
+                        isActive={pathFeature === item.key}
                       >
                         {renderIcon(item.icon)}
                         <span
@@ -331,6 +488,11 @@ export function AdminSideBar({
         </SidebarGroup>
         <div className="py-5 px-5">
           <hr />
+          <Button onClick={() => setMenuSidebar('main')}>Main Menu</Button>
+
+          <Button className="mt-6" onClick={() => setMenuSidebar('settings')}>
+            Settings Menu
+          </Button>
         </div>
       </SidebarContent>
     </Sidebar>

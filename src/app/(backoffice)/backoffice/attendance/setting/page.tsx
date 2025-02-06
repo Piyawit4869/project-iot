@@ -76,33 +76,36 @@ export default function SettingAttendancePage() {
     currentPage: 1,
   });
 
-  const fetchConfig = async () => {
-    setLoading(true);
-    try {
-      const { name, status } = filters;
-      const { items: fetchedItems, meta: fetchedMeta } = await pagination({
-        page,
-        limit: rowsPerPage,
-        ...(name && { name }),
-        ...(status && { status }),
-      });
+  React.useEffect(() => {
+    const fetchConfig = async () => {
+      setLoading(true);
+      try {
+        const { name, status } = filters;
+        const { items: fetchedItems, meta: fetchedMeta } = await pagination({
+          page,
+          limit: rowsPerPage,
+          ...(name && { name }),
+          ...(status && { status }),
+        });
 
-      setItems(
-        fetchedItems.map((item: ConfigItem) => ({
-          ...item,
-          WorkStart: formatDate(item.workStartTime).time,
-          WorkEnd: formatDate(item.workEndTime).time,
-          BreakStart: formatDate(item.breakStartTime).time,
-          BreakEnd: formatDate(item.breakEndTime).time,
-        })),
-      );
-      setMeta(fetchedMeta);
-    } catch (error) {
-      console.error('Error fetching work info:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+        setItems(
+          fetchedItems.map((item: ConfigItem) => ({
+            ...item,
+            WorkStart: formatDate(item.workStartTime).time,
+            WorkEnd: formatDate(item.workEndTime).time,
+            BreakStart: formatDate(item.breakStartTime).time,
+            BreakEnd: formatDate(item.breakEndTime).time,
+          })),
+        );
+        setMeta(fetchedMeta);
+      } catch (error) {
+        console.error('Error fetching work info:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchConfig();
+  }, [page, rowsPerPage, filters]);
 
   const handleFilterChange = React.useCallback((updatedFilters: any) => {
     debounce(() => {
@@ -120,10 +123,6 @@ export default function SettingAttendancePage() {
   //   const updatedFilters = { ...filters, status };
   //   handleFilterChange(updatedFilters); // This will trigger the debounced filter change
   // };
-
-  React.useEffect(() => {
-    fetchConfig();
-  }, [page, rowsPerPage, filters]);
 
   return (
     <div>
