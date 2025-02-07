@@ -342,7 +342,7 @@ export default function CreateUserPage() {
                           className="flex-1"
                           label={<span className="text-headFont">ชื่อ</span>}
                           labelPlacement="outside"
-                          name="firstName"
+                          name="firstNameTh"
                           placeholder="กรอกชื่อ"
                           onChange={handleChange}
                           isRequired
@@ -354,7 +354,7 @@ export default function CreateUserPage() {
                           className="flex-1"
                           label={<span className="text-headFont">นามสกุล</span>}
                           labelPlacement="outside"
-                          name="lastName"
+                          name="lastNameTh"
                           placeholder="กรอกชื่อ"
                           onChange={handleChange}
                           isRequired
@@ -370,7 +370,7 @@ export default function CreateUserPage() {
                             </span>
                           }
                           labelPlacement="outside"
-                          name="firstNameEn"
+                          name="firstName"
                           placeholder="กรอกชื่อภาษาอังกฤษ"
                           onChange={handleChange}
                           isRequired
@@ -385,7 +385,7 @@ export default function CreateUserPage() {
                             </span>
                           }
                           labelPlacement="outside"
-                          name="lastNameEn"
+                          name="lastName"
                           placeholder="กรอกนามสกุลภาษาอังกฤษ"
                           onChange={handleChange}
                           isRequired

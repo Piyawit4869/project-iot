@@ -24,12 +24,174 @@ import {
   CollapsibleTrigger,
 } from '../ui/collapsible';
 import { ChevronRight } from 'lucide-react';
+import { NavHome } from './homeSidebar';
+import { NavSetting } from './settingSidebar';
 import { Button } from '@nextui-org/react';
 
 const renderIcon = (iconName: string) => {
   const IconComponent = Icons[iconName as keyof typeof Icons] as any;
   return IconComponent ? <IconComponent className="w-10 h-10" /> : null;
 };
+
+// const menuData = {
+//   home: [
+//     {
+//       name: 'ภาพรวม',
+//       key: 'home',
+//       icon: Icons.House,
+//       path: '/backoffice',
+//       isActive: false,
+//     },
+//   ],
+//   mainSidebar: [
+//     {
+//       name: 'บัญชี',
+//       key: 'accounting',
+//       icon: Icons.DollarSign,
+//       isActive: false,
+//       subMenu: [
+//         {
+//           name: 'ภาพรวม',
+//           path: '/backoffice/accounting/statement',
+//           icon: Icons.BarChart2,
+//           isActive: false,
+//         },
+//         {
+//           name: 'รายได้',
+//           path: '/backoffice/accounting/revenue',
+//           icon: Icons.TrendingUp,
+//           isActive: false,
+//         },
+//         {
+//           name: 'รายจ่าย',
+//           path: '/backoffice/accounting/expenses',
+//           icon: Icons.TrendingDown,
+//           isActive: false,
+//         },
+//         {
+//           name: 'วิเคราะห์',
+//           path: '/backoffice/accounting/analysis',
+//           icon: Icons.PieChart,
+//           isActive: false,
+//         },
+//       ],
+//     },
+//     {
+//       name: 'กิจกรรมการทำงาน',
+//       key: 'attendance',
+//       icon: Icons.UsersRound,
+//       isActive: false,
+//       subMenu: [
+//         {
+//           name: 'ภาพรวม',
+//           path: '/backoffice/attendance/overview',
+//           icon: Icons.LayoutPanelLeft,
+//           isActive: false,
+//         },
+//         {
+//           name: 'การเข้าทำงาน',
+//           path: '/backoffice/attendance/work-infomation',
+//           icon: Icons.BriefcaseBusiness,
+//           isActive: false,
+//         },
+//         {
+//           name: 'การเข้าใช้งาน',
+//           path: '/backoffice/attendance/whitelist',
+//           icon: Icons.ShieldCheck,
+//           isActive: false,
+//         },
+//         {
+//           name: 'การตั้งค่า',
+//           path: '/backoffice/attendance/setting',
+//           icon: Icons.Settings2,
+//           isActive: false,
+//         },
+//       ],
+//     },
+//     {
+//       name: 'เอกสาร',
+//       key: 'notation',
+//       icon: Icons.Folder,
+//       isActive: false,
+//       subMenu: [
+//         {
+//           name: 'เอกสารทั้งหมด',
+//           path: '/backoffice/notation',
+//           icon: Icons.FileType2,
+//           isActive: false,
+//         },
+//       ],
+//     },
+//     {
+//       name: 'สินค้าและบริการ',
+//       key: 'item',
+//       icon: Icons.Package,
+//       isActive: false,
+//       subMenu: [
+//         {
+//           name: 'สินค้าและบริการทั้งหมด',
+//           path: '/backoffice/item',
+//           icon: Icons.Package2,
+//           isActive: false,
+//         },
+//       ],
+//     },
+//     {
+//       name: 'ลูกค้า',
+//       key: 'customer',
+//       icon: Icons.UserRound,
+//       isActive: false,
+//       subMenu: [
+//         {
+//           name: 'ลูกค้าทั้งหมด',
+//           path: '/backoffice/customer',
+//           icon: Icons.UsersRound,
+//           isActive: false,
+//         },
+//       ],
+//     },
+//     {
+//       name: 'จัดการพนักงาน',
+//       key: 'user',
+//       icon: Icons.UserRoundPen,
+//       isActive: false,
+//       subMenu: [
+//         {
+//           name: 'พนักงาน',
+//           path: '/backoffice/user',
+//           icon: Icons.UserRoundCheck,
+//           isActive: false,
+//         },
+//         {
+//           name: 'ตำแหน่ง',
+//           path: '/backoffice/role',
+//           icon: Icons.UserRoundCog,
+//           isActive: false,
+//         },
+//         {
+//           name: 'ตำแหน่งพนักงาน',
+//           path: '/backoffice/employeeRole',
+//           icon: Icons.UserRoundCog,
+//           isActive: false,
+//         },
+//       ],
+//     },
+//     {
+//       name: 'การตั้งค่า',
+//       key: 'setting',
+//       icon: Icons.Bolt,
+//       isActive: false,
+//       subMenu: [
+//         {
+//           name: 'การตั้งค่าองค์กร',
+//           path: '/backoffice/organization',
+//           icon: Icons.Settings2,
+//           isActive: false,
+//         },
+//       ],
+//     },
+//   ],
+// };
 
 export function AdminSideBar({
   isSidebarOpen,
@@ -42,232 +204,223 @@ export function AdminSideBar({
   console.log({ pathSubFeature });
 
   const me = useClientSession();
-  const menuData: any = React.useMemo(
-    () => [
-      {
-        name: 'ภาพรวม',
-        key: 'home',
-        icon: 'House',
-        path: '/backoffice',
-        isActive: false,
-      },
-      {
-        name: 'บัญชี',
-        key: 'accounting',
-        icon: 'DollarSign',
-        isActive: false,
-        subMenu: [
-          {
-            name: 'ภาพรวม',
-            path: '/backoffice/accounting/statement',
-            icon: 'BarChart2',
-            isActive: false,
-          },
-          {
-            name: 'รายได้',
-            path: '/backoffice/accounting/revenue',
-            icon: 'TrendingUp',
-            isActive: false,
-          },
-          {
-            name: 'รายจ่าย',
-            path: '/backoffice/accounting/expenses',
-            icon: 'TrendingDown',
-            isActive: false,
-          },
-          {
-            name: 'วิเคราะห์',
-            path: '/backoffice/accounting/analysis',
-            icon: 'PieChart',
-            isActive: false,
-          },
-        ],
-      },
-      {
-        name: 'กิจกรรมการทำงาน',
-        key: 'attendance',
-        icon: 'UsersRound',
-        isActive: false,
-        subMenu: [
-          {
-            name: 'ภาพรวม',
-            path: '/backoffice/attendance/overview',
-            icon: 'LayoutPanelLeft',
-            isActive: false,
-          },
-          {
-            name: 'การเข้าทำงาน',
-            path: '/backoffice/attendance/work-infomation',
-            icon: 'BriefcaseBusiness',
-            isActive: false,
-          },
-          {
-            name: 'การเข้าใช้งาน',
-            path: '/backoffice/attendance/whitelist',
-            icon: 'ShieldCheck',
-            isActive: false,
-          },
-          {
-            name: 'การตั้งค่า',
-            path: '/backoffice/attendance/setting',
-            icon: 'Settings2',
-            isActive: false,
-          },
-        ],
-      },
-      {
-        name: 'เอกสาร',
-        key: 'notation',
-        icon: 'Folder',
-        isActive: false,
-        subMenu: [
-          {
-            name: 'เอกสารทั้งหมด',
-            path: '/backoffice/notation',
-            icon: 'FileType2',
-            isActive: false,
-          },
-        ],
-      },
-      {
-        name: 'สินค้าและบริการ',
-        key: 'item',
-        icon: 'Package',
-        isActive: false,
-        subMenu: [
-          {
-            name: 'สินค้าและบริการทั้งหมด',
-            path: '/backoffice/item',
-            icon: 'Package2',
-            isActive: false,
-          },
-        ],
-      },
-      {
-        name: 'ลูกค้า',
-        key: 'customer',
-        icon: 'UserRound',
-        isActive: false,
-        subMenu: [
-          {
-            name: 'ลูกค้าทั้งหมด',
-            path: '/backoffice/customer',
-            icon: 'UsersRound',
-            isActive: false,
-          },
-        ],
-      },
-      {
-        name: 'จัดการพนักงาน',
-        key: 'user',
-        icon: 'UserRoundPen',
-        isActive: false,
-        subMenu: [
-          {
-            name: 'พนักงาน',
-            path: '/backoffice/user',
-            icon: 'UserRoundCheck',
-            isActive: false,
-          },
-          {
-            name: 'ตำแหน่ง',
-            path: '/backoffice/role',
-            icon: 'UserRoundCog',
-            isActive: false,
-          },
-          {
-            name: 'ตำแหน่งพนักงาน',
-            path: '/backoffice/employeeRole',
-            icon: 'UserRoundCog',
-            isActive: false,
-          },
-        ],
-      },
-      {
-        name: 'การตั้งค่า',
-        key: 'setting',
-        icon: 'Bolt',
-        isActive: false,
-        subMenu: [
-          {
-            name: 'การตั้งค่าองค์กร',
-            path: '/backoffice/organization',
-            icon: 'Settings2',
-            isActive: false,
-          },
-        ],
-      },
-    ],
-    [],
-  );
+  const menuData: any = React.useMemo(() => {
+    return {
+      home: [
+        {
+          name: 'ภาพรวม',
+          key: 'home',
+          icon: Icons.House,
+          path: '/backoffice',
+          isActive: false,
+        },
+      ],
+      main: [
+        {
+          name: 'บัญชี',
+          key: 'accounting',
+          icon: 'DollarSign',
+          isActive: false,
+          subMenu: [
+            {
+              name: 'ภาพรวม',
+              path: '/backoffice/accounting/statement',
+              icon: 'BarChart2',
+              isActive: false,
+            },
+            {
+              name: 'รายได้',
+              path: '/backoffice/accounting/revenue',
+              icon: 'TrendingUp',
+              isActive: false,
+            },
+            {
+              name: 'รายจ่าย',
+              path: '/backoffice/accounting/expenses',
+              icon: 'TrendingDown',
+              isActive: false,
+            },
+            {
+              name: 'วิเคราะห์',
+              path: '/backoffice/accounting/analysis',
+              icon: 'PieChart',
+              isActive: false,
+            },
+          ],
+        },
+        {
+          name: 'กิจกรรมการทำงาน',
+          key: 'attendance',
+          icon: 'UsersRound',
+          isActive: false,
+          subMenu: [
+            {
+              name: 'ภาพรวม',
+              path: '/backoffice/attendance/overview',
+              icon: 'LayoutPanelLeft',
+              isActive: false,
+            },
+            {
+              name: 'การเข้าทำงาน',
+              path: '/backoffice/attendance/work-infomation',
+              icon: 'BriefcaseBusiness',
+              isActive: false,
+            },
+            {
+              name: 'การเข้าใช้งาน',
+              path: '/backoffice/attendance/whitelist',
+              icon: 'ShieldCheck',
+              isActive: false,
+            },
+            {
+              name: 'การตั้งค่า',
+              path: '/backoffice/attendance/setting',
+              icon: 'Settings2',
+              isActive: false,
+            },
+          ],
+        },
+        {
+          name: 'เอกสาร',
+          key: 'notation',
+          icon: 'Folder',
+          isActive: false,
+          subMenu: [
+            {
+              name: 'เอกสารทั้งหมด',
+              path: '/backoffice/notation',
+              icon: 'FileType2',
+              isActive: false,
+            },
+          ],
+        },
+        {
+          name: 'สินค้าและบริการ',
+          key: 'item',
+          icon: 'Package',
+          isActive: false,
+          subMenu: [
+            {
+              name: 'สินค้าและบริการทั้งหมด',
+              path: '/backoffice/item',
+              icon: 'Package2',
+              isActive: false,
+            },
+          ],
+        },
+        {
+          name: 'ลูกค้า',
+          key: 'customer',
+          icon: 'UserRound',
+          isActive: false,
+          subMenu: [
+            {
+              name: 'ลูกค้าทั้งหมด',
+              path: '/backoffice/customer',
+              icon: 'UsersRound',
+              isActive: false,
+            },
+          ],
+        },
+        {
+          name: 'จัดการพนักงาน',
+          key: 'user',
+          icon: 'UserRoundPen',
+          isActive: false,
+          subMenu: [
+            {
+              name: 'พนักงาน',
+              path: '/backoffice/user',
+              icon: 'UserRoundCheck',
+              isActive: false,
+            },
+            {
+              name: 'ตำแหน่ง',
+              path: '/backoffice/role',
+              icon: 'UserRoundCog',
+              isActive: false,
+            },
+            {
+              name: 'ตำแหน่งพนักงาน',
+              path: '/backoffice/employeeRole',
+              icon: 'UserRoundCog',
+              isActive: false,
+            },
+          ],
+        },
+      ],
+      setting: [
+        {
+          name: 'การตั้งค่า',
+          path: '/backoffice/organization',
+          key: 'setting',
+          icon: Icons.Bolt,
+          isActive: false,
+        },
+      ],
+    };
+  }, []);
 
-  const menuSetting: any = React.useMemo(
-    () => [
-      {
-        name: 'การตั้งค่า',
-        key: 'setting',
-        icon: 'Bolt',
-        isActive: false,
-        subMenu: [
-          {
-            name: 'การตั้งค่าระบบ',
-            path: '/backoffice/accounting/statement',
-            icon: 'BarChart2',
-            isActive: false,
-          },
-          {
-            name: 'ข้อมูลที่อยู่',
-            path: '/backoffice/accounting/revenue',
-            icon: 'MapPinHouse',
-            isActive: false,
-          },
-          {
-            name: 'ข้อมูลสาขา',
-            path: '/backoffice/accounting/expenses',
-            icon: 'TrendingDown',
-            isActive: false,
-          },
-          {
-            name: 'ข้อมูลองค์กร',
-            path: '/backoffice/accounting/analysis',
-            icon: 'PieChart',
-            isActive: false,
-          },
-        ],
-      },
-    ],
-    [],
-  );
+  const menuSetting: any = React.useMemo(() => {
+    return {
+      setting: [
+        {
+          name: 'การตั้งค่า',
+          key: 'setting',
+          icon: 'Bolt',
+          isActive: false,
+          subMenu: [
+            {
+              name: 'ข้อมูลองค์กร',
+              icon: 'SquareChartGantt',
+              isActive: false,
+            },
+            {
+              name: 'ข้อมูลสาขา',
+              icon: 'Building2',
+              isActive: false,
+            },
+            {
+              name: 'ข้อมูลที่อยู่',
+              icon: 'MapPinCheck',
+              isActive: false,
+            },
+            {
+              name: 'การตั้งค่า',
+              icon: 'SlidersHorizontal',
+              isActive: false,
+            },
+          ],
+        },
+      ],
+    };
+  }, []);
 
   const initialSubMenuState = React.useMemo(() => {
     const state: any = {};
-    menuData.forEach((item: any) => {
-      if (item.subMenu) {
-        state[item.key] = item.subMenu.some((subItem: any) =>
-          pathname.startsWith(subItem.path),
-        );
-      }
+    (Object.values(menuData) as any[][]).forEach((menuItems: any[]) => {
+      menuItems.forEach((item: any) => {
+        if (item.subMenu) {
+          state[item.key] = item.subMenu.some((subItem: any) =>
+            pathname.startsWith(subItem.path),
+          );
+        }
+      });
     });
+
     return state;
   }, [menuData, pathname]);
 
-  console.log({ pathname });
-
   const [isSubMenuOpen, setIsSubMenuOpen] = React.useState(initialSubMenuState);
-  const [menuSidebar, setMenuSidebar] = React.useState('main');
+  const [menuSidebar, setMenuSidebar] = React.useState<any[]>(menuData.main);
 
-  const menuItem = menuSidebar === 'main' ? menuData : menuSetting;
-
-  // const isMenuActive = (path: string) => pathname.startsWith(path);
-
-  // console.log(pathname);
-
-  // const splitPath = pathname.split('/');
-  // console.log(splitPath[2]);
-
-  // if (splitPath.length > 2) {
-  //   console.log(splitPath[3]);
-  // }
+  React.useEffect(() => {
+    if (location.pathname.startsWith('/backoffice/organization')) {
+      setMenuSidebar(menuSetting.setting);
+    } else {
+      setMenuSidebar(menuData.main);
+    }
+  }, [menuData.main, menuSetting.setting]);
 
   const toggleSubMenu = useCallback((key: string, open?: boolean) => {
     setIsSubMenuOpen((prev: any) => ({
@@ -277,113 +430,6 @@ export function AdminSideBar({
   }, []);
 
   return (
-    // <Sidebar collapsible="icon" {...props}>
-    //   <SidebarHeader>
-    //     <div
-    //       className={`flex items-center py-4 transition-all duration-300 ${
-    //         isSidebarOpen ? 'justify-start px-2' : 'justify-center'
-    //       }`}
-    //     >
-    //       <Link href="/backoffice">
-    //         <Image
-    //           src={me?.organization?.logoUrl || '/path/to/fallback-logo.png'}
-    //           alt="Logo"
-    //           width={40}
-    //           height={40}
-    //           className="rounded-xl hover:scale-110"
-    //         />
-    //       </Link>
-    //       {isSidebarOpen && (
-    //         <span className="ml-2 font-bold text-lg transition-opacity duration-300 opacity-100">
-    //           บริษัท {me?.organization?.nameTh} จำกัด
-    //         </span>
-    //       )}
-    //     </div>
-    //   </SidebarHeader>
-
-    //   {/* SidebarContent section */}
-    //   <SidebarContent>
-    //     <SidebarGroup>
-    //       <SidebarGroupLabel className="text-accent1 py-2">
-    //         เมนูหลัก
-    //       </SidebarGroupLabel>
-    //       <SidebarMenu>
-    //         {menuData.map((item: any) => {
-    //           return (
-    //             <Collapsible
-    //               key={item.key}
-    //               defaultOpen={item.isActive}
-    //               className="group/collapsible"
-    //             >
-    //               <SidebarMenuItem key={item.key}>
-    //                 <CollapsibleTrigger asChild>
-    //                   <SidebarMenuButton
-    //                     onClick={() => {
-    //                       if (isSidebarOpen) toggleSubMenu(item.key);
-    //                     }}
-    //                     className={`py-5 ${
-    //                       isMenuActive(item.subMenu?.path, pathname) ? '' : ''
-    //                     }`}
-    //                   >
-    //                     {renderIcon(item.icon)}
-    //                     <span
-    //                       className={`transition-all duration-300 ${
-    //                         isSidebarOpen ? 'opacity-100' : 'opacity-0 hidden'
-    //                       }`}
-    //                     >
-    //                       <a href={item.path}>{item.name}</a>
-    //                     </span>
-    //                     <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-    //                   </SidebarMenuButton>
-    //                 </CollapsibleTrigger>
-
-    //                 {item.subMenu && isSubMenuOpen[item.key] && (
-    //                   // <CollapsibleContent>
-    //                   <SidebarMenuSub>
-    //                     {item.subMenu?.map((subItem: any) => {
-    //                       // if (pathname === subItem.path) {
-    //                       //   console.log(subItem.name);
-    //                       // }
-    //                       // console.log(isSubMenuOpen);
-    //                       return (
-    //                         <SidebarMenuSubItem key={subItem.name}>
-    //                           <SidebarMenuSubButton
-    //                             key={subItem.path}
-    //                             href={subItem.path}
-    //                             isActive={pathname === subItem.path}
-    //                             className={`py-4 ${
-    //                               pathname === subItem.path ? 'bg-blue-100' : ''
-    //                             }`}
-    //                           >
-    //                             {renderIcon(subItem.icon)}
-    //                             <span
-    //                               className={`transition-all duration-300 ${
-    //                                 isSidebarOpen
-    //                                   ? 'opacity-100'
-    //                                   : 'opacity-0 hidden'
-    //                               }`}
-    //                             >
-    //                               {subItem.name}
-    //                             </span>
-    //                           </SidebarMenuSubButton>
-    //                         </SidebarMenuSubItem>
-    //                       );
-    //                     })}
-    //                   </SidebarMenuSub>
-    //                   // </CollapsibleContent>
-    //                 )}
-    //               </SidebarMenuItem>
-    //             </Collapsible>
-    //           );
-    //         })}
-    //       </SidebarMenu>
-    //     </SidebarGroup>
-    //     <div className="py-5 px-5">
-    //       <hr />
-    //     </div>
-    //   </SidebarContent>
-    // </Sidebar>
-
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <div
@@ -415,22 +461,16 @@ export function AdminSideBar({
             เมนูหลัก
           </SidebarGroupLabel>
           <SidebarMenu>
-            {menuItem.map((item: any) => {
+            <NavHome items={menuData.home} />
+            {menuSidebar.map((item: any) => {
               return (
-                <Collapsible
-                  key={item.key}
-                  defaultOpen={item.isActive}
-                  className="group/collapsible"
-                >
+                <Collapsible key={item.key} className="group/collapsible">
                   <SidebarMenuItem key={item.key}>
                     <CollapsibleTrigger asChild>
                       <SidebarMenuButton
                         onClick={() => {
                           if (isSidebarOpen) toggleSubMenu(item.key);
                         }}
-                        // className={`py-5 ${
-                        //   isMenuActive(item.subMenu?.path, pathname) ? '' : ''
-                        // }`}
                         isActive={pathFeature === item.key}
                       >
                         {renderIcon(item.icon)}
@@ -449,10 +489,6 @@ export function AdminSideBar({
                       // <CollapsibleContent>
                       <SidebarMenuSub>
                         {item.subMenu?.map((subItem: any) => {
-                          // if (pathname === subItem.path) {
-                          //   console.log(subItem.name);
-                          // }
-                          // console.log(isSubMenuOpen);
                           return (
                             <SidebarMenuSubItem key={subItem.name}>
                               <SidebarMenuSubButton
@@ -484,15 +520,28 @@ export function AdminSideBar({
                 </Collapsible>
               );
             })}
+
+            {menuSidebar === menuData.main && (
+              <NavSetting
+                items={menuData.setting}
+                // onMenuClick={handleMenuClick}
+              />
+            )}
           </SidebarMenu>
         </SidebarGroup>
         <div className="py-5 px-5">
           <hr />
-          <Button onClick={() => setMenuSidebar('main')}>Main Menu</Button>
-
-          <Button className="mt-6" onClick={() => setMenuSidebar('settings')}>
-            Settings Menu
-          </Button>
+          {menuSidebar === menuSetting.setting && (
+            <div className="flex items-center justify-center h-full mt-3">
+              <Button
+                onClick={() => setMenuSidebar(menuData.main)}
+                className="rounded-full"
+                size="sm"
+              >
+                <Icons.ChevronLeft />
+              </Button>
+            </div>
+          )}
         </div>
       </SidebarContent>
     </Sidebar>

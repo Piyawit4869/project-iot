@@ -879,8 +879,8 @@ export default function NotationSinglePage() {
                 ) : (
                   <div className="flex justify-center">
                     <div
-                      // className="bg-white w-[260mm] h-[300mm] shadow-lg border border-gray-300 rounded p-1"
-                      className="bg-white overflow-hidden w-full h-full shadow-lg border border-gray-300 rounded"
+                      className="bg-white overflow-hidden w-[170mm] h-[300mm] shadow-lg border border-gray-300 rounded p-1"
+                      // className="bg-white overflow-hidden w-full h-full shadow-lg border border-gray-300 rounded"
                       style={{
                         transform: `scale(${zoomLevel / 100})`,
                         transformOrigin: 'top left',
