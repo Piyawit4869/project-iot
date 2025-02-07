@@ -178,7 +178,7 @@ export default function CreateUserPage() {
                                   alt="image organization"
                                   width={100}
                                   height={100}
-                                ></Image>
+                                />
                               </div>
                             </div>
                             <div className="flex gap-4 mt-6">

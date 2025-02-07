@@ -49,7 +49,7 @@ const columns = [
   {
     title: 'ชื่อพนักงาน',
     dataIndex: 'userName',
-    Link: '/backoffice/attendance/overview',
+    link: '/backoffice/attendance/overview',
     align: 'left',
   },
   {
@@ -89,7 +89,11 @@ const columns = [
 
 export default function AttendancesPage() {
   const [page, setPage] = React.useState(1);
-  const [, setLoading] = React.useState(false);
+  const [
+    ,
+    // loading
+    setLoading,
+  ] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [filters, setFilters] = React.useState<FilterState>({
     userName: '',
@@ -179,27 +183,27 @@ export default function AttendancesPage() {
           <div>
             <TopSection title="ภาพรวมการเข้าทำงานทั้งหมด" />
 
-            <div className=" grid grid-cols-4 gap-5 flex justify-between">
+            <div className=" grid grid-cols-4 gap-8 flex justify-between">
               <div className="col-span-3">
                 <div>
                   <EmAttendanceCard users={userList || []} />
                 </div>
               </div>
               <div className="col-span-1">
-                <div className=" flex space-x-4 mt-8 bg-white rounded-xl  h-[90%]">
+                <div className=" flex space-x-4 mt-8 bg-white rounded-xl  h-[90%] shadow">
                   <TimelineComponent />
                 </div>
               </div>
             </div>
 
-            <div className=" grid grid-cols-5 gap-4">
+            <div className=" grid grid-cols-5 gap-8">
               <div className="col-span-3 mt-8">
-                <div className="bg-white rounded-xl p-5 ">
+                <div className="bg-white rounded-xl p-4 shadow">
                   <ChartComponent />
                 </div>
               </div>
               <div className="col-span-2 mt-8">
-                <div className="bg-white rounded-xl p-5">
+                <div className="bg-white rounded-xl p-4 shadow">
                   <WeeklyAttendanceChart />
                 </div>
               </div>

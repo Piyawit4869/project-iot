@@ -25,9 +25,9 @@ const weeklyData: WeeklyData[] = [
 
 const WeeklyAttendanceChart: React.FC = () => {
   return (
-    <Card className="p-4">
+    <Card>
       <CardContent>
-        <p className="text-xl font-semibold text-start mb-4 p-5">
+        <p className="text-xl font-semibold text-start mt-8 mb-6 ">
           การเข้าทำงานรายสัปดาห์ของแต่ละแผนก
         </p>
         <ResponsiveContainer width="100%" height={300}>

@@ -15,7 +15,12 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users }) => {
     users.filter((user) => user.status === 'on_leave').length || 2;
   const checkedOutCount =
     users.filter((user) => user.status === 'checked_out').length || 1;
-  const notCheckedInCount = totalEmployees - checkedInCount - lateCount - onLeaveCount - checkedOutCount ;
+  const notCheckedInCount =
+    totalEmployees -
+    checkedInCount -
+    lateCount -
+    onLeaveCount -
+    checkedOutCount;
 
   const renderCard = (
     title: string,
