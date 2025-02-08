@@ -53,7 +53,7 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users }) => {
 
   return (
     <div>
-      <div className="flex space-x-5 mt-8">
+      <div className="flex space-x-8 mt-8">
         {renderCard(
           'พนักงานทั้งหมด',
           totalEmployees,
@@ -73,7 +73,7 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users }) => {
           <Icons.UserRoundMinus />,
         )}
       </div>
-      <div className="flex space-x-4 mt-8">
+      <div className="flex space-x-8 mt-8">
         {renderCard(
           'เข้างานสาย',
           lateCount,

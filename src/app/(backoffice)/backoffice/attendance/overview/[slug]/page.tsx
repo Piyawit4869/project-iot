@@ -9,7 +9,6 @@ import WorkingTimeSummary from '@/components/backoffice/timeWork';
 import AttendanceSummaryCard from '@/components/backoffice/sumAtDetail';
 import UserDashboardCard from '@/components/backoffice/detailCardEm';
 import { TablePagination } from '@/components/common/tablePagination';
-import AttendanceRateChart from '@/components/backoffice/persentAttendance';
 import { DatePicker, Input, Select, SelectItem } from '@nextui-org/react';
 import { debounce } from 'lodash';
 // component end //
@@ -70,7 +69,7 @@ export default function AttendanceDetailPage() {
                 />
               </div>
               <div className="bg-white p-8 rounded-xl ">
-                <h2 className="pb-2">การเข้าทำงาน</h2>
+                <h1 className="pb-2 text-xl">การเข้าทำงานทั้งหมด</h1>
 
                 <div className="grid grid-cols-4 gap-4">
                   <AttendanceSummaryCard
@@ -101,9 +100,6 @@ export default function AttendanceDetailPage() {
               </div>
             </div>
             <div>
-              <AttendanceRateChart yearRate={87} monthlyRates={monthlyRates} />
-            </div>
-            <div>
               {/* {loading ? (
                 <div className="flex justify-center items-center h-64">
                   <div className="spinner"></div>
@@ -121,8 +117,6 @@ export default function AttendanceDetailPage() {
                     size="sm"
                     radius="sm"
                     name="userName"
-                    // label="ค้นหาด้วยชื่อพนักงาน"
-                    // labelPlacement="outside"
                     placeholder="ชื่อพนักงาน"
                     variant="bordered"
                     value={filters.userName}
@@ -134,9 +128,7 @@ export default function AttendanceDetailPage() {
                     size="sm"
                     radius="sm"
                     name="userName"
-                    // label="ค้นหาด้วยตำแหน่งพนักงาน"
-                    // labelPlacement="outside"
-                    placeholder="เลือกตำแหน่ง"
+                    placeholder="เลือกสถานะ"
                     variant="bordered"
                     value={filters.userName}
                     onChange={(e) => onInputChange('userName', e.target.value)}
@@ -152,8 +144,6 @@ export default function AttendanceDetailPage() {
                     name=""
                     variant="bordered"
                     selectorButtonPlacement="start"
-                    // label="ค้นหาด้วยวันที่"
-                    // labelPlacement="outside"
                   />
                 </div>
                 <TablePagination
@@ -178,24 +168,10 @@ export default function AttendanceDetailPage() {
   );
 }
 
-const monthlyRates = [
-  { month: 'Jan', rate: 50 },
-  { month: 'Feb', rate: 60 },
-  { month: 'Mar', rate: 45 },
-  { month: 'Apr', rate: 70 },
-  { month: 'May', rate: 80 },
-  { month: 'Jun', rate: 75 },
-];
-
 const columns = [
   {
     title: 'ชื่อพนักงาน',
     dataIndex: 'userName',
-    align: 'left',
-  },
-  {
-    title: 'ข้อมูลการทำงาน',
-    dataIndex: 'prefix',
     align: 'left',
   },
   {
@@ -204,8 +180,18 @@ const columns = [
     align: 'center',
   },
   {
-    title: 'วันที่',
+    title: 'กิจกรรม',
+    dataIndex: 'action',
+    align: 'center',
+  },
+  {
+    title: 'บันทึกเมื่อวันที่',
     dataIndex: 'date',
+    align: 'left',
+  },
+  {
+    title: 'เวลาที่บันทึก	',
+    dataIndex: 'timeDate',
     align: 'left',
   },
 ];
@@ -216,14 +202,18 @@ const mockItems = [
     userName: 'สมชาย ใจดี',
     prefix: 'rome',
     status: 'เข้างาน',
-    date: '2025-02-01',
+    date: '02-01-2025',
+    timeDate: '09:00',
+    action: 'in',
   },
   {
     id: 2,
     userName: 'สมชาย ใจดี',
     prefix: 'rome',
-    status: 'สาย',
+    status: 'เข้างานสาย',
     date: '2025-02-02',
+    timeDate: '09:00',
+    action: 'in',
   },
   {
     id: 3,
@@ -231,13 +221,17 @@ const mockItems = [
     prefix: 'rome',
     status: 'ออกก่อนเวลา',
     date: '2025-02-03',
+    timeDate: '09:00',
+    action: 'out',
   },
   {
     id: 4,
     userName: 'สมชาย ใจดี',
     prefix: 'rome',
-    status: 'เข้างาน',
+    status: 'เข้างานแล้ว',
     date: '2025-02-04',
+    timeDate: '09:00',
+    action: 'break',
   },
   {
     id: 5,
@@ -245,5 +239,7 @@ const mockItems = [
     prefix: 'rome',
     status: 'ขาดงาน',
     date: '2025-02-05',
+    timeDate: '09:00',
+    action: '-',
   },
 ];
