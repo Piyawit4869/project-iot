@@ -1,65 +1,66 @@
-import React from 'react';
-import { CardContent } from '@/components/ui/card';
-import * as Icons from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
-interface TimelineItem {
-  date: string;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
+interface TimelineItemProps {
+  data: {
+    time: string;
+    recorderName: string;
+    action: string;
+    date: string;
+  };
 }
 
-const timelineData: TimelineItem[] = [
-  {
-    date: 'Today',
-    title: 'Pending Approval',
-    description: 'This request requires your approval.',
-    icon: <Icons.UserRoundCheck className="text-blue-500" size={16} />,
-  },
-  {
-    date: 'May 19, 2018',
-    title: 'Approval Requested',
-    description: 'John Lloyd has requested your approval.',
-    icon: <Icons.ClockAlert className="text-blue-500" size={16} />,
-  },
-  {
-    date: '2018',
-    title: 'Request Created',
-    description: 'Request created by Kim May.',
-    icon: <Icons.MapPin className="text-blue-500" size={16} />,
-  },
-];
+const TimelineItem: React.FC<TimelineItemProps> = ({ data }) => (
+  <div className="flex items-start gap-4 p-1">
+    <div className="timeline-dot w-4 h-4 bg-green-500 rounded-full py-2" />
+    <div>
+      <p className="text-gray-700">
+        <strong>{data.action}:</strong> {data.recorderName}
+      </p>
+      <p className="text-gray-700">
+        <strong>Time:</strong> {data.time} <strong>Date:</strong> {data.date}
+      </p>
+    </div>
+  </div>
+);
 
-const TimelineComponent: React.FC = () => {
+interface TimelineProps {
+  fetchData: () => Promise<{ time: string; recorderName: string; action: string; date: string }[]>;
+}
+
+const Timeline: React.FC<TimelineProps> = ({ fetchData }) => {
+  const [timelineData, setTimelineData] = useState<
+    { time: string; recorderName: string; action: string; date: string }[]
+  >([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchTimelineData = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchData();
+        setTimelineData(data);
+      } catch (error) {
+        console.error('Error fetching timeline data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTimelineData();
+  }, [fetchData]);
+
   return (
-    <CardContent>
-      <h2 className="text-xl font-semibold text-start py-4">Timeline</h2>
-      {/* Vertical line */}
-      {/* <div className="absolute left-4 top-0 h-full border-l-2 border-gray-200" /> */}
-
-      {timelineData.map((item, index) => (
-        <div key={index} className="flex items-start space-x-4 py-1">
-          {/* Icon with connecting line */}
-          <div className="relative flex items-center">
-            <div className="z-10 flex items-center justify-center w-8 h-8 bg-white border-2 border-blue-500 rounded-full">
-              {item.icon}
-            </div>
-            {/* Connecting line for icons, except the last one */}
-            {index !== timelineData.length - 1 && (
-              <div className="absolute top-8 left-1/2 w-[2px] h-full bg-gray-200" />
-            )}
-          </div>
-
-          {/* Timeline content */}
-          <div className="text-xs">
-            <p className="text-xs text-gray-500">{item.date}</p>
-            <p className="font-medium text-gray-900">{item.title}</p>
-            <p className="text-xs text-gray-600">{item.description}</p>
-          </div>
-        </div>
-      ))}
-    </CardContent>
+    <div className="p-6">
+      <h2 className="text-lg font-semibold mb-4">Timeline</h2>
+      {loading ? (
+        <p className="text-gray-500">Loading...</p>
+      ) : timelineData.length > 0 ? (
+        timelineData.map((item, index) => <TimelineItem key={index} data={item} />)
+      ) : (
+        <p className="text-gray-500">No timeline data available.</p>
+      )}
+    </div>
   );
 };
 
-export default TimelineComponent;
+export default Timeline;

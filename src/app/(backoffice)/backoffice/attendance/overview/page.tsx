@@ -1,20 +1,25 @@
 'use client';
 
+//System
 import React from 'react';
 import debounce from 'lodash/debounce';
-import { TopSection } from '@/components/common/topSection';
-import { DatePicker, Input, Select, SelectItem } from '@nextui-org/react';
+//API
 import pagination from '@/pages/api/workinfos/pagination';
+import { getAttendance } from '@/pages/api/attendances/get';
 import { getAll } from '@/pages/api/user/getAll';
-import { TablePagination } from '@/components/common/tablePagination';
+//Helper function
 import { formatDate } from '@/utils/enums/date';
-import 'react-vertical-timeline-component/style.min.css';
+//Component
 import Scaffold from '@/components/common/scaffold';
-import * as Icons from 'lucide-react';
+import { TopSection } from '@/components/common/topSection';
+import { TablePagination } from '@/components/common/tablePagination';
+import { DatePicker, Input, Select, SelectItem } from '@nextui-org/react';
 import TimelineComponent from '@/components/backoffice/timeline';
 import ChartComponent from '@/components/backoffice/garphRateAll';
 import WeeklyAttendanceChart from '@/components/backoffice/garphRateDepartment';
 import EmAttendanceCard from '@/components/backoffice/cardAttedanceEm';
+//Icon
+import * as Icons from 'lucide-react';
 interface FilterState {
   userName: string;
 }
@@ -51,49 +56,19 @@ interface AttendanceItem {
   };
 }
 
-const columns = [
-  {
-    title: 'ชื่อพนักงาน',
-    dataIndex: 'userName',
-    link: '/backoffice/attendance/overview',
-    align: 'left',
-    render: (_: any, record: any) => {
-      return <span>{record?.user?.userName}</span>;
-    },
-  },
-  { title: 'คำนำหน้า', dataIndex: 'prefix' },
-  { title: 'สถานะ', dataIndex: 'status' },
-  { title: 'คำอธิบายงาน', dataIndex: 'descriptions' },
-  { title: 'ความสำคัญ', dataIndex: 'priority' },
-  { title: 'วันที่เริ่มต้น', dataIndex: 'startDate' },
-  { title: 'วันสิ้นสุด', dataIndex: 'dueDate' },
-  { title: 'เวลาจำกัดต่อวัน', dataIndex: 'limitTimePerDay' },
-  { title: 'ผู้ตรวจสอบ', dataIndex: 'inspector' },
-  { title: 'เครดิตเริ่มต้น', dataIndex: 'startCredit' },
-  { title: 'เครดิตรวม', dataIndex: 'totalCredit' },
-  { title: 'ชั่วโมงทำงานรวม', dataIndex: 'totalWorkHours' },
-  { title: 'วันที่จ่ายเงิน', dataIndex: 'payDayDate' },
-  { title: 'เวลาที่จ่ายเงิน', dataIndex: 'payDayTime' },
-  { title: 'หมายเหตุ', dataIndex: 'note' },
-  { title: 'สร้างวันที่', dataIndex: 'createdAtDate' },
-  { title: 'เวลาที่สร้าง', dataIndex: 'createdAtTime' },
-];
-
 export default function AttendancesPage() {
   const [page, setPage] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [filters, setFilters] = React.useState<FilterState>({
-    userName: '',
-  });
+  const [filters, setFilters] = React.useState<FilterState>({ userName: '' });
   const [items, setItems] = React.useState<AttendanceItem[]>([]);
+  const [userList, setUserList] = React.useState<any[]>([]);
   const [meta, setMeta] = React.useState<MetaData>({
     totalItems: 0,
     itemsPerPage: 10,
     totalPages: 0,
     currentPage: 1,
   });
-  const [userList, setUserList] = React.useState<any[]>([]);
 
   React.useEffect(() => {
     const fetchAttendances = async () => {
@@ -143,7 +118,7 @@ export default function AttendancesPage() {
     const fetchUsers = async () => {
       try {
         const response = await getAll();
-        console.log('API Response:', response); // ตรวจสอบข้อมูลที่ได้จาก API
+        console.log('API Response:', response);
         setUserList(response.data || []);
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -151,7 +126,32 @@ export default function AttendancesPage() {
     };
 
     fetchUsers();
-    console.log('name', fetchUsers);
+  }, []);
+
+  const fetchTimelineData = React.useCallback(async () => {
+    try {
+      const response = await getAttendance();
+
+      // Log response for verification
+      console.log('Raw API Response:', response);
+
+      // Ensure the response structure is valid
+      if (response && Array.isArray(response.items)) {
+        // Map the data to the format needed by the timeline
+        return response.items.map((item: any) => ({
+          time: item.stamp || 'N/A', // Use `stamp` for the time
+          recorderName: item.note || 'Unknown', // Use `note` as the recorder's name (adjust if needed)
+          action: item.action || 'N/A', // Use `action` for the timeline event
+          date: item.currentDate?.split('T')[0] || '', // Extract the date from `currentDate`
+        }));
+      } else {
+        console.error('Invalid response structure:', response);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching timeline data:', error);
+      return [];
+    }
   }, []);
 
   const handleFilterChange = React.useCallback((updatedFilters: any) => {
@@ -165,6 +165,7 @@ export default function AttendancesPage() {
     const updatedFilters = { ...filters, [key]: value };
     handleFilterChange(updatedFilters);
   };
+
 
   return (
     <div>
@@ -181,7 +182,7 @@ export default function AttendancesPage() {
               </div>
               <div className="col-span-2">
                 <div className=" flex space-x-8 mt-8 bg-white rounded-xl  h-[90%] shadow">
-                  <TimelineComponent />
+                  <TimelineComponent fetchData={fetchTimelineData} />
                 </div>
               </div>
             </div>
@@ -271,3 +272,31 @@ export default function AttendancesPage() {
     </div>
   );
 }
+
+const columns = [
+  {
+    title: 'ชื่อพนักงาน',
+    dataIndex: 'userName',
+    link: '/backoffice/attendance/overview',
+    align: 'left',
+    render: (_: any, record: any) => {
+      return <span>{record?.user?.userName}</span>;
+    },
+  },
+  { title: 'คำนำหน้า', dataIndex: 'prefix' },
+  { title: 'สถานะ', dataIndex: 'status' },
+  { title: 'คำอธิบายงาน', dataIndex: 'descriptions' },
+  { title: 'ความสำคัญ', dataIndex: 'priority' },
+  { title: 'วันที่เริ่มต้น', dataIndex: 'startDate' },
+  { title: 'วันสิ้นสุด', dataIndex: 'dueDate' },
+  { title: 'เวลาจำกัดต่อวัน', dataIndex: 'limitTimePerDay' },
+  { title: 'ผู้ตรวจสอบ', dataIndex: 'inspector' },
+  { title: 'เครดิตเริ่มต้น', dataIndex: 'startCredit' },
+  { title: 'เครดิตรวม', dataIndex: 'totalCredit' },
+  { title: 'ชั่วโมงทำงานรวม', dataIndex: 'totalWorkHours' },
+  { title: 'วันที่จ่ายเงิน', dataIndex: 'payDayDate' },
+  { title: 'เวลาที่จ่ายเงิน', dataIndex: 'payDayTime' },
+  { title: 'หมายเหตุ', dataIndex: 'note' },
+  { title: 'สร้างวันที่', dataIndex: 'createdAtDate' },
+  { title: 'เวลาที่สร้าง', dataIndex: 'createdAtTime' },
+];
