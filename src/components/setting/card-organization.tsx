@@ -30,7 +30,7 @@ export const CardControl = ({
           name={name}
           className="mt-3"
           color="secondary"
-          checked={isSelected}
+          isSelected={isSelected}
           onChange={(e) => {
             if (onChange) {
               onChange(e as any);

@@ -17,7 +17,7 @@ const translations: Record<string, string> = {
   revenue: 'รายได้',
   expenses: 'รายจ่าย',
   analysis: 'วิเคราะห์',
-  attendance: 'การเข้าทำงาน',
+  attendance: 'กิจกรรมการทำงาน',
   overview: 'ภาพรวมการเข้าทำงาน',
   'work-infomation': 'ข้อมูลการทำงาน',
   whitelist: 'การเข้าใช้งาน',

@@ -7,7 +7,7 @@ import React from 'react';
 import { toast } from 'sonner';
 import { useParams, useRouter } from 'next/navigation';
 import { deleteemployeeRole } from '@/pages/api/employeeRole/delete';
-// import { updateemployeeRole } from '@/pages/api/employeeRole/update';
+import { updateemployeeRole } from '@/pages/api/employeeRole/update';
 import getemployeeRole from '@/pages/api/employeeRole/get';
 
 export default function RoleCreatePage() {
@@ -60,12 +60,12 @@ export default function RoleCreatePage() {
     }
 
     try {
-      // const payload = {
-      //   ...formData,
-      // };
+      const payload = {
+        ...formData,
+      };
 
       // 🔹 Send data to API
-      // const data = await updateemployeeRole({}, payload, params?.slug);
+      await updateemployeeRole({}, payload, params?.slug);
 
       toast.success('🎉 แก้ไขตำแหน่งเรียบร้อย!', {
         duration: 3000,
@@ -94,7 +94,7 @@ export default function RoleCreatePage() {
         style: { fontFamily: 'var(--font-ibm-sans)' },
       });
 
-      router.push(`/backoffice/role`);
+      router.push(`/backoffice/employeeRole`);
     } catch (error) {
       toast.error('❌ ไม่สามารถลบข้อมูลตำแหน่งได้', {
         duration: 3000,

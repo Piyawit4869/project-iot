@@ -2,12 +2,13 @@
 
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
-// import debounce from 'lodash/debounce';
+import Image from 'next/image';
 import { TopSection } from '@/components/common/topSection';
 import Link from 'next/link';
 import { Button, Chip } from '@nextui-org/react';
 import { TablePagination } from '@/components/common/tablePagination';
 import pagination from '@/pages/api/user/pagination';
+import * as Icons from 'lucide-react';
 
 export default function IndexPage() {
   const [page, setPage] = React.useState(1);
@@ -94,9 +95,18 @@ export default function IndexPage() {
 const columns = [
   {
     title: 'รูปภาพ',
+    align: 'center',
     dataIndex: 'image',
-    render: () => {
-      return '-';
+    render: (_: any, record: any) => {
+      return (
+        <Image
+          className="rounded-md"
+          src={record.profile.photoUrl || '/images/default-profile.png'}
+          alt="User profile photo"
+          width={50}
+          height={50}
+        />
+      );
     },
   },
   {
@@ -136,6 +146,18 @@ const columns = [
       <Chip color="success" variant="bordered">
         พร้อมใช้งาน
       </Chip>
+    ),
+  },
+  {
+    title: '',
+    dataIndex: 'edit',
+    align: 'center',
+    render: (_: any, record: any) => (
+      <Link href={`/backoffice/user/${record.id}`}>
+        <Button className="bg-accent3 text-white" size="sm">
+          <Icons.PencilLine />
+        </Button>
+      </Link>
     ),
   },
 ];

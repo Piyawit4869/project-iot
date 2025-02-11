@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation';
 import paginationRoles from '@/pages/api/role/pagination';
 import paginationEmployeeRole from '@/pages/api/employeeRole/pagination';
 import { useClientSession } from '@/libs/auth';
+import { Upload } from '@/components/backoffice/upload';
 
 export default function CreateUserPage() {
   const [page] = React.useState(1);
@@ -30,6 +31,7 @@ export default function CreateUserPage() {
   const [roleSelect, setRoleSelect] = React.useState<string>('');
   const [employeeRoleSelect, setEmployeeRoleSelect] =
     React.useState<string>('');
+  const [uploadImg, setUploadImg] = React.useState('') as any;
   const router = useRouter();
 
   const me = useClientSession();
@@ -57,6 +59,10 @@ export default function CreateUserPage() {
 
   const handleEmployeeRoleChange = (value: string) => {
     setEmployeeRoleSelect(value);
+  };
+
+  const handleUpload = (url: string) => {
+    setUploadImg(url);
   };
 
   const selectedRole = role.find((item: any) => item.id === roleSelect);
@@ -119,15 +125,15 @@ export default function CreateUserPage() {
         roleId: roleSelect,
         employeeRoleId: employeeRoleSelect,
         branchId: me?.branchId,
-        // organizationId: me?.organizationId,
         profile: {
           prefix: formData.prefix,
           firstName: formData.firstName,
           lastName: formData.lastName,
-          firstNameEn: formData.firstNameEn,
-          lastNameEn: formData.lastNameEn,
+          firstNameTh: formData.firstNameTh,
+          lastNameTh: formData.lastNameTh,
           birthDate: formData.birthDate,
           phone: formData.phone,
+          photoUrl: uploadImg,
         },
       };
 
@@ -196,13 +202,11 @@ export default function CreateUserPage() {
                         </h1>
                         <div className="font-bold text-headFon mt-10">
                           <span>รูปภาพผู้ใช้งาน</span>
-                          {/* <Image
-                            className="mt-3"
-                            src={'/logo.png'}
-                            alt="User Image"
-                            width={100}
-                            height={100}
-                          /> */}
+                          <Upload
+                            className="mt-4"
+                            imageUrl={formData.photoUrl}
+                            onUpload={handleUpload}
+                          />
                         </div>
                       </div>
                       <div className="flex gap-4 mt-6">
@@ -342,7 +346,7 @@ export default function CreateUserPage() {
                           className="flex-1"
                           label={<span className="text-headFont">ชื่อ</span>}
                           labelPlacement="outside"
-                          name="firstName"
+                          name="firstNameTh"
                           placeholder="กรอกชื่อ"
                           onChange={handleChange}
                           isRequired
@@ -354,7 +358,7 @@ export default function CreateUserPage() {
                           className="flex-1"
                           label={<span className="text-headFont">นามสกุล</span>}
                           labelPlacement="outside"
-                          name="lastName"
+                          name="lastNameTh"
                           placeholder="กรอกชื่อ"
                           onChange={handleChange}
                           isRequired
@@ -370,7 +374,7 @@ export default function CreateUserPage() {
                             </span>
                           }
                           labelPlacement="outside"
-                          name="firstNameEn"
+                          name="firstName"
                           placeholder="กรอกชื่อภาษาอังกฤษ"
                           onChange={handleChange}
                           isRequired
@@ -385,7 +389,7 @@ export default function CreateUserPage() {
                             </span>
                           }
                           labelPlacement="outside"
-                          name="lastNameEn"
+                          name="lastName"
                           placeholder="กรอกนามสกุลภาษาอังกฤษ"
                           onChange={handleChange}
                           isRequired
