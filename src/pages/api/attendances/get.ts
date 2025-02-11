@@ -27,7 +27,7 @@ export default async function getSingleAttendance(id: string): Promise<any> {
 }
 
 export async function getAttendance() {
-  const url = `${base_url}/crud/attendances/`;
+  const url = `${base_url}/crud/attendances`;
   const auth = await getServerSession();
 
   const data = await fetch(url, {
