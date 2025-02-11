@@ -132,17 +132,14 @@ export default function AttendancesPage() {
     try {
       const response = await getAttendance();
 
-      // Log response for verification
       console.log('Raw API Response:', response);
 
-      // Ensure the response structure is valid
-      if (response && Array.isArray(response.items)) {
-        // Map the data to the format needed by the timeline
+      if (response && Array.isArray(timeline)) {
         return response.items.map((item: any) => ({
-          time: item.stamp || 'N/A', // Use `stamp` for the time
-          recorderName: item.note || 'Unknown', // Use `note` as the recorder's name (adjust if needed)
-          action: item.action || 'N/A', // Use `action` for the timeline event
-          date: item.currentDate?.split('T')[0] || '', // Extract the date from `currentDate`
+          recorderName: item.note || 'Undefind',
+          action: item.action || 'N/A',
+          time: formatDate(item.stamp).time || 'N/A',
+          date: formatDate(item.stamp).date || '',
         }));
       } else {
         console.error('Invalid response structure:', response);
@@ -165,7 +162,6 @@ export default function AttendancesPage() {
     const updatedFilters = { ...filters, [key]: value };
     handleFilterChange(updatedFilters);
   };
-
 
   return (
     <div>
@@ -299,4 +295,159 @@ const columns = [
   { title: 'หมายเหตุ', dataIndex: 'note' },
   { title: 'สร้างวันที่', dataIndex: 'createdAtDate' },
   { title: 'เวลาที่สร้าง', dataIndex: 'createdAtTime' },
+];
+
+const timeline = [
+  {
+    success: true,
+    items: [
+      {
+        id: '1d7a16e5-1bea-407c-aaa2-38faf28fc7ef',
+        createdAt: '2025-02-11T05:58:45.171Z',
+        updatedAt: '2025-02-11T05:58:45.171Z',
+        deletedAt: null,
+        status: 'On time',
+        action: 'in',
+        active: true,
+        currentDate: '2025-02-10T17:00:00.000Z',
+        stamp: '2025-02-11T05:58:45.060Z',
+        reasons: null,
+        note: null,
+        workInfoId: '594de15f-74ad-4fb6-96ad-96fe0c234c14',
+      },
+      {
+        id: '5376e1e5-df30-43f9-a894-f9038b1560d2',
+        createdAt: '2025-02-11T05:40:17.997Z',
+        updatedAt: '2025-02-11T05:58:45.136Z',
+        deletedAt: null,
+        status: 'Out break',
+        action: 'break',
+        active: false,
+        currentDate: '2025-02-10T17:00:00.000Z',
+        stamp: '2025-02-11T05:40:17.886Z',
+        reasons: null,
+        note: null,
+        workInfoId: '594de15f-74ad-4fb6-96ad-96fe0c234c14',
+      },
+      {
+        id: '91e7094a-96bc-4f6e-bf64-1af7ee986de1',
+        createdAt: '2025-02-11T05:40:13.226Z',
+        updatedAt: '2025-02-11T05:58:45.136Z',
+        deletedAt: null,
+        status: 'On time',
+        action: 'in',
+        active: false,
+        currentDate: '2025-02-10T17:00:00.000Z',
+        stamp: '2025-02-11T05:40:13.112Z',
+        reasons: null,
+        note: null,
+        workInfoId: '594de15f-74ad-4fb6-96ad-96fe0c234c14',
+      },
+      {
+        id: '7d521484-f0fc-444a-9834-869477f71e0b',
+        createdAt: '2025-02-11T05:34:48.949Z',
+        updatedAt: '2025-02-11T05:58:45.136Z',
+        deletedAt: null,
+        status: 'Out break',
+        action: 'break',
+        active: false,
+        currentDate: '2025-02-10T17:00:00.000Z',
+        stamp: '2025-02-11T05:34:48.837Z',
+        reasons: null,
+        note: null,
+        workInfoId: '594de15f-74ad-4fb6-96ad-96fe0c234c14',
+      },
+      {
+        id: 'ee757ed0-3422-4372-bc45-c9fc0e28721c',
+        createdAt: '2025-02-11T05:34:43.911Z',
+        updatedAt: '2025-02-11T05:58:45.136Z',
+        deletedAt: null,
+        status: 'On time',
+        action: 'in',
+        active: false,
+        currentDate: '2025-02-10T17:00:00.000Z',
+        stamp: '2025-02-11T05:34:43.793Z',
+        reasons: null,
+        note: null,
+        workInfoId: '594de15f-74ad-4fb6-96ad-96fe0c234c14',
+      },
+      {
+        id: 'c10ea0e5-6aed-498d-bd51-5acea38d289d',
+        createdAt: '2025-02-11T05:13:25.006Z',
+        updatedAt: '2025-02-11T05:58:45.136Z',
+        deletedAt: null,
+        status: 'Out break',
+        action: 'break',
+        active: false,
+        currentDate: '2025-02-10T17:00:00.000Z',
+        stamp: '2025-02-11T05:13:24.889Z',
+        reasons: null,
+        note: null,
+        workInfoId: '594de15f-74ad-4fb6-96ad-96fe0c234c14',
+      },
+      {
+        id: '3d0a7457-39d0-4d3a-b91d-3dbce323ad73',
+        createdAt: '2025-02-11T04:12:09.975Z',
+        updatedAt: '2025-02-11T05:58:45.136Z',
+        deletedAt: null,
+        status: 'On time',
+        action: 'in',
+        active: false,
+        currentDate: '2025-02-10T17:00:00.000Z',
+        stamp: '2025-02-11T04:12:09.862Z',
+        reasons: null,
+        note: null,
+        workInfoId: '594de15f-74ad-4fb6-96ad-96fe0c234c14',
+      },
+      {
+        id: 'b7b46de8-97cd-4449-b2cb-c69ec8a3060f',
+        createdAt: '2025-02-11T04:12:07.095Z',
+        updatedAt: '2025-02-11T05:58:45.136Z',
+        deletedAt: null,
+        status: 'Out break',
+        action: 'break',
+        active: false,
+        currentDate: '2025-02-10T17:00:00.000Z',
+        stamp: '2025-02-11T04:12:06.982Z',
+        reasons: null,
+        note: null,
+        workInfoId: '594de15f-74ad-4fb6-96ad-96fe0c234c14',
+      },
+      {
+        id: '8c85afca-71c4-4b6c-bdec-f83ec2679581',
+        createdAt: '2025-02-11T04:11:46.141Z',
+        updatedAt: '2025-02-11T05:58:45.136Z',
+        deletedAt: null,
+        status: 'On time',
+        action: 'in',
+        active: false,
+        currentDate: '2025-02-10T17:00:00.000Z',
+        stamp: '2025-02-11T04:11:46.007Z',
+        reasons: null,
+        note: null,
+        workInfoId: '594de15f-74ad-4fb6-96ad-96fe0c234c14',
+      },
+      {
+        id: '9acd9501-e7e2-4c01-817a-ee2650082891',
+        createdAt: '2025-02-11T04:11:44.248Z',
+        updatedAt: '2025-02-11T05:58:45.136Z',
+        deletedAt: null,
+        status: 'Out break',
+        action: 'break',
+        active: false,
+        currentDate: '2025-02-10T17:00:00.000Z',
+        stamp: '2025-02-11T04:11:44.135Z',
+        reasons: null,
+        note: null,
+        workInfoId: '594de15f-74ad-4fb6-96ad-96fe0c234c14',
+      },
+    ],
+    meta: {
+      totalItems: 1015,
+      itemCount: 10,
+      itemsPerPage: 10,
+      totalPages: 102,
+      currentPage: 1,
+    },
+  },
 ];
