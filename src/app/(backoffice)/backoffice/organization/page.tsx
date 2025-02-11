@@ -5,7 +5,7 @@ import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import InputSystem from './components/system/InputSystem';
 import Inputorganization from './components/Inputorganization';
-import InputAddressProps from './components/InputAddress';
+import InputAddressProps from './components/addresses/InputAddress';
 import Link from 'next/link';
 import * as Icon from '@ant-design/icons';
 import {
@@ -31,6 +31,9 @@ import { toast } from 'sonner';
 import { TablePagination } from '@/components/common/tablePagination';
 import InputBranch from './components/InputBranch';
 import InputTime from './components/system/inputTime';
+import AddressTable from './components/addresses/addressTable';
+// import Map from '@/components/map/map';
+import LongdoMapPage from './components/addresses/addressMap';
 // import { updatesystem } from '@/pages/api/organization/updata';
 
 export default function OraganizationPage() {
@@ -689,1096 +692,1124 @@ export default function OraganizationPage() {
 
                     {/* Setting Address */}
                     <Tab key="address" title="ข้อมูลที่อยู่">
-                      <div>
-                        <div className="flex justify-between p-6">
-                          <h1 className="text-2xl font-bold text-headFont">
-                            ข้อมูลที่อยู่องค์กร
-                          </h1>
-                          <div className="mr-10">
-                            <Button
-                              className="bg-accent3 text-white mr-3"
-                              onClick={toggleInput}
-                            >
-                              แก้ไข
-                            </Button>
-                            <Button
-                              className="bg-accent1 text-white"
-                              onPress={openAddress}
-                            >
-                              ดูที่อยู่ทั้งหมด
-                            </Button>
-                          </div>
+                      <div className="flex space-x-4">
+                        <CardComponent
+                          className={'basis-2/3'}
+                          customCard
+                          custom={
+                            <div className="p-2">
+                              <div className="flex justify-between">
+                                <h1 className="text-2xl font-bold text-headFont">
+                                  ข้อมูลที่อยู่องค์กร
+                                </h1>
+                                <div className="mr-10">
+                                  <Button
+                                    className="bg-accent3 text-white mr-3"
+                                    onClick={toggleInput}
+                                  >
+                                    แก้ไข
+                                  </Button>
+                                  <Button
+                                    className="bg-accent1 text-white"
+                                    onPress={openAddress}
+                                  >
+                                    ดูที่อยู่ทั้งหมด
+                                  </Button>
+                                </div>
 
-                          <Modal
-                            size="5xl"
-                            isOpen={isOpenAddress}
-                            onOpenChange={onChange1}
-                          >
-                            <ModalContent>
-                              {() => (
-                                <>
-                                  <ModalHeader className="flex flex-col-1 gap-1">
-                                    ที่อยู่ทั้งหมด
-                                  </ModalHeader>
-                                  <ModalBody>
-                                    <div>
-                                      <Button
-                                        className="bg-accent1 text-white"
-                                        onPress={openAddress1}
-                                      >
-                                        สร้างที่อยู่ใหม่
-                                      </Button>
-                                    </div>
-                                    <div className="mb-4">
-                                      <TablePagination
-                                        initialRows={dataAddress}
-                                        initialMeta={meta}
-                                        rowsPerPage={rowsPerPage}
-                                        columns={columns}
-                                        onPageChange={(newPage) =>
-                                          setPage(newPage)
-                                        }
-                                        onRowsPerPageChange={(newRowsPerPage) =>
-                                          setRowsPerPage(newRowsPerPage)
-                                        }
-                                      />
-                                    </div>
-                                  </ModalBody>
-                                </>
-                              )}
-                            </ModalContent>
-                          </Modal>
-
-                          <Modal
-                            size="5xl"
-                            className="height-500"
-                            isOpen={isOpenAddress1}
-                            onOpenChange={onChange2}
-                          >
-                            <ModalContent>
-                              {() => (
-                                <>
-                                  <ModalHeader className="flex flex-col gap-1">
-                                    สร้างที่อยู่ใหม่
-                                  </ModalHeader>
-                                  <ModalBody>
-                                    <Form
-                                      id="create-address"
-                                      onSubmit={onSubmit}
-                                      method="post"
-                                    >
-                                      <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ชื่อที่อยู่
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="AddressName"
-                                            placeholder="ชื่อที่อยู่"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                เมือง
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="city"
-                                            placeholder="ชื่อเมือง"
-                                          />
-                                        </div>
-
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                จังหวัด
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="province"
-                                            placeholder="ชื่อจังหวัด"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                รหัสไปรษณีย์
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="zipcode"
-                                            placeholder="ชื่อรหัสไปรษณีย์"
-                                          />
-                                        </div>
-
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                เลขห้อง
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="Roomnumber"
-                                            placeholder="เลขห้อง"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ชั้นที่อยู่
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="floor"
-                                            placeholder="ชั้นที่อยู่"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                หมู่บ้าน
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="village"
-                                            placeholder="หมู่บ้าน"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                เลขหมู่บ้าน
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="Villagenumber"
-                                            placeholder="เลขหมู่บ้าน"
-                                          />
-                                        </div>
-
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                บ้านเลขที่
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="housenumber"
-                                            placeholder="บ้านเลขที่"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ตรอก
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="alley"
-                                            placeholder="ตรอก"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ถนน
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="road"
-                                            placeholder="ถนน"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                อาคาร
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="building"
-                                            placeholder="อาคาร"
-                                          />
-                                        </div>
-
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ประเทศ
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="country"
-                                            placeholder="ประเทศ"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                เขต/อำเภอ
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="district"
-                                            placeholder="เขต/อำเภอ"
-                                          />
-                                        </div>
-                                        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                                          <div className="flex gap-4 mt-6">
-                                            <Input
-                                              className="flex-1"
-                                              label={
-                                                <span className="text-headFont">
-                                                  แขวง/ตำบล
-                                                </span>
-                                              }
-                                              labelPlacement="outside"
-                                              name="subdistrict"
-                                              placeholder="แขวง/ตำบล"
-                                            />
+                                <Modal
+                                  isOpen={isOpenAddress}
+                                  onOpenChange={onChange1}
+                                  scrollBehavior="inside"
+                                  size="5xl"
+                                >
+                                  <ModalContent>
+                                    {() => (
+                                      <>
+                                        <ModalHeader className="flex flex-col-1 gap-1">
+                                          ที่อยู่ทั้งหมด
+                                        </ModalHeader>
+                                        <ModalBody>
+                                          <div>
+                                            <Button
+                                              className="bg-accent1 text-white"
+                                              onPress={openAddress1}
+                                            >
+                                              สร้างที่อยู่ใหม่
+                                            </Button>
                                           </div>
-                                          <div className="flex gap-4 mt-6">
-                                            <Textarea
-                                              classNames={{
-                                                base: '',
-                                                input: 'resize-y min-h-[50px]',
-                                              }}
-                                              name="note"
-                                              label="หมายเหตุ"
-                                              labelPlacement="outside"
-                                              placeholder="หมายเหตุ"
-                                              variant="bordered"
-                                            />
+                                          <div className="mb-4">
+                                            <AddressTable data={data} />
                                           </div>
-                                        </div>
-                                      </div>
-                                    </Form>
-                                  </ModalBody>
-                                  <ModalFooter>
-                                    <Button
-                                      className="bg-accent1 text-white"
-                                      type="submit"
-                                      form="create-address"
-                                    >
-                                      สร้าง
-                                    </Button>
-                                  </ModalFooter>
-                                </>
-                              )}
-                            </ModalContent>
-                          </Modal>
+                                        </ModalBody>
+                                      </>
+                                    )}
+                                  </ModalContent>
+                                </Modal>
 
-                          <Modal
-                            size="5xl"
-                            className="height-500"
-                            isOpen={isOpenAddress2}
-                            onOpenChange={onChange3}
-                          >
-                            <ModalContent>
-                              {() => (
-                                <>
-                                  <ModalHeader className="flex flex-col gap-1">
-                                    ที่อยู่ที่ {selectedItem?.id}
-                                  </ModalHeader>
-                                  <ModalBody>
-                                    <Form
-                                      id="edit-address"
-                                      onSubmit={onSubmit}
-                                      method="post"
-                                    >
-                                      <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ชื่อที่อยู่
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="AddressName"
-                                            placeholder="ชื่อที่อยู่"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                เมือง
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="city"
-                                            placeholder="ชื่อเมือง"
-                                          />
-                                        </div>
+                                <Modal
+                                  size="5xl"
+                                  className="height-500"
+                                  isOpen={isOpenAddress1}
+                                  onOpenChange={onChange2}
+                                >
+                                  <ModalContent>
+                                    {() => (
+                                      <>
+                                        <ModalHeader className="flex flex-col gap-1">
+                                          สร้างที่อยู่ใหม่
+                                        </ModalHeader>
+                                        <ModalBody>
+                                          <Form
+                                            id="create-address"
+                                            onSubmit={onSubmit}
+                                            method="post"
+                                          >
+                                            <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
+                                              <div className="flex gap-4 mt-6">
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      ชื่อที่อยู่
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="AddressName"
+                                                  placeholder="ชื่อที่อยู่"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      เมือง
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="city"
+                                                  placeholder="ชื่อเมือง"
+                                                />
+                                              </div>
 
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                จังหวัด
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="province"
-                                            placeholder="ชื่อจังหวัด"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                รหัสไปรษณีย์
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="zipcode"
-                                            placeholder="ชื่อรหัสไปรษณีย์"
-                                          />
-                                        </div>
+                                              <div className="flex gap-4 mt-6">
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      จังหวัด
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="province"
+                                                  placeholder="ชื่อจังหวัด"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      รหัสไปรษณีย์
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="zipcode"
+                                                  placeholder="ชื่อรหัสไปรษณีย์"
+                                                />
+                                              </div>
 
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                เลขห้อง
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="Roomnumber"
-                                            placeholder="เลขห้อง"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ชั้นที่อยู่
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="floor"
-                                            placeholder="ชั้นที่อยู่"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                หมู่บ้าน
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="village"
-                                            placeholder="หมู่บ้าน"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                เลขหมู่บ้าน
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="Villagenumber"
-                                            placeholder="เลขหมู่บ้าน"
-                                          />
-                                        </div>
+                                              <div className="flex gap-4 mt-6">
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      เลขห้อง
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="Roomnumber"
+                                                  placeholder="เลขห้อง"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      ชั้นที่อยู่
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="floor"
+                                                  placeholder="ชั้นที่อยู่"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      หมู่บ้าน
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="village"
+                                                  placeholder="หมู่บ้าน"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      เลขหมู่บ้าน
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="Villagenumber"
+                                                  placeholder="เลขหมู่บ้าน"
+                                                />
+                                              </div>
 
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                บ้านเลขที่
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="housenumber"
-                                            placeholder="บ้านเลขที่"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ตรอก
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="alley"
-                                            placeholder="ตรอก"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ถนน
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="road"
-                                            placeholder="ถนน"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                อาคาร
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="building"
-                                            placeholder="อาคาร"
-                                          />
-                                        </div>
+                                              <div className="flex gap-4 mt-6">
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      บ้านเลขที่
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="housenumber"
+                                                  placeholder="บ้านเลขที่"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      ตรอก
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="alley"
+                                                  placeholder="ตรอก"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      ถนน
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="road"
+                                                  placeholder="ถนน"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      อาคาร
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="building"
+                                                  placeholder="อาคาร"
+                                                />
+                                              </div>
 
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ประเทศ
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="country"
-                                            placeholder="ประเทศ"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                เขต/อำเภอ
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="district"
-                                            placeholder="เขต/อำเภอ"
-                                          />
-                                        </div>
-                                        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                                          <div className="flex gap-4 mt-6">
-                                            <Input
-                                              className="flex-1"
-                                              label={
-                                                <span className="text-headFont">
-                                                  แขวง/ตำบล
-                                                </span>
-                                              }
-                                              labelPlacement="outside"
-                                              name="subdistrict"
-                                              placeholder="แขวง/ตำบล"
-                                            />
-                                          </div>
-                                          <div className="flex gap-4 mt-6">
-                                            <Textarea
-                                              classNames={{
-                                                base: '',
-                                                input: 'resize-y min-h-[50px]',
-                                              }}
-                                              name="note"
-                                              label="หมายเหตุ"
-                                              labelPlacement="outside"
-                                              placeholder="หมายเหตุ"
-                                              variant="bordered"
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </Form>
-                                  </ModalBody>
-                                  <ModalFooter>
-                                    <Button
-                                      className="bg-accent1 text-white"
-                                      type="submit"
-                                      form="edit-address"
-                                    >
-                                      แก้ไข
-                                    </Button>
-                                    <Button className="bg-accent2 text-white">
-                                      ลบ
-                                    </Button>
-                                  </ModalFooter>
-                                </>
-                              )}
-                            </ModalContent>
-                          </Modal>
-                        </div>
-                        <InputAddressProps
-                          data={data}
-                          onChange={handleUpadteForm}
-                          openEdit={openEdit}
+                                              <div className="flex gap-4 mt-6">
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      ประเทศ
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="country"
+                                                  placeholder="ประเทศ"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      เขต/อำเภอ
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="district"
+                                                  placeholder="เขต/อำเภอ"
+                                                />
+                                              </div>
+                                              <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                                                <div className="flex gap-4 mt-6">
+                                                  <Input
+                                                    className="flex-1"
+                                                    label={
+                                                      <span className="text-headFont">
+                                                        แขวง/ตำบล
+                                                      </span>
+                                                    }
+                                                    labelPlacement="outside"
+                                                    name="subdistrict"
+                                                    placeholder="แขวง/ตำบล"
+                                                  />
+                                                </div>
+                                                <div className="flex gap-4 mt-6">
+                                                  <Textarea
+                                                    classNames={{
+                                                      base: '',
+                                                      input:
+                                                        'resize-y min-h-[50px]',
+                                                    }}
+                                                    name="note"
+                                                    label="หมายเหตุ"
+                                                    labelPlacement="outside"
+                                                    placeholder="หมายเหตุ"
+                                                    variant="bordered"
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </Form>
+                                        </ModalBody>
+                                        <ModalFooter>
+                                          <Button
+                                            className="bg-accent1 text-white"
+                                            type="submit"
+                                            form="create-address"
+                                          >
+                                            สร้าง
+                                          </Button>
+                                        </ModalFooter>
+                                      </>
+                                    )}
+                                  </ModalContent>
+                                </Modal>
+
+                                <Modal
+                                  size="5xl"
+                                  className="height-500"
+                                  isOpen={isOpenAddress2}
+                                  onOpenChange={onChange3}
+                                >
+                                  <ModalContent>
+                                    {() => (
+                                      <>
+                                        <ModalHeader className="flex flex-col gap-1">
+                                          ที่อยู่ที่ {selectedItem?.id}
+                                        </ModalHeader>
+                                        <ModalBody>
+                                          <Form
+                                            id="edit-address"
+                                            onSubmit={onSubmit}
+                                            method="post"
+                                          >
+                                            <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
+                                              <div className="flex gap-4 mt-6">
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      ชื่อที่อยู่
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="AddressName"
+                                                  placeholder="ชื่อที่อยู่"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      เมือง
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="city"
+                                                  placeholder="ชื่อเมือง"
+                                                />
+                                              </div>
+
+                                              <div className="flex gap-4 mt-6">
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      จังหวัด
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="province"
+                                                  placeholder="ชื่อจังหวัด"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      รหัสไปรษณีย์
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="zipcode"
+                                                  placeholder="ชื่อรหัสไปรษณีย์"
+                                                />
+                                              </div>
+
+                                              <div className="flex gap-4 mt-6">
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      เลขห้อง
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="Roomnumber"
+                                                  placeholder="เลขห้อง"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      ชั้นที่อยู่
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="floor"
+                                                  placeholder="ชั้นที่อยู่"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      หมู่บ้าน
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="village"
+                                                  placeholder="หมู่บ้าน"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      เลขหมู่บ้าน
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="Villagenumber"
+                                                  placeholder="เลขหมู่บ้าน"
+                                                />
+                                              </div>
+
+                                              <div className="flex gap-4 mt-6">
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      บ้านเลขที่
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="housenumber"
+                                                  placeholder="บ้านเลขที่"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      ตรอก
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="alley"
+                                                  placeholder="ตรอก"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      ถนน
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="road"
+                                                  placeholder="ถนน"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      อาคาร
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="building"
+                                                  placeholder="อาคาร"
+                                                />
+                                              </div>
+
+                                              <div className="flex gap-4 mt-6">
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      ประเทศ
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="country"
+                                                  placeholder="ประเทศ"
+                                                />
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      เขต/อำเภอ
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="district"
+                                                  placeholder="เขต/อำเภอ"
+                                                />
+                                              </div>
+                                              <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                                                <div className="flex gap-4 mt-6">
+                                                  <Input
+                                                    className="flex-1"
+                                                    label={
+                                                      <span className="text-headFont">
+                                                        แขวง/ตำบล
+                                                      </span>
+                                                    }
+                                                    labelPlacement="outside"
+                                                    name="subdistrict"
+                                                    placeholder="แขวง/ตำบล"
+                                                  />
+                                                </div>
+                                                <div className="flex gap-4 mt-6">
+                                                  <Textarea
+                                                    classNames={{
+                                                      base: '',
+                                                      input:
+                                                        'resize-y min-h-[50px]',
+                                                    }}
+                                                    name="note"
+                                                    label="หมายเหตุ"
+                                                    labelPlacement="outside"
+                                                    placeholder="หมายเหตุ"
+                                                    variant="bordered"
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </Form>
+                                        </ModalBody>
+                                        <ModalFooter>
+                                          <Button
+                                            className="bg-accent1 text-white"
+                                            type="submit"
+                                            form="edit-address"
+                                          >
+                                            แก้ไข
+                                          </Button>
+                                          <Button className="bg-accent2 text-white">
+                                            ลบ
+                                          </Button>
+                                        </ModalFooter>
+                                      </>
+                                    )}
+                                  </ModalContent>
+                                </Modal>
+                              </div>
+
+                              <InputAddressProps
+                                data={data}
+                                onChange={handleUpadteForm}
+                                openEdit={openEdit}
+                              />
+                            </div>
+                          }
+                        />
+                        <CardComponent
+                          className={'basis-1/3'}
+                          customCard
+                          custom={
+                            <div className="p-2">
+                              <div>
+                                <LongdoMapPage />
+                              </div>
+                            </div>
+                          }
                         />
                       </div>
                     </Tab>
 
                     {/* setting Branch */}
                     <Tab key="branch" title="ข้อมูลสาขา">
-                      <div>
-                        <div className="flex justify-between p-6">
-                          <h1 className="text-2xl font-bold text-headFont">
-                            ข้อมูลสาขา
-                          </h1>
-                          <div className="mr-10">
-                            <Button
-                              className="bg-accent3 text-white mr-3"
-                              onClick={toggleInput}
-                            >
-                              แก้ไข
-                            </Button>
-                          </div>
+                      <CardComponent
+                        className={'basis-2/3'}
+                        customCard
+                        custom={
+                          <div>
+                            <div className="flex justify-between p-6">
+                              <h1 className="text-2xl font-bold text-headFont">
+                                ข้อมูลสาขา
+                              </h1>
+                              <div className="mr-10">
+                                <Button
+                                  className="bg-accent3 text-white mr-3"
+                                  onClick={toggleInput}
+                                >
+                                  แก้ไข
+                                </Button>
+                              </div>
 
-                          <Modal
-                            size="5xl"
-                            isOpen={isOpenAddress}
-                            onOpenChange={onChange1}
-                          >
-                            <ModalContent>
-                              {() => (
-                                <>
-                                  <ModalHeader className="flex flex-col-1 gap-1">
-                                    ที่อยู่ทั้งหมด
-                                  </ModalHeader>
-                                  <ModalBody>
-                                    <div>
-                                      <Button
-                                        className="bg-accent1 text-white"
-                                        onPress={openAddress1}
-                                      >
-                                        สร้างที่อยู่ใหม่
-                                      </Button>
-                                    </div>
-                                    <div className="mb-4">
-                                      {/* <NextTable
+                              <Modal
+                                size="5xl"
+                                isOpen={isOpenAddress}
+                                onOpenChange={onChange1}
+                              >
+                                <ModalContent>
+                                  {() => (
+                                    <>
+                                      <ModalHeader className="flex flex-col-1 gap-1">
+                                        ที่อยู่ทั้งหมด
+                                      </ModalHeader>
+                                      <ModalBody>
+                                        <div>
+                                          <Button
+                                            className="bg-accent1 text-white"
+                                            onPress={openAddress1}
+                                          >
+                                            สร้างที่อยู่ใหม่
+                                          </Button>
+                                        </div>
+                                        <div className="mb-4">
+                                          {/* <NextTable
                                             columns={columns}
                                             rows={dataAddress}
                                             rowClickHandler={handleRowAddress}
                                           /> */}
-                                      <TablePagination
-                                        initialRows={dataAddress}
-                                        initialMeta={meta}
-                                        rowsPerPage={rowsPerPage}
-                                        columns={columns}
-                                        onPageChange={(newPage) =>
-                                          setPage(newPage)
-                                        }
-                                        onRowsPerPageChange={(newRowsPerPage) =>
-                                          setRowsPerPage(newRowsPerPage)
-                                        }
-                                      />
-                                    </div>
-                                  </ModalBody>
-                                </>
-                              )}
-                            </ModalContent>
-                          </Modal>
-
-                          <Modal
-                            size="5xl"
-                            className="height-500"
-                            isOpen={isOpenAddress1}
-                            onOpenChange={onChange2}
-                          >
-                            <ModalContent>
-                              {() => (
-                                <>
-                                  <ModalHeader className="flex flex-col gap-1">
-                                    สร้างที่อยู่ใหม่
-                                  </ModalHeader>
-                                  <ModalBody>
-                                    <Form
-                                      id="create-address"
-                                      onSubmit={onSubmit}
-                                      method="post"
-                                    >
-                                      <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ชื่อที่อยู่
-                                              </span>
+                                          <TablePagination
+                                            initialRows={dataAddress}
+                                            initialMeta={meta}
+                                            rowsPerPage={rowsPerPage}
+                                            columns={columns}
+                                            onPageChange={(newPage) =>
+                                              setPage(newPage)
                                             }
-                                            labelPlacement="outside"
-                                            name="AddressName"
-                                            placeholder="ชื่อที่อยู่"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                เมือง
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="city"
-                                            placeholder="ชื่อเมือง"
+                                            onRowsPerPageChange={(
+                                              newRowsPerPage,
+                                            ) => setRowsPerPage(newRowsPerPage)}
                                           />
                                         </div>
+                                      </ModalBody>
+                                    </>
+                                  )}
+                                </ModalContent>
+                              </Modal>
 
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                จังหวัด
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="province"
-                                            placeholder="ชื่อจังหวัด"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                รหัสไปรษณีย์
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="zipcode"
-                                            placeholder="ชื่อรหัสไปรษณีย์"
-                                          />
-                                        </div>
+                              <Modal
+                                size="5xl"
+                                className="height-500"
+                                isOpen={isOpenAddress1}
+                                onOpenChange={onChange2}
+                              >
+                                <ModalContent>
+                                  {() => (
+                                    <>
+                                      <ModalHeader className="flex flex-col gap-1">
+                                        สร้างที่อยู่ใหม่
+                                      </ModalHeader>
+                                      <ModalBody>
+                                        <Form
+                                          id="create-address"
+                                          onSubmit={onSubmit}
+                                          method="post"
+                                        >
+                                          <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
+                                            <div className="flex gap-4 mt-6">
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    ชื่อที่อยู่
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="AddressName"
+                                                placeholder="ชื่อที่อยู่"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    เมือง
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="city"
+                                                placeholder="ชื่อเมือง"
+                                              />
+                                            </div>
 
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                เลขห้อง
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="Roomnumber"
-                                            placeholder="เลขห้อง"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ชั้นที่อยู่
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="floor"
-                                            placeholder="ชั้นที่อยู่"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                หมู่บ้าน
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="village"
-                                            placeholder="หมู่บ้าน"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                เลขหมู่บ้าน
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="Villagenumber"
-                                            placeholder="เลขหมู่บ้าน"
-                                          />
-                                        </div>
+                                            <div className="flex gap-4 mt-6">
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    จังหวัด
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="province"
+                                                placeholder="ชื่อจังหวัด"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    รหัสไปรษณีย์
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="zipcode"
+                                                placeholder="ชื่อรหัสไปรษณีย์"
+                                              />
+                                            </div>
 
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                บ้านเลขที่
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="housenumber"
-                                            placeholder="บ้านเลขที่"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ตรอก
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="alley"
-                                            placeholder="ตรอก"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ถนน
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="road"
-                                            placeholder="ถนน"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                อาคาร
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="building"
-                                            placeholder="อาคาร"
-                                          />
-                                        </div>
+                                            <div className="flex gap-4 mt-6">
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    เลขห้อง
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="Roomnumber"
+                                                placeholder="เลขห้อง"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    ชั้นที่อยู่
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="floor"
+                                                placeholder="ชั้นที่อยู่"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    หมู่บ้าน
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="village"
+                                                placeholder="หมู่บ้าน"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    เลขหมู่บ้าน
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="Villagenumber"
+                                                placeholder="เลขหมู่บ้าน"
+                                              />
+                                            </div>
 
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ประเทศ
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="country"
-                                            placeholder="ประเทศ"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                เขต/อำเภอ
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="district"
-                                            placeholder="เขต/อำเภอ"
-                                          />
-                                        </div>
-                                        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                                          <div className="flex gap-4 mt-6">
-                                            <Input
-                                              className="flex-1"
-                                              label={
-                                                <span className="text-headFont">
-                                                  แขวง/ตำบล
-                                                </span>
-                                              }
-                                              labelPlacement="outside"
-                                              name="subdistrict"
-                                              placeholder="แขวง/ตำบล"
-                                            />
+                                            <div className="flex gap-4 mt-6">
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    บ้านเลขที่
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="housenumber"
+                                                placeholder="บ้านเลขที่"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    ตรอก
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="alley"
+                                                placeholder="ตรอก"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    ถนน
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="road"
+                                                placeholder="ถนน"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    อาคาร
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="building"
+                                                placeholder="อาคาร"
+                                              />
+                                            </div>
+
+                                            <div className="flex gap-4 mt-6">
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    ประเทศ
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="country"
+                                                placeholder="ประเทศ"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    เขต/อำเภอ
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="district"
+                                                placeholder="เขต/อำเภอ"
+                                              />
+                                            </div>
+                                            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                                              <div className="flex gap-4 mt-6">
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      แขวง/ตำบล
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="subdistrict"
+                                                  placeholder="แขวง/ตำบล"
+                                                />
+                                              </div>
+                                              <div className="flex gap-4 mt-6">
+                                                <Textarea
+                                                  classNames={{
+                                                    base: '',
+                                                    input:
+                                                      'resize-y min-h-[50px]',
+                                                  }}
+                                                  name="note"
+                                                  label="หมายเหตุ"
+                                                  labelPlacement="outside"
+                                                  placeholder="หมายเหตุ"
+                                                  variant="bordered"
+                                                />
+                                              </div>
+                                            </div>
                                           </div>
-                                          <div className="flex gap-4 mt-6">
-                                            <Textarea
-                                              classNames={{
-                                                base: '',
-                                                input: 'resize-y min-h-[50px]',
-                                              }}
-                                              name="note"
-                                              label="หมายเหตุ"
-                                              labelPlacement="outside"
-                                              placeholder="หมายเหตุ"
-                                              variant="bordered"
-                                            />
+                                        </Form>
+                                      </ModalBody>
+                                      <ModalFooter>
+                                        <Button
+                                          className="bg-accent1 text-white"
+                                          type="submit"
+                                          form="create-address"
+                                        >
+                                          สร้าง
+                                        </Button>
+                                      </ModalFooter>
+                                    </>
+                                  )}
+                                </ModalContent>
+                              </Modal>
+
+                              <Modal
+                                size="5xl"
+                                className="height-500"
+                                isOpen={isOpenAddress2}
+                                onOpenChange={onChange3}
+                              >
+                                <ModalContent>
+                                  {() => (
+                                    <>
+                                      <ModalHeader className="flex flex-col gap-1">
+                                        ที่อยู่ที่ {selectedItem?.id}
+                                      </ModalHeader>
+                                      <ModalBody>
+                                        <Form
+                                          id="edit-address"
+                                          onSubmit={onSubmit}
+                                          method="post"
+                                        >
+                                          <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
+                                            <div className="flex gap-4 mt-6">
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    ชื่อที่อยู่
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="AddressName"
+                                                placeholder="ชื่อที่อยู่"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    เมือง
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="city"
+                                                placeholder="ชื่อเมือง"
+                                              />
+                                            </div>
+
+                                            <div className="flex gap-4 mt-6">
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    จังหวัด
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="province"
+                                                placeholder="ชื่อจังหวัด"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    รหัสไปรษณีย์
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="zipcode"
+                                                placeholder="ชื่อรหัสไปรษณีย์"
+                                              />
+                                            </div>
+
+                                            <div className="flex gap-4 mt-6">
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    เลขห้อง
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="Roomnumber"
+                                                placeholder="เลขห้อง"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    ชั้นที่อยู่
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="floor"
+                                                placeholder="ชั้นที่อยู่"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    หมู่บ้าน
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="village"
+                                                placeholder="หมู่บ้าน"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    เลขหมู่บ้าน
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="Villagenumber"
+                                                placeholder="เลขหมู่บ้าน"
+                                              />
+                                            </div>
+
+                                            <div className="flex gap-4 mt-6">
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    บ้านเลขที่
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="housenumber"
+                                                placeholder="บ้านเลขที่"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    ตรอก
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="alley"
+                                                placeholder="ตรอก"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    ถนน
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="road"
+                                                placeholder="ถนน"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    อาคาร
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="building"
+                                                placeholder="อาคาร"
+                                              />
+                                            </div>
+
+                                            <div className="flex gap-4 mt-6">
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    ประเทศ
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="country"
+                                                placeholder="ประเทศ"
+                                              />
+                                              <Input
+                                                className="flex-1"
+                                                label={
+                                                  <span className="text-headFont">
+                                                    เขต/อำเภอ
+                                                  </span>
+                                                }
+                                                labelPlacement="outside"
+                                                name="district"
+                                                placeholder="เขต/อำเภอ"
+                                              />
+                                            </div>
+                                            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                                              <div className="flex gap-4 mt-6">
+                                                <Input
+                                                  className="flex-1"
+                                                  label={
+                                                    <span className="text-headFont">
+                                                      แขวง/ตำบล
+                                                    </span>
+                                                  }
+                                                  labelPlacement="outside"
+                                                  name="subdistrict"
+                                                  placeholder="แขวง/ตำบล"
+                                                />
+                                              </div>
+                                              <div className="flex gap-4 mt-6">
+                                                <Textarea
+                                                  classNames={{
+                                                    base: '',
+                                                    input:
+                                                      'resize-y min-h-[50px]',
+                                                  }}
+                                                  name="note"
+                                                  label="หมายเหตุ"
+                                                  labelPlacement="outside"
+                                                  placeholder="หมายเหตุ"
+                                                  variant="bordered"
+                                                />
+                                              </div>
+                                            </div>
                                           </div>
-                                        </div>
-                                      </div>
-                                    </Form>
-                                  </ModalBody>
-                                  <ModalFooter>
-                                    <Button
-                                      className="bg-accent1 text-white"
-                                      type="submit"
-                                      form="create-address"
-                                    >
-                                      สร้าง
-                                    </Button>
-                                  </ModalFooter>
-                                </>
-                              )}
-                            </ModalContent>
-                          </Modal>
-
-                          <Modal
-                            size="5xl"
-                            className="height-500"
-                            isOpen={isOpenAddress2}
-                            onOpenChange={onChange3}
-                          >
-                            <ModalContent>
-                              {() => (
-                                <>
-                                  <ModalHeader className="flex flex-col gap-1">
-                                    ที่อยู่ที่ {selectedItem?.id}
-                                  </ModalHeader>
-                                  <ModalBody>
-                                    <Form
-                                      id="edit-address"
-                                      onSubmit={onSubmit}
-                                      method="post"
-                                    >
-                                      <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ชื่อที่อยู่
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="AddressName"
-                                            placeholder="ชื่อที่อยู่"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                เมือง
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="city"
-                                            placeholder="ชื่อเมือง"
-                                          />
-                                        </div>
-
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                จังหวัด
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="province"
-                                            placeholder="ชื่อจังหวัด"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                รหัสไปรษณีย์
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="zipcode"
-                                            placeholder="ชื่อรหัสไปรษณีย์"
-                                          />
-                                        </div>
-
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                เลขห้อง
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="Roomnumber"
-                                            placeholder="เลขห้อง"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ชั้นที่อยู่
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="floor"
-                                            placeholder="ชั้นที่อยู่"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                หมู่บ้าน
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="village"
-                                            placeholder="หมู่บ้าน"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                เลขหมู่บ้าน
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="Villagenumber"
-                                            placeholder="เลขหมู่บ้าน"
-                                          />
-                                        </div>
-
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                บ้านเลขที่
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="housenumber"
-                                            placeholder="บ้านเลขที่"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ตรอก
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="alley"
-                                            placeholder="ตรอก"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ถนน
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="road"
-                                            placeholder="ถนน"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                อาคาร
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="building"
-                                            placeholder="อาคาร"
-                                          />
-                                        </div>
-
-                                        <div className="flex gap-4 mt-6">
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                ประเทศ
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="country"
-                                            placeholder="ประเทศ"
-                                          />
-                                          <Input
-                                            className="flex-1"
-                                            label={
-                                              <span className="text-headFont">
-                                                เขต/อำเภอ
-                                              </span>
-                                            }
-                                            labelPlacement="outside"
-                                            name="district"
-                                            placeholder="เขต/อำเภอ"
-                                          />
-                                        </div>
-                                        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                                          <div className="flex gap-4 mt-6">
-                                            <Input
-                                              className="flex-1"
-                                              label={
-                                                <span className="text-headFont">
-                                                  แขวง/ตำบล
-                                                </span>
-                                              }
-                                              labelPlacement="outside"
-                                              name="subdistrict"
-                                              placeholder="แขวง/ตำบล"
-                                            />
-                                          </div>
-                                          <div className="flex gap-4 mt-6">
-                                            <Textarea
-                                              classNames={{
-                                                base: '',
-                                                input: 'resize-y min-h-[50px]',
-                                              }}
-                                              name="note"
-                                              label="หมายเหตุ"
-                                              labelPlacement="outside"
-                                              placeholder="หมายเหตุ"
-                                              variant="bordered"
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </Form>
-                                  </ModalBody>
-                                  <ModalFooter>
-                                    <Button
-                                      className="bg-accent1 text-white"
-                                      type="submit"
-                                      form="edit-address"
-                                    >
-                                      แก้ไข
-                                    </Button>
-                                    <Button className="bg-accent2 text-white">
-                                      ลบ
-                                    </Button>
-                                  </ModalFooter>
-                                </>
-                              )}
-                            </ModalContent>
-                          </Modal>
-                        </div>
-                        <InputBranch
-                          data={data}
-                          onChange={handleUpadteForm}
-                          openEdit={openEdit}
-                        />
-                      </div>
+                                        </Form>
+                                      </ModalBody>
+                                      <ModalFooter>
+                                        <Button
+                                          className="bg-accent1 text-white"
+                                          type="submit"
+                                          form="edit-address"
+                                        >
+                                          แก้ไข
+                                        </Button>
+                                        <Button className="bg-accent2 text-white">
+                                          ลบ
+                                        </Button>
+                                      </ModalFooter>
+                                    </>
+                                  )}
+                                </ModalContent>
+                              </Modal>
+                            </div>
+                            <InputBranch
+                              data={data}
+                              onChange={handleUpadteForm}
+                              openEdit={openEdit}
+                            />
+                          </div>
+                        }
+                      />
                     </Tab>
 
                     {/* Setting organization */}
                     <Tab key="organization" title="ข้อมูลองค์กร">
-                      <div className="flex justify-between p-6">
-                        <h1 className="text-2xl font-bold text-headFont">
-                          ข้อมูลองค์กร
-                        </h1>
-                        <div className="">
-                          <Button
-                            className="bg-accent3 text-white mr-3"
-                            onClick={toggleInput}
-                          >
-                            แก้ไข
-                          </Button>
-                        </div>
-                      </div>
-                      <Inputorganization
-                        data={data}
-                        onChange={handleOrganization}
-                        openEdit={openEdit}
+                      <CardComponent
+                        className={'basis-2/3'}
+                        customCard
+                        custom={
+                          <div>
+                            <div className="flex justify-between p-6">
+                              <h1 className="text-2xl font-bold text-headFont">
+                                ข้อมูลองค์กร
+                              </h1>
+                              <div className="">
+                                <Button
+                                  className="bg-accent3 text-white mr-3"
+                                  onClick={toggleInput}
+                                >
+                                  แก้ไข
+                                </Button>
+                              </div>
+                            </div>
+                            <Inputorganization
+                              data={data}
+                              onChange={handleOrganization}
+                              openEdit={openEdit}
+                            />
+                          </div>
+                        }
                       />
                     </Tab>
                   </Tabs>

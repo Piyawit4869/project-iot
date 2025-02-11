@@ -17,6 +17,7 @@ import get from '@/pages/api/profile/get';
 import { parseDate } from '@internationalized/date';
 import { updateProfile } from '@/pages/api/profile/updata';
 import { toast } from 'sonner';
+import { Upload } from '@/components/backoffice/upload';
 
 export default function CreateUserPage() {
   const [data, setData] = React.useState() as any;
@@ -112,7 +113,7 @@ export default function CreateUserPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="h-full bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Page Header */}
         <Scaffold
@@ -281,6 +282,9 @@ export default function CreateUserPage() {
                                 value={formData.phone}
                                 onChange={handleChange}
                               />
+                            </div>
+                            <div className="flex gap-4 mt-6">
+                              <Upload />
                             </div>
                           </div>
                         </Form>

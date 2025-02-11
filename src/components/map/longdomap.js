@@ -43,4 +43,3 @@ export class LongdoMap extends Component {
     );
   }
 }
-

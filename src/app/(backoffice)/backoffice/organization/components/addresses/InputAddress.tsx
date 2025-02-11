@@ -1,9 +1,8 @@
 'use client';
 
-import { Button, Input, Textarea } from '@nextui-org/react';
+import { Input, Textarea } from '@nextui-org/react';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
-import { TablePagination } from '@/components/common/tablePagination';
 // import { updateIsmain } from '@/pages/api/organization/update-address';
 // import { toast } from 'sonner';
 
@@ -21,16 +20,6 @@ export default function Inputorganization({
 }: InpuAddressProps) {
   const [formData, setFormData] = React.useState<any>(data);
   const [address, setAddress] = React.useState<any[]>([]);
-  const [tableAddress, setTableAddress] = React.useState<any[]>([]);
-  // eslint-disable-next-line no-unused-vars
-  const [, setPage] = React.useState(1);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [meta] = React.useState({
-    totalItems: 0,
-    itemsPerPage: 10,
-    totalPages: 0,
-    currentPage: 1,
-  });
 
   React.useEffect(() => {
     if (data) {
@@ -38,11 +27,6 @@ export default function Inputorganization({
         (address: any) => address.isMain === true,
       );
       setAddress(filtered);
-
-      const filteredTable = data.organization.addresses.filter(
-        (address: any) => address.isMain !== true,
-      );
-      setTableAddress(filteredTable);
     }
   }, [data]);
 
@@ -278,47 +262,8 @@ export default function Inputorganization({
               </div>
             </div>
           ))}
-          <h1 className="text-2xl font-bold text-headFont mt-12">
-            ข้อมูลที่อยู่สาขา
-          </h1>
-          <TablePagination
-            initialRows={tableAddress}
-            initialMeta={meta}
-            rowsPerPage={rowsPerPage}
-            columns={columns}
-            onPageChange={(newPage) => setPage(newPage)}
-            onRowsPerPageChange={(newRowsPerPage) =>
-              setRowsPerPage(newRowsPerPage)
-            }
-          />
         </div>
       }
     />
   );
 }
-
-const columns: any = [
-  { title: 'ชื่อที่อยู่', dataIndex: 'name' },
-  { title: 'บ้านเลขที่', dataIndex: 'houseNo' },
-  { title: 'จังหวัด', dataIndex: 'province' },
-  { title: 'อำเภอ/เขต', dataIndex: 'subDistrict' },
-  {
-    title: 'เปลี่ยนที่อยู่หลัก',
-    dataIndex: 'isMain',
-    render: () => (
-      <Button className="bg-headFont text-white" size="sm">
-        ตั้งเป็นที่อยู่หลัก
-      </Button>
-    ),
-  },
-  {
-    title: 'ลบ',
-    dataIndex: 'delete',
-    // render: () => <Icon.DeleteOutlined className="ml-0.5 text-red-500" />,
-    render: () => (
-      <Button className="bg-accent2 text-white" size="sm">
-        ลบที่อยู่
-      </Button>
-    ),
-  },
-];
