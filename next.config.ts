@@ -5,6 +5,7 @@ const nextConfig = {
   output: 'standalone',
 
   images: {
+    domains: ['ui-avatars.com', 'api.dicebear.com'],
     remotePatterns: [
       {
         protocol: 'https',

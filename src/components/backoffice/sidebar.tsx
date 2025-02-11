@@ -18,11 +18,7 @@ import { useClientSession } from '@/libs/auth';
 import Image from 'next/image';
 import Link from 'next/link';
 // import { isMenuActive } from '../common/common';
-import {
-  Collapsible,
-  // CollapsibleContent,
-  CollapsibleTrigger,
-} from '../ui/collapsible';
+import { Collapsible, CollapsibleTrigger } from '../ui/collapsible';
 import { ChevronRight } from 'lucide-react';
 import { NavHome } from './Sidebar/homeSidebar';
 import { NavSetting } from './Sidebar/settingSidebar';
@@ -326,7 +322,6 @@ export function AdminSideBar({
                     </CollapsibleTrigger>
 
                     {item.subMenu && isSubMenuOpen[item.key] && (
-                      // <CollapsibleContent>
                       <SidebarMenuSub>
                         {item.subMenu?.map((subItem: any) => {
                           return (
@@ -354,7 +349,6 @@ export function AdminSideBar({
                           );
                         })}
                       </SidebarMenuSub>
-                      // </CollapsibleContent>
                     )}
                   </SidebarMenuItem>
                 </Collapsible>

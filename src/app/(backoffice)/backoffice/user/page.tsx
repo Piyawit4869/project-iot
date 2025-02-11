@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
-// import debounce from 'lodash/debounce';
+import Image from 'next/image';
 import { TopSection } from '@/components/common/topSection';
 import Link from 'next/link';
 import { Button, Chip } from '@nextui-org/react';
@@ -95,9 +95,18 @@ export default function IndexPage() {
 const columns = [
   {
     title: 'รูปภาพ',
+    align: 'center',
     dataIndex: 'image',
-    render: () => {
-      return '-';
+    render: (_: any, record: any) => {
+      return (
+        <Image
+          className="rounded-md"
+          src={record.profile.photoUrl || '/images/default-profile.png'}
+          alt="User profile photo"
+          width={50}
+          height={50}
+        />
+      );
     },
   },
   {

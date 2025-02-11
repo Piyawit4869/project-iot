@@ -2,7 +2,7 @@ import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
 export async function createEmployeeRole(prevState: any, formData: any) {
-  const url = `${base_url}/crud/employee-roles`;
+  const url = `${base_url}/crud/employee-roles/create`;
 
   const body = {
     ...formData,

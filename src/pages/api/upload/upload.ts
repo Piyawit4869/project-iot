@@ -6,7 +6,7 @@ export async function uploadFile(prevState: any, formData: FormData) {
 
   const auth = await getServerSession();
 
-  const data = await fetch(url, {
+  const response = await fetch(url, {
     method: `POST`,
     headers: {
       Authorization: `Bearer ${auth.accessToken}`,
@@ -15,5 +15,10 @@ export async function uploadFile(prevState: any, formData: FormData) {
     body: formData,
   });
 
-  return await data.formData();
+  if (!response.ok) {
+    throw new Error('Failed to fetch data from external API');
+  }
+
+  const result = await response.json();
+  return result;
 }

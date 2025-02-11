@@ -3,7 +3,6 @@
 import Scaffold from '@/components/common/scaffold';
 import CardComponent from '@/components/common/card';
 import { TopSection } from '@/components/common/topSection';
-import Image from 'next/image';
 import {
   Button,
   Form,
@@ -24,6 +23,7 @@ export default function CreateUserPage() {
   const [formData, setFormData] = React.useState({}) as any;
   const [loading, setLoading] = React.useState(false);
   const [, setErrors] = React.useState({}) as any;
+  const [uploadImg, setUploadImg] = React.useState('') as any;
 
   // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault(); // Prevent the form from submitting to the URL
@@ -44,6 +44,10 @@ export default function CreateUserPage() {
 
     getProfile();
   }, []);
+
+  const handleUpload = (url: string) => {
+    setUploadImg(url);
+  };
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -85,6 +89,7 @@ export default function CreateUserPage() {
           lastName: formData.lastName,
           birthDate: formData.birthDate,
           phone: formData.phone,
+          photoUrl: uploadImg,
         },
       };
 
@@ -164,7 +169,7 @@ export default function CreateUserPage() {
                       customCard
                       custom={
                         <Form id="profile" onSubmit={onSubmit} method="post">
-                          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center p-4">
                             <div>
                               <div>
                                 <h1 className="text-2xl font-bold text-headFont">
@@ -173,13 +178,11 @@ export default function CreateUserPage() {
                               </div>
                               <div className="font-bold text-headFon mt-10">
                                 <p>รูปภาพผู้ใช้งาน</p>
-                                <Image
+                                <Upload
                                   className="mt-3"
-                                  src="/logo.png"
-                                  alt="image organization"
-                                  width={100}
-                                  height={100}
-                                ></Image>
+                                  onUpload={handleUpload}
+                                  imageUrl={formData.photoUrl}
+                                />
                               </div>
                             </div>
                             <div className="flex gap-4 mt-6">
@@ -282,9 +285,6 @@ export default function CreateUserPage() {
                                 value={formData.phone}
                                 onChange={handleChange}
                               />
-                            </div>
-                            <div className="flex gap-4 mt-6">
-                              <Upload />
                             </div>
                           </div>
                         </Form>

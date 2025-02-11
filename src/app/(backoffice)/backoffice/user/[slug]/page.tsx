@@ -4,7 +4,6 @@ import Scaffold from '@/components/common/scaffold';
 import CardComponent from '@/components/common/card';
 import { TopSection } from '@/components/common/topSection';
 import { CardControl } from '@/components/setting/card-organization';
-import Image from 'next/image';
 import {
   Button,
   Form,
@@ -29,6 +28,7 @@ import { changePassword } from '@/pages/api/user/change-password';
 import { updateUser } from '@/pages/api/user/update';
 import paginationRoles from '@/pages/api/role/pagination';
 import paginationEmployeeRole from '@/pages/api/employeeRole/pagination';
+import { Upload } from '@/components/backoffice/upload';
 
 export default function UserSinglePage() {
   const [data, setData] = React.useState() as any;
@@ -38,6 +38,7 @@ export default function UserSinglePage() {
   const [password, setPassword] = React.useState({}) as any;
   const [role, setRole] = React.useState([]) as any;
   const [empolyeeRole, setEmployeeRole] = React.useState([]) as any;
+  const [uploadImg, setUploadImg] = React.useState('') as any;
   const router = useRouter();
 
   const params = useParams<{ slug: string }>();
@@ -92,6 +93,7 @@ export default function UserSinglePage() {
           lastName: formData.lastName,
           birthDate: formData.birthDate,
           phone: formData.phone,
+          photoUrl: uploadImg,
         },
         role: {
           name: formData.position,
@@ -108,6 +110,7 @@ export default function UserSinglePage() {
       }
 
       await updateUser({}, payload, params?.slug);
+      console.log('payload', payload);
 
       toast.success('📝 แก้ไขข้อมูลผู้ใช้งานสำเร็จ!', {
         duration: 3000,
@@ -201,6 +204,10 @@ export default function UserSinglePage() {
     }));
   };
 
+  const handleUpload = (url: string) => {
+    setUploadImg(url);
+  };
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
@@ -255,13 +262,11 @@ export default function UserSinglePage() {
                       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                         <div className="font-bold text-headFon mt-10">
                           <p>รูปภาพผู้ใช้งาน</p>
-                          <Image
-                            className="mt-3"
-                            src="/logo.png"
-                            alt="logo"
-                            width={100}
-                            height={100}
-                          ></Image>
+                          <Upload
+                            className="mt-4"
+                            imageUrl={formData.photoUrl}
+                            onUpload={handleUpload}
+                          />
                         </div>
                         <div className="flex gap-4 mt-6">
                           <div>
