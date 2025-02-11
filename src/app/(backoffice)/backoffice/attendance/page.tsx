@@ -1,206 +1,297 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { TopSection } from '@/components/common/topSection';
-import NextTable from '@/components/common/nextTable';
+//System
+import React from 'react';
+import debounce from 'lodash/debounce';
+//API
+import pagination from '@/pages/api/workinfos/pagination';
+import { getAttendance } from '@/pages/api/attendances/get';
+import { getAll } from '@/pages/api/user/getAll';
+//Helper function
+import { formatDate } from '@/utils/enums/date';
+//Component
 import Scaffold from '@/components/common/scaffold';
-import { useRouter } from 'next/navigation';
-import { Input, Select, SelectItem } from '@nextui-org/react';
-import CardComponent from '@/components/common/card';
+import { TopSection } from '@/components/common/topSection';
+import { TablePagination } from '@/components/common/tablePagination';
+import { DatePicker, Input, Select, SelectItem } from '@nextui-org/react';
+import TimelineComponent from '@/components/backoffice/timeline';
+import ChartComponent from '@/components/backoffice/garphRateAll';
+import WeeklyAttendanceChart from '@/components/backoffice/garphRateDepartment';
+import EmAttendanceCard from '@/components/backoffice/cardAttedanceEm';
+//Icon
+import * as Icons from 'lucide-react';
+interface FilterState {
+  userName: string;
+}
 
-// Define TypeScript types
-interface EmployeeData {
-  id: number;
-  order: string;
+interface MetaData {
+  totalItems: number;
+  itemsPerPage: number;
+  totalPages: number;
+  currentPage: number;
+}
+interface AttendanceItem {
+  id: string;
+  prefix: string;
   name: string;
-  role: string;
   status: string;
-  in: string;
-  break: string;
-  out: string;
-  summery: string;
+  active: boolean;
+  isCurrent: boolean;
+  descriptions: string;
+  priority: string;
+  startDate: string | null;
+  dueDate: string | null;
+  limitTimePerDay: number;
+  inspector: string;
+  startCredit: number;
+  totalCredit: number;
+  totalWorkHours: number;
+  payDay: string | null;
   note: string;
+  createdAt: string | null;
+  user: {
+    id: string;
+    userName: string;
+    emId: string;
+  };
 }
 
-interface FilterOption {
-  label: string;
-  value: string;
-}
+export default function AttendancesPage() {
+  const [page, setPage] = React.useState(1);
+  const [loading, setLoading] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [filters, setFilters] = React.useState<FilterState>({ userName: '' });
+  const [items, setItems] = React.useState<AttendanceItem[]>([]);
+  const [userList, setUserList] = React.useState<any[]>([]);
+  const [meta, setMeta] = React.useState<MetaData>({
+    totalItems: 0,
+    itemsPerPage: 10,
+    totalPages: 0,
+    currentPage: 1,
+  });
 
-const filterOptions: FilterOption[] = [
-  { label: 'All', value: 'all' },
-  { label: 'Frontend', value: 'Frontend' },
-  { label: 'Backend', value: 'Backend' },
-  { label: 'Mobile', value: 'Mobile' },
-];
+  React.useEffect(() => {
+    const fetchAttendances = async () => {
+      setLoading(true);
+      try {
+        const { userName } = filters;
 
-const filterstatusOptions: FilterOption[] = [
-  { label: 'All', value: 'all' },
-  { label: 'In', value: 'in' },
-  { label: 'Break', value: 'break' },
-  { label: 'Out', value: 'out' },
-];
+        const response = await pagination({
+          page,
+          limit: rowsPerPage,
+          ...(userName && { userName }),
+        });
 
-export default function AttendancePage() {
-  const router = useRouter();
+        if (response) {
+          const { items: fetchedItems, meta: fetchedMeta } = response;
 
-  const [searchValue, setSearchValue] = useState('');
-  const [selectedRole, setSelectedRole] = useState('all');
-  const [selectedstatus, setSelectedstatus] = useState('all');
-  const [employeeData, ] = useState<EmployeeData[]>([]);
-  // State to hold JSON data
+          if (Array.isArray(fetchedItems) && fetchedMeta) {
+            setItems(
+              fetchedItems.map((item: AttendanceItem) => ({
+                ...item,
+                createdAtDate: formatDate(item.createdAt).date,
+                createdAtTime: formatDate(item.createdAt).time,
+                dueDate: formatDate(item.dueDate).date,
+                startDate: formatDate(item.startDate).date,
+                payDayDate: formatDate(item.payDay).date,
+                payDayTime: formatDate(item.payDay).time,
+              })),
+            );
+            setMeta(fetchedMeta);
+          } else {
+            console.error('Invalid response structure:', response);
+          }
+        } else {
+          console.error('No data received:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching attendance:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleRowClick = (row: EmployeeData) => {
-    router.push(`attendance/${row.id}`);
+    fetchAttendances();
+  }, [page, rowsPerPage, filters]);
+  React.useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await getAll();
+        console.log('API Response:', response);
+        setUserList(response.data || []);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  const fetchTimelineData = React.useCallback(async () => {
+    try {
+      const response = await getAttendance();
+
+      console.log('Raw API Response:', response);
+
+      if (response && Array.isArray(response.items)) {
+        return response.items.map((item: any) => ({
+          userName: item.workInfo.user.userName || 'Undefind',
+          action: item.action || 'N/A',
+          time: formatDate(item.stamp).time || 'N/A',
+          date: formatDate(item.stamp).date || 'N/A',
+        }));
+      } else {
+        console.error('Invalid response structure:', response);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching timeline data:', error);
+      return [];
+    }
+  }, []);
+
+  const handleFilterChange = React.useCallback((updatedFilters: any) => {
+    debounce(() => {
+      setPage(1);
+      setFilters(updatedFilters);
+    }, 1)();
+  }, []);
+
+  const onInputChange = (key: keyof typeof filters, value: string) => {
+    const updatedFilters = { ...filters, [key]: value };
+    handleFilterChange(updatedFilters);
   };
 
-  const handleRowClick1 = (row: EmployeeData) => {
-    router.push(`attendance/workInfo/${row.id}`);
-  };
+  return (
+    <div>
+      <Scaffold
+        child={
+          <div>
+            <TopSection title="ภาพรวมการเข้าทำงานทั้งหมด" />
 
-  // Filter function to apply multiple filters
-  const filteredData = useMemo(() => {
-    if (!Array.isArray(employeeData)) return [];
-    return employeeData.filter((item) => {
-      const matchesRole =
-        selectedRole === 'all' ||
-        item.role.toLowerCase() === selectedRole.toLowerCase();
-      const matchesstatus =
-        selectedstatus === 'all' ||
-        item.status.toLowerCase() === selectedstatus.toLowerCase();
-      const matchesSearch =
-        !searchValue ||
-        item.name.toLowerCase().includes(searchValue.toLowerCase());
+            <div className=" grid grid-cols-5 gap-8 flex justify-between">
+              <div className="col-span-3">
+                <div>
+                  <EmAttendanceCard users={userList || []} />
+                </div>
+              </div>
+              <div className="col-span-2">
+                <div className=" space-x-8 mt-8 bg-white rounded-xl shadow h-[90%] ">
+                  <TimelineComponent fetchData={fetchTimelineData} />
+                </div>
+              </div>
+            </div>
 
-      return matchesRole && matchesstatus && matchesSearch;
-    });
-  }, [searchValue, selectedRole, selectedstatus, employeeData]);
+            <div className=" grid grid-cols-5 gap-8">
+              <div className="col-span-3 mt-8">
+                <div className="bg-white rounded-xl shadow">
+                  <ChartComponent />
+                </div>
+              </div>
+              <div className="col-span-2 mt-8">
+                <div className="bg-white rounded-xl shadow">
+                  <WeeklyAttendanceChart />
+                </div>
+              </div>
+            </div>
 
-  const handleSearchChange = (value: string) => {
-    setSearchValue(value);
-  };
-
-  const handleRoleChange = (value: string) => {
-    setSelectedRole(value);
-  };
-
-  const handlestatusChange = (value: string) => {
-    setSelectedstatus(value);
-  };
-
-  const renderCard = (title: string, count: number, colorClass: string) => (
-    <div className="flex-1">
-      <CardComponent
-        className={colorClass}
-        customCard
-        custom={
-          <div className="text-center">
-            <div className="text-sm text-white">{title}</div>
-            <div className="text-2xl font-bold text-white">{count} คน</div>
-            <div className="text-xs text-white mt-1">วันนี้</div>
+            <div>
+              {loading ? (
+                <div className="flex justify-center items-center h-64">
+                  <div className="spinner"></div>
+                </div>
+              ) : (
+                <>
+                  <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
+                    <div className="grid grid-cols-1 sm:grid-cols-5 p-4 flex justify-between items-center">
+                      <div className=" px-3">
+                        <h6>ภาพรวมการเข้าทำงาน</h6>
+                      </div>
+                      <Input
+                        className="w-[90%] p-2 text-headFont col-span-2"
+                        startContent={<Icons.Search className="p-1" />}
+                        size="sm"
+                        radius="sm"
+                        name="userName"
+                        placeholder="ชื่อพนักงาน"
+                        variant="bordered"
+                        value={filters.userName}
+                        onChange={(e) =>
+                          onInputChange('userName', e.target.value)
+                        }
+                      />
+                      <Select
+                        className="w-[90%] p-2 text-headFont"
+                        startContent={<Icons.UserRound className="p-1" />}
+                        size="sm"
+                        radius="sm"
+                        name="userName"
+                        placeholder="เลือกตำแหน่ง"
+                        variant="bordered"
+                        value={filters.userName}
+                        onChange={(e) =>
+                          onInputChange('userName', e.target.value)
+                        }
+                      >
+                        <SelectItem>
+                          <div>1</div>
+                        </SelectItem>
+                      </Select>
+                      <DatePicker
+                        className="w-[90%] p-2 text-headFont"
+                        size="sm"
+                        radius="sm"
+                        name=""
+                        variant="bordered"
+                        selectorButtonPlacement="start"
+                      />
+                    </div>
+                    <TablePagination
+                      initialRows={items}
+                      initialMeta={meta}
+                      rowsPerPage={rowsPerPage}
+                      columns={columns as any}
+                      onPageChange={(newPage) => setPage(newPage)}
+                      onRowsPerPageChange={(newRowsPerPage) =>
+                        setRowsPerPage(newRowsPerPage)
+                      }
+                    />
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         }
+        backgroundColor={''}
       />
     </div>
   );
-
-  return (
-    <Scaffold
-      child={
-        <div>
-          <TopSection title="ภาพรวมการทำงานในองค์กรวันนี้" />
-          <div className="flex space-x-4 mt-8">
-            {renderCard('เข้างาน', 10, 'bg-accent1')}
-            {renderCard('ลาป่วย/ลากิจ', 0, 'bg-accent3')}
-            {renderCard('มาสาย', 10, 'bg-accent2')}
-            {renderCard('ขาด', 0, 'bg-secondary')}
-          </div>
-          <div className="bg-white shadow rounded-2xl mb-4 mt-4">
-            <div className="flex flex-wrap gap-4">
-              <Input
-                className="flex-1 p-2 text-headFont"
-                size="lg"
-                name="name"
-                placeholder="ค้นหาชื่อพนักงาน"
-                value={searchValue}
-                onChange={(e) => handleSearchChange(e.target.value)}
-              />
-              <Select
-                className="flex-1 p-2 text-headFont"
-                size="sm"
-                name="role"
-                label="เลือกตำแหน่ง"
-                value={selectedRole}
-                onChange={(r) => handleRoleChange(r.target.value)}
-              >
-                {filterOptions.map((option) => (
-                  <SelectItem
-                    key={option.value}
-                    className="text-headFont"
-                    value={option.value}
-                  >
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </Select>
-
-              <Select
-                className="flex-1 p-2 text-headFont"
-                size="sm"
-                name="status"
-                label="เลือกสถานะ"
-                value={selectedstatus}
-                onChange={(a) => handlestatusChange(a.target.value)}
-              >
-                {filterstatusOptions.map((option) => (
-                  <SelectItem
-                    key={option.value}
-                    className="text-headFont"
-                    value={option.value}
-                  >
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </Select>
-            </div>
-          </div>
-          <div>
-            <NextTable
-              rows={filteredData}
-              columns={columns}
-              rowClickHandler={handleRowClick}
-              tabFieldName="Overview Employee Table"
-            />
-          </div>
-          <div>
-            <NextTable
-              rows={filteredData}
-              columns={columns1}
-              rowClickHandler={handleRowClick1}
-              tabFieldName="Overview Workinfo Table"
-            />
-          </div>
-        </div>
-      }
-    />
-  );
 }
 
-const columns: any = [
-  { title: 'Order', dataIndex: 'order', align: 'center' },
-  { title: 'Full Name', dataIndex: 'name', align: 'left' },
-  { title: 'Role', dataIndex: 'role', align: 'center' },
-  { title: 'Status', dataIndex: 'status', align: 'center' },
-  { title: 'In', dataIndex: 'in', align: 'center' },
-  { title: 'Break', dataIndex: 'break', align: 'center' },
-  { title: 'Out', dataIndex: 'out', align: 'center' },
-  { title: 'Summary', dataIndex: 'summery', align: 'center' },
-  { title: 'Note', dataIndex: 'note', align: 'center' },
-];
-
-const columns1: any = [
-  { title: 'status', dataIndex: 'order', align: 'center' },
-  { title: 'Full Name', dataIndex: 'name', align: 'left' },
-  { title: 'WorkInfo', dataIndex: 'work', align: 'center' },
-  { title: 'Note', dataIndex: 'note', align: 'center' },
+const columns = [
+  {
+    title: 'ชื่อพนักงาน',
+    dataIndex: 'userName',
+    link: '/backoffice/attendance/overview',
+    align: 'left',
+    render: (_: any, record: any) => {
+      return <span>{record?.user?.userName}</span>;
+    },
+  },
+  { title: 'คำนำหน้า', dataIndex: 'prefix' },
+  { title: 'สถานะ', dataIndex: 'status' },
+  { title: 'คำอธิบายงาน', dataIndex: 'descriptions' },
+  { title: 'ความสำคัญ', dataIndex: 'priority' },
+  { title: 'วันที่เริ่มต้น', dataIndex: 'startDate' },
+  { title: 'วันสิ้นสุด', dataIndex: 'dueDate' },
+  { title: 'เวลาจำกัดต่อวัน', dataIndex: 'limitTimePerDay' },
+  { title: 'ผู้ตรวจสอบ', dataIndex: 'inspector' },
+  { title: 'เครดิตเริ่มต้น', dataIndex: 'startCredit' },
+  { title: 'เครดิตรวม', dataIndex: 'totalCredit' },
+  { title: 'ชั่วโมงทำงานรวม', dataIndex: 'totalWorkHours' },
+  { title: 'วันที่จ่ายเงิน', dataIndex: 'payDayDate' },
+  { title: 'เวลาที่จ่ายเงิน', dataIndex: 'payDayTime' },
+  { title: 'หมายเหตุ', dataIndex: 'note' },
+  { title: 'สร้างวันที่', dataIndex: 'createdAtDate' },
+  { title: 'เวลาที่สร้าง', dataIndex: 'createdAtTime' },
 ];

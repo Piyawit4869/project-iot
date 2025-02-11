@@ -1,20 +1,25 @@
 'use client';
 
+//System
 import React from 'react';
 import debounce from 'lodash/debounce';
-import { TopSection } from '@/components/common/topSection';
-import { DatePicker, Input, Select, SelectItem } from '@nextui-org/react';
-import pagination from '@/pages/api/attendances/pagination';
-import { TablePagination } from '@/components/common/tablePagination';
+//API
+import pagination from '@/pages/api/workinfos/pagination';
+import { getAttendance } from '@/pages/api/attendances/get';
+import { getAll } from '@/pages/api/user/getAll';
+//Helper function
 import { formatDate } from '@/utils/enums/date';
-import 'react-vertical-timeline-component/style.min.css';
+//Component
 import Scaffold from '@/components/common/scaffold';
-import { handleAction } from '@/components/common/common';
-import CardComponent from '@/components/common/card';
-import * as Icons from 'lucide-react';
+import { TopSection } from '@/components/common/topSection';
+import { TablePagination } from '@/components/common/tablePagination';
+import { DatePicker, Input, Select, SelectItem } from '@nextui-org/react';
 import TimelineComponent from '@/components/backoffice/timeline';
 import ChartComponent from '@/components/backoffice/garphRateAll';
 import WeeklyAttendanceChart from '@/components/backoffice/garphRateDepartment';
+import EmAttendanceCard from '@/components/backoffice/cardAttedanceEm';
+//Icon
+import * as Icons from 'lucide-react';
 interface FilterState {
   userName: string;
 }
@@ -26,74 +31,38 @@ interface MetaData {
   currentPage: number;
 }
 interface AttendanceItem {
-  currentDate: string;
-  records: [
-    {
-      status: string;
-      stamp: string;
-      action: string;
-      workInfo: {
-        prefix: string;
-        totalWorkHours: number;
-        user: {
-          userName: string;
-          employeeRoleId: string;
-        };
-      };
-    },
-  ];
+  id: string;
+  prefix: string;
+  name: string;
+  status: string;
+  active: boolean;
+  isCurrent: boolean;
+  descriptions: string;
+  priority: string;
+  startDate: string | null;
+  dueDate: string | null;
+  limitTimePerDay: number;
+  inspector: string;
+  startCredit: number;
+  totalCredit: number;
+  totalWorkHours: number;
+  payDay: string | null;
+  note: string;
+  createdAt: string | null;
+  user: {
+    id: string;
+    userName: string;
+    emId: string;
+  };
 }
-
-const columns = [
-  {
-    title: 'ชื่อพนักงาน',
-    dataIndex: 'userName',
-    Link: '/backoffice/attendance/overview',
-    align: 'left',
-  },
-  {
-    title: 'ข้อมูลการทำงาน',
-    dataIndex: 'prefix',
-    align: 'left',
-  },
-  {
-    title: 'สถานะ',
-    dataIndex: 'status',
-    align: 'center',
-  },
-  {
-    title: 'กิจกรรม',
-    dataIndex: 'action',
-    align: 'center',
-    render: (value: string) => {
-      return handleAction(value);
-    },
-  },
-  {
-    title: 'บันทึกเมื่อวันที่',
-    dataIndex: 'stampDate',
-    align: 'center',
-  },
-  {
-    title: 'เวลาที่บันทึก',
-    dataIndex: 'stampTime',
-    align: 'center',
-  },
-  {
-    title: 'รวมเวลาการเข้าทำงาน',
-    dataIndex: 'totalWorkHours',
-    align: 'center',
-  },
-];
 
 export default function AttendancesPage() {
   const [page, setPage] = React.useState(1);
-  const [, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [filters, setFilters] = React.useState<FilterState>({
-    userName: '',
-  });
+  const [filters, setFilters] = React.useState<FilterState>({ userName: '' });
   const [items, setItems] = React.useState<AttendanceItem[]>([]);
+  const [userList, setUserList] = React.useState<any[]>([]);
   const [meta, setMeta] = React.useState<MetaData>({
     totalItems: 0,
     itemsPerPage: 10,
@@ -103,86 +72,95 @@ export default function AttendancesPage() {
 
   React.useEffect(() => {
     const fetchAttendances = async () => {
-      // setLoading(true);
+      setLoading(true);
       try {
         const { userName } = filters;
 
-        const { data } = (await pagination({
+        const response = await pagination({
           page,
           limit: rowsPerPage,
           ...(userName && { userName }),
-        })) as any;
-        const { items: fetchedItems, meta: fetchedMeta } = data;
+        });
 
-        setItems(
-          fetchedItems.flatMap((item: AttendanceItem) =>
-            item.records.map((record) => ({
-              ...item,
-              status: record?.status || '',
-              action: record?.action || '',
-              prefix: record?.workInfo?.prefix || '',
-              totalWorkHours: record?.workInfo?.totalWorkHours || '',
-              userName: record?.workInfo?.user?.userName || '',
-              stampDate: formatDate(record?.stamp).date || '',
-              stampTime: formatDate(record?.stamp).time || '',
-              currentDate: formatDate(item.currentDate).date || '',
-            })),
-          ),
-        );
+        if (response) {
+          const { items: fetchedItems, meta: fetchedMeta } = response;
 
-        // Set the meta state, ensuring it has default values
-        setMeta(fetchedMeta);
+          if (Array.isArray(fetchedItems) && fetchedMeta) {
+            setItems(
+              fetchedItems.map((item: AttendanceItem) => ({
+                ...item,
+                createdAtDate: formatDate(item.createdAt).date,
+                createdAtTime: formatDate(item.createdAt).time,
+                dueDate: formatDate(item.dueDate).date,
+                startDate: formatDate(item.startDate).date,
+                payDayDate: formatDate(item.payDay).date,
+                payDayTime: formatDate(item.payDay).time,
+              })),
+            );
+            setMeta(fetchedMeta);
+          } else {
+            console.error('Invalid response structure:', response);
+          }
+        } else {
+          console.error('No data received:', response);
+        }
       } catch (error) {
         console.error('Error fetching attendance:', error);
       } finally {
         setLoading(false);
       }
     };
+
     fetchAttendances();
   }, [page, rowsPerPage, filters]);
+  React.useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await getAll();
+        console.log('API Response:', response);
+        setUserList(response.data || []);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
 
-  // Debounced function to handle filter changes
+    fetchUsers();
+  }, []);
+
+  const fetchTimelineData = React.useCallback(async () => {
+    try {
+      const response = await getAttendance();
+
+      console.log('Raw API Response:', response);
+
+      if (response && Array.isArray(response.items)) {
+        return response.items.map((item: any) => ({
+          userName: item.workInfo.user.userName || 'Undefind',
+          action: item.action || 'N/A',
+          time: formatDate(item.stamp).time || 'N/A',
+          date: formatDate(item.stamp).date || 'N/A',
+        }));
+      } else {
+        console.error('Invalid response structure:', response);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching timeline data:', error);
+      return [];
+    }
+  }, []);
+
   const handleFilterChange = React.useCallback((updatedFilters: any) => {
     debounce(() => {
-      setPage(1); // Reset to the first page for new filters
+      setPage(1);
       setFilters(updatedFilters);
     }, 1)();
   }, []);
 
-  // Handle input changes
   const onInputChange = (key: keyof typeof filters, value: string) => {
     const updatedFilters = { ...filters, [key]: value };
     handleFilterChange(updatedFilters);
   };
-
-  const renderCard = (
-    title: string,
-    count: number,
-    colorClass: string,
-    Icon: React.ReactNode,
-  ) => (
-    <div className="flex-1">
-      <CardComponent
-        className={colorClass}
-        customCard
-        custom={
-          <div className="p-4 bg-white grid grid-cols-3 flex justify-between">
-            <div className="col-span-2">
-              <div className="text-4xl font-extrabold text-gray-900">
-                {count}
-              </div>
-              <div className="text-sm font-extrabold text-gray-600 mt-2">
-                {title}
-              </div>
-            </div>
-            <div className="flex items-start justify-end">
-              <div className="bg-gray-100 p-3 rounded-full">{Icon}</div>
-            </div>
-          </div>
-        }
-      />
-    </div>
-  );
 
   return (
     <div>
@@ -190,135 +168,97 @@ export default function AttendancesPage() {
         child={
           <div>
             <TopSection title="ภาพรวมการเข้าทำงานทั้งหมด" />
-            <div className=" grid grid-cols-4 gap-5">
+
+            <div className=" grid grid-cols-5 gap-8 flex justify-between">
               <div className="col-span-3">
-                <div className="flex space-x-5 mt-8  ">
-                  {renderCard(
-                    'พนักงานทั้งหมด',
-                    15,
-                    'bg-white text-blue-500',
-                    <Icons.UsersRound />,
-                  )}
-                  {renderCard(
-                    'เข้างานแล้ว',
-                    10,
-                    'bg-white text-accent1',
-                    <Icons.UserRoundCheck />,
-                  )}
-                  {renderCard(
-                    'ยังไม่เข้างาน',
-                    1,
-                    'bg-white text-red-500',
-                    <Icons.UserRoundMinus />,
-                  )}
-                </div>
-                <div className="flex space-x-4 mt-8">
-                  {renderCard(
-                    'เข้างานสาย',
-                    1,
-                    'bg-white text-orange-500',
-                    <Icons.ClockAlert />,
-                  )}
-                  {renderCard(
-                    'ลาป่วย/ลากิจ',
-                    2,
-                    'bg-white text-accent3',
-                    <Icons.Moon />,
-                  )}
-                  {renderCard(
-                    'เลิกงานแล้ว',
-                    1,
-                    'bg-white text-red-500',
-                    <Icons.LogOut />,
-                  )}
+                <div>
+                  <EmAttendanceCard users={userList || []} />
                 </div>
               </div>
-              <div className="col-span-1">
-                <div className=" flex space-x-4 mt-8 bg-white rounded-xl ">
-                  <TimelineComponent />
+              <div className="col-span-2">
+                <div className=" space-x-8 mt-8 bg-white rounded-xl shadow h-[90%] ">
+                  <TimelineComponent fetchData={fetchTimelineData} />
                 </div>
               </div>
             </div>
 
-            <div className=" grid grid-cols-5 gap-4">
+            <div className=" grid grid-cols-5 gap-8">
               <div className="col-span-3 mt-8">
-                <div className="bg-white rounded-xl p-5 ">
+                <div className="bg-white rounded-xl shadow">
                   <ChartComponent />
                 </div>
               </div>
               <div className="col-span-2 mt-8">
-                <div className="bg-white rounded-xl p-5">
+                <div className="bg-white rounded-xl shadow">
                   <WeeklyAttendanceChart />
                 </div>
               </div>
             </div>
 
             <div>
-              {/* {loading ? (
+              {loading ? (
                 <div className="flex justify-center items-center h-64">
                   <div className="spinner"></div>
                 </div>
               ) : (
-                <> */}
-              <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
-                <div className="grid grid-cols-1 sm:grid-cols-5 p-4 flex justify-between items-center">
-                  <div className=" px-3">
-                    <h6>ภาพรวมการเข้าทำงาน</h6>
+                <>
+                  <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
+                    <div className="grid grid-cols-1 sm:grid-cols-5 p-4 flex justify-between items-center">
+                      <div className=" px-3">
+                        <h6>ภาพรวมการเข้าทำงาน</h6>
+                      </div>
+                      <Input
+                        className="w-[90%] p-2 text-headFont col-span-2"
+                        startContent={<Icons.Search className="p-1" />}
+                        size="sm"
+                        radius="sm"
+                        name="userName"
+                        placeholder="ชื่อพนักงาน"
+                        variant="bordered"
+                        value={filters.userName}
+                        onChange={(e) =>
+                          onInputChange('userName', e.target.value)
+                        }
+                      />
+                      <Select
+                        className="w-[90%] p-2 text-headFont"
+                        startContent={<Icons.UserRound className="p-1" />}
+                        size="sm"
+                        radius="sm"
+                        name="userName"
+                        placeholder="เลือกตำแหน่ง"
+                        variant="bordered"
+                        value={filters.userName}
+                        onChange={(e) =>
+                          onInputChange('userName', e.target.value)
+                        }
+                      >
+                        <SelectItem>
+                          <div>1</div>
+                        </SelectItem>
+                      </Select>
+                      <DatePicker
+                        className="w-[90%] p-2 text-headFont"
+                        size="sm"
+                        radius="sm"
+                        name=""
+                        variant="bordered"
+                        selectorButtonPlacement="start"
+                      />
+                    </div>
+                    <TablePagination
+                      initialRows={items}
+                      initialMeta={meta}
+                      rowsPerPage={rowsPerPage}
+                      columns={columns as any}
+                      onPageChange={(newPage) => setPage(newPage)}
+                      onRowsPerPageChange={(newRowsPerPage) =>
+                        setRowsPerPage(newRowsPerPage)
+                      }
+                    />
                   </div>
-                  <Input
-                    className="w-[90%] p-2 text-headFont col-span-2"
-                    startContent={<Icons.Search className="p-1" />}
-                    size="sm"
-                    radius="sm"
-                    name="userName"
-                    // label="ค้นหาด้วยชื่อพนักงาน"
-                    // labelPlacement="outside"
-                    placeholder="ชื่อพนักงาน"
-                    variant="bordered"
-                    value={filters.userName}
-                    onChange={(e) => onInputChange('userName', e.target.value)}
-                  />
-                  <Select
-                    className="w-[90%] p-2 text-headFont"
-                    startContent={<Icons.UserRound className="p-1" />}
-                    size="sm"
-                    radius="sm"
-                    name="userName"
-                    // label="ค้นหาด้วยตำแหน่งพนักงาน"
-                    // labelPlacement="outside"
-                    placeholder="เลือกตำแหน่ง"
-                    variant="bordered"
-                    value={filters.userName}
-                    onChange={(e) => onInputChange('userName', e.target.value)}
-                  >
-                    <SelectItem>
-                      <div>1</div>
-                    </SelectItem>
-                  </Select>
-                  <DatePicker
-                    className="w-[90%] p-2 text-headFont"
-                    size="sm"
-                    radius="sm"
-                    name=""
-                    variant="bordered"
-                    selectorButtonPlacement="start"
-                    // label="ค้นหาด้วยวันที่"
-                    // labelPlacement="outside"
-                  />
-                </div>
-                <TablePagination
-                  initialRows={items}
-                  initialMeta={meta}
-                  rowsPerPage={rowsPerPage}
-                  columns={columns as any}
-                  onPageChange={(newPage) => setPage(newPage)}
-                  onRowsPerPageChange={(newRowsPerPage) =>
-                    setRowsPerPage(newRowsPerPage)
-                  }
-                />
-              </div>
-              {/* </>
-              )} */}
+                </>
+              )}
             </div>
           </div>
         }
@@ -327,3 +267,31 @@ export default function AttendancesPage() {
     </div>
   );
 }
+
+const columns = [
+  {
+    title: 'ชื่อพนักงาน',
+    dataIndex: 'userName',
+    link: '/backoffice/attendance/overview',
+    align: 'left',
+    render: (_: any, record: any) => {
+      return <span>{record?.user?.userName}</span>;
+    },
+  },
+  { title: 'คำนำหน้า', dataIndex: 'prefix' },
+  { title: 'สถานะ', dataIndex: 'status' },
+  { title: 'คำอธิบายงาน', dataIndex: 'descriptions' },
+  { title: 'ความสำคัญ', dataIndex: 'priority' },
+  { title: 'วันที่เริ่มต้น', dataIndex: 'startDate' },
+  { title: 'วันสิ้นสุด', dataIndex: 'dueDate' },
+  { title: 'เวลาจำกัดต่อวัน', dataIndex: 'limitTimePerDay' },
+  { title: 'ผู้ตรวจสอบ', dataIndex: 'inspector' },
+  { title: 'เครดิตเริ่มต้น', dataIndex: 'startCredit' },
+  { title: 'เครดิตรวม', dataIndex: 'totalCredit' },
+  { title: 'ชั่วโมงทำงานรวม', dataIndex: 'totalWorkHours' },
+  { title: 'วันที่จ่ายเงิน', dataIndex: 'payDayDate' },
+  { title: 'เวลาที่จ่ายเงิน', dataIndex: 'payDayTime' },
+  { title: 'หมายเหตุ', dataIndex: 'note' },
+  { title: 'สร้างวันที่', dataIndex: 'createdAtDate' },
+  { title: 'เวลาที่สร้าง', dataIndex: 'createdAtTime' },
+];

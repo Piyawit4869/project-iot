@@ -119,7 +119,7 @@ const columns = [
           className="text-accent1 hover:underline"
           href={`/backoffice/user/${record.id}`}
         >
-          {record.profile.firstName}
+          {record.userName}
         </Link>
       );
     },
