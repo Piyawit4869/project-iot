@@ -17,6 +17,10 @@ export const Upload: React.FC<UploadProps> = ({
   const [fileUpload, setFileUpload] = React.useState(false);
   const [imgUrl, setImgUrl] = React.useState([]) as any;
 
+  React.useEffect(() => {
+    setImgUrl(imageUrl);
+  }, [imageUrl]);
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] as File;
 
@@ -30,7 +34,6 @@ export const Upload: React.FC<UploadProps> = ({
 
     try {
       const result = await uploadFile({}, data);
-
       setImgUrl([...imgUrl, result.url]);
       onUpload(result.url);
     } finally {
@@ -62,7 +65,7 @@ export const Upload: React.FC<UploadProps> = ({
               </div>
             )}
 
-            {imgUrl?.map((url: any) => (
+            {/* {imgUrl?.map((url: any) => (
               <div key={url} className="relative">
                 <Image
                   className="rounded-md"
@@ -72,7 +75,7 @@ export const Upload: React.FC<UploadProps> = ({
                   height={100}
                 />
               </div>
-            ))}
+            ))} */}
           </>
         )}
       </div>

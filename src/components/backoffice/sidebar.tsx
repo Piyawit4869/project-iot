@@ -11,7 +11,7 @@ import {
   SidebarGroupLabel,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useCallback } from 'react';
 import * as Icons from 'lucide-react';
 import { useClientSession } from '@/libs/auth';
@@ -202,28 +202,32 @@ export function AdminSideBar({
       setting: [
         {
           name: 'การตั้งค่า',
-          key: 'setting',
+          // key: 'setting',
           icon: 'Bolt',
           isActive: false,
           subMenu: [
             {
               name: 'ข้อมูลองค์กร',
               icon: 'SquareChartGantt',
+              key: 'organization',
               isActive: false,
             },
             {
               name: 'ข้อมูลสาขา',
               icon: 'Building2',
+              key: 'branch',
               isActive: false,
             },
             {
               name: 'ข้อมูลที่อยู่',
               icon: 'MapPinCheck',
+              key: 'address',
               isActive: false,
             },
             {
               name: 'การตั้งค่า',
               icon: 'SlidersHorizontal',
+              key: 'setting',
               isActive: false,
             },
           ],
@@ -231,6 +235,16 @@ export function AdminSideBar({
       ],
     };
   }, []);
+
+  const searchParams = useSearchParams(); // ✅ ใช้ดึงค่า Query Parameter
+
+  const router = useRouter();
+  const activeTab = searchParams?.get('tab') || 'organization'; // ค่าเริ่มต้น "organization"
+
+  const handleMenuClick = (key: string) => {
+    const newUrl = `${pathname}?tab=${key}`;
+    router.push(newUrl); // ✅ เปลี่ยน Query Parameter ใน URL
+  };
 
   const initialSubMenuState = React.useMemo(() => {
     const state: any = {};
@@ -325,14 +339,15 @@ export function AdminSideBar({
                       <SidebarMenuSub>
                         {item.subMenu?.map((subItem: any) => {
                           return (
-                            <SidebarMenuSubItem key={subItem.name}>
+                            <SidebarMenuSubItem key={subItem.key}>
                               <SidebarMenuSubButton
-                                key={subItem.path}
-                                href={subItem.path}
-                                isActive={pathname === subItem.path}
-                                className={`py-4 ${
-                                  pathname === subItem.path ? 'bg-blue-100' : ''
+                                key={subItem.key}
+                                className={`p-2 rounded-md cursor-pointer ${
+                                  activeTab === subItem.key
+                                    ? 'bg-blue-500 text-white'
+                                    : 'bg-white'
                                 }`}
+                                onClick={() => handleMenuClick(subItem.key)}
                               >
                                 {renderIcon(subItem.icon)}
                                 <span
@@ -379,5 +394,119 @@ export function AdminSideBar({
         </div>
       </SidebarContent>
     </Sidebar>
+
+    // <Sidebar collapsible="icon" {...props}>
+    //   <SidebarHeader>
+    //     <div
+    //       className={`flex items-center py-4 transition-all duration-300 ${
+    //         isSidebarOpen ? 'justify-start px-2' : 'justify-center'
+    //       }`}
+    //     >
+    //       <Link href="/backoffice">
+    //         <Image
+    //           src={me?.organization?.logoUrl || '/path/to/fallback-logo.png'}
+    //           alt="Logo"
+    //           width={40}
+    //           height={40}
+    //           className="rounded-xl hover:scale-110"
+    //         />
+    //       </Link>
+    //       {isSidebarOpen && (
+    //         <span className="ml-2 font-bold text-lg transition-opacity duration-300 opacity-100">
+    //           บริษัท {me?.organization?.nameTh} จำกัด
+    //         </span>
+    //       )}
+    //     </div>
+    //   </SidebarHeader>
+
+    //   {/* SidebarContent section */}
+    //   <SidebarContent>
+    //     <SidebarGroup>
+    //       <SidebarGroupLabel className="text-accent1 py-2">
+    //         เมนูหลัก
+    //       </SidebarGroupLabel>
+    //       <SidebarMenu>
+    //         <NavHome items={menuData.home} />
+    //         {menuSidebar.map((item: any) => {
+    //           return (
+    //             <Collapsible key={item.key} className="group/collapsible">
+    //               <SidebarMenuItem key={item.key}>
+    //                 <CollapsibleTrigger asChild>
+    //                   <SidebarMenuButton
+    //                     onClick={() => {
+    //                       if (isSidebarOpen) toggleSubMenu(item.key);
+    //                     }}
+    //                     isActive={pathFeature === item.key}
+    //                   >
+    //                     {renderIcon(item.icon)}
+    //                     <span
+    //                       className={`transition-all duration-300 ${
+    //                         isSidebarOpen ? 'opacity-100' : 'opacity-0 hidden'
+    //                       }`}
+    //                     >
+    //                       <a href={item.path}>{item.name}</a>
+    //                     </span>
+    //                     <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+    //                   </SidebarMenuButton>
+    //                 </CollapsibleTrigger>
+
+    //                 {item.subMenu && isSubMenuOpen[item.key] && (
+    //                   <SidebarMenuSub>
+    //                     {item.subMenu?.map((subItem: any) => {
+    //                       return (
+    //                         <SidebarMenuSubItem key={subItem.name}>
+    //                           <SidebarMenuSubButton
+    //                             key={subItem.path}
+    //                             href={subItem.path}
+    //                             isActive={pathname === subItem.path}
+    //                             className={`py-4 ${
+    //                               pathname === subItem.path ? 'bg-blue-100' : ''
+    //                             }`}
+    //                           >
+    //                             {renderIcon(subItem.icon)}
+    //                             <span
+    //                               className={`transition-all duration-300 ${
+    //                                 isSidebarOpen
+    //                                   ? 'opacity-100'
+    //                                   : 'opacity-0 hidden'
+    //                               }`}
+    //                             >
+    //                               {subItem.name}
+    //                             </span>
+    //                           </SidebarMenuSubButton>
+    //                         </SidebarMenuSubItem>
+    //                       );
+    //                     })}
+    //                   </SidebarMenuSub>
+    //                 )}
+    //               </SidebarMenuItem>
+    //             </Collapsible>
+    //           );
+    //         })}
+
+    //         {menuSidebar === menuData.main && (
+    //           <NavSetting
+    //             items={menuData.setting}
+    //             // onMenuClick={handleMenuClick}
+    //           />
+    //         )}
+    //       </SidebarMenu>
+    //     </SidebarGroup>
+    //     <div className="py-5 px-5">
+    //       <hr />
+    //       {menuSidebar === menuSetting.setting && (
+    //         <div className="flex items-center justify-center h-full mt-3">
+    //           <Button
+    //             onClick={() => setMenuSidebar(menuData.main)}
+    //             className="rounded-full"
+    //             size="sm"
+    //           >
+    //             <Icons.ChevronLeft />
+    //           </Button>
+    //         </div>
+    //       )}
+    //     </div>
+    //   </SidebarContent>
+    // </Sidebar>
   );
 }

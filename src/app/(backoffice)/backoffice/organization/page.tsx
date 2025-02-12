@@ -34,6 +34,7 @@ import InputTime from './components/system/inputTime';
 import AddressTable from './components/addresses/addressTable';
 // import Map from '@/components/map/map';
 import LongdoMapPage from './components/addresses/addressMap';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 // import { updatesystem } from '@/pages/api/organization/updata';
 
 export default function OraganizationPage() {
@@ -255,6 +256,17 @@ export default function OraganizationPage() {
   //   );
   // };
 
+  const searchParams = useSearchParams(); // ✅ ใช้ดึงค่า Query Parameter
+  const pathname = usePathname(); // ✅ ใช้ดึง Path ปัจจุบัน
+
+  const router = useRouter();
+  const activeTab = searchParams?.get('tab') || 'setting'; // ค่าเริ่มต้น "setting"
+
+  const handleTabChange = (key: string) => {
+    const newUrl = `${pathname}?tab=${key}`;
+    router.push(newUrl); // ✅ เปลี่ยน URL แต่ไม่รีโหลดหน้า
+  };
+
   return (
     <Scaffold
       child={
@@ -278,7 +290,11 @@ export default function OraganizationPage() {
             <div className="flex-1">
               <Form id="organization" onSubmit={onSubmit} method="post">
                 <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
-                  <Tabs variant="underlined">
+                  <Tabs
+                    variant="underlined"
+                    selectedKey={activeTab}
+                    onSelectionChange={(key) => handleTabChange(key as string)}
+                  >
                     <Tab key="setting" title="การตั้งค่าระบบ">
                       <div className="flex space-x-4">
                         <CardComponent
