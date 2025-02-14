@@ -36,8 +36,8 @@ export function AdminSideBar({
   const pathname = usePathname() ?? '';
   const pathUrl = pathname.split('/');
   const pathFeature = pathUrl && pathUrl[2];
-  const pathSubFeature = pathUrl && pathUrl[3];
-  console.log({ pathSubFeature });
+  // const pathSubFeature = pathUrl && pathUrl[3];
+  // console.log({ pathSubFeature });
 
   const me = useClientSession();
   const menuData: any = React.useMemo(() => {

@@ -1,14 +1,13 @@
 import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
-interface FetchWorkInfoParams {
+interface FetchAttendancesParams {
   page: number;
   limit: number;
-  userName?: string;
-  status?: string;
+  docNo?: string;
 }
 
-interface FetchWorkInfoResponse {
+interface FetchAttendancesResponse {
   items: any[];
   meta: {
     totalItems: number;
@@ -18,31 +17,26 @@ interface FetchWorkInfoResponse {
   };
 }
 
-export default async function pagination({
-  page,
-  limit,
-  userName,
-  status,
-}: FetchWorkInfoParams): Promise<FetchWorkInfoResponse> {
+export default async function pagination(
+  { page, limit, docNo }: FetchAttendancesParams,
+  id?: string,
+): Promise<FetchAttendancesResponse> {
   try {
-    const url = new URL(`${base_url}/crud/work-info`);
+    const url = new URL(`${base_url}/crud/attendances/user/${id}`);
     url.searchParams.append('page', page.toString());
     url.searchParams.append('limit', limit.toString());
 
     const auth = await getServerSession();
 
-    if (userName) {
-      url.searchParams.append('userName', userName);
-    }
-    if (status) {
-      url.searchParams.append('status', status);
+    if (docNo) {
+      url.searchParams.append('docNo', docNo);
     }
 
     const response = await fetch(url.toString(), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${auth.accessToken}`,
+        Authorization: `Bearer  ${auth.accessToken}`,
       },
     });
 

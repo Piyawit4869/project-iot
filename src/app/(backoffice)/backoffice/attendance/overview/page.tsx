@@ -3,12 +3,12 @@
 //System
 import React from 'react';
 import debounce from 'lodash/debounce';
+
 //API
 import pagination from '@/pages/api/workinfos/pagination';
 import { getAttendance } from '@/pages/api/attendances/get';
-import { getAll } from '@/pages/api/user/getAll';
-//Helper function
-import { formatDate } from '@/utils/enums/date';
+import { countWork } from '@/pages/api/workinfos/get';
+
 //Component
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
@@ -18,8 +18,13 @@ import TimelineComponent from '@/components/backoffice/timeline';
 import ChartComponent from '@/components/backoffice/garphRateAll';
 import WeeklyAttendanceChart from '@/components/backoffice/garphRateDepartment';
 import EmAttendanceCard from '@/components/backoffice/cardAttedanceEm';
+
+//Helper function
+import { formatDate } from '@/utils/enums/date';
+
 //Icon
 import * as Icons from 'lucide-react';
+
 interface FilterState {
   userName: string;
 }
@@ -95,6 +100,7 @@ export default function AttendancesPage() {
                 startDate: formatDate(item.startDate).date,
                 payDayDate: formatDate(item.payDay).date,
                 payDayTime: formatDate(item.payDay).time,
+                userName: item?.user?.userName,
               })),
             );
             setMeta(fetchedMeta);
@@ -113,25 +119,44 @@ export default function AttendancesPage() {
 
     fetchAttendances();
   }, [page, rowsPerPage, filters]);
+
   React.useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchWork = async () => {
       try {
-        const response = await getAll();
-        console.log('API Response:', response);
-        setUserList(response.data || []);
+        const response = await countWork();
+
+        if (response && typeof response.data === 'object') {
+          const formattedUsers = [
+            ...Array(response.data.totalClockedIn).fill({
+              status: 'totalClockedIn',
+            }),
+            ...Array(response.data.totalLateIn).fill({ status: 'totalLateIn' }),
+            ...Array(response.data.totalNotClockedIn).fill({
+              status: 'totalNotClockedIn',
+            }),
+            ...Array(response.data.totalClockedOut).fill({
+              status: 'totalClockedOut',
+            }),
+          ];
+
+          setUserList(formattedUsers);
+        } else {
+          console.error('❌ Unexpected work data format:', response);
+          setUserList([]);
+        }
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('⚠️ Error fetching work data:', error);
+        setUserList([]);
       }
     };
-
-    fetchUsers();
+    fetchWork();
   }, []);
+  //END API EMPLOYEE CARD
 
+  //API TIMELINE COMPONENT
   const fetchTimelineData = React.useCallback(async () => {
     try {
       const response = await getAttendance();
-
-      console.log('Raw API Response:', response);
 
       if (response && Array.isArray(response.items)) {
         return response.items.map((item: any) => ({
@@ -182,14 +207,14 @@ export default function AttendancesPage() {
               </div>
             </div>
 
-            <div className=" grid grid-cols-5 gap-8">
-              <div className="col-span-3 mt-8">
-                <div className="bg-white rounded-xl shadow">
+            <div className=" grid grid-cols-5 gap-8 flex justify-between">
+              <div className="col-span-3">
+                <div className=" space-x-8 mt-8 bg-white rounded-xl shadow ">
                   <ChartComponent />
                 </div>
               </div>
-              <div className="col-span-2 mt-8">
-                <div className="bg-white rounded-xl shadow">
+              <div className="col-span-2">
+                <div className=" space-x-8 mt-8 bg-white rounded-xl shadow ">
                   <WeeklyAttendanceChart />
                 </div>
               </div>
@@ -274,9 +299,9 @@ const columns = [
     dataIndex: 'userName',
     link: '/backoffice/attendance/overview',
     align: 'left',
-    render: (_: any, record: any) => {
-      return <span>{record?.user?.userName}</span>;
-    },
+    // render: (_: any, record: any) => {
+    //   return <span>{record?.user?.userName}</span>;
+    // },
   },
   { title: 'คำนำหน้า', dataIndex: 'prefix' },
   { title: 'สถานะ', dataIndex: 'status' },

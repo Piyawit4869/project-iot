@@ -1,14 +1,14 @@
 import { base_url } from '@/constant/common';
 import { getServerSession } from '@/libs/auth';
 
-interface FetchWorkInfoParams {
+interface FetchWhitelistsParams {
   page: number;
   limit: number;
-  userName?: string;
+  ip?: string;
   status?: string;
 }
 
-interface FetchWorkInfoResponse {
+interface FetchApprovalResponse {
   items: any[];
   meta: {
     totalItems: number;
@@ -21,18 +21,18 @@ interface FetchWorkInfoResponse {
 export default async function pagination({
   page,
   limit,
-  userName,
+  ip,
   status,
-}: FetchWorkInfoParams): Promise<FetchWorkInfoResponse> {
+}: FetchWhitelistsParams): Promise<FetchApprovalResponse> {
   try {
-    const url = new URL(`${base_url}/crud/work-info`);
+    const url = new URL(`${base_url}/crud/approvals`);
     url.searchParams.append('page', page.toString());
     url.searchParams.append('limit', limit.toString());
 
     const auth = await getServerSession();
 
-    if (userName) {
-      url.searchParams.append('userName', userName);
+    if (ip) {
+      url.searchParams.append('ip', ip);
     }
     if (status) {
       url.searchParams.append('status', status);
