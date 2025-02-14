@@ -2,25 +2,53 @@ import React from 'react';
 import * as Icons from 'lucide-react';
 import CardComponent from '../common/card';
 
-interface EmAttendanceCardProps {
-  users: any[];
+interface UserProps {
+  id: number;
+  name: string;
+  status:
+    | 'totalClockedIn'
+    | 'totalLateIn'
+    | 'totalNotClockedIn'
+    | 'totalClockedOut'
+    | 'totalonLeave';
 }
 
-const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users }) => {
-  const totalEmployees = users.length || 10;
-  const checkedInCount =
-    users.filter((user) => user.status === 'active').length || 4;
-  const lateCount = users.filter((user) => user.status === 'late').length || 2;
-  const onLeaveCount =
-    users.filter((user) => user.status === 'on_leave').length || 2;
-  const checkedOutCount =
-    users.filter((user) => user.status === 'checked_out').length || 1;
-  const notCheckedInCount =
-    totalEmployees -
-    checkedInCount -
-    lateCount -
-    onLeaveCount -
-    checkedOutCount;
+interface EmAttendanceCardProps {
+  users?: UserProps[];
+}
+
+const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users = [] }) => {
+  const validUsers = Array.isArray(users) ? users : [];
+  const totalEmployees = validUsers.length;
+
+  const attendanceStats = React.useMemo(() => {
+    const counts: Record<
+      | 'totalClockedIn'
+      | 'totalLateIn'
+      | 'totalNotClockedIn'
+      | 'totalClockedOut'
+      | 'totalonLeave',
+      number
+    > = {
+      totalClockedIn: 0,
+      totalLateIn: 0,
+      totalNotClockedIn: 0,
+      totalClockedOut: 0,
+      totalonLeave: 0,
+    };
+
+    validUsers.forEach((user) => {
+      counts[user.status]++;
+    });
+
+    return {
+      checkedInCount: counts.totalClockedIn,
+      lateCount: counts.totalLateIn,
+      onLeaveCount: counts.totalonLeave,
+      checkedOutCount: counts.totalClockedOut,
+      notCheckedInCount: counts.totalNotClockedIn,
+    };
+  }, [validUsers, totalEmployees]);
 
   const renderCard = (
     title: string,
@@ -62,33 +90,33 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users }) => {
         )}
         {renderCard(
           'เข้างานแล้ว',
-          checkedInCount,
-          'bg-white text-accent1',
+          attendanceStats.checkedInCount,
+          'bg-white text-green-500',
           <Icons.UserRoundCheck />,
         )}
         {renderCard(
           'ยังไม่เข้างาน',
-          notCheckedInCount,
-          'bg-white text-red-500',
+          attendanceStats.notCheckedInCount,
+          'bg-white text-gray-500',
           <Icons.UserRoundMinus />,
         )}
       </div>
       <div className="flex space-x-8 mt-8">
         {renderCard(
           'เข้างานสาย',
-          lateCount,
+          attendanceStats.lateCount,
           'bg-white text-orange-500',
           <Icons.ClockAlert />,
         )}
         {renderCard(
-          'ลาป่วย/ลากิจ',
-          onLeaveCount,
-          'bg-white text-accent3',
+          'ลางาน',
+          attendanceStats.onLeaveCount,
+          'bg-white text-yellow-500',
           <Icons.Moon />,
         )}
         {renderCard(
           'เลิกงานแล้ว',
-          checkedOutCount,
+          attendanceStats.checkedOutCount,
           'bg-white text-red-500',
           <Icons.LogOut />,
         )}

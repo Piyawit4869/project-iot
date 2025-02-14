@@ -6,7 +6,7 @@ export default async function getSingle(id: string): Promise<any> {
     const auth = await getServerSession();
 
     //query params in this
-    const response = await fetch(`${base_url}/crud/work-info/${id}`, {
+    const response = await fetch(`${base_url}/crud/work-info/user/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -24,8 +24,7 @@ export default async function getSingle(id: string): Promise<any> {
     console.error('Error fetching data:', error);
     return {};
   }
-} 
-
+}
 
 export async function getAll() {
   const url = `${base_url}/crud/work-info/`;
@@ -43,8 +42,8 @@ export async function getAll() {
   return await data.json();
 }
 
-export async function getUserWorkinfo() {
-  const url = `${base_url}/crud/users/`;
+export async function countWork() {
+  const url = `${base_url}/crud/work-info/work-count`;
   const auth = await getServerSession();
 
   const data = await fetch(url, {
