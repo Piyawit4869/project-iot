@@ -63,7 +63,7 @@ export default function RoleCreatePage() {
         style: { fontFamily: 'var(--font-ibm-sans)' },
       });
 
-      router.push(`/backoffice/employeeRole/${data.items.id}`);
+      router.push(`/backoffice/employeeRole/${data.items.data.id}`);
     } catch (err: any) {
       toast.error('❌ ไม่สามารถสร้างตำแหน่งพนักงานใหม่ได้', {
         duration: 3000,

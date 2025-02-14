@@ -1,3 +1,4 @@
+import React from 'react';
 import { Card, CardHeader, CardBody, Switch } from '@nextui-org/react';
 
 interface CardControlProps {
@@ -17,6 +18,23 @@ export const CardControl = ({
   onChange,
   isSelected,
 }: CardControlProps) => {
+  const [selected, setSelected] = React.useState(isSelected);
+
+  React.useEffect(() => {
+    if (isSelected !== undefined) {
+      setSelected(isSelected);
+    }
+  }, [isSelected]);
+
+  const handleToggle = (e: any) => {
+    setSelected(e.target.checked);
+    if (onChange) {
+      onChange(e.target.checked);
+    }
+  };
+
+  console.log('selected', selected);
+
   return (
     <Card className="py-4 bg-primary" isHoverable isPressable>
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
@@ -30,12 +48,13 @@ export const CardControl = ({
           name={name}
           className="mt-3"
           color="secondary"
-          isSelected={isSelected}
-          onChange={(e) => {
-            if (onChange) {
-              onChange(e as any);
-            }
-          }}
+          isSelected={selected}
+          // onChange={(e) => {
+          //   if (onChange) {
+          //     onChange(e as any);
+          //   }
+          // }}
+          onChange={handleToggle}
         ></Switch>
       </CardBody>
     </Card>

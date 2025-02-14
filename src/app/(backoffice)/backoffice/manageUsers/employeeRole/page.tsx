@@ -5,7 +5,7 @@ import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
-import paginationRoles from '@/pages/api/role/pagination';
+import paginationEmployeeRole from '@/pages/api/employeeRole/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 
 export default function RolesPage() {
@@ -21,28 +21,29 @@ export default function RolesPage() {
     totalPages: 0,
     currentPage: 1,
   });
-  // const [loading, setLoading] = React.useState(false);
+  const [, setLoading] = React.useState(false);
 
-  // Fetch data from the API
   React.useEffect(() => {
-    const fetchCustomer = async () => {
-      // setLoading(true);
+    // Fetch data from the API
+    const fetchEmployeeRole = async () => {
+      setLoading(true);
       try {
         // const { name } = filters;
-        const { items: fetchedItems } = await paginationRoles({
-          page,
-          limit: rowsPerPage,
-          // ...(name && { name }),
-        });
+        const { items: fetchedItems, items: fetchedMeta } =
+          await paginationEmployeeRole({
+            page,
+            limit: rowsPerPage,
+            // ...(name && { name }),
+          });
         setItems(fetchedItems.items);
-        setMeta(fetchedItems.meta);
+        setMeta(fetchedMeta.meta);
       } catch (error) {
         console.log('Error fetching notations:', error);
       } finally {
-        // setLoading(false);
+        setLoading(false);
       }
     };
-    fetchCustomer();
+    fetchEmployeeRole();
   }, [page, rowsPerPage]);
 
   // Debounced function to handle filter changes
@@ -66,9 +67,9 @@ export default function RolesPage() {
         child={
           <div>
             <TopSection
-              title="ตำแหน่งทั้งหมด"
+              title="ตำแหน่งพนักงาน"
               buttons={[
-                <Link href={'role/create'} key={'create button'}>
+                <Link href={'employeeRole/create'} key={'create button'}>
                   <Button
                     className="bg-accent1 text-white"
                     size="sm"
@@ -95,11 +96,6 @@ export default function RolesPage() {
               </div>
             </div>
 
-            {/* {loading ? (
-              <div className="flex justify-center items-center h-64">
-                <div className="spinner"></div>
-              </div>
-            ) : ( */}
             <TablePagination
               initialRows={items}
               initialMeta={meta}
@@ -110,7 +106,6 @@ export default function RolesPage() {
                 setRowsPerPage(newRowsPerPage)
               }
             />
-            {/* )} */}
           </div>
         }
         backgroundColor={''}
@@ -123,7 +118,7 @@ const columns = [
   {
     title: 'ชื่อตำแหน่ง',
     dataIndex: 'name',
-    link: '/backoffice/role',
+    link: '/backoffice/manageUsers/employeeRole',
   },
   {
     title: 'รายละเอียดตำแหน่ง',

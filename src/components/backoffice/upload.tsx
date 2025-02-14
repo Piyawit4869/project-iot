@@ -2,6 +2,7 @@ import React from 'react';
 import { Input } from '@/components/ui/input';
 import { uploadFile } from '@/pages/api/upload/upload';
 import Image from 'next/image';
+import * as Icons from 'lucide-react';
 
 interface UploadProps {
   imageUrl: string | null;
@@ -17,29 +18,27 @@ export const Upload: React.FC<UploadProps> = ({
   const [fileUpload, setFileUpload] = React.useState(false);
   const [imgUrl, setImgUrl] = React.useState([]) as any;
 
-  React.useEffect(() => {
-    setImgUrl(imageUrl);
-  }, [imageUrl]);
+  // const handleFileChange = async (e: any) => {
+  //   const file = e.target.files?.[0] as File;
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] as File;
+  //   setFileUpload(true);
 
-    setFileUpload(true);
+  //   const data = new FormData();
+  //   data.set('file', file);
+  //   console.log(file);
 
-    const data = new FormData();
-    data.set('file', file);
-    console.log(file);
+  //   await uploadFile({}, data);
 
-    await uploadFile({}, data);
+  //   try {
+  //     const result = await uploadFile({}, data);
 
-    try {
-      const result = await uploadFile({}, data);
-      setImgUrl([...imgUrl, result.url]);
-      onUpload(result.url);
-    } finally {
-      setFileUpload(false);
-    }
-  };
+  //     setImgUrl(...imgUrl, result.url);
+
+  //     onUpload(result.url);
+  //   } finally {
+  //     setFileUpload(false);
+  //   }
+  // };
 
   return (
     <>
@@ -47,7 +46,7 @@ export const Upload: React.FC<UploadProps> = ({
         onClick={() => {
           fileInuptRef.current?.click();
         }}
-        className={`flex flex-warp p-2 bg-gray-200 w-[100px] h-auto rounded-md hover:scale-110 cursor-pointer ${className}`}
+        className={`flex flex-warp p-2 w-[100px] border-dashed border-1 border-gray-400 h-auto rounded-md hover:scale-110 cursor-pointer ${className}`}
       >
         {imageUrl ? (
           <Image
@@ -60,12 +59,17 @@ export const Upload: React.FC<UploadProps> = ({
         ) : (
           <>
             {!imgUrl?.length && (
-              <div className="text-sm flex items-center p-2 cursor-pointer opacity-50 text-center">
-                <span>เพิ่มรูปภาพ</span>
+              <div className="text-sm p-2 cursor-pointer opacity-50 text-center rounded-md">
+                <div className="flex justify-center">
+                  <Icons.ImageUp />
+                </div>
+                <div className="mt-2">
+                  <span>เพิ่มรูปภาพ</span>
+                </div>
               </div>
             )}
 
-            {/* {imgUrl?.map((url: any) => (
+            {imgUrl?.map((url: any) => (
               <div key={url} className="relative">
                 <Image
                   className="rounded-md"
@@ -75,7 +79,7 @@ export const Upload: React.FC<UploadProps> = ({
                   height={100}
                 />
               </div>
-            ))} */}
+            ))}
           </>
         )}
       </div>
@@ -85,7 +89,27 @@ export const Upload: React.FC<UploadProps> = ({
         disabled={fileUpload}
         ref={fileInuptRef}
         className="hidden"
-        onChange={handleFileChange}
+        onChange={async (e) => {
+          const file = e.target.files?.[0] as File;
+
+          setFileUpload(true);
+
+          const data = new FormData();
+          data.set('file', file);
+          console.log(file);
+
+          await uploadFile({}, data);
+
+          try {
+            const result = await uploadFile({}, data);
+
+            setImgUrl([...imgUrl, result.url]);
+
+            onUpload(result.url);
+          } finally {
+            setFileUpload(false);
+          }
+        }}
       />
     </>
   );

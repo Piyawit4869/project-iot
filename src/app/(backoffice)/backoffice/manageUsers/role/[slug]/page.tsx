@@ -6,9 +6,9 @@ import { Button, Card, Form, Input, Switch, Textarea } from '@nextui-org/react';
 import React from 'react';
 import { toast } from 'sonner';
 import { useParams, useRouter } from 'next/navigation';
-import { deleteemployeeRole } from '@/pages/api/employeeRole/delete';
-import { updateemployeeRole } from '@/pages/api/employeeRole/update';
-import getemployeeRole from '@/pages/api/employeeRole/get';
+import getRole from '@/pages/api/role/get';
+import { updateRole } from '@/pages/api/role/update';
+import { deleteRole } from '@/pages/api/role/delete';
 
 export default function RoleCreatePage() {
   const [errors, setErrors] = React.useState({}) as any;
@@ -32,7 +32,7 @@ export default function RoleCreatePage() {
     }
 
     const fetchRoleSingle = async () => {
-      const data = await getemployeeRole(params.slug);
+      const data = await getRole(params.slug);
 
       setFormData(data.items.data);
     };
@@ -65,7 +65,7 @@ export default function RoleCreatePage() {
       };
 
       // 🔹 Send data to API
-      await updateemployeeRole({}, payload, params?.slug);
+      await updateRole({}, payload, params?.slug);
 
       toast.success('🎉 แก้ไขตำแหน่งเรียบร้อย!', {
         duration: 3000,
@@ -86,7 +86,7 @@ export default function RoleCreatePage() {
 
   const onDelete = async () => {
     try {
-      await deleteemployeeRole(params?.slug);
+      await deleteRole(params?.slug);
 
       toast.success('ลบข้อมูลตำแหน่งสำเร็จ!', {
         duration: 3000,
@@ -94,7 +94,7 @@ export default function RoleCreatePage() {
         style: { fontFamily: 'var(--font-ibm-sans)' },
       });
 
-      router.push(`/backoffice/employeeRole`);
+      router.push(`/backoffice/role`);
     } catch (error) {
       toast.error('❌ ไม่สามารถลบข้อมูลตำแหน่งได้', {
         duration: 3000,
@@ -113,14 +113,14 @@ export default function RoleCreatePage() {
           {/* 🔹 Page Header */}
           <TopSection
             title="ข้อมูลตำแหน่ง"
-            backpath={'/backoffice/employeeRole'}
+            backpath={'/backoffice/manageUsers/role'}
             buttons={[
               <a key={'create button'}>
                 <Button
                   className="bg-accent1 text-white text-xs"
                   size="sm"
                   type="submit"
-                  form="employeeroleForm"
+                  form="roleForm"
                 >
                   ยืนยัน
                 </Button>
@@ -140,7 +140,7 @@ export default function RoleCreatePage() {
           {/* 🔹 Form Section */}
           <Card className="p-6 mt-8">
             <Form
-              id="employeeroleForm"
+              id="roleForm"
               onSubmit={onSubmit}
               method="post"
               className="grid grid-cols-1 gap-4"
@@ -149,7 +149,7 @@ export default function RoleCreatePage() {
               {/* 🔹 Section Header */}
               <div className="flex justify-between items-center">
                 <h1 className="flex-1 text-xl font-bold text-headFont">
-                  ข้อมูลตำแหน่งพนักงาน
+                  ข้อมูลตำแหน่งงาน
                 </h1>
               </div>
               <div className="flex items-center gap-4 mt-4">
@@ -169,7 +169,7 @@ export default function RoleCreatePage() {
                 <Input
                   className="w-full"
                   size="sm"
-                  label="ชื่อตำแหน่งพนักงาน"
+                  label="ชื่อตำแหน่งงาน"
                   labelPlacement="outside"
                   name="name"
                   placeholder="กรอกชื่อตำแหน่งงาน"

@@ -58,7 +58,7 @@ export default function TemplatesPage() {
   // Fetch data whenever filters, page, or rowsPerPage change
   React.useEffect(() => {
     fetchNotations();
-  });
+  }, [page, rowsPerPage, filters]);
 
   return (
     <div>
@@ -81,7 +81,7 @@ export default function TemplatesPage() {
               ]}
             />
             <div className="bg-white shadow rounded-lg mb-4 mt-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2">
+              <div className="grid grid-cols-1 sm:grid-cols-1">
                 <Input
                   className="flex-1 p-2 text-headFont"
                   labelPlacement="outside"
@@ -92,15 +92,6 @@ export default function TemplatesPage() {
                   onChange={(e) =>
                     onInputChange('templateName', e.target.value)
                   }
-                />
-                <Input
-                  className="flex-1 p-2 text-headFont"
-                  labelPlacement="outside"
-                  size="sm"
-                  name="docNo"
-                  placeholder="ค้นหาหมายเลขเอกสาร"
-                  value={filters.docNo}
-                  onChange={(e) => onInputChange('docNo', e.target.value)}
                 />
               </div>
             </div>

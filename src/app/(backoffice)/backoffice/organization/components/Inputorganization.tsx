@@ -110,7 +110,7 @@ export default function Inputorganization({
               placeholder="สถานะธุรกิจ"
               label="สถานะธุรกิจ"
               labelPlacement={'outside'}
-              selectedKeys={[formData.status]}
+              selectedKeys={[formData?.status]}
               onChange={handleChange}
               isDisabled={!openEdit}
             >
@@ -130,7 +130,7 @@ export default function Inputorganization({
               placeholder="รูปแบบธุรกิจ"
               label="รูปแบบธุรกิจ"
               labelPlacement={'outside'}
-              selectedKeys={[formData.type]}
+              selectedKeys={[formData?.type]}
               onChange={handleChange}
               isDisabled={!openEdit}
             >
@@ -155,7 +155,7 @@ export default function Inputorganization({
               labelPlacement="outside"
               name="nameTh"
               placeholder="กรอกชื่อกิจการ"
-              value={formData.nameTh}
+              value={formData?.nameTh}
               onChange={handleChange}
               isDisabled={!openEdit}
             />
@@ -167,7 +167,7 @@ export default function Inputorganization({
               labelPlacement="outside"
               name="nameEn"
               placeholder="Enter the business name"
-              value={formData.nameEn}
+              value={formData?.nameEn}
               onChange={handleChange}
               isDisabled={!openEdit}
             />
@@ -184,7 +184,7 @@ export default function Inputorganization({
                     name="taxId"
                     length={13}
                     onChange={handleChange}
-                    value={formData.taxId}
+                    value={formData?.taxId}
                     isDisabled={!openEdit}
                   />
                 </div>
@@ -232,7 +232,7 @@ export default function Inputorganization({
                 disableAnimation
                 isDisabled={!openEdit}
                 value={
-                  formData.openingDate
+                  formData?.openingDate
                     ? parseDate(formData.openingDate.split('T')[0])
                     : undefined
                 }
@@ -267,7 +267,7 @@ export default function Inputorganization({
                   defaultSelected
                   aria-label="Automatic updates"
                   color="success"
-                  checked={formData.registerVat}
+                  checked={formData?.registerVat}
                   onChange={handleChange}
                   isDisabled={!openEdit}
                 />
@@ -281,7 +281,7 @@ export default function Inputorganization({
               labelPlacement="outside"
               name="websiteUrl"
               placeholder="www.three-chief.com"
-              value={formData.websiteUrl}
+              value={formData?.websiteUrl}
               onChange={handleChange}
               isDisabled={!openEdit}
             />
@@ -291,7 +291,7 @@ export default function Inputorganization({
               labelPlacement="outside"
               name="domainName"
               placeholder="threechief.com"
-              value={formData.domainName}
+              value={formData?.domainName}
               onChange={handleChange}
               isDisabled={!openEdit}
             />
@@ -317,7 +317,7 @@ export default function Inputorganization({
               labelPlacement="outside"
               name="contactPhone"
               placeholder="+66 888 821 480"
-              value={formData.contactPhone}
+              value={formData?.contactPhone}
               onChange={handleChange}
               isDisabled={!openEdit}
             />
@@ -329,7 +329,7 @@ export default function Inputorganization({
               labelPlacement="outside"
               name="contactEmail"
               placeholder="phuwis@threechief.com"
-              value={formData.contactEmail}
+              value={formData?.contactEmail}
               onChange={handleChange}
               isDisabled={!openEdit}
             />

@@ -170,7 +170,7 @@ export default function CreateUserPage() {
         <div>
           <TopSection
             title="สร้างข้อมูลผู้ใช้"
-            backpath={'/backoffice/user'}
+            backpath={'/backoffice/manageUsers/user'}
             buttons={[
               //submit form where out form
               <Button
