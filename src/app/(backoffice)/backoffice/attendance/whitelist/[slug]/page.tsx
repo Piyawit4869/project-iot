@@ -4,14 +4,14 @@ import { Button, Form, Input, Textarea } from '@nextui-org/react';
 import { update } from '@/pages/api/whitelists/update'; // API update
 import { deleteWhitelists } from '@/pages/api/whitelists/delete'; // API delete
 import getSingle from '@/pages/api/whitelists/get'; // API get
-import { changeStatusApproveWhitelists } from '@/pages/api/whitelists/changestatus'; // API change status
-import { changeStatusRejectWhitelists } from '@/pages/api/whitelists/changestatus'; // API change status
+import { statusApproved } from '@/pages/api/whitelists/changestatus'; // API change status
+import { statusRejected } from '@/pages/api/whitelists/changestatus'; // API change status
 import { TopSection } from '@/components/common/topSection';
 import Scaffold from '@/components/common/scaffold';
 import CardComponent from '@/components/common/card';
 import { useRouter, useParams } from 'next/navigation';
 import * as Icon from '@ant-design/icons';
-import Map from '@/components/map/map';
+// import Map from '@/components/map/map';
 import React from 'react';
 
 export default function WhitelistSinglePage() {
@@ -166,7 +166,7 @@ export default function WhitelistSinglePage() {
 
   const onApproved = async () => {
     try {
-      await changeStatusApproveWhitelists(params?.slug);
+      await statusApproved(params?.slug);
 
       router.push(`/backoffice/attendance/whitelist/${params?.slug}`);
     } catch (error) {
@@ -176,7 +176,7 @@ export default function WhitelistSinglePage() {
 
   const onRejected = async () => {
     try {
-      await changeStatusRejectWhitelists(params?.slug);
+      await statusRejected(params?.slug);
 
       router.push(`/backoffice/attendance/whitelist/${params?.slug}`);
     } catch (error) {
@@ -337,9 +337,7 @@ export default function WhitelistSinglePage() {
                               <h1 className="text-2xl font-bold text-headFont pl-5 py-5  ">
                                 Map
                               </h1>
-                              <div>
-                                <Map />
-                              </div>
+                              <div>{/* <Map /> */}</div>
                             </div>
                           </div>
                         </div>

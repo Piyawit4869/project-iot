@@ -15,6 +15,11 @@ interface TimelineItemProps {
     date: string;
   };
 }
+interface TimelineProps {
+  fetchData: () => Promise<
+    { time: string; userName: string; action: string; date: string }[]
+  >;
+}
 
 const TimelineItem: React.FC<TimelineItemProps> = ({ data }) => (
   <div className="flex gap-4 p-1">
@@ -30,11 +35,6 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ data }) => (
   </div>
 );
 
-interface TimelineProps {
-  fetchData: () => Promise<
-    { time: string; userName: string; action: string; date: string }[]
-  >;
-}
 
 const Timeline: React.FC<TimelineProps> = ({ fetchData }) => {
   const [timelineData, setTimelineData] = React.useState<
@@ -93,7 +93,7 @@ const Timeline: React.FC<TimelineProps> = ({ fetchData }) => {
 
             {/* Modal for full timeline */}
             <Modal size="5xl" isOpen={isOpenTimeline} onOpenChange={onChange1}>
-              <ModalContent>
+              <ModalContent className="p-6">
                 {() => (
                   <>
                     <ModalHeader>
@@ -113,7 +113,7 @@ const Timeline: React.FC<TimelineProps> = ({ fetchData }) => {
           </>
         ) : (
           <div className="flex justify-center items-center h-64">
-            <div className="spinner"></div>
+            <h2>not available </h2>
           </div>
         )}
       </div>
