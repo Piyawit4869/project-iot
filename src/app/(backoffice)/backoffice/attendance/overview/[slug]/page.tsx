@@ -154,7 +154,7 @@ export default function AttendanceDetailPage() {
                   title="ภาพรวมการเข้าทำงานทั้งหมด"
                   backpath="/backoffice/attendance/overview/"
                 />
-                <UserDashboardCard userData={userDetail} />
+                {userDetail && <UserDashboardCard userData={userDetail} />}
 
                 <div className="grid grid-cols-2 gap-8">
                   <div className="bg-white px-8 py-6 rounded-xl ">
