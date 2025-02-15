@@ -1,34 +1,56 @@
 'use client';
 
-import { Button } from '@nextui-org/react';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 import { TablePagination } from '@/components/common/tablePagination';
+import pagination from '@/pages/api/address/paginate';
 // import { updateIsmain } from '@/pages/api/organization/update-address';
 
-interface addressTableProps {
-  data: any;
-}
+// interface addressTableProps {
+//   data: any;
+// }
 
-export default function AddressTable({ data }: addressTableProps) {
-  const [tableAddress, setTableAddress] = React.useState<any[]>([]);
-  const [, setPage] = React.useState(1);
+export default function AddressTable() {
+  const [item, setItems] = React.useState([]) as any;
+  const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [meta] = React.useState({
+  const [meta, setMeta] = React.useState({
     totalItems: 0,
     itemsPerPage: 10,
     totalPages: 0,
     currentPage: 1,
   });
 
+  // React.useEffect(() => {
+  //   if (data) {
+  //     const filteredTable = data.organization.addresses.filter(
+  //       (address: any) => address.isMain !== true,
+  //     );
+  //     setTableAddress(filteredTable);
+  //   }
+  // }, [data]);
+
   React.useEffect(() => {
-    if (data) {
-      const filteredTable = data.organization.addresses.filter(
-        (address: any) => address.isMain !== true,
-      );
-      setTableAddress(filteredTable);
-    }
-  }, [data]);
+    const fetchUser = async () => {
+      try {
+        // const {} = filters;
+        const { items: fetchedItems } = await pagination({
+          page,
+          limit: rowsPerPage,
+          // ...(name && { name }),
+          // ...(docNo && { docNo }),
+        });
+        setItems(fetchedItems.items);
+        setMeta(fetchedItems.meta);
+      } catch (error) {
+        console.error('Error fetching notations:', error);
+      } finally {
+        // setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [page, rowsPerPage]);
 
   // const onIsMain = async () => {
   //   try {
@@ -61,7 +83,7 @@ export default function AddressTable({ data }: addressTableProps) {
       child={
         <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
           <TablePagination
-            initialRows={tableAddress}
+            initialRows={item}
             initialMeta={meta}
             rowsPerPage={rowsPerPage}
             columns={columns}
@@ -77,27 +99,10 @@ export default function AddressTable({ data }: addressTableProps) {
 }
 
 const columns: any = [
-  { title: 'ชื่อที่อยู่', dataIndex: 'name' },
+  { title: 'ชื่อที่อยู่', dataIndex: 'name', link: '/backoffice/organization' },
   { title: 'บ้านเลขที่', dataIndex: 'houseNo' },
-  { title: 'จังหวัด', dataIndex: 'province' },
+  { title: 'หมู่บ้าน', dataIndex: 'village' },
   { title: 'อำเภอ/เขต', dataIndex: 'subDistrict' },
-  {
-    title: 'เปลี่ยนที่อยู่หลัก',
-    dataIndex: 'isMain',
-    render: () => (
-      <Button className="bg-headFont text-white" size="sm">
-        ตั้งเป็นที่อยู่หลัก
-      </Button>
-    ),
-  },
-  {
-    title: 'ลบ',
-    dataIndex: 'delete',
-    // render: () => <Icon.DeleteOutlined className="ml-0.5 text-red-500" />,
-    render: () => (
-      <Button className="bg-accent2 text-white" size="sm">
-        ลบที่อยู่
-      </Button>
-    ),
-  },
+  { title: 'เมือง', dataIndex: 'city' },
+  { title: 'จังหวัด', dataIndex: 'province' },
 ];

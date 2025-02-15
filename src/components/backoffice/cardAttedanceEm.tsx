@@ -18,7 +18,12 @@ interface EmAttendanceCardProps {
 }
 
 const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users = [] }) => {
-  const validUsers = Array.isArray(users) ? users : [];
+  // const validUsers = Array.isArray(users) ? users : [];
+  const validUsers = React.useMemo(
+    () => (Array.isArray(users) ? users : []),
+    [users],
+  );
+
   const totalEmployees = validUsers.length;
 
   const attendanceStats = React.useMemo(() => {
@@ -48,7 +53,7 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users = [] }) => {
       checkedOutCount: counts.totalClockedOut,
       notCheckedInCount: counts.totalNotClockedIn,
     };
-  }, [validUsers, totalEmployees]);
+  }, [validUsers]);
 
   const renderCard = (
     title: string,

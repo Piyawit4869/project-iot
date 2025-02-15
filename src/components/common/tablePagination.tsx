@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import Link from 'next/link';
+import { Skeleton } from '@nextui-org/react';
 // import { Input } from '@nextui-org/react';
 
 interface Column {
@@ -127,7 +128,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
                   colSpan={columns.length + 1}
                   className="text-center text-gray-500 p-4"
                 >
-                  ไม่พบข้อมูล
+                  <Skeleton className="w-full h-[50px] rounded-md" />
                 </TableCell>
               </TableRow>
             )}

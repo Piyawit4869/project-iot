@@ -11,6 +11,7 @@ import {
   SidebarGroupLabel,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
+// import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import React, { useCallback } from 'react';
 import * as Icons from 'lucide-react';
@@ -18,8 +19,8 @@ import { useClientSession } from '@/libs/auth';
 import Image from 'next/image';
 import Link from 'next/link';
 // import { isMenuActive } from '../common/common';
-import { Collapsible, CollapsibleTrigger } from '../ui/collapsible';
-import { ChevronRight } from 'lucide-react';
+// import { Collapsible, CollapsibleTrigger } from '../ui/collapsible';
+// import { ChevronRight } from 'lucide-react';
 import { NavHome } from './Sidebar/homeSidebar';
 import { NavSetting } from './Sidebar/settingSidebar';
 import { Button } from '@nextui-org/react';
@@ -30,9 +31,15 @@ const renderIcon = (iconName: string) => {
 };
 
 export function AdminSideBar({
+  activeTab,
+  handleMenuClick,
   isSidebarOpen,
   ...props
-}: { isSidebarOpen: boolean } & React.ComponentProps<typeof Sidebar>) {
+}: {
+  isSidebarOpen: boolean;
+  activeTab: any;
+  handleMenuClick: any;
+} & React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname() ?? '';
   const pathUrl = pathname.split('/');
   const pathFeature = pathUrl && pathUrl[2];
@@ -160,25 +167,25 @@ export function AdminSideBar({
         },
         {
           name: 'จัดการพนักงาน',
-          key: 'user',
+          key: 'manageUsers',
           icon: 'UserRoundPen',
           isActive: false,
           subMenu: [
             {
               name: 'พนักงาน',
-              path: '/backoffice/user',
+              path: '/backoffice/manageUsers/user',
               icon: 'UserRoundCheck',
               isActive: false,
             },
             {
               name: 'ตำแหน่ง',
-              path: '/backoffice/role',
+              path: '/backoffice/manageUsers/role',
               icon: 'UserRoundCog',
               isActive: false,
             },
             {
               name: 'ตำแหน่งพนักงาน',
-              path: '/backoffice/employeeRole',
+              path: '/backoffice/manageUsers/employeeRole',
               icon: 'UserRoundCog',
               isActive: false,
             },
@@ -202,28 +209,32 @@ export function AdminSideBar({
       setting: [
         {
           name: 'การตั้งค่า',
-          key: 'setting',
+          // key: 'setting',
           icon: 'Bolt',
           isActive: false,
           subMenu: [
             {
               name: 'ข้อมูลองค์กร',
               icon: 'SquareChartGantt',
+              key: 'organization',
               isActive: false,
             },
             {
               name: 'ข้อมูลสาขา',
               icon: 'Building2',
+              key: 'branch',
               isActive: false,
             },
             {
               name: 'ข้อมูลที่อยู่',
               icon: 'MapPinCheck',
+              key: 'address',
               isActive: false,
             },
             {
               name: 'การตั้งค่า',
               icon: 'SlidersHorizontal',
+              key: 'setting',
               isActive: false,
             },
           ],
@@ -231,6 +242,16 @@ export function AdminSideBar({
       ],
     };
   }, []);
+
+  // const searchParams = useSearchParams();
+
+  // const router = useRouter();
+  // const activeTab = searchParams?.get('tab') || 'organization';
+
+  // const handleMenuClick = (key: string) => {
+  //   const newUrl = `${pathname}?tab=${key}`;
+  //   router.push(newUrl);
+  // };
 
   const initialSubMenuState = React.useMemo(() => {
     const state: any = {};
@@ -300,58 +321,56 @@ export function AdminSideBar({
             <NavHome items={menuData.home} />
             {menuSidebar.map((item: any) => {
               return (
-                <Collapsible key={item.key} className="group/collapsible">
-                  <SidebarMenuItem key={item.key}>
-                    <CollapsibleTrigger asChild>
-                      <SidebarMenuButton
-                        onClick={() => {
-                          if (isSidebarOpen) toggleSubMenu(item.key);
-                        }}
-                        isActive={pathFeature === item.key}
-                      >
-                        {renderIcon(item.icon)}
-                        <span
-                          className={`transition-all duration-300 ${
-                            isSidebarOpen ? 'opacity-100' : 'opacity-0 hidden'
-                          }`}
-                        >
-                          <a href={item.path}>{item.name}</a>
-                        </span>
-                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                      </SidebarMenuButton>
-                    </CollapsibleTrigger>
+                <SidebarMenuItem key={item.key}>
+                  <SidebarMenuButton
+                    onClick={() => {
+                      if (isSidebarOpen) toggleSubMenu(item.key);
+                    }}
+                    isActive={pathFeature === item.key}
+                  >
+                    {renderIcon(item.icon)}
+                    <span
+                      className={`transition-all duration-300 ${
+                        isSidebarOpen ? 'opacity-100' : 'opacity-0 hidden'
+                      }`}
+                    >
+                      <a href={item.path}>{item.name}</a>
+                    </span>
+                    {/* <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" /> */}
+                  </SidebarMenuButton>
 
-                    {item.subMenu && isSubMenuOpen[item.key] && (
-                      <SidebarMenuSub>
-                        {item.subMenu?.map((subItem: any) => {
-                          return (
-                            <SidebarMenuSubItem key={subItem.name}>
-                              <SidebarMenuSubButton
-                                key={subItem.path}
-                                href={subItem.path}
-                                isActive={pathname === subItem.path}
-                                className={`py-4 ${
-                                  pathname === subItem.path ? 'bg-blue-100' : ''
+                  {item.subMenu && isSubMenuOpen[item.key] && (
+                    <SidebarMenuSub>
+                      {item.subMenu?.map((subItem: any) => {
+                        return (
+                          <SidebarMenuSubItem key={subItem.name}>
+                            <SidebarMenuSubButton
+                              key={subItem.path}
+                              href={subItem.path}
+                              isActive={pathname === subItem.path}
+                              className={`py-4 ${
+                                (activeTab === subItem.key,
+                                pathname === subItem.path ? 'bg-blue-100' : '')
+                              }`}
+                              onClick={() => handleMenuClick(subItem.key)}
+                            >
+                              {renderIcon(subItem.icon)}
+                              <span
+                                className={`transition-all duration-300 ${
+                                  isSidebarOpen
+                                    ? 'opacity-100'
+                                    : 'opacity-0 hidden'
                                 }`}
                               >
-                                {renderIcon(subItem.icon)}
-                                <span
-                                  className={`transition-all duration-300 ${
-                                    isSidebarOpen
-                                      ? 'opacity-100'
-                                      : 'opacity-0 hidden'
-                                  }`}
-                                >
-                                  {subItem.name}
-                                </span>
-                              </SidebarMenuSubButton>
-                            </SidebarMenuSubItem>
-                          );
-                        })}
-                      </SidebarMenuSub>
-                    )}
-                  </SidebarMenuItem>
-                </Collapsible>
+                                {subItem.name}
+                              </span>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        );
+                      })}
+                    </SidebarMenuSub>
+                  )}
+                </SidebarMenuItem>
               );
             })}
 

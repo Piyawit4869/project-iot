@@ -56,16 +56,16 @@ export default function InputTime({
   return (
     <Scaffold
       child={
-        <div className="">
+        <>
           {items.map((_: any, index: any) => (
             <div key={index}>
               {openDay.map((item, index) => (
                 <div
                   key={index}
-                  className="flex w-full flex-wrap md:flex-nowrap mt-4 md:mb-0 gap-4 items-center text-headFont"
+                  className="flex md:flex-col gap-4 items-center"
                 >
                   <Select
-                    className="w-full text-headFont"
+                    className="mt-4 min-w-[150px]"
                     name="day"
                     placeholder="เลือกวันทำงาน"
                     onChange={(e) =>
@@ -76,7 +76,7 @@ export default function InputTime({
                   >
                     {day.map((item: any) => (
                       <SelectItem
-                        className="w-full text-headFont"
+                        className=""
                         key={item.value}
                         value={item.value}
                       >
@@ -84,8 +84,9 @@ export default function InputTime({
                       </SelectItem>
                     ))}
                   </Select>
+
                   <Input
-                    className="w-full"
+                    className="mt-4"
                     type="time"
                     startContent={
                       <div className="pointer-events-none flex items-center mr-6">
@@ -101,13 +102,14 @@ export default function InputTime({
                     }
                     isDisabled={!openEdit}
                   />
+
                   <Input
                     startContent={
                       <div className="pointer-events-none flex items-center mr-6">
                         <span className="text-default-400 text-small">ปิด</span>
                       </div>
                     }
-                    className="w-full"
+                    className="mt-4"
                     type="time"
                     name="closeTime"
                     defaultValue={item.closeTime}
@@ -117,8 +119,10 @@ export default function InputTime({
                     isDisabled={!openEdit}
                   />
                   <a
-                    className="w-full text-red-500 cursor-pointer"
-                    onClick={() => handleRemoveOpenDay(index)}
+                    className={`w-full text-red-500 cursor-pointer mt-4 ${
+                      !openEdit ? 'pointer-events-nons opacity-50' : ''
+                    }`}
+                    onClick={() => openEdit && handleRemoveOpenDay(index)}
                   >
                     <Icons.Trash />
                   </a>
@@ -129,14 +133,15 @@ export default function InputTime({
           <div className="flex gap-4 mt-6">
             <Button
               type="button"
-              className="bg-accent3 text-white w-full"
+              className="bg-accent3 text-white w-full mt-3"
               onClick={handleAddOpenDay}
+              isDisabled={!openEdit}
             >
               <Icon.PlusSquareOutlined className="text-xl" />
               เพิ่มวันทำงาน
             </Button>
           </div>
-        </div>
+        </>
       }
     />
   );
