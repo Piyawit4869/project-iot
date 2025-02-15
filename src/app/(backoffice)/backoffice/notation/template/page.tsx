@@ -22,24 +22,27 @@ export default function TemplatesPage() {
   const [loading, setLoading] = React.useState(false);
 
   // Fetch data from the API
-  const fetchNotations = async () => {
-    setLoading(true);
-    try {
-      const { templateName, docNo } = filters;
-      const { items: fetchedItems, meta: fetchedMeta } = await pagination({
-        page,
-        limit: rowsPerPage,
-        ...(templateName && { templateName }),
-        ...(docNo && { docNo }),
-      });
-      setItems(fetchedItems);
-      setMeta(fetchedMeta);
-    } catch (error) {
-      console.error('Error fetching notations:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  React.useEffect(() => {
+    const fetchNotations = async () => {
+      setLoading(true);
+      try {
+        const { templateName, docNo } = filters;
+        const { items: fetchedItems, meta: fetchedMeta } = await pagination({
+          page,
+          limit: rowsPerPage,
+          ...(templateName && { templateName }),
+          ...(docNo && { docNo }),
+        });
+        setItems(fetchedItems);
+        setMeta(fetchedMeta);
+      } catch (error) {
+        console.error('Error fetching notations:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchNotations();
+  }, [page, rowsPerPage, filters]);
 
   // Debounced function to handle filter changes
   const handleFilterChange = React.useCallback((updatedFilters: any) => {
@@ -56,9 +59,9 @@ export default function TemplatesPage() {
   };
 
   // Fetch data whenever filters, page, or rowsPerPage change
-  React.useEffect(() => {
-    fetchNotations();
-  }, [page, rowsPerPage, filters]);
+  // React.useEffect(() => {
+  //   fetchNotations();
+  // }, [page, rowsPerPage, filters]);
 
   return (
     <div>

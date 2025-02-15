@@ -11,7 +11,8 @@ import {
   SidebarGroupLabel,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+// import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import React, { useCallback } from 'react';
 import * as Icons from 'lucide-react';
 import { useClientSession } from '@/libs/auth';
@@ -30,9 +31,15 @@ const renderIcon = (iconName: string) => {
 };
 
 export function AdminSideBar({
+  activeTab,
+  handleMenuClick,
   isSidebarOpen,
   ...props
-}: { isSidebarOpen: boolean } & React.ComponentProps<typeof Sidebar>) {
+}: {
+  isSidebarOpen: boolean;
+  activeTab: any;
+  handleMenuClick: any;
+} & React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname() ?? '';
   const pathUrl = pathname.split('/');
   const pathFeature = pathUrl && pathUrl[2];
@@ -236,15 +243,15 @@ export function AdminSideBar({
     };
   }, []);
 
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
 
-  const router = useRouter();
-  const activeTab = searchParams?.get('tab') || 'organization';
+  // const router = useRouter();
+  // const activeTab = searchParams?.get('tab') || 'organization';
 
-  const handleMenuClick = (key: string) => {
-    const newUrl = `${pathname}?tab=${key}`;
-    router.push(newUrl);
-  };
+  // const handleMenuClick = (key: string) => {
+  //   const newUrl = `${pathname}?tab=${key}`;
+  //   router.push(newUrl);
+  // };
 
   const initialSubMenuState = React.useMemo(() => {
     const state: any = {};

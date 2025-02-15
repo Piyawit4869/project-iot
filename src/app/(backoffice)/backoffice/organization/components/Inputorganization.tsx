@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { CardControl } from '@/components/setting/card-organization';
 import {
   Select,
@@ -16,6 +15,7 @@ import {
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 import { parseDate } from '@internationalized/date';
+import { Upload } from '@/components/backoffice/upload';
 
 interface InputorganizationProps {
   data: any;
@@ -29,6 +29,7 @@ export default function Inputorganization({
   openEdit,
 }: InputorganizationProps) {
   const [formData, setFormData] = React.useState<any>(data);
+  const [uploadImg, setUploadImg] = React.useState('') as any;
 
   React.useEffect(() => {
     if (data) {
@@ -47,10 +48,15 @@ export default function Inputorganization({
 
     setFormData((prevData: any) => ({
       ...prevData,
+      ...uploadImg,
       [name]: updatedData,
     }));
 
     onChange({ ...formData, updatedData });
+  };
+
+  const handleUpload = (url: string) => {
+    setUploadImg(url);
   };
 
   // const handleItemChange = (index: number, value: string) => {
@@ -66,13 +72,11 @@ export default function Inputorganization({
           <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
             <div>
               <p>รูปภาพองค์กร</p>
-              <Image
+              <Upload
                 className="mt-3"
-                src={'/logo.png'}
-                alt="image organization"
-                width={100}
-                height={100}
-              ></Image>
+                onUpload={handleUpload}
+                imageUrl={formData?.logoUrl}
+              />
             </div>
             <div className="flex gap-4">
               <CardControl

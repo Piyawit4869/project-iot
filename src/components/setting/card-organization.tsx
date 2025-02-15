@@ -33,8 +33,6 @@ export const CardControl = ({
     }
   };
 
-  console.log('selected', selected);
-
   return (
     <Card className="py-4 bg-primary" isHoverable isPressable>
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">

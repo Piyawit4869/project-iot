@@ -60,7 +60,10 @@ export default function InputTime({
           {items.map((_: any, index: any) => (
             <div key={index}>
               {openDay.map((item, index) => (
-                <div key={index} className="flex gap-4 items-center">
+                <div
+                  key={index}
+                  className="flex md:flex-col gap-4 items-center"
+                >
                   <Select
                     className="mt-4 min-w-[150px]"
                     name="day"
@@ -116,8 +119,10 @@ export default function InputTime({
                     isDisabled={!openEdit}
                   />
                   <a
-                    className="w-full text-red-500 cursor-pointer mt-4"
-                    onClick={() => handleRemoveOpenDay(index)}
+                    className={`w-full text-red-500 cursor-pointer mt-4 ${
+                      !openEdit ? 'pointer-events-nons opacity-50' : ''
+                    }`}
+                    onClick={() => openEdit && handleRemoveOpenDay(index)}
                   >
                     <Icons.Trash />
                   </a>
@@ -130,6 +135,7 @@ export default function InputTime({
               type="button"
               className="bg-accent3 text-white w-full mt-3"
               onClick={handleAddOpenDay}
+              isDisabled={!openEdit}
             >
               <Icon.PlusSquareOutlined className="text-xl" />
               เพิ่มวันทำงาน

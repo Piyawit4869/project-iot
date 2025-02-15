@@ -50,19 +50,22 @@ export default function OraganizationPage() {
 
     try {
       const payload = {
+        ...formData,
+        ...data,
+        villageNo: null,
         isMain: true,
       };
 
-      const res = await isMain({}, payload, params?.slug);
-      console.log('ข้อมูลที่จะส่ง', res);
+      delete payload.data;
+
+      await isMain({}, payload, params?.slug);
+      console.log('ข้อมูลที่จะส่ง', payload);
 
       toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
         duration: 3000,
         position: 'bottom-left',
         style: { fontFamily: 'var(--font-ibm-sans)' },
       });
-
-      // router.push(`/backoffice/notation/${res.data.id}`);
     } catch (err: any) {
       toast.error('❌ ไม่สามารถแก้ไขข้อมูลได้', {
         duration: 3000,
@@ -286,6 +289,7 @@ export default function OraganizationPage() {
                                     }
                                     labelPlacement="outside"
                                     name="villageNo"
+                                    value={formData?.villageNo}
                                     placeholder="เลขหมู่บ้าน"
                                   />
                                 </div>
