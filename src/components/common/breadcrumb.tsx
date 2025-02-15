@@ -30,6 +30,7 @@ const translations: Record<string, string> = {
   new: 'สร้าง',
   employeeRole: 'ตำแหน่งพนักงาน',
   backoffice: 'หลังบ้าน',
+  manageUsers: 'จัดการผู้ใช้งาน',
 };
 
 const translateSegment = (segment: string): string => {

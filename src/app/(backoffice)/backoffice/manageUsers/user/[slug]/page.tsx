@@ -91,6 +91,8 @@ export default function UserSinglePage() {
           prefix: formData.prefix,
           firstName: formData.firstName,
           lastName: formData.lastName,
+          firstNameTh: formData.firstNameTh,
+          lastNameTh: formData.lastNameTh,
           birthDate: formData.birthDate,
           phone: formData.phone,
           photoUrl: uploadImg,
@@ -229,7 +231,7 @@ export default function UserSinglePage() {
         <div>
           <TopSection
             title="ข้อมูลผู้ใช้"
-            backpath={'/backoffice/user'}
+            backpath={'/backoffice/manageUsers/user'}
             buttons={[
               //submit form where out form
               <Button
@@ -353,9 +355,9 @@ export default function UserSinglePage() {
                             className="flex-1"
                             label={<span className="text-headFont">ชื่อ</span>}
                             labelPlacement="outside"
-                            name="firstName"
+                            name="firstNameTh"
                             placeholder="กรอกชื่อ"
-                            value={formData.firstName}
+                            value={formData?.firstNameTh}
                             onChange={handleChange}
                           />
                         </div>
@@ -367,12 +369,45 @@ export default function UserSinglePage() {
                               <span className="text-headFont">นามสกุล</span>
                             }
                             labelPlacement="outside"
+                            name="lastNameTh"
+                            placeholder="กรอกนามสกุล"
+                            value={formData?.lastNameTh}
+                            onChange={handleChange}
+                          />
+                        </div>
+
+                        <div className="flex gap-4 mt-6">
+                          <Input
+                            className="flex-1"
+                            label={
+                              <span className="text-headFont">
+                                ชื่อภาษาอังกฤษ
+                              </span>
+                            }
+                            labelPlacement="outside"
+                            name="firstName"
+                            placeholder="กรอกนามสกุล"
+                            value={formData.lastName}
+                            onChange={handleChange}
+                          />
+                        </div>
+
+                        <div className="flex gap-4 mt-6">
+                          <Input
+                            className="flex-1"
+                            label={
+                              <span className="text-headFont">
+                                นามสกุลภาษาอังกฤษ
+                              </span>
+                            }
+                            labelPlacement="outside"
                             name="lastName"
                             placeholder="กรอกนามสกุล"
                             value={formData.lastName}
                             onChange={handleChange}
                           />
                         </div>
+
                         <div className="flex gap-4 mt-6">
                           <DatePicker
                             className="flex-1  text-headFont"

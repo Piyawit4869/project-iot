@@ -6,7 +6,6 @@ import { TopSection } from '@/components/common/topSection';
 import InputSystem from './components/system/InputSystem';
 import Inputorganization from './components/Inputorganization';
 import InputAddressProps from './components/addresses/InputAddress';
-import Link from 'next/link';
 import * as Icon from '@ant-design/icons';
 import {
   Button,
@@ -34,7 +33,8 @@ import InputTime from './components/system/inputTime';
 import AddressTable from './components/addresses/addressTable';
 // import Map from '@/components/map/map';
 import LongdoMapPage from './components/addresses/addressMap';
-// import { updatesystem } from '@/pages/api/organization/updata';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { updatesystem } from '@/pages/api/organization/updata';
 
 export default function OraganizationPage() {
   const [, setLoading] = React.useState(false);
@@ -42,9 +42,13 @@ export default function OraganizationPage() {
   const [formData, setFormData] = React.useState({}) as any;
   const [data, setData] = React.useState() as any;
   // const [dataorg, setDataorg] = React.useState() as any;
-  const [organizationData, setOrganizationData] = React.useState() as any;
-  const [, setSystemData] = React.useState() as any;
-  const [, setOpenDayData] = React.useState<any[]>([]);
+  const [, setDataorg] = React.useState() as any;
+  const [, setOrganizationData] = React.useState() as any;
+  // const [organizationData, setOrganizationData] = React.useState() as any;
+  const [systemData, setSystemData] = React.useState() as any;
+  // const [, setSystemData] = React.useState() as any;
+  const [openDayData, setOpenDayData] = React.useState<any[]>([]);
+  // const [, setOpenDayData] = React.useState<any[]>([]);
   const [, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [meta] = React.useState({
@@ -55,21 +59,12 @@ export default function OraganizationPage() {
   });
   const [openEdit, setOpenEdit] = React.useState(false);
 
-  // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault(); // Prevent the form from submitting to the URL
-
-  //   const formData = new FormData(e.currentTarget);
-  //   // Convert formData to an object
-  //   const data = Object.fromEntries(formData.entries());
-  //   console.log(data); // Log the form data for debugging
-  // };
-
   React.useEffect(() => {
     const getAddress = async () => {
       const { data } = await get();
 
       setData(data);
-      // setDataorg(data.organization);
+      setDataorg(data.organization);
       setLoading(false);
     };
 
@@ -92,6 +87,43 @@ export default function OraganizationPage() {
     setOpenDayData(updatedOpenDay);
   };
 
+  // const onSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+
+  //   try {
+  //     const payload = {
+  //       ...formData,
+  //       ...data,
+  //       organization: {
+  //         ...organizationData,
+  //       },
+  //     };
+
+  //     delete payload.data;
+
+  //     await updatedetails({}, payload, dataorg.id);
+  //     console.log('payload', payload);
+
+  //     toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
+  //       duration: 3000,
+  //       position: 'bottom-left',
+  //       style: { fontFamily: 'var(--font-ibm-sans)' },
+  //     });
+  //   } catch (err: any) {
+  //     toast.error('❌ ไม่สามารถแก้ไขข้อมูลได้', {
+  //       duration: 3000,
+  //       position: 'bottom-left',
+  //       style: { fontFamily: 'var(--font-ibm-sans)' },
+  //     });
+
+  //     console.error('Send FormData error:', err);
+  //     setErrors({ general: err.message || 'An unexpected error occurred.' });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -100,14 +132,14 @@ export default function OraganizationPage() {
       const payload = {
         ...formData,
         ...data,
-        organization: {
-          ...organizationData,
-        },
+        ...systemData,
+        ...openDayData,
       };
 
       delete payload.data;
 
-      // const res = await updatedetails({}, payload, dataorg.id);
+      const res = await updatesystem({}, payload);
+      console.log('ข้อมูลที่จะส่ง', res);
 
       toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
         duration: 3000,
@@ -129,44 +161,6 @@ export default function OraganizationPage() {
       setLoading(false);
     }
   };
-
-  // const onSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-
-  //   try {
-  //     const payload = {
-  //       ...formData,
-  //       ...data,
-  //       ...systemData,
-  //       ...openDayData,
-  //     };
-
-  //     delete payload.data;
-
-  //     const res = await updatesystem({}, payload);
-  //     console.log('ข้อมูลที่จะส่ง', res);
-
-  //     toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
-  //       duration: 3000,
-  //       position: 'bottom-left',
-  //       style: { fontFamily: 'var(--font-ibm-sans)' },
-  //     });
-
-  //     // router.push(`/backoffice/notation/${res.data.id}`);
-  //   } catch (err: any) {
-  //     toast.error('❌ ไม่สามารถแก้ไขข้อมูลได้', {
-  //       duration: 3000,
-  //       position: 'bottom-left',
-  //       style: { fontFamily: 'var(--font-ibm-sans)' },
-  //     });
-
-  //     console.error('Send FormData error:', err);
-  //     setErrors({ general: err.message || 'An unexpected error occurred.' });
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   // Add Setting Time
@@ -216,44 +210,43 @@ export default function OraganizationPage() {
 
   const [selectedItem] = React.useState<any>(null);
 
-  // const handleRowAddress = (row: any) => {
-  //   setSelectedItem(row);
-  //   openAddress2();
-  // };
-
-  // const handleRowSetting = (row: any) => {
-  //   setSelectedItem(row);
-  //   openSetting3();
-  // };
-
   const toggleInput = () => {
     setOpenEdit((prev) => !prev);
   };
 
-  // const handleEditButton = (openEdit: boolean) => {
-  //   return openEdit ? (
-  //     <Button
-  //       className="bg-accent1 text-white text-xs"
-  //       key={'submit edit button'}
-  //       type="submit"
-  //       form="notation"
-  //       // disabled={formData?.docStatus === 'canceled'}
-  //     >
-  //       ยืนยันแก้ไขข้อมูล
-  //     </Button>
-  //   ) : (
-  //     <Button
-  //       className="bg-accent3 text-white text-xs"
-  //       key={'edit button'}
-  //       onClick={() => {
-  //         setOpenEdit(true);
-  //       }}
-  //       // disabled={formData?.docStatus === 'canceled'}
-  //     >
-  //       แก้ไขข้อมูล
-  //     </Button>
-  //   );
-  // };
+  const handleEditButton = (openEdit: boolean) => {
+    return openEdit ? (
+      <Button
+        className="bg-accent1 text-white text-xs"
+        key={'Edit organization'}
+        type="submit"
+        form="organization"
+      >
+        ยืนยันแก้ไขข้อมูล
+      </Button>
+    ) : (
+      <Button
+        className="bg-accent3 text-white text-xs"
+        key={'edit button'}
+        onClick={() => {
+          setOpenEdit(true);
+        }}
+      >
+        แก้ไขข้อมูล
+      </Button>
+    );
+  };
+
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const router = useRouter();
+  const activeTab = searchParams?.get('tab') || 'setting';
+
+  const handleTabChange = (key: string) => {
+    const newUrl = `${pathname}?tab=${key}`;
+    router.push(newUrl);
+  };
 
   return (
     <Scaffold
@@ -262,182 +255,284 @@ export default function OraganizationPage() {
           <TopSection
             title="ข้อมูลองค์กร"
             buttons={[
-              <Link href={''} key={'organization'}>
-                <Button
-                  className="bg-accent1 text-white"
-                  key={'Edit organization'}
-                  type="submit"
-                  form="organization"
-                >
-                  ยืนยันแก้ไขข้อมูล
-                </Button>
-              </Link>,
+              // <Link href={''} key={'organization'}>
+              //   <Button
+              //     className="bg-accent1 text-white"
+              //     key={'Edit organization'}
+              //     type="submit"
+              //     form="organization"
+              //   >
+              //     ยืนยันแก้ไขข้อมูล
+              //   </Button>
+              // </Link>,
+              handleEditButton(openEdit),
             ]}
           />
-          <div className="flex space-x-4 mt-6">
+          <div className="flex">
             <div className="flex-1">
               <Form id="organization" onSubmit={onSubmit} method="post">
                 <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
-                  <Tabs variant="underlined">
-                    <Tab key="setting" title="การตั้งค่าระบบ">
-                      <div className="flex space-x-4">
-                        <CardComponent
-                          className={'basis-2/3'}
-                          customCard
-                          custom={
-                            <div>
-                              <div className="flex justify-between p-6">
-                                <h1 className="text-2xl font-bold text-headFont">
-                                  ตั้งค่าระบบ
-                                </h1>
-                                <div className="">
-                                  <Button
-                                    className="bg-accent3 text-white mr-3"
-                                    onClick={toggleInput}
-                                  >
-                                    แก้ไข
-                                  </Button>
-                                  <Button
-                                    className="bg-accent1 text-white"
-                                    onPress={openSetting1}
-                                  >
-                                    ดูการตั้งค่าทั้งหมด
-                                  </Button>
+                  <Tabs
+                    aria-label="Tabs colors"
+                    color="primary"
+                    radius="full"
+                    selectedKey={activeTab}
+                    onSelectionChange={(key) => handleTabChange(key as string)}
+                  >
+                    <Tab
+                      key="setting"
+                      title={<span className="hidden">ตั้งค่าระบบ</span>}
+                    >
+                      <div className="flex flex-col lg:flex-row">
+                        <div className="w-full">
+                          <CardComponent
+                            className={'basis-2/3'}
+                            customCard
+                            custom={
+                              <div>
+                                <div className="flex justify-between p-6">
+                                  <h1 className="text-2xl font-bold text-headFont">
+                                    ตั้งค่าระบบ
+                                  </h1>
+                                  <div className="">
+                                    <Button
+                                      className="bg-accent1 text-white"
+                                      onPress={openSetting1}
+                                    >
+                                      ดูการตั้งค่าทั้งหมด
+                                    </Button>
+                                  </div>
                                 </div>
-                              </div>
-                              <Modal
-                                size="5xl"
-                                isOpen={isOpenSetting}
-                                onOpenChange={onChangeSetting1}
-                              >
-                                <ModalContent>
-                                  {() => (
-                                    <>
-                                      <ModalHeader className="flex flex-col-1 gap-1">
-                                        การตั้งค่าทั้งหมด
-                                      </ModalHeader>
-                                      <ModalBody>
-                                        <div>
+                                <Modal
+                                  size="5xl"
+                                  isOpen={isOpenSetting}
+                                  onOpenChange={onChangeSetting1}
+                                >
+                                  <ModalContent>
+                                    {() => (
+                                      <>
+                                        <ModalHeader className="flex flex-col-1 gap-1">
+                                          การตั้งค่าทั้งหมด
+                                        </ModalHeader>
+                                        <ModalBody>
+                                          <div>
+                                            <Button
+                                              className="bg-accent1 text-white"
+                                              onPress={openSetting2}
+                                            >
+                                              สร้างการตั้งค่าใหม่
+                                            </Button>
+                                          </div>
+                                          <div className="mb-4">
+                                            <div className="mt-4">
+                                              <TablePagination
+                                                initialRows={dataSet}
+                                                initialMeta={meta}
+                                                rowsPerPage={rowsPerPage}
+                                                columns={columnsSet}
+                                                onPageChange={(newPage) =>
+                                                  setPage(newPage)
+                                                }
+                                                onRowsPerPageChange={(
+                                                  newRowsPerPage,
+                                                ) =>
+                                                  setRowsPerPage(newRowsPerPage)
+                                                }
+                                              />
+                                            </div>
+                                          </div>
+                                        </ModalBody>
+                                      </>
+                                    )}
+                                  </ModalContent>
+                                </Modal>
+
+                                <Modal
+                                  size="5xl"
+                                  className="height-500"
+                                  isOpen={isOpenSetting1}
+                                  onOpenChange={onChangeSetting2}
+                                >
+                                  <ModalContent>
+                                    {() => (
+                                      <>
+                                        <ModalHeader className="flex flex-col gap-1">
+                                          สร้างการตั้งค่าใหม่
+                                        </ModalHeader>
+                                        <ModalBody>
+                                          <Form
+                                            id="create-setting"
+                                            // onSubmit={onSubmit}
+                                            // method="post"
+                                          >
+                                            <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
+                                              <div className="flex gap-4 mt-6">
+                                                <Select
+                                                  className="flex-1  text-headFont"
+                                                  name="language"
+                                                  placeholder="เลือกภาษา"
+                                                  label="ภาษา"
+                                                  labelPlacement={'outside'}
+                                                >
+                                                  {language.map((item: any) => (
+                                                    <SelectItem
+                                                      className="text-headFont"
+                                                      key={item.label}
+                                                      value={item.value}
+                                                    >
+                                                      {item.label}
+                                                    </SelectItem>
+                                                  ))}
+                                                </Select>
+                                                <Select
+                                                  className="flex-1  text-headFont"
+                                                  name="theme"
+                                                  placeholder="เลือกธีม"
+                                                  label="ธีมสี"
+                                                  labelPlacement={'outside'}
+                                                >
+                                                  {theme.map((item: any) => (
+                                                    <SelectItem
+                                                      className="text-headFont"
+                                                      key={item.label}
+                                                      value={item.value}
+                                                    >
+                                                      {item.label}
+                                                    </SelectItem>
+                                                  ))}
+                                                </Select>
+                                              </div>
+                                              <div className="flex gap-4 mt-6">
+                                                <Select
+                                                  className="flex-1 text-headFont"
+                                                  name="fontsize"
+                                                  placeholder="เลือกขนาดตัวอักษร"
+                                                  label="ขนาดตัวอักษร"
+                                                  labelPlacement={'outside'}
+                                                >
+                                                  {fontSize.map((item: any) => (
+                                                    <SelectItem
+                                                      className="text-headFont"
+                                                      key={item.label}
+                                                      value={item.value}
+                                                    >
+                                                      {item.label}
+                                                    </SelectItem>
+                                                  ))}
+                                                </Select>
+                                              </div>
+                                              {items.map(
+                                                (_: any, index: any) => (
+                                                  <div
+                                                    key={index}
+                                                    className="flex items-center gap-6 mt-6"
+                                                  >
+                                                    <Select
+                                                      className="flex-1 text-headFont"
+                                                      name="day"
+                                                      placeholder="เลือกวันทำงาน"
+                                                      label="วันทำงาน"
+                                                      labelPlacement={'outside'}
+                                                    >
+                                                      {day.map((item: any) => (
+                                                        <SelectItem
+                                                          className="flex-1 text-headFont"
+                                                          key={item.label}
+                                                          value={item.value}
+                                                        >
+                                                          {item.label}
+                                                        </SelectItem>
+                                                      ))}
+                                                    </Select>
+                                                    <TimeInput
+                                                      className="flex-1"
+                                                      label={
+                                                        <span className="flex-1 text-headFont">
+                                                          เริ่มงาน
+                                                        </span>
+                                                      }
+                                                      labelPlacement="outside"
+                                                      name="starttime"
+                                                    />
+                                                    <TimeInput
+                                                      className="flex-1"
+                                                      label={
+                                                        <span className="flex-1 text-headFont">
+                                                          เลิกงาน
+                                                        </span>
+                                                      }
+                                                      labelPlacement="outside"
+                                                      name="outtime"
+                                                    />
+                                                    <a
+                                                      className="text-red-500 cursor-pointer mt-6"
+                                                      onClick={() =>
+                                                        handleRemoveItem(index)
+                                                      }
+                                                    >
+                                                      ลบรายการ
+                                                    </a>
+                                                  </div>
+                                                ),
+                                              )}
+                                              <div className="flex  gap-4 mt-6">
+                                                <Button
+                                                  type="button"
+                                                  className="bg-accent3 text-white w-full"
+                                                  onClick={handleAddItem}
+                                                >
+                                                  <Icon.PlusSquareOutlined className="text-xl" />
+                                                  เพิ่มวันทำงาน
+                                                </Button>
+                                              </div>
+                                            </div>
+                                          </Form>
+                                        </ModalBody>
+                                        <ModalFooter>
                                           <Button
                                             className="bg-accent1 text-white"
-                                            onPress={openSetting2}
+                                            // type="submit"
+                                            form="create-setting"
+                                            onClick={onChangeSetting2}
                                           >
-                                            สร้างการตั้งค่าใหม่
+                                            สร้าง
                                           </Button>
-                                        </div>
-                                        <div className="mb-4">
-                                          <div className="mt-4">
-                                            <TablePagination
-                                              initialRows={dataSet}
-                                              initialMeta={meta}
-                                              rowsPerPage={rowsPerPage}
-                                              columns={columnsSet}
-                                              onPageChange={(newPage) =>
-                                                setPage(newPage)
-                                              }
-                                              onRowsPerPageChange={(
-                                                newRowsPerPage,
-                                              ) =>
-                                                setRowsPerPage(newRowsPerPage)
-                                              }
-                                            />
-                                          </div>
-                                        </div>
-                                      </ModalBody>
-                                    </>
-                                  )}
-                                </ModalContent>
-                              </Modal>
+                                        </ModalFooter>
+                                      </>
+                                    )}
+                                  </ModalContent>
+                                </Modal>
 
-                              <Modal
-                                size="5xl"
-                                className="height-500"
-                                isOpen={isOpenSetting1}
-                                onOpenChange={onChangeSetting2}
-                              >
-                                <ModalContent>
-                                  {() => (
-                                    <>
-                                      <ModalHeader className="flex flex-col gap-1">
-                                        สร้างการตั้งค่าใหม่
-                                      </ModalHeader>
-                                      <ModalBody>
-                                        <Form
-                                          id="create-setting"
-                                          // onSubmit={onSubmit}
-                                          // method="post"
-                                        >
-                                          <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
-                                            <div className="flex gap-4 mt-6">
-                                              <Select
-                                                className="flex-1  text-headFont"
-                                                name="language"
-                                                placeholder="เลือกภาษา"
-                                                label="ภาษา"
-                                                labelPlacement={'outside'}
-                                              >
-                                                {language.map((item: any) => (
-                                                  <SelectItem
-                                                    className="text-headFont"
-                                                    key={item.label}
-                                                    value={item.value}
-                                                  >
-                                                    {item.label}
-                                                  </SelectItem>
-                                                ))}
-                                              </Select>
-                                              <Select
-                                                className="flex-1  text-headFont"
-                                                name="theme"
-                                                placeholder="เลือกธีม"
-                                                label="ธีมสี"
-                                                labelPlacement={'outside'}
-                                              >
-                                                {theme.map((item: any) => (
-                                                  <SelectItem
-                                                    className="text-headFont"
-                                                    key={item.label}
-                                                    value={item.value}
-                                                  >
-                                                    {item.label}
-                                                  </SelectItem>
-                                                ))}
-                                              </Select>
-                                            </div>
-                                            <div className="flex gap-4 mt-6">
-                                              <Select
-                                                className="flex-1 text-headFont"
-                                                name="fontsize"
-                                                placeholder="เลือกขนาดตัวอักษร"
-                                                label="ขนาดตัวอักษร"
-                                                labelPlacement={'outside'}
-                                              >
-                                                {fontSize.map((item: any) => (
-                                                  <SelectItem
-                                                    className="text-headFont"
-                                                    key={item.label}
-                                                    value={item.value}
-                                                  >
-                                                    {item.label}
-                                                  </SelectItem>
-                                                ))}
-                                              </Select>
-                                            </div>
-                                            {items.map((_: any, index: any) => (
-                                              <div
-                                                key={index}
-                                                className="flex items-center gap-6 mt-6"
-                                              >
+                                <Modal
+                                  size="5xl"
+                                  className="height-500"
+                                  isOpen={isOpenSetting2}
+                                  onOpenChange={onChangeSetting3}
+                                >
+                                  <ModalContent>
+                                    {() => (
+                                      <>
+                                        <ModalHeader className="flex flex-col gap-1">
+                                          การตั้งค่าครั้งที่ {selectedItem?.id}
+                                        </ModalHeader>
+                                        <ModalBody>
+                                          <Form
+                                            id="edit-setting"
+                                            onSubmit={onSubmit}
+                                            method="post"
+                                          >
+                                            <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
+                                              <div className="flex gap-4 mt-6">
                                                 <Select
-                                                  className="flex-1 text-headFont"
-                                                  name="day"
-                                                  placeholder="เลือกวันทำงาน"
-                                                  label="วันทำงาน"
+                                                  className="flex-1  text-headFont"
+                                                  name="language"
+                                                  placeholder="เลือกภาษา"
+                                                  label="ภาษา"
                                                   labelPlacement={'outside'}
                                                 >
-                                                  {day.map((item: any) => (
+                                                  {language.map((item: any) => (
                                                     <SelectItem
-                                                      className="flex-1 text-headFont"
+                                                      className="text-headFont"
                                                       key={item.label}
                                                       value={item.value}
                                                     >
@@ -445,153 +540,16 @@ export default function OraganizationPage() {
                                                     </SelectItem>
                                                   ))}
                                                 </Select>
-                                                <TimeInput
-                                                  className="flex-1"
-                                                  label={
-                                                    <span className="flex-1 text-headFont">
-                                                      เริ่มงาน
-                                                    </span>
-                                                  }
-                                                  labelPlacement="outside"
-                                                  name="starttime"
-                                                />
-                                                <TimeInput
-                                                  className="flex-1"
-                                                  label={
-                                                    <span className="flex-1 text-headFont">
-                                                      เลิกงาน
-                                                    </span>
-                                                  }
-                                                  labelPlacement="outside"
-                                                  name="outtime"
-                                                />
-                                                <a
-                                                  className="text-red-500 cursor-pointer mt-6"
-                                                  onClick={() =>
-                                                    handleRemoveItem(index)
-                                                  }
-                                                >
-                                                  ลบรายการ
-                                                </a>
-                                              </div>
-                                            ))}
-                                            <div className="flex  gap-4 mt-6">
-                                              <Button
-                                                type="button"
-                                                className="bg-accent3 text-white w-full"
-                                                onClick={handleAddItem}
-                                              >
-                                                <Icon.PlusSquareOutlined className="text-xl" />
-                                                เพิ่มวันทำงาน
-                                              </Button>
-                                            </div>
-                                          </div>
-                                        </Form>
-                                      </ModalBody>
-                                      <ModalFooter>
-                                        <Button
-                                          className="bg-accent1 text-white"
-                                          // type="submit"
-                                          form="create-setting"
-                                          onClick={onChangeSetting2}
-                                        >
-                                          สร้าง
-                                        </Button>
-                                      </ModalFooter>
-                                    </>
-                                  )}
-                                </ModalContent>
-                              </Modal>
-
-                              <Modal
-                                size="5xl"
-                                className="height-500"
-                                isOpen={isOpenSetting2}
-                                onOpenChange={onChangeSetting3}
-                              >
-                                <ModalContent>
-                                  {() => (
-                                    <>
-                                      <ModalHeader className="flex flex-col gap-1">
-                                        การตั้งค่าครั้งที่ {selectedItem?.id}
-                                      </ModalHeader>
-                                      <ModalBody>
-                                        <Form
-                                          id="edit-setting"
-                                          onSubmit={onSubmit}
-                                          method="post"
-                                        >
-                                          <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
-                                            <div className="flex gap-4 mt-6">
-                                              <Select
-                                                className="flex-1  text-headFont"
-                                                name="language"
-                                                placeholder="เลือกภาษา"
-                                                label="ภาษา"
-                                                labelPlacement={'outside'}
-                                              >
-                                                {language.map((item: any) => (
-                                                  <SelectItem
-                                                    className="text-headFont"
-                                                    key={item.label}
-                                                    value={item.value}
-                                                  >
-                                                    {item.label}
-                                                  </SelectItem>
-                                                ))}
-                                              </Select>
-                                              <Select
-                                                className="flex-1  text-headFont"
-                                                name="theme"
-                                                placeholder="เลือกธีม"
-                                                label="ธีมสี"
-                                                labelPlacement={'outside'}
-                                              >
-                                                {theme.map((item: any) => (
-                                                  <SelectItem
-                                                    className="text-headFont"
-                                                    key={item.label}
-                                                    value={item.value}
-                                                  >
-                                                    {item.label}
-                                                  </SelectItem>
-                                                ))}
-                                              </Select>
-                                            </div>
-                                            <div className="flex gap-4 mt-6">
-                                              <Select
-                                                className="flex-1 text-headFont"
-                                                name="fontsize"
-                                                placeholder="เลือกขนาดตัวอักษร"
-                                                label="ขนาดตัวอักษร"
-                                                labelPlacement={'outside'}
-                                              >
-                                                {fontSize.map((item: any) => (
-                                                  <SelectItem
-                                                    className="text-headFont"
-                                                    key={item.label}
-                                                    value={item.value}
-                                                  >
-                                                    {item.label}
-                                                  </SelectItem>
-                                                ))}
-                                              </Select>
-                                            </div>
-                                            {items.map((_: any, index: any) => (
-                                              <div
-                                                key={index}
-                                                className="flex items-center gap-6 mt-6"
-                                              >
                                                 <Select
-                                                  className="flex-1 text-headFont"
-                                                  name="day"
-                                                  placeholder="เลือกวันทำงาน"
-                                                  label="วันทำงาน"
+                                                  className="flex-1  text-headFont"
+                                                  name="theme"
+                                                  placeholder="เลือกธีม"
+                                                  label="ธีมสี"
                                                   labelPlacement={'outside'}
                                                 >
-                                                  {day.map((item: any) => (
+                                                  {theme.map((item: any) => (
                                                     <SelectItem
-                                                      className="flex-1 text-headFont"
+                                                      className="text-headFont"
                                                       key={item.label}
                                                       value={item.value}
                                                     >
@@ -599,83 +557,126 @@ export default function OraganizationPage() {
                                                     </SelectItem>
                                                   ))}
                                                 </Select>
-                                                <TimeInput
-                                                  className="flex-1"
-                                                  label={
-                                                    <span className="flex-1 text-headFont">
-                                                      เริ่มงาน
-                                                    </span>
-                                                  }
-                                                  labelPlacement="outside"
-                                                  name="starttime"
-                                                />
-                                                <TimeInput
-                                                  className="flex-1"
-                                                  label={
-                                                    <span className="flex-1 text-headFont">
-                                                      เลิกงาน
-                                                    </span>
-                                                  }
-                                                  labelPlacement="outside"
-                                                  name="outtime"
-                                                />
-                                                <a
-                                                  className="text-red-500 cursor-pointer mt-6"
-                                                  onClick={() =>
-                                                    handleRemoveItem(index)
-                                                  }
-                                                >
-                                                  ลบรายการ
-                                                </a>
                                               </div>
-                                            ))}
-                                            <div className="flex  gap-4 mt-6">
-                                              <Button
-                                                type="button"
-                                                className="bg-secondary text-white w-full"
-                                                onClick={handleAddItem}
-                                              >
-                                                <Icon.PlusSquareOutlined className="text-xl" />
-                                                เพิ่มวันทำงาน
-                                              </Button>
+                                              <div className="flex gap-4 mt-6">
+                                                <Select
+                                                  className="flex-1 text-headFont"
+                                                  name="fontsize"
+                                                  placeholder="เลือกขนาดตัวอักษร"
+                                                  label="ขนาดตัวอักษร"
+                                                  labelPlacement={'outside'}
+                                                >
+                                                  {fontSize.map((item: any) => (
+                                                    <SelectItem
+                                                      className="text-headFont"
+                                                      key={item.label}
+                                                      value={item.value}
+                                                    >
+                                                      {item.label}
+                                                    </SelectItem>
+                                                  ))}
+                                                </Select>
+                                              </div>
+                                              {items.map(
+                                                (_: any, index: any) => (
+                                                  <div
+                                                    key={index}
+                                                    className="flex items-center gap-6 mt-6"
+                                                  >
+                                                    <Select
+                                                      className="flex-1 text-headFont"
+                                                      name="day"
+                                                      placeholder="เลือกวันทำงาน"
+                                                      label="วันทำงาน"
+                                                      labelPlacement={'outside'}
+                                                    >
+                                                      {day.map((item: any) => (
+                                                        <SelectItem
+                                                          className="flex-1 text-headFont"
+                                                          key={item.label}
+                                                          value={item.value}
+                                                        >
+                                                          {item.label}
+                                                        </SelectItem>
+                                                      ))}
+                                                    </Select>
+                                                    <TimeInput
+                                                      className="flex-1"
+                                                      label={
+                                                        <span className="flex-1 text-headFont">
+                                                          เริ่มงาน
+                                                        </span>
+                                                      }
+                                                      labelPlacement="outside"
+                                                      name="starttime"
+                                                    />
+                                                    <TimeInput
+                                                      className="flex-1"
+                                                      label={
+                                                        <span className="flex-1 text-headFont">
+                                                          เลิกงาน
+                                                        </span>
+                                                      }
+                                                      labelPlacement="outside"
+                                                      name="outtime"
+                                                    />
+                                                    <a
+                                                      className="text-red-500 cursor-pointer mt-6"
+                                                      onClick={() =>
+                                                        handleRemoveItem(index)
+                                                      }
+                                                    >
+                                                      ลบรายการ
+                                                    </a>
+                                                  </div>
+                                                ),
+                                              )}
+                                              <div className="flex  gap-4 mt-6">
+                                                <Button
+                                                  type="button"
+                                                  className="bg-secondary text-white w-full"
+                                                  onClick={handleAddItem}
+                                                >
+                                                  <Icon.PlusSquareOutlined className="text-xl" />
+                                                  เพิ่มวันทำงาน
+                                                </Button>
+                                              </div>
                                             </div>
-                                          </div>
-                                        </Form>
-                                      </ModalBody>
-                                      <ModalFooter>
-                                        <Button
-                                          className="bg-accent1 text-white"
-                                          type="submit"
-                                          form="edit-setting"
-                                        >
-                                          แกไข
-                                        </Button>
-                                        <Button className="bg-accent2 text-white">
-                                          ลบ
-                                        </Button>
-                                      </ModalFooter>
-                                    </>
-                                  )}
-                                </ModalContent>
-                              </Modal>
-                              <InputSystem
-                                data={data}
-                                onChange={handleSystem}
-                                onChangeTime={handleOpenDayChange}
-                                openEdit={openEdit}
-                              />
-                            </div>
-                          }
-                        />
+                                          </Form>
+                                        </ModalBody>
+                                        <ModalFooter>
+                                          <Button
+                                            className="bg-accent1 text-white"
+                                            type="submit"
+                                            form="edit-setting"
+                                          >
+                                            แกไข
+                                          </Button>
+                                          <Button className="bg-accent2 text-white">
+                                            ลบ
+                                          </Button>
+                                        </ModalFooter>
+                                      </>
+                                    )}
+                                  </ModalContent>
+                                </Modal>
+                                <InputSystem
+                                  data={data}
+                                  onChange={handleSystem}
+                                  onChangeTime={handleOpenDayChange}
+                                  openEdit={openEdit}
+                                />
+                              </div>
+                            }
+                          />
+                        </div>
                         <CardComponent
-                          className={'basis-2/3'}
+                          className={'basis-2/3 lg:ml-4 md:mt-4 max-md:mt-4'}
                           customCard
                           custom={
                             <div>
-                              <div className="p-6">
-                                <h1 className="text-2xl font-bold text-headFont">
-                                  ตั้งค่าเวลา
-                                </h1>
+                              <div className="justify-between p-6">
+                                <h1 className="text-2xl">ตั้งค่าเวลา</h1>
                               </div>
 
                               <InputTime
@@ -691,13 +692,15 @@ export default function OraganizationPage() {
                     </Tab>
 
                     {/* Setting Address */}
-                    <Tab key="address" title="ข้อมูลที่อยู่">
+                    <Tab
+                      key="address"
+                      title={<span className="hidden">ข้อมูลที่อยู่</span>}
+                    >
                       <div className="flex space-x-4">
                         <CardComponent
-                          className={'basis-2/3'}
                           customCard
                           custom={
-                            <div className="p-2">
+                            <div className="p-4">
                               <div className="flex justify-between">
                                 <h1 className="text-2xl font-bold text-headFont">
                                   ข้อมูลที่อยู่องค์กร
@@ -739,7 +742,7 @@ export default function OraganizationPage() {
                                             </Button>
                                           </div>
                                           <div className="mb-4">
-                                            <AddressTable data={data} />
+                                            <AddressTable />
                                           </div>
                                         </ModalBody>
                                       </>
@@ -1225,22 +1228,20 @@ export default function OraganizationPage() {
                             </div>
                           }
                         />
-                        <CardComponent
-                          className={'basis-1/3'}
-                          customCard
-                          custom={
-                            <div className="p-2">
-                              <div>
-                                <LongdoMapPage />
-                              </div>
-                            </div>
-                          }
-                        />
+                        <div className="flex-1">
+                          <CardComponent
+                            customCard
+                            custom={<LongdoMapPage />}
+                          />
+                        </div>
                       </div>
                     </Tab>
 
                     {/* setting Branch */}
-                    <Tab key="branch" title="ข้อมูลสาขา">
+                    <Tab
+                      key="branch"
+                      title={<span className="hidden">ข้อมูลสาขา</span>}
+                    >
                       <CardComponent
                         className={'basis-2/3'}
                         customCard
@@ -1784,7 +1785,10 @@ export default function OraganizationPage() {
                     </Tab>
 
                     {/* Setting organization */}
-                    <Tab key="organization" title="ข้อมูลองค์กร">
+                    <Tab
+                      key="organization"
+                      title={<span className="hidden">ข้อมูลองค์กร</span>}
+                    >
                       <CardComponent
                         className={'basis-2/3'}
                         customCard

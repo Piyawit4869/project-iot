@@ -1,6 +1,6 @@
 'use client';
 
-import { AdminSideBar } from '@/components/backoffice/sidebar';
+// import { AdminSideBar } from '@/components/backoffice/sidebar';
 import React, { Suspense } from 'react';
 import { Breadcrumb } from '@/components/common/breadcrumb';
 import { DropdownHead } from '@/components/backoffice/headDropdown';
@@ -8,6 +8,7 @@ import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 
 // import { useSession } from 'next-auth/react';
 import Loading from './loading';
+import { ActiveTabs } from '@/components/backoffice/Sidebar/activeTabs';
 
 export default function DashboardLayout({
   children,
@@ -21,7 +22,9 @@ export default function DashboardLayout({
       {/* Sidebar */}
       <SidebarProvider open={isSidebarOpen} onOpenChange={setSidebarOpen}>
         <aside className="w-62 bg-primary shadow-md overflow-y-auto">
-          <AdminSideBar isSidebarOpen={isSidebarOpen} />
+          <Suspense>
+            <ActiveTabs />
+          </Suspense>
         </aside>
         <main className="bg-gray-100 flex-1 w-full overflow-y-auto">
           <div className="flex-1 flex flex-col">

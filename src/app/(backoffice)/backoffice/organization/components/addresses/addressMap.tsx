@@ -21,8 +21,8 @@ const LongdoMapPage = () => {
   }, []);
 
   return (
-    <div className="h-screen">
-      <div id="map" className="h-[500px] w-full rounded-xl p-2"></div>
+    <div className="h-full">
+      <div id="map" className="w-full h-[500px] rounded-xl p-2"></div>
     </div>
   );
 };

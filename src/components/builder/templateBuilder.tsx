@@ -104,6 +104,8 @@ export const TemplateBuilder = ({
               'https://static.vecteezy.com/system/resources/previews/016/916/479/original/placeholder-icon-design-free-vector.jpg'
             }
             style={{ width: '300px' }}
+            width={300}
+            height={300}
             alt="Placeholder"
           />
         ),

@@ -16,7 +16,7 @@ import {
 export default function NotationsPage() {
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [filters, setFilters] = React.useState({ name: '', docNo: '' });
+  const [filters, setFilters] = React.useState({ docName: '', docNo: '' });
   const [items, setItems] = React.useState([]) as any;
   const [meta, setMeta] = React.useState({
     totalItems: 0,
@@ -31,11 +31,11 @@ export default function NotationsPage() {
     const fetchNotations = async () => {
       // setLoading(true);
       try {
-        const { name, docNo } = filters;
+        const { docName, docNo } = filters;
         const { items: fetchedItems, meta: fetchedMeta } = await pagination({
           page,
           limit: rowsPerPage,
-          ...(name && { name }),
+          ...(docName && { docName }),
           ...(docNo && { docNo }),
         });
         setItems(fetchedItems);
@@ -92,8 +92,8 @@ export default function NotationsPage() {
                   size="sm"
                   name="name"
                   placeholder="ค้นหาชื่อ"
-                  value={filters.name}
-                  onChange={(e) => onInputChange('name', e.target.value)}
+                  value={filters.docName}
+                  onChange={(e) => onInputChange('docName', e.target.value)}
                 />
                 <Input
                   className="w-full p-2 text-headFont"
@@ -132,11 +132,11 @@ export default function NotationsPage() {
 }
 
 const columns = [
-  // {
-  //   title: 'รหัสเอกสาร',
-  //   dataIndex: 'docNo',
-  //   link: '/backoffice/notation',
-  // },
+  {
+    title: 'ชื่อเอกสาร',
+    dataIndex: 'docName',
+    link: '/backoffice/notation',
+  },
   {
     title: 'รหัสเอกสาร',
     dataIndex: 'docNo',
