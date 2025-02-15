@@ -10,6 +10,10 @@ import {
   DatePicker,
   Form,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
   Select,
   SelectItem,
   Switch,
@@ -23,6 +27,7 @@ import pagination from '@/pages/api/templates/pagination';
 import getTemplate from '@/pages/api/templates/get';
 import paginationItems from '@/pages/api/items/pagination';
 import paginationCustomers from '@/pages/api/customer/pagination';
+// import paginationAddress from '@/pages/api/address/paginate';
 
 export default function NotationCreatePage() {
   const [zoomLevel, setZoomLevel] = React.useState(100); // Default zoom level (100%)
@@ -33,6 +38,7 @@ export default function NotationCreatePage() {
   const [templates, setTemplates] = React.useState([]) as any;
   const [itemServices, setItemServices] = React.useState([]) as any;
   const [customers, setCustomers] = React.useState([]) as any;
+  // const [address, setAddress] = React.useState([]) as any;
   const [templateSelected, setTemplateSelected] = React.useState({}) as any;
   const [processedHtml, setProcessedHtml] = React.useState<string>('');
   const htmlTemplate = templateSelected.templateNotation;
@@ -118,6 +124,13 @@ export default function NotationCreatePage() {
       setCustomers(fetchedCustomer);
     };
 
+    // const fetchAddress = async () => {
+    //   const { items: fetchedCustomer } = await paginationAddress({});
+
+    //   setAddress(fetchedCustomer);
+    // };
+
+    // fetchAddress();
     fetchCustomer();
     fetchTemplate();
     fetchItem();
@@ -254,6 +267,8 @@ export default function NotationCreatePage() {
     // onOpen: openDraft,
     onOpenChange: changeDraft,
   } = useDisclosure();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Scaffold
@@ -563,12 +578,20 @@ export default function NotationCreatePage() {
               <div className="w-full lg:w-1/2 p-6 bg-gray-100 justify-center">
                 <h1 className="text-base font-bold text-headFont mb-2">
                   ข้อมูลเอกสาร
+                  <Button
+                    color="secondary"
+                    className="ml-3"
+                    onPress={onOpen}
+                    size="sm"
+                  >
+                    กดดูเอกสาร
+                  </Button>
                 </h1>
 
                 {/* Render HTML Template Here */}
                 <div className="flex justify-center">
                   <div
-                    className="bg-white w-full max-w-[170mm] h-[240mm] shadow-lg border border-gray-300 rounded p-6"
+                    className="bg-white w-[200mm] overflow-hidden h-[240mm] shadow-lg border border-gray-300 rounded"
                     style={{
                       transform: `scale(${zoomLevel / 100})`,
                       transformOrigin: 'top left',
@@ -576,13 +599,52 @@ export default function NotationCreatePage() {
                   >
                     {processedHtml ? (
                       <div
+                        className="h-full w-full"
                         dangerouslySetInnerHTML={{ __html: processedHtml }}
                       />
                     ) : (
-                      <p className="text-center text-gray-500">
-                        กรุณาเลือกรูปแบบเอกสาร
+                      <p className="text-center text-gray-500 mt-10">
+                        รูปแบบเอกสาร
                       </p>
                     )}
+
+                    <Modal
+                      isOpen={isOpen}
+                      onClose={onClose}
+                      scrollBehavior="inside"
+                      size="4xl"
+                    >
+                      <ModalContent>
+                        {() => (
+                          <>
+                            <ModalHeader className="flex flex-col gap-1">
+                              เอกสาร
+                            </ModalHeader>
+                            <ModalBody>
+                              <div
+                                className="rounded"
+                                style={{
+                                  transform: `scale(${zoomLevel / 100})`,
+                                  transformOrigin: 'top left',
+                                }}
+                              >
+                                {processedHtml ? (
+                                  <div
+                                    dangerouslySetInnerHTML={{
+                                      __html: processedHtml,
+                                    }}
+                                  />
+                                ) : (
+                                  <p className="text-center text-gray-500">
+                                    กรุณาเลือกรูปแบบเอกสาร
+                                  </p>
+                                )}
+                              </div>
+                            </ModalBody>
+                          </>
+                        )}
+                      </ModalContent>
+                    </Modal>
                   </div>
                 </div>
                 <div className="w-[170mm] w-full flex justify-center items-center mt-4">

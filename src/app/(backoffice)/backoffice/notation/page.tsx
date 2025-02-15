@@ -64,6 +64,8 @@ export default function NotationsPage() {
     handleFilterChange(updatedFilters);
   };
 
+  console.log(filters.docName);
+
   return (
     <div>
       <Scaffold
@@ -90,7 +92,7 @@ export default function NotationsPage() {
                   className="w-full p-2 text-headFont"
                   labelPlacement="outside"
                   size="sm"
-                  name="name"
+                  name="docName"
                   placeholder="ค้นหาชื่อ"
                   value={filters.docName}
                   onChange={(e) => onInputChange('docName', e.target.value)}

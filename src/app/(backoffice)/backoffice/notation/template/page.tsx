@@ -26,12 +26,11 @@ export default function TemplatesPage() {
     const fetchNotations = async () => {
       setLoading(true);
       try {
-        const { templateName, docNo } = filters;
+        const { templateName } = filters;
         const { items: fetchedItems, meta: fetchedMeta } = await pagination({
           page,
           limit: rowsPerPage,
           ...(templateName && { templateName }),
-          ...(docNo && { docNo }),
         });
         setItems(fetchedItems);
         setMeta(fetchedMeta);

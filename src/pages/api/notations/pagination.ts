@@ -5,6 +5,7 @@ interface FetchNotationsParams {
   page: number;
   limit: number;
   docNo?: string;
+  docName?: string;
 }
 
 interface FetchNotationsResponse {
@@ -21,6 +22,7 @@ export default async function pagination({
   page,
   limit,
   docNo,
+  docName,
 }: FetchNotationsParams): Promise<FetchNotationsResponse> {
   try {
     const url = new URL(`${base_url}/crud/notations`);
@@ -31,6 +33,10 @@ export default async function pagination({
 
     if (docNo) {
       url.searchParams.append('docNo', docNo);
+    }
+
+    if (docName) {
+      url.searchParams.append('docName', docName);
     }
 
     const response = await fetch(url.toString(), {

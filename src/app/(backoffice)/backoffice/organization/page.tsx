@@ -25,7 +25,7 @@ import {
 import React from 'react';
 import { Tabs, Tab } from '@nextui-org/react';
 import get from '@/pages/api/organization/get';
-// import { updatedetails } from '@/pages/api/organization/update-details';
+import { updatedetails } from '@/pages/api/organization/update-details';
 import { toast } from 'sonner';
 import { TablePagination } from '@/components/common/tablePagination';
 import InputBranch from './components/InputBranch';
@@ -34,19 +34,19 @@ import AddressTable from './components/addresses/addressTable';
 // import Map from '@/components/map/map';
 import LongdoMapPage from './components/addresses/addressMap';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { updatesystem } from '@/pages/api/organization/updata';
+// import { updatesystem } from '@/pages/api/organization/updata';
 
 export default function OraganizationPage() {
   const [, setLoading] = React.useState(false);
   const [, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [data, setData] = React.useState() as any;
-  // const [dataorg, setDataorg] = React.useState() as any;
-  const [, setDataorg] = React.useState() as any;
-  const [, setOrganizationData] = React.useState() as any;
-  // const [organizationData, setOrganizationData] = React.useState() as any;
-  const [systemData, setSystemData] = React.useState() as any;
-  // const [, setSystemData] = React.useState() as any;
+  const [dataorg, setDataorg] = React.useState() as any;
+  // const [, setDataorg] = React.useState() as any;
+  // const [, setOrganizationData] = React.useState() as any;
+  const [organizationData, setOrganizationData] = React.useState() as any;
+  // const [systemData, setSystemData] = React.useState() as any;
+  const [, setSystemData] = React.useState() as any;
   const [openDayData, setOpenDayData] = React.useState<any[]>([]);
   // const [, setOpenDayData] = React.useState<any[]>([]);
   const [, setPage] = React.useState(1);
@@ -87,42 +87,7 @@ export default function OraganizationPage() {
     setOpenDayData(updatedOpenDay);
   };
 
-  // const onSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-
-  //   try {
-  //     const payload = {
-  //       ...formData,
-  //       ...data,
-  //       organization: {
-  //         ...organizationData,
-  //       },
-  //     };
-
-  //     delete payload.data;
-
-  //     await updatedetails({}, payload, dataorg.id);
-  //     console.log('payload', payload);
-
-  //     toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
-  //       duration: 3000,
-  //       position: 'bottom-left',
-  //       style: { fontFamily: 'var(--font-ibm-sans)' },
-  //     });
-  //   } catch (err: any) {
-  //     toast.error('❌ ไม่สามารถแก้ไขข้อมูลได้', {
-  //       duration: 3000,
-  //       position: 'bottom-left',
-  //       style: { fontFamily: 'var(--font-ibm-sans)' },
-  //     });
-
-  //     console.error('Send FormData error:', err);
-  //     setErrors({ general: err.message || 'An unexpected error occurred.' });
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  console.log('openDayData', openDayData);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,22 +97,21 @@ export default function OraganizationPage() {
       const payload = {
         ...formData,
         ...data,
-        ...systemData,
-        ...openDayData,
+        organization: {
+          ...organizationData,
+        },
       };
 
       delete payload.data;
 
-      const res = await updatesystem({}, payload);
-      console.log('ข้อมูลที่จะส่ง', res);
+      await updatedetails({}, payload, dataorg.id);
+      console.log('payload', payload);
 
       toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
         duration: 3000,
         position: 'bottom-left',
         style: { fontFamily: 'var(--font-ibm-sans)' },
       });
-
-      // router.push(`/backoffice/notation/${res.data.id}`);
     } catch (err: any) {
       toast.error('❌ ไม่สามารถแก้ไขข้อมูลได้', {
         duration: 3000,
@@ -161,6 +125,44 @@ export default function OraganizationPage() {
       setLoading(false);
     }
   };
+
+  // const onSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+
+  //   try {
+  //     const payload = {
+  //       ...formData,
+  //       ...data,
+  //       ...systemData,
+  //       ...openDayData,
+  //     };
+
+  //     delete payload.data;
+
+  //     const res = await updatesystem({}, payload);
+  //     console.log('ข้อมูลที่จะส่ง', res);
+
+  //     toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
+  //       duration: 3000,
+  //       position: 'bottom-left',
+  //       style: { fontFamily: 'var(--font-ibm-sans)' },
+  //     });
+
+  //     // router.push(`/backoffice/notation/${res.data.id}`);
+  //   } catch (err: any) {
+  //     toast.error('❌ ไม่สามารถแก้ไขข้อมูลได้', {
+  //       duration: 3000,
+  //       position: 'bottom-left',
+  //       style: { fontFamily: 'var(--font-ibm-sans)' },
+  //     });
+
+  //     console.error('Send FormData error:', err);
+  //     setErrors({ general: err.message || 'An unexpected error occurred.' });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const [items, setItems] = React.useState([{ description: '', amount: '' }]);
   // Add Setting Time
@@ -209,10 +211,6 @@ export default function OraganizationPage() {
     useDisclosure();
 
   const [selectedItem] = React.useState<any>(null);
-
-  const toggleInput = () => {
-    setOpenEdit((prev) => !prev);
-  };
 
   const handleEditButton = (openEdit: boolean) => {
     return openEdit ? (
@@ -671,7 +669,9 @@ export default function OraganizationPage() {
                           />
                         </div>
                         <CardComponent
-                          className={'basis-2/3 lg:ml-4 md:mt-4 max-md:mt-4'}
+                          className={
+                            'basis-2/3 lg:ml-4 lg:mt-0 md:mt-4 max-md:mt-4'
+                          }
                           customCard
                           custom={
                             <div>
@@ -706,12 +706,6 @@ export default function OraganizationPage() {
                                   ข้อมูลที่อยู่องค์กร
                                 </h1>
                                 <div className="mr-10">
-                                  <Button
-                                    className="bg-accent3 text-white mr-3"
-                                    onClick={toggleInput}
-                                  >
-                                    แก้ไข
-                                  </Button>
                                   <Button
                                     className="bg-accent1 text-white"
                                     onPress={openAddress}
@@ -1251,14 +1245,6 @@ export default function OraganizationPage() {
                               <h1 className="text-2xl font-bold text-headFont">
                                 ข้อมูลสาขา
                               </h1>
-                              <div className="mr-10">
-                                <Button
-                                  className="bg-accent3 text-white mr-3"
-                                  onClick={toggleInput}
-                                >
-                                  แก้ไข
-                                </Button>
-                              </div>
 
                               <Modal
                                 size="5xl"
@@ -1798,14 +1784,6 @@ export default function OraganizationPage() {
                               <h1 className="text-2xl font-bold text-headFont">
                                 ข้อมูลองค์กร
                               </h1>
-                              <div className="">
-                                <Button
-                                  className="bg-accent3 text-white mr-3"
-                                  onClick={toggleInput}
-                                >
-                                  แก้ไข
-                                </Button>
-                              </div>
                             </div>
                             <Inputorganization
                               data={data}
