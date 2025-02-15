@@ -96,14 +96,15 @@ const ChartComponent: React.FC = () => {
       <CardContent>
         <div className="grid grid-cols-6 gap-4">
           <div className="col-span-3 mt-8">
-            <span className="text-xl font-semibold text-center mb-4">
+            <span className="text-xl font-semibold text-center mb-4 xl:text-lg lg:text-sm md:text-xs">
               กราฟแสดงสถิติการเข้าร่วมงาน
             </span>
           </div>
           <div className="col-span-3 mt-8">
-            <div className="flex justify-center space-x-2 mb-4">
+            <div className="flex justify-center space-x-2 mb-4 ">
               <Button
                 className="text-#4f46e5"
+                size={'sm'}
                 variant={view === 'daily' ? 'default' : 'outline'}
                 onClick={() => setView('daily')}
               >
@@ -111,6 +112,7 @@ const ChartComponent: React.FC = () => {
               </Button>
               <Button
                 className="text-#4f46e5"
+                size={'sm'}
                 variant={view === 'weekly' ? 'default' : 'outline'}
                 onClick={() => setView('weekly')}
               >
@@ -118,6 +120,7 @@ const ChartComponent: React.FC = () => {
               </Button>
               <Button
                 className="text-#4f46e5"
+                size={'sm'}
                 variant={view === 'monthly' ? 'default' : 'outline'}
                 onClick={() => setView('monthly')}
               >

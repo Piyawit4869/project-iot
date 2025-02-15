@@ -27,7 +27,7 @@ const WeeklyAttendanceChart: React.FC = () => {
   return (
     <Card>
       <CardContent>
-        <p className="text-xl font-semibold text-start mt-8 mb-6 ">
+        <p className="text-xl font-semibold text-start mt-8 mb-6 xl:text-lg lg:text-sm md:text-xs">
           การเข้าทำงานรายสัปดาห์ของแต่ละแผนก
         </p>
         <ResponsiveContainer width="100%" height={300}>

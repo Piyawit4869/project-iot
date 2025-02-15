@@ -179,7 +179,7 @@ export default function AttendancesPage() {
     debounce(() => {
       setPage(1);
       setFilters(updatedFilters);
-    }, 1)();
+    }, 300)();
   }, []);
 
   const onInputChange = (key: keyof typeof filters, value: string) => {
@@ -228,9 +228,11 @@ export default function AttendancesPage() {
               ) : (
                 <>
                   <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
-                    <div className="grid grid-cols-1 sm:grid-cols-5 p-4 flex justify-between items-center">
-                      <div className=" px-3">
-                        <h6>ภาพรวมการเข้าทำงาน</h6>
+                    <div className="grid grid-cols-1 sm:grid-cols-5 gap-8 p-4 flex justify-between items-center">
+                      <div className=" px-3 col-span-1">
+                        <p className="xl:text-lg lg:text-sm md:text-xs">
+                          ภาพรวมการเข้าทำงาน
+                        </p>
                       </div>
                       <Input
                         className="w-[90%] p-2 text-headFont col-span-2"
@@ -246,7 +248,7 @@ export default function AttendancesPage() {
                         }
                       />
                       <Select
-                        className="w-[90%] p-2 text-headFont"
+                        className="w-[90%] p-2 text-headFont col-span-1"
                         startContent={<Icons.UserRound className="p-1" />}
                         size="sm"
                         radius="sm"
@@ -299,24 +301,10 @@ const columns = [
     dataIndex: 'userName',
     link: '/backoffice/attendance/overview',
     align: 'left',
-    // render: (_: any, record: any) => {
-    //   return <span>{record?.user?.userName}</span>;
-    // },
   },
   { title: 'คำนำหน้า', dataIndex: 'prefix' },
   { title: 'สถานะ', dataIndex: 'status' },
-  { title: 'คำอธิบายงาน', dataIndex: 'descriptions' },
-  { title: 'ความสำคัญ', dataIndex: 'priority' },
-  { title: 'วันที่เริ่มต้น', dataIndex: 'startDate' },
-  { title: 'วันสิ้นสุด', dataIndex: 'dueDate' },
   { title: 'เวลาจำกัดต่อวัน', dataIndex: 'limitTimePerDay' },
-  { title: 'ผู้ตรวจสอบ', dataIndex: 'inspector' },
-  { title: 'เครดิตเริ่มต้น', dataIndex: 'startCredit' },
-  { title: 'เครดิตรวม', dataIndex: 'totalCredit' },
   { title: 'ชั่วโมงทำงานรวม', dataIndex: 'totalWorkHours' },
-  { title: 'วันที่จ่ายเงิน', dataIndex: 'payDayDate' },
-  { title: 'เวลาที่จ่ายเงิน', dataIndex: 'payDayTime' },
   { title: 'หมายเหตุ', dataIndex: 'note' },
-  { title: 'สร้างวันที่', dataIndex: 'createdAtDate' },
-  { title: 'เวลาที่สร้าง', dataIndex: 'createdAtTime' },
 ];
