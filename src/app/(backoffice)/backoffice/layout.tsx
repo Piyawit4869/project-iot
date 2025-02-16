@@ -8,7 +8,7 @@ import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 
 // import { useSession } from 'next-auth/react';
 import Loading from './loading';
-import { ActiveTabs } from '@/components/backoffice/Sidebar/activeTabs';
+import { AdminSideBar } from '@/components/backoffice/sidebar';
 
 export default function DashboardLayout({
   children,
@@ -23,7 +23,7 @@ export default function DashboardLayout({
       <SidebarProvider open={isSidebarOpen} onOpenChange={setSidebarOpen}>
         <aside className="w-62 bg-primary shadow-md overflow-y-auto">
           <Suspense>
-            <ActiveTabs />
+            <AdminSideBar isSidebarOpen={isSidebarOpen} />
           </Suspense>
         </aside>
         <main className="bg-gray-100 flex-1 w-full overflow-y-auto">

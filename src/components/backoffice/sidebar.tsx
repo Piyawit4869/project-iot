@@ -11,8 +11,7 @@ import {
   SidebarGroupLabel,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-// import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useCallback } from 'react';
 import * as Icons from 'lucide-react';
 import { useClientSession } from '@/libs/auth';
@@ -23,7 +22,6 @@ import Link from 'next/link';
 // import { ChevronRight } from 'lucide-react';
 import { NavHome } from './Sidebar/homeSidebar';
 import { NavSetting } from './Sidebar/settingSidebar';
-import { Button } from '@nextui-org/react';
 
 const renderIcon = (iconName: string) => {
   const IconComponent = Icons[iconName as keyof typeof Icons] as any;
@@ -31,14 +29,10 @@ const renderIcon = (iconName: string) => {
 };
 
 export function AdminSideBar({
-  activeTab,
-  handleMenuClick,
   isSidebarOpen,
   ...props
 }: {
   isSidebarOpen: boolean;
-  activeTab: any;
-  handleMenuClick: any;
 } & React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname() ?? '';
   const pathUrl = pathname.split('/');
@@ -243,15 +237,15 @@ export function AdminSideBar({
     };
   }, []);
 
-  // const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
 
-  // const router = useRouter();
-  // const activeTab = searchParams?.get('tab') || 'organization';
+  const router = useRouter();
+  const activeTab = searchParams?.get('tab') || 'organization';
 
-  // const handleMenuClick = (key: string) => {
-  //   const newUrl = `${pathname}?tab=${key}`;
-  //   router.push(newUrl);
-  // };
+  const handleMenuClick = (key: string) => {
+    const newUrl = `${pathname}?tab=${key}`;
+    router.push(newUrl);
+  };
 
   const initialSubMenuState = React.useMemo(() => {
     const state: any = {};
@@ -384,17 +378,6 @@ export function AdminSideBar({
         </SidebarGroup>
         <div className="py-5 px-5">
           <hr />
-          {menuSidebar === menuSetting.setting && (
-            <div className="flex items-center justify-center h-full mt-3">
-              <Button
-                onClick={() => setMenuSidebar(menuData.main)}
-                className="rounded-full"
-                size="sm"
-              >
-                <Icons.ChevronLeft />
-              </Button>
-            </div>
-          )}
         </div>
       </SidebarContent>
     </Sidebar>

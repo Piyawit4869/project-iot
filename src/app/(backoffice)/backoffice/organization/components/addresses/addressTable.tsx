@@ -13,7 +13,7 @@ import pagination from '@/pages/api/address/paginate';
 export default function AddressTable() {
   const [item, setItems] = React.useState([]) as any;
   const [page, setPage] = React.useState(1);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(20);
   const [meta, setMeta] = React.useState({
     totalItems: 0,
     itemsPerPage: 10,
