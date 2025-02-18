@@ -9,6 +9,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { deleteemployeeRole } from '@/pages/api/employeeRole/delete';
 import { updateemployeeRole } from '@/pages/api/employeeRole/update';
 import getemployeeRole from '@/pages/api/employeeRole/get';
+import { Breadcrumb } from '@/components/common/breadcrumb';
 
 export default function RoleCreatePage() {
   const [errors, setErrors] = React.useState({}) as any;
@@ -107,97 +108,102 @@ export default function RoleCreatePage() {
   };
 
   return (
-    <Scaffold
-      child={
-        <div>
-          {/* 🔹 Page Header */}
-          <TopSection
-            title="ข้อมูลตำแหน่ง"
-            backpath={'/backoffice/manageUsers/employeeRole'}
-            buttons={[
-              <a key={'create button'}>
-                <Button
-                  className="bg-accent1 text-white text-xs"
-                  size="sm"
-                  type="submit"
-                  form="employeeroleForm"
-                >
-                  ยืนยัน
-                </Button>
-              </a>,
-              <a key={'delete button'}>
-                <Button
-                  className="bg-accent2 text-white text-xs"
-                  size="sm"
-                  onClick={onDelete}
-                >
-                  ลบ
-                </Button>
-              </a>,
-            ]}
-          />
+    <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb title={formData?.name} />
+      </div>
+      <Scaffold
+        child={
+          <div>
+            {/* 🔹 Page Header */}
+            <TopSection
+              title="ข้อมูลตำแหน่ง"
+              backpath={'/backoffice/manageUsers/employeeRole'}
+              buttons={[
+                <a key={'create button'}>
+                  <Button
+                    className="bg-accent1 text-white text-xs"
+                    size="sm"
+                    type="submit"
+                    form="employeeroleForm"
+                  >
+                    ยืนยัน
+                  </Button>
+                </a>,
+                <a key={'delete button'}>
+                  <Button
+                    className="bg-accent2 text-white text-xs"
+                    size="sm"
+                    onClick={onDelete}
+                  >
+                    ลบ
+                  </Button>
+                </a>,
+              ]}
+            />
 
-          {/* 🔹 Form Section */}
-          <Card className="p-6 mt-8">
-            <Form
-              id="employeeroleForm"
-              onSubmit={onSubmit}
-              method="post"
-              className="grid grid-cols-1 gap-4"
-              validationErrors={errors}
-            >
-              {/* 🔹 Section Header */}
-              <div className="flex justify-between items-center">
-                <h1 className="flex-1 text-xl font-bold text-headFont">
-                  ข้อมูลตำแหน่งพนักงาน
-                </h1>
-              </div>
-              <div className="flex items-center gap-4 mt-4">
-                <span className="text-headFont text-xs">สถานะการใช้งาน</span>
-                <Switch
-                  type="checkbox"
-                  name="status"
-                  color="secondary"
-                  onChange={handleChange}
-                  required
-                  isSelected={formData.status === 'active'}
-                />
-              </div>
+            {/* 🔹 Form Section */}
+            <Card className="p-6 mt-8">
+              <Form
+                id="employeeroleForm"
+                onSubmit={onSubmit}
+                method="post"
+                className="grid grid-cols-1 gap-4"
+                validationErrors={errors}
+              >
+                {/* 🔹 Section Header */}
+                <div className="flex justify-between items-center">
+                  <h1 className="flex-1 text-xl font-bold text-headFont">
+                    ข้อมูลตำแหน่งพนักงาน
+                  </h1>
+                </div>
+                <div className="flex items-center gap-4 mt-4">
+                  <span className="text-headFont text-xs">สถานะการใช้งาน</span>
+                  <Switch
+                    type="checkbox"
+                    name="status"
+                    color="secondary"
+                    onChange={handleChange}
+                    required
+                    isSelected={formData.status === 'active'}
+                  />
+                </div>
 
-              {/* 🔹 Company Name */}
-              <div className="grid grid-cols-2 gap-4 mt-4">
-                <Input
-                  className="w-full"
-                  size="sm"
-                  label="ชื่อตำแหน่งพนักงาน"
-                  labelPlacement="outside"
-                  name="name"
-                  placeholder="กรอกชื่อตำแหน่งงาน"
-                  value={formData.name}
-                  onChange={handleChange}
-                  isRequired
-                  errorMessage={'กรุณากรอกชื่อตำแหน่งงาน'}
-                />
-              </div>
+                {/* 🔹 Company Name */}
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  <Input
+                    className="w-full"
+                    size="sm"
+                    label="ชื่อตำแหน่งพนักงาน"
+                    labelPlacement="outside"
+                    name="name"
+                    placeholder="กรอกชื่อตำแหน่งงาน"
+                    value={formData.name}
+                    onChange={handleChange}
+                    isRequired
+                    errorMessage={'กรุณากรอกชื่อตำแหน่งงาน'}
+                  />
+                </div>
 
-              {/* 🔹 Tax ID */}
-              <div className="grid grid-cols-2 gap-4 mt-5">
-                <Textarea
-                  className="w-full"
-                  size="sm"
-                  label="รายละเอียด"
-                  labelPlacement="outside"
-                  name="description"
-                  placeholder="กรอกรายละเอียด"
-                  value={formData.description}
-                  onChange={handleChange}
-                />
-              </div>
-            </Form>
-          </Card>
-        </div>
-      }
-      backgroundColor={''}
-    />
+                {/* 🔹 Tax ID */}
+                <div className="grid grid-cols-2 gap-4 mt-5">
+                  <Textarea
+                    className="w-full"
+                    size="sm"
+                    label="รายละเอียด"
+                    labelPlacement="outside"
+                    name="description"
+                    placeholder="กรอกรายละเอียด"
+                    value={formData.description}
+                    onChange={handleChange}
+                  />
+                </div>
+              </Form>
+            </Card>
+          </div>
+        }
+        backgroundColor={''}
+      />
+    </div>
   );
 }

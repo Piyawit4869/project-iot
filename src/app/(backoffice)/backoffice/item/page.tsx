@@ -7,6 +7,7 @@ import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
 import paginationItems from '@/pages/api/items/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
+import { Breadcrumb } from '@/components/common/breadcrumb';
 
 export default function ItemsPage() {
   const [page, setPage] = React.useState(1);
@@ -61,6 +62,9 @@ export default function ItemsPage() {
 
   return (
     <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb />
+      </div>
       <Scaffold
         child={
           <div>

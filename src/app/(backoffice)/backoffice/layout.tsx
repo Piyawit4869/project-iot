@@ -2,7 +2,6 @@
 
 // import { AdminSideBar } from '@/components/backoffice/sidebar';
 import React, { Suspense } from 'react';
-import { Breadcrumb } from '@/components/common/breadcrumb';
 import { DropdownHead } from '@/components/backoffice/headDropdown';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 
@@ -31,11 +30,9 @@ export default function DashboardLayout({
             <header className="bg-white shadow p-4 flex items-center justify-between">
               <div className="flex">
                 <SidebarTrigger
-                  className="cursor-pointer text-primary mr-5 "
+                  className="cursor-pointer text-primary mr-5 text-2xl"
                   onClick={() => setSidebarOpen((prev) => !prev)}
                 ></SidebarTrigger>
-
-                <Breadcrumb />
               </div>
               <div className="flex items-center space-x-4">
                 <DropdownHead />

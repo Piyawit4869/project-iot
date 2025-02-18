@@ -12,6 +12,7 @@ import {
   handleStatusTag,
   handleTypeTag,
 } from '@/components/common/common';
+import { Breadcrumb } from '@/components/common/breadcrumb';
 
 export default function NotationsPage() {
   const [page, setPage] = React.useState(1);
@@ -68,6 +69,9 @@ export default function NotationsPage() {
 
   return (
     <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb />
+      </div>
       <Scaffold
         child={
           <div>

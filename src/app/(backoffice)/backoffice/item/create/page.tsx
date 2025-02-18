@@ -7,6 +7,7 @@ import { Button, Card, Form, Input, Textarea } from '@nextui-org/react';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { Breadcrumb } from '@/components/common/breadcrumb';
 
 export default function ItemCreatePage() {
   // 🔹 State for form data and errors
@@ -93,115 +94,120 @@ export default function ItemCreatePage() {
   };
 
   return (
-    <Scaffold
-      child={
-        <div>
-          {/* 🔹 Page Header */}
-          <TopSection
-            title="สร้างเอกสาร"
-            backpath={'/backoffice/item'}
-            buttons={[
-              <a key={'create button'}>
-                <Button
-                  className="bg-accent1 text-white text-xs"
-                  size="sm"
-                  type="submit"
-                  form="item"
-                >
-                  สร้าง
-                </Button>
-              </a>,
-            ]}
-          />
+    <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb />
+      </div>
+      <Scaffold
+        child={
+          <div>
+            {/* 🔹 Page Header */}
+            <TopSection
+              title="สร้างเอกสาร"
+              backpath={'/backoffice/item'}
+              buttons={[
+                <a key={'create button'}>
+                  <Button
+                    className="bg-accent1 text-white text-xs"
+                    size="sm"
+                    type="submit"
+                    form="item"
+                  >
+                    สร้าง
+                  </Button>
+                </a>,
+              ]}
+            />
 
-          {/* 🔹 Form Section */}
-          <Card className="p-6 mt-6">
-            <Form
-              id="item"
-              onSubmit={onSubmit}
-              method="post"
-              className="grid grid-cols-1 gap-4"
-              validationErrors={errors}
-            >
-              {/* 🔹 Section Header */}
-              <div className="flex justify-between items-center">
-                <h1 className="flex-1 text-xl font-bold text-headFont">
-                  ข้อมูลสินค้าและบริการ
-                </h1>
-              </div>
+            {/* 🔹 Form Section */}
+            <Card className="p-6 mt-6">
+              <Form
+                id="item"
+                onSubmit={onSubmit}
+                method="post"
+                className="grid grid-cols-1 gap-4"
+                validationErrors={errors}
+              >
+                {/* 🔹 Section Header */}
+                <div className="flex justify-between items-center">
+                  <h1 className="flex-1 text-xl font-bold text-headFont">
+                    ข้อมูลสินค้าและบริการ
+                  </h1>
+                </div>
 
-              {/* 🔹 Name Input */}
-              <Input
-                className="w-full"
-                size="sm"
-                label="ชื่อสินค้าและบริการ"
-                labelPlacement="outside"
-                name="name"
-                placeholder="กรอกชื่อสินค้าและบริการ"
-                onChange={handleChange}
-                isRequired
-                errorMessage={'กรุณากรอกชื่อสินค้าและบริการ'}
-              />
-
-              {/* 🔹 Quantity, Unit Price, and Discount Inputs */}
-              <div className="grid grid-cols-3 gap-4">
+                {/* 🔹 Name Input */}
                 <Input
                   className="w-full"
                   size="sm"
-                  type="number"
-                  label="จำนวน"
+                  label="ชื่อสินค้าและบริการ"
                   labelPlacement="outside"
-                  name="quantity"
-                  value={formData.quantity}
-                  placeholder="จำนวน"
+                  name="name"
+                  placeholder="กรอกชื่อสินค้าและบริการ"
                   onChange={handleChange}
                   isRequired
-                  errorMessage={errors.quantity}
+                  errorMessage={'กรุณากรอกชื่อสินค้าและบริการ'}
                 />
-                <Input
-                  className="w-full"
-                  size="sm"
-                  type="number"
-                  label="ราคาต่อหน่วย"
-                  labelPlacement="outside"
-                  name="unitPrice"
-                  value={formData.unitPrice}
-                  placeholder="ราคาต่อหน่วย"
-                  onChange={handleChange}
-                  isRequired
-                  errorMessage={errors.unitPrice}
-                />
-                <Input
-                  className="w-full"
-                  size="sm"
-                  type="number"
-                  label="ส่วนลด"
-                  labelPlacement="outside"
-                  name="discount"
-                  value={formData.discount}
-                  placeholder="ส่วนลด"
-                  onChange={handleChange}
-                />
-              </div>
 
-              {/* 🔹 Display Total Price */}
-              <div className="text-lg font-bold">
-                ราคารวม:{' '}
-                {formData.total ? formData.total.toLocaleString() : '0'} บาท
-              </div>
-              {/* 🔹 Description */}
-              <Textarea
-                label="รายละเอียด"
-                labelPlacement="outside"
-                name="description"
-                placeholder="เพิ่มรายละเอียดเกี่ยวกับสินค้า"
-                onChange={handleChange}
-              />
-            </Form>
-          </Card>
-        </div>
-      }
-      backgroundColor={''}
-    />
+                {/* 🔹 Quantity, Unit Price, and Discount Inputs */}
+                <div className="grid grid-cols-3 gap-4">
+                  <Input
+                    className="w-full"
+                    size="sm"
+                    type="number"
+                    label="จำนวน"
+                    labelPlacement="outside"
+                    name="quantity"
+                    value={formData.quantity}
+                    placeholder="จำนวน"
+                    onChange={handleChange}
+                    isRequired
+                    errorMessage={errors.quantity}
+                  />
+                  <Input
+                    className="w-full"
+                    size="sm"
+                    type="number"
+                    label="ราคาต่อหน่วย"
+                    labelPlacement="outside"
+                    name="unitPrice"
+                    value={formData.unitPrice}
+                    placeholder="ราคาต่อหน่วย"
+                    onChange={handleChange}
+                    isRequired
+                    errorMessage={errors.unitPrice}
+                  />
+                  <Input
+                    className="w-full"
+                    size="sm"
+                    type="number"
+                    label="ส่วนลด"
+                    labelPlacement="outside"
+                    name="discount"
+                    value={formData.discount}
+                    placeholder="ส่วนลด"
+                    onChange={handleChange}
+                  />
+                </div>
+
+                {/* 🔹 Display Total Price */}
+                <div className="text-lg font-bold">
+                  ราคารวม:{' '}
+                  {formData.total ? formData.total.toLocaleString() : '0'} บาท
+                </div>
+                {/* 🔹 Description */}
+                <Textarea
+                  label="รายละเอียด"
+                  labelPlacement="outside"
+                  name="description"
+                  placeholder="เพิ่มรายละเอียดเกี่ยวกับสินค้า"
+                  onChange={handleChange}
+                />
+              </Form>
+            </Card>
+          </div>
+        }
+        backgroundColor={''}
+      />
+    </div>
   );
 }

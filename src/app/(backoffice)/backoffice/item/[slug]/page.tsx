@@ -10,6 +10,7 @@ import getItem from '@/pages/api/items/get';
 import * as Icon from '@ant-design/icons';
 import { deleteItem } from '@/pages/api/items/delete';
 import { updateItem } from '@/pages/api/items/update';
+import { Breadcrumb } from '@/components/common/breadcrumb';
 
 export default function ItemUpdatePage() {
   const params = useParams<{ slug?: string }>();
@@ -141,142 +142,147 @@ export default function ItemUpdatePage() {
   }, [params]);
 
   return (
-    <Scaffold
-      child={
-        loading ? (
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="relative flex flex-col items-center space-y-4">
-              {/* Spinner */}
-              <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+    <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb title={formData?.name} />
+      </div>
+      <Scaffold
+        child={
+          loading ? (
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="relative flex flex-col items-center space-y-4">
+                {/* Spinner */}
+                <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
 
-              {/* Loading Text */}
-              <p className="text-gray-600 text-lg font-semibold animate-pulse">
-                Loading, please wait...
-              </p>
+                {/* Loading Text */}
+                <p className="text-gray-600 text-lg font-semibold animate-pulse">
+                  Loading, please wait...
+                </p>
+              </div>
             </div>
-          </div>
-        ) : (
-          <div>
-            {/* 🔹 Page Header */}
-            <TopSection
-              title={
-                formData?.name ? formData.name : 'แก้ไขข้อมูลสินค้าและบริการ'
-              }
-              backpath={'/backoffice/item'}
-              buttons={[
-                <a key={'create button'}>
+          ) : (
+            <div>
+              {/* 🔹 Page Header */}
+              <TopSection
+                title={
+                  formData?.name ? formData.name : 'แก้ไขข้อมูลสินค้าและบริการ'
+                }
+                backpath={'/backoffice/item'}
+                buttons={[
+                  <a key={'create button'}>
+                    <Button
+                      className="bg-accent1 text-white text-xs"
+                      size="sm"
+                      type="submit"
+                      form="item"
+                    >
+                      แก้ไข
+                    </Button>
+                  </a>,
                   <Button
-                    className="bg-accent1 text-white text-xs"
+                    className={`bg-accent2 text-white text-xs`}
+                    key={'delete button'}
+                    onClick={onDelete}
                     size="sm"
-                    type="submit"
-                    form="item"
                   >
-                    แก้ไข
-                  </Button>
-                </a>,
-                <Button
-                  className={`bg-accent2 text-white text-xs`}
-                  key={'delete button'}
-                  onClick={onDelete}
-                  size="sm"
+                    <Icon.DeleteFilled />
+                    ลบ
+                  </Button>,
+                ]}
+              />
+
+              {/* 🔹 Form Section */}
+              <Card className="p-6 mt-6">
+                <Form
+                  id="item"
+                  onSubmit={onSubmit}
+                  method="post"
+                  className="grid grid-cols-1 gap-4"
+                  validationErrors={errors}
                 >
-                  <Icon.DeleteFilled />
-                  ลบ
-                </Button>,
-              ]}
-            />
+                  {/* 🔹 Section Header */}
+                  <div className="flex justify-between items-center">
+                    <h1 className="flex-1 text-md font-bold text-headFont">
+                      ข้อมูลสินค้าและบริการ
+                    </h1>
+                  </div>
 
-            {/* 🔹 Form Section */}
-            <Card className="p-6 mt-6">
-              <Form
-                id="item"
-                onSubmit={onSubmit}
-                method="post"
-                className="grid grid-cols-1 gap-4"
-                validationErrors={errors}
-              >
-                {/* 🔹 Section Header */}
-                <div className="flex justify-between items-center">
-                  <h1 className="flex-1 text-md font-bold text-headFont">
-                    ข้อมูลสินค้าและบริการ
-                  </h1>
-                </div>
-
-                {/* 🔹 Name Input */}
-                <Input
-                  className="w-full"
-                  size="sm"
-                  label="ชื่อสินค้าและบริการ"
-                  labelPlacement="outside"
-                  name="name"
-                  placeholder="กรอกชื่อสินค้าและบริการ"
-                  onChange={handleChange}
-                  defaultValue={formData.name}
-                  isRequired
-                  errorMessage={'กรุณากรอกชื่อสินค้าและบริการ'}
-                />
-
-                {/* 🔹 Quantity, Unit Price, and Discount Inputs */}
-                <div className="grid grid-cols-3 gap-4">
+                  {/* 🔹 Name Input */}
                   <Input
                     className="w-full"
                     size="sm"
-                    type="number"
-                    label="จำนวน"
+                    label="ชื่อสินค้าและบริการ"
                     labelPlacement="outside"
-                    name="quantity"
-                    defaultValue={formData.quantity}
-                    placeholder="จำนวน"
+                    name="name"
+                    placeholder="กรอกชื่อสินค้าและบริการ"
                     onChange={handleChange}
+                    defaultValue={formData.name}
                     isRequired
-                    errorMessage={errors.quantity}
+                    errorMessage={'กรุณากรอกชื่อสินค้าและบริการ'}
                   />
-                  <Input
-                    className="w-full"
-                    size="sm"
-                    type="number"
-                    label="ราคาต่อหน่วย"
-                    labelPlacement="outside"
-                    name="unitPrice"
-                    defaultValue={formData.unitPrice}
-                    placeholder="ราคาต่อหน่วย"
-                    onChange={handleChange}
-                    isRequired
-                    errorMessage={errors.unitPrice}
-                  />
-                  <Input
-                    className="w-full"
-                    size="sm"
-                    type="number"
-                    label="ส่วนลด"
-                    labelPlacement="outside"
-                    name="discount"
-                    defaultValue={formData.discount}
-                    placeholder="ส่วนลด"
-                    onChange={handleChange}
-                  />
-                </div>
 
-                {/* 🔹 Display Total Price */}
-                <div className="text-lg font-bold">
-                  ราคารวม:{' '}
-                  {formData.total ? formData.total.toLocaleString() : '0'} บาท
-                </div>
-                {/* 🔹 Description */}
-                <Textarea
-                  label="รายละเอียด"
-                  labelPlacement="outside"
-                  name="description"
-                  placeholder="เพิ่มรายละเอียดเกี่ยวกับสินค้า"
-                  onChange={handleChange}
-                  defaultValue={formData.description}
-                />
-              </Form>
-            </Card>
-          </div>
-        )
-      }
-      backgroundColor={''}
-    />
+                  {/* 🔹 Quantity, Unit Price, and Discount Inputs */}
+                  <div className="grid grid-cols-3 gap-4">
+                    <Input
+                      className="w-full"
+                      size="sm"
+                      type="number"
+                      label="จำนวน"
+                      labelPlacement="outside"
+                      name="quantity"
+                      defaultValue={formData.quantity}
+                      placeholder="จำนวน"
+                      onChange={handleChange}
+                      isRequired
+                      errorMessage={errors.quantity}
+                    />
+                    <Input
+                      className="w-full"
+                      size="sm"
+                      type="number"
+                      label="ราคาต่อหน่วย"
+                      labelPlacement="outside"
+                      name="unitPrice"
+                      defaultValue={formData.unitPrice}
+                      placeholder="ราคาต่อหน่วย"
+                      onChange={handleChange}
+                      isRequired
+                      errorMessage={errors.unitPrice}
+                    />
+                    <Input
+                      className="w-full"
+                      size="sm"
+                      type="number"
+                      label="ส่วนลด"
+                      labelPlacement="outside"
+                      name="discount"
+                      defaultValue={formData.discount}
+                      placeholder="ส่วนลด"
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  {/* 🔹 Display Total Price */}
+                  <div className="text-lg font-bold">
+                    ราคารวม:{' '}
+                    {formData.total ? formData.total.toLocaleString() : '0'} บาท
+                  </div>
+                  {/* 🔹 Description */}
+                  <Textarea
+                    label="รายละเอียด"
+                    labelPlacement="outside"
+                    name="description"
+                    placeholder="เพิ่มรายละเอียดเกี่ยวกับสินค้า"
+                    onChange={handleChange}
+                    defaultValue={formData.description}
+                  />
+                </Form>
+              </Card>
+            </div>
+          )
+        }
+        backgroundColor={''}
+      />
+    </div>
   );
 }

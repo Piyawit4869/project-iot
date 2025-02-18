@@ -17,11 +17,14 @@ import * as Icons from 'lucide-react';
 import { useClientSession } from '@/libs/auth';
 import Image from 'next/image';
 import Link from 'next/link';
-// import { isMenuActive } from '../common/common';
-// import { Collapsible, CollapsibleTrigger } from '../ui/collapsible';
-// import { ChevronRight } from 'lucide-react';
 import { NavHome } from './Sidebar/homeSidebar';
 import { NavSetting } from './Sidebar/settingSidebar';
+import { ChevronRight } from 'lucide-react';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '../ui/collapsible';
 
 const renderIcon = (iconName: string) => {
   const IconComponent = Icons[iconName as keyof typeof Icons] as any;
@@ -37,8 +40,6 @@ export function AdminSideBar({
   const pathname = usePathname() ?? '';
   const pathUrl = pathname.split('/');
   const pathFeature = pathUrl && pathUrl[2];
-  // const pathSubFeature = pathUrl && pathUrl[3];
-  // console.log({ pathSubFeature });
 
   const me = useClientSession();
   const menuData: any = React.useMemo(() => {
@@ -97,24 +98,24 @@ export function AdminSideBar({
               icon: 'LayoutPanelLeft',
               isActive: false,
             },
-            {
-              name: 'การเข้าทำงาน',
-              path: '/backoffice/attendance/work-infomation',
-              icon: 'BriefcaseBusiness',
-              isActive: false,
-            },
+            // {
+            //   name: 'การเข้าทำงาน',
+            //   path: '/backoffice/attendance/work-infomation',
+            //   icon: 'BriefcaseBusiness',
+            //   isActive: false,
+            // },
             {
               name: 'การเข้าใช้งาน',
               path: '/backoffice/attendance/whitelist',
               icon: 'ShieldCheck',
               isActive: false,
             },
-            {
-              name: 'การตั้งค่า',
-              path: '/backoffice/attendance/setting',
-              icon: 'Settings2',
-              isActive: false,
-            },
+            // {
+            //   name: 'การตั้งค่า',
+            //   path: '/backoffice/attendance/setting',
+            //   icon: 'Settings2',
+            //   isActive: false,
+            // },
           ],
         },
         {
@@ -263,22 +264,30 @@ export function AdminSideBar({
   }, [menuData, pathname]);
 
   const [isSubMenuOpen, setIsSubMenuOpen] = React.useState(initialSubMenuState);
-  const [menuSidebar, setMenuSidebar] = React.useState<any[]>(menuData.main);
 
-  React.useEffect(() => {
-    if (location.pathname.startsWith('/backoffice/organization')) {
-      setMenuSidebar(menuSetting.setting);
-    } else {
-      setMenuSidebar(menuData.main);
-    }
-  }, [menuData.main, menuSetting.setting]);
+  const menuSidebar = React.useMemo(() => {
+    const activeMenu = pathname.startsWith('/backoffice/organization')
+      ? menuSetting.setting
+      : menuData.main;
 
-  const toggleSubMenu = useCallback((key: string, open?: boolean) => {
+    return activeMenu.map((item: any) => ({
+      ...item,
+      isActive: pathname.includes(item.key),
+    }));
+  }, [pathname, menuSetting.setting, menuData.main]);
+
+  const toggleSubMenu = useCallback((key: string) => {
     setIsSubMenuOpen((prev: any) => ({
       ...prev,
-      [key]: open !== undefined ? open : !prev[key],
+      [key]: !prev[key],
     }));
   }, []);
+
+  const handleToggleSubMenu = (key: string) => {
+    if (isSidebarOpen) {
+      toggleSubMenu(key);
+    }
+  };
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -315,64 +324,72 @@ export function AdminSideBar({
             <NavHome items={menuData.home} />
             {menuSidebar.map((item: any) => {
               return (
-                <SidebarMenuItem key={item.key}>
-                  <SidebarMenuButton
-                    onClick={() => {
-                      if (isSidebarOpen) toggleSubMenu(item.key);
-                    }}
-                    isActive={pathFeature === item.key}
-                  >
-                    {renderIcon(item.icon)}
-                    <span
-                      className={`transition-all duration-300 ${
-                        isSidebarOpen ? 'opacity-100' : 'opacity-0 hidden'
-                      }`}
-                    >
-                      <a href={item.path}>{item.name}</a>
-                    </span>
-                    {/* <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" /> */}
-                  </SidebarMenuButton>
+                <Collapsible
+                  key={item.key}
+                  asChild
+                  defaultOpen={item.isActive}
+                  className="group/collapsible"
+                >
+                  <SidebarMenuItem>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuButton
+                        onClick={() => handleToggleSubMenu(item.key)}
+                        isActive={pathFeature === item.key}
+                      >
+                        {renderIcon(item.icon)}
+                        <span
+                          className={`transition-all duration-300 ${
+                            isSidebarOpen ? 'opacity-100' : 'opacity-0 hidden'
+                          }`}
+                        >
+                          <a href={item.path}>{item.name}</a>
+                        </span>
+                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                      </SidebarMenuButton>
+                    </CollapsibleTrigger>
 
-                  {item.subMenu && isSubMenuOpen[item.key] && (
-                    <SidebarMenuSub>
-                      {item.subMenu?.map((subItem: any) => {
-                        return (
-                          <SidebarMenuSubItem key={subItem.name}>
-                            <SidebarMenuSubButton
-                              key={subItem.path}
-                              href={subItem.path}
-                              isActive={pathname === subItem.path}
-                              className={`py-4 ${
-                                (activeTab === subItem.key,
-                                pathname === subItem.path ? 'bg-blue-100' : '')
-                              }`}
-                              onClick={() => handleMenuClick(subItem.key)}
-                            >
-                              {renderIcon(subItem.icon)}
-                              <span
-                                className={`transition-all duration-300 ${
-                                  isSidebarOpen
-                                    ? 'opacity-100'
-                                    : 'opacity-0 hidden'
-                                }`}
-                              >
-                                {subItem.name}
-                              </span>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        );
-                      })}
-                    </SidebarMenuSub>
-                  )}
-                </SidebarMenuItem>
+                    {item.subMenu && isSubMenuOpen[item.key] && (
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
+                          {item.subMenu?.map((subItem: any) => {
+                            return (
+                              <SidebarMenuSubItem key={subItem.path}>
+                                <SidebarMenuSubButton
+                                  key={subItem.path}
+                                  href={subItem.path}
+                                  isActive={pathname === subItem.path}
+                                  className={`py-4 ${
+                                    (activeTab === subItem.key,
+                                    pathname === subItem.path
+                                      ? 'bg-blue-100'
+                                      : '')
+                                  }`}
+                                  onClick={() => handleMenuClick(subItem.key)}
+                                >
+                                  {renderIcon(subItem.icon)}
+                                  <span
+                                    className={`transition-all duration-300 ${
+                                      isSidebarOpen
+                                        ? 'opacity-100'
+                                        : 'opacity-0 hidden'
+                                    }`}
+                                  >
+                                    {subItem.name}
+                                  </span>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            );
+                          })}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    )}
+                  </SidebarMenuItem>
+                </Collapsible>
               );
             })}
 
-            {menuSidebar === menuData.main && (
-              <NavSetting
-                items={menuData.setting}
-                // onMenuClick={handleMenuClick}
-              />
+            {!pathname.startsWith('/backoffice/organization') && (
+              <NavSetting items={menuData.setting} />
             )}
           </SidebarMenu>
         </SidebarGroup>

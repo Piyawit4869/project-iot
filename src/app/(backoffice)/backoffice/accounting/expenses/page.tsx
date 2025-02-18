@@ -5,6 +5,7 @@ import { TopSection } from '@/components/common/topSection';
 import Scaffold from '@/components/common/scaffold';
 import { Input, Select, SelectItem, Tab, Tabs } from '@nextui-org/react';
 import { TablePagination } from '@/components/common/tablePagination';
+import { Breadcrumb } from '@/components/common/breadcrumb';
 
 export default function ExpensesPage() {
   const [, setPage] = React.useState(1);
@@ -69,107 +70,112 @@ export default function ExpensesPage() {
   );
 
   return (
-    <Scaffold
-      child={
-        <div>
-          <TopSection title={'รายจ่าย'} />
-          {/* Filter Bar */}
-          <div className="bg-white shadow rounded-lg  mb-4 mt-4">
-            <div className="grid grid-cols-1 sm:grid-cols-3">
-              {/* Search Bar */}
-              <Input
-                className="w-full p-2 text-headFont"
-                labelPlacement="outside"
-                size="sm"
-                name="name"
-                placeholder="ค้นหาชื่อ"
-                // value={filters.name}
-                // onChange={(e) => onInputChange('name', e.target.value)}
-                isDisabled
+    <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb />
+      </div>
+      <Scaffold
+        child={
+          <div>
+            <TopSection title={'รายจ่าย'} />
+            {/* Filter Bar */}
+            <div className="bg-white shadow rounded-lg  mb-4 mt-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3">
+                {/* Search Bar */}
+                <Input
+                  className="w-full p-2 text-headFont"
+                  labelPlacement="outside"
+                  size="sm"
+                  name="name"
+                  placeholder="ค้นหาชื่อ"
+                  // value={filters.name}
+                  // onChange={(e) => onInputChange('name', e.target.value)}
+                  isDisabled
+                />
+
+                {/* Category Filter */}
+
+                <Select
+                  className="w-full p-2 text-headFont"
+                  size="sm"
+                  name="category"
+                  placeholder="เลือกประเภท"
+                  // value={filters.type}
+                  // onChange={(e) => onInputChange('type', e.target.value)}
+                  isDisabled
+                >
+                  <SelectItem className="text-headFont" key={'option1'}>
+                    ทุกประเภท
+                  </SelectItem>
+                  <SelectItem className="text-headFont" key={'option2'}>
+                    รายได้
+                  </SelectItem>
+                  <SelectItem className="text-headFont" key={'option3'}>
+                    รายจ่าย
+                  </SelectItem>
+                </Select>
+
+                {/* Status Filter */}
+
+                <Select
+                  className="w-full p-2 text-headFont"
+                  size="sm"
+                  name="status"
+                  placeholder="เลือกสถานะ"
+                  // value={filters.status}
+                  // onChange={(e) => onInputChange('status', e.target.value)}
+                  isDisabled
+                >
+                  <SelectItem className="text-headFont" key={'option1'}>
+                    ทุกสถานะ
+                  </SelectItem>
+                  <SelectItem className="text-headFont" key={'option2'}>
+                    สำเร็จ
+                  </SelectItem>
+                  <SelectItem className="text-headFont" key={'option3'}>
+                    รอดำเนินการ
+                  </SelectItem>
+                </Select>
+              </div>
+            </div>
+
+            {/* Tabs */}
+            <div className="flex flex-wrap gap-4">
+              <Tabs
+                color="secondary"
+                className="mt-2 mb-4"
+                radius="full"
+                aria-label="Tabs colors"
+                selectedKey={selectedCategory}
+                onSelectionChange={(key) => setSelectedCategory(key.toString())}
+              >
+                {tabs.map((tab: any) => (
+                  <Tab key={tab.value} title={tab.label} />
+                ))}
+              </Tabs>
+            </div>
+
+            {/* Table */}
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="spinner"></div>
+              </div>
+            ) : (
+              <TablePagination
+                initialRows={filteredData}
+                initialMeta={meta}
+                rowsPerPage={rowsPerPage}
+                columns={columns as any}
+                onPageChange={(newPage) => setPage(newPage)}
+                onRowsPerPageChange={(newRowsPerPage) =>
+                  setRowsPerPage(newRowsPerPage)
+                }
               />
-
-              {/* Category Filter */}
-
-              <Select
-                className="w-full p-2 text-headFont"
-                size="sm"
-                name="category"
-                placeholder="เลือกประเภท"
-                // value={filters.type}
-                // onChange={(e) => onInputChange('type', e.target.value)}
-                isDisabled
-              >
-                <SelectItem className="text-headFont" key={'option1'}>
-                  ทุกประเภท
-                </SelectItem>
-                <SelectItem className="text-headFont" key={'option2'}>
-                  รายได้
-                </SelectItem>
-                <SelectItem className="text-headFont" key={'option3'}>
-                  รายจ่าย
-                </SelectItem>
-              </Select>
-
-              {/* Status Filter */}
-
-              <Select
-                className="w-full p-2 text-headFont"
-                size="sm"
-                name="status"
-                placeholder="เลือกสถานะ"
-                // value={filters.status}
-                // onChange={(e) => onInputChange('status', e.target.value)}
-                isDisabled
-              >
-                <SelectItem className="text-headFont" key={'option1'}>
-                  ทุกสถานะ
-                </SelectItem>
-                <SelectItem className="text-headFont" key={'option2'}>
-                  สำเร็จ
-                </SelectItem>
-                <SelectItem className="text-headFont" key={'option3'}>
-                  รอดำเนินการ
-                </SelectItem>
-              </Select>
-            </div>
+            )}
           </div>
-
-          {/* Tabs */}
-          <div className="flex flex-wrap gap-4">
-            <Tabs
-              color="secondary"
-              className="mt-2 mb-4"
-              radius="full"
-              aria-label="Tabs colors"
-              selectedKey={selectedCategory}
-              onSelectionChange={(key) => setSelectedCategory(key.toString())}
-            >
-              {tabs.map((tab: any) => (
-                <Tab key={tab.value} title={tab.label} />
-              ))}
-            </Tabs>
-          </div>
-
-          {/* Table */}
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="spinner"></div>
-            </div>
-          ) : (
-            <TablePagination
-              initialRows={filteredData}
-              initialMeta={meta}
-              rowsPerPage={rowsPerPage}
-              columns={columns as any}
-              onPageChange={(newPage) => setPage(newPage)}
-              onRowsPerPageChange={(newRowsPerPage) =>
-                setRowsPerPage(newRowsPerPage)
-              }
-            />
-          )}
-        </div>
-      }
-    />
+        }
+      />
+    </div>
   );
 }
 

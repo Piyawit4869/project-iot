@@ -33,6 +33,7 @@ import pagination from '@/pages/api/templates/pagination';
 import { handleDocumentStatusTag } from '@/components/common/common';
 import paginationItems from '@/pages/api/items/pagination';
 import paginationCustomers from '@/pages/api/customer/pagination';
+import { Breadcrumb } from '@/components/common/breadcrumb';
 
 export default function NotationSinglePage() {
   const [zoomLevel, setZoomLevel] = React.useState(100);
@@ -437,359 +438,363 @@ export default function NotationSinglePage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Scaffold
-      child={
-        // loading ? (
-        //   <div className="flex items-center justify-center min-h-screen">
-        //     <div className="relative flex flex-col items-center space-y-4">
-        //       {/* Spinner */}
-        //       <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+    <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb title={formData?.docNo} />
+      </div>
+      <Scaffold
+        child={
+          // loading ? (
+          //   <div className="flex items-center justify-center min-h-screen">
+          //     <div className="relative flex flex-col items-center space-y-4">
+          //       {/* Spinner */}
+          //       <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
 
-        //       {/* Loading Text */}
-        //       <p className="text-gray-600 text-lg font-semibold animate-pulse">
-        //         Loading, please wait...
-        //       </p>
-        //     </div>
-        //   </div>
-        // ) : (
-        <div>
-          <TopSection
-            title={
-              loading ? (
-                <Skeleton className="h-6 w-[180px] rounded-lg" />
-              ) : (
-                <span>{formData?.docNo}</span>
-              )
-            }
-            backpath={'/backoffice/notation'}
-            buttons={[
-              formData?.docStatus !== 'canceled' ? (
-                <Button
-                  className=" text-white text-xs"
-                  key={'cancel button'}
-                  onClick={onCancel}
-                  size="sm"
-                >
-                  ยกเลิก
-                </Button>
-              ) : (
-                <div key={'empty cancel'}></div>
-              ),
+          //       {/* Loading Text */}
+          //       <p className="text-gray-600 text-lg font-semibold animate-pulse">
+          //         Loading, please wait...
+          //       </p>
+          //     </div>
+          //   </div>
+          // ) : (
+          <div>
+            <TopSection
+              title={
+                loading ? (
+                  <Skeleton className="h-6 w-[180px] rounded-lg" />
+                ) : (
+                  <span>{formData?.docNo}</span>
+                )
+              }
+              backpath={'/backoffice/notation'}
+              buttons={[
+                formData?.docStatus !== 'canceled' ? (
+                  <Button
+                    className=" text-white text-xs"
+                    key={'cancel button'}
+                    onClick={onCancel}
+                    size="sm"
+                  >
+                    ยกเลิก
+                  </Button>
+                ) : (
+                  <div key={'empty cancel'}></div>
+                ),
 
-              handleEditButton(openEdit),
-              formData?.docStatus === 'draft' ? (
+                handleEditButton(openEdit),
+                formData?.docStatus === 'draft' ? (
+                  <Button
+                    className={`bg-sky-400 text-white text-xs`}
+                    key={'pending button'}
+                    onClick={onPending}
+                    size="sm"
+                  >
+                    รอดำเนินการ
+                  </Button>
+                ) : (
+                  <div key={'empty pendding'}></div>
+                ),
+                formData?.docStatus === 'pending' ? (
+                  <Button
+                    className={`bg-sky-600 text-white text-xs`}
+                    key={'waiting button'}
+                    onClick={onWaiting}
+                    size="sm"
+                  >
+                    รอตรวจสอบ
+                  </Button>
+                ) : (
+                  <div key={'empty waiting'}></div>
+                ),
                 <Button
-                  className={`bg-sky-400 text-white text-xs`}
-                  key={'pending button'}
-                  onClick={onPending}
+                  className={`bg-${
+                    formData?.docStatus !== 'waiting_for_review'
+                      ? 'gray-400 cursor-not-allowed'
+                      : 'accent2'
+                  } text-white text-xs`}
+                  key={'reject button'}
+                  disabled={formData?.docStatus !== 'waiting_for_review'}
+                  onClick={onRejected}
                   size="sm"
                 >
-                  รอดำเนินการ
-                </Button>
-              ) : (
-                <div key={'empty pendding'}></div>
-              ),
-              formData?.docStatus === 'pending' ? (
+                  ปฏิเสธ
+                </Button>,
                 <Button
-                  className={`bg-sky-600 text-white text-xs`}
-                  key={'waiting button'}
-                  onClick={onWaiting}
+                  className={`bg-${
+                    formData?.docStatus !== 'waiting_for_review'
+                      ? 'gray-400 cursor-not-allowed'
+                      : 'accent1'
+                  } text-white text-xs`}
+                  key={'approve button'}
+                  disabled={formData?.docStatus !== 'waiting_for_review'}
+                  onClick={onApproved}
                   size="sm"
                 >
-                  รอตรวจสอบ
-                </Button>
-              ) : (
-                <div key={'empty waiting'}></div>
-              ),
-              <Button
-                className={`bg-${
-                  formData?.docStatus !== 'waiting_for_review'
-                    ? 'gray-400 cursor-not-allowed'
-                    : 'accent2'
-                } text-white text-xs`}
-                key={'reject button'}
-                disabled={formData?.docStatus !== 'waiting_for_review'}
-                onClick={onRejected}
-                size="sm"
-              >
-                ปฏิเสธ
-              </Button>,
-              <Button
-                className={`bg-${
-                  formData?.docStatus !== 'waiting_for_review'
-                    ? 'gray-400 cursor-not-allowed'
-                    : 'accent1'
-                } text-white text-xs`}
-                key={'approve button'}
-                disabled={formData?.docStatus !== 'waiting_for_review'}
-                onClick={onApproved}
-                size="sm"
-              >
-                อนุมัติ
-              </Button>,
-              <Button
-                className={`bg-${
-                  formData?.docStatus === 'canceled'
-                    ? 'gray-400 cursor-not-allowed'
-                    : 'accent2'
-                } text-white text-xs`}
-                key={'delete button'}
-                onClick={onDelete}
-                disabled={formData?.docStatus === 'canceled'}
-                size="sm"
-              >
-                <Icon.DeleteFilled />
-                ลบ
-              </Button>,
-            ]}
-          />
-          <div className="bg-gray-100  flex justify-center items-center pt-6">
-            {/* A4 Paper Styled Container */}
-            <div className="bg-white w-full border-gray-300 rounded-lg shadow-lg flex flex-wrap">
-              {/* Input Form Section */}
-              <div className="w-full lg:w-1/2 p-6 border-r border-gray-200 overflow-y-auto">
-                <Form
-                  id="notation"
-                  onSubmit={onSubmit}
-                  method="post"
-                  className="grid grid-cols-1 gap-4"
-                  validationErrors={errors}
+                  อนุมัติ
+                </Button>,
+                <Button
+                  className={`bg-${
+                    formData?.docStatus === 'canceled'
+                      ? 'gray-400 cursor-not-allowed'
+                      : 'accent2'
+                  } text-white text-xs`}
+                  key={'delete button'}
+                  onClick={onDelete}
+                  disabled={formData?.docStatus === 'canceled'}
+                  size="sm"
                 >
-                  <div className="flex justify-between items-center mb-5">
-                    <h1 className="flex-1 text-xl font-bold text-headFont">
-                      ข้อมูลเอกสาร
-                    </h1>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-headFont text-sm">แสดงผลเอกสาร</p>
+                  <Icon.DeleteFilled />
+                  ลบ
+                </Button>,
+              ]}
+            />
+            <div className="bg-gray-100  flex justify-center items-center pt-6">
+              {/* A4 Paper Styled Container */}
+              <div className="bg-white w-full border-gray-300 rounded-lg shadow-lg flex flex-wrap">
+                {/* Input Form Section */}
+                <div className="w-full lg:w-1/2 p-6 border-r border-gray-200 overflow-y-auto">
+                  <Form
+                    id="notation"
+                    onSubmit={onSubmit}
+                    method="post"
+                    className="grid grid-cols-1 gap-4"
+                    validationErrors={errors}
+                  >
+                    <div className="flex justify-between items-center mb-5">
+                      <h1 className="flex-1 text-xl font-bold text-headFont">
+                        ข้อมูลเอกสาร
+                      </h1>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-headFont text-sm">แสดงผลเอกสาร</p>
+                        {loading ? (
+                          <Skeleton className="h-8 w-[55px] rounded-full" />
+                        ) : (
+                          <Switch
+                            className="mt-2"
+                            name="active"
+                            color="secondary"
+                            onChange={handleChange}
+                            required
+                            isDisabled={!openEdit}
+                            isSelected={formData.active}
+                          />
+                        )}
+                      </div>
                       {loading ? (
-                        <Skeleton className="h-8 w-[55px] rounded-full" />
+                        <Skeleton className="h-12 w-[360px] rounded-lg" />
                       ) : (
-                        <Switch
-                          className="mt-2"
-                          name="active"
-                          color="secondary"
-                          onChange={handleChange}
-                          required
+                        <Select
+                          name="templateId"
+                          placeholder="เลือกรูปแบบเอกสาร"
+                          label="เลือกรูปแบบเอกสาร"
+                          labelPlacement={'outside'}
+                          onChange={handleTemplateChange}
+                          defaultSelectedKeys={[formData.templateId]}
                           isDisabled={!openEdit}
-                          isSelected={formData.active}
-                        />
+                        >
+                          {templates.map((item: any) => (
+                            <SelectItem key={item.id} value={item.id}>
+                              {item.templateName}
+                            </SelectItem>
+                          ))}
+                        </Select>
                       )}
                     </div>
-                    {loading ? (
-                      <Skeleton className="h-12 w-[360px] rounded-lg" />
-                    ) : (
-                      <Select
-                        name="templateId"
-                        placeholder="เลือกรูปแบบเอกสาร"
-                        label="เลือกรูปแบบเอกสาร"
-                        labelPlacement={'outside'}
-                        onChange={handleTemplateChange}
-                        defaultSelectedKeys={[formData.templateId]}
-                        isDisabled={!openEdit}
-                      >
-                        {templates.map((item: any) => (
-                          <SelectItem key={item.id} value={item.id}>
-                            {item.templateName}
-                          </SelectItem>
-                        ))}
-                      </Select>
-                    )}
-                  </div>
-                  {/* Notation Section */}
-                  <div className="flex gap-6 mt-8">
-                    {loading ? (
-                      <Skeleton className="h-12 w-[360px] rounded-lg" />
-                    ) : (
-                      <Input
-                        className="flex-1"
-                        label="ชื่อเอกสาร"
-                        labelPlacement="outside"
-                        name="name"
-                        placeholder="กรอกหมายขื่อเอกสาร"
-                        onChange={handleChange}
-                        defaultValue={formData?.docName}
-                        isRequired
-                        errorMessage={'กรุณากรอกชื่อเอกสาร'}
-                        isDisabled={!openEdit}
-                      />
-                    )}
-                    {loading ? (
-                      <Skeleton className="h-12 w-[360px] rounded-lg" />
-                    ) : (
-                      <Select
-                        className="flex-1"
-                        name="type"
-                        label="เลือกประเภทเอกสาร"
-                        labelPlacement={'outside'}
-                        placeholder="กรุณาเลือกประเภทเอกสาร"
-                        onChange={handleChange}
-                        isRequired
-                        errorMessage={'กรุณาเลือกประเภทเอกสาร'}
-                        defaultSelectedKeys={[formData.type]}
-                        isDisabled={!openEdit}
-                      >
-                        {types.map((item) => (
-                          <SelectItem key={item.value} value={item.value}>
-                            {item.label}
-                          </SelectItem>
-                        ))}
-                      </Select>
-                    )}
-                  </div>
-                  <div className="flex gap-4 mt-6">
-                    {loading ? (
-                      <Skeleton className="h-12 w-[360px] rounded-lg mt-5" />
-                    ) : (
-                      <Input
-                        className="flex-1"
-                        label="หมายเลขอ้างอิง"
-                        labelPlacement="outside"
-                        name="refNo"
-                        placeholder="กรอกหมายเลขอ้างอิง"
-                        onChange={handleChange}
-                        defaultValue={formData.refNo}
-                        isRequired
-                        errorMessage={'กรุณากรอกหมายเลขอ้างอิง'}
-                        isDisabled={!openEdit}
-                      />
-                    )}
-                    {loading ? (
-                      <Skeleton className="h-12 w-[360px] rounded-lg" />
-                    ) : (
-                      <DatePicker
-                        className="flex-1"
-                        name="startDate"
-                        label="วันที่สร้าง"
-                        labelPlacement={'outside'}
-                        disableAnimation
-                        isRequired
-                        errorMessage={'กรุณาเลือกวันที่สร้าง'}
-                        defaultValue={
-                          formData.startDate
-                            ? parseDate(formData.startDate.split('T')[0])
-                            : undefined
-                        }
-                        isDisabled={!openEdit}
-                        onChange={(date: any) => {
-                          if (date?.year && date?.month && date?.day) {
-                            // Convert the custom date object to a valid Date instance
-                            const parsedDate = new Date(
-                              date.year,
-                              date.month - 1,
-                              date.day,
-                            ); // month is 0-indexed
-                            const isoString = parsedDate.toISOString();
-
-                            // Update formData with the ISO string
-                            setFormData((prevData: any) => ({
-                              ...prevData,
-                              startDate: isoString,
-                            }));
-                          } else {
-                            console.error('Invalid date object:', date);
+                    {/* Notation Section */}
+                    <div className="flex gap-6 mt-8">
+                      {loading ? (
+                        <Skeleton className="h-12 w-[360px] rounded-lg" />
+                      ) : (
+                        <Input
+                          className="flex-1"
+                          label="ชื่อเอกสาร"
+                          labelPlacement="outside"
+                          name="name"
+                          placeholder="กรอกหมายขื่อเอกสาร"
+                          onChange={handleChange}
+                          defaultValue={formData?.docName}
+                          isRequired
+                          errorMessage={'กรุณากรอกชื่อเอกสาร'}
+                          isDisabled={!openEdit}
+                        />
+                      )}
+                      {loading ? (
+                        <Skeleton className="h-12 w-[360px] rounded-lg" />
+                      ) : (
+                        <Select
+                          className="flex-1"
+                          name="type"
+                          label="เลือกประเภทเอกสาร"
+                          labelPlacement={'outside'}
+                          placeholder="กรุณาเลือกประเภทเอกสาร"
+                          onChange={handleChange}
+                          isRequired
+                          errorMessage={'กรุณาเลือกประเภทเอกสาร'}
+                          defaultSelectedKeys={[formData.type]}
+                          isDisabled={!openEdit}
+                        >
+                          {types.map((item) => (
+                            <SelectItem key={item.value} value={item.value}>
+                              {item.label}
+                            </SelectItem>
+                          ))}
+                        </Select>
+                      )}
+                    </div>
+                    <div className="flex gap-4 mt-6">
+                      {loading ? (
+                        <Skeleton className="h-12 w-[360px] rounded-lg mt-5" />
+                      ) : (
+                        <Input
+                          className="flex-1"
+                          label="หมายเลขอ้างอิง"
+                          labelPlacement="outside"
+                          name="refNo"
+                          placeholder="กรอกหมายเลขอ้างอิง"
+                          onChange={handleChange}
+                          defaultValue={formData.refNo}
+                          isRequired
+                          errorMessage={'กรุณากรอกหมายเลขอ้างอิง'}
+                          isDisabled={!openEdit}
+                        />
+                      )}
+                      {loading ? (
+                        <Skeleton className="h-12 w-[360px] rounded-lg" />
+                      ) : (
+                        <DatePicker
+                          className="flex-1"
+                          name="startDate"
+                          label="วันที่สร้าง"
+                          labelPlacement={'outside'}
+                          disableAnimation
+                          isRequired
+                          errorMessage={'กรุณาเลือกวันที่สร้าง'}
+                          defaultValue={
+                            formData.startDate
+                              ? parseDate(formData.startDate.split('T')[0])
+                              : undefined
                           }
-                        }}
+                          isDisabled={!openEdit}
+                          onChange={(date: any) => {
+                            if (date?.year && date?.month && date?.day) {
+                              // Convert the custom date object to a valid Date instance
+                              const parsedDate = new Date(
+                                date.year,
+                                date.month - 1,
+                                date.day,
+                              ); // month is 0-indexed
+                              const isoString = parsedDate.toISOString();
+
+                              // Update formData with the ISO string
+                              setFormData((prevData: any) => ({
+                                ...prevData,
+                                startDate: isoString,
+                              }));
+                            } else {
+                              console.error('Invalid date object:', date);
+                            }
+                          }}
+                        />
+                      )}
+                      {/* {formData.status} */}
+                    </div>
+                    {loading ? (
+                      <Skeleton className="h-24 w-full rounded-lg mt-6" />
+                    ) : (
+                      <Textarea
+                        label="หมายเหตุ"
+                        labelPlacement="outside"
+                        name="note"
+                        placeholder=""
+                        onChange={handleChange}
+                        isDisabled={!openEdit}
+                        defaultValue={formData.note}
                       />
                     )}
-                    {/* {formData.status} */}
-                  </div>
-                  {loading ? (
-                    <Skeleton className="h-24 w-full rounded-lg mt-6" />
-                  ) : (
-                    <Textarea
-                      label="หมายเหตุ"
-                      labelPlacement="outside"
-                      name="note"
-                      placeholder=""
-                      onChange={handleChange}
-                      isDisabled={!openEdit}
-                      defaultValue={formData.note}
-                    />
-                  )}
-                  <div className="flex gap-4 mt-6">
-                    <h1 className="text-base font-bold text-headFont flex-1">
-                      ลูกค้า
+                    <div className="flex gap-4 mt-6">
+                      <h1 className="text-base font-bold text-headFont flex-1">
+                        ลูกค้า
+                      </h1>
+                      <h1 className="text-base font-bold text-headFont flex-1">
+                        ที่อยู่
+                      </h1>
+                    </div>
+                    <div className="flex gap-4">
+                      {loading ? (
+                        <Skeleton className="h-12 w-[360px] rounded-lg" />
+                      ) : (
+                        <Select
+                          name="customer"
+                          size="sm"
+                          label="เลือกลูกค้า"
+                          onChange={handleCustomer}
+                          defaultSelectedKeys={[formData.customerId]}
+                          isDisabled={!openEdit}
+                        >
+                          {customers.map((item: any) => (
+                            <SelectItem key={item.id} value={item.id}>
+                              {`${
+                                item.firstName
+                                  ? `คุณ ${item.firstName}`
+                                  : 'ไม่มีชื่อ'
+                              }  ${
+                                item.companyName
+                                  ? `จาก ${item.companyName}`
+                                  : 'ไม่มีชื่อ'
+                              }`}
+                            </SelectItem>
+                          ))}
+                        </Select>
+                      )}
+                      {loading ? (
+                        <Skeleton className="h-12 w-[360px] rounded-lg" />
+                      ) : (
+                        <Select
+                          size="sm"
+                          name="address"
+                          label="เลือกที่อยู่บริษัท"
+                          isDisabled={!openEdit}
+                        >
+                          {address.map((item) => (
+                            <SelectItem key={item.value} value={item.value}>
+                              {item.label}
+                            </SelectItem>
+                          ))}
+                        </Select>
+                      )}
+                    </div>
+                    <h1 className="text-base font-bold text-headFont mt-6">
+                      รายการ
                     </h1>
-                    <h1 className="text-base font-bold text-headFont flex-1">
-                      ที่อยู่
-                    </h1>
-                  </div>
-                  <div className="flex gap-4">
                     {loading ? (
-                      <Skeleton className="h-12 w-[360px] rounded-lg" />
+                      <Skeleton className="h-12 w-full rounded-lg" />
                     ) : (
                       <Select
-                        name="customer"
                         size="sm"
-                        label="เลือกลูกค้า"
-                        onChange={handleCustomer}
-                        defaultSelectedKeys={[formData.customerId]}
+                        name="itemsId"
+                        label="เลือกรายการ"
+                        className="flex-1"
+                        selectionMode="multiple"
                         isDisabled={!openEdit}
+                        onSelectionChange={(keys: any) =>
+                          handleMultipleSelect(keys)
+                        }
+                        defaultSelectedKeys={
+                          formData?.itemsId
+                            ? formData.itemsId.map((item: any) => item.id)
+                            : []
+                        }
                       >
-                        {customers.map((item: any) => (
+                        {itemServices.map((item: any) => (
                           <SelectItem key={item.id} value={item.id}>
-                            {`${
-                              item.firstName
-                                ? `คุณ ${item.firstName}`
-                                : 'ไม่มีชื่อ'
-                            }  ${
-                              item.companyName
-                                ? `จาก ${item.companyName}`
-                                : 'ไม่มีชื่อ'
-                            }`}
+                            {item.name}
                           </SelectItem>
                         ))}
                       </Select>
                     )}
-                    {loading ? (
-                      <Skeleton className="h-12 w-[360px] rounded-lg" />
-                    ) : (
-                      <Select
-                        size="sm"
-                        name="address"
-                        label="เลือกที่อยู่บริษัท"
-                        isDisabled={!openEdit}
-                      >
-                        {address.map((item) => (
-                          <SelectItem key={item.value} value={item.value}>
-                            {item.label}
-                          </SelectItem>
-                        ))}
-                      </Select>
-                    )}
-                  </div>
-                  <h1 className="text-base font-bold text-headFont mt-6">
-                    รายการ
-                  </h1>
-                  {loading ? (
-                    <Skeleton className="h-12 w-full rounded-lg" />
-                  ) : (
-                    <Select
-                      size="sm"
-                      name="itemsId"
-                      label="เลือกรายการ"
-                      className="flex-1"
-                      selectionMode="multiple"
-                      isDisabled={!openEdit}
-                      onSelectionChange={(keys: any) =>
-                        handleMultipleSelect(keys)
-                      }
-                      defaultSelectedKeys={
-                        formData?.itemsId
-                          ? formData.itemsId.map((item: any) => item.id)
-                          : []
-                      }
-                    >
-                      {itemServices.map((item: any) => (
-                        <SelectItem key={item.id} value={item.id}>
-                          {item.name}
-                        </SelectItem>
-                      ))}
-                    </Select>
-                  )}
-                  {/* <h1 className="text-base font-bold text-headFont mt-6">
+                    {/* <h1 className="text-base font-bold text-headFont mt-6">
                       รายการ
                     </h1>
                     {items.map((_, index) => (
@@ -841,136 +846,139 @@ export default function NotationSinglePage() {
                     ) : (
                       <></>
                     )} */}
-                </Form>
-              </div>
+                  </Form>
+                </div>
 
-              {/* PDF Preview Section */}
-              <div className="w-full lg:w-1/2 p-4 bg-gray-100 justify-center">
-                <div className=" flex justify-between items-center mb-2">
-                  <h1 className="text-base font-bold text-headFont">
-                    ข้อมูลเอกสาร
-                    {/* <div className="flex flex-wrap gap-3"> */}
-                    <Button
-                      color="secondary"
-                      className="ml-3"
-                      onPress={onOpen}
-                      size="sm"
-                    >
-                      กดดูเอกสาร
-                    </Button>
-                    {/* </div> */}
-                  </h1>
-                  {/* Dynamic Status Tag */}
-                  {loading ? (
-                    <Skeleton className="h-7 w-[130px] rounded-full" />
-                  ) : (
-                    <span>{handleDocumentStatusTag(formData?.docStatus)}</span>
-                  )}
-                  {/* <div
+                {/* PDF Preview Section */}
+                <div className="w-full lg:w-1/2 p-4 bg-gray-100 justify-center">
+                  <div className=" flex justify-between items-center mb-2">
+                    <h1 className="text-base font-bold text-headFont">
+                      ข้อมูลเอกสาร
+                      {/* <div className="flex flex-wrap gap-3"> */}
+                      <Button
+                        color="secondary"
+                        className="ml-3"
+                        onPress={onOpen}
+                        size="sm"
+                      >
+                        กดดูเอกสาร
+                      </Button>
+                      {/* </div> */}
+                    </h1>
+                    {/* Dynamic Status Tag */}
+                    {loading ? (
+                      <Skeleton className="h-7 w-[130px] rounded-full" />
+                    ) : (
+                      <span>
+                        {handleDocumentStatusTag(formData?.docStatus)}
+                      </span>
+                    )}
+                    {/* <div
                         className={`px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700 border border-gray`}
                       >
                         แบบร่าง
                       </div> */}
-                </div>
-
-                {/* Render HTML Template Here */}
-                {loading ? (
-                  <Skeleton className="w-90% max-w-[170mm] h-[240mm] rounded-sm ml-11" />
-                ) : (
-                  <div className="flex justify-center">
-                    <div
-                      className="bg-white w-[200mm] overflow-hidden h-full shadow-lg border border-gray-300 rounded"
-                      // className="bg-white w-[200mm] overflow-hidden h-full shadow-lg border border-gray-300 rounded"
-                      style={{
-                        transform: `scale(${zoomLevel / 100})`,
-                        transformOrigin: 'top left',
-                      }}
-                    >
-                      {processedHtml ? (
-                        <div
-                          className="h-full w-full"
-                          dangerouslySetInnerHTML={{ __html: processedHtml }}
-                        />
-                      ) : (
-                        <p className="text-center text-gray-500">
-                          กรุณาเลือกรูปแบบเอกสาร
-                        </p>
-                      )}
-                    </div>
-
-                    <Modal
-                      isOpen={isOpen}
-                      onClose={onClose}
-                      scrollBehavior="inside"
-                      size="4xl"
-                    >
-                      <ModalContent>
-                        {() => (
-                          <>
-                            <ModalHeader className="flex flex-col gap-1">
-                              เอกสาร
-                            </ModalHeader>
-                            <ModalBody>
-                              <div
-                                className="rounded"
-                                style={{
-                                  transform: `scale(${zoomLevel / 100})`,
-                                  transformOrigin: 'top left',
-                                }}
-                              >
-                                {processedHtml ? (
-                                  <div
-                                    dangerouslySetInnerHTML={{
-                                      __html: processedHtml,
-                                    }}
-                                  />
-                                ) : (
-                                  <p className="text-center text-gray-500">
-                                    กรุณาเลือกรูปแบบเอกสาร
-                                  </p>
-                                )}
-                              </div>
-                            </ModalBody>
-                          </>
-                        )}
-                      </ModalContent>
-                    </Modal>
                   </div>
-                )}
-                <div className="w-[170mm] w-full flex justify-center items-center mt-4">
-                  <div className="flex items-center gap-2">
-                    {/* Zoom Out Button */}
-                    <Button
-                      className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
-                      aria-label="Zoom Out"
-                      onClick={handleZoomOut}
-                    >
-                      <Icon.MinusOutlined className="text-lg text-gray-700" />
-                    </Button>
 
-                    {/* Zoom Level Display */}
-                    <span className="text-sm font-medium text-gray-700">
-                      {zoomLevel}%
-                    </span>
+                  {/* Render HTML Template Here */}
+                  {loading ? (
+                    <Skeleton className="w-90% max-w-[170mm] h-[240mm] rounded-sm ml-11" />
+                  ) : (
+                    <div className="flex justify-center">
+                      <div
+                        className="bg-white w-[200mm] overflow-hidden h-full shadow-lg border border-gray-300 rounded"
+                        // className="bg-white w-[200mm] overflow-hidden h-full shadow-lg border border-gray-300 rounded"
+                        style={{
+                          transform: `scale(${zoomLevel / 100})`,
+                          transformOrigin: 'top left',
+                        }}
+                      >
+                        {processedHtml ? (
+                          <div
+                            className="h-full w-full"
+                            dangerouslySetInnerHTML={{ __html: processedHtml }}
+                          />
+                        ) : (
+                          <p className="text-center text-gray-500">
+                            กรุณาเลือกรูปแบบเอกสาร
+                          </p>
+                        )}
+                      </div>
 
-                    {/* Zoom In Button */}
-                    <Button
-                      className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
-                      aria-label="Zoom In"
-                      onClick={handleZoomIn}
-                    >
-                      <Icon.PlusOutlined className="text-lg text-gray-700" />
-                    </Button>
+                      <Modal
+                        isOpen={isOpen}
+                        onClose={onClose}
+                        scrollBehavior="inside"
+                        size="4xl"
+                      >
+                        <ModalContent>
+                          {() => (
+                            <>
+                              <ModalHeader className="flex flex-col gap-1">
+                                เอกสาร
+                              </ModalHeader>
+                              <ModalBody>
+                                <div
+                                  className="rounded"
+                                  style={{
+                                    transform: `scale(${zoomLevel / 100})`,
+                                    transformOrigin: 'top left',
+                                  }}
+                                >
+                                  {processedHtml ? (
+                                    <div
+                                      dangerouslySetInnerHTML={{
+                                        __html: processedHtml,
+                                      }}
+                                    />
+                                  ) : (
+                                    <p className="text-center text-gray-500">
+                                      กรุณาเลือกรูปแบบเอกสาร
+                                    </p>
+                                  )}
+                                </div>
+                              </ModalBody>
+                            </>
+                          )}
+                        </ModalContent>
+                      </Modal>
+                    </div>
+                  )}
+                  <div className="w-[170mm] w-full flex justify-center items-center mt-4">
+                    <div className="flex items-center gap-2">
+                      {/* Zoom Out Button */}
+                      <Button
+                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
+                        aria-label="Zoom Out"
+                        onClick={handleZoomOut}
+                      >
+                        <Icon.MinusOutlined className="text-lg text-gray-700" />
+                      </Button>
+
+                      {/* Zoom Level Display */}
+                      <span className="text-sm font-medium text-gray-700">
+                        {zoomLevel}%
+                      </span>
+
+                      {/* Zoom In Button */}
+                      <Button
+                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 shadow transition"
+                        aria-label="Zoom In"
+                        onClick={handleZoomIn}
+                      >
+                        <Icon.PlusOutlined className="text-lg text-gray-700" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        // )
-      }
-      backgroundColor={''}
-    />
+          // )
+        }
+        backgroundColor={''}
+      />
+    </div>
   );
 }
 

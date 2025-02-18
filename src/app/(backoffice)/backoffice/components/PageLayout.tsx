@@ -12,7 +12,7 @@ const PageLayout = () => {
   // const me = user && user.me ? user.me : null;
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col justify-center items-center px-6 py-12 sm:py-16 lg:py-20 -mt-1">
+    <div className="h-full bg-gray-50 flex flex-col justify-center items-center px-6 py-12 sm:py-16 lg:py-20">
       {/* Header Section */}
       <div className="text-center">
         <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl lg:text-5xl">

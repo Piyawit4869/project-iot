@@ -8,6 +8,7 @@ import { Input, Button, Link, Tabs, Tab } from '@nextui-org/react';
 import pagination from '@/pages/api/whitelists/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date';
+import { Breadcrumb } from '@/components/common/breadcrumb';
 // import * as Icon from '@ant-design/icons';
 
 interface FilterState {
@@ -131,6 +132,9 @@ export default function WhitelistsPage() {
 
   return (
     <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb />
+      </div>
       <Scaffold
         child={
           <div>
