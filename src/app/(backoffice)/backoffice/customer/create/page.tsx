@@ -7,6 +7,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { createCustomer } from '@/pages/api/customer/create';
+import { Breadcrumb } from '@/components/common/breadcrumb';
 
 export default function CustomerCreatePage() {
   // 🔹 State for form data and errors
@@ -134,173 +135,178 @@ export default function CustomerCreatePage() {
   };
 
   return (
-    <Scaffold
-      child={
-        <div>
-          {/* 🔹 Page Header */}
-          <TopSection
-            title="สร้างลูกค้า"
-            backpath={'/backoffice/customer'}
-            buttons={[
-              <a key={'create button'}>
-                <Button
-                  className="bg-accent1 text-white text-xs"
-                  size="sm"
-                  type="submit"
-                  form="customerForm"
-                >
-                  สร้าง
-                </Button>
-              </a>,
-            ]}
-          />
-
-          {/* 🔹 Form Section */}
-          <Card className="p-6 mt-6">
-            <Form
-              id="customerForm"
-              onSubmit={onSubmit}
-              method="post"
-              className="grid grid-cols-1 gap-4"
-              validationErrors={errors}
-            >
-              {/* 🔹 Section Header */}
-              <div className="flex justify-between items-center">
-                <h1 className="flex-1 text-xl font-bold text-headFont">
-                  ข้อมูลลูกค้า
-                </h1>
-              </div>
-
-              {/* 🔹 Company Name */}
-              <div className="grid grid-cols-2 gap-4">
-                <Input
-                  className="w-full"
-                  size="sm"
-                  label="ชื่อบริษัท"
-                  labelPlacement="outside"
-                  name="companyName"
-                  placeholder="กรอกชื่อบริษัท"
-                  onChange={handleChange}
-                  isRequired
-                  errorMessage={'กรุณากรอกชื่อบริษัท'}
-                />
-
-                {/* 🔹 Tax ID */}
-                <Input
-                  className="w-full"
-                  size="sm"
-                  label="หมายเลขประจำตัวผู้เสียภาษี"
-                  labelPlacement="outside"
-                  name="taxId"
-                  placeholder="กรอกหมายเลขประจำตัวผู้เสียภาษี"
-                  onChange={handleChange}
-                  isRequired
-                  errorMessage={'กรุณากรอกหมายเลขประจำตัวผู้เสียภาษี'}
-                />
-              </div>
-
-              {/* 🔹 First Name & Last Name */}
-              <div className="grid grid-cols-2 gap-4">
-                <Input
-                  className="w-full"
-                  size="sm"
-                  label="ชื่อ"
-                  labelPlacement="outside"
-                  name="firstName"
-                  placeholder="กรอกชื่อ"
-                  onChange={handleChange}
-                  isRequired
-                  errorMessage={'กรุณากรอกชื่อ'}
-                />
-                <Input
-                  className="w-full"
-                  size="sm"
-                  label="นามสกุล"
-                  labelPlacement="outside"
-                  name="lastName"
-                  placeholder="กรอกนามสกุล"
-                  onChange={handleChange}
-                  // errorMessage={'กรุณากรอกชื่อ'}
-                  // isRequired
-                  // errorMessage={errors.lastName}
-                />
-              </div>
-
-              {/* 🔹 Contact Email & Phone */}
-              <div className="grid grid-cols-2 gap-4">
-                <Input
-                  className="w-full"
-                  size="sm"
-                  type="email"
-                  label="อีเมลติดต่อ"
-                  labelPlacement="outside"
-                  name="contactEmail"
-                  placeholder="กรอกอีเมล"
-                  onChange={handleChange}
-                  isRequired
-                  errorMessage={'กรุณากรออีเมลติดต่อ'}
-                />
-                <Input
-                  className="w-full"
-                  size="sm"
-                  type="tel"
-                  label="เบอร์โทรติดต่อ"
-                  labelPlacement="outside"
-                  name="contactPhone"
-                  placeholder="กรอกเบอร์โทรศัพท์"
-                  onChange={handleChange}
-                  // isRequired
-                  // errorMessage={errors.contactPhone}
-                />
-              </div>
-
-              <div className="flex justify-between items-center">
-                <h1 className="flex-1 text-xl font-bold text-headFont">
-                  ที่อยู่
-                </h1>
-              </div>
-              {formData?.addresses?.map((address: any, index: number) => (
-                <div key={index} className="grid grid-cols-3 gap-4">
-                  {[
-                    'name',
-                    'houseNo',
-                    'village',
-                    'subDistrict',
-                    'city',
-                    'province',
-                    'postalCode',
-                  ].map((field) => (
-                    <Input
-                      key={field}
-                      className="w-full"
-                      size="sm"
-                      labelPlacement="outside"
-                      label={field}
-                      name={field}
-                      placeholder={field}
-                      value={address[field]}
-                      onChange={(e) => handleAddressChange(index, e)}
-                    />
-                  ))}
+    <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb />
+      </div>
+      <Scaffold
+        child={
+          <div>
+            {/* 🔹 Page Header */}
+            <TopSection
+              title="สร้างลูกค้า"
+              backpath={'/backoffice/customer'}
+              buttons={[
+                <a key={'create button'}>
                   <Button
-                    className="bg-accent2 text-white text-xs mt-2"
-                    onClick={() => removeAddress(index)}
+                    className="bg-accent1 text-white text-xs"
+                    size="sm"
+                    type="submit"
+                    form="customerForm"
                   >
-                    ลบที่อยู่
+                    สร้าง
                   </Button>
-                </div>
-              ))}
-              <Button
-                className="bg-accent1 text-white text-xs mt-2"
-                onClick={addAddress}
+                </a>,
+              ]}
+            />
+
+            {/* 🔹 Form Section */}
+            <Card className="p-6 mt-6">
+              <Form
+                id="customerForm"
+                onSubmit={onSubmit}
+                method="post"
+                className="grid grid-cols-1 gap-4"
+                validationErrors={errors}
               >
-                เพิ่มที่อยู่
-              </Button>
-            </Form>
-          </Card>
-        </div>
-      }
-      backgroundColor={''}
-    />
+                {/* 🔹 Section Header */}
+                <div className="flex justify-between items-center">
+                  <h1 className="flex-1 text-xl font-bold text-headFont">
+                    ข้อมูลลูกค้า
+                  </h1>
+                </div>
+
+                {/* 🔹 Company Name */}
+                <div className="grid grid-cols-2 gap-4">
+                  <Input
+                    className="w-full"
+                    size="sm"
+                    label="ชื่อบริษัท"
+                    labelPlacement="outside"
+                    name="companyName"
+                    placeholder="กรอกชื่อบริษัท"
+                    onChange={handleChange}
+                    isRequired
+                    errorMessage={'กรุณากรอกชื่อบริษัท'}
+                  />
+
+                  {/* 🔹 Tax ID */}
+                  <Input
+                    className="w-full"
+                    size="sm"
+                    label="หมายเลขประจำตัวผู้เสียภาษี"
+                    labelPlacement="outside"
+                    name="taxId"
+                    placeholder="กรอกหมายเลขประจำตัวผู้เสียภาษี"
+                    onChange={handleChange}
+                    isRequired
+                    errorMessage={'กรุณากรอกหมายเลขประจำตัวผู้เสียภาษี'}
+                  />
+                </div>
+
+                {/* 🔹 First Name & Last Name */}
+                <div className="grid grid-cols-2 gap-4">
+                  <Input
+                    className="w-full"
+                    size="sm"
+                    label="ชื่อ"
+                    labelPlacement="outside"
+                    name="firstName"
+                    placeholder="กรอกชื่อ"
+                    onChange={handleChange}
+                    isRequired
+                    errorMessage={'กรุณากรอกชื่อ'}
+                  />
+                  <Input
+                    className="w-full"
+                    size="sm"
+                    label="นามสกุล"
+                    labelPlacement="outside"
+                    name="lastName"
+                    placeholder="กรอกนามสกุล"
+                    onChange={handleChange}
+                    // errorMessage={'กรุณากรอกชื่อ'}
+                    // isRequired
+                    // errorMessage={errors.lastName}
+                  />
+                </div>
+
+                {/* 🔹 Contact Email & Phone */}
+                <div className="grid grid-cols-2 gap-4">
+                  <Input
+                    className="w-full"
+                    size="sm"
+                    type="email"
+                    label="อีเมลติดต่อ"
+                    labelPlacement="outside"
+                    name="contactEmail"
+                    placeholder="กรอกอีเมล"
+                    onChange={handleChange}
+                    isRequired
+                    errorMessage={'กรุณากรออีเมลติดต่อ'}
+                  />
+                  <Input
+                    className="w-full"
+                    size="sm"
+                    type="tel"
+                    label="เบอร์โทรติดต่อ"
+                    labelPlacement="outside"
+                    name="contactPhone"
+                    placeholder="กรอกเบอร์โทรศัพท์"
+                    onChange={handleChange}
+                    // isRequired
+                    // errorMessage={errors.contactPhone}
+                  />
+                </div>
+
+                <div className="flex justify-between items-center mt-3">
+                  <h1 className="flex-1 text-xl font-bold text-headFont">
+                    ที่อยู่
+                  </h1>
+                </div>
+                {formData?.addresses?.map((address: any, index: number) => (
+                  <div key={index} className="grid grid-cols-3 gap-4">
+                    {[
+                      'name',
+                      'houseNo',
+                      'village',
+                      'subDistrict',
+                      'city',
+                      'province',
+                      'postalCode',
+                    ].map((field) => (
+                      <Input
+                        key={field}
+                        className="w-full"
+                        size="sm"
+                        labelPlacement="outside"
+                        label={field}
+                        name={field}
+                        placeholder={field}
+                        value={address[field]}
+                        onChange={(e) => handleAddressChange(index, e)}
+                      />
+                    ))}
+                    <Button
+                      className="bg-accent2 text-white text-xs mt-2"
+                      onClick={() => removeAddress(index)}
+                    >
+                      ลบที่อยู่
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  className="bg-accent1 text-white text-xs mt-2"
+                  onClick={addAddress}
+                >
+                  เพิ่มที่อยู่
+                </Button>
+              </Form>
+            </Card>
+          </div>
+        }
+        backgroundColor={''}
+      />
+    </div>
   );
 }

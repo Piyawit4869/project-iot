@@ -13,6 +13,7 @@ import { useRouter, useParams } from 'next/navigation';
 import * as Icon from '@ant-design/icons';
 // import Map from '@/components/map/map';
 import React from 'react';
+import { Breadcrumb } from '@/components/common/breadcrumb';
 
 export default function WhitelistSinglePage() {
   const router = useRouter();
@@ -185,89 +186,93 @@ export default function WhitelistSinglePage() {
   };
 
   return (
-    <Scaffold
-      child={
-        loading ? (
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="relative flex flex-col items-center space-y-4">
-              {/* Spinner */}
-              <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+    <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb title={formData?.ip} />
+      </div>
+      <Scaffold
+        child={
+          loading ? (
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="relative flex flex-col items-center space-y-4">
+                {/* Spinner */}
+                <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
 
-              {/* Loading Text */}
-              <p className="text-gray-600 text-lg font-semibold animate-pulse">
-                Loading, please wait...
-              </p>
+                {/* Loading Text */}
+                <p className="text-gray-600 text-lg font-semibold animate-pulse">
+                  Loading, please wait...
+                </p>
+              </div>
             </div>
-          </div>
-        ) : (
-          <div>
-            <TopSection
-              title="แก้ไขการเข้าใช้งาน"
-              backpath={'/backoffice/attendance/whitelist'}
-              buttons={[
-                <div
-                  className="mx-2.5 gap-2"
-                  key={'button approved and rejected'}
-                >
-                  <Button
-                    key={'approve whitelist button'}
-                    className="bg-accent1 text-white m-1"
-                    type="button"
-                    size="sm"
-                    onClick={onApproved}
+          ) : (
+            <div>
+              <TopSection
+                title="แก้ไขการเข้าใช้งาน"
+                backpath={'/backoffice/attendance/whitelist'}
+                buttons={[
+                  <div
+                    className="mx-2.5 gap-2"
+                    key={'button approved and rejected'}
                   >
-                    <Icon.CheckOutlined />
-                    อนุมัติ
-                  </Button>
-
-                  <Button
-                    key={'reject whitelist button'}
-                    className="bg-accent2 text-white m-1"
-                    type="button"
-                    size="sm"
-                    onClick={onRejected}
-                  >
-                    <Icon.CloseOutlined />
-                    ปฏิเสธ
-                  </Button>
-
-                  {handleEditButton(openEdit)}
-
-                  <Button
-                    key={'cancel whitelist button'}
-                    className="bg-accent2 text-white m-1"
-                    type="button"
-                    size="sm"
-                    onClick={onDelete}
-                  >
-                    <Icon.DeleteFilled />
-                    ลบ
-                  </Button>
-                </div>,
-              ]}
-            />
-            <div className="flex space-x-4 mt-6">
-              <div className="flex-1">
-                <CardComponent
-                  customCard
-                  custom={
-                    <Form
-                      id="whitelist"
-                      onSubmit={onSubmit}
-                      method="post"
-                      validationErrors={errors}
+                    <Button
+                      key={'approve whitelist button'}
+                      className="bg-accent1 text-white m-1"
+                      type="button"
+                      size="sm"
+                      onClick={onApproved}
                     >
-                      <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
-                        {/* Content Section */}
-                        <div className="mb-6">
-                          <div className="grid grid-cols-2 gap-6 px-5">
-                            {/* Detail Section */}
-                            <div>
-                              <h1 className="text-2xl font-bold text-headFont mb-10 py-5">
-                                Detail
-                              </h1>
-                              {/* Whitelist Section */}
-                              {/* <div className="flex-1 flex items-center gap-4">
+                      <Icon.CheckOutlined />
+                      อนุมัติ
+                    </Button>
+
+                    <Button
+                      key={'reject whitelist button'}
+                      className="bg-accent2 text-white m-1"
+                      type="button"
+                      size="sm"
+                      onClick={onRejected}
+                    >
+                      <Icon.CloseOutlined />
+                      ปฏิเสธ
+                    </Button>
+
+                    {handleEditButton(openEdit)}
+
+                    <Button
+                      key={'cancel whitelist button'}
+                      className="bg-accent2 text-white m-1"
+                      type="button"
+                      size="sm"
+                      onClick={onDelete}
+                    >
+                      <Icon.DeleteFilled />
+                      ลบ
+                    </Button>
+                  </div>,
+                ]}
+              />
+              <div className="flex space-x-4 mt-6">
+                <div className="flex-1">
+                  <CardComponent
+                    customCard
+                    custom={
+                      <Form
+                        id="whitelist"
+                        onSubmit={onSubmit}
+                        method="post"
+                        validationErrors={errors}
+                      >
+                        <div className="w-full grid grid-cols-1 md:grid-cols-1 gap-4 items-center">
+                          {/* Content Section */}
+                          <div className="mb-6">
+                            <div className="grid grid-cols-2 gap-6 px-5">
+                              {/* Detail Section */}
+                              <div>
+                                <h1 className="text-2xl font-bold text-headFont mb-10 py-5">
+                                  Detail
+                                </h1>
+                                {/* Whitelist Section */}
+                                {/* <div className="flex-1 flex items-center gap-4">
                                 <span className="text-headFont">Active</span>
                                 <Switch
                                   name="active"
@@ -277,312 +282,317 @@ export default function WhitelistSinglePage() {
                                   isDisabled={!openEdit}
                                 />
                               </div> */}
-                              {/* GET API FOR SHOW DISPLAY */}
-                              <div className="flex gap-4 mt-6">
-                                <Input
-                                  className="flex-1"
-                                  size="lg"
-                                  label="IP"
-                                  labelPlacement="outside"
-                                  name="ip"
-                                  placeholder="Enter your IP Address"
-                                  onChange={handleChange}
-                                  defaultValue={formData?.ip}
-                                  errorMessage={'กรุณากรอกที่อยู่ไอพี'}
-                                  isDisabled={!openEdit}
-                                />
-                                <Input
-                                  className="flex-1"
-                                  size="lg"
-                                  label="ISP"
-                                  labelPlacement="outside"
-                                  name="isp"
-                                  placeholder="Enter your ISP"
-                                  onChange={handleChange}
-                                  defaultValue={formData?.isp}
-                                  errorMessage={'กรุณากรอกที่อยู่ไอเอสพี'}
-                                  isDisabled={!openEdit}
-                                />
+                                {/* GET API FOR SHOW DISPLAY */}
+                                <div className="flex gap-4 mt-6">
+                                  <Input
+                                    className="flex-1"
+                                    size="lg"
+                                    label="IP"
+                                    labelPlacement="outside"
+                                    name="ip"
+                                    placeholder="Enter your IP Address"
+                                    onChange={handleChange}
+                                    defaultValue={formData?.ip}
+                                    errorMessage={'กรุณากรอกที่อยู่ไอพี'}
+                                    isDisabled={!openEdit}
+                                  />
+                                  <Input
+                                    className="flex-1"
+                                    size="lg"
+                                    label="ISP"
+                                    labelPlacement="outside"
+                                    name="isp"
+                                    placeholder="Enter your ISP"
+                                    onChange={handleChange}
+                                    defaultValue={formData?.isp}
+                                    errorMessage={'กรุณากรอกที่อยู่ไอเอสพี'}
+                                    isDisabled={!openEdit}
+                                  />
+                                </div>
+                                <div className="flex gap-4 mt-6">
+                                  <Input
+                                    className="flex-1"
+                                    size="lg"
+                                    label="Browser"
+                                    labelPlacement="outside"
+                                    name="browser"
+                                    placeholder="Enter your Browser"
+                                    onChange={handleChange}
+                                    defaultValue={formData?.browser}
+                                    errorMessage={'กรุณากรอกที่อยู่บราวเซอร์'}
+                                    isDisabled={!openEdit}
+                                  />
+                                  <Input
+                                    className="flex-1"
+                                    size="lg"
+                                    label="OS"
+                                    labelPlacement="outside"
+                                    name="os"
+                                    placeholder="Enter your OS"
+                                    onChange={handleChange}
+                                    defaultValue={formData?.os}
+                                    errorMessage={'กรุณากรอกที่อยู่โอเอส'}
+                                    isDisabled={!openEdit}
+                                  />
+                                </div>
                               </div>
-                              <div className="flex gap-4 mt-6">
-                                <Input
-                                  className="flex-1"
-                                  size="lg"
-                                  label="Browser"
-                                  labelPlacement="outside"
-                                  name="browser"
-                                  placeholder="Enter your Browser"
-                                  onChange={handleChange}
-                                  defaultValue={formData?.browser}
-                                  errorMessage={'กรุณากรอกที่อยู่บราวเซอร์'}
-                                  isDisabled={!openEdit}
-                                />
-                                <Input
-                                  className="flex-1"
-                                  size="lg"
-                                  label="OS"
-                                  labelPlacement="outside"
-                                  name="os"
-                                  placeholder="Enter your OS"
-                                  onChange={handleChange}
-                                  defaultValue={formData?.os}
-                                  errorMessage={'กรุณากรอกที่อยู่โอเอส'}
-                                  isDisabled={!openEdit}
-                                />
+
+                              {/* Map Section */}
+                              <div className="">
+                                <h1 className="text-2xl font-bold text-headFont pl-5 py-5  ">
+                                  Map
+                                </h1>
+                                <div>{/* <Map /> */}</div>
                               </div>
                             </div>
+                          </div>
 
-                            {/* Map Section */}
-                            <div className="">
-                              <h1 className="text-2xl font-bold text-headFont pl-5 py-5  ">
-                                Map
-                              </h1>
-                              <div>{/* <Map /> */}</div>
+                          {/* Address Section */}
+                          <div className="px-5 py-5">
+                            <h1 className="text-2xl font-bold text-headFont">
+                              Address
+                            </h1>
+                            <div className="flex gap-4 mt-6">
+                              <Input
+                                className="flex-1"
+                                size="lg"
+                                label="สถานที่"
+                                labelPlacement="outside"
+                                name="name"
+                                placeholder="กรอก สถานที่"
+                                onChange={handleChange}
+                                defaultValue={formData?.address?.name || ''}
+                                isRequired
+                                errorMessage={'กรุณากรอกสถานที่'}
+                                isDisabled={!openEdit}
+                              />
+                              <Input
+                                className="flex-1"
+                                size="lg"
+                                label="บ้านเลขที่"
+                                labelPlacement="outside"
+                                name="houseNo"
+                                placeholder="กรอก บ้านเลขที่"
+                                defaultValue={formData?.address?.houseNo || ''}
+                                onChange={handleChange}
+                                isRequired
+                                isDisabled={!openEdit}
+                                errorMessage={'กรุณากรอก บ้านเลขที่'}
+                              />
+                            </div>
+                            {/* More Address Fields */}
+                            <div className="flex gap-4 mt-6">
+                              <Input
+                                className="flex-1"
+                                size="lg"
+                                label="ประเทศ"
+                                labelPlacement="outside"
+                                name="country"
+                                placeholder="กรอก ประเทศ"
+                                defaultValue={formData?.address?.country || ''}
+                                onChange={handleChange}
+                                isRequired
+                                isDisabled={!openEdit}
+                                errorMessage={'กรุณากรอก ประเทศ'}
+                              />
+                              <Input
+                                className="flex-1"
+                                size="lg"
+                                label="จังหวัด"
+                                labelPlacement="outside"
+                                name="province"
+                                placeholder="กรอก จังหวัด"
+                                defaultValue={formData?.address?.province || ''}
+                                onChange={handleChange}
+                                isRequired
+                                isDisabled={!openEdit}
+                                errorMessage={'กรุณากรอก จังหวัด'}
+                              />
+                            </div>
+                            <div className="flex gap-4 mt-6">
+                              <Input
+                                className="flex-1"
+                                size="lg"
+                                label="ถนน"
+                                labelPlacement="outside"
+                                name="road"
+                                placeholder="กรอก ถนน"
+                                defaultValue={formData?.address?.road || ''}
+                                onChange={handleChange}
+                                isRequired
+                                isDisabled={!openEdit}
+                                errorMessage={'กรุณากรอก ถนน'}
+                              />
+                              <Input
+                                className="flex-1"
+                                size="lg"
+                                label="ซอย"
+                                labelPlacement="outside"
+                                name="alley"
+                                placeholder="กรอก ซอย"
+                                defaultValue={formData?.address?.alley || ''}
+                                onChange={handleChange}
+                                isRequired
+                                isDisabled={!openEdit}
+                                errorMessage={'กรุณากรอก ซอย'}
+                              />
+                            </div>
+                            <div className="flex gap-4 mt-6">
+                              <Input
+                                className="flex-1"
+                                size="lg"
+                                label="เขต/อำเภอ"
+                                labelPlacement="outside"
+                                name="city"
+                                placeholder="กรอก เขต/อำเภอ"
+                                defaultValue={formData?.address?.city || ''}
+                                onChange={handleChange}
+                                isRequired
+                                isDisabled={!openEdit}
+                                errorMessage={'กรุณากรอก เขต/อำเภอ'}
+                              />
+                              <Input
+                                className="flex-1"
+                                size="lg"
+                                label="แขวง/ตำบล"
+                                labelPlacement="outside"
+                                name="subDistrict"
+                                placeholder="กรอก แขวง/ตำบล"
+                                defaultValue={
+                                  formData?.address?.subDistrict || ''
+                                }
+                                onChange={handleChange}
+                                isRequired
+                                isDisabled={!openEdit}
+                                errorMessage={'กรุณากรอก แขวง/ตำบล'}
+                              />
+                            </div>
+                            <div className="flex gap-4 mt-6">
+                              <Input
+                                className="flex-1"
+                                size="lg"
+                                label="ชื่ออาคาร"
+                                labelPlacement="outside"
+                                name="building"
+                                placeholder="กรอก ชื่ออาคาร"
+                                defaultValue={formData?.address?.building || ''}
+                                onChange={handleChange}
+                                isDisabled={!openEdit}
+                              />
+                              <Input
+                                className="flex-1"
+                                size="lg"
+                                label="postalcode"
+                                labelPlacement="outside"
+                                name="postalCode"
+                                placeholder="กรอก postalcode"
+                                defaultValue={
+                                  formData?.address?.postalCode || ''
+                                }
+                                onChange={handleChange}
+                                isDisabled={!openEdit}
+                              />
+                            </div>
+                            <div className="flex gap-4 mt-6">
+                              <Input
+                                className="flex-1"
+                                size="lg"
+                                label="เลขห้อง"
+                                labelPlacement="outside"
+                                name="roomNo"
+                                placeholder="กรอก เลขห้อง"
+                                defaultValue={formData?.address?.roomNo || ''}
+                                onChange={handleChange}
+                                isDisabled={!openEdit}
+                              />
+                              <Input
+                                className="flex-1"
+                                size="lg"
+                                label="เลขชั้น"
+                                labelPlacement="outside"
+                                name="floorNo"
+                                placeholder="กรอก เลขชั้น"
+                                defaultValue={formData?.address?.floorNo || ''}
+                                onChange={handleChange}
+                                isDisabled={!openEdit}
+                              />
+                            </div>
+                            <div className="flex gap-4 mt-6">
+                              <Input
+                                className="flex-1"
+                                size="lg"
+                                label="ชื่อหมู่บ้าน"
+                                labelPlacement="outside"
+                                name="village"
+                                placeholder="กรอก ชื่อหมู่บ้าน"
+                                defaultValue={formData?.address?.village || ''}
+                                onChange={handleChange}
+                                isDisabled={!openEdit}
+                              />
+                              <Input
+                                className="flex-1"
+                                size="lg"
+                                label="เลขที่หมู่บ้าน"
+                                labelPlacement="outside"
+                                name="villageNo"
+                                type="number"
+                                placeholder="กรอก เลขที่หมู่บ้าน"
+                                defaultValue={
+                                  formData?.address?.villageNo || ''
+                                }
+                                onChange={handleChange}
+                                isDisabled={!openEdit}
+                              />
+                            </div>
+                            <div className="flex gap-4 mt-6">
+                              <Input
+                                className="flex-1"
+                                size="lg"
+                                label="organizationId"
+                                labelPlacement="outside"
+                                name="organizationId"
+                                placeholder="กรอก organizationId "
+                                defaultValue={
+                                  formData?.address?.organizationId || ''
+                                }
+                                onChange={handleChange}
+                                isDisabled={!openEdit}
+                              />
+                              <Input
+                                className="flex-1"
+                                size="lg"
+                                label="branchId"
+                                labelPlacement="outside"
+                                name="branchId"
+                                placeholder="กรอก branchId"
+                                defaultValue={formData?.address?.branchId || ''}
+                                onChange={handleChange}
+                                isDisabled={!openEdit}
+                              />
+                            </div>
+                            {/* Notes Section */}
+                            <div className="flex gap-4 mt-6">
+                              <Textarea
+                                label="หมายเหตุ"
+                                labelPlacement="outside"
+                                name="note"
+                                placeholder="หมายเหตุ"
+                                defaultValue={formData?.address?.note || ''}
+                                onChange={handleChange}
+                                isDisabled={!openEdit}
+                              />
                             </div>
                           </div>
                         </div>
-
-                        {/* Address Section */}
-                        <div className="px-5 py-5">
-                          <h1 className="text-2xl font-bold text-headFont">
-                            Address
-                          </h1>
-                          <div className="flex gap-4 mt-6">
-                            <Input
-                              className="flex-1"
-                              size="lg"
-                              label="สถานที่"
-                              labelPlacement="outside"
-                              name="name"
-                              placeholder="กรอก สถานที่"
-                              onChange={handleChange}
-                              defaultValue={formData?.address?.name || ''}
-                              isRequired
-                              errorMessage={'กรุณากรอกสถานที่'}
-                              isDisabled={!openEdit}
-                            />
-                            <Input
-                              className="flex-1"
-                              size="lg"
-                              label="บ้านเลขที่"
-                              labelPlacement="outside"
-                              name="houseNo"
-                              placeholder="กรอก บ้านเลขที่"
-                              defaultValue={formData?.address?.houseNo || ''}
-                              onChange={handleChange}
-                              isRequired
-                              isDisabled={!openEdit}
-                              errorMessage={'กรุณากรอก บ้านเลขที่'}
-                            />
-                          </div>
-                          {/* More Address Fields */}
-                          <div className="flex gap-4 mt-6">
-                            <Input
-                              className="flex-1"
-                              size="lg"
-                              label="ประเทศ"
-                              labelPlacement="outside"
-                              name="country"
-                              placeholder="กรอก ประเทศ"
-                              defaultValue={formData?.address?.country || ''}
-                              onChange={handleChange}
-                              isRequired
-                              isDisabled={!openEdit}
-                              errorMessage={'กรุณากรอก ประเทศ'}
-                            />
-                            <Input
-                              className="flex-1"
-                              size="lg"
-                              label="จังหวัด"
-                              labelPlacement="outside"
-                              name="province"
-                              placeholder="กรอก จังหวัด"
-                              defaultValue={formData?.address?.province || ''}
-                              onChange={handleChange}
-                              isRequired
-                              isDisabled={!openEdit}
-                              errorMessage={'กรุณากรอก จังหวัด'}
-                            />
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <Input
-                              className="flex-1"
-                              size="lg"
-                              label="ถนน"
-                              labelPlacement="outside"
-                              name="road"
-                              placeholder="กรอก ถนน"
-                              defaultValue={formData?.address?.road || ''}
-                              onChange={handleChange}
-                              isRequired
-                              isDisabled={!openEdit}
-                              errorMessage={'กรุณากรอก ถนน'}
-                            />
-                            <Input
-                              className="flex-1"
-                              size="lg"
-                              label="ซอย"
-                              labelPlacement="outside"
-                              name="alley"
-                              placeholder="กรอก ซอย"
-                              defaultValue={formData?.address?.alley || ''}
-                              onChange={handleChange}
-                              isRequired
-                              isDisabled={!openEdit}
-                              errorMessage={'กรุณากรอก ซอย'}
-                            />
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <Input
-                              className="flex-1"
-                              size="lg"
-                              label="เขต/อำเภอ"
-                              labelPlacement="outside"
-                              name="city"
-                              placeholder="กรอก เขต/อำเภอ"
-                              defaultValue={formData?.address?.city || ''}
-                              onChange={handleChange}
-                              isRequired
-                              isDisabled={!openEdit}
-                              errorMessage={'กรุณากรอก เขต/อำเภอ'}
-                            />
-                            <Input
-                              className="flex-1"
-                              size="lg"
-                              label="แขวง/ตำบล"
-                              labelPlacement="outside"
-                              name="subDistrict"
-                              placeholder="กรอก แขวง/ตำบล"
-                              defaultValue={
-                                formData?.address?.subDistrict || ''
-                              }
-                              onChange={handleChange}
-                              isRequired
-                              isDisabled={!openEdit}
-                              errorMessage={'กรุณากรอก แขวง/ตำบล'}
-                            />
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <Input
-                              className="flex-1"
-                              size="lg"
-                              label="ชื่ออาคาร"
-                              labelPlacement="outside"
-                              name="building"
-                              placeholder="กรอก ชื่ออาคาร"
-                              defaultValue={formData?.address?.building || ''}
-                              onChange={handleChange}
-                              isDisabled={!openEdit}
-                            />
-                            <Input
-                              className="flex-1"
-                              size="lg"
-                              label="postalcode"
-                              labelPlacement="outside"
-                              name="postalCode"
-                              placeholder="กรอก postalcode"
-                              defaultValue={formData?.address?.postalCode || ''}
-                              onChange={handleChange}
-                              isDisabled={!openEdit}
-                            />
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <Input
-                              className="flex-1"
-                              size="lg"
-                              label="เลขห้อง"
-                              labelPlacement="outside"
-                              name="roomNo"
-                              placeholder="กรอก เลขห้อง"
-                              defaultValue={formData?.address?.roomNo || ''}
-                              onChange={handleChange}
-                              isDisabled={!openEdit}
-                            />
-                            <Input
-                              className="flex-1"
-                              size="lg"
-                              label="เลขชั้น"
-                              labelPlacement="outside"
-                              name="floorNo"
-                              placeholder="กรอก เลขชั้น"
-                              defaultValue={formData?.address?.floorNo || ''}
-                              onChange={handleChange}
-                              isDisabled={!openEdit}
-                            />
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <Input
-                              className="flex-1"
-                              size="lg"
-                              label="ชื่อหมู่บ้าน"
-                              labelPlacement="outside"
-                              name="village"
-                              placeholder="กรอก ชื่อหมู่บ้าน"
-                              defaultValue={formData?.address?.village || ''}
-                              onChange={handleChange}
-                              isDisabled={!openEdit}
-                            />
-                            <Input
-                              className="flex-1"
-                              size="lg"
-                              label="เลขที่หมู่บ้าน"
-                              labelPlacement="outside"
-                              name="villageNo"
-                              type="number"
-                              placeholder="กรอก เลขที่หมู่บ้าน"
-                              defaultValue={formData?.address?.villageNo || ''}
-                              onChange={handleChange}
-                              isDisabled={!openEdit}
-                            />
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <Input
-                              className="flex-1"
-                              size="lg"
-                              label="organizationId"
-                              labelPlacement="outside"
-                              name="organizationId"
-                              placeholder="กรอก organizationId "
-                              defaultValue={
-                                formData?.address?.organizationId || ''
-                              }
-                              onChange={handleChange}
-                              isDisabled={!openEdit}
-                            />
-                            <Input
-                              className="flex-1"
-                              size="lg"
-                              label="branchId"
-                              labelPlacement="outside"
-                              name="branchId"
-                              placeholder="กรอก branchId"
-                              defaultValue={formData?.address?.branchId || ''}
-                              onChange={handleChange}
-                              isDisabled={!openEdit}
-                            />
-                          </div>
-                          {/* Notes Section */}
-                          <div className="flex gap-4 mt-6">
-                            <Textarea
-                              label="หมายเหตุ"
-                              labelPlacement="outside"
-                              name="note"
-                              placeholder="หมายเหตุ"
-                              defaultValue={formData?.address?.note || ''}
-                              onChange={handleChange}
-                              isDisabled={!openEdit}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </Form>
-                  }
-                />
+                      </Form>
+                    }
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        )
-      }
-    />
+          )
+        }
+      />
+    </div>
   );
 }

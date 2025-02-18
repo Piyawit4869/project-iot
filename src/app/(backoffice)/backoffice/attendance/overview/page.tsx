@@ -31,6 +31,7 @@ import { formatDate } from '@/utils/enums/date';
 
 //Icon
 import * as Icons from 'lucide-react';
+import { Breadcrumb } from '@/components/common/breadcrumb';
 
 interface FilterState {
   userName: string;
@@ -197,6 +198,9 @@ export default function AttendancesPage() {
 
   return (
     <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb />
+      </div>
       <Scaffold
         child={
           <div>

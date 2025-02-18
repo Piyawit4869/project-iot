@@ -9,6 +9,7 @@ import { Button, Chip } from '@nextui-org/react';
 import { TablePagination } from '@/components/common/tablePagination';
 import pagination from '@/pages/api/user/pagination';
 import * as Icons from 'lucide-react';
+import { Breadcrumb } from '@/components/common/breadcrumb';
 
 export default function IndexPage() {
   const [page, setPage] = React.useState(1);
@@ -50,6 +51,9 @@ export default function IndexPage() {
 
   return (
     <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb />
+      </div>
       {/* Page Header */}
       <Scaffold
         child={
@@ -120,9 +124,11 @@ const columns = [
       );
     },
   },
+  { title: 'รหัสพนักงาน', dataIndex: 'emId' },
   { title: 'อีเมล', dataIndex: 'email' },
   {
     title: 'ตำแหน่ง',
+    align: 'center',
     dataIndex: 'position',
     render: (_: any, record: any) => {
       return <span>{record.role?.name}</span>;
@@ -137,6 +143,7 @@ const columns = [
   },
   {
     title: 'สถานะ',
+    align: 'center',
     dataIndex: 'status',
     render: () => (
       <Chip color="success" variant="bordered">

@@ -16,7 +16,7 @@ import {
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 import { parseDate } from '@internationalized/date';
-import Image from 'next/image';
+import { Upload } from '@/components/backoffice/upload';
 
 interface InputorBranchProps {
   data: any;
@@ -31,6 +31,8 @@ export default function InputBranch({
 }: InputorBranchProps) {
   const [formData, setFormData] = React.useState<any>(data);
   const [branch, setBranch] = React.useState<any[]>([]);
+  // const [uploadImg, setUploadImg] = React.useState('') as any;
+  const [, setUploadImg] = React.useState('') as any;
 
   React.useEffect(() => {
     if (data) {
@@ -62,6 +64,10 @@ export default function InputBranch({
   //   setItems(updatedItems);
   // };
 
+  const handleUpload = (url: string) => {
+    setUploadImg(url);
+  };
+
   return (
     <Scaffold
       child={
@@ -91,13 +97,11 @@ export default function InputBranch({
               <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                 <div>
                   <p>รูปภาพสาขา</p>
-                  <Image
+                  <Upload
                     className="mt-3"
-                    src={'/logo.png'}
-                    alt="image organization"
-                    width={100}
-                    height={100}
-                  ></Image>
+                    onUpload={handleUpload}
+                    imageUrl={branch?.logoUrl}
+                  />
                 </div>
                 <div className="flex gap-4 ">
                   <CardControl

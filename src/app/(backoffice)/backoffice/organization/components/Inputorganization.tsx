@@ -29,7 +29,8 @@ export default function Inputorganization({
   openEdit,
 }: InputorganizationProps) {
   const [formData, setFormData] = React.useState<any>(data);
-  const [uploadImg, setUploadImg] = React.useState('') as any;
+  // const [uploadImg, setUploadImg] = React.useState('') as any;
+  const [, setUploadImg] = React.useState('') as any;
 
   React.useEffect(() => {
     if (data) {
@@ -48,7 +49,6 @@ export default function Inputorganization({
 
     setFormData((prevData: any) => ({
       ...prevData,
-      ...uploadImg,
       [name]: updatedData,
     }));
 

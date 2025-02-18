@@ -12,6 +12,7 @@ import {
   handleStatusTag,
   handleTypeTag,
 } from '@/components/common/common';
+import { Breadcrumb } from '@/components/common/breadcrumb';
 
 export default function NotationsPage() {
   const [page, setPage] = React.useState(1);
@@ -64,8 +65,13 @@ export default function NotationsPage() {
     handleFilterChange(updatedFilters);
   };
 
+  console.log(filters.docName);
+
   return (
     <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb />
+      </div>
       <Scaffold
         child={
           <div>
@@ -90,7 +96,7 @@ export default function NotationsPage() {
                   className="w-full p-2 text-headFont"
                   labelPlacement="outside"
                   size="sm"
-                  name="name"
+                  name="docName"
                   placeholder="ค้นหาชื่อ"
                   value={filters.docName}
                   onChange={(e) => onInputChange('docName', e.target.value)}

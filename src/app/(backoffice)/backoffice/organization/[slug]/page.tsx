@@ -7,15 +7,17 @@ import { Button, Form, Input, Textarea } from '@nextui-org/react';
 import React from 'react';
 import { toast } from 'sonner';
 import LongdoMapPage from '../components/addresses/addressMap';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import get from '@/pages/api/address/get';
 import { isMain } from '@/pages/api/address/changIsMain';
+import { deleteAddress } from '@/pages/api/address/delete';
 
 export default function OraganizationPage() {
   const [, setLoading] = React.useState(false);
   const [, setErrors] = React.useState({}) as any;
   const [data, setData] = React.useState() as any;
   const [formData, setFormData] = React.useState({}) as any;
+  const router = useRouter();
   // const [dataorg, setDataorg] = React.useState() as any;
 
   // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -52,7 +54,6 @@ export default function OraganizationPage() {
       const payload = {
         ...formData,
         ...data,
-        villageNo: null,
         isMain: true,
       };
 
@@ -77,6 +78,28 @@ export default function OraganizationPage() {
       setErrors({ general: err.message || 'An unexpected error occurred.' });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const onDelete = async () => {
+    try {
+      await deleteAddress(params?.slug);
+
+      toast.success('ลบข้อมูลผู้ใช้งานสำเร็จ!', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
+      router.push(`/backoffice/organization`);
+    } catch (error) {
+      toast.error('❌ ไม่สามารถลบข้อมูลผู้ใช้งานได้', {
+        duration: 3000,
+        position: 'bottom-left',
+        style: { fontFamily: 'var(--font-ibm-sans)' },
+      });
+
+      console.error('Delete error:', error);
     }
   };
 
@@ -153,6 +176,17 @@ export default function OraganizationPage() {
   //   );
   // };
 
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormData((prevData: any) => ({
+      ...prevData,
+      [name]:
+        name === 'birthDate' && value instanceof Date
+          ? value.toISOString()
+          : value,
+    }));
+  };
+
   return (
     <Scaffold
       child={
@@ -171,9 +205,8 @@ export default function OraganizationPage() {
               </Button>,
               <Button
                 className="bg-accent2 text-white"
-                key={'Edit organization'}
-                type="submit"
-                form="organization"
+                key={'delete button'}
+                onClick={onDelete}
               >
                 ลบที่อยู่
               </Button>,
@@ -209,6 +242,7 @@ export default function OraganizationPage() {
                                     name="name"
                                     value={formData?.name}
                                     placeholder="ชื่อที่อยู่"
+                                    onChange={handleChange}
                                   />
                                   <Input
                                     className="flex-1"
@@ -218,8 +252,10 @@ export default function OraganizationPage() {
                                       </span>
                                     }
                                     labelPlacement="outside"
+                                    value={formData?.city}
                                     name="city"
                                     placeholder="ชื่อเมือง"
+                                    onChange={handleChange}
                                   />
                                 </div>
                                 <div className="flex gap-4 mt-6">
@@ -231,8 +267,10 @@ export default function OraganizationPage() {
                                       </span>
                                     }
                                     labelPlacement="outside"
+                                    value={formData?.province}
                                     name="province"
                                     placeholder="ชื่อจังหวัด"
+                                    onChange={handleChange}
                                   />
                                   <Input
                                     className="flex-1"
@@ -242,8 +280,10 @@ export default function OraganizationPage() {
                                       </span>
                                     }
                                     labelPlacement="outside"
+                                    value={formData?.postalCode}
                                     name="postalCode"
                                     placeholder="ชื่อรหัสไปรษณีย์"
+                                    onChange={handleChange}
                                   />
                                 </div>
                                 <div className="flex gap-4 mt-6">
@@ -255,8 +295,10 @@ export default function OraganizationPage() {
                                       </span>
                                     }
                                     labelPlacement="outside"
+                                    value={formData?.roomNo}
                                     name="roomNo"
                                     placeholder="เลขห้อง"
+                                    onChange={handleChange}
                                   />
                                   <Input
                                     className="flex-1"
@@ -266,8 +308,10 @@ export default function OraganizationPage() {
                                       </span>
                                     }
                                     labelPlacement="outside"
+                                    value={formData?.floorNo}
                                     name="floorNo"
                                     placeholder="ชั้นที่อยู่"
+                                    onChange={handleChange}
                                   />
                                   <Input
                                     className="flex-1"
@@ -277,8 +321,10 @@ export default function OraganizationPage() {
                                       </span>
                                     }
                                     labelPlacement="outside"
+                                    value={formData?.village}
                                     name="village"
                                     placeholder="หมู่บ้าน"
+                                    onChange={handleChange}
                                   />
                                   <Input
                                     className="flex-1"
@@ -291,6 +337,7 @@ export default function OraganizationPage() {
                                     name="villageNo"
                                     value={formData?.villageNo}
                                     placeholder="เลขหมู่บ้าน"
+                                    onChange={handleChange}
                                   />
                                 </div>
                                 <div className="flex gap-4 mt-6">
@@ -302,8 +349,10 @@ export default function OraganizationPage() {
                                       </span>
                                     }
                                     labelPlacement="outside"
+                                    value={formData?.houseNo}
                                     name="houseNo"
                                     placeholder="บ้านเลขที่"
+                                    onChange={handleChange}
                                   />
                                   <Input
                                     className="flex-1"
@@ -313,8 +362,10 @@ export default function OraganizationPage() {
                                       </span>
                                     }
                                     labelPlacement="outside"
+                                    value={formData?.alley}
                                     name="alley"
                                     placeholder="ตรอก"
+                                    onChange={handleChange}
                                   />
                                   <Input
                                     className="flex-1"
@@ -322,8 +373,10 @@ export default function OraganizationPage() {
                                       <span className="text-headFont">ถนน</span>
                                     }
                                     labelPlacement="outside"
+                                    value={formData?.road}
                                     name="road"
                                     placeholder="ถนน"
+                                    onChange={handleChange}
                                   />
                                   <Input
                                     className="flex-1"
@@ -333,8 +386,10 @@ export default function OraganizationPage() {
                                       </span>
                                     }
                                     labelPlacement="outside"
+                                    value={formData?.building}
                                     name="building"
                                     placeholder="อาคาร"
+                                    onChange={handleChange}
                                   />
                                 </div>
                                 <div className="flex gap-4 mt-6">
@@ -346,8 +401,10 @@ export default function OraganizationPage() {
                                       </span>
                                     }
                                     labelPlacement="outside"
+                                    value={formData?.country}
                                     name="country"
                                     placeholder="ประเทศ"
+                                    onChange={handleChange}
                                   />
                                   <Input
                                     className="flex-1"
@@ -357,8 +414,10 @@ export default function OraganizationPage() {
                                       </span>
                                     }
                                     labelPlacement="outside"
+                                    value={formData?.district}
                                     name="district"
                                     placeholder="เขต/อำเภอ"
+                                    onChange={handleChange}
                                   />
                                 </div>
                                 <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
@@ -371,8 +430,10 @@ export default function OraganizationPage() {
                                         </span>
                                       }
                                       labelPlacement="outside"
+                                      value={formData?.subDistrict}
                                       name="subDistrict"
                                       placeholder="แขวง/ตำบล"
+                                      onChange={handleChange}
                                     />
                                   </div>
                                   <div className="flex gap-4 mt-6">
@@ -382,10 +443,12 @@ export default function OraganizationPage() {
                                         input: 'resize-y min-h-[50px]',
                                       }}
                                       name="note"
+                                      value={formData?.note}
                                       label="หมายเหตุ"
                                       labelPlacement="outside"
                                       placeholder="หมายเหตุ"
                                       variant="bordered"
+                                      onChange={handleChange}
                                     />
                                   </div>
                                 </div>

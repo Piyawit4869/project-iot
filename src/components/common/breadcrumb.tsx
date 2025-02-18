@@ -37,7 +37,11 @@ const translateSegment = (segment: string): string => {
   return translations[segment] || segment;
 };
 
-export const Breadcrumb = () => {
+interface BreadcrumbProps {
+  title?: string;
+}
+
+export const Breadcrumb = ({ title }: BreadcrumbProps) => {
   const pathname = usePathname() as string;
 
   // Split the pathname into segments
@@ -55,7 +59,11 @@ export const Breadcrumb = () => {
           </Link>
         </BreadcrumbItem>
         {pathSegments.map((segment, index) => {
-          const translatedSegment = translateSegment(segment);
+          const isUUID = /^[0-9a-fA-F-]{36}$/.test(segment);
+          // const translatedSegment = translateSegment(segment);
+          const translatedSegment = isUUID
+            ? title || 'กำลังโหลด...'
+            : translateSegment(segment);
           const href = '/' + pathSegments.slice(0, index + 1).join('/');
           const isLast = index === pathSegments.length - 1;
           return (

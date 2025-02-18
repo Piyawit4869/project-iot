@@ -43,14 +43,14 @@ export default function InputTime({
   const handleRemoveOpenDay = (index: number) => {
     const updatedOpenDay = openDay.filter((_, i) => i !== index);
     setOpenDay(updatedOpenDay);
-    onChangeTime({ ...formData, openDay: updatedOpenDay });
+    onChangeTime({ ...formData, openDays: updatedOpenDay });
   };
 
   const handleAddOpenDay = () => {
     const newOpenDayItem = { day: [], openTime: '', closeTime: '' };
     const updatedOpenDay = [...openDay, newOpenDayItem];
     setOpenDay(updatedOpenDay);
-    onChangeTime({ ...formData, openDay: updatedOpenDay });
+    onChangeTime({ ...formData, openDays: updatedOpenDay });
   };
 
   return (
@@ -62,70 +62,76 @@ export default function InputTime({
               {openDay.map((item, index) => (
                 <div
                   key={index}
-                  className="flex md:flex-col gap-4 items-center"
+                  className="w-full grid grid-cols-4 md:grid-cols-1 items-center"
                 >
-                  <Select
-                    className="mt-4 min-w-[150px]"
-                    name="day"
-                    placeholder="เลือกวันทำงาน"
-                    onChange={(e) =>
-                      handleDayChange(index, 'day', e.target.value)
-                    }
-                    defaultSelectedKeys={item.day}
-                    isDisabled={!openEdit}
-                  >
-                    {day.map((item: any) => (
-                      <SelectItem
-                        className=""
-                        key={item.value}
-                        value={item.value}
+                  <div className="flex max-md:flex-col gap-4 items-center">
+                    <Select
+                      className="mt-4"
+                      name="day"
+                      placeholder="เลือกวันทำงาน"
+                      onChange={(e) =>
+                        handleDayChange(index, 'day', e.target.value)
+                      }
+                      defaultSelectedKeys={item.day}
+                      isDisabled={!openEdit}
+                    >
+                      {day.map((item: any) => (
+                        <SelectItem
+                          className=""
+                          key={item.value}
+                          value={item.value}
+                        >
+                          {item.label}
+                        </SelectItem>
+                      ))}
+                    </Select>
+
+                    <Input
+                      className="mt-4"
+                      type="time"
+                      startContent={
+                        <div className="pointer-events-none flex items-center mr-6">
+                          <span className="text-default-400 text-small">
+                            เปิด
+                          </span>
+                        </div>
+                      }
+                      name="openTime"
+                      defaultValue={item.openTime}
+                      onChange={(e) =>
+                        handleDayChange(index, 'openTime', e.target.value)
+                      }
+                      isDisabled={!openEdit}
+                    />
+
+                    <Input
+                      startContent={
+                        <div className="pointer-events-none flex items-center mr-6">
+                          <span className="text-default-400 text-small">
+                            ปิด
+                          </span>
+                        </div>
+                      }
+                      className="mt-4"
+                      type="time"
+                      name="closeTime"
+                      defaultValue={item.closeTime}
+                      onChange={(e) =>
+                        handleDayChange(index, 'closeTime', e.target.value)
+                      }
+                      isDisabled={!openEdit}
+                    />
+                    <div className="text-right">
+                      <a
+                        className={`flex w-full text-red-500 cursor-pointer mt-4 ${
+                          !openEdit ? 'pointer-events-nons opacity-50' : ''
+                        }`}
+                        onClick={() => openEdit && handleRemoveOpenDay(index)}
                       >
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </Select>
-
-                  <Input
-                    className="mt-4"
-                    type="time"
-                    startContent={
-                      <div className="pointer-events-none flex items-center mr-6">
-                        <span className="text-default-400 text-small">
-                          เปิด
-                        </span>
-                      </div>
-                    }
-                    name="openTime"
-                    defaultValue={item.openTime}
-                    onChange={(e) =>
-                      handleDayChange(index, 'openTime', e.target.value)
-                    }
-                    isDisabled={!openEdit}
-                  />
-
-                  <Input
-                    startContent={
-                      <div className="pointer-events-none flex items-center mr-6">
-                        <span className="text-default-400 text-small">ปิด</span>
-                      </div>
-                    }
-                    className="mt-4"
-                    type="time"
-                    name="closeTime"
-                    defaultValue={item.closeTime}
-                    onChange={(e) =>
-                      handleDayChange(index, 'closeTime', e.target.value)
-                    }
-                    isDisabled={!openEdit}
-                  />
-                  <a
-                    className={`w-full text-red-500 cursor-pointer mt-4 ${
-                      !openEdit ? 'pointer-events-nons opacity-50' : ''
-                    }`}
-                    onClick={() => openEdit && handleRemoveOpenDay(index)}
-                  >
-                    <Icons.Trash />
-                  </a>
+                        <Icons.Trash />
+                      </a>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>

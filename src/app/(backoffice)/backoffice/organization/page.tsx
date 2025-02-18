@@ -87,6 +87,8 @@ export default function OraganizationPage() {
     setOpenDayData(updatedOpenDay);
   };
 
+  console.log('openDayData', openDayData);
+
   // const onSubmit = async (e: React.FormEvent) => {
   //   e.preventDefault();
   //   setLoading(true);
@@ -209,10 +211,6 @@ export default function OraganizationPage() {
     useDisclosure();
 
   const [selectedItem] = React.useState<any>(null);
-
-  const toggleInput = () => {
-    setOpenEdit((prev) => !prev);
-  };
 
   const handleEditButton = (openEdit: boolean) => {
     return openEdit ? (
@@ -671,7 +669,9 @@ export default function OraganizationPage() {
                           />
                         </div>
                         <CardComponent
-                          className={'basis-2/3 lg:ml-4 md:mt-4 max-md:mt-4'}
+                          className={
+                            'basis-2/3 lg:ml-4 lg:mt-0 md:mt-4 max-md:mt-4'
+                          }
                           customCard
                           custom={
                             <div>
@@ -707,12 +707,6 @@ export default function OraganizationPage() {
                                 </h1>
                                 <div className="mr-10">
                                   <Button
-                                    className="bg-accent3 text-white mr-3"
-                                    onClick={toggleInput}
-                                  >
-                                    แก้ไข
-                                  </Button>
-                                  <Button
                                     className="bg-accent1 text-white"
                                     onPress={openAddress}
                                   >
@@ -727,7 +721,7 @@ export default function OraganizationPage() {
                                   size="5xl"
                                 >
                                   <ModalContent>
-                                    {() => (
+                                    {(onClose) => (
                                       <>
                                         <ModalHeader className="flex flex-col-1 gap-1">
                                           ที่อยู่ทั้งหมด
@@ -745,6 +739,15 @@ export default function OraganizationPage() {
                                             <AddressTable />
                                           </div>
                                         </ModalBody>
+                                        <ModalFooter>
+                                          <Button
+                                            className="bg-accent2 text-white"
+                                            variant="light"
+                                            onPress={onClose}
+                                          >
+                                            ปิด
+                                          </Button>
+                                        </ModalFooter>
                                       </>
                                     )}
                                   </ModalContent>
@@ -1251,14 +1254,6 @@ export default function OraganizationPage() {
                               <h1 className="text-2xl font-bold text-headFont">
                                 ข้อมูลสาขา
                               </h1>
-                              <div className="mr-10">
-                                <Button
-                                  className="bg-accent3 text-white mr-3"
-                                  onClick={toggleInput}
-                                >
-                                  แก้ไข
-                                </Button>
-                              </div>
 
                               <Modal
                                 size="5xl"
@@ -1798,14 +1793,6 @@ export default function OraganizationPage() {
                               <h1 className="text-2xl font-bold text-headFont">
                                 ข้อมูลองค์กร
                               </h1>
-                              <div className="">
-                                <Button
-                                  className="bg-accent3 text-white mr-3"
-                                  onClick={toggleInput}
-                                >
-                                  แก้ไข
-                                </Button>
-                              </div>
                             </div>
                             <Inputorganization
                               data={data}

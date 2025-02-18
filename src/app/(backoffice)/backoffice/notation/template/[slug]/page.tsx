@@ -1,6 +1,7 @@
 'use client';
 
 import { TemplateBuilder } from '@/components/builder/templateBuilder';
+import { Breadcrumb } from '@/components/common/breadcrumb';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import getTemplate from '@/pages/api/templates/get';
@@ -28,20 +29,25 @@ export default function SingleTemplatePage() {
   }, [params]);
 
   return (
-    <Scaffold
-      backgroundColor=""
-      child={
-        <div>
-          <TopSection
-            backpath={'/backoffice/notation/template'}
-            title="แก้ไขรูปแบบเอกสาร"
-            buttons={[]}
-          />
-          <Card className="mb-4 mt-4">
-            <TemplateBuilder isCreate={false} initialData={data} />
-          </Card>
-        </div>
-      }
-    />
+    <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb title={data?.templateName} />
+      </div>
+      <Scaffold
+        backgroundColor=""
+        child={
+          <div>
+            <TopSection
+              backpath={'/backoffice/notation/template'}
+              title="แก้ไขรูปแบบเอกสาร"
+              buttons={[]}
+            />
+            <Card className="mb-4 mt-4">
+              <TemplateBuilder isCreate={false} initialData={data} />
+            </Card>
+          </div>
+        }
+      />
+    </div>
   );
 }

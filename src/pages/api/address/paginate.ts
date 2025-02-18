@@ -21,16 +21,26 @@ interface FetchNotationsResponse {
   };
 }
 
-export default async function pagination({
+export default async function paginationAddress({
   page,
   limit,
 }: FetchNotationsParams): Promise<FetchNotationsResponse> {
   try {
     const url = new URL(`${base_url}/crud/address/`);
-    url.searchParams.append('page', page.toString());
-    url.searchParams.append('limit', limit.toString());
 
     const auth = await getServerSession();
+
+    // url.searchParams.append('page', page.toString());
+    // url.searchParams.append('limit', limit.toString());
+
+    if (page) {
+      url.searchParams.append('page', String(page));
+    }
+
+    if (limit) {
+      url.searchParams.append('limit', String(limit));
+    }
+
     //query params in this
     const response = await fetch(url.toString(), {
       method: 'GET',

@@ -2,13 +2,12 @@
 
 // import { AdminSideBar } from '@/components/backoffice/sidebar';
 import React, { Suspense } from 'react';
-import { Breadcrumb } from '@/components/common/breadcrumb';
 import { DropdownHead } from '@/components/backoffice/headDropdown';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 
 // import { useSession } from 'next-auth/react';
 import Loading from './loading';
-import { ActiveTabs } from '@/components/backoffice/Sidebar/activeTabs';
+import { AdminSideBar } from '@/components/backoffice/sidebar';
 
 export default function DashboardLayout({
   children,
@@ -23,7 +22,7 @@ export default function DashboardLayout({
       <SidebarProvider open={isSidebarOpen} onOpenChange={setSidebarOpen}>
         <aside className="w-62 bg-primary shadow-md overflow-y-auto">
           <Suspense>
-            <ActiveTabs />
+            <AdminSideBar isSidebarOpen={isSidebarOpen} />
           </Suspense>
         </aside>
         <main className="bg-gray-100 flex-1 w-full overflow-y-auto">
@@ -31,11 +30,9 @@ export default function DashboardLayout({
             <header className="bg-white shadow p-4 flex items-center justify-between">
               <div className="flex">
                 <SidebarTrigger
-                  className="cursor-pointer text-primary mr-5 "
+                  className="cursor-pointer text-primary mr-5 text-2xl"
                   onClick={() => setSidebarOpen((prev) => !prev)}
                 ></SidebarTrigger>
-
-                <Breadcrumb />
               </div>
               <div className="flex items-center space-x-4">
                 <DropdownHead />

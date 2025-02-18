@@ -7,6 +7,7 @@ import React from 'react';
 import { toast } from 'sonner';
 import { createEmployeeRole } from '@/pages/api/employeeRole/create';
 import { useRouter } from 'next/navigation';
+import { Breadcrumb } from '@/components/common/breadcrumb';
 
 export default function RoleCreatePage() {
   // 🔹 State for form data and errors
@@ -77,86 +78,91 @@ export default function RoleCreatePage() {
   };
 
   return (
-    <Scaffold
-      child={
-        <div>
-          {/* 🔹 Page Header */}
-          <TopSection
-            title="สร้างตำแหน่งพนักงาน"
-            backpath={'/backoffice/employeeRole'}
-            buttons={[
-              <a key={'create button'}>
-                <Button
-                  className="bg-accent1 text-white text-xs"
-                  size="sm"
-                  type="submit"
-                  form="roleForm"
-                >
-                  สร้าง
-                </Button>
-              </a>,
-            ]}
-          />
+    <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb />
+      </div>
+      <Scaffold
+        child={
+          <div>
+            {/* 🔹 Page Header */}
+            <TopSection
+              title="สร้างตำแหน่งพนักงาน"
+              backpath={'/backoffice/manageUsers/employeeRole'}
+              buttons={[
+                <a key={'create button'}>
+                  <Button
+                    className="bg-accent1 text-white text-xs"
+                    size="sm"
+                    type="submit"
+                    form="roleForm"
+                  >
+                    สร้าง
+                  </Button>
+                </a>,
+              ]}
+            />
 
-          {/* 🔹 Form Section */}
-          <Card className="p-6 mt-8">
-            <Form
-              id="roleForm"
-              onSubmit={onSubmit}
-              method="post"
-              className="grid grid-cols-1 gap-4"
-              validationErrors={errors}
-            >
-              {/* 🔹 Section Header */}
-              <div className="flex justify-between items-center">
-                <h1 className="flex-1 text-xl font-bold text-headFont">
-                  สร้างตำแหน่งพนักงาน
-                </h1>
-              </div>
-              <div className="flex items-center gap-4 mt-4">
-                <span className="text-headFont text-xs">สถานะการใช้งาน</span>
-                <Switch
-                  type="checkbox"
-                  name="status"
-                  color="secondary"
-                  onChange={handleChange}
-                  required
-                  defaultChecked
-                />
-              </div>
+            {/* 🔹 Form Section */}
+            <Card className="p-6 mt-8">
+              <Form
+                id="roleForm"
+                onSubmit={onSubmit}
+                method="post"
+                className="grid grid-cols-1 gap-4"
+                validationErrors={errors}
+              >
+                {/* 🔹 Section Header */}
+                <div className="flex justify-between items-center">
+                  <h1 className="flex-1 text-xl font-bold text-headFont">
+                    สร้างตำแหน่งพนักงาน
+                  </h1>
+                </div>
+                <div className="flex items-center gap-4 mt-4">
+                  <span className="text-headFont text-xs">สถานะการใช้งาน</span>
+                  <Switch
+                    type="checkbox"
+                    name="status"
+                    color="secondary"
+                    onChange={handleChange}
+                    required
+                    defaultChecked
+                  />
+                </div>
 
-              {/* 🔹 Company Name */}
-              <div className="grid grid-cols-2 gap-4 mt-4">
-                <Input
-                  className="w-full"
-                  size="sm"
-                  label="ชื่อตำแหน่งพนักงาน"
-                  labelPlacement="outside"
-                  name="name"
-                  placeholder="กรอกชื่อตำแหน่งงาน"
-                  onChange={handleChange}
-                  isRequired
-                  errorMessage={'กรุณากรอกชื่อตำแหน่งงาน'}
-                />
-              </div>
+                {/* 🔹 Company Name */}
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  <Input
+                    className="w-full"
+                    size="sm"
+                    label="ชื่อตำแหน่งพนักงาน"
+                    labelPlacement="outside"
+                    name="name"
+                    placeholder="กรอกชื่อตำแหน่งงาน"
+                    onChange={handleChange}
+                    isRequired
+                    errorMessage={'กรุณากรอกชื่อตำแหน่งงาน'}
+                  />
+                </div>
 
-              {/* 🔹 Tax ID */}
-              <div className="grid grid-cols-2 gap-4 mt-5">
-                <Textarea
-                  className="w-full"
-                  size="sm"
-                  label="รายละเอียด"
-                  labelPlacement="outside"
-                  name="description"
-                  placeholder="กรอกรายละเอียด"
-                  onChange={handleChange}
-                />
-              </div>
-            </Form>
-          </Card>
-        </div>
-      }
-      backgroundColor={''}
-    />
+                {/* 🔹 Tax ID */}
+                <div className="grid grid-cols-2 gap-4 mt-5">
+                  <Textarea
+                    className="w-full"
+                    size="sm"
+                    label="รายละเอียด"
+                    labelPlacement="outside"
+                    name="description"
+                    placeholder="กรอกรายละเอียด"
+                    onChange={handleChange}
+                  />
+                </div>
+              </Form>
+            </Card>
+          </div>
+        }
+        backgroundColor={''}
+      />
+    </div>
   );
 }
