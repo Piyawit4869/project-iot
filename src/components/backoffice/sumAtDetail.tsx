@@ -1,29 +1,69 @@
 // components/AttendanceSummaryCard.tsx
 import React from 'react';
+import CardComponent from '../common/card';
+// Icon
+// import * as Icons from 'lucide-react';
 
 interface AttendanceSummaryCardProps {
-  value: string;
-  label: string;
-  backgroundColor: string;
-  icon: React.ReactNode;
+  data: any;
 }
 
-const AttendanceSummaryCard: React.FC<AttendanceSummaryCardProps> = ({
-  value,
-  label,
-  backgroundColor,
-  icon,
-}) => {
-  return (
-    <div
-      className={`flex flex-col justify-between items-center p-4 rounded-lg shadow-md`}
-      style={{ backgroundColor }}
-    >
-      <h2 className="text-3xl font-bold text-white">{value}</h2>
-      <span className="p-3 bg-black text-white rounded-full mt-4">{icon}</span>
-      <p className="text-sm font-medium text-white mt-2">{label}</p>
+export default function AttendanceSummaryCard({
+  data,
+}: AttendanceSummaryCardProps) {
+  const [formData, setFormData] = React.useState<any>(data);
+
+  React.useEffect(() => {
+    if (data) {
+      setFormData(data);
+    }
+  }, [data]);
+
+  const renderCard = (title: string, count: number, colorClass: string) => (
+    <div className="flex-1">
+      <CardComponent
+        className={colorClass}
+        customCard
+        custom={
+          <div className="p-4 bg-white grid grid-cols-2 flex justify-between">
+            <div className="col-span-2">
+              <div className="text-4xl font-extrabold text-center text-gray-900">
+                {count}
+              </div>
+              <div className="text-xs font-extrabold text-center text-gray-600 mt-2">
+                {title}
+              </div>
+            </div>
+          </div>
+        }
+      />
     </div>
   );
-};
 
-export default AttendanceSummaryCard;
+  return (
+    <div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {renderCard(
+          'เข้างาน',
+          formData?.statistics?.totalWorkDays,
+          'bg-white text-blue-500',
+        )}
+        {renderCard(
+          'สาย',
+          formData?.statistics?.lateArrivals,
+          'bg-white text-orange-500',
+        )}
+        {renderCard(
+          'ลา',
+          formData?.statistics?.leaveEarly,
+          'bg-white text-yellow-500',
+        )}
+        {renderCard(
+          'ขาด',
+          formData?.statistics?.absenteeism,
+          'bg-white text-red-500',
+        )}
+      </div>
+    </div>
+  );
+}

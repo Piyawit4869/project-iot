@@ -9,7 +9,7 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 
 interface ChartData {
   date: string;
@@ -93,58 +93,76 @@ const ChartComponent: React.FC = () => {
 
   return (
     <Card>
-      <CardContent>
+      <div className="px-6 pb-4">
         <div className="grid grid-cols-6 gap-4">
           <div className="col-span-3 mt-8">
-            <span className="text-xl font-semibold text-center mb-4">
+            <span className="text-xl font-semibold text-center mb-4 xl:text-lg lg:text-sm md:text-xs">
               กราฟแสดงสถิติการเข้าร่วมงาน
             </span>
           </div>
           <div className="col-span-3 mt-8">
-            <div className="flex justify-center space-x-2 mb-4">
-              <Button
-                className="text-#4f46e5"
-                variant={view === 'daily' ? 'default' : 'outline'}
-                onClick={() => setView('daily')}
-              >
-                รายวัน
-              </Button>
-              <Button
-                className="text-#4f46e5"
-                variant={view === 'weekly' ? 'default' : 'outline'}
-                onClick={() => setView('weekly')}
-              >
-                รายสัปดาห์
-              </Button>
-              <Button
-                className="text-#4f46e5"
-                variant={view === 'monthly' ? 'default' : 'outline'}
-                onClick={() => setView('monthly')}
-              >
-                รายเดือน
-              </Button>
+            <div className="flex justify-end space-x-2 mb-4 ">
+              <div>
+                <Button
+                  className="text-#4f46e5"
+                  size={'sm'}
+                  variant={view === 'daily' ? 'default' : 'outline'}
+                  onClick={() => setView('daily')}
+                >
+                  รายวัน
+                </Button>
+              </div>
+              <div>
+                <Button
+                  className="text-#4f46e5"
+                  size={'sm'}
+                  variant={view === 'weekly' ? 'default' : 'outline'}
+                  onClick={() => setView('weekly')}
+                >
+                  รายสัปดาห์
+                </Button>
+              </div>
+              <div>
+                <Button
+                  className="text-#4f46e5"
+                  size={'sm'}
+                  variant={view === 'monthly' ? 'default' : 'outline'}
+                  onClick={() => setView('monthly')}
+                >
+                  รายเดือน
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart
-            data={getData()}
-            margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
-          >
-            <CartesianGrid stroke="#e0e0e0" strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
-            <Tooltip formatter={(value) => `${value}%`} />
-            <Line
-              type="monotone"
-              dataKey="percentage"
-              stroke="#00a57c"
-              strokeWidth={3}
-              dot={{ r: 6 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </CardContent>
+        <div>
+          <div>
+            <h5 className="text-sm pl-6">ค่าเฉลี่ยการเข้างาน</h5>
+          </div>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart
+              data={getData()}
+              margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
+            >
+              <CartesianGrid stroke="#eeeeee" strokeDasharray="9 0" />
+              <XAxis dataKey="date" className="text-sm" />
+              <YAxis
+                domain={[0, 100]}
+                tickFormatter={(value) => `${value}%`}
+                className="text-sm"
+              />
+              <Tooltip formatter={(value) => `${value}%`} />
+              <Line
+                type="monotone"
+                dataKey="percentage"
+                stroke="#4f46e5"
+                strokeWidth={2}
+                dot={{ r: 4 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
     </Card>
   );
 };

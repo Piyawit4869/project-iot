@@ -13,7 +13,14 @@ import { countWork } from '@/pages/api/workinfos/get';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { TablePagination } from '@/components/common/tablePagination';
-import { DatePicker, Input, Select, SelectItem } from '@nextui-org/react';
+import {
+  Button,
+  DatePicker,
+  Input,
+  Link,
+  Select,
+  SelectItem,
+} from '@nextui-org/react';
 import TimelineComponent from '@/components/backoffice/timeline';
 import ChartComponent from '@/components/backoffice/garphRateAll';
 import WeeklyAttendanceChart from '@/components/backoffice/garphRateDepartment';
@@ -28,6 +35,7 @@ import { Breadcrumb } from '@/components/common/breadcrumb';
 
 interface FilterState {
   userName: string;
+  status: string;
 }
 
 interface MetaData {
@@ -64,9 +72,11 @@ interface AttendanceItem {
 
 export default function AttendancesPage() {
   const [page, setPage] = React.useState(1);
-  const [loading, setLoading] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [filters, setFilters] = React.useState<FilterState>({ userName: '' });
+  const [filters, setFilters] = React.useState<FilterState>({
+    userName: '',
+    status: '',
+  });
   const [items, setItems] = React.useState<AttendanceItem[]>([]);
   const [userList, setUserList] = React.useState<any[]>([]);
   const [meta, setMeta] = React.useState<MetaData>({
@@ -78,14 +88,14 @@ export default function AttendancesPage() {
 
   React.useEffect(() => {
     const fetchAttendances = async () => {
-      setLoading(true);
       try {
-        const { userName } = filters;
+        const { userName, status } = filters;
 
         const response = await pagination({
           page,
           limit: rowsPerPage,
           ...(userName && { userName }),
+          ...(status && { status }),
         });
 
         if (response) {
@@ -113,8 +123,6 @@ export default function AttendancesPage() {
         }
       } catch (error) {
         console.error('Error fetching attendance:', error);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -161,10 +169,10 @@ export default function AttendancesPage() {
 
       if (response && Array.isArray(response.items)) {
         return response.items.map((item: any) => ({
-          userName: item.workInfo.user.userName || 'Undefind',
-          action: item.action || 'N/A',
-          time: formatDate(item.stamp).time || 'N/A',
-          date: formatDate(item.stamp).date || 'N/A',
+          userName: item?.workInfo?.user?.userName || 'Undefind',
+          action: item.action || 'Undefind',
+          time: formatDate(item.stamp).time || 'Undefind',
+          date: formatDate(item.stamp).date || 'Undefind',
         }));
       } else {
         console.error('Invalid response structure:', response);
@@ -180,7 +188,7 @@ export default function AttendancesPage() {
     debounce(() => {
       setPage(1);
       setFilters(updatedFilters);
-    }, 1)();
+    }, 300)();
   }, []);
 
   const onInputChange = (key: keyof typeof filters, value: string) => {
@@ -225,69 +233,62 @@ export default function AttendancesPage() {
             </div>
 
             <div>
-              {loading ? (
-                <div className="flex justify-center items-center h-64">
-                  <div className="spinner"></div>
-                </div>
-              ) : (
-                <>
-                  <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
-                    <div className="grid grid-cols-1 sm:grid-cols-5 p-4 flex justify-between items-center">
-                      <div className=" px-3">
-                        <h6>ภาพรวมการเข้าทำงาน</h6>
-                      </div>
-                      <Input
-                        className="w-[90%] p-2 text-headFont col-span-2"
-                        startContent={<Icons.Search className="p-1" />}
-                        size="sm"
-                        radius="sm"
-                        name="userName"
-                        placeholder="ชื่อพนักงาน"
-                        variant="bordered"
-                        value={filters.userName}
-                        onChange={(e) =>
-                          onInputChange('userName', e.target.value)
-                        }
-                      />
-                      <Select
-                        className="w-[90%] p-2 text-headFont"
-                        startContent={<Icons.UserRound className="p-1" />}
-                        size="sm"
-                        radius="sm"
-                        name="userName"
-                        placeholder="เลือกตำแหน่ง"
-                        variant="bordered"
-                        value={filters.userName}
-                        onChange={(e) =>
-                          onInputChange('userName', e.target.value)
-                        }
-                      >
-                        <SelectItem>
-                          <div>1</div>
-                        </SelectItem>
-                      </Select>
-                      <DatePicker
-                        className="w-[90%] p-2 text-headFont"
-                        size="sm"
-                        radius="sm"
-                        name=""
-                        variant="bordered"
-                        selectorButtonPlacement="start"
-                      />
-                    </div>
-                    <TablePagination
-                      initialRows={items}
-                      initialMeta={meta}
-                      rowsPerPage={rowsPerPage}
-                      columns={columns as any}
-                      onPageChange={(newPage) => setPage(newPage)}
-                      onRowsPerPageChange={(newRowsPerPage) =>
-                        setRowsPerPage(newRowsPerPage)
-                      }
-                    />
+              <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
+                <div className="grid grid-cols-1 sm:grid-cols-5 gap-8 p-4 flex justify-between items-center">
+                  <div className=" px-3 col-span-1">
+                    <p className="xl:text-lg lg:text-sm md:text-xs">
+                      ภาพรวมการเข้าทำงาน
+                    </p>
                   </div>
-                </>
-              )}
+                  <Input
+                    className="w-[90%] p-2 text-headFont col-span-2"
+                    startContent={<Icons.Search className="p-1" />}
+                    size="sm"
+                    radius="sm"
+                    name="userName"
+                    placeholder="ชื่อพนักงาน"
+                    variant="bordered"
+                    value={filters.userName}
+                    onChange={(e) => onInputChange('userName', e.target.value)}
+                  />
+                  <Select
+                    className="w-[90%] p-2 text-headFont col-span-1"
+                    startContent={<Icons.UserRound className="p-1" />}
+                    size="sm"
+                    radius="sm"
+                    name="status"
+                    placeholder="เลือกสถานะ"
+                    variant="bordered"
+                    value={filters.status}
+                    onChange={(e) => onInputChange('status', e.target.value)}
+                  >
+                    <SelectItem>
+                      <div>active</div>
+                    </SelectItem>
+                    <SelectItem>
+                      <div>-</div>
+                    </SelectItem>
+                  </Select>
+                  <DatePicker
+                    className="w-[90%] p-2 text-headFont"
+                    size="sm"
+                    radius="sm"
+                    name=""
+                    variant="bordered"
+                    selectorButtonPlacement="start"
+                  />
+                </div>
+                <TablePagination
+                  initialRows={items}
+                  initialMeta={meta}
+                  rowsPerPage={rowsPerPage}
+                  columns={columns as any}
+                  onPageChange={(newPage) => setPage(newPage)}
+                  onRowsPerPageChange={(newRowsPerPage) =>
+                    setRowsPerPage(newRowsPerPage)
+                  }
+                />
+              </div>
             </div>
           </div>
         }
@@ -303,24 +304,22 @@ const columns = [
     dataIndex: 'userName',
     link: '/backoffice/attendance/overview',
     align: 'left',
-    // render: (_: any, record: any) => {
-    //   return <span>{record?.user?.userName}</span>;
-    // },
   },
-  { title: 'คำนำหน้า', dataIndex: 'prefix' },
-  { title: 'สถานะ', dataIndex: 'status' },
-  { title: 'คำอธิบายงาน', dataIndex: 'descriptions' },
-  { title: 'ความสำคัญ', dataIndex: 'priority' },
-  { title: 'วันที่เริ่มต้น', dataIndex: 'startDate' },
-  { title: 'วันสิ้นสุด', dataIndex: 'dueDate' },
-  { title: 'เวลาจำกัดต่อวัน', dataIndex: 'limitTimePerDay' },
-  { title: 'ผู้ตรวจสอบ', dataIndex: 'inspector' },
-  { title: 'เครดิตเริ่มต้น', dataIndex: 'startCredit' },
-  { title: 'เครดิตรวม', dataIndex: 'totalCredit' },
-  { title: 'ชั่วโมงทำงานรวม', dataIndex: 'totalWorkHours' },
-  { title: 'วันที่จ่ายเงิน', dataIndex: 'payDayDate' },
-  { title: 'เวลาที่จ่ายเงิน', dataIndex: 'payDayTime' },
+  { title: 'ชื่อย่องาน', dataIndex: 'prefix', align: 'center' },
+  { title: 'สถานะ', dataIndex: 'status', align: 'center' },
+  { title: 'เวลาจำกัดต่อวัน', dataIndex: 'limitTimePerDay', align: 'center' },
+  { title: 'ชั่วโมงทำงานรวม', dataIndex: 'totalWorkHours', align: 'center' },
   { title: 'หมายเหตุ', dataIndex: 'note' },
-  { title: 'สร้างวันที่', dataIndex: 'createdAtDate' },
-  { title: 'เวลาที่สร้าง', dataIndex: 'createdAtTime' },
+  {
+    title: '',
+    dataIndex: 'edit',
+    align: 'center',
+    render: (_: any, record: any) => (
+      <Link href={`/backoffice/attendance/overview/${record.id}`}>
+        <Button className="flex bg-accent3 text-white" size="sm">
+          <Icons.PencilLine size={20} />
+        </Button>
+      </Link>
+    ),
+  },
 ];

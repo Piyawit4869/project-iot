@@ -8,8 +8,9 @@ import { Input, Button, Link, Tabs, Tab } from '@nextui-org/react';
 import pagination from '@/pages/api/whitelists/pagination';
 import { TablePagination } from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date';
+//Icon
+import * as Icons from 'lucide-react';
 import { Breadcrumb } from '@/components/common/breadcrumb';
-// import * as Icon from '@ant-design/icons';
 
 interface FilterState {
   ip: string;
@@ -50,13 +51,19 @@ const columns = [
   { title: 'ระบบปฏิบัติการ', dataIndex: 'os' },
   { title: 'ที่อยู่', dataIndex: 'addressName' },
   { title: 'บ้านเลขที', dataIndex: 'addressHouseNo' },
-  { title: 'ประเทศ', dataIndex: 'addressCountry' },
-  { title: 'จังหวัด', dataIndex: 'addressProvince' },
-  { title: 'เขต/อำเภอ', dataIndex: 'addressCity' },
-  { title: 'แขวง/ตำบล', dataIndex: 'addressSubdistrict' },
-  { title: 'ซอย', dataIndex: 'addressAlley' },
-  { title: 'ถนน', dataIndex: 'addressRoad' },
   { title: 'สร้างวันที่', dataIndex: 'createdAtDate' },
+  {
+    title: '',
+    dataIndex: 'edit',
+    align: 'center',
+    render: (_: any, record: any) => (
+      <Link href={`/backoffice/attendance/whitelist/${record.id}`}>
+        <Button className="flex bg-accent3 text-white" size="sm">
+          <Icons.PencilLine />
+        </Button>
+      </Link>
+    ),
+  },
 ];
 
 export default function WhitelistsPage() {
@@ -202,7 +209,7 @@ export default function WhitelistsPage() {
                   initialRows={items}
                   initialMeta={meta}
                   rowsPerPage={rowsPerPage}
-                  columns={columns}
+                  columns={columns as any}
                   onPageChange={(newPage) => setPage(newPage)}
                   onRowsPerPageChange={(newRowsPerPage) =>
                     setRowsPerPage(newRowsPerPage)
