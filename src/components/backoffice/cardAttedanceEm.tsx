@@ -1,6 +1,8 @@
 import React from 'react';
-import * as Icons from 'lucide-react';
+// Component
 import CardComponent from '../common/card';
+// Icon
+import * as Icons from 'lucide-react';
 
 interface UserProps {
   id: number;
@@ -18,7 +20,6 @@ interface EmAttendanceCardProps {
 }
 
 const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users = [] }) => {
-  // const validUsers = Array.isArray(users) ? users : [];
   const validUsers = React.useMemo(
     () => (Array.isArray(users) ? users : []),
     [users],
@@ -68,10 +69,10 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users = [] }) => {
         custom={
           <div className="p-4 bg-white grid grid-cols-3 flex justify-between">
             <div className="col-span-2">
-              <div className="text-4xl font-extrabold text-gray-900">
+              <div className="text-4xl  font-extrabold text-gray-900">
                 {count}
               </div>
-              <div className="text-sm font-extrabold text-gray-600 mt-2">
+              <div className="text-sm font-extrabold text-gray-600 mt-2 ">
                 {title}
               </div>
             </div>
@@ -85,8 +86,8 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users = [] }) => {
   );
 
   return (
-    <div>
-      <div className="flex space-x-8 mt-8">
+    <div className=" xl:size-lg xl:text-lg lg:size-sm lg:text-sm  md:size-xs md:text-xs sm:size-xs sm:text-xs ">
+      <div className="flex mt-8 space-x-8">
         {renderCard(
           'พนักงานทั้งหมด',
           totalEmployees,
@@ -106,7 +107,7 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users = [] }) => {
           <Icons.UserRoundMinus />,
         )}
       </div>
-      <div className="flex space-x-8 mt-8">
+      <div className="flex mt-8 space-x-8">
         {renderCard(
           'เข้างานสาย',
           attendanceStats.lateCount,

@@ -2,14 +2,19 @@
 import React from 'react';
 
 interface WorkingTimeSummaryProps {
-  totalWorkingTime: string;
-  workingTimeToday: string;
+  data: any;
 }
+export default function WorkingTimeSummary({ data }: WorkingTimeSummaryProps) {
+  const [formData, setFormData] = React.useState<any>(data);
 
-const WorkingTimeSummary: React.FC<WorkingTimeSummaryProps> = ({
-  totalWorkingTime,
-  workingTimeToday,
-}) => {
+  React.useEffect(() => {
+    if (data) {
+      setFormData(data);
+    }
+  }, [data]);
+
+  console.log('formData', formData);
+
   return (
     <div>
       <div className="grid grid-cols-2 py-2">
@@ -18,7 +23,7 @@ const WorkingTimeSummary: React.FC<WorkingTimeSummaryProps> = ({
           <p className="text-xs text-gray-600">เวลาทำงานรวมทั้งหมด</p>
         </div>
         <span className="text-2xl flex justify-end">
-          {totalWorkingTime} ชั่วโมง
+          {formData?.workHours?.total} ชั่วโมง
         </span>
       </div>
       <div className="h-[2px] bg-gray-800 my-8"></div>
@@ -28,11 +33,9 @@ const WorkingTimeSummary: React.FC<WorkingTimeSummaryProps> = ({
           <p className="text-xs text-gray-600">เวลาทำงานวันนี้</p>
         </div>
         <span className="text-2xl flex justify-end">
-          {workingTimeToday} ชั่วโมง
+          {formData?.workHours?.today} ชั่วโมง
         </span>
       </div>
     </div>
   );
-};
-
-export default WorkingTimeSummary;
+}

@@ -1,124 +1,129 @@
 import React from 'react';
 import Image from 'next/image';
-//component
+// Component
 import CardComponent from '../common/card';
-// icon
+// Icon
 import * as Icons from 'lucide-react';
 
 interface UserDashboardCardProps {
-  userData: {
-    prefix?: String;
-    statistics: {
-      totalWorkDays?: Number;
-      lateArrivals?: Number;
-      leaveEarly?: Number;
-      absenteeism?: Number;
-    };
-    dailyStreak: {
-      dailyStreak?: any;
-    };
-    user: {
-      userName?: String;
-      emId?: String;
-      email?: String;
-      role?: any;
-    };
-  };
+  data: any;
 }
 
-const renderCard = (
-  Icon: React.ReactNode,
-  count: number,
-  title: string,
-  colorClass: string,
-) => (
-  <div className="flex-1">
-    <CardComponent
-      className={colorClass}
-      customCard
-      custom={
-        <div className="p-4 bg-white grid grid-cols-3 flex justify-between">
-          <div className="flex items-start justify-start">
-            <div className="bg-gray-100 p-3 rounded-full">{Icon}</div>
-          </div>
-          <div className="col-span-2">
-            <div className="text-xl font-extrabold text-gray-900">
-              {count} วัน
-            </div>
-            <div className="text-xs font-bold text-gray-600 mt-2">{title}</div>
-          </div>
-        </div>
-      }
-    />
-  </div>
-);
+export default function UserDashboardCard({ data }: UserDashboardCardProps) {
+  const [formData, setFormData] = React.useState<any>(data);
 
-const UserDashboardCard: React.FC<UserDashboardCardProps> = ({ userData }) => {
+  React.useEffect(() => {
+    if (data) {
+      setFormData(data);
+    }
+  }, [data]);
+
+  console.log('formData', formData);
+
+  const renderCard = (
+    title: string,
+    count: number,
+    colorClass: string,
+    Icon: React.ReactNode,
+  ) => (
+    <div className="flex-1">
+      <CardComponent
+        className={colorClass}
+        customCard
+        custom={
+          <div className="p-4 bg-white grid grid-cols-3 flex justify-between">
+            <div className="col-span-2">
+              <div className="text-4xl font-extrabold text-gray-900">
+                {count}
+              </div>
+              <div className="text-sm font-extrabold text-gray-600 mt-2">
+                {title}
+              </div>
+            </div>
+            <div className="flex items-start justify-end">
+              <div className="bg-gray-100 p-3 rounded-full">{Icon}</div>
+            </div>
+          </div>
+        }
+      />
+    </div>
+  );
+
   return (
-    <div className="bg-white rounded-xl shadow p-8 mt-8">
-      <div className="flex items-center space-x-8 gap-4 mb-8">
-        <div>
+    <div className="bg-white rounded-2xl shadow p-8 mt-8">
+      {/* Header Section */}
+      <div className="flex items-center space-x-8 gap-8 mb-8">
+        <div className="rounded-full">
           <Image
-            className="w-20 h-20 rounded-full flex items-center justify-center text-2xls"
-            src="/logo.png"
-            alt="image user"
+            className="rounded-xl"
+            src={
+              formData?.dailyStreak?.user?.profile?.photoUrl ||
+              '/images/default-profile.png'
+            }
+            alt="User profile photo"
             width={100}
             height={100}
           />
         </div>
         <div>
           <h1 className="text-2xl font-bold mb-2">
-            {userData?.user?.userName || 'N/A'}
+            {formData?.dailyStreak?.user?.userName || '-'}
           </h1>
-          <div className="grid grid-cols-8 gap-6">
-            <p>
-              EmId : <span>{userData?.user?.emId || 'N/A'}</span>
+          <div className="grid grid-cols-10 gap-8">
+            <p className="col-span-2">
+              รหัสพนักงาน:{' '}
+              <span>{formData?.dailyStreak?.user?.emId || '-'}</span>
             </p>
             <p className="col-span-2">
-              <span>Email : {userData?.user?.email || 'N/A'}</span>
-            </p>
-            <p>
-              <span>Role : {userData?.user?.role || 'N/A'}</span>
+              <span>อีเมล: {formData?.dailyStreak?.user?.email || '-'}</span>
             </p>
             <p className="col-span-2">
-              <span>Work Information : {userData?.prefix || 'N/A'}</span>
+              <span>
+                ตำแหน่ง:
+                {formData?.dailyStreak?.user?.employeeRole?.name || '-'}
+              </span>
             </p>
-            <p>
-              <span>Streak : {userData?.dailyStreak?.dailyStreak || 0}</span>
+            <p className="col-span-2">
+              <span>ข้อมูลการทำงาน: {formData?.prefix || '-'}</span>
+            </p>
+            <p className="col-span-2">
+              <span>
+                ทำงานต่อเนื่อง: {formData?.dailyStreak?.dailyStreak || 0} วัน
+              </span>
             </p>
           </div>
         </div>
       </div>
+
+      {/* Card Statistics */}
       <div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {renderCard(
-            <Icons.UsersRound />,
-            31,
             'เข้างานทั้งหมด',
+            formData?.statistics?.totalWorkDays,
             'bg-white text-blue-500',
+            <Icons.UserRoundCheck />,
           )}
           {renderCard(
-            <Icons.UsersRound />,
-            1,
             'เข้างานสายทั้งหมด',
-            'bg-white text-blue-500',
+            formData?.statistics?.lateArrivals,
+            'bg-white text-orange-500',
+            <Icons.ClockAlert />,
           )}
           {renderCard(
-            <Icons.UsersRound />,
-            2,
             'ออกก่อนเวลาทั้งหมด',
-            'bg-white text-blue-500',
+            formData?.statistics?.leaveEarly,
+            'bg-white text-yellow-500',
+            <Icons.LogOut />,
           )}
           {renderCard(
-            <Icons.UsersRound />,
-            3,
             'ขาดทั้งหมด',
-            'bg-white text-blue-500',
+            formData?.statistics?.absenteeism,
+            'bg-white text-red-500',
+            <Icons.UserRoundX />,
           )}
         </div>
       </div>
     </div>
   );
-};
-
-export default UserDashboardCard;
+}
