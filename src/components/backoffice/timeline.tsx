@@ -35,7 +35,6 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ data }) => (
   </div>
 );
 
-
 const Timeline: React.FC<TimelineProps> = ({ fetchData }) => {
   const [timelineData, setTimelineData] = React.useState<
     { time: string; userName: string; action: string; date: string }[]
@@ -65,7 +64,7 @@ const Timeline: React.FC<TimelineProps> = ({ fetchData }) => {
   } = useDisclosure();
 
   return (
-    <div className="p-6">
+    <div className="py-4 px-6">
       <h2 className="text-lg font-semibold mb-4">กิจกรรม</h2>
       <div>
         {loading ? (
@@ -80,7 +79,7 @@ const Timeline: React.FC<TimelineProps> = ({ fetchData }) => {
             ))}
 
             {/* Show More button */}
-            <div className="flex justify-end mt-4">
+            <div className="flex justify-end my-2 mx-4">
               {visibleItems < timelineData.length && (
                 <button
                   className="text-sm text-accent1 hover:underline"
@@ -113,7 +112,7 @@ const Timeline: React.FC<TimelineProps> = ({ fetchData }) => {
           </>
         ) : (
           <div className="flex justify-center items-center h-64">
-            <h2>not available </h2>
+            <h2>ไม่พบข้อมูล</h2>
           </div>
         )}
       </div>

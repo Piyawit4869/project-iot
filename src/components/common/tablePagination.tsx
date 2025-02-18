@@ -88,7 +88,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
               {columns.map((col) => (
                 <TableCell
                   key={col.dataIndex}
-                  className="py-2.5 px-4 font-semibold text-left whitespace-nowrap"
+                  className="py-2.5 px-4 font-semibold text-center whitespace-nowrap"
                   align={col.align || 'left'}
                 >
                   {col.title}

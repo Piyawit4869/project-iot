@@ -8,7 +8,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 
 interface WeeklyData {
   department: string;
@@ -26,23 +26,35 @@ const weeklyData: WeeklyData[] = [
 const WeeklyAttendanceChart: React.FC = () => {
   return (
     <Card>
-      <CardContent>
-        <p className="text-xl font-semibold text-start mt-8 mb-6 ">
-          การเข้าทำงานรายสัปดาห์ของแต่ละแผนก
+      <div className="px-6 pb-4">
+        <p className="text-xl font-semibold text-start mt-8 mb-6 xl:text-lg lg:text-sm md:text-xs">
+          การเข้าทำงานของแต่ละแผนก
         </p>
+        <div>
+          <h5 className="text-xs pl-6">ค่าเฉลี่ยการเข้างาน</h5>
+        </div>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={weeklyData}
             margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
+            className="text-xs"
           >
-            <CartesianGrid stroke="#e0e0e0" strokeDasharray="3 3" />
-            <XAxis dataKey="department" tick={{ fontSize: 12 }} />
-            <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
+            <CartesianGrid stroke="#eeeeee" strokeDasharray="9 0" />
+            <XAxis
+              dataKey="department"
+              tick={{ fontSize: 12 }}
+              className="text-xs"
+            />
+            <YAxis
+              domain={[0, 100]}
+              tickFormatter={(value) => `${value}%`}
+              className="text-xs"
+            />
             <Tooltip formatter={(value) => `${value}%`} />
             <Bar dataKey="attendance" fill="#00a57c" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
-      </CardContent>
+      </div>
     </Card>
   );
 };
