@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Modal,
   ModalContent,
@@ -7,55 +6,45 @@ import {
   ModalFooter,
   Button,
 } from '@nextui-org/react';
-import * as Icon from '@ant-design/icons';
+import React from 'react';
 
-export const ModalVerify = ({
-  title,
-  content,
+interface ModalProps {
+  isOpen: boolean;
+  onOpenChange: () => void;
+  title: string;
+  children: React.ReactNode;
+}
+
+export const ModalComponents: React.FC<ModalProps> = ({
   isOpen,
-  onClose,
-  CancelButton,
-  ConfirmButton,
-}: any) => {
+  title,
+  children,
+  onOpenChange,
+}) => {
   return (
-    <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+    <div>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
-          {() => (
+          {(onClose) => (
             <>
-              <ModalHeader className="flex gap-1">
-                <Icon.ExclamationOutlined color="accent2" />
-                {title}
-              </ModalHeader>
-              <ModalBody>
-                <p>{content}</p>
-              </ModalBody>
+              <ModalHeader className="flex flex-col gap-1">{title}</ModalHeader>
+              <ModalBody>{children}</ModalBody>
               <ModalFooter>
-                {CancelButton && (
-                  <Button
-                    className="bg-accent2 text-white"
-                    variant="light"
-                    onPress={CancelButton.onClick}
-                  >
-                    {CancelButton.label}
-                  </Button>
-                )}
-                {ConfirmButton && (
-                  <Button
-                    className="bg-accent1 text-white"
-                    type={ConfirmButton.type}
-                    form={ConfirmButton.form}
-                    variant="light"
-                    onPress={ConfirmButton.onClick}
-                  >
-                    {ConfirmButton.label}
-                  </Button>
-                )}
+                <Button
+                  className="bg-accent2 text-ehite"
+                  variant="light"
+                  onPress={onClose}
+                >
+                  Close
+                </Button>
+                <Button className="bg-accent1 text-white" onPress={onClose}>
+                  Action
+                </Button>
               </ModalFooter>
             </>
           )}
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 };

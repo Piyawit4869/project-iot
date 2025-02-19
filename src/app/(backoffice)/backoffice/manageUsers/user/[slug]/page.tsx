@@ -30,7 +30,7 @@ import paginationRoles from '@/pages/api/role/pagination';
 import paginationEmployeeRole from '@/pages/api/employeeRole/pagination';
 import { Upload } from '@/components/backoffice/upload';
 import { Breadcrumb } from '@/components/common/breadcrumb';
-import SkeletonUser from '@/components/backoffice/skeleton/skeletonUser';
+import SkeletonUser from '@/components/backoffice/skeleton/skeletonTable';
 
 export default function UserSinglePage() {
   const [data, setData] = React.useState() as any;

@@ -18,6 +18,7 @@ import getSingle from '@/pages/api/workinfos/getSingle';
 import { formatDate } from '@/utils/enums/date';
 // icon
 import * as Icons from 'lucide-react';
+import { Breadcrumb } from '@/components/common/breadcrumb';
 
 interface FilterState {
   userName: string;
@@ -87,8 +88,6 @@ export default function AttendanceDetailPage() {
     fetchWorkInfo();
   }, [params]);
 
-  console.log('data', data);
-
   const handleFilterChange = React.useCallback((updatedFilters: any) => {
     debounce(() => {
       setPage(1); // Reset to the first page for new filters
@@ -111,6 +110,9 @@ export default function AttendanceDetailPage() {
   console.log(userDetail);
   return (
     <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb title={data?.dailyStreak?.user?.userName} />
+      </div>
       <Scaffold
         child={
           <div className="space-y-8">

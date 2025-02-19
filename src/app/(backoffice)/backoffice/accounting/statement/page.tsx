@@ -4,7 +4,7 @@ import React from 'react';
 import { TopSection } from '@/components/common/topSection';
 import Scaffold from '@/components/common/scaffold';
 import { Input, Select, SelectItem, Tab, Tabs } from '@nextui-org/react';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 import { Breadcrumb } from '@/components/common/breadcrumb';
 
 export default function StatementPage() {

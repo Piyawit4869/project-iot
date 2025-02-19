@@ -12,7 +12,7 @@ import { countWork } from '@/pages/api/workinfos/get';
 //Component
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 import {
   Button,
   DatePicker,
@@ -32,6 +32,8 @@ import { formatDate } from '@/utils/enums/date';
 //Icon
 import * as Icons from 'lucide-react';
 import { Breadcrumb } from '@/components/common/breadcrumb';
+import SkeletonAttendanceCard from '@/components/backoffice/skeleton/skeletonAttendanceCard';
+// import SkeletonTimeline from '@/components/backoffice/skeleton/skeletonTimeline';
 
 interface FilterState {
   userName: string;
@@ -73,6 +75,7 @@ interface AttendanceItem {
 export default function AttendancesPage() {
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [loading, setLoading] = React.useState(false);
   const [filters, setFilters] = React.useState<FilterState>({
     userName: '',
     status: '',
@@ -88,6 +91,7 @@ export default function AttendancesPage() {
 
   React.useEffect(() => {
     const fetchAttendances = async () => {
+      setLoading(true);
       try {
         const { userName, status } = filters;
 
@@ -123,6 +127,8 @@ export default function AttendancesPage() {
         }
       } catch (error) {
         console.error('Error fetching attendance:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -131,6 +137,7 @@ export default function AttendancesPage() {
 
   React.useEffect(() => {
     const fetchWork = async () => {
+      setLoading(true);
       try {
         const response = await countWork();
 
@@ -156,6 +163,8 @@ export default function AttendancesPage() {
       } catch (error) {
         console.error('⚠️ Error fetching work data:', error);
         setUserList([]);
+      } finally {
+        setLoading(false);
       }
     };
     fetchWork();
@@ -164,6 +173,7 @@ export default function AttendancesPage() {
 
   //API TIMELINE COMPONENT
   const fetchTimelineData = React.useCallback(async () => {
+    setLoading(true);
     try {
       const response = await getAttendance();
 
@@ -181,6 +191,8 @@ export default function AttendancesPage() {
     } catch (error) {
       console.error('Error fetching timeline data:', error);
       return [];
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -209,12 +221,20 @@ export default function AttendancesPage() {
             <div className=" grid grid-cols-5 gap-8 flex justify-between">
               <div className="col-span-3">
                 <div>
-                  <EmAttendanceCard users={userList || []} />
+                  {loading ? (
+                    <SkeletonAttendanceCard />
+                  ) : (
+                    <EmAttendanceCard users={userList || []} />
+                  )}
                 </div>
               </div>
               <div className="col-span-2">
                 <div className=" space-x-8 mt-8 bg-white rounded-xl shadow h-[90%] ">
+                  {/* {loading ? (
+                    <SkeletonTimeline />
+                  ) : ( */}
                   <TimelineComponent fetchData={fetchTimelineData} />
+                  {/* )} */}
                 </div>
               </div>
             </div>

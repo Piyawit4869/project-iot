@@ -6,8 +6,9 @@ import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
 import paginationEmployeeRole from '@/pages/api/employeeRole/pagination';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 import { Breadcrumb } from '@/components/common/breadcrumb';
+import SkeletonTable from '@/components/backoffice/skeleton/skeletonTable';
 
 export default function RolesPage() {
   const [page, setPage] = React.useState(1);
@@ -22,7 +23,7 @@ export default function RolesPage() {
     totalPages: 0,
     currentPage: 1,
   });
-  const [, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     // Fetch data from the API
@@ -100,16 +101,20 @@ export default function RolesPage() {
               </div>
             </div>
 
-            <TablePagination
-              initialRows={items}
-              initialMeta={meta}
-              rowsPerPage={rowsPerPage}
-              columns={columns as any}
-              onPageChange={(newPage) => setPage(newPage)}
-              onRowsPerPageChange={(newRowsPerPage) =>
-                setRowsPerPage(newRowsPerPage)
-              }
-            />
+            {loading ? (
+              <SkeletonTable rowCount={9} columns={columns} />
+            ) : (
+              <TablePagination
+                initialRows={items}
+                initialMeta={meta}
+                rowsPerPage={rowsPerPage}
+                columns={columns as any}
+                onPageChange={(newPage) => setPage(newPage)}
+                onRowsPerPageChange={(newRowsPerPage) =>
+                  setRowsPerPage(newRowsPerPage)
+                }
+              />
+            )}
           </div>
         }
         backgroundColor={''}

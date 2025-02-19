@@ -6,12 +6,14 @@ import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
 import paginationRoles from '@/pages/api/role/pagination';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 import { Breadcrumb } from '@/components/common/breadcrumb';
+import SkeletonTable from '@/components/backoffice/skeleton/skeletonTable';
 
 export default function RolesPage() {
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [loading, setLoading] = React.useState(false);
   const [filters] = React.useState({
     name: '',
   });
@@ -27,7 +29,7 @@ export default function RolesPage() {
   // Fetch data from the API
   React.useEffect(() => {
     const fetchCustomer = async () => {
-      // setLoading(true);
+      setLoading(true);
       try {
         // const { name } = filters;
         const { items: fetchedItems } = await paginationRoles({
@@ -40,7 +42,7 @@ export default function RolesPage() {
       } catch (error) {
         console.log('Error fetching notations:', error);
       } finally {
-        // setLoading(false);
+        setLoading(false);
       }
     };
     fetchCustomer();
@@ -99,16 +101,20 @@ export default function RolesPage() {
               </div>
             </div>
 
-            <TablePagination
-              initialRows={items}
-              initialMeta={meta}
-              rowsPerPage={rowsPerPage}
-              columns={columns as any}
-              onPageChange={(newPage) => setPage(newPage)}
-              onRowsPerPageChange={(newRowsPerPage) =>
-                setRowsPerPage(newRowsPerPage)
-              }
-            />
+            {loading ? (
+              <SkeletonTable rowCount={5} columns={columns} />
+            ) : (
+              <TablePagination
+                initialRows={items}
+                initialMeta={meta}
+                rowsPerPage={rowsPerPage}
+                columns={columns as any}
+                onPageChange={(newPage) => setPage(newPage)}
+                onRowsPerPageChange={(newRowsPerPage) =>
+                  setRowsPerPage(newRowsPerPage)
+                }
+              />
+            )}
           </div>
         }
         backgroundColor={''}
