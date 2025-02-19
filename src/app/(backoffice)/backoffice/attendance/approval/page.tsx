@@ -130,7 +130,7 @@ export default function ApprovalPages() {
                   labelPlacement="outside"
                   size="sm"
                   name="name"
-                  placeholder="ค้นหา createdBy"
+                  placeholder="ค้นหาชื่อ"
                   value={filters.createdBy}
                   onChange={(e) => onInputChange('createdBy', e.target.value)}
                 />
@@ -172,7 +172,7 @@ export default function ApprovalPages() {
                   initialRows={items}
                   initialMeta={meta}
                   rowsPerPage={rowsPerPage}
-                  columns={columns}
+                  columns={columns as any}
                   onPageChange={(newPage) => setPage(newPage)}
                   onRowsPerPageChange={(newRowsPerPage) =>
                     setRowsPerPage(newRowsPerPage)

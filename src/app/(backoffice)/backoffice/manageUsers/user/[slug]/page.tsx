@@ -45,23 +45,23 @@ export default function UserSinglePage() {
 
   const params = useParams<{ slug: string }>();
 
-  React.useEffect(() => {
-    if (!params || !params.slug) {
-      return;
-    }
+  // React.useEffect(() => {
+  //   if (!params || !params.slug) {
+  //     return;
+  //   }
 
-    setLoading(true);
+  //   setLoading(true);
 
-    const fetchUserSingle = async () => {
-      const { data } = await getUser(params.slug);
+  //   const fetchUserSingle = async () => {
+  //     const { data } = await getUser(params.slug);
 
-      setData(data);
-      setFormData(data.profile);
-      setLoading(false);
-    };
+  //     setData(data);
+  //     setFormData(data.profile);
+  //     setLoading(false);
+  //   };
 
-    fetchUserSingle();
-  }, [params]);
+  //   fetchUserSingle();
+  // }, [params]);
 
   React.useEffect(() => {
     const fetchRole = async () => {
@@ -78,9 +78,24 @@ export default function UserSinglePage() {
       setEmployeeRole(fetchedItems.items);
     };
 
+    if (!params || !params.slug) {
+      return;
+    }
+
+    setLoading(true);
+
+    const fetchUserSingle = async () => {
+      const { data } = await getUser(params.slug);
+
+      setData(data);
+      setFormData(data.profile);
+      setLoading(false);
+    };
+
+    fetchUserSingle();
     fetchRole();
     fetchEmployeeRole();
-  }, []);
+  }, [params]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -2,18 +2,12 @@
 import React from 'react';
 
 interface WorkingTimeSummaryProps {
-  data: any;
+  time: any;
 }
-export default function WorkingTimeSummary({ data }: WorkingTimeSummaryProps) {
-  const [formData, setFormData] = React.useState<any>(data);
+export default function WorkingTimeSummary({ time }: WorkingTimeSummaryProps) {
+  const [formData] = React.useState<any>(time);
 
-  React.useEffect(() => {
-    if (data) {
-      setFormData(data);
-    }
-  }, [data]);
 
-  console.log('formData', formData);
 
   return (
     <div>

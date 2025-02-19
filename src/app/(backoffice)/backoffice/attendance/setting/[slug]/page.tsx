@@ -156,8 +156,6 @@ export default function SingleSettingPage() {
         // if (!response?.data) {
         //   throw new Error('No data found for the given slug');
         // }
-        // console.log('name', data);
-        // console.log('anna');
 
         setData(response?.data);
         setFormData(response);

@@ -47,7 +47,6 @@ export default function IndexPage() {
   }, [page, rowsPerPage]);
   // }, [filters, page, rowsPerPage]);
 
-  console.log('item', items);
 
   return (
     <div>

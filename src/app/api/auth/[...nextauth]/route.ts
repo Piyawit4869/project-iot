@@ -13,13 +13,11 @@ const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        // console.log({ credentials });
         try {
           const res = await axios.post(`${base_url}/auth/signin/`, {
             user: credentials?.user,
             password: credentials?.password,
           });
-          // console.log({ res });
           if (res.data) {
             const { data } = res;
             const { data: me } = await axios(`${base_url}/auth/me/`, {
@@ -51,7 +49,6 @@ const authOptions: NextAuthOptions = {
       return token;
     },
     session: async ({ session, token }) => {
-      // console.log({ session, token });
       if (session) {
         session = {
           ...session,

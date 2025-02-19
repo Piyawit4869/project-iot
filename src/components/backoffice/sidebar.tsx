@@ -93,7 +93,7 @@ export function AdminSideBar({
           isActive: false,
           subMenu: [
             {
-              name: 'ภาพรวม',
+              name: 'ภาพรวมการทำงาน',
               path: '/backoffice/attendance/overview',
               icon: 'LayoutPanelLeft',
               isActive: false,
@@ -108,6 +108,12 @@ export function AdminSideBar({
               name: 'การเข้าใช้งาน',
               path: '/backoffice/attendance/whitelist',
               icon: 'ShieldCheck',
+              isActive: false,
+            },
+            {
+              name: 'การลา',
+              path: '/backoffice/attendance/approval',
+              icon: 'NotepadText',
               isActive: false,
             },
             // {
