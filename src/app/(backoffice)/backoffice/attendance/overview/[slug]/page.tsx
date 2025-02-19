@@ -9,7 +9,7 @@ import { TopSection } from '@/components/common/topSection';
 import WorkingTimeSummary from '@/components/backoffice/timeWork';
 import AttendanceSummaryCard from '@/components/backoffice/sumAtDetail';
 import UserDashboardCard from '@/components/backoffice/detailCardEm';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 import { DatePicker, Input, Select, SelectItem } from '@nextui-org/react';
 // API
 import getSingleUser from '@/pages/api/attendances/get';
@@ -18,7 +18,7 @@ import getSingle from '@/pages/api/workinfos/getSingle';
 import { formatDate } from '@/utils/enums/date';
 // icon
 import * as Icons from 'lucide-react';
-import { Breadcrumb } from '@/components/common/breadcrumb';
+// import { Breadcrumb } from '@/components/common/breadcrumb';
 
 interface FilterState {
   userName: string;
@@ -33,7 +33,7 @@ export default function AttendanceDetailPage() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [filters, setFilters] = React.useState<FilterState>({ userName: '' });
   const [items, setItems] = React.useState<AttendanceDetail[]>([]);
-  const [userDetail] = React.useState<any[]>([]);
+  const [details, setDetail] = React.useState() as any;
   const params = useParams<{ slug: string }>();
   const [meta, setMeta] = React.useState({
     totalItems: 0,
@@ -41,13 +41,15 @@ export default function AttendanceDetailPage() {
     totalPages: 0,
     currentPage: 1,
   });
-  const [data, setData] = React.useState() as any;
 
   React.useEffect(() => {
+    if (!params?.slug) {
+      console.warn('params.slug is missing');
+      return;
+    }
     const fetchAttendances = async () => {
       try {
         const response = await getSingleUser('');
-        console.log('API Response (getSingleUser):', response);
 
         if (response && Array.isArray(response.items) && response.meta) {
           setItems(
@@ -66,27 +68,18 @@ export default function AttendanceDetailPage() {
       }
     };
 
-    fetchAttendances();
-  }, [page, rowsPerPage, filters]);
-
-  React.useEffect(() => {
-    if (!params?.slug) {
-      console.warn('params.slug is missing');
-      return;
-    }
-
-    const fetchWorkInfo = async () => {
+    const fetchDetail = async () => {
       try {
         const response = await getSingle(params.slug);
-        console.log('API Response (getSingle):', response);
-        setData(response.data);
+        setDetail(response.data);
       } catch (error) {
         console.error('Error fetching work info:', error);
       }
     };
 
-    fetchWorkInfo();
-  }, [params]);
+    fetchAttendances();
+    fetchDetail();
+  }, [page, rowsPerPage, filters, params]);
 
   const handleFilterChange = React.useCallback((updatedFilters: any) => {
     debounce(() => {
@@ -107,11 +100,10 @@ export default function AttendanceDetailPage() {
     { title: 'สาเหตุ', dataIndex: 'note' },
   ];
 
-  console.log(userDetail);
   return (
     <div>
       <div className="fixed mt-6 ml-12 top-0 z-10">
-        <Breadcrumb title={data?.dailyStreak?.user?.userName} />
+        {/* <Breadcrumb title={items?.dailyStreak?.user?.userName} /> */}
       </div>
       <Scaffold
         child={
@@ -120,17 +112,17 @@ export default function AttendanceDetailPage() {
               title="ภาพรวมการเข้าทำงานทั้งหมด"
               backpath="/backoffice/attendance/overview/"
             />
-            {data && <UserDashboardCard data={data} />}
+            {details && <UserDashboardCard detail={details} />}
 
             <div className="grid grid-cols-2 gap-8">
               <div className="bg-white px-8 py-6 rounded-xl ">
-                {data && <WorkingTimeSummary data={data} />}
+                {details && <WorkingTimeSummary time={details} />}
               </div>
               <div className="bg-white p-8 rounded-xl ">
                 <h1 className="pb-2 text-xl">การเข้าทำงานทั้งหมด</h1>
 
                 <div>
-                  <AttendanceSummaryCard data={data} />
+                  {details && <AttendanceSummaryCard detail={details} />}
                 </div>
               </div>
             </div>

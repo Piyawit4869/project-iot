@@ -31,9 +31,8 @@ import { formatDate } from '@/utils/enums/date';
 
 //Icon
 import * as Icons from 'lucide-react';
+0;
 import { Breadcrumb } from '@/components/common/breadcrumb';
-import SkeletonAttendanceCard from '@/components/backoffice/skeleton/skeletonAttendanceCard';
-// import SkeletonTimeline from '@/components/backoffice/skeleton/skeletonTimeline';
 
 interface FilterState {
   userName: string;
@@ -75,13 +74,14 @@ interface AttendanceItem {
 export default function AttendancesPage() {
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [loading, setLoading] = React.useState(false);
   const [filters, setFilters] = React.useState<FilterState>({
     userName: '',
     status: '',
   });
   const [items, setItems] = React.useState<AttendanceItem[]>([]);
   const [userList, setUserList] = React.useState<any[]>([]);
+  const [timeline, setTimeline] = React.useState<any[]>([]);
+
   const [meta, setMeta] = React.useState<MetaData>({
     totalItems: 0,
     itemsPerPage: 10,
@@ -91,7 +91,6 @@ export default function AttendancesPage() {
 
   React.useEffect(() => {
     const fetchAttendances = async () => {
-      setLoading(true);
       try {
         const { userName, status } = filters;
 
@@ -127,17 +126,10 @@ export default function AttendancesPage() {
         }
       } catch (error) {
         console.error('Error fetching attendance:', error);
-      } finally {
-        setLoading(false);
       }
     };
 
-    fetchAttendances();
-  }, [page, rowsPerPage, filters]);
-
-  React.useEffect(() => {
     const fetchWork = async () => {
-      setLoading(true);
       try {
         const response = await countWork();
 
@@ -163,38 +155,39 @@ export default function AttendancesPage() {
       } catch (error) {
         console.error('⚠️ Error fetching work data:', error);
         setUserList([]);
-      } finally {
-        setLoading(false);
       }
     };
+
+    const fetchTimelineData = async () => {
+      try {
+        const response = await getAttendance();
+
+        if (response && Array.isArray(response.items)) {
+          setTimeline(
+            response.items.map((item: any) => ({
+              userName: item?.workInfo?.user?.userName || 'Undefined',
+              action: item.action || 'Undefined',
+              time: formatDate(item.stamp).time || 'Undefined',
+              date: formatDate(item.stamp).date || 'Undefined',
+            })),
+          );
+        } else {
+          console.error('Invalid response structure:', response);
+          return [];
+        }
+      } catch (error) {
+        console.error('Error fetching timeline data:', error);
+        return [];
+      }
+    };
+
     fetchWork();
-  }, []);
+    fetchAttendances();
+    fetchTimelineData();
+  }, [page, rowsPerPage, filters]);
   //END API EMPLOYEE CARD
 
   //API TIMELINE COMPONENT
-  const fetchTimelineData = React.useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await getAttendance();
-
-      if (response && Array.isArray(response.items)) {
-        return response.items.map((item: any) => ({
-          userName: item?.workInfo?.user?.userName || 'Undefind',
-          action: item.action || 'Undefind',
-          time: formatDate(item.stamp).time || 'Undefind',
-          date: formatDate(item.stamp).date || 'Undefind',
-        }));
-      } else {
-        console.error('Invalid response structure:', response);
-        return [];
-      }
-    } catch (error) {
-      console.error('Error fetching timeline data:', error);
-      return [];
-    } finally {
-      setLoading(false);
-    }
-  }, []);
 
   const handleFilterChange = React.useCallback((updatedFilters: any) => {
     debounce(() => {
@@ -207,6 +200,19 @@ export default function AttendancesPage() {
     const updatedFilters = { ...filters, [key]: value };
     handleFilterChange(updatedFilters);
   };
+
+  // const handleChange = (e: any) => {
+  //   const { name, checked, type, value } = e.target;
+  //   setItems((prevData: any) => ({
+  //     ...prevData,
+  //     [name]:
+  //       type === 'checkbox'
+  //         ? checked
+  //         : name === 'birthDate' && value instanceof Date
+  //         ? value.toISOString()
+  //         : value,
+  //   }));
+  // };
 
   return (
     <div>
@@ -221,20 +227,12 @@ export default function AttendancesPage() {
             <div className=" grid grid-cols-5 gap-8 flex justify-between">
               <div className="col-span-3">
                 <div>
-                  {loading ? (
-                    <SkeletonAttendanceCard />
-                  ) : (
-                    <EmAttendanceCard users={userList || []} />
-                  )}
+                  <EmAttendanceCard users={userList || []} />
                 </div>
               </div>
               <div className="col-span-2">
                 <div className=" space-x-8 mt-8 bg-white rounded-xl shadow h-[90%] ">
-                  {/* {loading ? (
-                    <SkeletonTimeline />
-                  ) : ( */}
-                  <TimelineComponent fetchData={fetchTimelineData} />
-                  {/* )} */}
+                  <TimelineComponent timeline={timeline || []} />
                 </div>
               </div>
             </div>
@@ -271,22 +269,38 @@ export default function AttendancesPage() {
                     value={filters.userName}
                     onChange={(e) => onInputChange('userName', e.target.value)}
                   />
+                  {/* <Select
+                    className="flex-1  text-headFont"
+                    name="position"
+                    placeholder="กรุณาเลือกตำแหน่ง"
+                    label="ตำแหน่ง"
+                    selectedKeys={item?.workInfo?.user?.userName}
+                    labelPlacement={'outside'}
+                    onChange={handleChange}
+                  >
+                    {.map((item: any) => (
+                      <SelectItem
+                        className="text-headFont"
+                        key={item.id}
+                        value={item.id}
+                      >
+                        {item.name}
+                      </SelectItem>
+                    ))}
+                  </Select> */}
                   <Select
                     className="w-[90%] p-2 text-headFont col-span-1"
                     startContent={<Icons.UserRound className="p-1" />}
                     size="sm"
                     radius="sm"
-                    name="status"
-                    placeholder="เลือกสถานะ"
+                    name="userName"
+                    placeholder="เลือกกิจกรรม"
                     variant="bordered"
-                    value={filters.status}
-                    onChange={(e) => onInputChange('status', e.target.value)}
+                    value={filters.userName}
+                    onChange={(e) => onInputChange('userName', e.target.value)}
                   >
                     <SelectItem>
-                      <div>active</div>
-                    </SelectItem>
-                    <SelectItem>
-                      <div>-</div>
+                      <div>1</div>
                     </SelectItem>
                   </Select>
                   <DatePicker

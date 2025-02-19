@@ -93,46 +93,16 @@ export default function NotationSinglePage() {
   };
 
   React.useEffect(() => {
-    const fetchTemplate = async () => {
-      const { items: fetchedItems } = await pagination({
-        isAll: true,
-      });
-
-      setTemplates(fetchedItems);
-    };
-
-    fetchTemplate();
-  }, []);
-
-  React.useEffect(() => {
-    if (formData.templateId) {
-      const fetchedTemplateWithId = async () => {
-        const { data } = await getTemplate(formData.templateId);
-        setTemplateSelected(data);
-      };
-
-      fetchedTemplateWithId();
-    }
-  }, [formData]);
-
-  React.useEffect(() => {
-    if (!params || !params.slug) {
-      console.error('No slug provided in the URL params.');
-      return;
-    }
-
+    if (!params || !params.slug) return;
     setLoading(true);
 
     const fetchData = async () => {
       const { data } = await get(params.slug as string);
-
-      const { items: fetchedItems } = await paginationItems({
-        isAll: true,
-      });
-
+      const { items: fetchedItems } = await paginationItems({ isAll: true });
       const { items: fetchedCustomer } = await paginationCustomers({
         isAll: true,
       });
+      const { items: fetchedTemplates } = await pagination({ isAll: true });
 
       const selectedItems = data?.itemsId.map((key: any) => {
         const item = fetchedItems.find((item: any) => item.id === key);
@@ -147,16 +117,95 @@ export default function NotationSinglePage() {
 
       setItemServices(fetchedItems);
       setCustomers(fetchedCustomer);
-
-      setFormData({
-        ...data,
-        itemsId: selectedItems,
-      });
+      setTemplates(fetchedTemplates);
+      setFormData({ ...data, itemsId: selectedItems });
       setLoading(false);
     };
 
+    const fetchTemplateWithId = async () => {
+      if (formData.templateId) {
+        const { data } = await getTemplate(formData.templateId);
+        setTemplateSelected(data);
+      }
+    };
+
     fetchData();
-  }, [params]);
+    fetchTemplateWithId();
+  }, [params, formData.templateId]);
+
+  React.useEffect(() => {
+    if (htmlTemplate) {
+      let updatedHtml = htmlTemplate;
+      Object.keys(formData).forEach((key) => {
+        const regex = new RegExp(`{{${key}}}`, 'g');
+        let value = formData[key] || '';
+        if (key === 'startDate' && value) {
+          const date = new Date(value);
+          value = date.toLocaleDateString('th-TH', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          });
+        }
+        updatedHtml = updatedHtml.replace(regex, value);
+      });
+      setProcessedHtml(updatedHtml);
+    }
+  }, [formData, htmlTemplate]);
+
+  // React.useEffect(() => {
+  //   if (formData.templateId) {
+  //     const fetchedTemplateWithId = async () => {
+  //       const { data } = await getTemplate(formData.templateId);
+  //       setTemplateSelected(data);
+  //     };
+
+  //     fetchedTemplateWithId();
+  //   }
+  // }, [formData]);
+
+  // React.useEffect(() => {
+  //   if (!params || !params.slug) {
+  //     console.error('No slug provided in the URL params.');
+  //     return;
+  //   }
+
+  //   setLoading(true);
+
+  //   const fetchData = async () => {
+  //     const { data } = await get(params.slug as string);
+
+  //     const { items: fetchedItems } = await paginationItems({
+  //       isAll: true,
+  //     });
+
+  //     const { items: fetchedCustomer } = await paginationCustomers({
+  //       isAll: true,
+  //     });
+
+  //     const selectedItems = data?.itemsId.map((key: any) => {
+  //       const item = fetchedItems.find((item: any) => item.id === key);
+  //       return {
+  //         id: item?.id || '',
+  //         name: item?.name || '',
+  //         quantity: item?.quantity || 0,
+  //         unitPrice: item?.unitPrice || 0,
+  //         total: item?.total || 0,
+  //       };
+  //     });
+
+  //     setItemServices(fetchedItems);
+  //     setCustomers(fetchedCustomer);
+
+  //     setFormData({
+  //       ...data,
+  //       itemsId: selectedItems,
+  //     });
+  //     setLoading(false);
+  //   };
+
+  //   fetchData();
+  // }, [params]);
 
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
@@ -171,29 +220,29 @@ export default function NotationSinglePage() {
     }));
   };
 
-  React.useEffect(() => {
-    if (htmlTemplate) {
-      let updatedHtml = htmlTemplate;
+  // React.useEffect(() => {
+  //   if (htmlTemplate) {
+  //     let updatedHtml = htmlTemplate;
 
-      Object.keys(formData).forEach((key) => {
-        const regex = new RegExp(`{{${key}}}`, 'g');
-        let value = formData[key] || '';
+  //     Object.keys(formData).forEach((key) => {
+  //       const regex = new RegExp(`{{${key}}}`, 'g');
+  //       let value = formData[key] || '';
 
-        if (key === 'startDate' && value) {
-          const date = new Date(value);
-          value = date.toLocaleDateString('th-TH', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          });
-        }
+  //       if (key === 'startDate' && value) {
+  //         const date = new Date(value);
+  //         value = date.toLocaleDateString('th-TH', {
+  //           day: '2-digit',
+  //           month: '2-digit',
+  //           year: 'numeric',
+  //         });
+  //       }
 
-        updatedHtml = updatedHtml.replace(regex, value);
-      });
+  //       updatedHtml = updatedHtml.replace(regex, value);
+  //     });
 
-      setProcessedHtml(updatedHtml);
-    }
-  }, [formData, htmlTemplate]);
+  //     setProcessedHtml(updatedHtml);
+  //   }
+  // }, [formData, htmlTemplate]);
 
   const handleZoomIn = () => {
     setZoomLevel((prevZoom) => Math.min(prevZoom + 10, 200));

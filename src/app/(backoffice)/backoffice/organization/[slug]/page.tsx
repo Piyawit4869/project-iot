@@ -60,7 +60,6 @@ export default function OraganizationPage() {
       delete payload.data;
 
       await isMain({}, payload, params?.slug);
-      console.log('ข้อมูลที่จะส่ง', payload);
 
       toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
         duration: 3000,

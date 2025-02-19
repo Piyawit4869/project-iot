@@ -132,12 +132,7 @@ export default function NotationCreatePage() {
     // };
 
     // fetchAddress();
-    fetchCustomer();
-    fetchTemplate();
-    fetchItem();
-  }, []);
 
-  React.useEffect(() => {
     if (htmlTemplate) {
       let updatedHtml = htmlTemplate;
 
@@ -159,6 +154,10 @@ export default function NotationCreatePage() {
 
       setProcessedHtml(updatedHtml);
     }
+
+    fetchCustomer();
+    fetchTemplate();
+    fetchItem();
   }, [formData, htmlTemplate]);
 
   const handleZoomIn = () => {

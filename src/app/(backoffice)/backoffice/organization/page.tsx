@@ -88,7 +88,6 @@ export default function OraganizationPage() {
     setOpenDayData(updatedOpenDay);
   };
 
-  console.log('openDayData', openDayData);
 
   // const onSubmit = async (e: React.FormEvent) => {
   //   e.preventDefault();
@@ -106,7 +105,6 @@ export default function OraganizationPage() {
   //     delete payload.data;
 
   //     await updatedetails({}, payload, dataorg.id);
-  //     console.log('payload', payload);
 
   //     toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
   //       duration: 3000,
@@ -141,8 +139,8 @@ export default function OraganizationPage() {
 
       delete payload.data;
 
-      const res = await updatesystem({}, payload);
-      console.log('ข้อมูลที่จะส่ง', res);
+    await updatesystem({}, payload);
+      
 
       toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
         duration: 3000,

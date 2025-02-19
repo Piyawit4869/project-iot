@@ -62,23 +62,21 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users = [] }) => {
     colorClass: string,
     Icon: React.ReactNode,
   ) => (
-    <div className="flex-1">
+    <div className="w-full sm:w-1/2 lg:w-1/3 px-2">
       <CardComponent
         className={colorClass}
         customCard
         custom={
-          <div className="p-4 bg-white grid grid-cols-3 flex justify-between">
-            <div className="col-span-2">
-              <div className="text-4xl  font-extrabold text-gray-900">
+          <div className="p-4 bg-white flex items-center justify-between">
+            <div>
+              <div className="text-4xl font-extrabold text-gray-900">
                 {count}
               </div>
-              <div className="text-sm font-extrabold text-gray-600 mt-2 ">
+              <div className="text-sm font-extrabold text-gray-600 mt-2">
                 {title}
               </div>
             </div>
-            <div className="flex items-start justify-end">
-              <div className="bg-gray-100 p-3 rounded-full">{Icon}</div>
-            </div>
+            <div className="bg-gray-100 p-3 rounded-full">{Icon}</div>
           </div>
         }
       />
@@ -86,10 +84,10 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users = [] }) => {
   );
 
   return (
-    <div className=" xl:size-lg xl:text-lg lg:size-sm lg:text-sm  md:size-xs md:text-xs sm:size-xs sm:text-xs ">
-      <div className="flex mt-8 space-x-8">
+    <div className="w-full flex  mt-8">
+      <div className="flex flex-wrap -mx-2">
         {renderCard(
-          'พนักงานทั้งหมด',
+          'ทั้งหมด',
           totalEmployees,
           'bg-white text-blue-500',
           <Icons.UsersRound />,
@@ -106,8 +104,6 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users = [] }) => {
           'bg-white text-gray-500',
           <Icons.UserRoundMinus />,
         )}
-      </div>
-      <div className="flex mt-8 space-x-8">
         {renderCard(
           'เข้างานสาย',
           attendanceStats.lateCount,

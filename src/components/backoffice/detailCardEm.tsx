@@ -6,19 +6,11 @@ import CardComponent from '../common/card';
 import * as Icons from 'lucide-react';
 
 interface UserDashboardCardProps {
-  data: any;
+  detail: any;
 }
 
-export default function UserDashboardCard({ data }: UserDashboardCardProps) {
-  const [formData, setFormData] = React.useState<any>(data);
-
-  React.useEffect(() => {
-    if (data) {
-      setFormData(data);
-    }
-  }, [data]);
-
-  console.log('formData', formData);
+export default function UserDashboardCard({ detail }: UserDashboardCardProps) {
+  const [formData] = React.useState<any>(detail);
 
   const renderCard = (
     title: string,

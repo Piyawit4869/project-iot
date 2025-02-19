@@ -5,19 +5,13 @@ import CardComponent from '../common/card';
 // import * as Icons from 'lucide-react';
 
 interface AttendanceSummaryCardProps {
-  data: any;
+  detail: any;
 }
 
 export default function AttendanceSummaryCard({
-  data,
+  detail,
 }: AttendanceSummaryCardProps) {
-  const [formData, setFormData] = React.useState<any>(data);
-
-  React.useEffect(() => {
-    if (data) {
-      setFormData(data);
-    }
-  }, [data]);
+  const [formData] = React.useState<any>(detail);
 
   const renderCard = (title: string, count: number, colorClass: string) => (
     <div className="flex-1">
