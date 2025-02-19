@@ -6,7 +6,7 @@ import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
 import pagination from '@/pages/api/notations/pagination';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 import {
   handleDocumentStatusTag,
   handleStatusTag,

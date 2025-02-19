@@ -27,7 +27,7 @@ import { Tabs, Tab } from '@nextui-org/react';
 import get from '@/pages/api/organization/get';
 // import { updatedetails } from '@/pages/api/organization/update-details';
 import { toast } from 'sonner';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 import InputBranch from './components/InputBranch';
 import InputTime from './components/system/inputTime';
 import AddressTable from './components/addresses/addressTable';
@@ -88,7 +88,6 @@ export default function OraganizationPage() {
     setOpenDayData(updatedOpenDay);
   };
 
-
   // const onSubmit = async (e: React.FormEvent) => {
   //   e.preventDefault();
   //   setLoading(true);
@@ -139,8 +138,7 @@ export default function OraganizationPage() {
 
       delete payload.data;
 
-    await updatesystem({}, payload);
-      
+      await updatesystem({}, payload);
 
       toast.success('📝 แก้ไขข้อมูลสำเร็จ!', {
         duration: 3000,

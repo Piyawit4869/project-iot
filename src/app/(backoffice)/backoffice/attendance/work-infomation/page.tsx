@@ -5,7 +5,7 @@ import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Link, Input } from '@nextui-org/react';
 import pagination from '@/pages/api/workinfos/pagination';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date'; // <-- Import formatDate here
 // import debounce from 'lodash/debounce';
 // import * as Icon from '@ant-design/icons';
