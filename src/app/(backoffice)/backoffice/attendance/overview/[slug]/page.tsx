@@ -9,7 +9,7 @@ import { TopSection } from '@/components/common/topSection';
 import WorkingTimeSummary from '@/components/backoffice/timeWork';
 import AttendanceSummaryCard from '@/components/backoffice/sumAtDetail';
 import UserDashboardCard from '@/components/backoffice/detailCardEm';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 import { DatePicker, Input, Select, SelectItem } from '@nextui-org/react';
 // API
 import getSingleUser from '@/pages/api/attendances/get';
@@ -18,6 +18,7 @@ import getSingle from '@/pages/api/workinfos/getSingle';
 import { formatDate } from '@/utils/enums/date';
 // icon
 import * as Icons from 'lucide-react';
+// import { Breadcrumb } from '@/components/common/breadcrumb';
 
 interface FilterState {
   userName: string;
@@ -76,8 +77,8 @@ export default function AttendanceDetailPage() {
       }
     };
 
-    fetchDetail();
     fetchAttendances();
+    fetchDetail();
   }, [page, rowsPerPage, filters, params]);
 
   const handleFilterChange = React.useCallback((updatedFilters: any) => {
@@ -101,6 +102,9 @@ export default function AttendanceDetailPage() {
 
   return (
     <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        {/* <Breadcrumb title={items?.dailyStreak?.user?.userName} /> */}
+      </div>
       <Scaffold
         child={
           <div className="space-y-8">

@@ -6,14 +6,23 @@ import Image from 'next/image';
 import { TopSection } from '@/components/common/topSection';
 import Link from 'next/link';
 import { Button, Chip } from '@nextui-org/react';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 import pagination from '@/pages/api/user/pagination';
 import * as Icons from 'lucide-react';
 import { Breadcrumb } from '@/components/common/breadcrumb';
+// import dynamic from 'next/dynamic';
+import SkeletonTable from '@/components/backoffice/skeleton/skeletonTable';
+
+// const TablePagination = dynamic(
+//   () => import('@/components/common/tablePagination'),
+//   {
+//     loading: () => <SkeletonTable rowCount={10} columns={columns} />,
+//   },
+// );
 
 export default function IndexPage() {
   const [page, setPage] = React.useState(1);
-  const [, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [items, setItems] = React.useState([]) as any;
   const [meta, setMeta] = React.useState({
@@ -45,8 +54,8 @@ export default function IndexPage() {
 
     fetchUser();
   }, [page, rowsPerPage]);
-  // }, [filters, page, rowsPerPage]);
 
+  console.log('item', items);
 
   return (
     <div>
@@ -72,16 +81,20 @@ export default function IndexPage() {
             />
 
             <div className="mt-6">
-              <TablePagination
-                initialRows={items}
-                initialMeta={meta}
-                rowsPerPage={rowsPerPage}
-                columns={columns as any}
-                onPageChange={(newPage) => setPage(newPage)}
-                onRowsPerPageChange={(newRowsPerPage) =>
-                  setRowsPerPage(newRowsPerPage)
-                }
-              />
+              {loading ? (
+                <SkeletonTable rowCount={10} columns={columns} />
+              ) : (
+                <TablePagination
+                  initialRows={items}
+                  initialMeta={meta}
+                  rowsPerPage={rowsPerPage}
+                  columns={columns as any}
+                  onPageChange={(newPage) => setPage(newPage)}
+                  onRowsPerPageChange={(newRowsPerPage) =>
+                    setRowsPerPage(newRowsPerPage)
+                  }
+                />
+              )}
             </div>
           </div>
         }
@@ -111,6 +124,7 @@ const columns = [
   {
     title: 'ชื่อผู้ใช้',
     dataIndex: 'name',
+    key: 'name',
     link: '/backoffice/manageUsers/user',
     render: (_: any, record: any) => {
       return (
@@ -123,12 +137,13 @@ const columns = [
       );
     },
   },
-  { title: 'รหัสพนักงาน', dataIndex: 'emId' },
-  { title: 'อีเมล', dataIndex: 'email' },
+  { title: 'รหัสพนักงาน', dataIndex: 'emId', key: 'emId' },
+  { title: 'อีเมล', dataIndex: 'email', key: 'email' },
   {
     title: 'ตำแหน่ง',
     align: 'center',
     dataIndex: 'position',
+    key: 'position',
     render: (_: any, record: any) => {
       return <span>{record.role?.name}</span>;
     },
@@ -136,6 +151,7 @@ const columns = [
   {
     title: 'เบอร์โทรศัพท์',
     dataIndex: 'phone',
+    key: 'phone',
     render: (_: any, record: any) => {
       return <span>{record.profile.phone}</span>;
     },
@@ -144,6 +160,7 @@ const columns = [
     title: 'สถานะ',
     align: 'center',
     dataIndex: 'status',
+    key: 'status',
     render: () => (
       <Chip color="success" variant="bordered">
         พร้อมใช้งาน
@@ -153,6 +170,7 @@ const columns = [
   {
     title: '',
     dataIndex: 'edit',
+    key: 'edit',
     align: 'center',
     render: (_: any, record: any) => (
       <Link href={`/backoffice/manageUsers/user/${record.id}`}>
@@ -163,3 +181,5 @@ const columns = [
     ),
   },
 ];
+
+console.log({});

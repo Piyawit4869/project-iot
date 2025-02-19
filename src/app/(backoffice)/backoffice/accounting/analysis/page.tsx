@@ -18,7 +18,7 @@ import { TopSection } from '@/components/common/topSection';
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
 import CardComponent from '@/components/common/card';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 import { Breadcrumb } from '@/components/common/breadcrumb';
 
 ChartJS.register(

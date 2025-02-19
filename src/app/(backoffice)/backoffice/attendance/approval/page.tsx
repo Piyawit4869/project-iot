@@ -6,7 +6,7 @@ import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Input, Tabs, Tab } from '@nextui-org/react';
 import pagination from '@/pages/api/approval/pagination';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 //function helper
 import { formatDate } from '@/utils/enums/date';
 // import * as Icon from '@ant-design/icons';
