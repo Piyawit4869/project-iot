@@ -1,8 +1,8 @@
 // pages/map.tsx
-import { useEffect } from 'react';
+import React from 'react';
 
 const LongdoMapPage = () => {
-  useEffect(() => {
+  React.useEffect(() => {
     const script = document.createElement('script');
     script.src =
       'https://api.longdo.com/map3/?key=ea563b949f128ad28cda75e93579013a';

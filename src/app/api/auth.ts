@@ -33,7 +33,6 @@ export const login = async (prevState: any, formData: any) => {
 
       return data;
     });
-  // .catch((e) => console.log({ e }));
 
   session.save();
 

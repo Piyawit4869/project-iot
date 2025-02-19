@@ -3,25 +3,39 @@
 //System
 import React from 'react';
 import debounce from 'lodash/debounce';
+
 //API
 import pagination from '@/pages/api/workinfos/pagination';
 import { getAttendance } from '@/pages/api/attendances/get';
-import { getAll } from '@/pages/api/user/getAll';
-//Helper function
-import { formatDate } from '@/utils/enums/date';
+import { countWork } from '@/pages/api/workinfos/get';
+
 //Component
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { TablePagination } from '@/components/common/tablePagination';
-import { DatePicker, Input, Select, SelectItem } from '@nextui-org/react';
+import {
+  Button,
+  DatePicker,
+  Input,
+  Link,
+  // Select,
+  // SelectItem,
+} from '@nextui-org/react';
 import TimelineComponent from '@/components/backoffice/timeline';
 import ChartComponent from '@/components/backoffice/garphRateAll';
 import WeeklyAttendanceChart from '@/components/backoffice/garphRateDepartment';
 import EmAttendanceCard from '@/components/backoffice/cardAttedanceEm';
+
+//Helper function
+import { formatDate } from '@/utils/enums/date';
+
 //Icon
 import * as Icons from 'lucide-react';
+import { Breadcrumb } from '@/components/common/breadcrumb';
+
 interface FilterState {
   userName: string;
+  status: string;
 }
 
 interface MetaData {
@@ -58,11 +72,15 @@ interface AttendanceItem {
 
 export default function AttendancesPage() {
   const [page, setPage] = React.useState(1);
-  const [loading, setLoading] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [filters, setFilters] = React.useState<FilterState>({ userName: '' });
+  const [filters, setFilters] = React.useState<FilterState>({
+    userName: '',
+    status: '',
+  });
   const [items, setItems] = React.useState<AttendanceItem[]>([]);
   const [userList, setUserList] = React.useState<any[]>([]);
+  const [timeline, setTimeline] = React.useState<any[]>([]);
+
   const [meta, setMeta] = React.useState<MetaData>({
     totalItems: 0,
     itemsPerPage: 10,
@@ -72,14 +90,14 @@ export default function AttendancesPage() {
 
   React.useEffect(() => {
     const fetchAttendances = async () => {
-      setLoading(true);
       try {
-        const { userName } = filters;
+        const { userName, status } = filters;
 
         const response = await pagination({
           page,
           limit: rowsPerPage,
           ...(userName && { userName }),
+          ...(status && { status }),
         });
 
         if (response) {
@@ -95,6 +113,7 @@ export default function AttendancesPage() {
                 startDate: formatDate(item.startDate).date,
                 payDayDate: formatDate(item.payDay).date,
                 payDayTime: formatDate(item.payDay).time,
+                userName: item?.user?.userName,
               })),
             );
             setMeta(fetchedMeta);
@@ -106,55 +125,74 @@ export default function AttendancesPage() {
         }
       } catch (error) {
         console.error('Error fetching attendance:', error);
-      } finally {
-        setLoading(false);
       }
     };
 
-    fetchAttendances();
-  }, [page, rowsPerPage, filters]);
-  React.useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchWork = async () => {
       try {
-        const response = await getAll();
-        console.log('API Response:', response);
-        setUserList(response.data || []);
+        const response = await countWork();
+
+        if (response && typeof response.data === 'object') {
+          const formattedUsers = [
+            ...Array(response.data.totalClockedIn).fill({
+              status: 'totalClockedIn',
+            }),
+            ...Array(response.data.totalLateIn).fill({ status: 'totalLateIn' }),
+            ...Array(response.data.totalNotClockedIn).fill({
+              status: 'totalNotClockedIn',
+            }),
+            ...Array(response.data.totalClockedOut).fill({
+              status: 'totalClockedOut',
+            }),
+          ];
+
+          setUserList(formattedUsers);
+        } else {
+          console.error('❌ Unexpected work data format:', response);
+          setUserList([]);
+        }
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('⚠️ Error fetching work data:', error);
+        setUserList([]);
       }
     };
 
-    fetchUsers();
-  }, []);
+    const fetchTimelineData = async () => {
+      try {
+        const response = await getAttendance();
 
-  const fetchTimelineData = React.useCallback(async () => {
-    try {
-      const response = await getAttendance();
-
-      console.log('Raw API Response:', response);
-
-      if (response && Array.isArray(response.items)) {
-        return response.items.map((item: any) => ({
-          userName: item.workInfo.user.userName || 'Undefind',
-          action: item.action || 'N/A',
-          time: formatDate(item.stamp).time || 'N/A',
-          date: formatDate(item.stamp).date || 'N/A',
-        }));
-      } else {
-        console.error('Invalid response structure:', response);
+        if (response && Array.isArray(response.items)) {
+          setTimeline(
+            response.items.map((item: any) => ({
+              userName: item?.workInfo?.user?.userName || 'Undefined',
+              action: item.action || 'Undefined',
+              time: formatDate(item.stamp).time || 'Undefined',
+              date: formatDate(item.stamp).date || 'Undefined',
+            })),
+          );
+        } else {
+          console.error('Invalid response structure:', response);
+          return [];
+        }
+      } catch (error) {
+        console.error('Error fetching timeline data:', error);
         return [];
       }
-    } catch (error) {
-      console.error('Error fetching timeline data:', error);
-      return [];
-    }
-  }, []);
+    };
+
+    fetchWork();
+    fetchAttendances();
+    fetchTimelineData();
+  }, [page, rowsPerPage, filters]);
+  //END API EMPLOYEE CARD
+
+  //API TIMELINE COMPONENT
 
   const handleFilterChange = React.useCallback((updatedFilters: any) => {
     debounce(() => {
       setPage(1);
       setFilters(updatedFilters);
-    }, 1)();
+    }, 300)();
   }, []);
 
   const onInputChange = (key: keyof typeof filters, value: string) => {
@@ -162,8 +200,24 @@ export default function AttendancesPage() {
     handleFilterChange(updatedFilters);
   };
 
+  // const handleChange = (e: any) => {
+  //   const { name, checked, type, value } = e.target;
+  //   setItems((prevData: any) => ({
+  //     ...prevData,
+  //     [name]:
+  //       type === 'checkbox'
+  //         ? checked
+  //         : name === 'birthDate' && value instanceof Date
+  //         ? value.toISOString()
+  //         : value,
+  //   }));
+  // };
+
   return (
     <div>
+      <div className="fixed mt-6 ml-12 top-0 z-10">
+        <Breadcrumb />
+      </div>
       <Scaffold
         child={
           <div>
@@ -177,88 +231,82 @@ export default function AttendancesPage() {
               </div>
               <div className="col-span-2">
                 <div className=" space-x-8 mt-8 bg-white rounded-xl shadow h-[90%] ">
-                  <TimelineComponent fetchData={fetchTimelineData} />
+                  <TimelineComponent timeline={timeline || []} />
                 </div>
               </div>
             </div>
 
-            <div className=" grid grid-cols-5 gap-8">
-              <div className="col-span-3 mt-8">
-                <div className="bg-white rounded-xl shadow">
+            <div className=" grid grid-cols-5 gap-8 flex justify-between">
+              <div className="col-span-3">
+                <div className=" space-x-8 mt-8 bg-white rounded-xl shadow ">
                   <ChartComponent />
                 </div>
               </div>
-              <div className="col-span-2 mt-8">
-                <div className="bg-white rounded-xl shadow">
+              <div className="col-span-2">
+                <div className=" space-x-8 mt-8 bg-white rounded-xl shadow ">
                   <WeeklyAttendanceChart />
                 </div>
               </div>
             </div>
 
             <div>
-              {loading ? (
-                <div className="flex justify-center items-center h-64">
-                  <div className="spinner"></div>
-                </div>
-              ) : (
-                <>
-                  <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
-                    <div className="grid grid-cols-1 sm:grid-cols-5 p-4 flex justify-between items-center">
-                      <div className=" px-3">
-                        <h6>ภาพรวมการเข้าทำงาน</h6>
-                      </div>
-                      <Input
-                        className="w-[90%] p-2 text-headFont col-span-2"
-                        startContent={<Icons.Search className="p-1" />}
-                        size="sm"
-                        radius="sm"
-                        name="userName"
-                        placeholder="ชื่อพนักงาน"
-                        variant="bordered"
-                        value={filters.userName}
-                        onChange={(e) =>
-                          onInputChange('userName', e.target.value)
-                        }
-                      />
-                      <Select
-                        className="w-[90%] p-2 text-headFont"
-                        startContent={<Icons.UserRound className="p-1" />}
-                        size="sm"
-                        radius="sm"
-                        name="userName"
-                        placeholder="เลือกตำแหน่ง"
-                        variant="bordered"
-                        value={filters.userName}
-                        onChange={(e) =>
-                          onInputChange('userName', e.target.value)
-                        }
-                      >
-                        <SelectItem>
-                          <div>1</div>
-                        </SelectItem>
-                      </Select>
-                      <DatePicker
-                        className="w-[90%] p-2 text-headFont"
-                        size="sm"
-                        radius="sm"
-                        name=""
-                        variant="bordered"
-                        selectorButtonPlacement="start"
-                      />
-                    </div>
-                    <TablePagination
-                      initialRows={items}
-                      initialMeta={meta}
-                      rowsPerPage={rowsPerPage}
-                      columns={columns as any}
-                      onPageChange={(newPage) => setPage(newPage)}
-                      onRowsPerPageChange={(newRowsPerPage) =>
-                        setRowsPerPage(newRowsPerPage)
-                      }
-                    />
+              <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
+                <div className="grid grid-cols-1 sm:grid-cols-5 gap-8 p-4 flex justify-between items-center">
+                  <div className=" px-3 col-span-1">
+                    <p className="xl:text-lg lg:text-sm md:text-xs">
+                      ภาพรวมการเข้าทำงาน
+                    </p>
                   </div>
-                </>
-              )}
+                  <Input
+                    className="w-[90%] p-2 text-headFont col-span-2"
+                    startContent={<Icons.Search className="p-1" />}
+                    size="sm"
+                    radius="sm"
+                    name="userName"
+                    placeholder="ชื่อพนักงาน"
+                    variant="bordered"
+                    value={filters.userName}
+                    onChange={(e) => onInputChange('userName', e.target.value)}
+                  />
+                  {/* <Select
+                    className="flex-1  text-headFont"
+                    name="position"
+                    placeholder="กรุณาเลือกตำแหน่ง"
+                    label="ตำแหน่ง"
+                    selectedKeys={item?.workInfo?.user?.userName}
+                    labelPlacement={'outside'}
+                    onChange={handleChange}
+                  >
+                    {.map((item: any) => (
+                      <SelectItem
+                        className="text-headFont"
+                        key={item.id}
+                        value={item.id}
+                      >
+                        {item.name}
+                      </SelectItem>
+                    ))}
+                  </Select> */}
+                  <DatePicker
+                    className="w-[90%] p-2 text-headFont"
+                    size="sm"
+                    radius="sm"
+                    name=""
+                    variant="bordered"
+                    selectorButtonPlacement="start"
+                  />
+                </div>
+                <TablePagination
+                  initialRows={items}
+                  initialMeta={meta}
+                  rowsPerPage={rowsPerPage}
+                  columns={columns as any}
+                  onPageChange={(newPage) => setPage(newPage)}
+                  onRowsPerPageChange={(newRowsPerPage) =>
+                    setRowsPerPage(newRowsPerPage)
+                  }
+                />
+              </div>
             </div>
           </div>
         }
@@ -274,24 +322,22 @@ const columns = [
     dataIndex: 'userName',
     link: '/backoffice/attendance/overview',
     align: 'left',
-    render: (_: any, record: any) => {
-      return <span>{record?.user?.userName}</span>;
-    },
   },
-  { title: 'คำนำหน้า', dataIndex: 'prefix' },
-  { title: 'สถานะ', dataIndex: 'status' },
-  { title: 'คำอธิบายงาน', dataIndex: 'descriptions' },
-  { title: 'ความสำคัญ', dataIndex: 'priority' },
-  { title: 'วันที่เริ่มต้น', dataIndex: 'startDate' },
-  { title: 'วันสิ้นสุด', dataIndex: 'dueDate' },
-  { title: 'เวลาจำกัดต่อวัน', dataIndex: 'limitTimePerDay' },
-  { title: 'ผู้ตรวจสอบ', dataIndex: 'inspector' },
-  { title: 'เครดิตเริ่มต้น', dataIndex: 'startCredit' },
-  { title: 'เครดิตรวม', dataIndex: 'totalCredit' },
-  { title: 'ชั่วโมงทำงานรวม', dataIndex: 'totalWorkHours' },
-  { title: 'วันที่จ่ายเงิน', dataIndex: 'payDayDate' },
-  { title: 'เวลาที่จ่ายเงิน', dataIndex: 'payDayTime' },
+  { title: 'ชื่อย่องาน', dataIndex: 'prefix', align: 'center' },
+  { title: 'สถานะ', dataIndex: 'status', align: 'center' },
+  { title: 'เวลาจำกัดต่อวัน', dataIndex: 'limitTimePerDay', align: 'center' },
+  { title: 'ชั่วโมงทำงานรวม', dataIndex: 'totalWorkHours', align: 'center' },
   { title: 'หมายเหตุ', dataIndex: 'note' },
-  { title: 'สร้างวันที่', dataIndex: 'createdAtDate' },
-  { title: 'เวลาที่สร้าง', dataIndex: 'createdAtTime' },
+  {
+    title: '',
+    dataIndex: 'edit',
+    align: 'center',
+    render: (_: any, record: any) => (
+      <Link href={`/backoffice/attendance/overview/${record.id}`}>
+        <Button className="flex bg-accent3 text-white" size="sm">
+          <Icons.PencilLine size={20} />
+        </Button>
+      </Link>
+    ),
+  },
 ];
