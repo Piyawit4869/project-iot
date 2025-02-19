@@ -18,8 +18,8 @@ import {
   DatePicker,
   Input,
   Link,
-  // Select,
-  // SelectItem,
+  Select,
+  SelectItem,
 } from '@nextui-org/react';
 import TimelineComponent from '@/components/backoffice/timeline';
 import ChartComponent from '@/components/backoffice/garphRateAll';
@@ -287,6 +287,21 @@ export default function AttendancesPage() {
                       </SelectItem>
                     ))}
                   </Select> */}
+                  <Select
+                    className="w-[90%] p-2 text-headFont col-span-1"
+                    startContent={<Icons.UserRound className="p-1" />}
+                    size="sm"
+                    radius="sm"
+                    name="userName"
+                    placeholder="เลือกกิจกรรม"
+                    variant="bordered"
+                    value={filters.userName}
+                    onChange={(e) => onInputChange('userName', e.target.value)}
+                  >
+                    <SelectItem>
+                      <div>1</div>
+                    </SelectItem>
+                  </Select>
                   <DatePicker
                     className="w-[90%] p-2 text-headFont"
                     size="sm"
