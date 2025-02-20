@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-function Skeleton({
+function SkeletonUi({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
@@ -13,4 +13,4 @@ function Skeleton({
   );
 }
 
-export { Skeleton };
+export { SkeletonUi };

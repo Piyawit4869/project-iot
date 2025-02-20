@@ -275,24 +275,33 @@ export default function UserSinglePage() {
                         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                           <div className="font-bold text-headFon mt-10">
                             <p>รูปภาพผู้ใช้งาน</p>
-                            <Upload
-                              className="mt-4"
-                              imageUrl={formData.photoUrl}
-                              onUpload={handleUpload}
-                            />
-                          </div>
-                          <div className="flex gap-4 mt-6">
-                            <div>
-                              <CardControl
-                                name="active"
-                                title="เปิดใช้งาน"
-                                description="ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน"
-                                control="เปิดใช้งาน"
-                                onChange={handleChange}
-                                isSelected={data?.active}
+                            {loading ? (
+                              <SkeletonLoad.Upload />
+                            ) : (
+                              <Upload
+                                className="mt-4"
+                                imageUrl={formData.photoUrl}
+                                onUpload={handleUpload}
                               />
-                            </div>
+                            )}
                           </div>
+
+                          {loading ? (
+                            <SkeletonLoad.Card />
+                          ) : (
+                            <div className="flex gap-4 mt-6">
+                              <div>
+                                <CardControl
+                                  name="active"
+                                  title="เปิดใช้งาน"
+                                  description="ใช้สำหรับการปิดหรือยุติการทำงานของผู้ใช้งาน"
+                                  control="เปิดใช้งาน"
+                                  onChange={handleChange}
+                                  isSelected={data?.active}
+                                />
+                              </div>
+                            </div>
+                          )}
 
                           <div className="flex gap-4 mt-6">
                             {loading ? (

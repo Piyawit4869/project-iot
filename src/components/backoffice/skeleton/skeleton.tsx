@@ -5,7 +5,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Skeleton } from '@/components/ui/skeleton';
+import { SkeletonUi } from '@/components/ui/skeleton';
+import { Skeleton } from '@nextui-org/react';
 import {
   Table,
   TableBody,
@@ -13,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Button, Input } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import React from 'react';
 
 interface columns {
@@ -27,7 +28,7 @@ interface SkeletonTableProps {
 
 const SkeletonTable: React.FC<SkeletonTableProps> = ({ rowCount, columns }) => {
   return (
-    <Skeleton>
+    <SkeletonUi>
       <div className="bg-white px-5 py-4 rounded-xl ">
         <div className="overflow-x-auto rounded-xl ">
           <Table className="border bg-white rounded-xl">
@@ -86,21 +87,29 @@ const SkeletonTable: React.FC<SkeletonTableProps> = ({ rowCount, columns }) => {
           </div>
         </div>
       </div>
-    </Skeleton>
+    </SkeletonUi>
   );
 };
 
 const SkeletonInput: React.FC = () => {
+  return <Skeleton className="h-[40px] w-full rounded-xl" />;
+};
+
+const SkeletonUpload: React.FC = () => {
   return (
-    <Skeleton>
-      <div className="w-full">
-        <Input className="w-full" />
-      </div>
-    </Skeleton>
+    <div className="mt-3">
+      <Skeleton className="h-[100px] w-[100px] rounded-xl" />
+    </div>
   );
+};
+
+const SkeletonCard: React.FC = () => {
+  return <Skeleton className="h-[125] w-[250px] rounded-xl" />;
 };
 
 export const SkeletonLoad = {
   Table: SkeletonTable,
   Input: SkeletonInput,
+  Upload: SkeletonUpload,
+  Card: SkeletonCard,
 };

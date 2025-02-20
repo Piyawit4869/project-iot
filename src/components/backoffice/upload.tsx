@@ -12,8 +12,6 @@ import {
   ModalHeader,
   useDisclosure,
 } from '@nextui-org/react';
-import { updateUser } from '@/pages/api/user/update';
-import { useParams } from 'next/navigation';
 
 interface UploadProps {
   imageUrl: string | null;
@@ -31,29 +29,6 @@ export const Upload: React.FC<UploadProps> = ({
   const [previewImage, setPreviewImage] = React.useState<string | null>(null);
   const [modalVisible, setModalVisible] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
-  const params = useParams<{ slug: string }>();
-
-  // const handleFileChange = async (e: any) => {
-  //   const file = e.target.files?.[0] as File;
-
-  //   setFileUpload(true);
-
-  //   const data = new FormData();
-  //   data.set('file', file);
-  //   console.log(file);
-
-  //   await uploadFile({}, data);
-
-  //   try {
-  //     const result = await uploadFile({}, data);
-
-  //     setImgUrl(...imgUrl, result.url);
-
-  //     onUpload(result.url);
-  //   } finally {
-  //     setFileUpload(false);
-  //   }
-  // };
 
   const { onOpenChange: onOpenChange } = useDisclosure();
 
@@ -83,14 +58,6 @@ export const Upload: React.FC<UploadProps> = ({
         setImgUrl((prevUrl: any) => [...prevUrl, result.url]);
         onUpload(result.url);
       }
-
-      const payload = {
-        profile: {
-          photoUrl: result.url,
-        },
-      };
-
-      await updateUser({}, payload, params?.slug);
     } catch (error) {
       console.error('Upload error:', error);
     } finally {
@@ -152,27 +119,6 @@ export const Upload: React.FC<UploadProps> = ({
         disabled={fileUpload}
         ref={fileInuptRef}
         className="hidden"
-        // onChange={async (e) => {
-        //   const file = e.target.files?.[0] as File;
-
-        //   setFileUpload(true);
-
-        //   const data = new FormData();
-        //   data.set('file', file);
-        //   console.log(file);
-
-        //   await uploadFile({}, data);
-
-        //   try {
-        //     const result = await uploadFile({}, data);
-
-        //     setImgUrl([...imgUrl, result.url]);
-
-        //     onUpload(result.url);
-        //   } finally {
-        //     setFileUpload(false);
-        //   }
-        // }}
         onChange={handleFileChange}
       />
 
