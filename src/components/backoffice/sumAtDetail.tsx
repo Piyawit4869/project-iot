@@ -14,18 +14,20 @@ export default function AttendanceSummaryCard({
   const [formData] = React.useState<any>(detail);
 
   const renderCard = (title: string, count: number, colorClass: string) => (
-    <div className="flex-1">
+    <div className="w-full">
       <CardComponent
         className={colorClass}
         customCard
         custom={
-          <div className="p-4 bg-white grid grid-cols-2 flex justify-between">
-            <div className="col-span-2">
-              <div className="text-4xl font-extrabold text-center text-gray-900">
-                {count}
-              </div>
-              <div className="text-xs font-extrabold text-center text-gray-600 mt-2">
-                {title}
+          <div className="grid lg:grid-cols-1 md:grid-cols-1 max-sm:grid-cols-1">
+            <div className="p-4 bg-white flex lg:items-center justify-start md:items-center justify-center max-sm:items-center justify-center">
+              <div>
+                <div className="mt-2 lg:text-4xl md:text-4xl max-sm:text-2xl font-extrabold text-gray-900  flex lg:items-center justify-start md:items-center justify-center max-sm:items-center justify-center ">
+                  {count}
+                </div>
+                <div className="mt-2 lg:text-sm md:text-sm max-sm:text-xs font-extrabold text-gray-600">
+                  {title}
+                </div>
               </div>
             </div>
           </div>
@@ -36,7 +38,7 @@ export default function AttendanceSummaryCard({
 
   return (
     <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid lg:grid-cols-4 md:grid-cols-2 max-sm:grid-cols-2 lg:gap-8 md:gap-6 max-sm:gap-4">
         {renderCard(
           'เข้างาน',
           formData?.statistics?.totalWorkDays,

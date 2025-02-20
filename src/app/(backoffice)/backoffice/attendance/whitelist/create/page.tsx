@@ -8,7 +8,6 @@ import createWhitelists from '@/pages/api/whitelists/create'; //API
 import * as Icon from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-// import Map from '@/components/map/map';
 import { Button, Form, Input, Textarea } from '@nextui-org/react';
 import { Breadcrumb } from '@/components/common/breadcrumb';
 
@@ -16,40 +15,11 @@ export default function CreateWhitelistPage() {
   const [errors, setErrors] = React.useState({}) as any;
   const [, setData] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
-  // const params = useParams<{ slug?: string }>();
   const [, setLoading] = React.useState(false);
   const router = useRouter();
-  // const [meta, setMeta] = React.useState<any>({
-  //   totalItems: 0,
-  //   itemsPerPage: 10,
-  //   totalPages: 0,
-  //   currentPage: 1,
-  // });
   const [page] = React.useState(1);
 
   const [rowsPerPage] = React.useState(10);
-  // const [latLon, setLatLon] = React.useState() as any;
-
-  // React.useEffect(() => {
-
-  //   setLoading(true);
-
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await pagination();
-  //       // if (!response?.data) {
-  //       //   throw new Error('No data found for the given slug');
-  //       // }
-  //       setData(response);
-  //     } catch (error) {
-  //       console.error('Error fetching whitelist:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   React.useEffect(() => {
     const fetchWhitelists = async () => {

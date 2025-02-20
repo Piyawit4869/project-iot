@@ -27,28 +27,25 @@ const WeeklyAttendanceChart: React.FC = () => {
   return (
     <Card>
       <div className="px-6 pb-4">
-        <p className="text-xl font-semibold text-start mt-8 mb-6 xl:text-lg lg:text-sm md:text-xs">
+        <p className="font-semibold text-start mt-8 mb-6 lg:text-sm md:text-sm max-sm:text-sm">
           การเข้าทำงานของแต่ละแผนก
         </p>
         <div>
-          <h5 className="text-xs pl-6">ค่าเฉลี่ยการเข้างาน</h5>
+          <h5 className="lg:text-sm md:text-sm max-sm:text-xs pl-6">
+            ค่าเฉลี่ยการเข้างาน
+          </h5>
         </div>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={weeklyData}
             margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
-            className="text-xs"
           >
             <CartesianGrid stroke="#eeeeee" strokeDasharray="9 0" />
-            <XAxis
-              dataKey="department"
-              tick={{ fontSize: 12 }}
-              className="text-xs"
-            />
+            <XAxis dataKey="department" tick={{ fontSize: 12 }} />
             <YAxis
               domain={[0, 100]}
               tickFormatter={(value) => `${value}%`}
-              className="text-xs"
+              className="lg:text-sm md:text-sm max-sm:text-xs"
             />
             <Tooltip formatter={(value) => `${value}%`} />
             <Bar dataKey="attendance" fill="#00a57c" radius={[6, 6, 0, 0]} />

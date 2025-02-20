@@ -45,24 +45,6 @@ export default function UserSinglePage() {
 
   const params = useParams<{ slug: string }>();
 
-  // React.useEffect(() => {
-  //   if (!params || !params.slug) {
-  //     return;
-  //   }
-
-  //   setLoading(true);
-
-  //   const fetchUserSingle = async () => {
-  //     const { data } = await getUser(params.slug);
-
-  //     setData(data);
-  //     setFormData(data.profile);
-  //     setLoading(false);
-  //   };
-
-  //   fetchUserSingle();
-  // }, [params]);
-
   React.useEffect(() => {
     const fetchRole = async () => {
       const { items: fetchedItems } = await paginationRoles({
