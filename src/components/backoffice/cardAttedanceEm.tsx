@@ -62,23 +62,23 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users = [] }) => {
     colorClass: string,
     Icon: React.ReactNode,
   ) => (
-    <div className="w-full max-sm:w-1/2 md:w-1/2 lg:w-1/3 px-4 ">
+    <div className="w-full max-sm:w-1/2 md:w-1/2 lg:w-1/3 px-4">
       <CardComponent
         className={colorClass}
         customCard
         custom={
-          <div className="grid lg:grid-cols-2 md:grid-cols-1 ">
-            <div className="p-4 bg-white flex lg:items-center justify-start md:items-center justify-center">
+          <div className="grid lg:grid-cols-3 md:grid-cols-3 max-sm:grid-cols-3">
+            <div className="p-4 bg-white flex lg:items-center justify-start md:items-center justify-center max-sm:items-center justify-center lg:col-span-2 md:col-span-2 max-sm:col-span-2">
               <div>
-                <div className="mt-2 text-4xl font-extrabold text-gray-900  flex lg:items-center justify-start md:items-center justify-center">
+                <div className="mt-2 lg:text-4xl md:text-4xl max-sm:text-2xl font-extrabold text-gray-900  flex lg:items-center justify-start md:items-center justify-center max-sm:items-center justify-center ">
                   {count}
                 </div>
-                <div className="mt-2 text-sm font-extrabold text-gray-600">
+                <div className="mt-2 lg:text-sm  md:text-sm max-sm:text-xs font-extrabold text-gray-600">
                   {title}
                 </div>
               </div>
             </div>
-            <div className="p-4 flex lg:items-center justify-end md:items-center justify-center">
+            <div className="p-4 flex lg:items-center justify-end md:items-center justify-center max-sm:items-center justify-center">
               <div className=" bg-gray-100 p-3 rounded-full">{Icon}</div>
             </div>
           </div>

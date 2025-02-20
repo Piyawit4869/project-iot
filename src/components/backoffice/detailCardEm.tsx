@@ -18,22 +18,24 @@ export default function UserDashboardCard({ detail }: UserDashboardCardProps) {
     colorClass: string,
     Icon: React.ReactNode,
   ) => (
-    <div className="flex-1">
+    <div className="w-full">
       <CardComponent
         className={colorClass}
         customCard
         custom={
-          <div className="p-4 bg-white grid grid-cols-3 flex justify-between">
-            <div className="col-span-2">
-              <div className="text-4xl font-extrabold text-gray-900">
-                {count}
-              </div>
-              <div className="text-sm font-extrabold text-gray-600 mt-2">
-                {title}
+          <div className="grid lg:grid-cols-3 md:grid-cols-3 max-sm:grid-cols-3">
+            <div className="p-4 bg-white flex lg:items-center justify-start md:items-center justify-center max-sm:items-center justify-center lg:col-span-2 md:col-span-2 max-sm:col-span-2">
+              <div>
+                <div className="mt-2 lg:text-4xl md:text-4xl max-sm:text-2xl font-extrabold text-gray-900  flex lg:items-center justify-start md:items-center justify-center max-sm:items-center justify-center ">
+                  {count}
+                </div>
+                <div className="mt-2 lg:text-sm md:text-sm max-sm:text-xs font-extrabold text-gray-600">
+                  {title}
+                </div>
               </div>
             </div>
-            <div className="flex items-start justify-end">
-              <div className="bg-gray-100 p-3 rounded-full">{Icon}</div>
+            <div className="p-4 flex lg:items-center justify-end md:items-center justify-center max-sm:items-center justify-center">
+              <div className=" bg-gray-100 p-3 rounded-full">{Icon}</div>
             </div>
           </div>
         }
@@ -42,46 +44,57 @@ export default function UserDashboardCard({ detail }: UserDashboardCardProps) {
   );
 
   return (
-    <div className="bg-white rounded-2xl shadow p-8 mt-8">
-      {/* Header Section */}
-      <div className="flex items-center space-x-8 gap-8 mb-8">
-        <div className="rounded-full">
+    <div className="bg-white rounded-2xl shadow p-6 sm:p-8 mt-6 sm:mt-8">
+      {/* User Information */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 space-y-4 sm:space-y-0">
+        <div className="flex justify-center sm:block">
           <Image
-            className="rounded-xl"
+            className="rounded-xl w-50 h-50 "
             src={
               formData?.dailyStreak?.user?.profile?.photoUrl ||
               '/images/default-profile.png'
             }
             alt="User profile photo"
-            width={100}
-            height={100}
+            width={150}
+            height={150}
           />
         </div>
-        <div>
-          <h1 className="text-2xl font-bold mb-2">
-            {formData?.dailyStreak?.user?.userName || '-'}
+        <div className="w-full">
+          <h1 className="text-lg max-sm:text-lg md:text-2xl font-bold mb-2">
+            <strong>ชื่อ: </strong>
+            <span className="text-accent1">
+              {formData?.dailyStreak?.user?.userName || '-'}
+            </span>
           </h1>
-          <div className="grid grid-cols-10 gap-8">
-            <p className="col-span-2">
-              รหัสพนักงาน:{' '}
-              <span>{formData?.dailyStreak?.user?.emId || '-'}</span>
+          <div className="grid max-sm:grid-cols-2 lg:grid-cols-5 md:grid-cols-2 gap-4 text-sm md:text-sm max-sm:text-xs  mb-4">
+            <p>
+              <strong>รหัสพนักงาน: </strong>
+              <span className="text-accent1">
+                {formData?.dailyStreak?.user?.emId || '-'}
+              </span>
             </p>
-            <p className="col-span-2">
-              <span>อีเมล: {formData?.dailyStreak?.user?.email || '-'}</span>
+            <p>
+              <strong>อีเมล: </strong>
+              <span className="text-accent1">
+                {formData?.dailyStreak?.user?.email || '-'}
+              </span>
             </p>
-            <p className="col-span-2">
-              <span>
-                ตำแหน่ง:
+            <p>
+              <strong>ตำแหน่ง: </strong>
+              <span className="text-accent1">
                 {formData?.dailyStreak?.user?.employeeRole?.name || '-'}
               </span>
             </p>
-            <p className="col-span-2">
-              <span>ข้อมูลการทำงาน: {formData?.prefix || '-'}</span>
+            <p>
+              <strong>ข้อมูลการทำงาน: </strong>
+              <span className="text-accent1">{formData?.prefix || '-'}</span>
             </p>
-            <p className="col-span-2">
-              <span>
-                ทำงานต่อเนื่อง: {formData?.dailyStreak?.dailyStreak || 0} วัน
+            <p>
+              <strong>ทำงานต่อเนื่อง: </strong>
+              <span className="text-accent1">
+                {formData?.dailyStreak?.dailyStreak || 0}
               </span>
+              วัน
             </p>
           </div>
         </div>
@@ -89,21 +102,21 @@ export default function UserDashboardCard({ detail }: UserDashboardCardProps) {
 
       {/* Card Statistics */}
       <div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid lg:grid-cols-4 md:grid-cols-2 max-sm:grid-cols-2 lg:gap-8 md:gap-6 max-sm:gap-4">
           {renderCard(
-            'เข้างานทั้งหมด',
+            'เข้าทั้งหมด',
             formData?.statistics?.totalWorkDays,
             'bg-white text-blue-500',
             <Icons.UserRoundCheck />,
           )}
           {renderCard(
-            'เข้างานสายทั้งหมด',
+            'สายทั้งหมด',
             formData?.statistics?.lateArrivals,
             'bg-white text-orange-500',
             <Icons.ClockAlert />,
           )}
           {renderCard(
-            'ออกก่อนเวลาทั้งหมด',
+            'ลาทั้งหมด',
             formData?.statistics?.leaveEarly,
             'bg-white text-yellow-500',
             <Icons.LogOut />,

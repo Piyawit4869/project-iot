@@ -113,26 +113,6 @@
 //     },
 //   };
 
-//   React.useEffect(() => {
-//     setLoading(true);
-//     if (isCreate) {
-//       // console.log('in create');
-
-//       setEditorContent({ content: [] });
-//       setTimeout(() => setLoading(false), 100);
-//     } else if (initialData?.templateNotation) {
-//       // console.log('has templateNotation');
-//       const parsedData = parseHtmlToPuckData(initialData.templateNotation);
-//       setFormData({ templateName: initialData.templateName || '' }); // Load existing template name
-//       setEditorContent(parsedData);
-//       setTimeout(() => setLoading(false), 100);
-//     } else {
-//       // console.log('in else');
-
-//       setLoading(false);
-//     }
-//   }, [initialData, isCreate]);
-
 //   const exportToHTML = async () => {
 //     // Function to convert Puck editor content into HTML
 //     const generateHTML = (data: any): string => {
@@ -422,6 +402,7 @@ import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 import { updateTemplate } from '@/pages/api/templates/update';
 import { deleteTemplate } from '@/pages/api/templates/delete';
+import Image from 'next/image';
 import { toast } from 'sonner';
 
 interface BuilderTemplateProps {
@@ -508,7 +489,7 @@ export const TemplateBuilder = ({
         label: 'รูปภาพ',
         fields: { src: { type: 'text' } },
         render: ({ src }: any) => (
-          <img
+          <Image
             key={uuidv4()}
             src={
               src ||

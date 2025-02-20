@@ -48,7 +48,7 @@ export default function NotationSinglePage() {
   const [customers, setCustomers] = React.useState([]) as any;
   const [templateSelected, setTemplateSelected] = React.useState({}) as any;
   const [processedHtml, setProcessedHtml] = React.useState<string>('');
-  const htmlTemplate = templateSelected.templateNotation;
+  const [isDataFetched, setIsDataFetched] = React.useState(false);
 
   const handleTemplateChange = async (e: any) => {
     const selectedId = e.target.value;
@@ -92,14 +92,14 @@ export default function NotationSinglePage() {
     }));
   };
 
-  React.useEffect(() => {
-    if (!params || !params.slug) return;
-    setLoading(true);
+  const fetchData = React.useCallback(async () => {
+    if (!params?.slug || isDataFetched) return;
 
-    const fetchData = async () => {
-      const { data } = await get(params.slug as string);
+    setLoading(true);
+    try {
+      const { data } = await get(params.slug);
       const { items: fetchedItems } = await paginationItems({ isAll: true });
-      const { items: fetchedCustomer } = await paginationCustomers({
+      const { items: fetchedCustomers } = await paginationCustomers({
         isAll: true,
       });
       const { items: fetchedTemplates } = await pagination({ isAll: true });
@@ -116,29 +116,30 @@ export default function NotationSinglePage() {
       });
 
       setItemServices(fetchedItems);
-      setCustomers(fetchedCustomer);
+      setCustomers(fetchedCustomers);
       setTemplates(fetchedTemplates);
       setFormData({ ...data, itemsId: selectedItems });
-      setLoading(false);
-    };
 
-    const fetchTemplateWithId = async () => {
-      if (formData.templateId) {
-        const { data } = await getTemplate(formData.templateId);
-        setTemplateSelected(data);
+      if (data.templateId) {
+        const { data: templateData } = await getTemplate(data.templateId);
+        setTemplateSelected(templateData);
       }
-    };
 
-    fetchData();
-    fetchTemplateWithId();
-  }, [params, formData.templateId]);
+      setIsDataFetched(true);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [params, isDataFetched]);
 
-  React.useEffect(() => {
-    if (htmlTemplate) {
-      let updatedHtml = htmlTemplate;
+  const updateHtmlTemplate = React.useCallback(() => {
+    if (templateSelected.templateNotation) {
+      let updatedHtml = templateSelected.templateNotation;
       Object.keys(formData).forEach((key) => {
         const regex = new RegExp(`{{${key}}}`, 'g');
         let value = formData[key] || '';
+
         if (key === 'startDate' && value) {
           const date = new Date(value);
           value = date.toLocaleDateString('th-TH', {
@@ -147,65 +148,17 @@ export default function NotationSinglePage() {
             year: 'numeric',
           });
         }
+
         updatedHtml = updatedHtml.replace(regex, value);
       });
       setProcessedHtml(updatedHtml);
     }
-  }, [formData, htmlTemplate]);
+  }, [formData, templateSelected]);
 
-  // React.useEffect(() => {
-  //   if (formData.templateId) {
-  //     const fetchedTemplateWithId = async () => {
-  //       const { data } = await getTemplate(formData.templateId);
-  //       setTemplateSelected(data);
-  //     };
-
-  //     fetchedTemplateWithId();
-  //   }
-  // }, [formData]);
-
-  // React.useEffect(() => {
-  //   if (!params || !params.slug) {
-  //     console.error('No slug provided in the URL params.');
-  //     return;
-  //   }
-
-  //   setLoading(true);
-
-  //   const fetchData = async () => {
-  //     const { data } = await get(params.slug as string);
-
-  //     const { items: fetchedItems } = await paginationItems({
-  //       isAll: true,
-  //     });
-
-  //     const { items: fetchedCustomer } = await paginationCustomers({
-  //       isAll: true,
-  //     });
-
-  //     const selectedItems = data?.itemsId.map((key: any) => {
-  //       const item = fetchedItems.find((item: any) => item.id === key);
-  //       return {
-  //         id: item?.id || '',
-  //         name: item?.name || '',
-  //         quantity: item?.quantity || 0,
-  //         unitPrice: item?.unitPrice || 0,
-  //         total: item?.total || 0,
-  //       };
-  //     });
-
-  //     setItemServices(fetchedItems);
-  //     setCustomers(fetchedCustomer);
-
-  //     setFormData({
-  //       ...data,
-  //       itemsId: selectedItems,
-  //     });
-  //     setLoading(false);
-  //   };
-
-  //   fetchData();
-  // }, [params]);
+  React.useEffect(() => {
+    fetchData();
+    updateHtmlTemplate();
+  }, [fetchData, updateHtmlTemplate]);
 
   const handleChange = (e: any) => {
     const { name, checked, type, value } = e.target;
@@ -220,30 +173,6 @@ export default function NotationSinglePage() {
     }));
   };
 
-  // React.useEffect(() => {
-  //   if (htmlTemplate) {
-  //     let updatedHtml = htmlTemplate;
-
-  //     Object.keys(formData).forEach((key) => {
-  //       const regex = new RegExp(`{{${key}}}`, 'g');
-  //       let value = formData[key] || '';
-
-  //       if (key === 'startDate' && value) {
-  //         const date = new Date(value);
-  //         value = date.toLocaleDateString('th-TH', {
-  //           day: '2-digit',
-  //           month: '2-digit',
-  //           year: 'numeric',
-  //         });
-  //       }
-
-  //       updatedHtml = updatedHtml.replace(regex, value);
-  //     });
-
-  //     setProcessedHtml(updatedHtml);
-  //   }
-  // }, [formData, htmlTemplate]);
-
   const handleZoomIn = () => {
     setZoomLevel((prevZoom) => Math.min(prevZoom + 10, 200));
   };
@@ -251,15 +180,6 @@ export default function NotationSinglePage() {
   const handleZoomOut = () => {
     setZoomLevel((prevZoom) => Math.max(prevZoom - 10, 50));
   };
-
-  // const handleAddItem = () => {
-  //   setItems([...items, { description: '', amount: '' }]);
-  // };
-
-  // const handleRemoveItem = (index: number) => {
-  //   const updatedItems = items.filter((_, i) => i !== index);
-  //   setItems(updatedItems);
-  // };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

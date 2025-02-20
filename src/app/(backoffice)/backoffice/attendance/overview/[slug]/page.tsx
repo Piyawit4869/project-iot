@@ -109,12 +109,12 @@ export default function AttendanceDetailPage() {
         child={
           <div className="space-y-8">
             <TopSection
-              title="ภาพรวมการเข้าทำงานทั้งหมด"
+              title="รายละเอียดการเข้าทำงาน"
               backpath="/backoffice/attendance/overview/"
             />
             {details && <UserDashboardCard detail={details} />}
 
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid lg:grid-cols-2 md:grid-cols-1 max-sm:grid-cols-1 gap-8">
               <div className="bg-white px-8 py-6 rounded-xl ">
                 {details && <WorkingTimeSummary time={details} />}
               </div>
@@ -126,16 +126,16 @@ export default function AttendanceDetailPage() {
                 </div>
               </div>
             </div>
-            <div>
-              <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
-                <div className="grid grid-cols-1 sm:grid-cols-5 gap-8 p-4 flex justify-between items-center">
-                  <div className=" px-3 col-span-1">
-                    <p className="xl:text-lg lg:text-sm md:text-xs">
-                      รายละเอียดการเข้าทำงาน
+            <div className="">
+              <div className="bg-white shadow rounded-2xl my-4">
+                <div className="grid lg:grid-cols-5 md:grid-cols-6 max-sm:grid-cols-6 lg:gap-8 p-4 flex justify-between items-center">
+                  <div className=" px-3 lg:col-span-1  md:col-span-3 max-sm:col-span-3">
+                    <p className="xl:text-lg lg:text-sm md:text-sm max-sm:text-sm">
+                      ภาพรวมการเข้าทำงาน
                     </p>
                   </div>
                   <Input
-                    className="w-[90%] p-2 text-headFont col-span-2"
+                    className="w-[90%] p-2 text-headFont lg:col-span-2  md:col-span-3 max-sm:col-span-3"
                     startContent={<Icons.Search className="p-1" />}
                     size="sm"
                     radius="sm"
@@ -145,8 +145,27 @@ export default function AttendanceDetailPage() {
                     value={filters.userName}
                     onChange={(e) => onInputChange('userName', e.target.value)}
                   />
+                  {/* <Select
+                               className="flex-1  text-headFont"
+                               name="position"
+                               placeholder="กรุณาเลือกตำแหน่ง"
+                               label="ตำแหน่ง"
+                               selectedKeys={item?.workInfo?.user?.userName}
+                               labelPlacement={'outside'}
+                               onChange={handleChange}
+                             >
+                               {.map((item: any) => (
+                                 <SelectItem
+                                   className="text-headFont"
+                                   key={item.id}
+                                   value={item.id}
+                                 >
+                                   {item.name}
+                                 </SelectItem>
+                               ))}
+                             </Select> */}
                   <Select
-                    className="w-[90%] p-2 text-headFont col-span-1"
+                    className="w-[90%] p-2 text-headFont lg:col-span-1  md:col-span-3 max-sm:col-span-3"
                     startContent={<Icons.UserRound className="p-1" />}
                     size="sm"
                     radius="sm"
@@ -161,7 +180,7 @@ export default function AttendanceDetailPage() {
                     </SelectItem>
                   </Select>
                   <DatePicker
-                    className="w-[90%] p-2 text-headFont"
+                    className="w-[90%] p-2 text-headFont lg:col-span-1  md:col-span-3 max-sm:col-span-3"
                     size="sm"
                     radius="sm"
                     name=""

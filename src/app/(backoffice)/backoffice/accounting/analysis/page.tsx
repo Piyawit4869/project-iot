@@ -120,12 +120,6 @@ export default function AccountSummaryPage() {
   };
   */
 
-  /* ดึงข้อมูล API Fetch data whenever filters, page, or rowsPerPage change
-  React.useEffect(() => {
-      API Accounting();
-    }, [page, rowsPerPage]);
-  */
-
   React.useEffect(() => {
     const getCssVariable = (variableName: string) => {
       return getComputedStyle(document.documentElement)
