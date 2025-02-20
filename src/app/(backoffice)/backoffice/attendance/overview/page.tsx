@@ -224,42 +224,44 @@ export default function AttendancesPage() {
           <div>
             <TopSection title="ภาพรวมการเข้าทำงานทั้งหมด" />
 
-            <div className=" grid grid-cols-5 gap-8 flex justify-between mt-8 max-lg:grid-cols-5 md:grid-cols-1 max-sm:grid-cols-1">
-              <div className="col-span-3">
+            <div className="flex justify-between mt-8  grid lg:grid-cols-5 md:grid-cols-1 max-sm:grid-cols-1 lg:gap-8">
+              <div className="lg:col-span-3 md:col-span-1 max-sm:col-span-1">
                 <div className="flex items-center">
                   <EmAttendanceCard users={userList || []} />
                 </div>
               </div>
-              <div className="col-span-2">
-                <div className="bg-white rounded-xl shadow ">
-                  <TimelineComponent timeline={timeline || []} />
+              <div className="col-span-2 w-full h-full">
+                <div className=" lg:col-span-2 md:col-span-3 max-sm:col-span-1 lg:mt-0 lg:px-4 md:mt-8 md:px-4 max-sm:mt-8 max-sm:px-4">
+                  <div className="bg-white rounded-2xl shadow ">
+                    <TimelineComponent timeline={timeline || []} />
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className=" grid grid-cols-5 gap-8 flex justify-between">
+            <div className="flex justify-between mt-8 grid lg:grid-cols-5 md:grid-cols-1 max-sm:grid-cols-1 lg:gap-8">
               <div className="col-span-3">
-                <div className=" space-x-8 mt-8 bg-white rounded-xl shadow ">
+                <div className=" rounded-xl lg:col-span-2 md:col-span-3 max-sm:col-span-1 lg:mt-0 lg:px-4 md:px-4 max-sm:px-4">
                   <ChartComponent />
                 </div>
               </div>
               <div className="col-span-2">
-                <div className=" space-x-8 mt-8 bg-white rounded-xl shadow ">
+                <div className=" rounded-xl lg:col-span-2 md:col-span-3 max-sm:col-span-1 lg:mt-0 lg:px-4 md:mt-8 md:px-4 max-sm:mt-8 max-sm:px-4">
                   <WeeklyAttendanceChart />
                 </div>
               </div>
             </div>
 
-            <div>
-              <div className="bg-white shadow rounded-2xl mb-4 mt-4 ">
-                <div className="grid grid-cols-1 sm:grid-cols-5 gap-8 p-4 flex justify-between items-center">
-                  <div className=" px-3 col-span-1">
-                    <p className="xl:text-lg lg:text-sm md:text-xs">
+            <div className="px-4 ">
+              <div className="bg-white shadow rounded-2xl my-4">
+                <div className="grid lg:grid-cols-5 md:grid-cols-6 max-sm:grid-cols-6 lg:gap-8 p-4 flex justify-between items-center">
+                  <div className=" px-3 lg:col-span-1  md:col-span-3 max-sm:col-span-3">
+                    <p className="xl:text-lg lg:text-sm md:text-sm max-sm:text-sm">
                       ภาพรวมการเข้าทำงาน
                     </p>
                   </div>
                   <Input
-                    className="w-[90%] p-2 text-headFont col-span-2"
+                    className="w-[90%] p-2 text-headFont lg:col-span-2  md:col-span-3 max-sm:col-span-3"
                     startContent={<Icons.Search className="p-1" />}
                     size="sm"
                     radius="sm"
@@ -289,7 +291,7 @@ export default function AttendancesPage() {
                     ))}
                   </Select> */}
                   <Select
-                    className="w-[90%] p-2 text-headFont col-span-1"
+                    className="w-[90%] p-2 text-headFont lg:col-span-1  md:col-span-3 max-sm:col-span-3"
                     startContent={<Icons.UserRound className="p-1" />}
                     size="sm"
                     radius="sm"
@@ -304,7 +306,7 @@ export default function AttendancesPage() {
                     </SelectItem>
                   </Select>
                   <DatePicker
-                    className="w-[90%] p-2 text-headFont"
+                    className="w-[90%] p-2 text-headFont lg:col-span-1  md:col-span-3 max-sm:col-span-3"
                     size="sm"
                     radius="sm"
                     name=""

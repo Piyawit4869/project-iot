@@ -95,36 +95,32 @@ const ChartComponent: React.FC = () => {
     <Card>
       <div className="px-6 pb-4">
         <div className="grid grid-cols-6 gap-4">
-          <div className="col-span-3 mt-8">
-            <span className="text-xl font-semibold text-center mb-4 xl:text-lg lg:text-sm md:text-xs">
+          <div className="lg:col-span-3 md:col-span-3 max-sm:col-span-4  mt-8">
+            <span className="text-xl font-semibold text-center mb-4 xl:text-lg lg:text-sm md:text-sm max-sm:text-sm">
               กราฟแสดงสถิติการเข้าร่วมงาน
             </span>
           </div>
-          <div className="col-span-3 mt-8">
-            <div className="flex justify-end space-x-2 mb-4 ">
-              <div>
+          <div className="lg:col-span-3 md:col-span-3 max-sm:col-span-2 mt-8">
+            <div className="flex justify-end px-2 mb-4 ">
+              <div className="grid lg:grid-cols-3 md:grid-cols-3 max-sm:grid-cols-3  gap-4">
                 <Button
-                  className="text-#4f46e5"
+                  className="text-#4f46e5 max-sm:col-span-3"
                   size={'sm'}
                   variant={view === 'daily' ? 'default' : 'outline'}
                   onClick={() => setView('daily')}
                 >
                   รายวัน
                 </Button>
-              </div>
-              <div>
                 <Button
-                  className="text-#4f46e5"
+                  className="text-#4f46e5 max-sm:col-span-3"
                   size={'sm'}
                   variant={view === 'weekly' ? 'default' : 'outline'}
                   onClick={() => setView('weekly')}
                 >
                   รายสัปดาห์
                 </Button>
-              </div>
-              <div>
                 <Button
-                  className="text-#4f46e5"
+                  className="text-#4f46e5 max-sm:col-span-3"
                   size={'sm'}
                   variant={view === 'monthly' ? 'default' : 'outline'}
                   onClick={() => setView('monthly')}
@@ -137,7 +133,9 @@ const ChartComponent: React.FC = () => {
         </div>
         <div>
           <div>
-            <h5 className="text-sm pl-6">ค่าเฉลี่ยการเข้างาน</h5>
+            <h5 className="lg:text-sm md:text-sm max-sm:text-xs pl-6">
+              ค่าเฉลี่ยการเข้างาน
+            </h5>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart

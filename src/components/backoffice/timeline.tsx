@@ -22,7 +22,7 @@ interface TimelineComponentProps {
 
 // Timeline Item Component
 const TimelineItem: React.FC<{ data: TimelineItemProps }> = ({ data }) => (
-  <div className="flex gap-4 p-2">
+  <div className="flex gap-x-4 gap-y-4">
     <div className="w-4 h-4 bg-green-500 rounded-full mt-2" />
     <div>
       <p className="text-gray-700">
@@ -37,11 +37,11 @@ const TimelineItem: React.FC<{ data: TimelineItemProps }> = ({ data }) => (
 
 // Main Timeline Component
 const TimelineComponent: React.FC<TimelineComponentProps> = ({ timeline }) => {
-  const [visibleItems] = useState(3); // Show only first 3 items initially
+  const [visibleItems] = useState(4); // Show only first 3 items initially
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
-    <div className="py-4 px-6">
+    <div className="px-8 py-6 max-sm:py-4">
       <h2 className="text-lg font-semibold mb-4">กิจกรรม</h2>
       <div>
         {/* Display first 3 items */}
@@ -50,7 +50,7 @@ const TimelineComponent: React.FC<TimelineComponentProps> = ({ timeline }) => {
         ))}
 
         {/* "See More" Button */}
-        <div className="flex justify-end my-2 mx-4">
+        <div className="flex justify-end mx-4 lg:my-0 md:my-2 max-sm:my-4">
           {visibleItems < timeline.length && (
             <button
               className="text-sm text-accent1 hover:underline"
