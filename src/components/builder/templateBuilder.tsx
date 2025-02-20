@@ -402,6 +402,7 @@ import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 import { updateTemplate } from '@/pages/api/templates/update';
 import { deleteTemplate } from '@/pages/api/templates/delete';
+import Image from 'next/image';
 import { toast } from 'sonner';
 
 interface BuilderTemplateProps {
@@ -488,7 +489,7 @@ export const TemplateBuilder = ({
         label: 'รูปภาพ',
         fields: { src: { type: 'text' } },
         render: ({ src }: any) => (
-          <img
+          <Image
             key={uuidv4()}
             src={
               src ||
