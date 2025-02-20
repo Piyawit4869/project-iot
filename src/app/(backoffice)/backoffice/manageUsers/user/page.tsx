@@ -6,10 +6,19 @@ import Image from 'next/image';
 import { TopSection } from '@/components/common/topSection';
 import Link from 'next/link';
 import { Button, Chip } from '@nextui-org/react';
-import { TablePagination } from '@/components/common/tablePagination';
 import pagination from '@/pages/api/user/pagination';
 import * as Icons from 'lucide-react';
 import { Breadcrumb } from '@/components/common/breadcrumb';
+import dynamic from 'next/dynamic';
+import { SkeletonLoad } from '@/components/backoffice/skeleton/skeleton';
+
+const TablePagination = dynamic(
+  () => import('@/components/common/tablePagination'),
+  {
+    ssr: false,
+    loading: () => <SkeletonLoad.Table rowCount={10} columns={columns} />,
+  },
+);
 
 export default function IndexPage() {
   const [page, setPage] = React.useState(1);
@@ -45,8 +54,8 @@ export default function IndexPage() {
 
     fetchUser();
   }, [page, rowsPerPage]);
-  // }, [filters, page, rowsPerPage]);
 
+  console.log('item', items);
 
   return (
     <div>
@@ -111,6 +120,7 @@ const columns = [
   {
     title: 'ชื่อผู้ใช้',
     dataIndex: 'name',
+    key: 'name',
     link: '/backoffice/manageUsers/user',
     render: (_: any, record: any) => {
       return (
@@ -123,12 +133,13 @@ const columns = [
       );
     },
   },
-  { title: 'รหัสพนักงาน', dataIndex: 'emId' },
-  { title: 'อีเมล', dataIndex: 'email' },
+  { title: 'รหัสพนักงาน', dataIndex: 'emId', key: 'emId' },
+  { title: 'อีเมล', dataIndex: 'email', key: 'email' },
   {
     title: 'ตำแหน่ง',
     align: 'center',
     dataIndex: 'position',
+    key: 'position',
     render: (_: any, record: any) => {
       return <span>{record.role?.name}</span>;
     },
@@ -136,6 +147,7 @@ const columns = [
   {
     title: 'เบอร์โทรศัพท์',
     dataIndex: 'phone',
+    key: 'phone',
     render: (_: any, record: any) => {
       return <span>{record.profile.phone}</span>;
     },
@@ -144,6 +156,7 @@ const columns = [
     title: 'สถานะ',
     align: 'center',
     dataIndex: 'status',
+    key: 'status',
     render: () => (
       <Chip color="success" variant="bordered">
         พร้อมใช้งาน
@@ -153,6 +166,7 @@ const columns = [
   {
     title: '',
     dataIndex: 'edit',
+    key: 'edit',
     align: 'center',
     render: (_: any, record: any) => (
       <Link href={`/backoffice/manageUsers/user/${record.id}`}>
@@ -163,3 +177,5 @@ const columns = [
     ),
   },
 ];
+
+console.log({});

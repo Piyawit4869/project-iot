@@ -2,7 +2,6 @@
 
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
-import { ModalVerify } from '@/components/setting/modalVerify';
 import * as Icon from '@ant-design/icons';
 import { createNotation } from '@/pages/api/notations/create';
 import {
@@ -256,18 +255,6 @@ export default function NotationCreatePage() {
     }
   };
 
-  const {
-    isOpen: isPending,
-    // onOpen: openPending,
-    onOpenChange: changePending,
-  } = useDisclosure();
-
-  const {
-    isOpen: isDraft,
-    // onOpen: openDraft,
-    onOpenChange: changeDraft,
-  } = useDisclosure();
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -310,40 +297,6 @@ export default function NotationCreatePage() {
                   </Button>
                 </a>,
               ]}
-            />
-
-            <ModalVerify
-              isOpen={isPending}
-              title="สร้างเอกสาร"
-              content="สร้างข้อมูลเอกสารในสถานะ Pending"
-              onClose={changePending}
-              CancelButton={{
-                label: 'ยกเลิก',
-                onClick: changePending,
-              }}
-              ConfirmButton={{
-                label: 'ยืนยัน',
-                type: 'submit',
-                form: 'notation',
-                onClick: () => setCreateStatus('pending'),
-              }}
-            />
-
-            <ModalVerify
-              isOpen={isDraft}
-              title="แบบร่างเอกสาร"
-              content="สร้างแบบร่างข้อมูลเอกสารในสถานะ Draft"
-              onClose={changeDraft}
-              CancelButton={{
-                label: 'ยกเลิก',
-                onClick: changeDraft,
-              }}
-              ConfirmButton={{
-                label: 'ยืนยัน',
-                type: 'submit',
-                form: 'notation',
-                onClick: () => setCreateStatus('draft'),
-              }}
             />
 
             <div className="bg-gray-100  flex justify-center items-center pt-6">

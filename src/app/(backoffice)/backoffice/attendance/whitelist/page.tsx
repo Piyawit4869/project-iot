@@ -6,7 +6,7 @@ import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Input, Button, Link, Tabs, Tab } from '@nextui-org/react';
 import pagination from '@/pages/api/whitelists/pagination';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 import { formatDate } from '@/utils/enums/date';
 //Icon
 import * as Icons from 'lucide-react';

@@ -17,8 +17,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import Link from 'next/link';
-import { Skeleton } from '@nextui-org/react';
-// import { Input } from '@nextui-org/react';
 
 interface Column {
   title: string;
@@ -44,7 +42,7 @@ interface TablePaginationProps {
   columns: Column[];
 }
 
-export const TablePagination: React.FC<TablePaginationProps> = ({
+const TablePagination: React.FC<TablePaginationProps> = ({
   initialRows,
   initialMeta,
   rowsPerPage,
@@ -97,41 +95,30 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {initialRows.length > 0 ? (
-              initialRows.map((row, idx) => (
-                <TableRow key={idx} className="hover:bg-gray-50">
-                  {columns.map((col) => (
-                    <TableCell
-                      key={col.dataIndex}
-                      className="p-3 border border-gray-200 text-sm"
-                      align={col.align || 'left'}
-                    >
-                      {col.render ? (
-                        col.render(row[col.dataIndex], row, idx)
-                      ) : col.link ? (
-                        <Link
-                          href={`${col.link}/${row.id}`}
-                          className="text-accent1 hover:underline"
-                        >
-                          {row[col.dataIndex] || '-'}
-                        </Link>
-                      ) : (
-                        row[col.dataIndex] || '-'
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length + 1}
-                  className="text-center text-gray-500 p-4"
-                >
-                  <Skeleton className="w-full h-[50px] rounded-md" />
-                </TableCell>
+            {initialRows.map((row, idx) => (
+              <TableRow key={idx} className="hover:bg-gray-50">
+                {columns.map((col) => (
+                  <TableCell
+                    key={col.dataIndex}
+                    className="p-3 border border-gray-200 text-sm"
+                    align={col.align || 'left'}
+                  >
+                    {col.render ? (
+                      col.render(row[col.dataIndex], row, idx)
+                    ) : col.link ? (
+                      <Link
+                        href={`${col.link}/${row.id}`}
+                        className="text-accent1 hover:underline"
+                      >
+                        {row[col.dataIndex] || '-'}
+                      </Link>
+                    ) : (
+                      row[col.dataIndex] || '-'
+                    )}
+                  </TableCell>
+                ))}
               </TableRow>
-            )}
+            ))}
           </TableBody>
         </Table>
       </div>
@@ -247,3 +234,5 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
     </div>
   );
 };
+
+export default TablePagination;

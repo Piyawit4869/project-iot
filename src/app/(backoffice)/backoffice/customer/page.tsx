@@ -6,7 +6,7 @@ import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
 import paginationCustomers from '@/pages/api/customer/pagination';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 import { Breadcrumb } from '@/components/common/breadcrumb';
 
 export default function CustomersPage() {

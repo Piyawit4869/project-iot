@@ -5,7 +5,7 @@ import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 import pagination from '@/pages/api/templates/pagination';
 import { Breadcrumb } from '@/components/common/breadcrumb';
 

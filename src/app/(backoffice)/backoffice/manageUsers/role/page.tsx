@@ -1,17 +1,26 @@
 'use client';
 
 import React from 'react';
-// import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
 import paginationRoles from '@/pages/api/role/pagination';
-import { TablePagination } from '@/components/common/tablePagination';
 import { Breadcrumb } from '@/components/common/breadcrumb';
+import { SkeletonLoad } from '@/components/backoffice/skeleton/skeleton';
+import dynamic from 'next/dynamic';
+
+const TablePagination = dynamic(
+  () => import('@/components/common/tablePagination'),
+  {
+    ssr: false,
+    loading: () => <SkeletonLoad.Table rowCount={5} columns={columns} />,
+  },
+);
 
 export default function RolesPage() {
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [, setLoading] = React.useState(false);
   const [filters] = React.useState({
     name: '',
   });
@@ -22,12 +31,11 @@ export default function RolesPage() {
     totalPages: 0,
     currentPage: 1,
   });
-  // const [loading, setLoading] = React.useState(false);
 
   // Fetch data from the API
   React.useEffect(() => {
     const fetchCustomer = async () => {
-      // setLoading(true);
+      setLoading(true);
       try {
         // const { name } = filters;
         const { items: fetchedItems } = await paginationRoles({
@@ -40,7 +48,7 @@ export default function RolesPage() {
       } catch (error) {
         console.log('Error fetching notations:', error);
       } finally {
-        // setLoading(false);
+        setLoading(false);
       }
     };
     fetchCustomer();

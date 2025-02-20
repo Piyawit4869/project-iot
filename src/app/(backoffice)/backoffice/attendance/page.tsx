@@ -12,7 +12,7 @@ import { countWork } from '@/pages/api/workinfos/get';
 //Component
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 import {
   Button,
   DatePicker,

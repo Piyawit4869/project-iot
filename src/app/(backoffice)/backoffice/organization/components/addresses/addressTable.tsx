@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Scaffold from '@/components/common/scaffold';
-import { TablePagination } from '@/components/common/tablePagination';
+import TablePagination from '@/components/common/tablePagination';
 import pagination from '@/pages/api/address/paginate';
 // import { updateIsmain } from '@/pages/api/organization/update-address';
 

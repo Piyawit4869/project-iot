@@ -1,17 +1,26 @@
 'use client';
 
 import React from 'react';
-// import debounce from 'lodash/debounce';
 import Scaffold from '@/components/common/scaffold';
 import { TopSection } from '@/components/common/topSection';
 import { Button, Input, Link } from '@nextui-org/react';
 import paginationEmployeeRole from '@/pages/api/employeeRole/pagination';
-import { TablePagination } from '@/components/common/tablePagination';
 import { Breadcrumb } from '@/components/common/breadcrumb';
+import { SkeletonLoad } from '@/components/backoffice/skeleton/skeleton';
+import dynamic from 'next/dynamic';
+
+const TablePagination = dynamic(
+  () => import('@/components/common/tablePagination'),
+  {
+    ssr: false,
+    loading: () => <SkeletonLoad.Table rowCount={5} columns={columns} />,
+  },
+);
 
 export default function RolesPage() {
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [, setLoading] = React.useState(false);
   const [filters] = React.useState({
     name: '',
   });
@@ -22,7 +31,6 @@ export default function RolesPage() {
     totalPages: 0,
     currentPage: 1,
   });
-  const [, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     // Fetch data from the API
