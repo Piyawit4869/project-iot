@@ -30,10 +30,11 @@ import paginationRoles from '@/pages/api/role/pagination';
 import paginationEmployeeRole from '@/pages/api/employeeRole/pagination';
 import { Upload } from '@/components/backoffice/upload';
 import { Breadcrumb } from '@/components/common/breadcrumb';
+import { SkeletonLoad } from '@/components/backoffice/skeleton/skeleton';
 
 export default function UserSinglePage() {
   const [data, setData] = React.useState() as any;
-  const [, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [, setErrors] = React.useState({}) as any;
   const [formData, setFormData] = React.useState({}) as any;
   const [password, setPassword] = React.useState({}) as any;
@@ -294,39 +295,19 @@ export default function UserSinglePage() {
                           </div>
 
                           <div className="flex gap-4 mt-6">
-                            <Select
-                              className="flex-1  text-headFont"
-                              name="position"
-                              placeholder="กรุณาเลือกตำแหน่ง"
-                              label="ตำแหน่ง"
-                              selectedKeys={[data?.roleId]}
-                              labelPlacement={'outside'}
-                              onChange={handleChange}
-                            >
-                              {role.map((item: any) => (
-                                <SelectItem
-                                  className="text-headFont"
-                                  key={item.id}
-                                  value={item.id}
-                                >
-                                  {item.name}
-                                </SelectItem>
-                              ))}
-                            </Select>
-                          </div>
-
-                          {data?.employeeRoleId !== null && (
-                            <div className="flex gap-4 mt-6">
+                            {loading ? (
+                              <SkeletonLoad.Input />
+                            ) : (
                               <Select
                                 className="flex-1  text-headFont"
                                 name="position"
                                 placeholder="กรุณาเลือกตำแหน่ง"
-                                label="ตำแหน่งพนักงาน"
-                                selectedKeys={[data?.employeeRoleId]}
+                                label="ตำแหน่ง"
+                                selectedKeys={[data?.roleId]}
                                 labelPlacement={'outside'}
                                 onChange={handleChange}
                               >
-                                {empolyeeRole.map((item: any) => (
+                                {role.map((item: any) => (
                                   <SelectItem
                                     className="text-headFont"
                                     key={item.id}
@@ -336,42 +317,78 @@ export default function UserSinglePage() {
                                   </SelectItem>
                                 ))}
                               </Select>
+                            )}
+                          </div>
+
+                          {data?.employeeRoleId !== null && (
+                            <div className="flex gap-4 mt-6">
+                              {loading ? (
+                                <SkeletonLoad.Input />
+                              ) : (
+                                <Select
+                                  className="flex-1  text-headFont"
+                                  name="position"
+                                  placeholder="กรุณาเลือกตำแหน่ง"
+                                  label="ตำแหน่งพนักงาน"
+                                  selectedKeys={[data?.employeeRoleId]}
+                                  labelPlacement={'outside'}
+                                  onChange={handleChange}
+                                >
+                                  {empolyeeRole.map((item: any) => (
+                                    <SelectItem
+                                      className="text-headFont"
+                                      key={item.id}
+                                      value={item.id}
+                                    >
+                                      {item.name}
+                                    </SelectItem>
+                                  ))}
+                                </Select>
+                              )}
                             </div>
                           )}
 
                           <div className="flex gap-4 mt-6">
-                            <Select
-                              className="flex-1  text-headFont"
-                              name="prefix"
-                              placeholder="กรุณาเลือกคำนำหน้า"
-                              label="คำนำหน้า"
-                              selectedKeys={[formData.prefix]}
-                              labelPlacement={'outside'}
-                              onChange={handleChange}
-                            >
-                              {prefix.map((item) => (
-                                <SelectItem
-                                  className="text-headFont"
-                                  key={item.value}
-                                  value={item.value}
-                                >
-                                  {item.label}
-                                </SelectItem>
-                              ))}
-                            </Select>
+                            {loading ? (
+                              <SkeletonLoad.Input />
+                            ) : (
+                              <Select
+                                className="flex-1  text-headFont"
+                                name="prefix"
+                                placeholder="กรุณาเลือกคำนำหน้า"
+                                label="คำนำหน้า"
+                                selectedKeys={[formData.prefix]}
+                                labelPlacement={'outside'}
+                                onChange={handleChange}
+                              >
+                                {prefix.map((item) => (
+                                  <SelectItem
+                                    className="text-headFont"
+                                    key={item.value}
+                                    value={item.value}
+                                  >
+                                    {item.label}
+                                  </SelectItem>
+                                ))}
+                              </Select>
+                            )}
                           </div>
                           <div className="flex gap-4 mt-6">
-                            <Input
-                              className="flex-1"
-                              label={
-                                <span className="text-headFont">ชื่อ</span>
-                              }
-                              labelPlacement="outside"
-                              name="firstNameTh"
-                              placeholder="กรอกชื่อ"
-                              value={formData?.firstNameTh}
-                              onChange={handleChange}
-                            />
+                            {loading ? (
+                              <SkeletonLoad.Input />
+                            ) : (
+                              <Input
+                                className="flex-1"
+                                label={
+                                  <span className="text-headFont">ชื่อ</span>
+                                }
+                                labelPlacement="outside"
+                                name="firstNameTh"
+                                placeholder="กรอกชื่อ"
+                                value={formData?.firstNameTh}
+                                onChange={handleChange}
+                              />
+                            )}
                           </div>
 
                           <div className="flex gap-4 mt-6">

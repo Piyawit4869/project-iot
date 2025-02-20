@@ -84,7 +84,7 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users = [] }) => {
   );
 
   return (
-    <div className="w-full flex  mt-8">
+    <div className="w-full flex mt-8">
       <div className="flex flex-wrap -mx-2">
         {renderCard(
           'ทั้งหมด',
@@ -104,24 +104,26 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users = [] }) => {
           'bg-white text-gray-500',
           <Icons.UserRoundMinus />,
         )}
-        {renderCard(
-          'เข้างานสาย',
-          attendanceStats.lateCount,
-          'bg-white text-orange-500',
-          <Icons.ClockAlert />,
-        )}
-        {renderCard(
-          'ลางาน',
-          attendanceStats.onLeaveCount,
-          'bg-white text-yellow-500',
-          <Icons.Moon />,
-        )}
-        {renderCard(
-          'เลิกงานแล้ว',
-          attendanceStats.checkedOutCount,
-          'bg-white text-red-500',
-          <Icons.LogOut />,
-        )}
+        <div className="w-full flex mt-12">
+          {renderCard(
+            'เข้างานสาย',
+            attendanceStats.lateCount,
+            'bg-white text-orange-500',
+            <Icons.ClockAlert />,
+          )}
+          {renderCard(
+            'ลางาน',
+            attendanceStats.onLeaveCount,
+            'bg-white text-yellow-500',
+            <Icons.Moon />,
+          )}
+          {renderCard(
+            'เลิกงานแล้ว',
+            attendanceStats.checkedOutCount,
+            'bg-white text-red-500',
+            <Icons.LogOut />,
+          )}
+        </div>
       </div>
     </div>
   );
