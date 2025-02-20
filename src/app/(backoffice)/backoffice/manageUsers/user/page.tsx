@@ -6,23 +6,23 @@ import Image from 'next/image';
 import { TopSection } from '@/components/common/topSection';
 import Link from 'next/link';
 import { Button, Chip } from '@nextui-org/react';
-import TablePagination from '@/components/common/tablePagination';
 import pagination from '@/pages/api/user/pagination';
 import * as Icons from 'lucide-react';
 import { Breadcrumb } from '@/components/common/breadcrumb';
-// import dynamic from 'next/dynamic';
-import SkeletonTable from '@/components/backoffice/skeleton/skeletonTable';
+import dynamic from 'next/dynamic';
+import { SkeletonLoad } from '@/components/backoffice/skeleton/skeleton';
 
-// const TablePagination = dynamic(
-//   () => import('@/components/common/tablePagination'),
-//   {
-//     loading: () => <SkeletonTable rowCount={10} columns={columns} />,
-//   },
-// );
+const TablePagination = dynamic(
+  () => import('@/components/common/tablePagination'),
+  {
+    ssr: false,
+    loading: () => <SkeletonLoad.Table rowCount={10} columns={columns} />,
+  },
+);
 
 export default function IndexPage() {
   const [page, setPage] = React.useState(1);
-  const [loading, setLoading] = React.useState(false);
+  const [, setLoading] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [items, setItems] = React.useState([]) as any;
   const [meta, setMeta] = React.useState({
@@ -81,20 +81,16 @@ export default function IndexPage() {
             />
 
             <div className="mt-6">
-              {loading ? (
-                <SkeletonTable rowCount={10} columns={columns} />
-              ) : (
-                <TablePagination
-                  initialRows={items}
-                  initialMeta={meta}
-                  rowsPerPage={rowsPerPage}
-                  columns={columns as any}
-                  onPageChange={(newPage) => setPage(newPage)}
-                  onRowsPerPageChange={(newRowsPerPage) =>
-                    setRowsPerPage(newRowsPerPage)
-                  }
-                />
-              )}
+              <TablePagination
+                initialRows={items}
+                initialMeta={meta}
+                rowsPerPage={rowsPerPage}
+                columns={columns as any}
+                onPageChange={(newPage) => setPage(newPage)}
+                onRowsPerPageChange={(newRowsPerPage) =>
+                  setRowsPerPage(newRowsPerPage)
+                }
+              />
             </div>
           </div>
         }

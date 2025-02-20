@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Button } from '@nextui-org/react';
+import { Button, Input } from '@nextui-org/react';
 import React from 'react';
 
 interface columns {
@@ -90,4 +90,17 @@ const SkeletonTable: React.FC<SkeletonTableProps> = ({ rowCount, columns }) => {
   );
 };
 
-export default SkeletonTable;
+const SkeletonInput: React.FC = () => {
+  return (
+    <Skeleton>
+      <div className="w-full">
+        <Input className="w-full" />
+      </div>
+    </Skeleton>
+  );
+};
+
+export const SkeletonLoad = {
+  Table: SkeletonTable,
+  Input: SkeletonInput,
+};
