@@ -21,15 +21,6 @@ export default function AddressTable() {
     currentPage: 1,
   });
 
-  // React.useEffect(() => {
-  //   if (data) {
-  //     const filteredTable = data.organization.addresses.filter(
-  //       (address: any) => address.isMain !== true,
-  //     );
-  //     setTableAddress(filteredTable);
-  //   }
-  // }, [data]);
-
   React.useEffect(() => {
     const fetchUser = async () => {
       try {

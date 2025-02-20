@@ -113,26 +113,6 @@
 //     },
 //   };
 
-//   React.useEffect(() => {
-//     setLoading(true);
-//     if (isCreate) {
-//       // console.log('in create');
-
-//       setEditorContent({ content: [] });
-//       setTimeout(() => setLoading(false), 100);
-//     } else if (initialData?.templateNotation) {
-//       // console.log('has templateNotation');
-//       const parsedData = parseHtmlToPuckData(initialData.templateNotation);
-//       setFormData({ templateName: initialData.templateName || '' }); // Load existing template name
-//       setEditorContent(parsedData);
-//       setTimeout(() => setLoading(false), 100);
-//     } else {
-//       // console.log('in else');
-
-//       setLoading(false);
-//     }
-//   }, [initialData, isCreate]);
-
 //   const exportToHTML = async () => {
 //     // Function to convert Puck editor content into HTML
 //     const generateHTML = (data: any): string => {
