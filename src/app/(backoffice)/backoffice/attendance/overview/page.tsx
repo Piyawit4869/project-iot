@@ -224,14 +224,14 @@ export default function AttendancesPage() {
           <div>
             <TopSection title="ภาพรวมการเข้าทำงานทั้งหมด" />
 
-            <div className=" grid grid-cols-5 gap-8 flex justify-between">
+            <div className=" grid grid-cols-5 gap-8 flex justify-between mt-8 max-lg:grid-cols-5 md:grid-cols-1 max-sm:grid-cols-1">
               <div className="col-span-3">
-                <div>
+                <div className="flex items-center">
                   <EmAttendanceCard users={userList || []} />
                 </div>
               </div>
               <div className="col-span-2">
-                <div className=" space-x-8 mt-8 bg-white rounded-xl shadow h-[90%] ">
+                <div className="bg-white rounded-xl shadow ">
                   <TimelineComponent timeline={timeline || []} />
                 </div>
               </div>

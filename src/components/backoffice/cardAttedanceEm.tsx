@@ -62,21 +62,25 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users = [] }) => {
     colorClass: string,
     Icon: React.ReactNode,
   ) => (
-    <div className="w-full sm:w-1/2 lg:w-1/3 px-2">
+    <div className="w-full max-sm:w-1/2 md:w-1/2 lg:w-1/3 px-4 ">
       <CardComponent
         className={colorClass}
         customCard
         custom={
-          <div className="p-4 bg-white flex items-center justify-between">
-            <div>
-              <div className="text-4xl font-extrabold text-gray-900">
-                {count}
-              </div>
-              <div className="text-sm font-extrabold text-gray-600 mt-2">
-                {title}
+          <div className="grid lg:grid-cols-2 md:grid-cols-1 ">
+            <div className="p-4 bg-white flex lg:items-center justify-start md:items-center justify-center">
+              <div>
+                <div className="mt-2 text-4xl font-extrabold text-gray-900  flex lg:items-center justify-start md:items-center justify-center">
+                  {count}
+                </div>
+                <div className="mt-2 text-sm font-extrabold text-gray-600">
+                  {title}
+                </div>
               </div>
             </div>
-            <div className="bg-gray-100 p-3 rounded-full">{Icon}</div>
+            <div className="p-4 flex lg:items-center justify-end md:items-center justify-center">
+              <div className=" bg-gray-100 p-3 rounded-full">{Icon}</div>
+            </div>
           </div>
         }
       />
@@ -84,8 +88,8 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users = [] }) => {
   );
 
   return (
-    <div className="w-full flex mt-8">
-      <div className="flex flex-wrap -mx-2">
+    <div className="w-full  ">
+      <div className="flex flex-wrap gap-y-8 ">
         {renderCard(
           'ทั้งหมด',
           totalEmployees,
@@ -104,26 +108,24 @@ const EmAttendanceCard: React.FC<EmAttendanceCardProps> = ({ users = [] }) => {
           'bg-white text-gray-500',
           <Icons.UserRoundMinus />,
         )}
-        <div className="w-full flex mt-12">
-          {renderCard(
-            'เข้างานสาย',
-            attendanceStats.lateCount,
-            'bg-white text-orange-500',
-            <Icons.ClockAlert />,
-          )}
-          {renderCard(
-            'ลางาน',
-            attendanceStats.onLeaveCount,
-            'bg-white text-yellow-500',
-            <Icons.Moon />,
-          )}
-          {renderCard(
-            'เลิกงานแล้ว',
-            attendanceStats.checkedOutCount,
-            'bg-white text-red-500',
-            <Icons.LogOut />,
-          )}
-        </div>
+        {renderCard(
+          'เข้างานสาย',
+          attendanceStats.lateCount,
+          'bg-white text-orange-500',
+          <Icons.ClockAlert />,
+        )}
+        {renderCard(
+          'ลางาน',
+          attendanceStats.onLeaveCount,
+          'bg-white text-yellow-500',
+          <Icons.Moon />,
+        )}
+        {renderCard(
+          'เลิกงานแล้ว',
+          attendanceStats.checkedOutCount,
+          'bg-white text-red-500',
+          <Icons.LogOut />,
+        )}
       </div>
     </div>
   );
