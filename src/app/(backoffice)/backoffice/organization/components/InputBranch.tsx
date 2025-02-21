@@ -108,8 +108,6 @@ export default function InputBranch({
                     name="active"
                     title="ปิดสาขา"
                     description="ใช้สำหรับการปิดหรือยุติการทำงานของสาขาในระบบหรือเว็บไซต์<br>ซึ่งอาจรวมถึงการปิดการใช้งานบัญชีสาขา"
-                    control="ปิดสาขา"
-                    isSelected
                     onChange={handleChange}
                   />
                 </div>
