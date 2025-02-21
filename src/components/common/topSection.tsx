@@ -24,7 +24,7 @@ export function TopSection({ title, subtitle, buttons = [], backpath }: any) {
   }, []);
 
   return (
-    <div className="sticky top-[-10px] shadow-md z-30 bg-white p-4 rounded-lg">
+    <div className="sticky top-[-10px] shadow-md z-30 bg-white p-4 rounded-2xl">
       <div className="flex items-center justify-between">
         {/* Title */}
         {backpath ? (

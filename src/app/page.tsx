@@ -73,7 +73,7 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@nextui-org/react';
 import { toast } from 'sonner';
-import { Skeleton } from '@/components/ui/skeleton';
+import { SkeletonUi } from '@/components/ui/skeleton';
 
 const Login = () => {
   const [user, setUser] = useState('');
@@ -192,7 +192,7 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
           {loading ? (
-            <Skeleton>
+            <SkeletonUi>
               <label className="text-sm font-medium">อีเมล</label>
               <Input size="lg" />
 
@@ -200,7 +200,7 @@ const Login = () => {
                 <label className="text-sm font-medium">รหัสผ่าน</label>
                 <Input size="lg" />
               </div>
-            </Skeleton>
+            </SkeletonUi>
           ) : (
             <div>
               {/* Email Input */}

@@ -83,8 +83,6 @@ export default function Inputorganization({
                 name="active"
                 title="ปิดองค์กร"
                 description="ใช้สำหรับการปิดหรือยุติการทำงานขององค์กรในระบบหรือเว็บไซต์<br>ซึ่งอาจรวมถึงการปิดการใช้งานบัญชีองค์กร"
-                control="ปิดองค์กร"
-                isSelected
                 onChange={handleChange}
               />
             </div>

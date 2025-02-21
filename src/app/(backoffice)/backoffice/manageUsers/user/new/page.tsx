@@ -8,7 +8,7 @@ import paginationRoles from '@/pages/api/role/pagination';
 import paginationEmployeeRole from '@/pages/api/employeeRole/pagination';
 import { useClientSession } from '@/libs/auth';
 import { Breadcrumb } from '@/components/common/breadcrumb';
-import { FormUser } from '../../../components/formUser/formUser';
+import FormUser from '../../../components/formUser/formUser';
 
 export default function CreateUserPage() {
   const [page] = React.useState(1);
@@ -126,6 +126,7 @@ export default function CreateUserPage() {
         role={role}
         employeeRole={employeeRole}
         error={errors}
+        isCreate={true}
       />
     </div>
   );
