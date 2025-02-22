@@ -249,9 +249,9 @@ export function AdminSideBar({
   const router = useRouter();
   const activeTab = searchParams?.get('tab') || 'organization';
 
-  const handleMenuClick = (key: string) => {
-    const newUrl = `${pathname}?tab=${key}`;
-    router.push(newUrl);
+  const handleMenuClick = (path: string, key: string) => {
+    // const newUrl = `${pathname}?tab=${key}`;
+    router.push(path);
   };
 
   const initialSubMenuState = React.useMemo(() => {
@@ -348,7 +348,9 @@ export function AdminSideBar({
                             isSidebarOpen ? 'opacity-100' : 'opacity-0 hidden'
                           }`}
                         >
-                          <a href={item.path}>{item.name}</a>
+                          {/* <a href={item.path}>{item.name}</a>
+                           */}
+                          {item.name}
                         </span>
                         <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                       </SidebarMenuButton>
@@ -362,15 +364,17 @@ export function AdminSideBar({
                               <SidebarMenuSubItem key={subItem.path}>
                                 <SidebarMenuSubButton
                                   key={subItem.path}
-                                  href={subItem.path}
+                                  // href={subItem.path}
                                   isActive={pathname === subItem.path}
-                                  className={`py-4 ${
+                                  className={`cursor-pointer py-4 ${
                                     (activeTab === subItem.key,
                                     pathname === subItem.path
                                       ? 'bg-blue-100'
                                       : '')
                                   }`}
-                                  onClick={() => handleMenuClick(subItem.key)}
+                                  onClick={() =>
+                                    handleMenuClick(subItem.path, subItem.key)
+                                  }
                                 >
                                   {renderIcon(subItem.icon)}
                                   <span

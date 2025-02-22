@@ -1,6 +1,7 @@
 'use client';
 
 import { type LucideIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import {
   SidebarMenu,
@@ -19,15 +20,21 @@ export function NavSetting({
     isActive: false;
   }[];
 }) {
+  const router = useRouter();
+
+  const handleClickSetting = (path: string) => {
+    router.push(path);
+  };
+
   return (
     <SidebarMenu>
       {items.map((item) => (
         <SidebarMenuItem key={item.name}>
           <SidebarMenuButton asChild>
-            <a href={item.path}>
+            <div onClick={() => handleClickSetting(item.path)}>
               <item.icon />
               <span>{item.name}</span>
-            </a>
+            </div>
           </SidebarMenuButton>
         </SidebarMenuItem>
       ))}
