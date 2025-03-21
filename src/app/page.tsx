@@ -1,73 +1,3 @@
-// // import { getSession } from '@/libs/lib';
-
-// export default async function App() {
-//   // const session = await getSession();
-
-//   return (
-//     <div>
-//       <main>
-//         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-//           <div className="text-center">
-//             <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
-//               Welcome to ROME!
-//             </h1>
-//             <p className="text-lg text-gray-600 mb-8">
-//               {`"If you haven't figured out how to build Rome in a day. let us
-//               show you how with the ROME platform"`}
-//             </p>
-
-//             <a href={'/login'}>
-//               <button className="px-6 py-3 bg-blue-600 text-white rounded-lg text-lg shadow hover:bg-blue-700 transition duration-300 mr-5">
-//                 Sign in
-//               </button>
-//             </a>
-//             <a href={'/home'}>
-//               <button className="px-6 py-3 bg-blue-600 text-white rounded-lg text-lg shadow hover:bg-blue-700 transition duration-300">
-//                 Bring to Homepage
-//               </button>
-//             </a>
-//           </div>
-//         </div>
-//       </main>
-//     </div>
-//   );
-// }
-
-'use client';
-
-// import { signIn, signOut, useSession } from 'next-auth/react';
-
-// export default function AuthActions() {
-//   const { data: session, status } = useSession();
-//   const handleLogin = async () => {
-//     await signIn('credentials', {
-//       user: 'owner@utotech.org', // Replace with user input
-//       password: 'localpass', // Replace with user input
-//       callbackUrl: '/', // Redirect after successful login
-//     });
-//   };
-//   const handleLogout = async () => {
-//     await signOut({ callbackUrl: '/login' }); // Redirect after logout
-//   };
-//   if (status === 'loading') {
-//     return <p>Loading...</p>;
-//   }
-//   if (!session) {
-//     return (
-//       <div>
-//         <p>You are not logged in.</p>
-//         <button onClick={handleLogin}>Login</button>
-//       </div>
-//     );
-//   }
-//   return (
-//     <div>
-//       <p>Welcome, {session.user?.name || 'User'}!</p>
-//       <button onClick={handleLogout}>Logout</button>
-//     </div>
-//   );
-// }
-
 import React, { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -84,7 +14,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const handleSubmit = async (e: any) => {
-    // 'use server';
     e.preventDefault();
     setError(null);
     setLoading(true);
@@ -147,9 +76,6 @@ const Login = () => {
 
   return (
     <div className="flex min-h-screen w-full">
-      {/* Left Section - Branding & Illustration */}
-
-      {/* i want to change this to background image  */}
       <div
         className="hidden lg:flex flex-col justify-center items-center w-1/2 text-white p-12 bg-cover bg-center bg-no-repeat relative"
         style={{ backgroundImage: "url('/background-login.png')" }}
@@ -163,30 +89,8 @@ const Login = () => {
             ของคุณได้อย่างง่ายดาย
           </p>
         </div>
-
-        {/* Mockup Image */}
-        {/* <div className="relative mt-8">
-          <img
-            src="https://static.vecteezy.com/system/resources/previews/011/377/062/original/continuous-one-line-drawing-colosseum-amphitheater-in-rome-italy-landmark-concept-single-line-draw-design-graphic-illustration-vector.jpg"
-            alt="ภาพจำลอง"
-            className="w-full max-w-lg shadow-lg rounded-lg"
-          />
-          <div className="absolute -top-5 left-10 w-20 h-20 border-2 border-white rounded-full overflow-hidden">
-            <img
-              src="https://th.bing.com/th/id/R.8a6e98694704f6a48a710409ef85c324?rik=p30zunKZVWjD1g&pid=ImgRaw&r=0"
-              alt="ผู้ใช้ 1"
-            />
-          </div>
-          <div className="absolute -bottom-5 right-10 w-20 h-20 border-2 border-white rounded-full overflow-hidden">
-            <img
-              src="https://aura.services/wp-content/uploads/2023/01/Female.png"
-              alt="ผู้ใช้ 2"
-            />
-          </div>
-        </div> */}
       </div>
 
-      {/* Right Section - Login Form */}
       <div className="flex flex-col justify-center items-center w-full lg:w-1/2 p-8 lg:p-16 bg-white">
         <h2 className="text-2xl font-bold mb-6">เข้าสู่ระบบ</h2>
 
@@ -219,7 +123,6 @@ const Login = () => {
                 />
               </div>
 
-              {/* Password Input */}
               <div className="relative w-full mt-6">
                 <label className="text-sm font-medium">รหัสผ่าน</label>
                 <div className="flex justify-between items-center">
@@ -287,24 +190,6 @@ const Login = () => {
             </div>
           )}
 
-          {/* Remember Me Checkbox */}
-          {/* <div className="flex items-center space-x-2 justify-between">
-            <div>
-              <input type="checkbox" id="remember" className="form-checkbox" />
-              <label htmlFor="remember" className="text-sm">
-                จดจำรหัสผ่าน
-              </label>
-            </div>
-
-            <a
-              href="#"
-              className="text-sm text-blue-500 hover:underline ml-2 text-nowrap pl-12"
-            >
-              ลืมรหัสผ่าน?
-            </a>
-          </div> */}
-
-          {/* Login Button */}
           <Button
             type="submit"
             disabled={loading}
@@ -342,87 +227,9 @@ const Login = () => {
               'เข้าสู่ระบบ'
             )}
           </Button>
-
-          {/* {loading && (
-            <div
-              style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                padding: 0,
-                margin: 0,
-                width: '100vw',
-                height: '100vh',
-                backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                zIndex: 1000,
-              }}
-            >
-              <div style={{ textAlign: 'center', display: 'flex' }}>
-                <p style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
-                  กำลังเข้าสู่ระบบ กรุณารอสักครู่
-                </p>
-                <div style={{ marginLeft: '8px' }}>
-                  <div>
-                    <Spinner />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )} */}
-
-          {/* Signup Link */}
-          {/* <p className="text-sm text-gray-600">
-            ยังไม่มีบัญชี?{' '}
-            <a href="#" className="text-blue-500 hover:underline">a
-              สมัครสมาชิก
-            </a>
-          </p> */}
-
-          {/* Divider */}
-          {/* <div className="flex items-center my-4">
-            <div className="flex-1 h-px bg-gray-300"></div>
-            <span className="px-3 text-sm text-gray-500">หรือ</span>
-            <div className="flex-1 h-px bg-gray-300"></div>
-          </div> */}
-
-          {/* Google Login Button */}
-          {/* <button
-            type="button"
-            className="w-full flex items-center justify-center border border-gray-300 py-2 rounded-md hover:bg-gray-100"
-          >
-            <img
-              src="https://th.bing.com/th/id/R.0fa3fe04edf6c0202970f2088edea9e7?rik=joOK76LOMJlBPw&riu=http%3a%2f%2fpluspng.com%2fimg-png%2fgoogle-logo-png-open-2000.png&ehk=0PJJlqaIxYmJ9eOIp9mYVPA4KwkGo5Zob552JPltDMw%3d&risl=&pid=ImgRaw&r=0" // แก้ไขเป็นไอคอน Google ที่คุณใช้
-              alt="Google"
-              className="w-5 h-5 mr-2"
-            />
-            เข้าสู่ระบบด้วย Google
-          </button> */}
         </form>
       </div>
     </div>
-    // <form onSubmit={handleSubmit}>
-    //   <div>
-    //     <label>Email</label>
-    //     <input
-    //       type="email"
-    //       value={email}
-    //       onChange={(e) => setEmail(e.target.value)}
-    //     />
-    //   </div>
-    //   <div>
-    //     <label>Password</label>
-    //     <input
-    //       type="password"
-    //       value={password}
-    //       onChange={(e) => setPassword(e.target.value)}
-    //     />
-    //   </div>
-    //   {error && <p>{error}</p>}
-    //   <button type="submit">Login</button>
-    // </form>
   );
 };
 

@@ -14,7 +14,7 @@ import {
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useCallback } from 'react';
 import * as Icons from 'lucide-react';
-import { useClientSession } from '@/libs/auth';
+import { useClientSession } from '@/helpers/auth';
 import Image from 'next/image';
 import Link from 'next/link';
 import { NavHome } from './Sidebar/homeSidebar';

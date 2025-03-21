@@ -1,5 +1,5 @@
-import { base_url } from '@/constant/common';
-import { getServerSession } from '@/libs/auth';
+import { base_url } from '@/helpers/common';
+import { getServerSession } from '@/helpers/auth';
 
 interface FetchWhitelistsParams {
   page: number;
@@ -45,7 +45,6 @@ export default async function pagination({
         Authorization: `Bearer ${auth.accessToken}`,
       },
     });
-    
 
     if (!response.ok) {
       throw new Error('Failed to fetch data from external API');

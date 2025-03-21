@@ -1,5 +1,5 @@
-import { base_url } from '@/constant/common';
-import { getServerSession } from '@/libs/auth';
+import { base_url } from '@/helpers/common';
+import { getServerSession } from '@/helpers/auth';
 
 export default async function create(prevState: any, formData: any) {
   const url = `${base_url}/crud/config-setting/create`;
@@ -8,8 +8,7 @@ export default async function create(prevState: any, formData: any) {
     ...formData,
   };
 
-
-const auth = await getServerSession();
+  const auth = await getServerSession();
 
   const data = await fetch(url, {
     method: `POST`,

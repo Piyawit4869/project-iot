@@ -2,7 +2,7 @@ import { Button, Input } from '@nextui-org/react';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { base_url } from '@/constant/common';
+import { base_url } from '@/helpers/common';
 
 export const LoginComponent = () => {
   const [user, setUser] = React.useState('');

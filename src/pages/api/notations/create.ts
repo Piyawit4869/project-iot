@@ -1,5 +1,5 @@
-import { base_url } from '@/constant/common';
-import { getServerSession } from '@/libs/auth';
+import { base_url } from '@/helpers/common';
+import { getServerSession } from '@/helpers/auth';
 
 export async function createNotation(prevState: any, formData: any) {
   const url = `${base_url}/crud/notations/create/`;

@@ -1,4 +1,4 @@
-import { base_url } from '@/constant/common';
+import { base_url } from '@/helpers/common';
 
 export default async function Update(id: string, formData: any): Promise<any> {
   try {

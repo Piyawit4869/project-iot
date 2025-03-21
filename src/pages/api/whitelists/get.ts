@@ -1,5 +1,5 @@
-import { base_url } from '@/constant/common';
-import { getServerSession } from '@/libs/auth';
+import { base_url } from '@/helpers/common';
+import { getServerSession } from '@/helpers/auth';
 
 export default async function getSingle(id: string): Promise<any> {
   try {
@@ -24,10 +24,9 @@ export default async function getSingle(id: string): Promise<any> {
     console.error('Error fetching data:', error);
     return {};
   }
-} 
+}
 
-
-export async function getWhitelists(){
+export async function getWhitelists() {
   const url = `${base_url}/crud/whitelists/`;
   const auth = await getServerSession();
 

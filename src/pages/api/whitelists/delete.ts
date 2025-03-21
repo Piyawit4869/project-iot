@@ -1,10 +1,10 @@
-import { base_url } from '@/constant/common';
-import { getServerSession } from '@/libs/auth';
+import { base_url } from '@/helpers/common';
+import { getServerSession } from '@/helpers/auth';
 
 export async function deleteWhitelists(id: any) {
   const url = `${base_url}/whitelists/delete/${id}`;
 
-const auth = await getServerSession();
+  const auth = await getServerSession();
 
   const data = await fetch(url, {
     method: `DELETE`,

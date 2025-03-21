@@ -1,5 +1,5 @@
-import { base_url } from '@/constant/common';
-import { getServerSession } from '@/libs/auth';
+import { base_url } from '@/helpers/common';
+import { getServerSession } from '@/helpers/auth';
 
 export default async function getUser(id: string): Promise<any> {
   try {
@@ -25,4 +25,3 @@ export default async function getUser(id: string): Promise<any> {
     return {};
   }
 }
-
