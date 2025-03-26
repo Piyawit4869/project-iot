@@ -1,5 +1,5 @@
-import { LoginForm } from "@/core/features/auth/view/login-form";
+import LoginContainer from "@/containers/login-container";
 
 export default function LoginPage() {
-  return <LoginForm />;
+  return <LoginContainer />;
 }

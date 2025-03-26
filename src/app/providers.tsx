@@ -2,7 +2,7 @@
 
 import { ReactNode, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthProvider } from "@/core/stores/auth/useAuthStore";
+import { AuthProvider } from "@/stores/auth/useAuthStore";
 
 const test = 1;
 
