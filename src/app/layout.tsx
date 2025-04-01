@@ -19,17 +19,20 @@ export const metadata: Metadata = {
   title: "ROME",
   description: "ROME Backoffice app",
 };
-const a = 1;
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
-        <Providers>{children}</Providers>
-      </body>
-    </html>
+    <Providers>
+      {/* { isAuth ? <AuthLayout/> :  <PublucLayout />  } */}
+
+      <html lang="en">
+        <body>
+          <main>{children}</main>
+        </body>
+      </html>
+    </Providers>
   );
 }

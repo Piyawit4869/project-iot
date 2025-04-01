@@ -1,4 +1,4 @@
-import { User } from "@/models/user/types/user";
+import { User } from "../../types/user";
 import { create } from "zustand";
 
 type UserStore = {

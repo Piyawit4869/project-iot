@@ -12,47 +12,56 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { loginFormSchema, LoginFormValues } from "@/models/auth/schemas/login";
+import { loginFormSchema, LoginFormValues } from "@/schemas/auth/login";
 
 import React from "react";
-import { useLogin } from "@/actions/auth/client/useLogin";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import GlobalButton from "@/components/shared/global-button";
 
 export default function LoginForm() {
-  const { mutate, isPending } = useLogin();
+  const router = useRouter();
+
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: "",
+      user: "",
       password: "",
     },
   });
 
-  function onSubmit(values: LoginFormValues) {
-    mutate(values);
-  }
+  const { isSubmitting } = form.formState;
+
+  const onSubmit = async (values: LoginFormValues) => {
+    await signIn("credentials", {
+      redirect: false,
+      user: values.user,
+      password: values.password,
+    });
+
+    router.push("/");
+  };
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6 max-w-sm mx-auto"
+        className="flex-row space-y-6 max-w-sm mx-auto content-center h-screen"
       >
-        {/* make this to shared component */}
+        <h1>Sign In</h1>
         <FormField
           control={form.control}
-          name="email"
+          name="user"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Username/Email</FormLabel>
               <FormControl>
-                <Input type="email" {...field} />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        {/* make this to shared component */}
-
         <FormField
           control={form.control}
           name="password"
@@ -66,9 +75,7 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={isPending}>
-          {isPending ? "Logging in..." : "Login"}
-        </Button>
+        <GlobalButton label="Login" type="submit" loading={isSubmitting} />
       </form>
     </Form>
   );

@@ -6,8 +6,8 @@ export const useLogin = () => {
   const setToken = useAuthStore((s) => s.setToken);
 
   return useMutation({
-    mutationFn: ({ email, password }: { email: string; password: string }) =>
-      login(email, password),
+    mutationFn: ({ user, password }: { user: string; password: string }) =>
+      login(user, password),
     onSuccess: (data) => {
       setToken(data.token);
     },

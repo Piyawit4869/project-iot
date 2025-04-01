@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is(.dark *)); 
 
 @theme inline {
   --color-background: var(--background);
@@ -116,7 +116,15 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
+
+ body {
     @apply bg-background text-foreground;
+    
+  }
+   main {
+    min-height: 100vh;
+  }
+  button {
+    cursor: pointer;
   }
 }
