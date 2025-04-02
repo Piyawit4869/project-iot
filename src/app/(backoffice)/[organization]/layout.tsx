@@ -1,8 +1,6 @@
 "use client";
 
-import { playlists } from "@/components/features/home/data/playlist";
-import { Sidebar } from "@/components/shared/sidebar";
-import React, { Suspense } from "react";
+import AdminSidebar from "@/components/shared/sidebar";
 
 export default function DashboardLayout({
   children,
@@ -10,15 +8,37 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex bg-gray-50">
-      <aside className="w-62 shadow-md">
-        <Suspense>
-          <Sidebar playlists={playlists} className="hidden lg:block" />
-        </Suspense>
-      </aside>
-      <main className="bg-gray-100 flex-1 w-full">
+    // <div className="flex h-screen">
+    //   <SidebarProvider>
+    //     <aside className="bg-primary shadow-md overflow-y-auto">
+    //       <AppSidebar />
+    //     </aside>
+    //     <main className="flex-1 w-full overflow-y-auto">
+    //       <div className="flex-1 flex flex-col">
+    //         <header className="bg-white shadow p-2 flex items-center justify-between">
+    //           <div className="flex">
+    //             <SidebarTrigger className="-ml-1" />
+    //           </div>
+    //           <div className="flex items-center space-x-4">{/* Header */}</div>
+    //         </header>
+
+    //         {children}
+    //       </div>
+    //     </main>
+    //   </SidebarProvider>
+    // </div>
+
+    <div className="flex h-screen">
+      {/* <aside className="bg-primary shadow-md overflow-y-auto"> */}
+      <AdminSidebar />
+      {/* </aside> */}
+      <main className="flex-1 w-full overflow-y-auto">
         <div className="flex-1 flex flex-col">
-          <Suspense>{children}</Suspense>
+          {/* <header className="bg-white shadow p-2 flex items-center justify-between">
+              <div className="flex items-center space-x-4">{/* Header </div>
+            </header> */}
+
+          {children}
         </div>
       </main>
     </div>

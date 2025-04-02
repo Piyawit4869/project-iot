@@ -4,8 +4,6 @@ import Providers from "./providers";
 
 // import "@/styles/global.css";
 import "./globals.css";
-import { Sidebar } from "@/components/shared/sidebar";
-import { playlists } from "@/components/features/home/data/playlist";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,7 +30,6 @@ export default function RootLayout({
 
       <html lang="en">
         <body>
-          {/* <Sidebar playlists={playlists} className="hidden lg:block" /> */}
           <main>{children}</main>
         </body>
       </html>

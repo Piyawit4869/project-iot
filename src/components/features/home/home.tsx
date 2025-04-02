@@ -8,7 +8,7 @@ import { Menu } from "../../shared/menu";
 import { playlists } from "./data/playlist";
 // import { AppSidebar } from "@/components/shared/sidebar";
 // import { AppSidebar } from "@/components/shared/sidebar";
-import { Sidebar } from "@/components/shared/sidebar";
+// import { Sidebar } from "@/components/shared/sidebar";
 import { PlusCircle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
