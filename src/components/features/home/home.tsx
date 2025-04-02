@@ -6,7 +6,7 @@ import { signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Menu } from "../../shared/menu";
 import { playlists } from "./data/playlist";
-import { Sidebar } from "@/components/shared/sidebar";
+import { AppSidebar } from "@/components/shared/sidebar";
 import { PlusCircle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -69,7 +69,8 @@ export const Home = () => {
       <div className="border-t">
         <div className="bg-background">
           <div className="grid lg:grid-cols-5">
-            <Sidebar playlists={playlists} className="hidden lg:block" />
+            {/* <Sidebar playlists={playlists} className="hidden lg:block" /> */}
+            <AppSidebar />
             <div className="col-span-3 lg:col-span-4 lg:border-l">
               <div className="h-full px-4 py-6 lg:px-8">
                 <Tabs defaultValue="music" className="h-full space-y-6">
