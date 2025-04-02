@@ -37,7 +37,6 @@ const authOptions: NextAuthOptions = {
           }
           return null;
         } catch (error) {
-          console.log({ error });
           throw new Error("Invalid username or password");
         }
       },
@@ -50,7 +49,6 @@ const authOptions: NextAuthOptions = {
       return token;
     },
     session: async ({ session, token }) => {
-      console.log({ base_url });
       if (session) {
         session = {
           ...session,
