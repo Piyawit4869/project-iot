@@ -1,6 +1,8 @@
 "use client";
 
-import AdminSidebar from "@/components/shared/sidebar";
+import { Menu } from "@/components/shared/menu";
+import { AppSidebar } from "@/components/shared/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function DashboardLayout({
   children,
@@ -8,39 +10,26 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // <div className="flex h-screen">
-    //   <SidebarProvider>
-    //     <aside className="bg-primary shadow-md overflow-y-auto">
-    //       <AppSidebar />
-    //     </aside>
-    //     <main className="flex-1 w-full overflow-y-auto">
-    //       <div className="flex-1 flex flex-col">
-    //         <header className="bg-white shadow p-2 flex items-center justify-between">
-    //           <div className="flex">
-    //             <SidebarTrigger className="-ml-1" />
-    //           </div>
-    //           <div className="flex items-center space-x-4">{/* Header */}</div>
-    //         </header>
-
-    //         {children}
-    //       </div>
-    //     </main>
-    //   </SidebarProvider>
-    // </div>
-
     <div className="flex h-screen">
-      {/* <aside className="bg-primary shadow-md overflow-y-auto"> */}
-      <AdminSidebar />
-      {/* </aside> */}
-      <main className="flex-1 w-full overflow-y-auto">
-        <div className="flex-1 flex flex-col">
-          {/* <header className="bg-white shadow p-2 flex items-center justify-between">
-              <div className="flex items-center space-x-4">{/* Header </div>
-            </header> */}
+      <SidebarProvider>
+        <aside>
+          <AppSidebar />
+        </aside>
+        <main className="flex-1 w-full overflow-y-auto">
+          <div className="flex-1 flex flex-col">
+            <header className="bg-white shadow p-2 flex items-center justify-between">
+              <div className="flex items-center gap-2 px-4">
+                <SidebarTrigger className="-ml-1" />
+              </div>
+              <div className="flex items-center space-x-4">
+                <Menu />
+              </div>
+            </header>
 
-          {children}
-        </div>
-      </main>
+            {children}
+          </div>
+        </main>
+      </SidebarProvider>
     </div>
   );
 }

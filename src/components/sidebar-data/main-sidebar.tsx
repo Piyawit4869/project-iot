@@ -52,7 +52,7 @@ export function MainSidebar({
                     <SidebarMenuSubItem key={subItem.name}>
                       <SidebarMenuSubButton asChild>
                         <a href={subItem.path}>
-                          {item.icon && <item.icon />}
+                          {subItem.icon && <subItem.icon />}
                           <span>{subItem.name}</span>
                         </a>
                       </SidebarMenuSubButton>
