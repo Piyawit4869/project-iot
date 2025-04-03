@@ -1,3 +1,5 @@
+/** @format */
+
 "use client";
 
 import { Menu } from "@/components/shared/menu";
