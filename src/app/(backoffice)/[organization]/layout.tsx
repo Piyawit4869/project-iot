@@ -17,7 +17,7 @@ export default function DashboardLayout({
         </Suspense>
       </aside>
       <main className="bg-gray-100 flex-1 w-full">
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col p-8" >
           <Suspense>{children}</Suspense>
         </div>
       </main>

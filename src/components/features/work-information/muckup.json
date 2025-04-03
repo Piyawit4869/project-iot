@@ -1,0 +1,98 @@
+{
+    "items": [
+      {
+        "id": "emp001",
+        "userName": "นางสาว สุนิสา สมบูรณ์",
+        "prefix": "นางสาว",
+        "status": "Active",
+        "limitTimePerDay": 8,
+        "totalWorkHours": 160,
+        "note": "ทำงานครบ"
+      },
+      {
+        "id": "emp002",
+        "userName": "นาย ธนกฤต ภักดี",
+        "prefix": "นาย",
+        "status": "Active",
+        "limitTimePerDay": 8,
+        "totalWorkHours": 156,
+        "note": "-"
+      },
+      {
+        "id": "emp003",
+        "userName": "นาง มณีรัตน์ จันทร์เพ็ญ",
+        "prefix": "นาง",
+        "status": "Inactive",
+        "limitTimePerDay": 6,
+        "totalWorkHours": 48,
+        "note": "ลาคลอด"
+      },
+      {
+        "id": "emp004",
+        "userName": "นาย กิตติชัย คำดี",
+        "prefix": "นาย",
+        "status": "Active",
+        "limitTimePerDay": 8,
+        "totalWorkHours": 172,
+        "note": "โอทีเยอะ"
+      },
+      {
+        "id": "emp005",
+        "userName": "นางสาว ภัทรสุดา พรมงาม",
+        "prefix": "นางสาว",
+        "status": "Inactive",
+        "limitTimePerDay": 8,
+        "totalWorkHours": 64,
+        "note": "ขาดงานหลายวัน"
+      },
+      {
+        "id": "emp006",
+        "userName": "นาย วีรภัทร สุขดี",
+        "prefix": "นาย",
+        "status": "Active",
+        "limitTimePerDay": 8,
+        "totalWorkHours": 120,
+        "note": "-"
+      },
+      {
+        "id": "emp007",
+        "userName": "นาง สายฝน สวัสดี",
+        "prefix": "นาง",
+        "status": "Active",
+        "limitTimePerDay": 8,
+        "totalWorkHours": 150,
+        "note": "ทำงานดี"
+      },
+      {
+        "id": "emp008",
+        "userName": "นาย ธวัชชัย บุญมา",
+        "prefix": "นาย",
+        "status": "Active",
+        "limitTimePerDay": 8,
+        "totalWorkHours": 140,
+        "note": "-"
+      },
+      {
+        "id": "emp009",
+        "userName": "นางสาว พิชญา ใจดี",
+        "prefix": "นางสาว",
+        "status": "Inactive",
+        "limitTimePerDay": 6,
+        "totalWorkHours": 30,
+        "note": "ลาออก"
+      },
+      {
+        "id": "emp010",
+        "userName": "นาย พงศ์เทพ มั่งมี",
+        "prefix": "นาย",
+        "status": "Active",
+        "limitTimePerDay": 8,
+        "totalWorkHours": 168,
+        "note": "-"
+      }
+    ],
+    "currentPage": 1,
+    "totalPages": 1,
+    "totalItems": 10
+  }
+  
