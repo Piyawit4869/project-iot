@@ -18,20 +18,20 @@ export function Menu() {
       key: "profile",
       label: "Profile",
       path: "/backoffice/profile",
-      icon: Icons.User,
+      icon: <Icons.User />,
     },
     {
       key: "setting",
       label: "Setting",
       path: "/backoffice/profile/setting",
-      icon: Icons.Settings,
+      icon: <Icons.Settings />,
     },
     {
       key: "logout",
       label: "Sign Out",
       onClick: signOut,
       path: "",
-      icon: Icons.LogOut,
+      icon: <Icons.LogOut />,
     },
   ];
 
@@ -254,8 +254,8 @@ export function Menu() {
             >
               <a href={item.path} onClick={() => item.onClick}>
                 <div className="flex">
-                  {/* {item.icon} */}
-                  <div className="ml-3 text-xs">{item.label}</div>
+                  <div className="">{item.icon}</div>
+                  <div className="ml-3">{item.label}</div>
                 </div>
               </a>
             </DropdownMenuItem>

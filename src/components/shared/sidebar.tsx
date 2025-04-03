@@ -66,31 +66,31 @@ const data = {
       subMenu: [
         {
           name: "Overview",
-          path: "/admin/attendance/overview",
+          path: "/organization/attendance/overview",
           icon: Icons.Grid,
           isActive: false,
         },
         {
           name: "Work Information",
-          path: "/admin/attendance/work-infomation",
+          path: "/organization/attendance/work-infomation",
           icon: Icons.Briefcase,
           isActive: false,
         },
         {
           name: "Whitelist",
-          path: "/admin/attendance/whitelist",
+          path: "/organization/attendance/whitelist",
           icon: Icons.FileText,
           isActive: false,
         },
         {
           name: "Approval",
-          path: "/admin/attendance/config_attendance",
+          path: "/organization/attendance/approval",
           icon: Icons.Settings,
           isActive: false,
         },
         {
           name: "Appointment",
-          path: "/admin/attendance/config_attendance",
+          path: "/organization/attendance/appointment",
           icon: Icons.Settings,
           isActive: false,
         },
@@ -104,7 +104,7 @@ const data = {
       subMenu: [
         {
           name: "All Notation",
-          path: "/admin/notation",
+          path: "/organization/notation",
           icon: Icons.Folder,
           isActive: false,
         },
@@ -118,7 +118,7 @@ const data = {
       subMenu: [
         {
           name: "All Products",
-          path: "/admin/item",
+          path: "/organization/products",
           icon: Icons.Archive,
           isActive: false,
         },
@@ -132,7 +132,7 @@ const data = {
       subMenu: [
         {
           name: "All Customer",
-          path: "/admin/customer",
+          path: "/organization/customer",
           icon: Icons.Users,
           isActive: false,
         },
@@ -172,7 +172,7 @@ const data = {
       subMenu: [
         {
           name: "Setting Organization",
-          path: "/admin/organization",
+          path: "/organization/setting",
           icon: Icons.Settings,
           isActive: false,
         },
