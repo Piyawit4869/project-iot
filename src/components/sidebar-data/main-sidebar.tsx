@@ -17,6 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { usePathname } from "next/navigation";
 
 export function MainSidebar({
   items,
@@ -25,13 +26,17 @@ export function MainSidebar({
     name: string;
     key: string;
     icon?: LucideIcon;
+    isActive: boolean;
     subMenu?: {
       name: string;
       path: string;
       icon?: LucideIcon;
+      isActive: boolean;
     }[];
   }[];
 }) {
+  const pathname = usePathname() ?? "";
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Feature</SidebarGroupLabel>
@@ -50,7 +55,11 @@ export function MainSidebar({
                 <SidebarMenuSub>
                   {item.subMenu?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.name}>
-                      <SidebarMenuSubButton asChild>
+                      <SidebarMenuSubButton
+                        asChild
+                        key={subItem.name}
+                        isActive={pathname === subItem.path}
+                      >
                         <a href={subItem.path}>
                           {subItem.icon && <subItem.icon />}
                           <span>{subItem.name}</span>
