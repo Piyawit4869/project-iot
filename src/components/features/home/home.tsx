@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetMe } from "@/actions/user/client/useGetUsers";
 import { Sidebar } from "@/components/shared/test-sidebar";
+import Link from "next/link";
 
 export const Home = () => {
   // const { data, refetch } = useGetMe();
@@ -84,10 +85,12 @@ export const Home = () => {
                       </TabsTrigger>
                     </TabsList>
                     <div className="ml-auto mr-4">
-                      <Button>
-                        <PlusCircle />
-                        Add music
-                      </Button>
+                      <Link href={"/utotech"}>
+                        <Button>
+                          <PlusCircle />
+                          go to utotech
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                   <TabsContent

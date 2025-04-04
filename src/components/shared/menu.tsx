@@ -4,12 +4,12 @@ import Image from "next/image";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { BellRing } from "lucide-react";
 import { Button } from "../ui/button";
 
 export function Menu() {
@@ -17,21 +17,14 @@ export function Menu() {
     {
       key: "profile",
       label: "Profile",
-      path: "/backoffice/profile",
-      icon: <Icons.User />,
+      path: "/organization/profile",
+      icon: Icons.User,
     },
     {
       key: "setting",
       label: "Setting",
-      path: "/backoffice/profile/setting",
-      icon: <Icons.Settings />,
-    },
-    {
-      key: "logout",
-      label: "Sign Out",
-      onClick: signOut,
-      path: "",
-      icon: <Icons.LogOut />,
+      path: "/organization/profile/setting",
+      icon: Icons.Settings,
     },
   ];
 
@@ -218,7 +211,7 @@ export function Menu() {
       </Menubar> */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <BellRing className="items-center hover:text-accent1 hover:scale-110 mr-5 mb-1 p-1" />
+          <Icons.BellRing className="items-center hover:text-accent1 hover:scale-110 mr-5 mt-1 p-1" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel>Notification</DropdownMenuLabel>
@@ -230,49 +223,43 @@ export function Menu() {
       </DropdownMenu>
 
       <DropdownMenu>
-        <div className="relative">
-          <DropdownMenuTrigger className="hover:scale-110">
-            <Image
-              width={30}
-              height={30}
-              src="/logo.png"
-              alt="Profile"
-              className="rounded-full items-center"
-            />
-          </DropdownMenuTrigger>
-        </div>
-        <DropdownMenuContent className="w-40">
+        <DropdownMenuTrigger className="hover:scale-110">
+          <Image
+            width={30}
+            height={30}
+            src="/logo.png"
+            alt="Profile"
+            className="rounded-full items-center"
+          />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>UTOTECH-owner</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {items.map((item: any) => (
-            <DropdownMenuItem
-              key={item.key}
-              className={
-                item.key === "delete" ? "text-danger" : "text-headFont"
-              }
-              color={item.key === "delete" ? "danger" : "default"}
-            >
-              <a href={item.path} onClick={() => item.onClick}>
-                <div className="flex">
-                  <div className="">{item.icon}</div>
-                  <div className="ml-3">{item.label}</div>
-                </div>
-              </a>
-            </DropdownMenuItem>
-          ))}
+          <DropdownMenuGroup>
+            {items.map((item: any) => (
+              <DropdownMenuItem
+                key={item.key}
+                className={
+                  item.key === "delete" ? "text-danger" : "text-headFont"
+                }
+                color={item.key === "delete" ? "danger" : "default"}
+              >
+                <a href={item.path} onClick={() => item.onClick}>
+                  <div className="flex">
+                    {item.icon && <item.icon className="w-5 h-5" />}
+                    <div className="ml-3">{item.label}</div>
+                  </div>
+                </a>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => signOut()}>
+            <Icons.LogOut className="ml-1" />
+            Sign Out
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      <div>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="flex gap-4 items-center flex-col sm:flex-row"
-          onClick={() => signOut()}
-        >
-          Sign Out
-        </Button>
-      </div>
     </div>
   );
 }

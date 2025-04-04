@@ -36,16 +36,29 @@ export function MainSidebar({
   }[];
 }) {
   const pathname = usePathname() ?? "";
+  const pathUrl = pathname.split("/");
+  const pathFeature = pathUrl && pathUrl[2];
 
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Feature</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
-          <Collapsible key={item.name} asChild className="group/collapsible">
+          <Collapsible
+            key={item.name}
+            defaultOpen={item.isActive}
+            asChild
+            className="group/collapsible"
+          >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.name}>
+                <SidebarMenuButton
+                  isActive={pathFeature === item.key}
+                  className={
+                    pathFeature === item.key ? "bg-black text-white" : ""
+                  }
+                >
+                  {/* <SidebarMenuButton> */}
                   {item.icon && <item.icon />}
                   <span>{item.name}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />

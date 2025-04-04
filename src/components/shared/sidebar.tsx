@@ -28,7 +28,7 @@ const data = {
   main: [
     {
       name: "Account",
-      key: "accounting",
+      key: "account",
       icon: Icons.DollarSign,
       isActive: false,
       subMenu: [
@@ -112,7 +112,7 @@ const data = {
     },
     {
       name: "Products",
-      key: "item",
+      key: "products",
       icon: Icons.Package,
       isActive: false,
       subMenu: [
@@ -152,13 +152,13 @@ const data = {
         },
         {
           name: "Role",
-          path: "/organization/role",
+          path: "/organization/user/role",
           icon: Icons.Users,
           isActive: false,
         },
         {
           name: "Employee Role",
-          path: "/organization/employeerole",
+          path: "/organization/user/employeerole",
           icon: Icons.Users,
           isActive: false,
         },
