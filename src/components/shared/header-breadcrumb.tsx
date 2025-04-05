@@ -1,9 +1,14 @@
 "use client";
-
-import Link from "next/link";
+import React from "react";
 import { usePathname } from "next/navigation";
-import * as Icon from "@ant-design/icons";
-import { Breadcrumb, BreadcrumbItem } from "../ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "../ui/breadcrumb";
 
 export const HeaderBreadcrumb = () => {
   const pathname = usePathname() as string;
@@ -12,26 +17,25 @@ export const HeaderBreadcrumb = () => {
   const pathSegments = pathname.split("/").filter((segment) => segment);
 
   return (
-    <Breadcrumb
-      separator={<Icon.RightOutlined className="text-headFont text-xs" />}
-    >
-      {pathSegments.map((segment, index) => {
-        const href = "/" + pathSegments.slice(0, index + 1).join("/");
-        const isLast = index === pathSegments.length - 1;
-        return (
-          <BreadcrumbItem key={href}>
-            {isLast ? (
-              <Link href={href}>
-                <span className="text-headFont text-xs">{segment}</span>
-              </Link>
-            ) : (
-              <Link href={href}>
-                <span className="text-headFont text-xs">{segment}</span>
-              </Link>
-            )}
-          </BreadcrumbItem>
-        );
-      })}
+    <Breadcrumb>
+      <BreadcrumbList>
+        {pathSegments.map((segment, index) => {
+          const href = "/" + pathSegments.slice(0, index + 1).join("/");
+          const isLast = index === pathSegments.length - 1;
+          return (
+            <React.Fragment key={href}>
+              <BreadcrumbItem key={href}>
+                {isLast ? (
+                  <BreadcrumbPage>{segment}</BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink href={href}>{segment}</BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+              {!isLast && <BreadcrumbSeparator />}
+            </React.Fragment>
+          );
+        })}
+      </BreadcrumbList>
     </Breadcrumb>
   );
 };

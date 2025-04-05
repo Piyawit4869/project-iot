@@ -34,7 +34,7 @@ const data = {
       subMenu: [
         {
           name: "Overview",
-          path: "/organization/account/overview",
+          path: "/organization/account",
           icon: Icons.BarChart2,
           isActive: false,
         },
@@ -66,7 +66,7 @@ const data = {
       subMenu: [
         {
           name: "Overview",
-          path: "/organization/attendance/overview",
+          path: "/organization/attendance",
           icon: Icons.Grid,
           isActive: false,
         },
