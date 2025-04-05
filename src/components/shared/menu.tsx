@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { Breadcrumb } from "./header-breadcrumb";
+import { HeaderBreadcrumb } from "./header-breadcrumb";
 
 export function Menu() {
   const items = [
@@ -33,9 +33,6 @@ export function Menu() {
 
   return (
     <div className="justify-between items-center flex">
-      <div className="flex justify-start items-center">
-        <Breadcrumb />
-      </div>
       {/* <Menubar className="rounded-none border-b border-none px-2 lg:px-4">
         <MenubarMenu>
           <MenubarTrigger className="font-bold">Music</MenubarTrigger>
