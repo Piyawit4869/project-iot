@@ -20,6 +20,11 @@ interface Task {
   dueDate: string;
 }
 
+interface FilterProps {
+  name: string;
+  type: "input" | "select" | "datepicker";
+}
+
 const tasks: Task[] = [
   {
     id: "1",
@@ -39,6 +44,11 @@ const tasks: Task[] = [
     status: "done",
     dueDate: "2025-04-01",
   },
+];
+
+const filters: FilterProps[] = [
+  { name: "title", type: "input" },
+  { name: "status", type: "select" },
 ];
 
 const columns: ColumnDef<Task>[] = [
@@ -95,14 +105,16 @@ export const WorkInformation = () => {
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
         <div className="flex items-center justify-between space-y-2">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Welcome back!</h2>
+            <h2 className="text-2xl font-bold tracking-tight">
+              Work Information
+            </h2>
             <p className="text-muted-foreground">
               Here&apos;s a list of your tasks for this month!
             </p>
           </div>
         </div>
 
-        <DataTable data={tasks} columns={columns} />
+        <DataTable data={tasks} columns={columns} filters={filters} />
       </div>
     </>
   );
