@@ -17,6 +17,7 @@ export function HomeSidebar({
   home: {
     name: string;
     key: string;
+    path: string;
     icon?: LucideIcon;
   }[];
 }) {
@@ -25,9 +26,11 @@ export function HomeSidebar({
       <SidebarMenu>
         {home.map((item) => (
           <SidebarMenuItem key={item.key}>
-            <SidebarMenuButton tooltip={item.name}>
-              {item.icon && <item.icon />}
-              <span>{item.name}</span>
+            <SidebarMenuButton asChild>
+              <a href={item.path}>
+                {item.icon && <item.icon />}
+                <span>{item.name}</span>
+              </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}

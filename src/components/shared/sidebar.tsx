@@ -3,7 +3,6 @@ import {
   SidebarContent,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-
 import React from "react";
 import * as Icons from "lucide-react";
 import { HeadSidebar } from "../sidebar-data/head-sidebar";
@@ -21,66 +20,79 @@ const data = {
     {
       name: "Home",
       key: "home",
+      path: "/organization",
       icon: Icons.Home,
+      isActive: false,
     },
   ],
   main: [
     {
-      name: "Account",
-      key: "accounting",
+      name: "Accounting",
+      key: "account",
       icon: Icons.DollarSign,
+      isActive: false,
       subMenu: [
         {
           name: "Overview",
-          path: "/admin/accounting/statement",
+          path: "/organization/account/overview",
           icon: Icons.BarChart2,
+          isActive: false,
         },
         {
           name: "Revenue",
-          path: "/admin/accounting/revenue",
+          path: "/organization/account/revenue",
           icon: Icons.TrendingUp,
+          isActive: false,
         },
         {
           name: "Expenses",
-          path: "/admin/accounting/expenses",
+          path: "/organization/account/expenses",
           icon: Icons.TrendingDown,
+          isActive: false,
         },
         {
           name: "Analysis",
-          path: "/admin/accounting/analysis",
+          path: "/organization/account/analysis",
           icon: Icons.PieChart,
+          isActive: false,
         },
       ],
     },
     {
       name: "Attendance",
       key: "attendance",
-      icon: Icons.Users,
+      icon: Icons.UsersRound,
+      isActive: false,
       subMenu: [
         {
           name: "Overview",
-          path: "/admin/attendance/overview",
+          path: "/organization/attendance/overview",
           icon: Icons.Grid,
+          isActive: false,
         },
         {
           name: "Work Information",
-          path: "/admin/attendance/work-infomation",
+          path: "/organization/attendance/work-infomation",
           icon: Icons.Briefcase,
+          isActive: false,
         },
         {
           name: "Whitelist",
-          path: "/admin/attendance/whitelist",
+          path: "/organization/attendance/whitelist",
           icon: Icons.FileText,
+          isActive: false,
         },
         {
           name: "Approval",
-          path: "/admin/attendance/config_attendance",
+          path: "/organization/attendance/approval",
           icon: Icons.Settings,
+          isActive: false,
         },
         {
           name: "Appointment",
-          path: "/admin/attendance/config_attendance",
+          path: "/organization/attendance/appointment",
           icon: Icons.Settings,
+          isActive: false,
         },
       ],
     },
@@ -88,19 +100,27 @@ const data = {
       name: "Notation",
       key: "notation",
       icon: Icons.File,
+      isActive: false,
       subMenu: [
-        { name: "All Notation", path: "/admin/notation", icon: Icons.Folder },
+        {
+          name: "All Notation",
+          path: "/organization/notation",
+          icon: Icons.Folder,
+          isActive: false,
+        },
       ],
     },
     {
       name: "Products",
-      key: "item",
+      key: "products",
       icon: Icons.Package,
+      isActive: false,
       subMenu: [
         {
           name: "All Products",
-          path: "/admin/item",
+          path: "/organization/products",
           icon: Icons.Archive,
+          isActive: false,
         },
       ],
     },
@@ -108,29 +128,71 @@ const data = {
       name: "Customer",
       key: "customer",
       icon: Icons.Smile,
+      isActive: false,
       subMenu: [
-        { name: "All Customer", path: "/admin/customer", icon: Icons.Users },
+        {
+          name: "All Customer",
+          path: "/organization/customer",
+          icon: Icons.Users,
+          isActive: false,
+        },
       ],
     },
     {
       name: "Employee",
       key: "user",
       icon: Icons.User,
+      isActive: false,
       subMenu: [
-        { name: "Employee", path: "/admin/user", icon: Icons.UserCheck },
-        { name: "Role", path: "/admin/role", icon: Icons.Grid },
-        { name: "Employee Role", path: "/admin/role", icon: Icons.Grid },
+        {
+          name: "Employee",
+          path: "/organization/user",
+          icon: Icons.User,
+          isActive: false,
+        },
+        {
+          name: "Role",
+          path: "/organization/user/role",
+          icon: Icons.Users,
+          isActive: false,
+        },
+        {
+          name: "Employee Role",
+          path: "/organization/user/employeerole",
+          icon: Icons.Users,
+          isActive: false,
+        },
       ],
     },
     {
       name: "Setting",
       key: "setting",
       icon: Icons.Settings,
+      isActive: false,
       subMenu: [
         {
-          name: "Setting Organization",
-          path: "/admin/organization",
-          icon: Icons.Settings,
+          name: "Organization",
+          path: "/organization/setting/organization",
+          icon: Icons.SquareChartGantt,
+          isActive: false,
+        },
+        {
+          name: "Branch",
+          path: "/organization/setting/branch",
+          icon: Icons.Building2,
+          isActive: false,
+        },
+        {
+          name: "Address",
+          path: "/organization/setting/address",
+          icon: Icons.MapPinCheck,
+          isActive: false,
+        },
+        {
+          name: "Settings",
+          path: "/organization/setting",
+          icon: Icons.SlidersHorizontal,
+          isActive: false,
         },
       ],
     },
