@@ -29,23 +29,23 @@ import {
 
 import { TablePagination } from "./global-table";
 import { DataTableToolbar } from "./toolbar";
-import { Input } from "../ui/input";
+// import { Input } from "../ui/input";
 
-interface FilterProps {
-  name: string;
-  type: "input" | "select" | "datepicker";
-}
+// interface FilterProps {
+//   name: string;
+//   type: "input" | "select" | "datepicker";
+// }
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  filters?: FilterProps[];
+  // filters?: FilterProps[];
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  filters,
+  // filters,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =

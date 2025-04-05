@@ -2,6 +2,7 @@
 
 import { signOut } from "next-auth/react";
 import * as Icons from "lucide-react";
+import {} from "lucide-react";
 import Image from "next/image";
 import {
   DropdownMenu,
@@ -12,11 +13,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Button } from "../ui/button";
-import { HeaderBreadcrumb } from "./header-breadcrumb";
+import React from "react";
+
+type ItemMenuType = {
+  key: string;
+  label: string;
+  path: string;
+  icon: Icons.LucideIcon;
+};
 
 export function Menu() {
-  const items = [
+  const items: ItemMenuType[] = [
     {
       key: "profile",
       label: "Profile",
@@ -239,7 +246,7 @@ export function Menu() {
           <DropdownMenuLabel>UTOTECH-owner</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            {items.map((item: any) => (
+            {items.map((item: (typeof items)[0]) => (
               <DropdownMenuItem
                 key={item.key}
                 className={
@@ -247,7 +254,7 @@ export function Menu() {
                 }
                 color={item.key === "delete" ? "danger" : "default"}
               >
-                <a href={item.path} onClick={() => item.onClick}>
+                <a href={item.path}>
                   <div className="flex">
                     {item.icon && <item.icon className="w-5 h-5" />}
                     <div className="ml-3">{item.label}</div>
