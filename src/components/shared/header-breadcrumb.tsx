@@ -1,19 +1,21 @@
+/** @format */
+
 "use client";
 
-import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import * as Icon from "@ant-design/icons";
+import * as Icons from "lucide-react";
+import { Breadcrumb, BreadcrumbItem } from "../ui/breadcrumb";
 
-export const Breadcrumb = () => {
+export const HeaderBreadcrumb = () => {
   const pathname = usePathname() as string;
 
   // Split the pathname into segments
   const pathSegments = pathname.split("/").filter((segment) => segment);
 
   return (
-    <Breadcrumbs
-      separator={<Icon.RightOutlined className="text-headFont text-xs" />}
+    <Breadcrumb
+      separator={<Icons.ChevronRight className="text-headFont text-xs" />}
     >
       {pathSegments.map((segment, index) => {
         const href = "/" + pathSegments.slice(0, index + 1).join("/");
@@ -32,6 +34,6 @@ export const Breadcrumb = () => {
           </BreadcrumbItem>
         );
       })}
-    </Breadcrumbs>
+    </Breadcrumb>
   );
 };
