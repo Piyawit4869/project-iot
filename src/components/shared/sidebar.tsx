@@ -27,7 +27,7 @@ const data = {
   ],
   main: [
     {
-      name: "Account",
+      name: "Accounting",
       key: "account",
       icon: Icons.DollarSign,
       isActive: false,
@@ -171,9 +171,27 @@ const data = {
       isActive: false,
       subMenu: [
         {
-          name: "Setting Organization",
+          name: "Organization",
+          path: "/organization/setting/organization",
+          icon: Icons.SquareChartGantt,
+          isActive: false,
+        },
+        {
+          name: "Branch",
+          path: "/organization/setting/branch",
+          icon: Icons.Building2,
+          isActive: false,
+        },
+        {
+          name: "Address",
+          path: "/organization/setting/address",
+          icon: Icons.MapPinCheck,
+          isActive: false,
+        },
+        {
+          name: "Settings",
           path: "/organization/setting",
-          icon: Icons.Settings,
+          icon: Icons.SlidersHorizontal,
           isActive: false,
         },
       ],
