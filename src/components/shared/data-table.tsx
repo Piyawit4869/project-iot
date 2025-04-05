@@ -29,15 +29,23 @@ import {
 
 import { TablePagination } from "./global-table";
 import { DataTableToolbar } from "./toolbar";
+import { Input } from "../ui/input";
+
+interface FilterProps {
+  name: string;
+  type: "input" | "select" | "datepicker";
+}
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  filters?: FilterProps[];
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  filters,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -71,6 +79,9 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
+      {/* {filters && filters.length
+        ? filters.map((item) => <Input className="flex w-[50%]"></Input>)
+        : null} */}
       <DataTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
