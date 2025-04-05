@@ -37,3 +37,4 @@ export const HeaderBreadcrumb = () => {
     </Breadcrumb>
   );
 };
+export { Breadcrumb };
