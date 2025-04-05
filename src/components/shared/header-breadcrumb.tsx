@@ -1,18 +1,18 @@
 "use client";
 
-import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as Icon from "@ant-design/icons";
+import { Breadcrumb, BreadcrumbItem } from "../ui/breadcrumb";
 
-export const Breadcrumb = () => {
+export const HeaderBreadcrumb = () => {
   const pathname = usePathname() as string;
 
   // Split the pathname into segments
   const pathSegments = pathname.split("/").filter((segment) => segment);
 
   return (
-    <Breadcrumbs
+    <Breadcrumb
       separator={<Icon.RightOutlined className="text-headFont text-xs" />}
     >
       {pathSegments.map((segment, index) => {
@@ -32,6 +32,6 @@ export const Breadcrumb = () => {
           </BreadcrumbItem>
         );
       })}
-    </Breadcrumbs>
+    </Breadcrumb>
   );
 };
