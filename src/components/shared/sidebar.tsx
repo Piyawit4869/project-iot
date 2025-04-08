@@ -13,7 +13,7 @@ const data = {
   head: [
     {
       name: "Utotech co., ltd",
-      logo: "/logo.png",
+      logo: "/assets/images/logo.webp",
     },
   ],
   home: [

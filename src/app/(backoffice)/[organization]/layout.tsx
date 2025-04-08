@@ -1,5 +1,3 @@
-/** @format */
-
 "use client";
 
 import { HeaderBreadcrumb } from "@/components/shared/header-breadcrumb";
@@ -31,7 +29,6 @@ export default function DashboardLayout({
                 <Menu />
               </div>
             </header>
-
             {children}
           </div>
         </main>
