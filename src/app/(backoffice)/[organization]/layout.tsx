@@ -28,7 +28,6 @@ export default function DashboardLayout({
                 <Menu />
               </div>
             </header>
-
             {children}
           </div>
         </main>

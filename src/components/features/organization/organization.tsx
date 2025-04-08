@@ -90,11 +90,10 @@ export const Organization = () => {
         ]}
       />
 
-      <DataTable
-        data={tasks}
-        columns={columns}
-        // filters={filters}
-      />
+      {/* <DataTable
+              columns={columns} queryFunction={}
+                      // filters={filters}
+      /> */}
     </>
   );
 };
