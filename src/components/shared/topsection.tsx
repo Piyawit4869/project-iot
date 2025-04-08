@@ -1,7 +1,9 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, cloneElement, isValidElement } from "react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import * as Icons from "lucide-react";
+import { Button } from "../ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 interface CardWithFormProps {
   title: string;
