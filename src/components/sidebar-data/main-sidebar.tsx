@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -22,17 +22,23 @@ import { usePathname } from "next/navigation";
 interface SidebarItem {
   name: string;
   key: string;
-  icon?: LucideIcon;
+  icon?: string;
   isActive: boolean;
   subMenu?: {
     name: string;
     path: string;
-    icon?: LucideIcon;
+    icon?: string;
     isActive: boolean;
   }[];
 }
 
-export function MainSidebar({ items }: { items: SidebarItem[] }) {
+export function MainSidebar({
+  items,
+  icon,
+}: {
+  items: SidebarItem[];
+  icon: (iconName: string) => React.ReactNode;
+}) {
   const pathname = usePathname() ?? "";
   const pathUrl = pathname.split("/");
   const pathFeature = pathUrl && pathUrl[2];
@@ -61,7 +67,7 @@ export function MainSidebar({ items }: { items: SidebarItem[] }) {
                     pathFeature === item.key ? "bg-black text-white" : ""
                   }
                 >
-                  {item.icon && <item.icon />}
+                  {item.icon && icon(item.icon)}
                   <span>{item.name}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
@@ -76,7 +82,7 @@ export function MainSidebar({ items }: { items: SidebarItem[] }) {
                         isActive={pathname === subItem.path}
                       >
                         <a href={subItem.path}>
-                          {subItem.icon && <subItem.icon />}
+                          {subItem.icon && icon(subItem.icon)}
                           <span>{subItem.name}</span>
                         </a>
                       </SidebarMenuSubButton>

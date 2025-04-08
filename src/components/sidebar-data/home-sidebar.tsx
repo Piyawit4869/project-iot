@@ -2,26 +2,28 @@
 
 "use client";
 
-// import Image from "next/image";
-import { LucideIcon } from "lucide-react";
+import React from "react";
 import {
   SidebarGroup,
-  // SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  // SidebarMenuSub,
 } from "@/components/ui/sidebar";
+
+interface SidebarItem {
+  name: string;
+  key: string;
+  path: string;
+  icon?: string;
+  isActive: boolean;
+}
 
 export function HomeSidebar({
   home,
+  icon,
 }: {
-  home: {
-    name: string;
-    key: string;
-    path: string;
-    icon?: LucideIcon;
-  }[];
+  home: SidebarItem[];
+  icon: (iconName: string) => React.ReactNode;
 }) {
   return (
     <SidebarGroup>
@@ -30,7 +32,7 @@ export function HomeSidebar({
           <SidebarMenuItem key={item.key}>
             <SidebarMenuButton asChild>
               <a href={item.path}>
-                {item.icon && <item.icon />}
+                {item.icon && icon(item.icon)}
                 <span>{item.name}</span>
               </a>
             </SidebarMenuButton>
