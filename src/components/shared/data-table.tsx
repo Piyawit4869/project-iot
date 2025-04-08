@@ -29,7 +29,6 @@ import {
 
 import { TablePagination } from "./global-table";
 import { DataTableToolbar } from "./toolbar";
-import { Input } from "../ui/input";
 
 interface FilterProps {
   name: string;

@@ -12,8 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Button } from "../ui/button";
-import { HeaderBreadcrumb } from "./header-breadcrumb";
 
 export function Menu() {
   const items = [
