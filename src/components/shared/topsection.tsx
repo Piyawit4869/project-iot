@@ -1,9 +1,9 @@
 import React, { ReactNode, cloneElement, isValidElement } from "react";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import * as Icons from "lucide-react";
-import { Button } from "../ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+// import { Button } from "../ui/button";
+// import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 interface CardWithFormProps {
   title: string;
@@ -31,20 +31,19 @@ export function Control({
   // }, []);
 
   return (
-    <Card className="sticky p-4 mt-8">
+    <Card className="sticky p-4 mt-4">
       <div className="flex items-center justify-between">
         {/* Title */}
         {backpath ? (
-          <CardHeader className="flex text-headFont gap-2 items-center">
+          <div className="flex text-headFont gap-2 items-center">
             <Link href={backpath} passHref>
               <Icons.ChevronLeft className="text-base cursor-pointer" />
             </Link>
             <CardTitle>{title}</CardTitle>
-          </CardHeader>
+          </div>
         ) : (
           <CardTitle className="text-xl">{title}</CardTitle>
         )}
-
         {subtitle && <CardTitle className="text-sm">{subtitle}</CardTitle>}
 
         {/* ✅ Fixed Popover for Mobile */}
