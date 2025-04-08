@@ -3,9 +3,8 @@
 import { Metadata } from "next";
 import { ColumnDef } from "@tanstack/react-table";
 
-import { DataTable } from "@/components/shared/data-table"; // <- ให้แน่ใจว่ามี component นี้
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import GlobalTabs from "@/components/shared/global-tab";
+import { DataTable } from "@/components/shared/data-table";
+import { usePaginate } from "@/actions/user/client/useGetUsers";
 
 export const metadata: Metadata = {
   title: "Tasks",
@@ -19,30 +18,9 @@ interface Task {
   dueDate: string;
 }
 
-const tasks: Task[] = [
-  {
-    id: "1",
-    title: "ออกแบบ UI หน้า Dashboard",
-    status: "in-progress",
-    dueDate: "2025-04-10",
-  },
-  {
-    id: "2",
-    title: "แก้บั๊กระบบสมัครสมาชิก",
-    status: "pending",
-    dueDate: "2025-04-05",
-  },
-  {
-    id: "3",
-    title: "ทดสอบระบบ API ใหม่",
-    status: "done",
-    dueDate: "2025-04-01",
-  },
-];
-
 const columns: ColumnDef<Task>[] = [
   {
-    accessorKey: "title",
+    accessorKey: "id",
     header: "ชื่องาน",
     cell: (info) => <span>{info.getValue() as string}</span>,
   },
@@ -74,26 +52,7 @@ const columns: ColumnDef<Task>[] = [
 export const Organization = () => {
   return (
     <>
-      <GlobalTabs
-        defaultValue="overview"
-        tabs={[
-          {
-            value: "overview",
-            label: "Overview",
-            content: <h1>Overview Content</h1>,
-          },
-          {
-            value: "analytics",
-            label: "Analytics",
-            content: () => <div>Analytics Content (lazy)</div>,
-          },
-        ]}
-      />
-
-      {/* <DataTable
-              columns={columns} queryFunction={}
-                      // filters={filters}
-      /> */}
+      <DataTable queryFunction={usePaginate} columns={columns} />
     </>
   );
 };

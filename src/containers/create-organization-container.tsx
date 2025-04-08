@@ -1,28 +1,32 @@
 import React from "react";
-import { Organization } from "@/components/features/organization";
+import { CreateOrganization } from "@/components/features/organization";
 import { Control } from "@/components/shared/topsection";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-const OrganizationContainer = () => {
+const CreateOrganizationContainer = () => {
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
       <div className="items-center justify-between space-y-2">
         <Control
-          title="Organization"
+          backpath={"/superadmin/organization"}
+          title="CreateOrganization"
           buttons={[
             <Link
               href={`/superadmin/organization/create`}
               key={"create button"}
             >
-              <Button key={"create button"}>Create</Button>
+              <div className="space-x-2">
+                <Button key={"save button"}>Save</Button>
+                <Button key={"cancel button"}>Cancel</Button>
+              </div>
             </Link>,
           ]}
         />
       </div>
-      <Organization />
+      <CreateOrganization />
     </div>
   );
 };
 
-export default OrganizationContainer;
+export default CreateOrganizationContainer;
