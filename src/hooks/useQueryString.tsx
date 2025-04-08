@@ -1,5 +1,3 @@
-/** @format */
-
 import { useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 

@@ -1,5 +1,5 @@
 "use client";
 
-export const GlobalErrorPage = () => {
-  return <>Error</>;
-};
+export default function GlobalErrorPage() {
+  return <>ERROR</>;
+}
