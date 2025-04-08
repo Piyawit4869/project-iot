@@ -1,16 +1,13 @@
 import { z } from "zod";
 
 export const CreateFormSchema = z.object({
-  user: z.string(),
-  password: z.string().min(6),
+  name: z.string(),
+  description: z.string(),
+  quantity: z.string(),
+  price: z.string(),
+  discount: z.string(),
+  total: z.string(),
+  accessToken: z.string(),
 });
 
 export type CreateFormValues = z.infer<typeof CreateFormSchema>;
-
-// export const signinFormSchema = z.object({
-//   user: z.string(),
-//   password: z.string().min(6),
-//   email: z.string().email(),
-// });
-
-// export type SigninFormSchema = z.infer<typeof signinFormSchema>;

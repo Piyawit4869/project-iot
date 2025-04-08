@@ -43,6 +43,34 @@ export const fetchProducts = async (
   }
 };
 
+export const fetchCreateProducts = async (
+  name: string | undefined,
+  description: string | undefined,
+  quantity: string | undefined,
+  price: string | undefined,
+  discount: string | undefined,
+  total: string | undefined,
+  accessToken: string | undefined
+) => {
+  try {
+    const res = await axios.post(`${env.base_url}/crud/items/create`, {
+      name,
+      description,
+      quantity,
+      price,
+      discount,
+      total,
+      accessToken,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const signin = async () => {
   const res = await apiAxios.get("/api/signin");
   return res.data;
