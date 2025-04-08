@@ -111,13 +111,13 @@ const data = {
       ],
     },
     {
-      name: "Products",
+      name: "product and service",
       key: "products",
       icon: Icons.Package,
       isActive: false,
       subMenu: [
         {
-          name: "All Products",
+          name: "Products",
           path: "/organization/products",
           icon: Icons.Archive,
           isActive: false,

@@ -2,8 +2,6 @@
 
 import React from "react";
 import { WorkInformation } from "@/components/features/work-information";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 const WorkInformationContainer = () => {
   return (

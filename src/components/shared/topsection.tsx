@@ -97,34 +97,21 @@
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function CardWithForm() {
   return (
-    // <Card className="w-[350px]">
-    <Card className="flex w-full">
-      <CardHeader>
-        <CardTitle>Create project</CardTitle>
-      </CardHeader>
-      <CardFooter className="flex flex-end">
-        <Button>Deploy</Button>
-      </CardFooter>
-    </Card>
+    <div className="sticky">
+      <div className="flex items-center justify-between">
+        <Card className="flex w-full">
+          <CardHeader>
+            <CardTitle>Create project</CardTitle>
+          </CardHeader>
+          <CardFooter className="flex items-center justify-between">
+            <Button>Deploy</Button>
+          </CardFooter>
+        </Card>
+      </div>
+    </div>
   );
 }

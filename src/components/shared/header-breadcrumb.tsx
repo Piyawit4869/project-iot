@@ -1,3 +1,5 @@
+/** @format */
+
 "use client";
 import React from "react";
 import { usePathname } from "next/navigation";
@@ -39,3 +41,4 @@ export const HeaderBreadcrumb = () => {
     </Breadcrumb>
   );
 };
+export { Breadcrumb };

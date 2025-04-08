@@ -20,11 +20,6 @@ interface Task {
   dueDate: string;
 }
 
-interface FilterProps {
-  name: string;
-  type: "input" | "select" | "datepicker";
-}
-
 const tasks: Task[] = [
   {
     id: "1",
@@ -44,11 +39,6 @@ const tasks: Task[] = [
     status: "done",
     dueDate: "2025-04-01",
   },
-];
-
-const filters: FilterProps[] = [
-  { name: "title", type: "input" },
-  { name: "status", type: "select" },
 ];
 
 const columns: ColumnDef<Task>[] = [
@@ -114,7 +104,11 @@ export const WorkInformation = () => {
           </div>
         </div>
 
-        <DataTable data={tasks} columns={columns} filters={filters} />
+        <DataTable
+          data={tasks}
+          columns={columns}
+          // filters={filters}
+        />
       </div>
     </>
   );
