@@ -1,4 +1,4 @@
-/** @format */
+
 
 import axios from "axios";
 import NextAuth, { NextAuthOptions } from "next-auth";

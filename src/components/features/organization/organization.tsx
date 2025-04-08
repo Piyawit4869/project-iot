@@ -1,10 +1,10 @@
 "use client";
 
 import { Metadata } from "next";
-import Image from "next/image";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { DataTable } from "@/components/shared/data-table"; // <- ให้แน่ใจว่ามี component นี้
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const metadata: Metadata = {
   title: "Tasks",
@@ -70,44 +70,23 @@ const columns: ColumnDef<Task>[] = [
   },
 ];
 
-export const WorkInformation = () => {
+export const Organization = () => {
   return (
     <>
-      <div className="md:hidden">
-        <Image
-          src="/examples/tasks-light.png"
-          width={1280}
-          height={998}
-          alt="Playground"
-          className="block dark:hidden"
-        />
-        <Image
-          src="/examples/tasks-dark.png"
-          width={1280}
-          height={998}
-          alt="Playground"
-          className="hidden dark:block"
-        />
-      </div>
+      <Tabs>
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="reports">Reports</TabsTrigger>
+          <TabsTrigger value="notifications">Notifications</TabsTrigger>
+        </TabsList>
+      </Tabs>
 
-      <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
-        <div className="flex items-center justify-between space-y-2">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight">
-              Work Information
-            </h2>
-            <p className="text-muted-foreground">
-              Here&apos;s a list of your tasks for this month!
-            </p>
-          </div>
-        </div>
-
-        <DataTable
-          data={tasks}
-          columns={columns}
-          // filters={filters}
-        />
-      </div>
+      <DataTable
+        data={tasks}
+        columns={columns}
+        // filters={filters}
+      />
     </>
   );
 };

@@ -1,5 +1,3 @@
-/** @format */
-
 import { signOut } from "next-auth/react";
 import * as Icons from "lucide-react";
 import {} from "lucide-react";
