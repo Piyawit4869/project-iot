@@ -4,6 +4,7 @@ import { HeaderBreadcrumb } from "@/components/shared/header-breadcrumb";
 import { Menu } from "@/components/shared/menu";
 import { AppSidebar } from "@/components/shared/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import data from "@/components/sidebar-data/super-admin-data.json";
 
 export default function DashboardLayout({
   children,
@@ -14,7 +15,7 @@ export default function DashboardLayout({
     <div className="flex h-screen">
       <SidebarProvider>
         <aside>
-          <AppSidebar />
+          <AppSidebar data={data} />
         </aside>
         <main className="flex-1 w-full overflow-y-auto">
           <div className="flex-1 flex flex-col">

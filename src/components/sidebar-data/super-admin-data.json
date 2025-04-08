@@ -1,0 +1,65 @@
+{
+  "head": [
+    {
+      "name": "Utotech co., ltd",
+      "logo": "/logo.png"
+    }
+  ],
+  "home": [
+    {
+      "name": "Home",
+      "key": "home",
+      "path": "/superadmin",
+      "icon": "Home",
+      "isActive": false
+    }
+  ],
+  "main": [
+    {
+      "name": "Organization",
+      "key": "account",
+      "icon": "DollarSign",
+      "isActive": false,
+      "subMenu": [
+        {
+          "name": "Overview",
+          "path": "/superadmin/organization",
+          "icon": "BarChart2",
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "name": "Accounting",
+      "key": "account",
+      "icon": "DollarSign",
+      "isActive": false,
+      "subMenu": [
+        {
+          "name": "Overview",
+          "path": "/organization/account",
+          "icon": "BarChart2",
+          "isActive": false
+        },
+        {
+          "name": "Revenue",
+          "path": "/organization/account/revenue",
+          "icon": "TrendingUp",
+          "isActive": false
+        },
+        {
+          "name": "Expenses",
+          "path": "/organization/account/expenses",
+          "icon": "TrendingDown",
+          "isActive": false
+        },
+        {
+          "name": "Analysis",
+          "path": "/organization/account/analysis",
+          "icon": "PieChart",
+          "isActive": false
+        }
+      ]
+    }
+  ]
+}

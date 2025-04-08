@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import { DataTable } from "@/components/shared/data-table"; // <- ให้แน่ใจว่ามี component นี้
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import GlobalTabs from "@/components/shared/global-tab";
 
 export const metadata: Metadata = {
   title: "Tasks",
@@ -73,14 +74,21 @@ const columns: ColumnDef<Task>[] = [
 export const Organization = () => {
   return (
     <>
-      <Tabs>
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-        </TabsList>
-      </Tabs>
+      <GlobalTabs
+        defaultValue="overview"
+        tabs={[
+          {
+            value: "overview",
+            label: "Overview",
+            content: <h1>Overview Content</h1>,
+          },
+          {
+            value: "analytics",
+            label: "Analytics",
+            content: () => <div>Analytics Content (lazy)</div>,
+          },
+        ]}
+      />
 
       <DataTable
         data={tasks}
