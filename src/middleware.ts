@@ -2,8 +2,10 @@ import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  // const token = request.cookies.get("token")?.value;
+export async function middleware(
+  request: NextRequest
+  // { params }: { params: { organization: string } }
+) {
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
@@ -21,6 +23,12 @@ export async function middleware(request: NextRequest) {
 
   if (token && isPublicPath) {
     return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  if (pathname === "/") {
+    const orgSlug = "utotech";
+
+    return NextResponse.redirect(new URL(`/${orgSlug}`, request.url));
   }
 
   return NextResponse.next();

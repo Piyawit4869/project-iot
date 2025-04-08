@@ -1,11 +1,14 @@
 "use client";
 
+// import Image from "next/image";
 import { LucideIcon } from "lucide-react";
 import {
   SidebarGroup,
+  // SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  // SidebarMenuSub,
 } from "@/components/ui/sidebar";
 
 export function HomeSidebar({

@@ -7,5 +7,5 @@ type LayoutStore = {
 
 export const useLayoutStore = create<LayoutStore>()((set) => ({
   mobileOpen: false,
-  handleMobileOpen: (val) => set((state) => ({ mobileOpen: val })),
+  handleMobileOpen: (val) => set(() => ({ mobileOpen: val })),
 }));

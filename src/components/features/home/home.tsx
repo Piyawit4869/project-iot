@@ -1,7 +1,11 @@
 "use client";
 
 import React, { Suspense } from "react";
-import { useSession } from "next-auth/react";
+// import Image from "next/image";
+import {
+  // signOut,
+  useSession,
+} from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Menu } from "../../shared/menu";
 import { playlists } from "./data/playlist";
@@ -10,15 +14,14 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
+// import { useGetMe } from "@/actions/user/client/useGetUsers";
 import { Sidebar } from "@/components/shared/test-sidebar";
 import Link from "next/link";
 
 export const Home = () => {
   // const { data, refetch } = useGetMe();
-  // console.log({ data });
 
   const { data: session } = useSession();
-  console.log({ session });
 
   return (
     // <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
