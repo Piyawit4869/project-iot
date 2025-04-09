@@ -1,11 +1,9 @@
-name: Build & Deploy
+name: Build Checked
 
 on:
   push:
     branches:
-      - develop
-      - main
-      - staging
+      - "**"
 
 jobs:
   build:
