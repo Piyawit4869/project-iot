@@ -1,0 +1,98 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows:
+      - Build Checked
+    types:
+      - completed
+    branches:
+      - develop
+      - staging
+      - main
+
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "Deployment Environment"
+        required: true
+        default: dev
+
+      version:
+        description: "Deployment Version"
+        required: true
+        default: dev
+
+      migration:
+        description: "Have Migration file"
+        required: true
+        default: false
+        options:
+          - true
+          - false
+
+      note:
+        description: "Note"
+        required: false
+
+  repository_dispatch:
+    types: [deploy]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: contains('refs/heads/develop refs/heads/main refs/heads/staging', github.ref)
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Setting up environment variables via repository_dispatch
+        run: |
+          echo "APP_ENV=${{ github.event.client_payload.env }}" >> $GITHUB_ENV
+          echo "APP_VERSION=${{ github.event.client_payload.version }}" >> $GITHUB_ENV
+          echo "NOTE=${{ github.event.client_payload.note }}" >> $GITHUB_ENV
+        if: ${{ github.event_name == 'repository_dispatch' }}
+
+      - name: Setting up environment variables via workflow_dispatch
+        run: |
+          echo "APP_ENV=${{ github.event.inputs.env }}" >> $GITHUB_ENV
+          echo "APP_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+          echo "NOTE=${{ github.event.inputs.note }}" >> $GITHUB_ENV
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ env.APP_VERSION }}
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/setup-gcloud@v0.4.0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Deploy to Cloud Run
+        env:
+          APP_IMAGE: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}
+          SERVICE_NAME: ${{ github.event.repository.name }}-dev
+          APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
+          GCP_CLOUD_RUN_REGION: ${{ secrets.GCP_CLOUD_RUN_REGION }}
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        run: |
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+          --region=${{ env.GCP_CLOUD_RUN_REGION }} \
+          --image ${{ env.APP_IMAGE }}:develop \
+          --project ${{ env.GCP_PROJECT_ID }}
+
+      - uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          content: "<@&888117099246026772> alert ! deployed ${{ github.event.repository.name }} to ${{ github.event.inputs.env }} by ${{ github.actor }}"
+          title: "Deploy to ${{ github.event.inputs.env }}:${{ github.event.inputs.version }}"
+          description: |
+            Build Status: ${{ job.status }} On Repository: ${{ github.event.repository.name }} Version: ${{ steps.get_version.outputs.VERSION }}
+          url: "https://github.com/Utotech-organize/rome-backoffice"
