@@ -1,0 +1,130 @@
+name: Build Checked
+
+on:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  code-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Set up pnpm store path
+        id: pnpm-cache
+        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build project
+        run: pnpm build
+
+      # running this later when got jest test
+      # - name: Run tests
+      #   run: pnpm test
+
+      - name: Notify Discord (Code Check)
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: "Code check by ${{ github.actor }}"
+          description: "build ${{ job.status }} please check in github before pull request"
+          url: "https://github.com/Utotech-organize/rome-backoffice"
+
+  build:
+    needs: code-check
+    runs-on: ubuntu-latest
+    if: contains('refs/heads/develop refs/heads/main refs/heads/staging', github.ref)
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Set up pnpm store path
+        id: pnpm-cache
+        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build project
+        run: pnpm build
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0.4.0
+        with:
+          workload_identity_provider: ${{ secrets.GCP_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Get the version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
+
+      - name: Configure Docker Client
+        run: gcloud auth configure-docker ${{ secrets.GCP_IMAGE_REGISTRY }} --quiet
+
+      - name: Build Docker Image
+        env:
+          APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
+          APP_IMAGE: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}
+        run: |
+          docker build -t $APP_IMAGE:$APP_VERSION .
+
+      - name: Push Docker Image to Artifact Registry
+        env:
+          APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
+          APP_IMAGE: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}
+        run: |
+          docker push $APP_IMAGE:$APP_VERSION
+
+      - name: Notify Discord (Build)
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: "Build by ${{ github.actor }}"
+          description: "Build container prepared to deploy artifact"
+          url: "https://github.com/Utotech-organize/rome-backoffice"
