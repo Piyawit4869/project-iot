@@ -1,10 +1,11 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import {
-  // fetchCreateProducts,
+  fetchCreateProducts,
   fetchMe,
   fetchProducts,
 } from "../server/products";
-import { useSession } from "next-auth/react";
+import { CreateFormValues } from "@/schemas/products/create";
 
 export const useGetMe = () =>
   useQuery({
@@ -34,29 +35,18 @@ export const usePaginate = ({
   });
 };
 
-// export const useCreate = ({CreateFormValues}) => {
-//   const data = useSession();
-//   const userDetails = data.data?.user;
+export const useCreateProduct = () => {
+  const data = useSession();
+  const userDetails = data.data?.user;
 
-//   const user = userDetails as { user: { auth: { accessToken: string } } };
-//   const accessToken = user?.user?.auth?.accessToken;
+  const user = userDetails as { user: { auth: { accessToken: string } } };
+  const accessToken = user?.user?.auth?.accessToken;
 
-//   return useQuery({
-//     queryKey: ["paginate", pageIndex, pageSize],
-//     queryFn: () =>
-//       fetchCreateProducts(
-//         {values.name,
-//       values.description,
-//       values.quantity,
-//       values.price,
-//       values.discount,
-//       values.total},
-//         accessToken
-//       ),
-//     placeholderData: keepPreviousData,
-//     enabled: !!pageIndex && !!pageSize && !!accessToken,
-//   });
-// };
+  return useMutation({
+    mutationFn: (values: CreateFormValues) =>
+      fetchCreateProducts(values, accessToken),
+  });
+};
 
 export const useUser = () =>
   useQuery({

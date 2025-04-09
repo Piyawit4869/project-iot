@@ -44,22 +44,33 @@ export const fetchProducts = async (
 };
 
 export const fetchCreateProducts = async (
-  name: string | undefined,
-  description: string | undefined,
-  quantity: string | undefined,
-  price: string | undefined,
-  discount: string | undefined,
-  total: string | undefined
+  payload: {
+    name: string;
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    discount: number;
+    total: number;
+  },
+  accessToken: string | undefined
 ) => {
   try {
-    const res = await axios.post(`${env.base_url}/crud/items/create`, {
-      name,
-      description,
-      quantity,
-      price,
-      discount,
-      total,
-    });
+    const res = await axios.post(
+      `${env.base_url}/crud/items/create`,
+      {
+        name: payload.name,
+        description: payload.description,
+        quantity: payload.quantity,
+        unitPrice: payload.unitPrice,
+        discount: payload.discount,
+        total: payload.total,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     return res.data;
   } catch (error) {
     return error;

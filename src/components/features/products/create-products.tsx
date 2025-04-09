@@ -18,7 +18,7 @@ import { CreateFormSchema, CreateFormValues } from "@/schemas/products/create";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import GlobalButton from "@/components/shared/global-button";
-import { fetchCreateProducts } from "@/actions/products/server/products";
+import { useCreateProduct } from "@/actions/products/client/useGetProducts";
 
 export const CreateProducts = () => {
   const form = useForm<CreateFormValues>({
@@ -26,16 +26,17 @@ export const CreateProducts = () => {
   });
 
   const { isSubmitting } = form.formState;
+  const { mutate } = useCreateProduct();
 
-  const onSubmit = async (values: CreateFormValues) => {
-    await fetchCreateProducts(
-      values.name,
-      values.description,
-      values.quantity,
-      values.price,
-      values.discount,
-      values.total
-    );
+  const onSubmit = (values: CreateFormValues) => {
+    mutate(values, {
+      onSuccess: (data) => {
+        console.log("✅ Created successfully:", data);
+      },
+      onError: (err) => {
+        console.error("❌ Failed to create:", err);
+      },
+    });
   };
 
   return (
@@ -75,7 +76,7 @@ export const CreateProducts = () => {
               />
               <FormField
                 control={form.control}
-                name="price"
+                name="unitPrice"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Price</FormLabel>
