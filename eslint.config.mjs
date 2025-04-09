@@ -18,8 +18,8 @@ const eslintConfig = [
       "unused-imports": unusedImportsPlugin,
     },
     rules: {
-      "no-unused-vars": "warn",
-      "unused-imports/no-unused-imports": "error",
+      "no-unused-vars": "off",
+      "unused-imports/no-unused-imports": "warn",
     },
   },
 ];

@@ -1,36 +1,49 @@
-# Stage 1: Build with caching
-FROM node:22-alpine AS builder
+# Stage 1: Install dependencies and build the project
+FROM node:22.12.0-alpine AS builder
+
+# Install pnpm globally via npm (instead of Corepack)
+RUN npm install -g pnpm
+
+# Set working directory
 WORKDIR /app
 
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-# Copy lockfile and manifest to install dependencies (enables better caching)
+# Copy package.json and pnpm-lock.yaml
 COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
 
-# Copy the rest of the application
+# Copy the rest of the application files
 COPY . .
 
-# Build the app
+# Build the Next.js project
 RUN pnpm build
 
-# Stage 2: Production image
-FROM node:22-alpine AS runner
+# Install only production dependencies
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
+
+# Stage 2: Create optimized production image
+FROM node:22.12.0-alpine AS runner
+
+# Install pnpm globally
+RUN npm install -g pnpm
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=80
+
+# Set working directory
 WORKDIR /app
 
-# Enable pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Copy necessary files from the builder stage
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/pnpm-lock.yaml ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
 
-# Only copy the necessary files from builder
-COPY --from=builder /app .
+# Expose the port for GCP Cloud Run
+EXPOSE 80
 
-ENV NODE_ENV=production
-
-# Cloud Run expects app to listen on port 8080
-EXPOSE 8080
-
-# Start the app
+# Start the application
 CMD ["pnpm", "start"]
