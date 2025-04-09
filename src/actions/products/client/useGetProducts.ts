@@ -6,7 +6,7 @@ import {
   fetchGetProducts,
   fetchMe,
   fetchProducts,
-  fetchUpdateProducts,
+  // fetchUpdateProducts,
 } from "../server/products";
 import { ProductsFormValues } from "@/schemas/products/product";
 
@@ -65,18 +65,18 @@ export const useCreateProducts = () => {
   });
 };
 
-export const useUpdateProducts = (id: string) => {
-  const data = useSession();
-  const userDetails = data.data?.user;
+// export const useUpdateProducts = (id: string) => {
+//   const data = useSession();
+//   const userDetails = data.data?.user;
 
-  const user = userDetails as { user: { auth: { accessToken: string } } };
-  const accessToken = user?.user?.auth?.accessToken;
+//   const user = userDetails as { user: { auth: { accessToken: string } } };
+//   const accessToken = user?.user?.auth?.accessToken;
 
-  return useMutation({
-    mutationFn: (values: ProductsFormValues) =>
-      fetchUpdateProducts(id, accessToken, values),
-  });
-};
+//   return useMutation({
+//     mutationFn: (values: ProductsFormValues) =>
+//       fetchUpdateProducts(id, accessToken, values),
+//   });
+// };
 
 export const useDeleteProducts = () => {
   const data = useSession();

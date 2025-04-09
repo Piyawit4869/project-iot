@@ -11,15 +11,6 @@ export const fetchMe = async () => {
   }
 };
 
-// export const fetchProducts = async (id: string) => {
-//   try {
-//     const res = await apiAxios.get(`/crud/user/${id}`);
-//     return res.data;
-//   } catch (error) {
-//     return error;
-//   }
-// };
-
 export const fetchProducts = async (
   params: {
     page: number;
@@ -28,7 +19,7 @@ export const fetchProducts = async (
   accessToken: string
 ) => {
   try {
-    const res = await axios.get(`${env.base_url}/crud/items`, {
+    const res = await axios.get(`${env.base_url}/crud/products`, {
       params: {
         page: params.page,
         itemsPerPage: params.itemsPerPage,
@@ -59,24 +50,56 @@ export const fetchGetProducts = async (id: string, accessToken: string) => {
 export const fetchCreateProducts = async (
   payload: {
     name: string;
-    description: string;
     quantity: number;
-    unitPrice: number;
-    discount: number;
-    total: number;
+    brand: string;
+    status: string;
+    sku: string;
+    type: string;
+    price: number;
+    imageUrl: string;
+    detail: string;
+    description: string;
+    manufacturedDate: string;
+    expireDate: string;
+    weight: number;
+    country: string;
+    subRegion: string;
+    vintage: string;
+    colour: string;
+    alcohol: number;
+    bottleSize: number;
+    reference: string;
+    width: number;
+    height: number;
   },
   accessToken: string | undefined
 ) => {
   try {
     const res = await axios.post(
-      `${env.base_url}/crud/items/create`,
+      `${env.base_url}/crud/products/create`,
       {
         name: payload.name,
-        description: payload.description,
         quantity: payload.quantity,
-        unitPrice: payload.unitPrice,
-        discount: payload.discount,
-        total: payload.total,
+        brand: payload.brand,
+        status: payload.status,
+        sku: payload.sku,
+        type: payload.type,
+        price: payload.price,
+        imageUrl: payload.imageUrl,
+        detail: payload.detail,
+        description: payload.description,
+        manufacturedDate: payload.manufacturedDate,
+        expireDate: payload.expireDate,
+        weight: payload.weight,
+        country: payload.country,
+        subRegion: payload.subRegion,
+        vintage: payload.vintage,
+        colour: payload.colour,
+        alcohol: payload.alcohol,
+        bottleSize: payload.bottleSize,
+        reference: payload.reference,
+        width: payload.width,
+        height: payload.height,
       },
       {
         headers: {

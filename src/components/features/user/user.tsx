@@ -4,7 +4,7 @@ import React from "react";
 import { Metadata } from "next";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/shared/data-table";
-import { usePaginate } from "@/actions/products/client/useGetProducts";
+import { usePaginate } from "@/actions/user/client/useGetUsers";
 import { Control } from "@/components/shared/topsection";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -28,61 +28,29 @@ const columns: ColumnDef<Task>[] = [
     cell: (info) => <span>{info.getValue() as string}</span>,
   },
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: "userName",
+    header: "User Name",
     cell: (info) => <span>{info.getValue() as string}</span>,
   },
   {
-    accessorKey: "unitPrice",
-    header: "Price",
-    cell: (info) => {
-      const status = info.getValue() as string;
-      const color =
-        status === "done"
-          ? "text-green-600"
-          : status === "in-progress"
-            ? "text-yellow-600"
-            : "text-gray-500";
-      return <span className={`font-medium ${color}`}>{status}</span>;
-    },
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: "email",
+    header: "Email",
     cell: (info) => (
       <span className="text-sm text-muted-foreground">
         {info.getValue() as string}
       </span>
-    ),
-  },
-  {
-    accessorKey: "discount",
-    header: "Discount",
-    cell: (info) => (
-      <span className="text-sm text-muted-foreground">
-        {info.getValue() as string}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "",
-    header: "Actions",
-    cell: (info) => (
-      <Link href={`/organization/products/${info.row.original.id}`}>
-        <Button className="text-sm">Edit</Button>
-      </Link>
     ),
   },
 ];
 
-export const Products = () => {
+export const Users = () => {
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
       <div>
         <Control
-          title="Products and Services"
+          title="Users"
           buttons={[
-            <Link href={"/organization/products/create"} key={"create button"}>
+            <Link href={"/organization/user/create"} key={"create button"}>
               <Button key={"create button"}>Create</Button>
             </Link>,
           ]}
