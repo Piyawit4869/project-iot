@@ -4,7 +4,7 @@ import { HeaderBreadcrumb } from "@/components/shared/header-breadcrumb";
 import { Menu } from "@/components/shared/menu";
 import { AppSidebar } from "@/components/shared/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import data from "@/components/sidebar-data/backoffice-data.json";
+import data from "@/components/sidebar-data/super-admin-data.json";
 
 export default function DashboardLayout({
   children,
@@ -28,6 +28,7 @@ export default function DashboardLayout({
                 <Menu />
               </div>
             </header>
+
             {children}
           </div>
         </main>
