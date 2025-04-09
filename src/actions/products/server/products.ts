@@ -49,8 +49,7 @@ export const fetchCreateProducts = async (
   quantity: string | undefined,
   price: string | undefined,
   discount: string | undefined,
-  total: string | undefined,
-  accessToken: string | undefined
+  total: string | undefined
 ) => {
   try {
     const res = await axios.post(`${env.base_url}/crud/items/create`, {
@@ -60,10 +59,6 @@ export const fetchCreateProducts = async (
       price,
       discount,
       total,
-      accessToken,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
     });
     return res.data;
   } catch (error) {

@@ -34,8 +34,7 @@ export const CreateProducts = () => {
       values.quantity,
       values.price,
       values.discount,
-      values.total,
-      values.accessToken
+      values.total
     );
   };
 

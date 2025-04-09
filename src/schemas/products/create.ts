@@ -7,7 +7,6 @@ export const CreateFormSchema = z.object({
   price: z.string(),
   discount: z.string(),
   total: z.string(),
-  accessToken: z.string(),
 });
 
 export type CreateFormValues = z.infer<typeof CreateFormSchema>;
