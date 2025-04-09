@@ -14,21 +14,24 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateFormSchema, CreateFormValues } from "@/schemas/products/create";
+import {
+  ProductsFormSchema,
+  ProductsFormValues,
+} from "@/schemas/products/product";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import GlobalButton from "@/components/shared/global-button";
-import { useCreateProduct } from "@/actions/products/client/useGetProducts";
+import { useCreateProducts } from "@/actions/products/client/useGetProducts";
 
 export const CreateProducts = () => {
-  const form = useForm<CreateFormValues>({
-    resolver: zodResolver(CreateFormSchema),
+  const form = useForm<ProductsFormValues>({
+    resolver: zodResolver(ProductsFormSchema),
   });
 
   const { isSubmitting } = form.formState;
-  const { mutate } = useCreateProduct();
+  const { mutate } = useCreateProducts();
 
-  const onSubmit = (values: CreateFormValues) => {
+  const onSubmit = (values: ProductsFormValues) => {
     mutate(values, {
       onSuccess: (data) => {
         console.log("✅ Created successfully:", data);
@@ -47,7 +50,7 @@ export const CreateProducts = () => {
           backpath="/organization/products"
           buttons={[
             <Button key={"create button"} type="submit">
-              Save
+              Create
             </Button>,
             <Button key={"cancel button"}>Cancel</Button>,
           ]}
@@ -139,7 +142,11 @@ export const CreateProducts = () => {
                   </FormItem>
                 )}
               />
-              <GlobalButton label="Save" type="submit" loading={isSubmitting} />
+              <GlobalButton
+                label="Create"
+                type="submit"
+                loading={isSubmitting}
+              />
             </form>
           </Form>
         </Card>

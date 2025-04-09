@@ -43,6 +43,19 @@ export const fetchProducts = async (
   }
 };
 
+export const fetchGetProducts = async (id: string, accessToken: string) => {
+  try {
+    const res = await axios.get(`${env.base_url}/crud/items/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const fetchCreateProducts = async (
   payload: {
     name: string;
@@ -71,6 +84,54 @@ export const fetchCreateProducts = async (
         },
       }
     );
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchUpdateProducts = async (
+  id: string,
+  accessToken: string,
+  payload: {
+    name: string;
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    discount: number;
+    total: number;
+  }
+) => {
+  try {
+    const res = await axios.put(
+      `${env.base_url}/crud/items/edit/${id}`,
+      {
+        name: payload.name,
+        description: payload.description,
+        quantity: payload.quantity,
+        unitPrice: payload.unitPrice,
+        discount: payload.discount,
+        total: payload.total,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchDeleteProducts = async (id: string, accessToken: string) => {
+  try {
+    const res = await axios.delete(`${env.base_url}/crud/items/delete/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     return res.data;
   } catch (error) {
     return error;

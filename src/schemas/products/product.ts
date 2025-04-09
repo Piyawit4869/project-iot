@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const CreateFormSchema = z.object({
+export const ProductsFormSchema = z.object({
   name: z.string(),
   description: z.string(),
   quantity: z.coerce.number(),
@@ -9,4 +9,4 @@ export const CreateFormSchema = z.object({
   total: z.coerce.number(),
 });
 
-export type CreateFormValues = z.infer<typeof CreateFormSchema>;
+export type ProductsFormValues = z.infer<typeof ProductsFormSchema>;
