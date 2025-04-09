@@ -1,3 +1,3 @@
 export default function AddressPage() {
-  return <>Address page</>;
+  return <div className="flex flex-col space-y-4 p-2">Address page</div>;
 }
