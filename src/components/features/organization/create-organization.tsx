@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+// import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -21,15 +21,16 @@ import {
 } from "@/components/ui/select";
 
 import React from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
+// import { signIn } from "next-auth/react";
+// import { useRouter } from "next/navigation";
 
 export function CreateOrganization() {
-  const router = useRouter();
+  // const router = useRouter();
 
   const form = useForm();
 
-  const { isSubmitting } = form.formState;
+  // const { isSubmitting } = form.formState;
 
   //   const onSubmit = async () => {
   //     await signIn("credentials", {
@@ -57,7 +58,7 @@ export function CreateOrganization() {
                   <FormItem>
                     <FormLabel>Image</FormLabel>
                     <FormControl>
-                      <img
+                      <Image
                         src="https://storage.googleapis.com/utotech-storage/download-cbc51c051b314083b7bfc08489d6ae54011959.png"
                         alt=""
                         width={100}
@@ -304,7 +305,7 @@ export function CreateOrganization() {
                 <FormItem>
                   <FormLabel>photoUrl</FormLabel>
                   <FormControl>
-                    <img
+                    <Image
                       src="https://storage.googleapis.com/utotech-storage/download-cbc51c051b314083b7bfc08489d6ae54011959.png"
                       alt=""
                       width={100}
