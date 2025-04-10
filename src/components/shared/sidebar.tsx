@@ -10,7 +10,7 @@ import { MainSidebar } from "../sidebar-data/main-sidebar";
 import { HomeSidebar } from "../sidebar-data/home-sidebar";
 
 const renderIcon = (iconName: string) => {
-  const IconComponent = Icons[iconName as keyof typeof Icons] as any;
+  const IconComponent = Icons[iconName as keyof typeof Icons];
   return IconComponent ? <IconComponent className="w-10 h-10" /> : null;
 };
 

@@ -13,7 +13,7 @@ const settingSchema = z.object({
   theme: z.string().optional(),
   textDisplay: z.string().optional(),
   domainName: z.string().optional(),
-  defaultLanguage: z.string().optional(),
+  defaultLanguage: z.enum(["th", "en", "jp"]).optional(),
   openDays: z.array(openDaySchema).optional(),
 });
 
@@ -42,7 +42,7 @@ const profileSchema = z.object({
   prefix: z.string().optional(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  birthDate: z.string().optional(),
+  birthDate: z.coerce.date().optional(),
   photoUrl: z.string().url().optional(),
   isMobile: z.boolean().optional(),
   deviceToken: z.string().optional(),
@@ -54,7 +54,7 @@ const profileSchema = z.object({
 
 const userSchema = z.object({
   active: z.boolean().optional(),
-  status: z.string().optional(),
+  status: z.enum(["active", "inactive", "terminated", "pending"]).optional(),
   email: z.string().email().optional(),
   password: z.string().optional(),
   userName: z.string().optional(),
@@ -68,7 +68,7 @@ const organizationSchema = z.object({
   fromType: z.string().optional(),
   taxId: z.string().optional(),
   type: z.string().optional(),
-  openingDate: z.string().optional(),
+  openingDate: z.coerce.date().optional(),
   nameTh: z.string().optional(),
   nameEn: z.string().optional(),
   descriptionsTh: z.string().optional(),
@@ -83,21 +83,43 @@ const organizationSchema = z.object({
   contactWhatsapp: z.string().optional(),
   contactWebsite: z.string().url().optional(),
   contactNote: z.string().optional(),
-  logoUrl: z.string().nullable().optional(),
+  logoUrl: z.string().optional(),
   domainName: z.string().optional(),
-  user: userSchema.optional(),
-  setting: settingSchema.optional(),
-  address: addressSchema.optional(),
+  user: userSchema,
+  setting: settingSchema,
+  address: addressSchema,
 });
 
 const branchSchema = z.object({
   active: z.boolean().optional(),
   isMain: z.boolean().optional(),
-  status: z.string().optional(),
-  fromType: z.string().optional(),
+  status: z
+    .enum([
+      "newly_registered",
+      "active",
+      "loyal_customer",
+      "at_risk",
+      "churned",
+    ])
+    .optional(),
+  fromType: z.enum(["ordinary_person", "juristic_person"]).optional(),
   taxId: z.string().optional(),
-  type: z.string().optional(),
-  openingDate: z.string().optional(),
+  type: z
+    .enum([
+      "taxpayer",
+      "ordinary_partnership",
+      "shop",
+      "body_of_person",
+      "company_limited",
+      "public_company_limited",
+      "limited_partnership",
+      "foundation",
+      "association",
+      "joint_venture",
+      "others",
+    ])
+    .optional(),
+  openingDate: z.coerce.date().optional(),
   nameTh: z.string().optional(),
   nameEn: z.string().optional(),
   descriptionsTh: z.string().optional(),
@@ -112,7 +134,7 @@ const branchSchema = z.object({
   contactWhatsapp: z.string().optional(),
   contactWebsite: z.string().url().optional(),
   contactNote: z.string().optional(),
-  logoUrl: z.string().url().optional(),
+  logoUrl: z.string().optional(),
   setting: settingSchema.optional(),
   address: addressSchema.optional(),
   user: userSchema.optional(),
@@ -120,8 +142,8 @@ const branchSchema = z.object({
 
 // Combined schema
 export const createOrgSchema = z.object({
-  organization: organizationSchema.optional(),
-  branch: branchSchema.optional(),
+  organization: organizationSchema ?? {},
+  branch: branchSchema ?? {},
 });
 
 export type CreateFormValues = z.infer<typeof createOrgSchema>;

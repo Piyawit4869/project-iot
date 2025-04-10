@@ -2,7 +2,7 @@ export interface Profile {
   prefix: string | undefined;
   firstName: string | undefined;
   lastName: string | undefined;
-  birthDate: string | undefined;
+  birthDate: Date | undefined;
   photoUrl: string | undefined;
   isMobile: boolean | undefined;
   deviceToken: string | undefined;
@@ -61,7 +61,7 @@ export interface Organization {
   fromType: string | undefined;
   taxId: string | undefined;
   type: string | undefined;
-  openingDate: string | undefined;
+  openingDate: Date | undefined;
   nameTh: string | undefined;
   nameEn: string | undefined;
   descriptionsTh: string | undefined;
