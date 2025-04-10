@@ -11,14 +11,8 @@ export const ProductsFormSchema = z.object({
   imageUrl: z.string(),
   detail: z.string(),
   description: z.string(),
-  manufacturedDate: z
-    .string()
-    // .transform((date) => date.toISOString())
-    .optional(),
-  expireDate: z
-    .string()
-    // .transform((date) => date.toISOString())
-    .optional(),
+  manufacturedDate: z.string(),
+  expireDate: z.string(),
   weight: z.coerce.number(),
   country: z.string(),
   subRegion: z.string(),

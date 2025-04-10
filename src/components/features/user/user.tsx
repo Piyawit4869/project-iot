@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { Metadata } from "next";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/shared/data-table";
 import { usePaginate } from "@/actions/user/client/useGetUsers";
 import { Control } from "@/components/shared/topsection";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Tasks",
@@ -39,6 +39,15 @@ const columns: ColumnDef<Task>[] = [
       <span className="text-sm text-muted-foreground">
         {info.getValue() as string}
       </span>
+    ),
+  },
+  {
+    accessorKey: "",
+    header: "Action",
+    cell: (info) => (
+      <Link href={`/organization/user/${info.row.original.id}`}>
+        <Button className="text-sm">Edit</Button>
+      </Link>
     ),
   },
 ];

@@ -21,8 +21,8 @@ import {
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  // useGetProducts,
-  // useUpdateProducts,
+  useGetProducts,
+  useUpdateProducts,
   useDeleteProducts,
 } from "@/actions/products/client/useGetProducts";
 import GlobalButton from "@/components/shared/global-button";
@@ -30,24 +30,24 @@ import GlobalButton from "@/components/shared/global-button";
 export const EditProducts = () => {
   const router = useRouter();
   const params = useParams<{ id: string }>();
-  // const { data } = useGetProducts(params.id);
+  const { data } = useGetProducts(params.id);
 
   const form = useForm<ProductsFormValues>({
     resolver: zodResolver(ProductsFormSchema),
   });
 
   const { isSubmitting } = form.formState;
-  // const { mutate } = useUpdateProducts(params.id);
-  // const onSubmit = (values: ProductsFormValues) => {
-  //   mutate(values, {
-  //     onSuccess: (data) => {
-  //       console.log("✅ Created successfully:", data);
-  //     },
-  //     onError: (err) => {
-  //       console.error("❌ Failed to create:", err);
-  //     },
-  //   });
-  // };
+  const { mutate } = useUpdateProducts(params.id);
+  const onSubmit = (values: ProductsFormValues) => {
+    mutate(values, {
+      onSuccess: (data) => {
+        console.log("✅ Created successfully:", data);
+      },
+      onError: (err) => {
+        console.error("❌ Failed to create:", err);
+      },
+    });
+  };
 
   const { mutate: DeleteProducts } = useDeleteProducts();
   const handleDelete = (id: string) => {
@@ -61,24 +61,40 @@ export const EditProducts = () => {
     });
   };
 
-  // React.useEffect(() => {
-  //   if (data?.data) {
-  //     form.reset({
-  //       name: data?.data?.name,
-  //       description: data?.data?.description,
-  //       quantity: data?.data?.quantity,
-  //       unitPrice: data?.data?.unitPrice,
-  //       discount: data?.data?.discount,
-  //       total: data?.data?.total,
-  //     });
-  //   }
-  // }, [data, form]);
+  React.useEffect(() => {
+    if (data?.res?.Projects) {
+      form.reset({
+        name: data.res.Projects.name ?? "",
+        quantity: data?.res?.Projects?.quantity,
+        brand: data?.res?.Projects?.brand,
+        status: data?.res?.Projects?.status,
+        sku: data?.res?.Projects?.sku,
+        type: data?.res?.Projects?.type,
+        price: data?.res?.Projects?.price,
+        imageUrl: data?.res?.Projects?.imageUrl,
+        detail: data?.res?.Projects?.detail,
+        description: data?.res?.Projects?.description,
+        manufacturedDate: data?.res?.Projects?.manufacturedDate,
+        expireDate: data?.res?.Projects?.expireDate,
+        weight: data?.res?.Projects?.weight ?? 0,
+        country: data?.res?.Projects?.country,
+        subRegion: data?.res?.Projects?.subRegion,
+        vintage: data?.res?.Projects?.vintage,
+        colour: data?.res?.Projects?.colour,
+        alcohol: data?.res?.Projects?.alcohol,
+        bottleSize: data?.res?.Projects?.bottleSize,
+        reference: data?.res?.Projects?.reference,
+        width: data?.res?.Projects?.width,
+        height: data?.res?.Projects?.height,
+      });
+    }
+  }, [data, form]);
 
   return (
     <div className="hidden flex-1 flex-col space-y-3 p-8 md:flex">
       <div>
         <Control
-          title="Create Products"
+          title="Edit Products"
           backpath="/organization/products"
           buttons={[
             <GlobalButton
@@ -101,7 +117,7 @@ export const EditProducts = () => {
           <Form {...form}>
             <form
               id="products"
-              // onSubmit={form.handleSubmit(onSubmit)}
+              onSubmit={form.handleSubmit(onSubmit)}
               className="flex-row space-y-6 max-w-sm p-8"
             >
               <h1>Products Information</h1>

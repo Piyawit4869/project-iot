@@ -1,14 +1,14 @@
 import { useSession } from "next-auth/react";
 import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
-import { ProductsFormValues } from "@/schemas/products/product";
 import {
-  fetchCreateProducts,
-  fetchDeleteProducts,
-  fetchGetProducts,
+  fetchCreateUsers,
+  fetchDeleteUsers,
+  fetchGetUsers,
   fetchMe,
-  fetchUpdateProducts,
+  fetchUpdateUsers,
   fetchUsers,
 } from "../server/user";
+import { UsersFormValues } from "@/schemas/users/users";
 
 export const useGetMe = () =>
   useQuery({
@@ -38,7 +38,7 @@ export const usePaginate = ({
   });
 };
 
-export const useGetProducts = (id: string) => {
+export const useGetUsers = (id: string) => {
   const data = useSession();
   const userDetails = data.data?.user;
 
@@ -47,12 +47,12 @@ export const useGetProducts = (id: string) => {
 
   return useQuery({
     queryKey: ["products", id],
-    queryFn: () => fetchGetProducts(id, accessToken),
+    queryFn: () => fetchGetUsers(id, accessToken),
     enabled: !!id && !!accessToken,
   });
 };
 
-export const useCreateProducts = () => {
+export const useCreateUsers = () => {
   const data = useSession();
   const userDetails = data.data?.user;
 
@@ -60,12 +60,12 @@ export const useCreateProducts = () => {
   const accessToken = user?.user?.auth?.accessToken;
 
   return useMutation({
-    mutationFn: (values: ProductsFormValues) =>
-      fetchCreateProducts(values, accessToken),
+    mutationFn: (values: UsersFormValues) =>
+      fetchCreateUsers(values, accessToken),
   });
 };
 
-export const useUpdateProducts = (id: string) => {
+export const useUpdateUsers = (id: string) => {
   const data = useSession();
   const userDetails = data.data?.user;
 
@@ -73,12 +73,12 @@ export const useUpdateProducts = (id: string) => {
   const accessToken = user?.user?.auth?.accessToken;
 
   return useMutation({
-    mutationFn: (values: ProductsFormValues) =>
-      fetchUpdateProducts(id, accessToken, values),
+    mutationFn: (values: UsersFormValues) =>
+      fetchUpdateUsers(id, accessToken, values),
   });
 };
 
-export const useDeleteProducts = () => {
+export const useDeleteUsers = () => {
   const data = useSession();
   const userDetails = data.data?.user;
 
@@ -86,7 +86,7 @@ export const useDeleteProducts = () => {
   const accessToken = user?.user?.auth?.accessToken;
 
   return useMutation({
-    mutationFn: (id: string) => fetchDeleteProducts(id, accessToken),
+    mutationFn: (id: string) => fetchDeleteUsers(id, accessToken),
   });
 };
 
