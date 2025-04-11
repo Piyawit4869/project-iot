@@ -3,6 +3,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams, useRouter } from "next/navigation";
 
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -18,10 +19,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  cre_OrganizationFormValues,
+  up_OrganizationFormValues,
   createOrgSchema,
 } from "@/schemas/super-organization/organization";
-import { useCreateOrganization } from "@/actions/super-organization/client/useGetOrganizations";
+import { useUpdateOrganization } from "@/actions/super-organization/client/useGetOrganizations";
 import {
   Select,
   SelectContent,
@@ -31,19 +32,22 @@ import {
 } from "@/components/ui/select";
 import { DatePicker } from "@/components/shared/global-date";
 
-export const CreateOrganization = () => {
-  const form = useForm<cre_OrganizationFormValues>({
+export const UpdateOrganization = () => {
+  const router = useRouter();
+  const params = useParams<{ id: string }>();
+  const form = useForm<up_OrganizationFormValues>({
     resolver: zodResolver(createOrgSchema),
     mode: "onSubmit",
   });
-  const { isSubmitting } = form.formState;
-  const { mutate } = useCreateOrganization();
 
-  function onSubmit(values: cre_OrganizationFormValues) {
+  const { isSubmitting } = form.formState;
+  const { mutate } = useUpdateOrganization(params.id);
+
+  function onSubmit(values: up_OrganizationFormValues) {
     console.log("🔥 Form submitted", values);
     mutate(values, {
       onSuccess: (data) => {
-        console.log("✅ Created successfully:", data);
+        router.push("✅ Created successfully:", data);
       },
       onError: (err) => {
         console.error("❌ Failed to create:", err);
@@ -59,7 +63,7 @@ export const CreateOrganization = () => {
           backpath="/superadmin/organization"
           buttons={[
             <GlobalButton
-              label="Create"
+              label="Edit"
               key={"create button"}
               type="submit"
               loading={isSubmitting}

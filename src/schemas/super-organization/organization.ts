@@ -62,7 +62,7 @@ const userSchema = z.object({
 });
 
 // Main Schemas
-const organizationSchema = z.object({
+const cre_organizationSchema = z.object({
   active: z.boolean().optional(),
   status: z.string().optional(),
   fromType: z.string().optional(),
@@ -90,7 +90,7 @@ const organizationSchema = z.object({
   address: addressSchema,
 });
 
-const branchSchema = z.object({
+const cre_branchSchema = z.object({
   active: z.boolean().optional(),
   isMain: z.boolean().optional(),
   status: z
@@ -142,8 +142,66 @@ const branchSchema = z.object({
 
 // Combined schema
 export const createOrgSchema = z.object({
-  organization: organizationSchema ?? {},
-  branch: branchSchema ?? {},
+  organization: cre_organizationSchema ?? {},
+  branch: cre_branchSchema ?? {},
 });
 
-export type CreateFormValues = z.infer<typeof createOrgSchema>;
+export type cre_OrganizationFormValues = z.infer<typeof createOrgSchema>;
+
+export const up_organizationSchema = z.object({
+  active: z.boolean(),
+  status: z.string(),
+  fromType: z.string(),
+  taxId: z.string(),
+  type: z.string(),
+  code: z.string(),
+  openingDate: z.string().datetime(),
+  nameTh: z.string(),
+  nameEn: z.string(),
+  descriptionsTh: z.string(),
+  descriptionsEn: z.string(),
+  websiteUrl: z.string().url(),
+  registerVat: z.boolean(),
+  contactName: z.string(),
+  contactEmail: z.string().email(),
+  contactPhone: z.string(),
+  contactLine: z.string(),
+  contactFacebook: z.string(),
+  contactWhatsapp: z.string(),
+  contactWebsite: z.string().url(),
+  contactNote: z.string(),
+  logoUrl: z.string().url(),
+});
+
+export const up_branchSchema = z.object({
+  organizationId: z.string().uuid(),
+  active: z.boolean(),
+  isMain: z.boolean(),
+  status: z.string(),
+  fromType: z.string(),
+  taxId: z.string(),
+  type: z.string(),
+  code: z.string(),
+  openingDate: z.string().datetime(),
+  nameTh: z.string(),
+  nameEn: z.string(),
+  descriptionsTh: z.string(),
+  descriptionsEn: z.string(),
+  websiteUrl: z.string().url(),
+  registerVat: z.boolean(),
+  contactName: z.string(),
+  contactEmail: z.string().email(),
+  contactPhone: z.string(),
+  contactLine: z.string(),
+  contactFacebook: z.string(),
+  contactWhatsapp: z.string(),
+  contactWebsite: z.string().url(),
+  contactNote: z.string(),
+  logoUrl: z.string().url(),
+});
+export const updateOrgSchema = z.object({
+  organization: up_organizationSchema ?? {},
+  branch: up_branchSchema ?? {},
+});
+
+export type up_OrganizationFormValues = z.infer<typeof createOrgSchema>;

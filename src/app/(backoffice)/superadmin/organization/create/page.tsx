@@ -1,4 +1,4 @@
-import CreateOrganizationContainer from "@/containers/create-organization-container";
+import CreateOrganizationContainer from "@/containers/super-organizations/create-organization-container";
 
 export default function CreateOrganizationPage() {
   return (

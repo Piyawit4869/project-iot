@@ -1,6 +1,7 @@
 import { env } from "@/constants/common";
 import { apiAxios } from "@/utils/axiosInterceptor";
 import axios from "axios";
+import { Organization, Branch } from "../client/interface";
 
 export const fetchMe = async () => {
   try {
@@ -28,20 +29,39 @@ export const fetchOrganization = async (
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    return res.data;
+    return res.data.res;
   } catch (error) {
     return error;
   }
 };
 
 export const fetchCreateOrganization = async (
-  payload: any,
-
+  payload: { organization: Organization; branch: Branch },
   accessToken: string | undefined
 ) => {
   try {
     const res = await axios.post(
       `${env.base_url}/admin/organizations`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+export const fetchUpdateOrganization = async (
+  id: string,
+  payload: { organization: Organization; branch: Branch },
+  accessToken: string | undefined
+) => {
+  try {
+    const res = await axios.put(
+      `${env.base_url}/admin/organizations/${id}`,
       payload,
       {
         headers: {

@@ -1,11 +1,14 @@
 "use client";
 
+import React from "react";
+import Link from "next/link";
 import { Metadata } from "next";
+
+import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-
+import { Control } from "@/components/shared/topsection";
 import { DataTable } from "@/components/shared/data-table";
-import { usePaginate } from "@/actions/user/client/useGetUsers";
-
+import { usePaginate } from "@/actions/super-organization/client/useGetOrganizations";
 export const metadata: Metadata = {
   title: "Tasks",
   description: "A task and issue tracker built using Tanstack Table.",
@@ -21,12 +24,22 @@ interface Task {
 const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "id",
-    header: "ชื่องาน",
+    header: "Organization Id",
+    cell: (info) => <span>{info.getValue() as string}</span>,
+  },
+  {
+    accessorKey: "nameTh",
+    header: "Name (TH)",
+    cell: (info) => <span>{info.getValue() as string}</span>,
+  },
+  {
+    accessorKey: "nameEn",
+    header: "Name (EN)",
     cell: (info) => <span>{info.getValue() as string}</span>,
   },
   {
     accessorKey: "status",
-    header: "สถานะ",
+    header: "Status",
     cell: (info) => {
       const status = info.getValue() as string;
       const color =
@@ -39,12 +52,12 @@ const columns: ColumnDef<Task>[] = [
     },
   },
   {
-    accessorKey: "dueDate",
-    header: "กำหนดส่ง",
+    accessorKey: "",
+    header: "Actions",
     cell: (info) => (
-      <span className="text-sm text-muted-foreground">
-        {info.getValue() as string}
-      </span>
+      <Link href={`/superadmin/organization/${info.row.original.id}`}>
+        <Button className="text-sm">Edit</Button>
+      </Link>
     ),
   },
 ];
@@ -52,6 +65,19 @@ const columns: ColumnDef<Task>[] = [
 export const Organization = () => {
   return (
     <>
+      <div className="items-center justify-between space-y-2">
+        <Control
+          title="Organization"
+          buttons={[
+            <Link
+              href={`/superadmin/organization/create`}
+              key={"create button"}
+            >
+              <Button key={"create button"}>Create</Button>
+            </Link>,
+          ]}
+        />
+      </div>
       <DataTable queryFunction={usePaginate} columns={columns} />
     </>
   );
