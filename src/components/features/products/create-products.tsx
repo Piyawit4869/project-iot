@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Control } from "@/components/shared/topsection";
 import {
   Form,
@@ -23,8 +24,11 @@ import { useCreateProducts } from "@/actions/products/client/useGetProducts";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { DatePicker } from "@/components/shared/date-picker";
+import ImageUpload from "@/components/shared/upload";
 
 export const CreateProducts = () => {
+  const router = useRouter();
+
   const form = useForm<ProductsFormValues>({
     resolver: zodResolver(ProductsFormSchema),
   });
@@ -35,7 +39,8 @@ export const CreateProducts = () => {
   const onSubmit = (values: ProductsFormValues) => {
     mutate(values, {
       onSuccess: (data) => {
-        console.log("✅ Created successfully:", data);
+        router.push(`/organization/products/${data.res.id}`);
+        console.log("✅ Created:", data);
       },
       onError: (err) => {
         console.error("❌ Failed to create:", err);
@@ -48,8 +53,6 @@ export const CreateProducts = () => {
       status: "active",
     });
   }, [form]);
-
-  console.log("form values", form.getValues());
 
   return (
     <div className="hidden flex-1 flex-col space-y-3 p-8 md:flex">
@@ -71,7 +74,7 @@ export const CreateProducts = () => {
       <Form {...form}>
         <form id="products" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex gap-8 mt-4 w-full ">
-            <div className="flex flex-2 flex-col gap-6">
+            <div className="flex flex-3 flex-col gap-6">
               <Card className="p-6">
                 <h1>Products Information</h1>
                 <div className="flex gap-4 mt-4">
@@ -230,38 +233,40 @@ export const CreateProducts = () => {
                       </FormItem>
                     )}
                   />
-                  <FormField
-                    control={form.control}
-                    name="manufacturedDate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>manufacturedDate</FormLabel>
-                        <FormControl>
-                          <DatePicker
-                            value={field.value}
-                            onChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="expireDate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>expireDate</FormLabel>
-                        <FormControl>
-                          <DatePicker
-                            value={field.value}
-                            onChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="flex gap-4 w-full">
+                    <FormField
+                      control={form.control}
+                      name="manufacturedDate"
+                      render={({ field }) => (
+                        <FormItem className="flex-1 w-full">
+                          <FormLabel>manufacturedDate</FormLabel>
+                          <FormControl>
+                            <DatePicker
+                              value={field.value}
+                              onChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="expireDate"
+                      render={({ field }) => (
+                        <FormItem className="flex-1 w-full">
+                          <FormLabel>expireDate</FormLabel>
+                          <FormControl>
+                            <DatePicker
+                              value={field.value}
+                              onChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
                 <FormField
                   control={form.control}
@@ -333,7 +338,7 @@ export const CreateProducts = () => {
                     <FormItem className="mt-4">
                       <FormLabel>Products Image</FormLabel>
                       <FormControl className="w-full">
-                        <Input type="file" {...field} />
+                        <ImageUpload />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

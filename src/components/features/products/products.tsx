@@ -23,14 +23,27 @@ interface Task {
 
 const columns: ColumnDef<Task>[] = [
   {
-    accessorKey: "id",
-    header: "Id",
-    cell: (info) => <span>{info.getValue() as string}</span>,
+    accessorKey: "sku",
+    header: "SKU",
+    cell: (info) => (
+      <span className="text-sm text-muted-foreground">
+        {info.getValue() as string}
+      </span>
+    ),
   },
   {
     accessorKey: "name",
     header: "Name",
     cell: (info) => <span>{info.getValue() as string}</span>,
+  },
+  {
+    accessorKey: "description",
+    header: "Description",
+    cell: (info) => (
+      <span className="text-sm text-muted-foreground">
+        {info.getValue() as string}
+      </span>
+    ),
   },
   {
     accessorKey: "unitPrice",
@@ -45,15 +58,6 @@ const columns: ColumnDef<Task>[] = [
             : "text-gray-500";
       return <span className={`font-medium ${color}`}>{status}</span>;
     },
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
-    cell: (info) => (
-      <span className="text-sm text-muted-foreground">
-        {info.getValue() as string}
-      </span>
-    ),
   },
   {
     accessorKey: "discount",
