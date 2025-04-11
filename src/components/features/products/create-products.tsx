@@ -23,6 +23,7 @@ import {
 import { useCreateProducts } from "@/actions/products/client/useGetProducts";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { DatePicker } from "@/components/shared/date-picker";
 
 export const CreateProducts = () => {
   const form = useForm<ProductsFormValues>({
@@ -48,6 +49,8 @@ export const CreateProducts = () => {
       status: "active",
     });
   }, [form]);
+
+  console.log("form values", form.getValues());
 
   return (
     <div className="hidden flex-1 flex-col space-y-3 p-8 md:flex">
@@ -235,7 +238,10 @@ export const CreateProducts = () => {
                       <FormItem>
                         <FormLabel>manufacturedDate</FormLabel>
                         <FormControl>
-                          <Input type="date" {...field} />
+                          <DatePicker
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -248,7 +254,10 @@ export const CreateProducts = () => {
                       <FormItem>
                         <FormLabel>expireDate</FormLabel>
                         <FormControl>
-                          <Input type="date" {...field} />
+                          <DatePicker
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

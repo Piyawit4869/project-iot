@@ -1,4 +1,5 @@
 import { env } from "@/constants/common";
+import { ProductsFormValues } from "@/schemas/products/product";
 import { apiAxios } from "@/utils/axiosInterceptor";
 import axios from "axios";
 
@@ -48,59 +49,13 @@ export const fetchGetProducts = async (id: string, accessToken: string) => {
 };
 
 export const fetchCreateProducts = async (
-  payload: {
-    name: string;
-    quantity: number;
-    brand: string;
-    status: string;
-    sku: string;
-    type: string;
-    price: number;
-    imageUrl: string;
-    detail: string;
-    description: string;
-    manufacturedDate: string;
-    expireDate: string;
-    weight: number;
-    country: string;
-    subRegion: string;
-    vintage: string;
-    colour: string;
-    alcohol: number;
-    bottleSize: number;
-    reference: string;
-    width: number;
-    height: number;
-  },
+  payload: ProductsFormValues,
   accessToken: string | undefined
 ) => {
   try {
     const res = await axios.post(
       `${env.base_url}/crud/products/create`,
-      {
-        name: payload.name,
-        quantity: payload.quantity,
-        brand: payload.brand,
-        status: payload.status,
-        sku: payload.sku,
-        type: payload.type,
-        price: payload.price,
-        imageUrl: payload.imageUrl,
-        detail: payload.detail,
-        description: payload.description,
-        manufacturedDate: payload.manufacturedDate,
-        expireDate: payload.expireDate,
-        weight: payload.weight,
-        country: payload.country,
-        subRegion: payload.subRegion,
-        vintage: payload.vintage,
-        colour: payload.colour,
-        alcohol: payload.alcohol,
-        bottleSize: payload.bottleSize,
-        reference: payload.reference,
-        width: payload.width,
-        height: payload.height,
-      },
+      payload,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -116,58 +71,12 @@ export const fetchCreateProducts = async (
 export const fetchUpdateProducts = async (
   id: string,
   accessToken: string,
-  payload: {
-    name: string;
-    quantity: number;
-    brand: string;
-    status: string;
-    sku: string;
-    type: string;
-    price: number;
-    imageUrl: string;
-    detail: string;
-    description: string;
-    manufacturedDate: string;
-    expireDate: string;
-    weight: number;
-    country: string;
-    subRegion: string;
-    vintage: string;
-    colour: string;
-    alcohol: number;
-    bottleSize: number;
-    reference: string;
-    width: number;
-    height: number;
-  }
+  payload: ProductsFormValues
 ) => {
   try {
     const res = await axios.put(
       `${env.base_url}/crud/products/edit/${id}`,
-      {
-        name: payload.name,
-        quantity: payload.quantity,
-        brand: payload.brand,
-        status: payload.status,
-        sku: payload.sku,
-        type: payload.type,
-        price: payload.price,
-        imageUrl: payload.imageUrl,
-        detail: payload.detail,
-        description: payload.description,
-        manufacturedDate: payload.manufacturedDate,
-        expireDate: payload.expireDate,
-        weight: payload.weight,
-        country: payload.country,
-        subRegion: payload.subRegion,
-        vintage: payload.vintage,
-        colour: payload.colour,
-        alcohol: payload.alcohol,
-        bottleSize: payload.bottleSize,
-        reference: payload.reference,
-        width: payload.width,
-        height: payload.height,
-      },
+      payload,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

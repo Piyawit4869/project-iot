@@ -26,6 +26,7 @@ import {
   useDeleteProducts,
 } from "@/actions/products/client/useGetProducts";
 import GlobalButton from "@/components/shared/global-button";
+import { DatePicker } from "@/components/shared/date-picker";
 
 export const EditProducts = () => {
   const router = useRouter();
@@ -63,6 +64,14 @@ export const EditProducts = () => {
 
   React.useEffect(() => {
     if (data?.res?.Projects) {
+      const manufacturedDate = data.res.Projects.manufacturedDate
+        ? new Date(data.res.Projects.manufacturedDate)
+        : undefined;
+
+      const expireDate = data.res.Projects.expireDate
+        ? new Date(data.res.Projects.expireDate)
+        : undefined;
+
       form.reset({
         name: data.res.Projects.name ?? "",
         quantity: data?.res?.Projects?.quantity,
@@ -74,8 +83,8 @@ export const EditProducts = () => {
         imageUrl: data?.res?.Projects?.imageUrl,
         detail: data?.res?.Projects?.detail,
         description: data?.res?.Projects?.description,
-        manufacturedDate: data?.res?.Projects?.manufacturedDate,
-        expireDate: data?.res?.Projects?.expireDate,
+        manufacturedDate: manufacturedDate,
+        expireDate: expireDate,
         weight: data?.res?.Projects?.weight ?? 0,
         country: data?.res?.Projects?.country,
         subRegion: data?.res?.Projects?.subRegion,
@@ -112,7 +121,7 @@ export const EditProducts = () => {
           ]}
         />
       </div>
-      <div className="flex gap-8 p-4">
+      <div className="flex gap-8 mt-4">
         <Card className="w-full">
           <Form {...form}>
             <form
@@ -258,7 +267,10 @@ export const EditProducts = () => {
                   <FormItem>
                     <FormLabel>manufacturedDate</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <DatePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -271,7 +283,10 @@ export const EditProducts = () => {
                   <FormItem>
                     <FormLabel>expireDate</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <DatePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
