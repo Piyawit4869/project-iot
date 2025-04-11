@@ -59,7 +59,7 @@ export const Users = () => {
         <Control
           title="Users"
           buttons={[
-            <Link href={"/superadmin/user/create"} key={"create button"}>
+            <Link href={"/organization/user/create"} key={"create button"}>
               <Button key={"create button"}>Create</Button>
             </Link>,
           ]}

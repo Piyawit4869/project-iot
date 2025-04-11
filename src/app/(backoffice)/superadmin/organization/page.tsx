@@ -1,4 +1,4 @@
-import OrganizationContainer from "@/containers/organization-container";
+import OrganizationContainer from "@/containers/super-organizations/organization-container";
 
 export default function OrganizationPage() {
   return (

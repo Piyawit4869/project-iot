@@ -61,7 +61,7 @@ export const fetchCreateUsers = async (
       lastName: string;
       firstNameTh: string;
       lastNameTh: string;
-      birthDate: string;
+      birthDate: Date;
       phone: string;
     };
   },
