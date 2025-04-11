@@ -37,15 +37,15 @@ import { DatePicker } from "@/components/shared/date-picker";
 
 export const UpdateOrganization = () => {
   const router = useRouter();
-  const params = useParams<{ slug: string }>();
-  const { data } = useGetOrganization(params.slug);
+  const params = useParams<{ id: string }>();
+  const { data } = useGetOrganization(params.id);
   const form = useForm<up_OrganizationFormValues>({
     resolver: zodResolver(up_organizationSchema),
     mode: "onSubmit",
   });
 
   const { isSubmitting } = form.formState;
-  const { mutate } = useUpdateOrganization(params.slug);
+  const { mutate } = useUpdateOrganization(params.id);
 
   function onSubmit(values: up_OrganizationFormValues) {
     console.log("🔥 Form submitted", values);
@@ -67,28 +67,28 @@ export const UpdateOrganization = () => {
         : undefined;
 
       form.reset({
-        active: data.active,
-        status: data.status,
-        fromType: data.fromType,
-        taxId: data.taxId,
-        type: data.type,
-        code: data.code,
+        active: data.active || "",
+        status: data.status || "",
+        fromType: data.fromType || "",
+        taxId: data.taxId || "",
+        type: data.type || "",
+        code: data.code || "",
         openingDate: openingDate,
-        nameTh: data.nameTh,
-        nameEn: data.nameEn,
-        descriptionsTh: data.descriptionsTh,
-        descriptionsEn: data.descriptionsEn,
-        websiteUrl: data.websiteUrl,
-        registerVat: data.registerVat,
-        contactName: data.contactName,
-        contactEmail: data.contactEmail,
-        contactPhone: data.contactPhone,
-        contactLine: data.contactLine,
-        contactFacebook: data.contactFacebook,
-        contactWhatsapp: data.contactWhatsapp,
-        contactWebsite: data.contactWebsite,
-        contactNote: data.contactNote,
-        logoUrl: data.logoUrl,
+        nameTh: data.nameTh || "",
+        nameEn: data.nameEn || "",
+        descriptionsTh: data.descriptionsTh || "",
+        descriptionsEn: data.descriptionsEn || "",
+        websiteUrl: data.websiteUrl || "",
+        registerVat: data.registerVat || "",
+        contactName: data.contactName || "",
+        contactEmail: data.contactEmail || "",
+        contactPhone: data.contactPhone || "",
+        contactLine: data.contactLine || "",
+        contactFacebook: data.contactFacebook || "",
+        contactWhatsapp: data.contactWhatsapp || "",
+        contactWebsite: data.contactWebsite || "",
+        contactNote: data.contactNote || "",
+        logoUrl: data.logoUrl || "",
       });
     }
   }, [data, form]);

@@ -115,17 +115,6 @@ export const Organization = () => {
                 header: "ชื่อ",
               },
               { accessorKey: "subValue", header: "Sub Value" },
-              { accessorKey: "subValue", header: "Sub Value" },
-              { accessorKey: "subValue", header: "Sub Value" },
-              { accessorKey: "subValue", header: "Sub Value" },
-              { accessorKey: "subValue", header: "Sub Value" },
-              { accessorKey: "subValue", header: "Sub Value" },
-              { accessorKey: "subValue", header: "Sub Value" },
-              { accessorKey: "subValue", header: "Sub Value" },
-              { accessorKey: "subValue", header: "Sub Value" },
-              { accessorKey: "subValue", header: "Sub Value" },
-              { accessorKey: "subValue", header: "Sub Value" },
-              { accessorKey: "subValue", header: "Sub Value" },
             ]}
           />
         )}

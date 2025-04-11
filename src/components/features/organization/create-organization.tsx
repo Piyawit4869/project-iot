@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DatePicker } from "@/components/shared/global-date";
+import { DatePicker } from "@/components/shared/date-picker";
 
 export const CreateOrganization = () => {
   const form = useForm<cre_OrganizationFormValues>({
@@ -218,9 +218,8 @@ export const CreateOrganization = () => {
                     <FormLabel>OpeningDate</FormLabel>
                     <FormControl>
                       <DatePicker
-                        date={field.value}
+                        value={field.value}
                         onChange={field.onChange}
-                        placeholder="Select your OpeningDate date"
                       />
                     </FormControl>
                     <FormMessage />
@@ -898,9 +897,8 @@ export const CreateOrganization = () => {
                     <FormLabel>Birth Date</FormLabel>
                     <FormControl>
                       <DatePicker
-                        date={field.value}
+                        value={field.value}
                         onChange={field.onChange}
-                        placeholder="Select your birth date"
                       />
                     </FormControl>
                     <FormMessage />
@@ -1216,9 +1214,8 @@ export const CreateOrganization = () => {
                     <FormLabel>OpeningDate</FormLabel>
                     <FormControl>
                       <DatePicker
-                        date={field.value}
+                        value={field.value}
                         onChange={field.onChange}
-                        placeholder="Select your OpeningDate date"
                       />
                     </FormControl>
                     <FormMessage />
@@ -1848,9 +1845,8 @@ export const CreateOrganization = () => {
                     <FormLabel>Birth Date</FormLabel>
                     <FormControl>
                       <DatePicker
-                        date={field.value}
+                        value={field.value}
                         onChange={field.onChange}
-                        placeholder="Select your birth date"
                       />
                     </FormControl>
                     <FormMessage />
