@@ -1,7 +1,10 @@
 import { env } from "@/constants/common";
 import { apiAxios } from "@/utils/axiosInterceptor";
 import axios from "axios";
-import { Organization, Branch } from "../client/interface";
+import {
+  cre_OrganizationFormValues,
+  up_OrganizationFormValues,
+} from "@/schemas/super-organization/organization";
 
 export const fetchMe = async () => {
   try {
@@ -36,7 +39,7 @@ export const fetchOrganization = async (
 };
 
 export const fetchCreateOrganization = async (
-  payload: { organization: Organization; branch: Branch },
+  payload: cre_OrganizationFormValues,
   accessToken: string | undefined
 ) => {
   try {
@@ -54,10 +57,27 @@ export const fetchCreateOrganization = async (
     return error;
   }
 };
+
+export const fetchGetOrganization = async (id: string, accessToken: string) => {
+  try {
+    const { data: response } = await axios.get(
+      `${env.base_url}/admin/organizations/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    return response.res.data;
+  } catch (error) {
+    return error;
+  }
+};
 export const fetchUpdateOrganization = async (
   id: string,
-  payload: { organization: Organization; branch: Branch },
-  accessToken: string | undefined
+  accessToken: string,
+  payload: up_OrganizationFormValues
 ) => {
   try {
     const res = await axios.put(

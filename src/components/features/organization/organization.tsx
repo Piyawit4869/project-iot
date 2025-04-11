@@ -7,7 +7,7 @@ import { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { Control } from "@/components/shared/topsection";
-import { DataTable } from "@/components/shared/data-table";
+import { CollapeTable, SubTable } from "@/components/shared/collape-table";
 import { usePaginate } from "@/actions/super-organization/client/useGetOrganizations";
 export const metadata: Metadata = {
   title: "Tasks",
@@ -19,13 +19,18 @@ interface Task {
   title: string;
   status: "pending" | "in-progress" | "done";
   dueDate: string;
+  children: any;
 }
 
 const columns: ColumnDef<Task>[] = [
   {
-    accessorKey: "id",
-    header: "Organization Id",
-    cell: (info) => <span>{info.getValue() as string}</span>,
+    accessorKey: "nameEn",
+    header: "Name (EN)",
+    cell: (info) => (
+      <Link href={`/superadmin/organization/${info.row.original.id}`}>
+        <span className="hover:text-red-500">{info.getValue() as string}</span>
+      </Link>
+    ),
   },
   {
     accessorKey: "nameTh",
@@ -33,8 +38,8 @@ const columns: ColumnDef<Task>[] = [
     cell: (info) => <span>{info.getValue() as string}</span>,
   },
   {
-    accessorKey: "nameEn",
-    header: "Name (EN)",
+    accessorKey: "taxId",
+    header: "Tax Id",
     cell: (info) => <span>{info.getValue() as string}</span>,
   },
   {
@@ -50,6 +55,26 @@ const columns: ColumnDef<Task>[] = [
             : "text-gray-500";
       return <span className={`font-medium ${color}`}>{status}</span>;
     },
+  },
+  {
+    accessorKey: "contactName",
+    header: "Contact Name",
+    cell: (info) => <span>{info.getValue() as string}</span>,
+  },
+  {
+    accessorKey: "contactEmail",
+    header: "Contact Email",
+    cell: (info) => <span>{info.getValue() as string}</span>,
+  },
+  {
+    accessorKey: "contactPhone",
+    header: "Contact Phone",
+    cell: (info) => <span>{info.getValue() as string}</span>,
+  },
+  {
+    accessorKey: "code",
+    header: "Code Organization",
+    cell: (info) => <span>{info.getValue() as string}</span>,
   },
   {
     accessorKey: "",
@@ -78,7 +103,33 @@ export const Organization = () => {
           ]}
         />
       </div>
-      <DataTable queryFunction={usePaginate} columns={columns} />
+      <CollapeTable
+        queryFunction={usePaginate}
+        columns={columns}
+        renderSubComponent={(row) => (
+          <SubTable
+            data={row.original.children ?? []}
+            columns={[
+              {
+                accessorKey: "name",
+                header: "ชื่อ",
+              },
+              { accessorKey: "subValue", header: "Sub Value" },
+              { accessorKey: "subValue", header: "Sub Value" },
+              { accessorKey: "subValue", header: "Sub Value" },
+              { accessorKey: "subValue", header: "Sub Value" },
+              { accessorKey: "subValue", header: "Sub Value" },
+              { accessorKey: "subValue", header: "Sub Value" },
+              { accessorKey: "subValue", header: "Sub Value" },
+              { accessorKey: "subValue", header: "Sub Value" },
+              { accessorKey: "subValue", header: "Sub Value" },
+              { accessorKey: "subValue", header: "Sub Value" },
+              { accessorKey: "subValue", header: "Sub Value" },
+              { accessorKey: "subValue", header: "Sub Value" },
+            ]}
+          />
+        )}
+      />
     </>
   );
 };
