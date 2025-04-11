@@ -19,7 +19,21 @@ interface Task {
   title: string;
   status: "pending" | "in-progress" | "done";
   dueDate: string;
-  children: any;
+  children: {
+    id: string;
+    name: string;
+    subValue: string;
+  }[];
+  nameEn: string;
+  nameTh: string;
+  taxId: string;
+  contactName: string;
+  contactEmail: string;
+  contactPhone: string;
+  code: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
 }
 
 const columns: ColumnDef<Task>[] = [
