@@ -21,7 +21,6 @@ import { useCreateProducts } from "@/actions/products/client/useGetProducts";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { DatePicker } from "@/components/shared/date-picker";
-import ImageUpload from "@/components/shared/upload";
 import { useForm } from "react-hook-form";
 import GlobalButton from "@/components/shared/global-button";
 import { Card } from "@/components/ui/card";
@@ -339,7 +338,7 @@ export const CreateProducts = () => {
                     <FormItem className="mt-4">
                       <FormLabel>Products Image</FormLabel>
                       <FormControl className="w-full">
-                        <ImageUpload />
+                        <Input {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
