@@ -2,7 +2,7 @@
 
 import React from "react";
 import GlobalButton from "@/components/shared/global-button";
-import { Control } from "@/components/shared/topsection";
+import { Tabcontrol } from "@/components/shared/topsection";
 import {
   Form,
   FormControl,
@@ -51,7 +51,7 @@ export const CreateUsers = () => {
 
   return (
     <div className="hidden flex-1 flex-col gap-4 space-y-3 p-8 md:flex">
-      <Control
+      <Tabcontrol
         title="Create Users"
         backpath="/super-admin/user"
         buttons={[

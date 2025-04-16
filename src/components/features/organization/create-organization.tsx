@@ -8,7 +8,7 @@ import GlobalButton from "@/components/shared/global-button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Control } from "@/components/shared/topsection";
+import { Tabcontrol } from "@/components/shared/topsection";
 import {
   Form,
   FormField,
@@ -57,7 +57,7 @@ export const CreateOrganization = () => {
 
   return (
     <div className="flex flex-col space-y-4 p-8 md:flex">
-      <Control
+      <Tabcontrol
         title="Create Organization"
         backpath="/super-admin/organization"
         buttons={[

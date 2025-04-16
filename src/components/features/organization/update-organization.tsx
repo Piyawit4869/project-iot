@@ -8,7 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Control } from "@/components/shared/topsection";
+import { Tabcontrol } from "@/components/shared/topsection";
 import GlobalButton from "@/components/shared/global-button";
 import {
   Form,
@@ -97,7 +97,7 @@ export const UpdateOrganization = () => {
 
   return (
     <div className="hidden flex-1 flex-col space-y-3 p-8 md:flex">
-      <Control
+      <Tabcontrol
         title="Edit Organization"
         backpath="/super-admin/organization"
         buttons={[

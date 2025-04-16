@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/shared/data-table";
 import { usePaginate } from "@/actions/products/client/useGetProducts";
-import { Control } from "@/components/shared/topsection";
+import { Tabcontrol } from "@/components/shared/topsection";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -22,6 +22,25 @@ interface Task {
 }
 
 const columns: ColumnDef<Task>[] = [
+  {
+    accessorKey: "imageUrl",
+    header: "Image",
+    cell: (info) => {
+      const url = info.getValue() as string;
+
+      if (!url) return <span>No Image</span>;
+
+      return (
+        <img
+          src={url}
+          alt="item"
+          width={80}
+          height={80}
+          className="rounded-xl"
+        />
+      );
+    },
+  },
   {
     accessorKey: "sku",
     header: "SKU",
@@ -46,7 +65,7 @@ const columns: ColumnDef<Task>[] = [
     ),
   },
   {
-    accessorKey: "unitPrice",
+    accessorKey: "price",
     header: "Price",
     cell: (info) => {
       const status = info.getValue() as string;
@@ -58,15 +77,6 @@ const columns: ColumnDef<Task>[] = [
             : "text-gray-500";
       return <span className={`font-medium ${color}`}>{status}</span>;
     },
-  },
-  {
-    accessorKey: "discount",
-    header: "Discount",
-    cell: (info) => (
-      <span className="text-sm text-muted-foreground">
-        {info.getValue() as string}
-      </span>
-    ),
   },
   {
     accessorKey: "",
@@ -83,7 +93,7 @@ export const Products = () => {
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
       <div>
-        <Control
+        <Tabcontrol
           title="Products and Services"
           buttons={[
             <Link href={"/organization/products/create"} key={"create button"}>

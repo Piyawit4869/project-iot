@@ -10,33 +10,35 @@ interface CardWithFormProps {
   buttons: ReactNode[];
 }
 
-export function Control({
+export function Tabcontrol({
   title,
   backpath,
   subtitle,
   buttons,
 }: CardWithFormProps) {
   return (
-    <Card className="sticky p-4 mt-4">
-      <div className="flex items-center justify-between">
-        {backpath ? (
-          <div className="flex text-headFont gap-2 items-center">
-            <Link href={backpath} passHref>
-              <Icons.ChevronLeft className="text-base cursor-pointer" />
-            </Link>
-            <CardTitle>{title}</CardTitle>
-          </div>
-        ) : (
-          <CardTitle className="text-xl">{title}</CardTitle>
-        )}
-        {subtitle && <CardTitle className="text-xl">{subtitle}</CardTitle>}
+    <div className="sticky top-[-20px] z-50">
+      <Card className="p-4 mt-4">
+        <div className="flex items-center justify-between">
+          {backpath ? (
+            <div className="flex text-headFont gap-2 items-center">
+              <Link href={backpath} passHref>
+                <Icons.ChevronLeft className="text-base cursor-pointer" />
+              </Link>
+              <CardTitle>{title}</CardTitle>
+            </div>
+          ) : (
+            <CardTitle className="text-xl">{title}</CardTitle>
+          )}
+          {subtitle && <CardTitle className="text-xl">{subtitle}</CardTitle>}
 
-        <div className="flex space-x-2">
-          {buttons.map((button: ReactNode, index: number) => (
-            <div key={index}>{button}</div>
-          ))}
+          <div className="flex space-x-2">
+            {buttons.map((button: ReactNode, index: number) => (
+              <div key={index}>{button}</div>
+            ))}
+          </div>
         </div>
-      </div>
-    </Card>
+      </Card>
+    </div>
   );
 }

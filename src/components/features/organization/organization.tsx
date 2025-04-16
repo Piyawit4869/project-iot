@@ -6,7 +6,7 @@ import { Metadata } from "next";
 
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { Control } from "@/components/shared/topsection";
+import { Tabcontrol } from "@/components/shared/topsection";
 import { CollapeTable, SubTable } from "@/components/shared/collape-table";
 import { usePaginate } from "@/actions/super-organization/client/useGetOrganizations";
 export const metadata: Metadata = {
@@ -104,7 +104,7 @@ const columns: ColumnDef<Task>[] = [
 export const Organization = () => {
   return (
     <div className="items-center justify-between space-y-2">
-      <Control
+      <Tabcontrol
         title="Organization"
         buttons={[
           <Link href={`/super-admin/organization/create`} key={"create button"}>

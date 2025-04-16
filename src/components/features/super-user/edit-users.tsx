@@ -3,7 +3,7 @@
 import React from "react";
 import { useParams, useRouter } from "next/navigation";
 import GlobalButton from "@/components/shared/global-button";
-import { Control } from "@/components/shared/topsection";
+import { Tabcontrol } from "@/components/shared/topsection";
 import {
   Form,
   FormControl,
@@ -81,7 +81,7 @@ export const EditUsers = () => {
 
   return (
     <div className="hidden flex-1 flex-col gap-4 space-y-3 p-8 md:flex">
-      <Control
+      <Tabcontrol
         title="Edit Users"
         backpath="/organization/user"
         buttons={[
