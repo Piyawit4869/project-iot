@@ -6,7 +6,7 @@ import { Metadata } from "next";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/shared/data-table";
 import { usePaginate } from "@/actions/user/client/useGetUsers";
-import { Control } from "@/components/shared/topsection";
+import { Tabcontrol } from "@/components/shared/topsection";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
@@ -77,8 +77,8 @@ const columns: ColumnDef<Task>[] = [
 
 export const Users = () => {
   return (
-    <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
-      <Control
+    <div className="flex-1 flex-col space-y-8 p-8">
+      <Tabcontrol
         title="Users"
         buttons={[
           <Link href={"/organization/user/create"} key={"create button"}>

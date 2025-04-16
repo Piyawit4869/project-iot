@@ -2,8 +2,8 @@
 
 import React from "react";
 import GlobalButton from "@/components/shared/global-button";
-import ImageUpload from "@/components/shared/upload";
-import { Control } from "@/components/shared/topsection";
+import ImageUpload from "@/components/shared/image-upload";
+import { Tabcontrol } from "@/components/shared/topsection";
 import {
   Form,
   FormControl,
@@ -27,7 +27,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { usePaginate } from "@/actions/role/client/useGetRole";
 
 export const CreateUsers = () => {
   const form = useForm<UsersFormValues>({
@@ -52,7 +51,6 @@ export const CreateUsers = () => {
     },
   });
 
-  // const { data } = usePaginate({ pageIndex: 1, pageSize: 10 });
   const { isSubmitting } = form.formState;
   const { mutate } = useCreateUsers();
 
@@ -75,7 +73,7 @@ export const CreateUsers = () => {
 
   return (
     <div className="flex flex-col space-y-3 p-8">
-      <Control
+      <Tabcontrol
         title="Create Users"
         backpath="/organization/user"
         buttons={[

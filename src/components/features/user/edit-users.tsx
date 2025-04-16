@@ -3,7 +3,7 @@
 import React from "react";
 import { useParams, useRouter } from "next/navigation";
 import GlobalButton from "@/components/shared/global-button";
-import { Control } from "@/components/shared/topsection";
+import { Tabcontrol } from "@/components/shared/topsection";
 import {
   Form,
   FormControl,
@@ -23,7 +23,7 @@ import {
   useGetUsers,
 } from "@/actions/user/client/useGetUsers";
 import { DatePicker } from "@/components/shared/date-picker";
-import ImageUpload from "@/components/shared/upload";
+import ImageUpload from "@/components/shared/image-upload";
 import { Switch } from "@/components/ui/switch";
 import {
   Select,
@@ -113,27 +113,25 @@ export const EditUsers = () => {
   }, [data, form]);
 
   return (
-    <div className="hidden flex-1 flex-col space-y-3 p-8 md:flex">
-      <div>
-        <Control
-          title="Edit Users"
-          backpath="/organization/user"
-          buttons={[
-            <GlobalButton
-              label="Save"
-              key={"create button"}
-              type="submit"
-              loading={isSubmitting}
-              form="users"
-            />,
-            <GlobalButton
-              label="Delete"
-              key={"delete button"}
-              onClick={() => handleDelete(params.id)}
-            />,
-          ]}
-        />
-      </div>
+    <div className="flex flex-col space-y-3 p-8">
+      <Tabcontrol
+        title="Edit Users"
+        backpath="/organization/user"
+        buttons={[
+          <GlobalButton
+            label="Save"
+            key={"create button"}
+            type="submit"
+            loading={isSubmitting}
+            form="users"
+          />,
+          <GlobalButton
+            label="Delete"
+            key={"delete button"}
+            onClick={() => handleDelete(params.id)}
+          />,
+        ]}
+      />
       <Form {...form}>
         <form id="users" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex gap-8 mt-4 w-full">

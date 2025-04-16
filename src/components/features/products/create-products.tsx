@@ -4,7 +4,7 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRouter } from "next/navigation";
-import { Control } from "@/components/shared/topsection";
+import { Tabcontrol } from "@/components/shared/topsection";
 import {
   Form,
   FormControl,
@@ -24,7 +24,7 @@ import { useForm } from "react-hook-form";
 import GlobalButton from "@/components/shared/global-button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import ImageUpload from "@/components/shared/upload";
+import ImageUpload from "@/components/shared/image-upload";
 
 export const CreateProducts = () => {
   const router = useRouter();
@@ -50,7 +50,7 @@ export const CreateProducts = () => {
 
   return (
     <div className="hidden flex-1 flex-col space-y-3 p-8 md:flex">
-      <Control
+      <Tabcontrol
         title="Create Products"
         backpath="/organization/products"
         buttons={[

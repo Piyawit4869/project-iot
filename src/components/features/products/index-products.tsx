@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/shared/data-table";
 import { usePaginate } from "@/actions/products/client/useGetProducts";
-import { Control } from "@/components/shared/topsection";
+import { Tabcontrol } from "@/components/shared/topsection";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -93,7 +93,7 @@ export const Products = () => {
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
       <div>
-        <Control
+        <Tabcontrol
           title="Products and Services"
           buttons={[
             <Link href={"/organization/products/create"} key={"create button"}>

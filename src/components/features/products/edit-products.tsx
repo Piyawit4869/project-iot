@@ -3,7 +3,7 @@
 import React from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Control } from "@/components/shared/topsection";
+import { Tabcontrol } from "@/components/shared/topsection";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -27,7 +27,7 @@ import {
 } from "@/actions/products/client/useGetProducts";
 import GlobalButton from "@/components/shared/global-button";
 import { DatePicker } from "@/components/shared/date-picker";
-import ImageUpload from "@/components/shared/upload";
+import ImageUpload from "@/components/shared/image-upload";
 
 export const EditProducts = () => {
   const router = useRouter();
@@ -124,7 +124,7 @@ export const EditProducts = () => {
 
   return (
     <div className="hidden flex-1 flex-col space-y-3 p-8 md:flex">
-      <Control
+      <Tabcontrol
         title="Edit Products"
         backpath="/organization/products"
         buttons={[
