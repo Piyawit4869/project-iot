@@ -25,15 +25,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DatePicker } from "@/components/shared/date-picker";
+import { LabeledInput } from "@/components/shared/required-label";
+import { getRequiredPaths } from "@/utils/getRequiredPathsFromZod";
 
 import {
-  cre_OrganizationFormValues,
+  CreateOrganizationFormValues,
   createOrgSchema,
 } from "@/schemas/super-organization/organization";
 import { useCreateOrganization } from "@/actions/super-organization/client/useGetOrganizations";
+import { SmartLabel } from "@/components/shared/smart-label";
 
 export const CreateOrganization = () => {
-  const form = useForm<cre_OrganizationFormValues>({
+  const form = useForm<CreateOrganizationFormValues>({
     resolver: zodResolver(createOrgSchema),
     mode: "onSubmit",
     reValidateMode: "onChange",
@@ -41,7 +44,8 @@ export const CreateOrganization = () => {
   const { isSubmitting } = form.formState;
   const { mutate } = useCreateOrganization();
 
-  function onSubmit(values: cre_OrganizationFormValues) {
+  const requiredFieldPaths = new Set(getRequiredPaths(createOrgSchema));
+  function onSubmit(values: CreateOrganizationFormValues) {
     console.log("🔥 Form submitted", values);
     mutate(values, {
       onSuccess: (data) => {
@@ -52,8 +56,6 @@ export const CreateOrganization = () => {
       },
     });
   }
-
-  const requiredFields = ["organization.address.city"];
 
   return (
     <div className="flex flex-col space-y-4 p-8 md:flex">
@@ -84,7 +86,7 @@ export const CreateOrganization = () => {
                     name="organization.active"
                     render={({ field }) => (
                       <FormItem className="flex">
-                        <FormLabel className="px-2">*Active*</FormLabel>
+                        <FormLabel className="px-2">Active</FormLabel>
                         <FormControl>
                           <Switch
                             checked={field.value}
@@ -100,7 +102,7 @@ export const CreateOrganization = () => {
                     name="organization.registerVat"
                     render={({ field }) => (
                       <FormItem className="flex">
-                        <FormLabel className="px-2">*Register VAT*</FormLabel>
+                        <FormLabel className="px-2">Register VAT</FormLabel>
                         <FormControl>
                           <Switch
                             checked={field.value}
@@ -116,7 +118,11 @@ export const CreateOrganization = () => {
                     name="organization.status"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>*Status*</FormLabel>
+                        <SmartLabel
+                          fieldPath="organization.status"
+                          label={"Status"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -149,7 +155,11 @@ export const CreateOrganization = () => {
                     name="organization.fromType"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>*From Type*</FormLabel>
+                        <SmartLabel
+                          fieldPath="organization.fromType"
+                          label={"FromType"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -179,11 +189,12 @@ export const CreateOrganization = () => {
                   name="organization.taxId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>*Tax Id*</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Please Enter taxId" {...field} />
-                      </FormControl>
-                      <FormMessage />
+                      <LabeledInput
+                        control={form.control}
+                        label="Tax ID"
+                        requiredFields={requiredFieldPaths}
+                        {...field}
+                      />
                     </FormItem>
                   )}
                 />
@@ -193,7 +204,11 @@ export const CreateOrganization = () => {
                     name="organization.type"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>*Organization Type*</FormLabel>
+                        <SmartLabel
+                          fieldPath="organization.type"
+                          label={"Organization Type"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -232,7 +247,11 @@ export const CreateOrganization = () => {
                     name="organization.openingDate"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>OpeningDate</FormLabel>
+                        <SmartLabel
+                          fieldPath="organization.openingDate"
+                          label={"OpeningDate"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <DatePicker
                             value={field.value}
@@ -248,17 +267,12 @@ export const CreateOrganization = () => {
                     name="organization.nameTh"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>
-                          *Name Organization
-                          <span className="text-blue-500">(TH)*</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter Name Organization"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Name (TH)"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -267,17 +281,12 @@ export const CreateOrganization = () => {
                     name="organization.nameEn"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>
-                          *Name Organization
-                          <span className="text-blue-500">(EN)*</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter Name Organization"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Name (EN)"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -286,14 +295,12 @@ export const CreateOrganization = () => {
                     name="organization.descriptionsTh"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>
-                          Description{" "}
-                          <span className="text-blue-500">(TH)</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Description" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Description (TH)"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -303,14 +310,12 @@ export const CreateOrganization = () => {
                     name="organization.descriptionsEn"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>
-                          Description{" "}
-                          <span className="text-blue-500">(EN)</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Description" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Description (EN)"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -319,11 +324,12 @@ export const CreateOrganization = () => {
                     name="organization.websiteUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>WebsiteUrl</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter WebsiteUrl" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Website Url"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -332,11 +338,12 @@ export const CreateOrganization = () => {
                     name="organization.domainName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>*DomainName*</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter DomainName" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Domain Name"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -345,11 +352,12 @@ export const CreateOrganization = () => {
                     name="organization.logoUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>logoUrl</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter LogoUrl" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Logo Url"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -364,11 +372,12 @@ export const CreateOrganization = () => {
                     name="organization.contactName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>*ContactName*</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter ContactName" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Contact Name"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -377,11 +386,12 @@ export const CreateOrganization = () => {
                     name="organization.contactEmail"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>*ContactEmail*</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter ContactEmail" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Contact Email"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -392,14 +402,12 @@ export const CreateOrganization = () => {
                     name="organization.contactPhone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>*ContactPhone*</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Please Enter ContactPhone"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Contact Phone"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -410,11 +418,12 @@ export const CreateOrganization = () => {
                     name="organization.contactLine"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ContactLine</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter ContactLine" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Contact Line"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -423,14 +432,12 @@ export const CreateOrganization = () => {
                     name="organization.contactFacebook"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ContactFacebook</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter ContactFacebook"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Contact Facebook"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -439,14 +446,12 @@ export const CreateOrganization = () => {
                     name="organization.contactWhatsapp"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ContactWhatsapp</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter ContactWhatsapp"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Contact Whatsapp"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -455,14 +460,12 @@ export const CreateOrganization = () => {
                     name="organization.contactWebsite"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ContactWebsite</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter ContactWebsite"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Contact Website"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -471,11 +474,12 @@ export const CreateOrganization = () => {
                     name="organization.contactNote"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ContactNote</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter ContactNote" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Contact Note"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -489,7 +493,11 @@ export const CreateOrganization = () => {
                     name="organization.address.active"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Active</FormLabel>
+                        <SmartLabel
+                          fieldPath="organization.address.active"
+                          label={"Active"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <Switch
                             checked={field.value}
@@ -505,7 +513,11 @@ export const CreateOrganization = () => {
                     name="organization.address.isMain"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>isMain</FormLabel>
+                        <SmartLabel
+                          fieldPath="organization.address.isMain"
+                          label={"IsMain"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <Switch
                             checked={field.value}
@@ -523,11 +535,12 @@ export const CreateOrganization = () => {
                     name="organization.address.language"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>language</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter language" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Language"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -537,11 +550,12 @@ export const CreateOrganization = () => {
                     name="organization.address.name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>*Name Address*</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Address" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Name Address"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -550,11 +564,12 @@ export const CreateOrganization = () => {
                     name="organization.address.building"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Building</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Building" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Building"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -563,11 +578,12 @@ export const CreateOrganization = () => {
                     name="organization.address.roomNo"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>roomNo</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Room No" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Room No."
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -576,11 +592,12 @@ export const CreateOrganization = () => {
                     name="organization.address.floorNo"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>floorNo</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter floor No" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Floor No."
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -589,11 +606,12 @@ export const CreateOrganization = () => {
                     name="organization.address.village"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Village</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Village" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Village Name"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -602,11 +620,12 @@ export const CreateOrganization = () => {
                     name="organization.address.villageNo"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>villageNo</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Village No" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Village No."
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -615,11 +634,12 @@ export const CreateOrganization = () => {
                     name="organization.address.houseNo"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>House No</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter House No" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="House No."
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -628,11 +648,12 @@ export const CreateOrganization = () => {
                     name="organization.address.alley"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Alley</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Alley" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Alley"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -641,11 +662,12 @@ export const CreateOrganization = () => {
                     name="organization.address.road"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Road</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Road" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Road"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -654,11 +676,12 @@ export const CreateOrganization = () => {
                     name="organization.address.nation"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nation</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Nation" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Nation"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -667,11 +690,12 @@ export const CreateOrganization = () => {
                     name="organization.address.subDistrict"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>SubDistrict</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter SubDistrict" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Sub District"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -680,16 +704,12 @@ export const CreateOrganization = () => {
                     name="organization.address.city"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>
-                          {requiredFields.includes(
-                            "organization.address.city"
-                          ) && <span className="text-red-500 mr-1">*</span>}
-                          City
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter City" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="City"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -698,11 +718,12 @@ export const CreateOrganization = () => {
                     name="organization.address.province"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>*Province*</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Province" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Province"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -711,11 +732,12 @@ export const CreateOrganization = () => {
                     name="organization.address.postalCode"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>*PostalCode*</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter PostalCode" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Postal Code"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -724,11 +746,12 @@ export const CreateOrganization = () => {
                     name="organization.address.note"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Note</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Note" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Note"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -776,11 +799,12 @@ export const CreateOrganization = () => {
                     name="organization.user.email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>*Email*</FormLabel>
-                        <FormControl>
-                          <Input placeholder="EnterEmail" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Email"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -789,11 +813,12 @@ export const CreateOrganization = () => {
                     name="organization.user.password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Password" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Password"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -802,11 +827,12 @@ export const CreateOrganization = () => {
                     name="organization.user.userName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Username</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter UserName" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Username"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -815,7 +841,11 @@ export const CreateOrganization = () => {
                     name="organization.user.status"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>*Status*</FormLabel>
+                        <SmartLabel
+                          fieldPath="organization.user.status"
+                          label={"Status"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -854,7 +884,11 @@ export const CreateOrganization = () => {
                     name="organization.user.profile.prefix"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Prefix</FormLabel>
+                        <SmartLabel
+                          fieldPath="organization.user.profile.prefix"
+                          label={"Prefix"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -885,11 +919,12 @@ export const CreateOrganization = () => {
                     name="organization.user.profile.firstName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Firstname</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Firstname" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="FirstName"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -898,11 +933,12 @@ export const CreateOrganization = () => {
                     name="organization.user.profile.lastName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Lastname</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Lastname" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="LastName"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -911,7 +947,11 @@ export const CreateOrganization = () => {
                     name="organization.user.profile.birthDate"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Birth Date</FormLabel>
+                        <SmartLabel
+                          fieldPath="organization.user.profile.birthDate"
+                          label={"BirthDate"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <DatePicker
                             value={field.value}
@@ -927,11 +967,12 @@ export const CreateOrganization = () => {
                     name="organization.user.profile.photoUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Profile Url</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Profile Url" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Photo Url"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -940,11 +981,12 @@ export const CreateOrganization = () => {
                     name="organization.user.profile.deviceToken"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>DeviceToken</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter DeviceToken" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Device Token"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -953,10 +995,14 @@ export const CreateOrganization = () => {
                     name="organization.user.profile.phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Phone</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Phone" {...field} />
-                        </FormControl>
+                        <FormItem>
+                          <LabeledInput
+                            control={form.control}
+                            label="Phone"
+                            requiredFields={requiredFieldPaths}
+                            {...field}
+                          />
+                        </FormItem>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -987,7 +1033,11 @@ export const CreateOrganization = () => {
                   name="organization.setting.theme"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Theme</FormLabel>
+                      <SmartLabel
+                        fieldPath="organization.setting.theme"
+                        label={"Theme"}
+                        requiredFields={requiredFieldPaths}
+                      />
                       <FormControl>
                         <Input placeholder="Enter Theme" {...field} />
                       </FormControl>
@@ -1000,7 +1050,11 @@ export const CreateOrganization = () => {
                   name="organization.setting.textDisplay"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>textDisplay</FormLabel>
+                      <SmartLabel
+                        fieldPath="organization.setting.textDisplay"
+                        label={"TextDisplay"}
+                        requiredFields={requiredFieldPaths}
+                      />
                       <FormControl>
                         <Input placeholder="Enter textDisplay" {...field} />
                       </FormControl>
@@ -1013,7 +1067,11 @@ export const CreateOrganization = () => {
                   name="organization.setting.domainName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>domainName</FormLabel>
+                      <SmartLabel
+                        fieldPath="organization.setting.domainName"
+                        label={"Domain Name"}
+                        requiredFields={requiredFieldPaths}
+                      />
                       <FormControl>
                         <Input placeholder="Enter domainName" {...field} />
                       </FormControl>
@@ -1026,7 +1084,11 @@ export const CreateOrganization = () => {
                   name="organization.setting.defaultLanguage"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Default Language</FormLabel>
+                      <SmartLabel
+                        fieldPath="organization.setting.defaultLanguage"
+                        label={"Default Language"}
+                        requiredFields={requiredFieldPaths}
+                      />
                       <FormControl>
                         <Select
                           onValueChange={field.onChange}
@@ -1067,7 +1129,7 @@ export const CreateOrganization = () => {
                     name="branch.active"
                     render={({ field }) => (
                       <FormItem className="flex">
-                        <FormLabel className="px-2">*Active*</FormLabel>
+                        <FormLabel className="px-2">Active</FormLabel>
                         <FormControl>
                           <Switch
                             checked={field.value}
@@ -1099,7 +1161,7 @@ export const CreateOrganization = () => {
                     name="branch.isMain"
                     render={({ field }) => (
                       <FormItem className="flex">
-                        <FormLabel className="px-2">*isMain*</FormLabel>
+                        <FormLabel className="px-2">isMain</FormLabel>
                         <FormControl>
                           <Switch
                             checked={field.value}
@@ -1117,7 +1179,11 @@ export const CreateOrganization = () => {
                     name="branch.status"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Status</FormLabel>
+                        <SmartLabel
+                          fieldPath="branch.status"
+                          label={"Status"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -1150,7 +1216,11 @@ export const CreateOrganization = () => {
                     name="branch.fromType"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>From Type</FormLabel>
+                        <SmartLabel
+                          fieldPath="branch.fromType"
+                          label={"FromType"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -1180,11 +1250,12 @@ export const CreateOrganization = () => {
                   name="branch.taxId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tax Id</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Please Enter taxId" {...field} />
-                      </FormControl>
-                      <FormMessage />
+                      <LabeledInput
+                        control={form.control}
+                        label="Tax ID"
+                        requiredFields={requiredFieldPaths}
+                        {...field}
+                      />
                     </FormItem>
                   )}
                 />
@@ -1194,7 +1265,11 @@ export const CreateOrganization = () => {
                     name="branch.type"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>branch Type</FormLabel>
+                        <SmartLabel
+                          fieldPath="branch.type"
+                          label={"Branch Type"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -1233,7 +1308,11 @@ export const CreateOrganization = () => {
                     name="branch.openingDate"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>OpeningDate</FormLabel>
+                        <SmartLabel
+                          fieldPath="branch.openingDate"
+                          label={"OpeningDate"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <DatePicker
                             value={field.value}
@@ -1249,14 +1328,12 @@ export const CreateOrganization = () => {
                     name="branch.nameTh"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>
-                          Name branch
-                          <span className="text-blue-500">(TH)</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Name branch" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Name (TH)"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1265,14 +1342,12 @@ export const CreateOrganization = () => {
                     name="branch.nameEn"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>
-                          Name branch
-                          <span className="text-blue-500">(EN)</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Name branch" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Name (EN)"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1281,14 +1356,12 @@ export const CreateOrganization = () => {
                     name="branch.descriptionsTh"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>
-                          Description{" "}
-                          <span className="text-blue-500">(TH)</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Description" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Description (TH)"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1298,14 +1371,12 @@ export const CreateOrganization = () => {
                     name="branch.descriptionsEn"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>
-                          Description{" "}
-                          <span className="text-blue-500">(EN)</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Description" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Description (EN)"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1314,11 +1385,12 @@ export const CreateOrganization = () => {
                     name="branch.websiteUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>WebsiteUrl</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter WebsiteUrl" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="WebsiteUrl"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1327,11 +1399,12 @@ export const CreateOrganization = () => {
                     name="branch.logoUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>logoUrl</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter LogoUrl" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="logoUrl"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1346,11 +1419,12 @@ export const CreateOrganization = () => {
                     name="branch.contactName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ContactName</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter ContactName" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Contact Name"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1359,11 +1433,12 @@ export const CreateOrganization = () => {
                     name="branch.contactEmail"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ContactEmail</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter ContactEmail" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Contact Email"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1374,14 +1449,12 @@ export const CreateOrganization = () => {
                     name="branch.contactPhone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel> ContactPhone</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Please Enter ContactPhone"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Contact Phone"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1392,11 +1465,12 @@ export const CreateOrganization = () => {
                     name="branch.contactLine"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ContactLine</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter ContactLine" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Contact Line"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1405,14 +1479,12 @@ export const CreateOrganization = () => {
                     name="branch.contactFacebook"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ContactFacebook</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter ContactFacebook"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Contact Facebook"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1421,14 +1493,12 @@ export const CreateOrganization = () => {
                     name="branch.contactWhatsapp"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ContactWhatsapp</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter ContactWhatsapp"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Contact Whatsapp"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1437,14 +1507,12 @@ export const CreateOrganization = () => {
                     name="branch.contactWebsite"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ContactWebsite</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter ContactWebsite"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Contact Website"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1453,11 +1521,12 @@ export const CreateOrganization = () => {
                     name="branch.contactNote"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ContactNote</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter ContactNote" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Contact Note"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1471,7 +1540,11 @@ export const CreateOrganization = () => {
                     name="branch.address.active"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Active</FormLabel>
+                        <SmartLabel
+                          fieldPath="branch.address.active"
+                          label={"Active"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <Switch
                             checked={field.value}
@@ -1487,7 +1560,11 @@ export const CreateOrganization = () => {
                     name="branch.address.isMain"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>isMain</FormLabel>
+                        <SmartLabel
+                          fieldPath="branch.address.isMain"
+                          label={"Ismain"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <Switch
                             checked={field.value}
@@ -1505,11 +1582,12 @@ export const CreateOrganization = () => {
                     name="branch.address.language"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>language</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter language" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Language"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1519,11 +1597,12 @@ export const CreateOrganization = () => {
                     name="branch.address.name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>*Name Address*</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Address" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Name Address"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1532,11 +1611,12 @@ export const CreateOrganization = () => {
                     name="branch.address.building"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Building</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Building" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Building"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1545,11 +1625,12 @@ export const CreateOrganization = () => {
                     name="branch.address.roomNo"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>roomNo</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Room No" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Room No."
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1558,11 +1639,12 @@ export const CreateOrganization = () => {
                     name="branch.address.floorNo"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>floorNo</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter floor No" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Floor No."
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1571,11 +1653,12 @@ export const CreateOrganization = () => {
                     name="branch.address.village"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Village</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Village" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Village Name"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1584,11 +1667,12 @@ export const CreateOrganization = () => {
                     name="branch.address.villageNo"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>villageNo</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Village No" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Village No."
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1597,11 +1681,12 @@ export const CreateOrganization = () => {
                     name="branch.address.houseNo"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>House No</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter House No" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="House No."
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1610,11 +1695,12 @@ export const CreateOrganization = () => {
                     name="branch.address.alley"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Alley</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Alley" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Alley"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1623,11 +1709,12 @@ export const CreateOrganization = () => {
                     name="branch.address.road"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Road</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Road" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Road"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1636,11 +1723,12 @@ export const CreateOrganization = () => {
                     name="branch.address.nation"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nation</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Nation" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Nation"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1649,11 +1737,12 @@ export const CreateOrganization = () => {
                     name="branch.address.subDistrict"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>SubDistrict</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter SubDistrict" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Sub District"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1662,11 +1751,12 @@ export const CreateOrganization = () => {
                     name="branch.address.city"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>City</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter City" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="City"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1675,11 +1765,12 @@ export const CreateOrganization = () => {
                     name="branch.address.province"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>*Province*</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Province" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Province"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1688,11 +1779,12 @@ export const CreateOrganization = () => {
                     name="branch.address.postalCode"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>*PostalCode*</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter PostalCode" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Postal Code"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1701,11 +1793,12 @@ export const CreateOrganization = () => {
                     name="branch.address.note"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Note</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Note" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Note"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1721,7 +1814,11 @@ export const CreateOrganization = () => {
                     name="branch.user.active"
                     render={({ field }) => (
                       <FormItem className="flex">
-                        <FormLabel className="px-2">Active</FormLabel>
+                        <SmartLabel
+                          fieldPath="branch.user.active"
+                          label={"Active"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <Switch
                             checked={field.value}
@@ -1753,11 +1850,12 @@ export const CreateOrganization = () => {
                     name="branch.user.email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>*Email*</FormLabel>
-                        <FormControl>
-                          <Input placeholder="EnterEmail" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Email"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1766,11 +1864,12 @@ export const CreateOrganization = () => {
                     name="branch.user.password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Password" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Password"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1779,11 +1878,12 @@ export const CreateOrganization = () => {
                     name="branch.user.userName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Username</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter UserName" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Username"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1792,7 +1892,11 @@ export const CreateOrganization = () => {
                     name="branch.user.status"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Status</FormLabel>
+                        <SmartLabel
+                          fieldPath="branch.user.status"
+                          label={"Status"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -1831,7 +1935,11 @@ export const CreateOrganization = () => {
                     name="branch.user.profile.prefix"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Prefix</FormLabel>
+                        <SmartLabel
+                          fieldPath="branch.user.profile.prefix"
+                          label={"Prefix"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -1862,11 +1970,12 @@ export const CreateOrganization = () => {
                     name="branch.user.profile.firstName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Firstname</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Firstname" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="FirstName"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1875,11 +1984,12 @@ export const CreateOrganization = () => {
                     name="branch.user.profile.lastName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Lastname</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Lastname" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="LastName"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1888,7 +1998,11 @@ export const CreateOrganization = () => {
                     name="branch.user.profile.birthDate"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Birth Date</FormLabel>
+                        <SmartLabel
+                          fieldPath="branch.user.profile.birthDate"
+                          label={"BirthDate"}
+                          requiredFields={requiredFieldPaths}
+                        />
                         <FormControl>
                           <DatePicker
                             value={field.value}
@@ -1904,11 +2018,12 @@ export const CreateOrganization = () => {
                     name="branch.user.profile.photoUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Profile Url</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Profile Url" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Photo Url"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1917,11 +2032,13 @@ export const CreateOrganization = () => {
                     name="branch.user.profile.deviceToken"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>DeviceToken</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter DeviceToken" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Device Token"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
+                        v
                       </FormItem>
                     )}
                   />
@@ -1930,11 +2047,12 @@ export const CreateOrganization = () => {
                     name="branch.user.profile.phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Phone</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Phone" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                        <LabeledInput
+                          control={form.control}
+                          label="Photo Url"
+                          requiredFields={requiredFieldPaths}
+                          {...field}
+                        />
                       </FormItem>
                     )}
                   />
@@ -1964,7 +2082,11 @@ export const CreateOrganization = () => {
                   name="branch.setting.theme"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Theme</FormLabel>
+                      <SmartLabel
+                        fieldPath="branch.setting.theme"
+                        label={"Theme"}
+                        requiredFields={requiredFieldPaths}
+                      />
                       <FormControl>
                         <Input placeholder="Enter Theme" {...field} />
                       </FormControl>
@@ -1977,7 +2099,11 @@ export const CreateOrganization = () => {
                   name="branch.setting.textDisplay"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>textDisplay</FormLabel>
+                      <SmartLabel
+                        fieldPath="branch.setting.textDisplay"
+                        label={"TextDisplay"}
+                        requiredFields={requiredFieldPaths}
+                      />
                       <FormControl>
                         <Input placeholder="Enter textDisplay" {...field} />
                       </FormControl>
@@ -1990,7 +2116,11 @@ export const CreateOrganization = () => {
                   name="branch.setting.domainName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>domainName</FormLabel>
+                      <SmartLabel
+                        fieldPath="branch.setting.domainName"
+                        label={"Domain Name"}
+                        requiredFields={requiredFieldPaths}
+                      />
                       <FormControl>
                         <Input placeholder="Enter domainName" {...field} />
                       </FormControl>
@@ -2003,7 +2133,11 @@ export const CreateOrganization = () => {
                   name="branch.setting.defaultLanguage"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Default Language</FormLabel>
+                      <SmartLabel
+                        fieldPath="branch.setting.defaultLanguage"
+                        label={"Default Language"}
+                        requiredFields={requiredFieldPaths}
+                      />
                       <FormControl>
                         <Select
                           onValueChange={field.onChange}

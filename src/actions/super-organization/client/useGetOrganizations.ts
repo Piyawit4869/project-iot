@@ -8,7 +8,7 @@ import {
   fetchGetOrganization,
 } from "../server/organizations";
 import {
-  cre_OrganizationFormValues,
+  CreateOrganizationFormValues,
   up_OrganizationFormValues,
 } from "@/schemas/super-organization/organization";
 
@@ -50,7 +50,7 @@ export const useCreateOrganization = () => {
   const accessToken = user?.user?.auth?.accessToken;
 
   return useMutation({
-    mutationFn: (values: cre_OrganizationFormValues) =>
+    mutationFn: (values: CreateOrganizationFormValues) =>
       fetchCreateOrganization(values, accessToken),
   });
 };

@@ -22,6 +22,7 @@ import {
   useDeleteUsers,
   useGetUsers,
 } from "@/actions/user/client/useGetUsers";
+import { DatePicker } from "@/components/shared/date-picker";
 
 export const EditUsers = () => {
   const router = useRouter();
@@ -257,7 +258,7 @@ export const EditUsers = () => {
                 <FormItem>
                   <FormLabel>birthDate</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <DatePicker value={field.value} onChange={field.onChange} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
