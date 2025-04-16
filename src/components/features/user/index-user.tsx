@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+// import Image from "next/image";
 import { Metadata } from "next";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/shared/data-table";
@@ -22,6 +23,17 @@ interface Task {
 }
 
 const columns: ColumnDef<Task>[] = [
+  {
+    accessorKey: "profile.photoUrl",
+    header: "Image",
+    cell: (info) => {
+      const url = info.getValue() as string;
+
+      if (!url) return <span>No Image</span>;
+
+      return <img src={url} alt="item" className="w-16 h-16 rounded-xl" />;
+    },
+  },
   {
     accessorKey: "id",
     header: "Id",
@@ -55,19 +67,15 @@ const columns: ColumnDef<Task>[] = [
 export const Users = () => {
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
-      <div>
-        <Control
-          title="Users"
-          buttons={[
-            <Link href={"/superadmin/user/create"} key={"create button"}>
-              <Button key={"create button"}>Create</Button>
-            </Link>,
-          ]}
-        />
-      </div>
-      <div>
-        <DataTable queryFunction={usePaginate} columns={columns} />
-      </div>
+      <Control
+        title="Users"
+        buttons={[
+          <Link href={"/organization/user/create"} key={"create button"}>
+            <Button key={"create button"}>Create</Button>
+          </Link>,
+        ]}
+      />
+      <DataTable queryFunction={usePaginate} columns={columns} />
     </div>
   );
 };
