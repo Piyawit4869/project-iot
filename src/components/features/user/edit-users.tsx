@@ -25,6 +25,13 @@ import {
 import { DatePicker } from "@/components/shared/date-picker";
 import ImageUpload from "@/components/shared/upload";
 import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const EditUsers = () => {
   const router = useRouter();
@@ -153,9 +160,24 @@ export const EditUsers = () => {
                     render={({ field }) => (
                       <FormItem className="mt-4">
                         <FormLabel>Prefix</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
+                        <Select
+                          {...field}
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {prefix.map((item) => (
+                              <SelectItem key={item.value} value={item.value}>
+                                {item.value}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -261,6 +283,37 @@ export const EditUsers = () => {
                   />
                 </div>
               </Card>
+              <Card className="p-6">
+                <h1>Role</h1>
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="roleId"
+                    render={({ field }) => (
+                      <FormItem className="mt-4">
+                        <FormLabel>Role</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="employeeRoleId"
+                    render={({ field }) => (
+                      <FormItem className="mt-4">
+                        <FormLabel>Employee Role</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </Card>
             </div>
             <div className="flex flex-1 flex-col gap-4">
               <Card className="w-full p-6">
@@ -301,35 +354,6 @@ export const EditUsers = () => {
                   )}
                 />
               </Card>
-              <Card className="p-6">
-                <h1>Role</h1>
-                <FormField
-                  control={form.control}
-                  name="roleId"
-                  render={({ field }) => (
-                    <FormItem className="mt-4">
-                      <FormLabel>Role</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="employeeRoleId"
-                  render={({ field }) => (
-                    <FormItem className="mt-4">
-                      <FormLabel>Employee Role</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </Card>
             </div>
           </div>
         </form>
@@ -337,3 +361,5 @@ export const EditUsers = () => {
     </div>
   );
 };
+
+const prefix = [{ value: "Mr." }, { value: "Mrs." }, { value: "Ms." }];

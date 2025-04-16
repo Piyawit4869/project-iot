@@ -2,6 +2,7 @@
 
 import React from "react";
 import GlobalButton from "@/components/shared/global-button";
+import ImageUpload from "@/components/shared/upload";
 import { Control } from "@/components/shared/topsection";
 import {
   Form,
@@ -17,9 +18,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Card } from "@/components/ui/card";
 import { useCreateUsers } from "@/actions/user/client/useGetUsers";
 import { UsersFormSchema, UsersFormValues } from "@/schemas/users/users";
-import ImageUpload from "@/components/shared/upload";
 import { Switch } from "@/components/ui/switch";
 import { DatePicker } from "@/components/shared/date-picker";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+// import { usePaginate } from "@/actions/role/client/useGetRole";
 
 export const CreateUsers = () => {
   const form = useForm<UsersFormValues>({
@@ -44,6 +52,7 @@ export const CreateUsers = () => {
     },
   });
 
+  // const { data } = usePaginate({ pageIndex: 1, pageSize: 10 });
   const { isSubmitting } = form.formState;
   const { mutate } = useCreateUsers();
 
@@ -63,8 +72,6 @@ export const CreateUsers = () => {
       status: "active",
     });
   }, [form]);
-
-  console.log("form", form.getValues());
 
   return (
     <div className="flex flex-col space-y-3 p-8">
@@ -107,9 +114,24 @@ export const CreateUsers = () => {
                     render={({ field }) => (
                       <FormItem className="mt-4">
                         <FormLabel>Prefix</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
+                        <Select
+                          {...field}
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {prefix.map((item) => (
+                              <SelectItem key={item.value} value={item.value}>
+                                {item.value}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -215,6 +237,35 @@ export const CreateUsers = () => {
                   />
                 </div>
               </Card>
+              <Card className="p-6">
+                <h1>Role</h1>
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="roleId"
+                    render={({ field }) => (
+                      <FormItem className="mt-4">
+                        <FormLabel>Role</FormLabel>
+                        <Input {...field} />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="employeeRoleId"
+                    render={({ field }) => (
+                      <FormItem className="mt-4">
+                        <FormLabel>Employee Role</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </Card>
             </div>
             <div className="flex flex-1 flex-col gap-4">
               <Card className="w-full p-6">
@@ -256,35 +307,6 @@ export const CreateUsers = () => {
                 />
               </Card>
               <Card className="p-6">
-                <h1>Role</h1>
-                <FormField
-                  control={form.control}
-                  name="roleId"
-                  render={({ field }) => (
-                    <FormItem className="mt-4">
-                      <FormLabel>Role</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="employeeRoleId"
-                  render={({ field }) => (
-                    <FormItem className="mt-4">
-                      <FormLabel>Employee Role</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </Card>
-              <Card className="p-6">
                 <h1>Password</h1>
                 <FormField
                   control={form.control}
@@ -307,3 +329,5 @@ export const CreateUsers = () => {
     </div>
   );
 };
+
+const prefix = [{ value: "Mr." }, { value: "Mrs." }, { value: "Ms." }];

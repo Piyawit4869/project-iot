@@ -2,7 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-// import Image from "next/image";
 import { Metadata } from "next";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/shared/data-table";
@@ -31,13 +30,16 @@ const columns: ColumnDef<Task>[] = [
 
       if (!url) return <span>No Image</span>;
 
-      return <img src={url} alt="item" className="w-16 h-16 rounded-xl" />;
+      return (
+        <img
+          src={url}
+          alt="item"
+          width={80}
+          height={80}
+          className="rounded-xl"
+        />
+      );
     },
-  },
-  {
-    accessorKey: "id",
-    header: "Id",
-    cell: (info) => <span>{info.getValue() as string}</span>,
   },
   {
     accessorKey: "userName",
@@ -47,6 +49,15 @@ const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "email",
     header: "Email",
+    cell: (info) => (
+      <span className="text-sm text-muted-foreground">
+        {info.getValue() as string}
+      </span>
+    ),
+  },
+  {
+    accessorKey: "profile.phone",
+    header: "Phone",
     cell: (info) => (
       <span className="text-sm text-muted-foreground">
         {info.getValue() as string}

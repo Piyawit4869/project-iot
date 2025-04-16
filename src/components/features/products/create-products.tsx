@@ -19,12 +19,12 @@ import {
 } from "@/schemas/products/product";
 import { useCreateProducts } from "@/actions/products/client/useGetProducts";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { DatePicker } from "@/components/shared/date-picker";
 import { useForm } from "react-hook-form";
 import GlobalButton from "@/components/shared/global-button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import ImageUpload from "@/components/shared/upload";
 
 export const CreateProducts = () => {
   const router = useRouter();
@@ -48,29 +48,21 @@ export const CreateProducts = () => {
     });
   };
 
-  React.useEffect(() => {
-    form.reset({
-      status: "active",
-    });
-  }, [form]);
-
   return (
     <div className="hidden flex-1 flex-col space-y-3 p-8 md:flex">
-      <div>
-        <Control
-          title="Create Products"
-          backpath="/organization/products"
-          buttons={[
-            <GlobalButton
-              label="Create"
-              key={"create button"}
-              type="submit"
-              loading={isSubmitting}
-              form="products"
-            />,
-          ]}
-        />
-      </div>
+      <Control
+        title="Create Products"
+        backpath="/organization/products"
+        buttons={[
+          <GlobalButton
+            label="Create"
+            key={"create button"}
+            type="submit"
+            loading={isSubmitting}
+            form="products"
+          />,
+        ]}
+      />
       <Form {...form}>
         <form id="products" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex gap-8 mt-4 w-full ">
@@ -338,7 +330,10 @@ export const CreateProducts = () => {
                     <FormItem className="mt-4">
                       <FormLabel>Products Image</FormLabel>
                       <FormControl className="w-full">
-                        <Input {...field} />
+                        <ImageUpload
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -381,22 +376,6 @@ export const CreateProducts = () => {
                       <FormLabel>alcohol</FormLabel>
                       <FormControl>
                         <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </Card>
-              <Card className="w-full p-6">
-                <h1>Status</h1>
-                <FormField
-                  control={form.control}
-                  name="imageUrl"
-                  render={({ field }) => (
-                    <FormItem className="flex mt-4">
-                      <FormLabel>Status</FormLabel>
-                      <FormControl className="ml-4">
-                        <Switch {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

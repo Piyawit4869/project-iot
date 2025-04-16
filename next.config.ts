@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   output: "standalone",
   images: {
-    domains: ["ui-avatars.com", "storage.googleapis.com"],
+    domains: ["ui-avatars.com", "storage.googleapis.com", "example.com"],
   },
 };
 

@@ -27,6 +27,7 @@ import {
 } from "@/actions/products/client/useGetProducts";
 import GlobalButton from "@/components/shared/global-button";
 import { DatePicker } from "@/components/shared/date-picker";
+import ImageUpload from "@/components/shared/upload";
 
 export const EditProducts = () => {
   const router = useRouter();
@@ -35,6 +36,29 @@ export const EditProducts = () => {
 
   const form = useForm<ProductsFormValues>({
     resolver: zodResolver(ProductsFormSchema),
+    defaultValues: {
+      name: "",
+      quantity: 0,
+      brand: "",
+      sku: "",
+      type: "",
+      price: 0,
+      imageUrl: "",
+      detail: "",
+      description: "",
+      manufacturedDate: undefined,
+      expireDate: undefined,
+      weight: 0,
+      country: "",
+      subRegion: "",
+      vintage: "",
+      colour: "",
+      alcohol: 0,
+      bottleSize: 0,
+      reference: "",
+      width: 0,
+      height: 0,
+    },
   });
 
   const { isSubmitting } = form.formState;
@@ -76,7 +100,6 @@ export const EditProducts = () => {
         name: data.res.Projects.name ?? "",
         quantity: data?.res?.Projects?.quantity,
         brand: data?.res?.Projects?.brand,
-        status: data?.res?.Projects?.status,
         sku: data?.res?.Projects?.sku,
         type: data?.res?.Projects?.type,
         price: data?.res?.Projects?.price,
@@ -101,336 +124,347 @@ export const EditProducts = () => {
 
   return (
     <div className="hidden flex-1 flex-col space-y-3 p-8 md:flex">
-      <div>
-        <Control
-          title="Edit Products"
-          backpath="/organization/products"
-          buttons={[
-            <GlobalButton
-              label="Save"
-              key={"create button"}
-              type="submit"
-              loading={isSubmitting}
-              form="products"
-            />,
-            <GlobalButton
-              label="Delete"
-              key={"create button"}
-              onClick={() => handleDelete(params.id)}
-            />,
-          ]}
-        />
-      </div>
-      <div className="flex gap-8 mt-4">
-        <Card className="w-full">
-          <Form {...form}>
-            <form
-              id="products"
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="flex-row space-y-6 max-w-sm p-8"
-            >
-              <h1>Products Information</h1>
-              <FormField
-                control={form.control}
-                name="imageUrl"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Product Image</FormLabel>
-                    <FormControl className="w-full">
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>name</FormLabel>
-                    <FormControl className="w-full">
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="quantity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>quantity</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="brand"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>brand</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>status</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="sku"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>sku</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>type</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>price</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="detail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>detail</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>description</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="manufacturedDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>manufacturedDate</FormLabel>
-                    <FormControl>
-                      <DatePicker
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="expireDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>expireDate</FormLabel>
-                    <FormControl>
-                      <DatePicker
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="weight"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>weight</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="country"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>country</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="subRegion"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>subRegion</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="vintage"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>vintage</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="colour"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>colour</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="alcohol"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>alcohol</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="bottleSize"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>bottleSize</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="reference"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>reference</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="width"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>width</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="height"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Height</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </form>
-          </Form>
-        </Card>
-        {/* <Card className="w-1/4">
-          <div className="flex-row space-y-6 max-w-sm p-8">
-            <h1>Product Image</h1>
+      <Control
+        title="Edit Products"
+        backpath="/organization/products"
+        buttons={[
+          <GlobalButton
+            label="Save"
+            key={"create button"}
+            type="submit"
+            loading={isSubmitting}
+            form="products"
+          />,
+          <GlobalButton
+            label="Delete"
+            key={"create button"}
+            onClick={() => handleDelete(params.id)}
+          />,
+        ]}
+      />
+      <Form {...form}>
+        <form id="products" onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="flex gap-8 mt-4 w-full ">
+            <div className="flex flex-3 flex-col gap-6">
+              <Card className="p-6">
+                <h1>Products Information</h1>
+                <div className="flex gap-4 mt-4">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem className="flex-2">
+                        <FormLabel>name</FormLabel>
+                        <FormControl className="w-full">
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="brand"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>brand</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name="detail"
+                  render={({ field }) => (
+                    <FormItem className="mt-4">
+                      <FormLabel>detail</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem className="mt-4">
+                      <FormLabel>description</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </Card>
+
+              <Card className="p-6">
+                <h1>Product Detail</h1>
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  <FormField
+                    control={form.control}
+                    name="bottleSize"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>bottleSize</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="weight"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>weight</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="width"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>width</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="height"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Height</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </Card>
+
+              <Card className="p-6">
+                <h1>Prtoduct Country</h1>
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  <FormField
+                    control={form.control}
+                    name="country"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>country</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="subRegion"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>subRegion</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="vintage"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>vintage</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex gap-4 w-full">
+                    <FormField
+                      control={form.control}
+                      name="manufacturedDate"
+                      render={({ field }) => (
+                        <FormItem className="flex-1 w-full">
+                          <FormLabel>manufacturedDate</FormLabel>
+                          <FormControl>
+                            <DatePicker
+                              value={field.value}
+                              onChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="expireDate"
+                      render={({ field }) => (
+                        <FormItem className="flex-1 w-full">
+                          <FormLabel>expireDate</FormLabel>
+                          <FormControl>
+                            <DatePicker
+                              value={field.value}
+                              onChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+                <FormField
+                  control={form.control}
+                  name="reference"
+                  render={({ field }) => (
+                    <FormItem className="mt-4">
+                      <FormLabel>reference</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </Card>
+
+              <Card className="p-6">
+                <h1>Products Price</h1>
+                <FormField
+                  control={form.control}
+                  name="price"
+                  render={({ field }) => (
+                    <FormItem className="mt-4">
+                      <FormLabel>price</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  <FormField
+                    control={form.control}
+                    name="sku"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>SKU</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="quantity"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>quantity</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </Card>
+            </div>
+            <div className="flex flex-1 flex-col gap-4">
+              <Card className="w-full p-6">
+                <h1>Products Image</h1>
+                <FormField
+                  control={form.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem className="mt-4">
+                      <FormLabel>Products Image</FormLabel>
+                      <FormControl className="w-full">
+                        <ImageUpload
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </Card>
+              <Card className="w-full p-6">
+                <h1>Category</h1>
+                <FormField
+                  control={form.control}
+                  name="type"
+                  render={({ field }) => (
+                    <FormItem className="mt-4">
+                      <FormLabel>type</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="colour"
+                  render={({ field }) => (
+                    <FormItem className="mt-4">
+                      <FormLabel>colour</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="alcohol"
+                  render={({ field }) => (
+                    <FormItem className="mt-4">
+                      <FormLabel>alcohol</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </Card>
+            </div>
           </div>
-        </Card> */}
-      </div>
+        </form>
+      </Form>
     </div>
   );
 };
