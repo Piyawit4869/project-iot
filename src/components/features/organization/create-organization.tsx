@@ -24,7 +24,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { OtpInput } from "@/components/shared/global-opt";
 import { DatePicker } from "@/components/shared/date-picker";
 
 import {
@@ -37,6 +36,7 @@ export const CreateOrganization = () => {
   const form = useForm<cre_OrganizationFormValues>({
     resolver: zodResolver(createOrgSchema),
     mode: "onSubmit",
+    reValidateMode: "onChange",
   });
   const { isSubmitting } = form.formState;
   const { mutate } = useCreateOrganization();
@@ -52,6 +52,8 @@ export const CreateOrganization = () => {
       },
     });
   }
+
+  const requiredFields = ["organization.address.city"];
 
   return (
     <div className="flex flex-col space-y-4 p-8 md:flex">
@@ -82,7 +84,7 @@ export const CreateOrganization = () => {
                     name="organization.active"
                     render={({ field }) => (
                       <FormItem className="flex">
-                        <FormLabel className="px-2">Active</FormLabel>
+                        <FormLabel className="px-2">*Active*</FormLabel>
                         <FormControl>
                           <Switch
                             checked={field.value}
@@ -98,7 +100,7 @@ export const CreateOrganization = () => {
                     name="organization.registerVat"
                     render={({ field }) => (
                       <FormItem className="flex">
-                        <FormLabel className="px-2">Register VAT</FormLabel>
+                        <FormLabel className="px-2">*Register VAT*</FormLabel>
                         <FormControl>
                           <Switch
                             checked={field.value}
@@ -114,7 +116,7 @@ export const CreateOrganization = () => {
                     name="organization.status"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Status</FormLabel>
+                        <FormLabel>*Status*</FormLabel>
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -147,7 +149,7 @@ export const CreateOrganization = () => {
                     name="organization.fromType"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>From Type</FormLabel>
+                        <FormLabel>*From Type*</FormLabel>
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -177,9 +179,9 @@ export const CreateOrganization = () => {
                   name="organization.taxId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tax Id</FormLabel>
+                      <FormLabel>*Tax Id*</FormLabel>
                       <FormControl>
-                        <OtpInput groups={[3, 2, 5, 3]} {...field} />
+                        <Input placeholder="Please Enter taxId" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -191,7 +193,7 @@ export const CreateOrganization = () => {
                     name="organization.type"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Organization Type</FormLabel>
+                        <FormLabel>*Organization Type*</FormLabel>
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -247,8 +249,8 @@ export const CreateOrganization = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
-                          Name Organization
-                          <span className="text-blue-500">(TH)</span>
+                          *Name Organization
+                          <span className="text-blue-500">(TH)*</span>
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -266,8 +268,8 @@ export const CreateOrganization = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
-                          Name Organization
-                          <span className="text-blue-500">(EN)</span>
+                          *Name Organization
+                          <span className="text-blue-500">(EN)*</span>
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -330,7 +332,7 @@ export const CreateOrganization = () => {
                     name="organization.domainName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>DomainName</FormLabel>
+                        <FormLabel>*DomainName*</FormLabel>
                         <FormControl>
                           <Input placeholder="Enter DomainName" {...field} />
                         </FormControl>
@@ -362,7 +364,7 @@ export const CreateOrganization = () => {
                     name="organization.contactName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ContactName</FormLabel>
+                        <FormLabel>*ContactName*</FormLabel>
                         <FormControl>
                           <Input placeholder="Enter ContactName" {...field} />
                         </FormControl>
@@ -375,7 +377,7 @@ export const CreateOrganization = () => {
                     name="organization.contactEmail"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ContactEmail</FormLabel>
+                        <FormLabel>*ContactEmail*</FormLabel>
                         <FormControl>
                           <Input placeholder="Enter ContactEmail" {...field} />
                         </FormControl>
@@ -390,9 +392,12 @@ export const CreateOrganization = () => {
                     name="organization.contactPhone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel> ContactPhone</FormLabel>
+                        <FormLabel>*ContactPhone*</FormLabel>
                         <FormControl>
-                          <OtpInput groups={[3, 3, 4]} {...field} />
+                          <Input
+                            placeholder="Please Enter ContactPhone"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -532,7 +537,7 @@ export const CreateOrganization = () => {
                     name="organization.address.name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Name Address</FormLabel>
+                        <FormLabel>*Name Address*</FormLabel>
                         <FormControl>
                           <Input placeholder="Enter Address" {...field} />
                         </FormControl>
@@ -675,7 +680,12 @@ export const CreateOrganization = () => {
                     name="organization.address.city"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>City</FormLabel>
+                        <FormLabel>
+                          {requiredFields.includes(
+                            "organization.address.city"
+                          ) && <span className="text-red-500 mr-1">*</span>}
+                          City
+                        </FormLabel>
                         <FormControl>
                           <Input placeholder="Enter City" {...field} />
                         </FormControl>
@@ -688,7 +698,7 @@ export const CreateOrganization = () => {
                     name="organization.address.province"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Province</FormLabel>
+                        <FormLabel>*Province*</FormLabel>
                         <FormControl>
                           <Input placeholder="Enter Province" {...field} />
                         </FormControl>
@@ -701,7 +711,7 @@ export const CreateOrganization = () => {
                     name="organization.address.postalCode"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>PostalCode</FormLabel>
+                        <FormLabel>*PostalCode*</FormLabel>
                         <FormControl>
                           <Input placeholder="Enter PostalCode" {...field} />
                         </FormControl>
@@ -766,7 +776,7 @@ export const CreateOrganization = () => {
                     name="organization.user.email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>*Email*</FormLabel>
                         <FormControl>
                           <Input placeholder="EnterEmail" {...field} />
                         </FormControl>
@@ -805,7 +815,7 @@ export const CreateOrganization = () => {
                     name="organization.user.status"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Status</FormLabel>
+                        <FormLabel>*Status*</FormLabel>
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -1057,7 +1067,7 @@ export const CreateOrganization = () => {
                     name="branch.active"
                     render={({ field }) => (
                       <FormItem className="flex">
-                        <FormLabel className="px-2">Active</FormLabel>
+                        <FormLabel className="px-2">*Active*</FormLabel>
                         <FormControl>
                           <Switch
                             checked={field.value}
@@ -1089,7 +1099,7 @@ export const CreateOrganization = () => {
                     name="branch.isMain"
                     render={({ field }) => (
                       <FormItem className="flex">
-                        <FormLabel className="px-2">isMain</FormLabel>
+                        <FormLabel className="px-2">*isMain*</FormLabel>
                         <FormControl>
                           <Switch
                             checked={field.value}
@@ -1172,7 +1182,7 @@ export const CreateOrganization = () => {
                     <FormItem>
                       <FormLabel>Tax Id</FormLabel>
                       <FormControl>
-                        <OtpInput groups={[3, 2, 5, 3]} {...field} />
+                        <Input placeholder="Please Enter taxId" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -1366,7 +1376,10 @@ export const CreateOrganization = () => {
                       <FormItem>
                         <FormLabel> ContactPhone</FormLabel>
                         <FormControl>
-                          <OtpInput groups={[3, 3, 4]} {...field} />
+                          <Input
+                            placeholder="Please Enter ContactPhone"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -1506,7 +1519,7 @@ export const CreateOrganization = () => {
                     name="branch.address.name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Name Address</FormLabel>
+                        <FormLabel>*Name Address*</FormLabel>
                         <FormControl>
                           <Input placeholder="Enter Address" {...field} />
                         </FormControl>
@@ -1662,7 +1675,7 @@ export const CreateOrganization = () => {
                     name="branch.address.province"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Province</FormLabel>
+                        <FormLabel>*Province*</FormLabel>
                         <FormControl>
                           <Input placeholder="Enter Province" {...field} />
                         </FormControl>
@@ -1675,7 +1688,7 @@ export const CreateOrganization = () => {
                     name="branch.address.postalCode"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>PostalCode</FormLabel>
+                        <FormLabel>*PostalCode*</FormLabel>
                         <FormControl>
                           <Input placeholder="Enter PostalCode" {...field} />
                         </FormControl>
@@ -1740,7 +1753,7 @@ export const CreateOrganization = () => {
                     name="branch.user.email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>*Email*</FormLabel>
                         <FormControl>
                           <Input placeholder="EnterEmail" {...field} />
                         </FormControl>
