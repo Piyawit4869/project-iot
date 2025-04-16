@@ -52,7 +52,7 @@ export const UpdateOrganization = () => {
     mutate(values, {
       onSuccess: (data) => {
         console.log("✅ Created successfully:", data);
-        router.push("/superadmin/organization/");
+        router.push("/super-admin/organization/");
       },
       onError: (err) => {
         console.error("❌ Failed to create:", err);
@@ -100,7 +100,7 @@ export const UpdateOrganization = () => {
       <div>
         <Control
           title="Update Organization"
-          backpath="/superadmin/organization"
+          backpath="/super-admin/organization"
           buttons={[
             <GlobalButton
               label="Edit"

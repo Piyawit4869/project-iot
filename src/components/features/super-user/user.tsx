@@ -55,19 +55,15 @@ const columns: ColumnDef<Task>[] = [
 export const Users = () => {
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
-      <div>
-        <Control
-          title="Users"
-          buttons={[
-            <Link href={"/organization/user/create"} key={"create button"}>
-              <Button key={"create button"}>Create</Button>
-            </Link>,
-          ]}
-        />
-      </div>
-      <div>
-        <DataTable queryFunction={usePaginate} columns={columns} />
-      </div>
+      <Control
+        title="Users"
+        buttons={[
+          <Link href={"/super-admin/user/create"} key={"create button"}>
+            <Button key={"create button"}>Create</Button>
+          </Link>,
+        ]}
+      />
+      <DataTable queryFunction={usePaginate} columns={columns} />
     </div>
   );
 };

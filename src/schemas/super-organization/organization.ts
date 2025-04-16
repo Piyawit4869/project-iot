@@ -49,6 +49,7 @@ const profileSchema = z.object({
   phone: z
     .string()
     .regex(/^(0|\\+66)[0-9]{8,9}$/)
+    .length(10)
     .default(""),
 });
 
@@ -56,7 +57,7 @@ const userSchema = z.object({
   active: z.boolean(),
   status: z.enum(["active", "inactive", "terminated", "pending"]),
   email: z.string().email().default(""),
-  password: z.string().default(""),
+  password: z.string().min(6).default(""),
   userName: z.string().default(""),
   profile: profileSchema,
 });
@@ -80,6 +81,7 @@ const cre_organizationSchema = z.object({
   contactPhone: z
     .string()
     .regex(/^(0|\\+66)[0-9]{8,9}$/)
+    .length(10)
     .default(""),
   contactLine: z.string().default(""),
   contactFacebook: z.string().default(""),
@@ -130,6 +132,7 @@ const cre_branchSchema = z.object({
   contactPhone: z
     .string()
     .regex(/^(0|\\+66)[0-9]{8,9}$/)
+    .length(10)
     .default(""),
   contactLine: z.string().default(""),
   contactFacebook: z.string().default(""),
@@ -154,7 +157,12 @@ export const up_organizationSchema = z.object({
   active: z.boolean(),
   status: z.string().default(""),
   fromType: z.string().default(""),
-  taxId: z.string().default(""),
+  taxId: z
+    .string()
+    .length(13, { message: "Tax ID must be exactly 13 digits." })
+    .regex(/^\d+$/, { message: "Tax ID must contain only numbers." })
+    .default(""),
+
   type: z.string().default(""),
   code: z.string().default(""),
   openingDate: z.date(),
@@ -169,6 +177,7 @@ export const up_organizationSchema = z.object({
   contactPhone: z
     .string()
     .regex(/^(0|\\+66)[0-9]{8,9}$/)
+    .length(10)
     .default(""),
   contactLine: z.string().default(""),
   contactFacebook: z.string().default(""),
@@ -196,7 +205,11 @@ export const up_branchSchema = z.object({
   registerVat: z.boolean(),
   contactName: z.string().default(""),
   contactEmail: z.string().email().default(""),
-  contactPhone: z.string().regex(/^(0|\\+66)[0-9]{8,9}$/),
+  contactPhone: z
+    .string()
+    .regex(/^(0|\\+66)[0-9]{8,9}$/)
+    .length(10)
+    .default(""),
   contactLine: z.string().default(""),
   contactFacebook: z.string().default(""),
   contactWhatsapp: z.string().default(""),

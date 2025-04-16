@@ -1,4 +1,4 @@
-import UsersContainer from "@/containers/user/index-container";
+import UsersContainer from "@/containers/super-user/index-container";
 
 export default function UserPage() {
   return (
