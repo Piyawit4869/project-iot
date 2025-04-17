@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DatePicker } from "@/components/shared/date-picker";
-import { LabeledInput } from "@/components/shared/required-label";
+import { RequiredInput } from "@/components/shared/required-input";
 import { getRequiredPaths } from "@/utils/getRequiredPathsFromZod";
 
 import {
@@ -33,7 +33,7 @@ import {
   createOrgSchema,
 } from "@/schemas/super-organization/organization";
 import { useCreateOrganization } from "@/actions/super-organization/client/useGetOrganizations";
-import { SmartLabel } from "@/components/shared/smart-label";
+import { RequiredLabel } from "@/components/shared/required-label";
 
 export const CreateOrganization = () => {
   const form = useForm<CreateOrganizationFormValues>({
@@ -118,7 +118,7 @@ export const CreateOrganization = () => {
                     name="organization.status"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="organization.status"
                           label={"Status"}
                           requiredFields={requiredFieldPaths}
@@ -155,7 +155,7 @@ export const CreateOrganization = () => {
                     name="organization.fromType"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="organization.fromType"
                           label={"FromType"}
                           requiredFields={requiredFieldPaths}
@@ -189,7 +189,7 @@ export const CreateOrganization = () => {
                   name="organization.taxId"
                   render={({ field }) => (
                     <FormItem>
-                      <LabeledInput
+                      <RequiredInput
                         control={form.control}
                         label="Tax ID"
                         requiredFields={requiredFieldPaths}
@@ -204,7 +204,7 @@ export const CreateOrganization = () => {
                     name="organization.type"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="organization.type"
                           label={"Organization Type"}
                           requiredFields={requiredFieldPaths}
@@ -247,7 +247,7 @@ export const CreateOrganization = () => {
                     name="organization.openingDate"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="organization.openingDate"
                           label={"OpeningDate"}
                           requiredFields={requiredFieldPaths}
@@ -267,7 +267,7 @@ export const CreateOrganization = () => {
                     name="organization.nameTh"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Name (TH)"
                           requiredFields={requiredFieldPaths}
@@ -281,7 +281,7 @@ export const CreateOrganization = () => {
                     name="organization.nameEn"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Name (EN)"
                           requiredFields={requiredFieldPaths}
@@ -295,7 +295,7 @@ export const CreateOrganization = () => {
                     name="organization.descriptionsTh"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Description (TH)"
                           requiredFields={requiredFieldPaths}
@@ -310,7 +310,7 @@ export const CreateOrganization = () => {
                     name="organization.descriptionsEn"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Description (EN)"
                           requiredFields={requiredFieldPaths}
@@ -324,7 +324,7 @@ export const CreateOrganization = () => {
                     name="organization.websiteUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Website Url"
                           requiredFields={requiredFieldPaths}
@@ -338,7 +338,7 @@ export const CreateOrganization = () => {
                     name="organization.domainName"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Domain Name"
                           requiredFields={requiredFieldPaths}
@@ -352,7 +352,7 @@ export const CreateOrganization = () => {
                     name="organization.logoUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Logo Url"
                           requiredFields={requiredFieldPaths}
@@ -372,7 +372,7 @@ export const CreateOrganization = () => {
                     name="organization.contactName"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Contact Name"
                           requiredFields={requiredFieldPaths}
@@ -386,7 +386,7 @@ export const CreateOrganization = () => {
                     name="organization.contactEmail"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Contact Email"
                           requiredFields={requiredFieldPaths}
@@ -402,7 +402,7 @@ export const CreateOrganization = () => {
                     name="organization.contactPhone"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Contact Phone"
                           requiredFields={requiredFieldPaths}
@@ -418,7 +418,7 @@ export const CreateOrganization = () => {
                     name="organization.contactLine"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Contact Line"
                           requiredFields={requiredFieldPaths}
@@ -432,7 +432,7 @@ export const CreateOrganization = () => {
                     name="organization.contactFacebook"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Contact Facebook"
                           requiredFields={requiredFieldPaths}
@@ -446,7 +446,7 @@ export const CreateOrganization = () => {
                     name="organization.contactWhatsapp"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Contact Whatsapp"
                           requiredFields={requiredFieldPaths}
@@ -460,7 +460,7 @@ export const CreateOrganization = () => {
                     name="organization.contactWebsite"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Contact Website"
                           requiredFields={requiredFieldPaths}
@@ -474,7 +474,7 @@ export const CreateOrganization = () => {
                     name="organization.contactNote"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Contact Note"
                           requiredFields={requiredFieldPaths}
@@ -493,7 +493,7 @@ export const CreateOrganization = () => {
                     name="organization.address.active"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="organization.address.active"
                           label={"Active"}
                           requiredFields={requiredFieldPaths}
@@ -513,7 +513,7 @@ export const CreateOrganization = () => {
                     name="organization.address.isMain"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="organization.address.isMain"
                           label={"IsMain"}
                           requiredFields={requiredFieldPaths}
@@ -535,7 +535,7 @@ export const CreateOrganization = () => {
                     name="organization.address.language"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Language"
                           requiredFields={requiredFieldPaths}
@@ -550,7 +550,7 @@ export const CreateOrganization = () => {
                     name="organization.address.name"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Name Address"
                           requiredFields={requiredFieldPaths}
@@ -564,7 +564,7 @@ export const CreateOrganization = () => {
                     name="organization.address.building"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Building"
                           requiredFields={requiredFieldPaths}
@@ -578,7 +578,7 @@ export const CreateOrganization = () => {
                     name="organization.address.roomNo"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Room No."
                           requiredFields={requiredFieldPaths}
@@ -592,7 +592,7 @@ export const CreateOrganization = () => {
                     name="organization.address.floorNo"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Floor No."
                           requiredFields={requiredFieldPaths}
@@ -606,7 +606,7 @@ export const CreateOrganization = () => {
                     name="organization.address.village"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Village Name"
                           requiredFields={requiredFieldPaths}
@@ -620,7 +620,7 @@ export const CreateOrganization = () => {
                     name="organization.address.villageNo"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Village No."
                           requiredFields={requiredFieldPaths}
@@ -634,7 +634,7 @@ export const CreateOrganization = () => {
                     name="organization.address.houseNo"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="House No."
                           requiredFields={requiredFieldPaths}
@@ -648,7 +648,7 @@ export const CreateOrganization = () => {
                     name="organization.address.alley"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Alley"
                           requiredFields={requiredFieldPaths}
@@ -662,7 +662,7 @@ export const CreateOrganization = () => {
                     name="organization.address.road"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Road"
                           requiredFields={requiredFieldPaths}
@@ -676,7 +676,7 @@ export const CreateOrganization = () => {
                     name="organization.address.nation"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Nation"
                           requiredFields={requiredFieldPaths}
@@ -690,7 +690,7 @@ export const CreateOrganization = () => {
                     name="organization.address.subDistrict"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Sub District"
                           requiredFields={requiredFieldPaths}
@@ -704,7 +704,7 @@ export const CreateOrganization = () => {
                     name="organization.address.city"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="City"
                           requiredFields={requiredFieldPaths}
@@ -718,7 +718,7 @@ export const CreateOrganization = () => {
                     name="organization.address.province"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Province"
                           requiredFields={requiredFieldPaths}
@@ -732,7 +732,7 @@ export const CreateOrganization = () => {
                     name="organization.address.postalCode"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Postal Code"
                           requiredFields={requiredFieldPaths}
@@ -746,7 +746,7 @@ export const CreateOrganization = () => {
                     name="organization.address.note"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Note"
                           requiredFields={requiredFieldPaths}
@@ -799,7 +799,7 @@ export const CreateOrganization = () => {
                     name="organization.user.email"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Email"
                           requiredFields={requiredFieldPaths}
@@ -813,7 +813,7 @@ export const CreateOrganization = () => {
                     name="organization.user.password"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Password"
                           requiredFields={requiredFieldPaths}
@@ -827,7 +827,7 @@ export const CreateOrganization = () => {
                     name="organization.user.userName"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Username"
                           requiredFields={requiredFieldPaths}
@@ -841,7 +841,7 @@ export const CreateOrganization = () => {
                     name="organization.user.status"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="organization.user.status"
                           label={"Status"}
                           requiredFields={requiredFieldPaths}
@@ -884,7 +884,7 @@ export const CreateOrganization = () => {
                     name="organization.user.profile.prefix"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="organization.user.profile.prefix"
                           label={"Prefix"}
                           requiredFields={requiredFieldPaths}
@@ -919,7 +919,7 @@ export const CreateOrganization = () => {
                     name="organization.user.profile.firstName"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="FirstName"
                           requiredFields={requiredFieldPaths}
@@ -933,7 +933,7 @@ export const CreateOrganization = () => {
                     name="organization.user.profile.lastName"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="LastName"
                           requiredFields={requiredFieldPaths}
@@ -947,7 +947,7 @@ export const CreateOrganization = () => {
                     name="organization.user.profile.birthDate"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="organization.user.profile.birthDate"
                           label={"BirthDate"}
                           requiredFields={requiredFieldPaths}
@@ -967,7 +967,7 @@ export const CreateOrganization = () => {
                     name="organization.user.profile.photoUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Photo Url"
                           requiredFields={requiredFieldPaths}
@@ -981,7 +981,7 @@ export const CreateOrganization = () => {
                     name="organization.user.profile.deviceToken"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Device Token"
                           requiredFields={requiredFieldPaths}
@@ -996,7 +996,7 @@ export const CreateOrganization = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormItem>
-                          <LabeledInput
+                          <RequiredInput
                             control={form.control}
                             label="Phone"
                             requiredFields={requiredFieldPaths}
@@ -1033,7 +1033,7 @@ export const CreateOrganization = () => {
                   name="organization.setting.theme"
                   render={({ field }) => (
                     <FormItem>
-                      <SmartLabel
+                      <RequiredLabel
                         fieldPath="organization.setting.theme"
                         label={"Theme"}
                         requiredFields={requiredFieldPaths}
@@ -1050,7 +1050,7 @@ export const CreateOrganization = () => {
                   name="organization.setting.textDisplay"
                   render={({ field }) => (
                     <FormItem>
-                      <SmartLabel
+                      <RequiredLabel
                         fieldPath="organization.setting.textDisplay"
                         label={"TextDisplay"}
                         requiredFields={requiredFieldPaths}
@@ -1067,7 +1067,7 @@ export const CreateOrganization = () => {
                   name="organization.setting.domainName"
                   render={({ field }) => (
                     <FormItem>
-                      <SmartLabel
+                      <RequiredLabel
                         fieldPath="organization.setting.domainName"
                         label={"Domain Name"}
                         requiredFields={requiredFieldPaths}
@@ -1084,7 +1084,7 @@ export const CreateOrganization = () => {
                   name="organization.setting.defaultLanguage"
                   render={({ field }) => (
                     <FormItem>
-                      <SmartLabel
+                      <RequiredLabel
                         fieldPath="organization.setting.defaultLanguage"
                         label={"Default Language"}
                         requiredFields={requiredFieldPaths}
@@ -1179,7 +1179,7 @@ export const CreateOrganization = () => {
                     name="branch.status"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="branch.status"
                           label={"Status"}
                           requiredFields={requiredFieldPaths}
@@ -1216,7 +1216,7 @@ export const CreateOrganization = () => {
                     name="branch.fromType"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="branch.fromType"
                           label={"FromType"}
                           requiredFields={requiredFieldPaths}
@@ -1250,7 +1250,7 @@ export const CreateOrganization = () => {
                   name="branch.taxId"
                   render={({ field }) => (
                     <FormItem>
-                      <LabeledInput
+                      <RequiredInput
                         control={form.control}
                         label="Tax ID"
                         requiredFields={requiredFieldPaths}
@@ -1265,7 +1265,7 @@ export const CreateOrganization = () => {
                     name="branch.type"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="branch.type"
                           label={"Branch Type"}
                           requiredFields={requiredFieldPaths}
@@ -1308,7 +1308,7 @@ export const CreateOrganization = () => {
                     name="branch.openingDate"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="branch.openingDate"
                           label={"OpeningDate"}
                           requiredFields={requiredFieldPaths}
@@ -1328,7 +1328,7 @@ export const CreateOrganization = () => {
                     name="branch.nameTh"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Name (TH)"
                           requiredFields={requiredFieldPaths}
@@ -1342,7 +1342,7 @@ export const CreateOrganization = () => {
                     name="branch.nameEn"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Name (EN)"
                           requiredFields={requiredFieldPaths}
@@ -1356,7 +1356,7 @@ export const CreateOrganization = () => {
                     name="branch.descriptionsTh"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Description (TH)"
                           requiredFields={requiredFieldPaths}
@@ -1371,7 +1371,7 @@ export const CreateOrganization = () => {
                     name="branch.descriptionsEn"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Description (EN)"
                           requiredFields={requiredFieldPaths}
@@ -1385,7 +1385,7 @@ export const CreateOrganization = () => {
                     name="branch.websiteUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="WebsiteUrl"
                           requiredFields={requiredFieldPaths}
@@ -1399,7 +1399,7 @@ export const CreateOrganization = () => {
                     name="branch.logoUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="logoUrl"
                           requiredFields={requiredFieldPaths}
@@ -1419,7 +1419,7 @@ export const CreateOrganization = () => {
                     name="branch.contactName"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Contact Name"
                           requiredFields={requiredFieldPaths}
@@ -1433,7 +1433,7 @@ export const CreateOrganization = () => {
                     name="branch.contactEmail"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Contact Email"
                           requiredFields={requiredFieldPaths}
@@ -1449,7 +1449,7 @@ export const CreateOrganization = () => {
                     name="branch.contactPhone"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Contact Phone"
                           requiredFields={requiredFieldPaths}
@@ -1465,7 +1465,7 @@ export const CreateOrganization = () => {
                     name="branch.contactLine"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Contact Line"
                           requiredFields={requiredFieldPaths}
@@ -1479,7 +1479,7 @@ export const CreateOrganization = () => {
                     name="branch.contactFacebook"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Contact Facebook"
                           requiredFields={requiredFieldPaths}
@@ -1493,7 +1493,7 @@ export const CreateOrganization = () => {
                     name="branch.contactWhatsapp"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Contact Whatsapp"
                           requiredFields={requiredFieldPaths}
@@ -1507,7 +1507,7 @@ export const CreateOrganization = () => {
                     name="branch.contactWebsite"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Contact Website"
                           requiredFields={requiredFieldPaths}
@@ -1521,7 +1521,7 @@ export const CreateOrganization = () => {
                     name="branch.contactNote"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Contact Note"
                           requiredFields={requiredFieldPaths}
@@ -1540,7 +1540,7 @@ export const CreateOrganization = () => {
                     name="branch.address.active"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="branch.address.active"
                           label={"Active"}
                           requiredFields={requiredFieldPaths}
@@ -1560,7 +1560,7 @@ export const CreateOrganization = () => {
                     name="branch.address.isMain"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="branch.address.isMain"
                           label={"Ismain"}
                           requiredFields={requiredFieldPaths}
@@ -1582,7 +1582,7 @@ export const CreateOrganization = () => {
                     name="branch.address.language"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Language"
                           requiredFields={requiredFieldPaths}
@@ -1597,7 +1597,7 @@ export const CreateOrganization = () => {
                     name="branch.address.name"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Name Address"
                           requiredFields={requiredFieldPaths}
@@ -1611,7 +1611,7 @@ export const CreateOrganization = () => {
                     name="branch.address.building"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Building"
                           requiredFields={requiredFieldPaths}
@@ -1625,7 +1625,7 @@ export const CreateOrganization = () => {
                     name="branch.address.roomNo"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Room No."
                           requiredFields={requiredFieldPaths}
@@ -1639,7 +1639,7 @@ export const CreateOrganization = () => {
                     name="branch.address.floorNo"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Floor No."
                           requiredFields={requiredFieldPaths}
@@ -1653,7 +1653,7 @@ export const CreateOrganization = () => {
                     name="branch.address.village"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Village Name"
                           requiredFields={requiredFieldPaths}
@@ -1667,7 +1667,7 @@ export const CreateOrganization = () => {
                     name="branch.address.villageNo"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Village No."
                           requiredFields={requiredFieldPaths}
@@ -1681,7 +1681,7 @@ export const CreateOrganization = () => {
                     name="branch.address.houseNo"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="House No."
                           requiredFields={requiredFieldPaths}
@@ -1695,7 +1695,7 @@ export const CreateOrganization = () => {
                     name="branch.address.alley"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Alley"
                           requiredFields={requiredFieldPaths}
@@ -1709,7 +1709,7 @@ export const CreateOrganization = () => {
                     name="branch.address.road"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Road"
                           requiredFields={requiredFieldPaths}
@@ -1723,7 +1723,7 @@ export const CreateOrganization = () => {
                     name="branch.address.nation"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Nation"
                           requiredFields={requiredFieldPaths}
@@ -1737,7 +1737,7 @@ export const CreateOrganization = () => {
                     name="branch.address.subDistrict"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Sub District"
                           requiredFields={requiredFieldPaths}
@@ -1751,7 +1751,7 @@ export const CreateOrganization = () => {
                     name="branch.address.city"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="City"
                           requiredFields={requiredFieldPaths}
@@ -1765,7 +1765,7 @@ export const CreateOrganization = () => {
                     name="branch.address.province"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Province"
                           requiredFields={requiredFieldPaths}
@@ -1779,7 +1779,7 @@ export const CreateOrganization = () => {
                     name="branch.address.postalCode"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Postal Code"
                           requiredFields={requiredFieldPaths}
@@ -1793,7 +1793,7 @@ export const CreateOrganization = () => {
                     name="branch.address.note"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Note"
                           requiredFields={requiredFieldPaths}
@@ -1814,7 +1814,7 @@ export const CreateOrganization = () => {
                     name="branch.user.active"
                     render={({ field }) => (
                       <FormItem className="flex">
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="branch.user.active"
                           label={"Active"}
                           requiredFields={requiredFieldPaths}
@@ -1850,7 +1850,7 @@ export const CreateOrganization = () => {
                     name="branch.user.email"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Email"
                           requiredFields={requiredFieldPaths}
@@ -1864,7 +1864,7 @@ export const CreateOrganization = () => {
                     name="branch.user.password"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Password"
                           requiredFields={requiredFieldPaths}
@@ -1878,7 +1878,7 @@ export const CreateOrganization = () => {
                     name="branch.user.userName"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Username"
                           requiredFields={requiredFieldPaths}
@@ -1892,7 +1892,7 @@ export const CreateOrganization = () => {
                     name="branch.user.status"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="branch.user.status"
                           label={"Status"}
                           requiredFields={requiredFieldPaths}
@@ -1935,7 +1935,7 @@ export const CreateOrganization = () => {
                     name="branch.user.profile.prefix"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="branch.user.profile.prefix"
                           label={"Prefix"}
                           requiredFields={requiredFieldPaths}
@@ -1970,7 +1970,7 @@ export const CreateOrganization = () => {
                     name="branch.user.profile.firstName"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="FirstName"
                           requiredFields={requiredFieldPaths}
@@ -1984,7 +1984,7 @@ export const CreateOrganization = () => {
                     name="branch.user.profile.lastName"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="LastName"
                           requiredFields={requiredFieldPaths}
@@ -1998,7 +1998,7 @@ export const CreateOrganization = () => {
                     name="branch.user.profile.birthDate"
                     render={({ field }) => (
                       <FormItem>
-                        <SmartLabel
+                        <RequiredLabel
                           fieldPath="branch.user.profile.birthDate"
                           label={"BirthDate"}
                           requiredFields={requiredFieldPaths}
@@ -2018,7 +2018,7 @@ export const CreateOrganization = () => {
                     name="branch.user.profile.photoUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Photo Url"
                           requiredFields={requiredFieldPaths}
@@ -2032,7 +2032,7 @@ export const CreateOrganization = () => {
                     name="branch.user.profile.deviceToken"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Device Token"
                           requiredFields={requiredFieldPaths}
@@ -2047,7 +2047,7 @@ export const CreateOrganization = () => {
                     name="branch.user.profile.phone"
                     render={({ field }) => (
                       <FormItem>
-                        <LabeledInput
+                        <RequiredInput
                           control={form.control}
                           label="Photo Url"
                           requiredFields={requiredFieldPaths}
@@ -2082,7 +2082,7 @@ export const CreateOrganization = () => {
                   name="branch.setting.theme"
                   render={({ field }) => (
                     <FormItem>
-                      <SmartLabel
+                      <RequiredLabel
                         fieldPath="branch.setting.theme"
                         label={"Theme"}
                         requiredFields={requiredFieldPaths}
@@ -2099,7 +2099,7 @@ export const CreateOrganization = () => {
                   name="branch.setting.textDisplay"
                   render={({ field }) => (
                     <FormItem>
-                      <SmartLabel
+                      <RequiredLabel
                         fieldPath="branch.setting.textDisplay"
                         label={"TextDisplay"}
                         requiredFields={requiredFieldPaths}
@@ -2116,7 +2116,7 @@ export const CreateOrganization = () => {
                   name="branch.setting.domainName"
                   render={({ field }) => (
                     <FormItem>
-                      <SmartLabel
+                      <RequiredLabel
                         fieldPath="branch.setting.domainName"
                         label={"Domain Name"}
                         requiredFields={requiredFieldPaths}
@@ -2133,7 +2133,7 @@ export const CreateOrganization = () => {
                   name="branch.setting.defaultLanguage"
                   render={({ field }) => (
                     <FormItem>
-                      <SmartLabel
+                      <RequiredLabel
                         fieldPath="branch.setting.defaultLanguage"
                         label={"Default Language"}
                         requiredFields={requiredFieldPaths}

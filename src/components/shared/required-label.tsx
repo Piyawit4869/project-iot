@@ -1,45 +1,22 @@
-import {
-  FormField,
-  FormItem,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { SmartLabel } from "./smart-label";
-import { Control } from "react-hook-form";
+import { FormLabel } from "@/components/ui/form";
 
-interface LabeledInputProps {
-  control: Control<any>;
-  name: string;
+interface RequiredLabelProps {
+  fieldPath: string;
   label: string;
   requiredFields: Set<string>;
-  placeholder?: string;
 }
 
-export const LabeledInput = ({
-  control,
-  name,
+export const RequiredLabel = ({
+  fieldPath,
   label,
   requiredFields,
-  placeholder,
-}: LabeledInputProps) => {
+}: RequiredLabelProps) => {
+  const isRequired = requiredFields.has(fieldPath);
   return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem>
-          <SmartLabel
-            fieldPath={name}
-            label={label}
-            requiredFields={requiredFields}
-          />
-          <FormControl>
-            <Input placeholder={placeholder || `Enter ${label}`} {...field} />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+    <FormLabel>
+      {isRequired && <span className="text-red-500 mr-1">**</span>}
+      {label}
+      {isRequired && <span className="text-red-500 mr-1">**</span>}
+    </FormLabel>
   );
 };
