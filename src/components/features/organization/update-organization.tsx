@@ -67,33 +67,31 @@ export const UpdateOrganization = () => {
         : undefined;
 
       form.reset({
-        active: data.active || "",
-        status: data.status || "",
-        fromType: data.fromType || "",
-        taxId: data.taxId || "",
-        type: data.type || "",
-        code: data.code || "",
+        active: data.active ?? "",
+        status: data.status ?? "",
+        fromType: data.fromType ?? "",
+        taxId: data.taxId ?? "",
+        type: data.type ?? "",
+        code: data.code ?? "",
         openingDate: openingDate,
-        nameTh: data.nameTh || "",
-        nameEn: data.nameEn || "",
-        descriptionsTh: data.descriptionsTh || "",
-        descriptionsEn: data.descriptionsEn || "",
-        websiteUrl: data.websiteUrl || "",
-        registerVat: data.registerVat || "",
-        contactName: data.contactName || "",
-        contactEmail: data.contactEmail || "",
-        contactPhone: data.contactPhone || "",
-        contactLine: data.contactLine || "",
-        contactFacebook: data.contactFacebook || "",
-        contactWhatsapp: data.contactWhatsapp || "",
-        contactWebsite: data.contactWebsite || "",
-        contactNote: data.contactNote || "",
-        logoUrl: data.logoUrl || "",
+        nameTh: data.nameTh ?? "",
+        nameEn: data.nameEn ?? "",
+        descriptionsTh: data.descriptionsTh ?? "",
+        descriptionsEn: data.descriptionsEn ?? "",
+        websiteUrl: data.websiteUrl ?? "",
+        registerVat: data.registerVat ?? "",
+        contactName: data.contactName ?? "",
+        contactEmail: data.contactEmail ?? "",
+        contactPhone: data.contactPhone ?? "",
+        contactLine: data.contactLine ?? "",
+        contactFacebook: data.contactFacebook ?? "",
+        contactWhatsapp: data.contactWhatsapp ?? "",
+        contactWebsite: data.contactWebsite ?? "",
+        contactNote: data.contactNote ?? "",
+        logoUrl: data.logoUrl ?? "",
       });
     }
   }, [data, form]);
-
-  console.log(data);
 
   return (
     <div className="hidden flex-1 flex-col space-y-3 p-8 md:flex">

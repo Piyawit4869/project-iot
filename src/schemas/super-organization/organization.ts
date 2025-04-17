@@ -115,7 +115,7 @@ const userSchema = z.object({
   active: z.boolean(),
   status: UserStatusEnum,
   email: z.string().email("Invalid email format").min(1),
-  password: z.string().min(6).optional(),
+  password: z.string().optional(),
   userName: z.string().min(3).optional(),
   profile: profileSchema.optional(),
 });
@@ -207,70 +207,69 @@ export type CreateOrganizationFormValues = z.infer<typeof createOrgSchema>;
 
 export const up_organizationSchema = z.object({
   active: z.boolean().optional(),
-  status: z.string().default("").optional(),
-  fromType: z.string().default("").optional(),
+  status: z.string().optional(),
+  fromType: z.string().optional(),
   taxId: z
     .string()
     .length(13, { message: "Tax ID must be exactly 13 digits." })
     .regex(/^\d+$/, { message: "Tax ID must contain only numbers." })
-    .default("")
     .optional(),
 
-  type: z.string().default("").optional(),
-  code: z.string().default("").optional(),
+  type: z.string().optional(),
+  code: z.string().optional(),
   openingDate: z.date().optional(),
-  nameTh: z.string().default("").optional(),
-  nameEn: z.string().default("").optional(),
-  descriptionsTh: z.string().default("").optional(),
-  descriptionsEn: z.string().default("").optional(),
-  websiteUrl: z.string().url().default("").optional(),
+  nameTh: z.string().optional(),
+  nameEn: z.string().optional(),
+  descriptionsTh: z.string().optional(),
+  descriptionsEn: z.string().optional(),
+  websiteUrl: z.string().url().optional(),
   registerVat: z.boolean().optional(),
-  contactName: z.string().default("").optional(),
-  contactEmail: z.string().email().default("").optional(),
+  contactName: z.string().optional(),
+  contactEmail: z.string().email().optional(),
   contactPhone: z
     .string()
     .regex(/^(0|\\+66)[0-9]{8,9}$/)
     .length(10)
-    .default("")
+
     .optional(),
-  contactLine: z.string().default("").optional(),
-  contactFacebook: z.string().default("").optional(),
-  contactWhatsapp: z.string().default("").optional(),
-  contactWebsite: z.string().url().default("").optional(),
-  contactNote: z.string().default("").optional(),
-  logoUrl: z.string().url().default("").optional(),
+  contactLine: z.string().optional(),
+  contactFacebook: z.string().optional(),
+  contactWhatsapp: z.string().optional(),
+  contactWebsite: z.string().url().optional(),
+  contactNote: z.string().optional(),
+  logoUrl: z.string().url().optional(),
 });
 
 export const up_branchSchema = z.object({
-  organizationId: z.string().uuid().default("").optional(),
+  organizationId: z.string().uuid().optional(),
   active: z.boolean().optional(),
   isMain: z.boolean().optional(),
-  status: z.string().default("").optional(),
-  fromType: z.string().default("").optional(),
-  taxId: z.string().length(13).default("").optional(),
-  type: z.string().default("").optional(),
-  code: z.string().default("").optional(),
+  status: z.string().optional(),
+  fromType: z.string().optional(),
+  taxId: z.string().length(13).optional(),
+  type: z.string().optional(),
+  code: z.string().optional(),
   openingDate: z.date().optional(),
-  nameTh: z.string().default("").optional(),
-  nameEn: z.string().default("").optional(),
-  descriptionsTh: z.string().default("").optional(),
-  descriptionsEn: z.string().default("").optional(),
-  websiteUrl: z.string().url().default("").optional(),
+  nameTh: z.string().optional(),
+  nameEn: z.string().optional(),
+  descriptionsTh: z.string().optional(),
+  descriptionsEn: z.string().optional(),
+  websiteUrl: z.string().url().optional(),
   registerVat: z.boolean().optional(),
-  contactName: z.string().default("").optional(),
-  contactEmail: z.string().email().default("").optional(),
+  contactName: z.string().optional(),
+  contactEmail: z.string().email().optional(),
   contactPhone: z
     .string()
     .regex(/^(0|\\+66)[0-9]{8,9}$/)
     .length(10)
-    .default("")
+
     .optional(),
-  contactLine: z.string().default("").optional(),
-  contactFacebook: z.string().default("").optional(),
-  contactWhatsapp: z.string().default("").optional(),
-  contactWebsite: z.string().url().default("").optional(),
-  contactNote: z.string().default("").optional(),
-  logoUrl: z.string().url().default("").optional(),
+  contactLine: z.string().optional(),
+  contactFacebook: z.string().optional(),
+  contactWhatsapp: z.string().optional(),
+  contactWebsite: z.string().url().optional(),
+  contactNote: z.string().optional(),
+  logoUrl: z.string().url().optional(),
 });
 
 export type up_OrganizationFormValues = z.infer<typeof up_organizationSchema>;

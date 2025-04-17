@@ -23,9 +23,23 @@ interface Task {
 
 const columns: ColumnDef<Task>[] = [
   {
-    accessorKey: "id",
-    header: "Id",
-    cell: (info) => <span>{info.getValue() as string}</span>,
+    accessorKey: "profile.photoUrl",
+    header: "Image",
+    cell: (info) => {
+      const url = info.getValue() as string;
+
+      if (!url) return <span>No Image</span>;
+
+      return (
+        <img
+          src={url}
+          alt="item"
+          width={80}
+          height={80}
+          className="rounded-xl"
+        />
+      );
+    },
   },
   {
     accessorKey: "userName",
@@ -42,10 +56,19 @@ const columns: ColumnDef<Task>[] = [
     ),
   },
   {
+    accessorKey: "profile.phone",
+    header: "Phone",
+    cell: (info) => (
+      <span className="text-sm text-muted-foreground">
+        {info.getValue() as string}
+      </span>
+    ),
+  },
+  {
     accessorKey: "",
     header: "Action",
     cell: (info) => (
-      <Link href={`/organization/user/${info.row.original.id}`}>
+      <Link href={`/super-admin/user/${info.row.original.id}`}>
         <Button className="text-sm">Edit</Button>
       </Link>
     ),
@@ -54,7 +77,7 @@ const columns: ColumnDef<Task>[] = [
 
 export const Users = () => {
   return (
-    <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
+    <div className="flex-1 flex-col space-y-8 p-8">
       <Tabcontrol
         title="Users"
         buttons={[

@@ -70,7 +70,7 @@ export const fetchUpdateUsers = async (
   payload: super_UsersFormValues
 ) => {
   try {
-    const res = await axios.patch(`${env.base_url}/crud/users/${id}`, payload, {
+    const res = await axios.put(`${env.base_url}/crud/users/${id}`, payload, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

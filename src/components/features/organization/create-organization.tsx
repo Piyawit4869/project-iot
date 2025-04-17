@@ -133,14 +133,20 @@ export const CreateOrganization = () => {
                             </SelectTrigger>
                             <SelectContent>
                               {[
-                                "newly_registered",
-                                "active",
-                                "loyal_customer",
-                                "at_risk",
-                                "churned",
+                                {
+                                  label: "New Resgiter",
+                                  value: "newly_registered",
+                                },
+                                { label: "Active", value: "active" },
+                                {
+                                  label: "Loyal customer",
+                                  value: "loyal_customer",
+                                },
+                                { label: "Risk", value: "at_risk" },
+                                { label: "Churned", value: "churned" },
                               ].map((item) => (
-                                <SelectItem key={item} value={item}>
-                                  {item}
+                                <SelectItem key={item.value} value={item.value}>
+                                  {item.label}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -169,13 +175,20 @@ export const CreateOrganization = () => {
                               <SelectValue placeholder="Select Type" />
                             </SelectTrigger>
                             <SelectContent>
-                              {["ordinary_person", "juristic_person"].map(
-                                (item) => (
-                                  <SelectItem key={item} value={item}>
-                                    {item}
-                                  </SelectItem>
-                                )
-                              )}
+                              {[
+                                {
+                                  label: "Ordinary Person",
+                                  value: "ordinary_person",
+                                },
+                                {
+                                  label: "Juristic Person",
+                                  value: "juristic_person",
+                                },
+                              ].map((item) => (
+                                <SelectItem key={item.value} value={item.value}>
+                                  {item.label}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                         </FormControl>
@@ -219,20 +232,38 @@ export const CreateOrganization = () => {
                             </SelectTrigger>
                             <SelectContent>
                               {[
-                                "taxpayer",
-                                "ordinary_partnership",
-                                "shop",
-                                "body_of_person",
-                                "company_limited",
-                                "public_company_limited",
-                                "limited_partnership",
-                                "foundation",
-                                "association",
-                                "joint_venture",
-                                "others",
+                                { label: "Taxpayer", value: "taxpayer" },
+                                {
+                                  label: "Ordinary Partnership",
+                                  value: "ordinary_partnership",
+                                },
+                                { label: "Shop", value: "shop" },
+                                {
+                                  label: "Body of Person",
+                                  value: "body_of_person",
+                                },
+                                {
+                                  label: "Company Limited",
+                                  value: "company_limited",
+                                },
+                                {
+                                  label: "Public Company Limited",
+                                  value: "public_company_limited",
+                                },
+                                {
+                                  label: "Limited Partnership",
+                                  value: "limited_partnership",
+                                },
+                                { label: "Foundation", value: "foundation" },
+                                { label: "Association", value: "association" },
+                                {
+                                  label: "Joint Venture",
+                                  value: "joint_venture",
+                                },
+                                { label: "Others", value: "others" },
                               ].map((item) => (
-                                <SelectItem key={item} value={item}>
-                                  {item}
+                                <SelectItem key={item.value} value={item.value}>
+                                  {item.label}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -1194,14 +1225,20 @@ export const CreateOrganization = () => {
                             </SelectTrigger>
                             <SelectContent>
                               {[
-                                "newly_registered",
-                                "active",
-                                "loyal_customer",
-                                "at_risk",
-                                "churned",
+                                {
+                                  label: "New Resgiter",
+                                  value: "newly_registered",
+                                },
+                                { label: "Active", value: "active" },
+                                {
+                                  label: "Loyal customer",
+                                  value: "loyal_customer",
+                                },
+                                { label: "Risk", value: "at_risk" },
+                                { label: "Churned", value: "churned" },
                               ].map((item) => (
-                                <SelectItem key={item} value={item}>
-                                  {item}
+                                <SelectItem key={item.value} value={item.value}>
+                                  {item.label}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -1230,13 +1267,20 @@ export const CreateOrganization = () => {
                               <SelectValue placeholder="Select Type" />
                             </SelectTrigger>
                             <SelectContent>
-                              {["ordinary_person", "juristic_person"].map(
-                                (item) => (
-                                  <SelectItem key={item} value={item}>
-                                    {item}
-                                  </SelectItem>
-                                )
-                              )}
+                              {[
+                                {
+                                  label: "Ordinary Person",
+                                  value: "ordinary_person",
+                                },
+                                {
+                                  label: "Juristic Person",
+                                  value: "juristic_person",
+                                },
+                              ].map((item) => (
+                                <SelectItem key={item.value} value={item.value}>
+                                  {item.label}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                         </FormControl>
@@ -1280,20 +1324,38 @@ export const CreateOrganization = () => {
                             </SelectTrigger>
                             <SelectContent>
                               {[
-                                "taxpayer",
-                                "ordinary_partnership",
-                                "shop",
-                                "body_of_person",
-                                "company_limited",
-                                "public_company_limited",
-                                "limited_partnership",
-                                "foundation",
-                                "association",
-                                "joint_venture",
-                                "others",
+                                { label: "Taxpayer", value: "taxpayer" },
+                                {
+                                  label: "Ordinary Partnership",
+                                  value: "ordinary_partnership",
+                                },
+                                { label: "Shop", value: "shop" },
+                                {
+                                  label: "Body of Person",
+                                  value: "body_of_person",
+                                },
+                                {
+                                  label: "Company Limited",
+                                  value: "company_limited",
+                                },
+                                {
+                                  label: "Public Company Limited",
+                                  value: "public_company_limited",
+                                },
+                                {
+                                  label: "Limited Partnership",
+                                  value: "limited_partnership",
+                                },
+                                { label: "Foundation", value: "foundation" },
+                                { label: "Association", value: "association" },
+                                {
+                                  label: "Joint Venture",
+                                  value: "joint_venture",
+                                },
+                                { label: "Others", value: "others" },
                               ].map((item) => (
-                                <SelectItem key={item} value={item}>
-                                  {item}
+                                <SelectItem key={item.value} value={item.value}>
+                                  {item.label}
                                 </SelectItem>
                               ))}
                             </SelectContent>
