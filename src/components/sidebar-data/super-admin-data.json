@@ -9,7 +9,7 @@
     {
       "name": "Home",
       "key": "home",
-      "path": "/superadmin",
+      "path": "/super-admin",
       "icon": "Home",
       "isActive": false
     }
@@ -18,45 +18,27 @@
     {
       "name": "Organization",
       "key": "account",
-      "icon": "DollarSign",
+      "icon": "TvMinimal",
       "isActive": false,
       "subMenu": [
         {
-          "name": "Overview",
-          "path": "/superadmin/organization",
+          "name": "Index",
+          "path": "/super-admin/organization",
           "icon": "BarChart2",
           "isActive": false
         }
       ]
     },
     {
-      "name": "Accounting",
+      "name": "User",
       "key": "account",
-      "icon": "DollarSign",
+      "icon": "UserRound",
       "isActive": false,
       "subMenu": [
         {
           "name": "Overview",
-          "path": "/organization/account",
+          "path": "/super-admin/user",
           "icon": "BarChart2",
-          "isActive": false
-        },
-        {
-          "name": "Revenue",
-          "path": "/organization/account/revenue",
-          "icon": "TrendingUp",
-          "isActive": false
-        },
-        {
-          "name": "Expenses",
-          "path": "/organization/account/expenses",
-          "icon": "TrendingDown",
-          "isActive": false
-        },
-        {
-          "name": "Analysis",
-          "path": "/organization/account/analysis",
-          "icon": "PieChart",
           "isActive": false
         }
       ]

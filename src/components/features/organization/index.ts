@@ -1,3 +1,3 @@
-export * from "./organization"
-export * from "./create-organization"
-// export * from "./update-organization"
+export * from "./organization";
+export * from "./create-organization";
+export * from "./update-organization";
