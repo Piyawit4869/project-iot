@@ -40,7 +40,7 @@ export function getRequiredPaths(schema: ZodTypeAny, basePath = ""): string[] {
         paths.push(fullPath);
       }
 
-      const unwrapped = unwrap(field as any);
+      const unwrapped = field ? unwrap(field) : field;
       if (unwrapped instanceof ZodObject) {
         paths.push(...getRequiredPaths(unwrapped, fullPath));
       }

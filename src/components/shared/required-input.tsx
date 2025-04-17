@@ -6,11 +6,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { RequiredLabel } from "./required-label";
-import { Control } from "react-hook-form";
+import { Control, FieldValues } from "react-hook-form";
 
-interface RequiredInputProps {
-  control: Control<any>;
-  name: string;
+interface RequiredInputProps<T extends FieldValues = FieldValues> {
+  control: Control<T>;
+  name: keyof T & string;
   label: string;
   requiredFields: Set<string>;
   placeholder?: string;
