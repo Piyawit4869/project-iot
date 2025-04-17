@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Metadata } from "next";
 import { ColumnDef } from "@tanstack/react-table";
@@ -31,7 +32,7 @@ const columns: ColumnDef<Task>[] = [
       if (!url) return <span>No Image</span>;
 
       return (
-        <img
+        <Image
           src={url}
           alt="item"
           width={80}
