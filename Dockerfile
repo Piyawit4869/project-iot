@@ -1,40 +1,49 @@
-# Step 1: Build the React application using Vite
-# Use a specific version of Node
-FROM node:18.18.2 as build-stage
+# Stage 1: Install dependencies and build the project
+FROM node:22.12.0-alpine AS builder
 
-# Set the working directory
+# Install pnpm globally via npm (instead of Corepack)
+RUN npm install -g pnpm
+
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and yarn.lock file
-COPY package.json yarn.lock ./
+# Copy package.json and pnpm-lock.yaml
+COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN yarn install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
-# Copy the rest of the source code
+# Copy the rest of the application files
 COPY . .
 
-# Build the application
-RUN yarn run build
+# Build the Next.js project
+RUN pnpm build
 
-# Step 2: Serve the application using a lightweight server like Nginx
-FROM nginx:stable-alpine as production-stage
+# Install only production dependencies
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
 
-# Copy nginx configuration
-# You could add a custom nginx.conf if needed
-# COPY nginx.conf /etc/nginx/nginx.conf
+# Stage 2: Create optimized production image
+FROM node:22.12.0-alpine AS runner
 
-# Copy your custom nginx.conf to the container
-COPY default.conf /etc/nginx/conf.d/default.conf
+# Install pnpm globally
+RUN npm install -g pnpm
 
-# Remove default nginx static assets
-RUN rm -rf /usr/share/nginx/html/*
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=80
 
-# Copy the build output to replace the default nginx contents.
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+# Set working directory
+WORKDIR /app
 
-# Expose port 80
+# Copy necessary files from the builder stage
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/pnpm-lock.yaml ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+
+# Expose the port for GCP Cloud Run
 EXPOSE 80
 
-# Start Nginx and keep it running in the foreground
-CMD ["nginx", "-g", "daemon off;"]
+# Start the application
+CMD ["pnpm", "start"]

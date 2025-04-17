@@ -1,99 +1,106 @@
-# name: Build
+name: Build Checked
 
-# on:
-#   push:
-#     branches:
-#       - '**'
+on:
+  push:
+    branches:
+      - "**"
 
-# env:
-#   GCP_PROJECT_ID: stay-organize
-#   GCP_IDENTITY_PROVIDER: projects/928486735220/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-oidc
-#   GCP_SERVICE_ACCOUNT: stay-organize-deploy-sa@stay-organize.iam.gserviceaccount.com
-#   GCP_IMAGE_REGISTRY: asia-southeast1-docker.pkg.dev
+jobs:
+  code-check:
+    runs-on: ubuntu-latest
 
-# jobs:
-#   code-check:
-#     runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
 
-#     steps:
-#       - name: Check out repository code
-#         uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
 
-#       - name: Set up Node.js
-#         uses: actions/setup-node@v2
-#         with:
-#           node-version: '18.20'
+      - name: Install pnpm
+        run: npm install -g pnpm
 
-#       - name: Install dependencies
-#         run: yarn install
+      - name: Set up pnpm store path
+        id: pnpm-cache
+        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
-#       - name: Build project
-#         run: yarn build
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
-#       - name: Run lint
-#         run: yarn lint
+      - name: Install dependencies
+        run: pnpm install
 
-#       # - name: Run tests
-#       #   run: yarn test
+      - name: Build project
+        run: pnpm build
 
-#       - name: Notify Discord (Code Check)
-#         uses: sarisia/actions-status-discord@v1
-#         if: always()
-#         with:
-#           webhook: ${{ secrets.DISCORD_WEBHOOK }}
-#           status: ${{ job.status }}
-#           title: '${{ job.status }} check by ${{ github.actor }}'
-#           description: 'build ${{ job.status }} please check in github before pull request'
-#           url: 'https://github.com/Utotech-organize/stay-organize-dashboard'
+  build:
+    needs: code-check
+    runs-on: ubuntu-latest
+    if: contains('refs/heads/develop refs/heads/main refs/heads/staging', github.ref)
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
 
-#   build:
-#     needs: code-check
-#     runs-on: ubuntu-latest
-#     if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
-#     permissions:
-#       actions: read
-#       contents: read
-#       id-token: write # Ensure this permission is set for the job
+    steps:
+      - name: 📥 Check out repository code
+        uses: actions/checkout@v2
 
-#     steps:
-#       - name: Check out repository code
-#         uses: actions/checkout@v2
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: ${{ secrets.GCP_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-#       - name: Authenticate to Google Cloud
-#         uses: google-github-actions/auth@v0.4.0
-#         with:
-#           workload_identity_provider: ${{ env.GCP_IDENTITY_PROVIDER }}
-#           service_account: ${{ env.GCP_SERVICE_ACCOUNT }}
+      - name: 🏷️ Get the current version (branch name)
+        id: get_version
+        run: |
+          echo "VERSION=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
 
-#       - name: Get the version
-#         id: get_version
-#         run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+      - name: 🐳 Build Docker Image
+        env:
+          APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
+          APP_IMAGE: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}-${{ github.ref_name }}
+        run: |
+          echo "🔧 Building image..."
+          echo "APP_IMAGE: $APP_IMAGE"
+          echo "APP_VERSION: $APP_VERSION"
+          docker build -t $APP_IMAGE:$APP_VERSION .
 
-#       - name: Build Docker Image
-#         env:
-#           APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
-#           APP_IMAGE: ${{ env.GCP_IMAGE_REGISTRY }}/${{ env.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}
-#         run: docker build -t ${{ env.APP_IMAGE }}:${{ env.APP_VERSION }} .
+      - name: 🔐 Configure Docker to use GCP Artifact Registry
+        run: |-
+          gcloud auth configure-docker --quiet
+          gcloud auth configure-docker ${{ secrets.GCP_IMAGE_REGISTRY }} --quiet
 
-#       - name: Configure Docker Client
-#         run: |-
-#           gcloud auth configure-docker --quiet
-#           gcloud auth configure-docker ${{ env.GCP_IMAGE_REGISTRY }} --quiet
+      - name: 📤 Push Docker Image to Artifact Registry
+        env:
+          APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
+          APP_IMAGE: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}-${{ github.ref_name }}
+        run: |-
+          echo "🚀 Pushing image..."
+          echo "Pushing $APP_IMAGE:$APP_VERSION"
+          docker push $APP_IMAGE:$APP_VERSION
 
-#       - name: Push Docker Image to Artifact Registry
-#         env:
-#           APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
-#           APP_IMAGE: ${{ env.GCP_IMAGE_REGISTRY }}/${{ env.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}
-#         run: |-
-#           docker push ${{ env.APP_IMAGE }}:${{ env.APP_VERSION }}
+      - name: 🐛 Debug Output
+        run: |
+          echo "Branch: ${{ github.ref_name }}"
+          echo "GITHUB_REF: $GITHUB_REF"
+          echo "Repository: ${{ github.event.repository.name }}"
+          echo "Version: ${{ steps.get_version.outputs.VERSION }}"
+          echo "Full Image: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}-${{ github.ref_name }}:${{ steps.get_version.outputs.VERSION }}"
 
-#       - name: Notify Discord (Build)
-#         uses: sarisia/actions-status-discord@v1
-#         if: always()
-#         with:
-#           webhook: ${{ secrets.DISCORD_WEBHOOK }}
-#           status: ${{ job.status }}
-#           title: 'Build and Deploy by ${{ github.actor }}'
-#           content: 'build ${{ github.event.repository.name }}' # FIXME make this to env
-#           description: 'Prepared to deploy'
-#           url: 'https://github.com/Utotech-organize/stay-organize-dashboard'
+      - name: 🔔 Notify Discord (Build)
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: "Build by ${{ github.actor }}"
+          description: "Build container prepared to deploy artifact"
+          url: "https://github.com/Utotech-organize/rome-core"

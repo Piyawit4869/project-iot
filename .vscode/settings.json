@@ -1,14 +1,12 @@
 {
-    "github.copilot.editor.enableCodeActions": false,
-    "github.copilot.renameSuggestions.triggerAutomatically": false,
-    "github.copilot.chat.codeGeneration.useInstructionFiles": false,
-    "github.copilot.chat.copilotDebugCommand.enabled": false,
-    "github.copilot.chat.edits.suggestRelatedFilesForTests": false,
-    "github.copilot.chat.edits.suggestRelatedFilesFromGitHistory": false,
-    "github.copilot.editor.enableAutoCompletions": false,
-    "github.copilot.chat.reviewSelection.enabled": false,
-    "github.copilot.chat.startDebugging.enabled": false,
-    "github.copilot.chat.setupTests.enabled": false,
-    "editor.copyWithSyntaxHighlighting": false,
-    "editor.emptySelectionClipboard": false
+  "eslint.experimental.useFlatConfig": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.options": {
+    "overrideConfigFile": "eslint.config.mjs"
+  }
 }

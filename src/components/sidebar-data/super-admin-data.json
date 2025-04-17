@@ -1,0 +1,47 @@
+{
+  "head": [
+    {
+      "name": "Utotech co., ltd",
+      "logo": "/logo.png"
+    }
+  ],
+  "home": [
+    {
+      "name": "Home",
+      "key": "home",
+      "path": "/super-admin",
+      "icon": "Home",
+      "isActive": false
+    }
+  ],
+  "main": [
+    {
+      "name": "Organization",
+      "key": "account",
+      "icon": "TvMinimal",
+      "isActive": false,
+      "subMenu": [
+        {
+          "name": "Index",
+          "path": "/super-admin/organization",
+          "icon": "BarChart2",
+          "isActive": false
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "key": "account",
+      "icon": "UserRound",
+      "isActive": false,
+      "subMenu": [
+        {
+          "name": "Overview",
+          "path": "/super-admin/user",
+          "icon": "BarChart2",
+          "isActive": false
+        }
+      ]
+    }
+  ]
+}
