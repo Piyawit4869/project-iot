@@ -39,20 +39,6 @@ jobs:
       - name: Build project
         run: pnpm build
 
-      # running this later when got jest test
-      # - name: Run tests
-      #   run: pnpm test
-
-      - name: Notify Discord (Code Check)
-        uses: sarisia/actions-status-discord@v1
-        if: always()
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          status: ${{ job.status }}
-          title: "Code check by ${{ github.actor }}"
-          description: "build ${{ job.status }} please check in github before pull request"
-          url: "https://github.com/Utotech-organize/rome-backoffice"
-
   build:
     needs: code-check
     runs-on: ubuntu-latest
@@ -63,63 +49,53 @@ jobs:
       id-token: write
 
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "20"
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Set up pnpm store path
-        id: pnpm-cache
-        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - name: Cache pnpm dependencies
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build project
-        run: pnpm build
+      - name: 📥 Check out repository code
+        uses: actions/checkout@v2
 
       - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v0.4.0
+        uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: ${{ secrets.GCP_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-      - name: Get the version
+      - name: 🏷️ Get the current version (branch name)
         id: get_version
-        run: echo "VERSION=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
+        run: |
+          echo "VERSION=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
 
-      - name: Configure Docker Client
-        run: gcloud auth configure-docker ${{ secrets.GCP_IMAGE_REGISTRY }} --quiet
-
-      - name: Build Docker Image
+      - name: 🐳 Build Docker Image
         env:
           APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
-          APP_IMAGE: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}
+          APP_IMAGE: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}-${{ github.ref_name }}
         run: |
+          echo "🔧 Building image..."
+          echo "APP_IMAGE: $APP_IMAGE"
+          echo "APP_VERSION: $APP_VERSION"
           docker build -t $APP_IMAGE:$APP_VERSION .
 
-      - name: Push Docker Image to Artifact Registry
+      - name: 🔐 Configure Docker to use GCP Artifact Registry
+        run: |-
+          gcloud auth configure-docker --quiet
+          gcloud auth configure-docker ${{ secrets.GCP_IMAGE_REGISTRY }} --quiet
+
+      - name: 📤 Push Docker Image to Artifact Registry
         env:
           APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
-          APP_IMAGE: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}
-        run: |
+          APP_IMAGE: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}-${{ github.ref_name }}
+        run: |-
+          echo "🚀 Pushing image..."
+          echo "Pushing $APP_IMAGE:$APP_VERSION"
           docker push $APP_IMAGE:$APP_VERSION
 
-      - name: Notify Discord (Build)
+      - name: 🐛 Debug Output
+        run: |
+          echo "Branch: ${{ github.ref_name }}"
+          echo "GITHUB_REF: $GITHUB_REF"
+          echo "Repository: ${{ github.event.repository.name }}"
+          echo "Version: ${{ steps.get_version.outputs.VERSION }}"
+          echo "Full Image: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}-${{ github.ref_name }}:${{ steps.get_version.outputs.VERSION }}"
+
+      - name: 🔔 Notify Discord (Build)
         uses: sarisia/actions-status-discord@v1
         if: always()
         with:
@@ -127,4 +103,4 @@ jobs:
           status: ${{ job.status }}
           title: "Build by ${{ github.actor }}"
           description: "Build container prepared to deploy artifact"
-          url: "https://github.com/Utotech-organize/rome-backoffice"
+          url: "https://github.com/Utotech-organize/rome-core"

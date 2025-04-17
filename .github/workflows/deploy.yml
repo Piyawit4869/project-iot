@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to Cloud Run
 
 on:
   workflow_run:
@@ -8,91 +8,98 @@ on:
       - completed
     branches:
       - develop
+      - demo
       - staging
       - main
 
   workflow_dispatch:
     inputs:
       env:
-        description: "Deployment Environment"
+        description: "Environment"
         required: true
-        default: dev
-
+        default: "develop"
       version:
-        description: "Deployment Version"
+        description: "Version (branch or tag)"
         required: true
-        default: dev
-
-      migration:
-        description: "Have Migration file"
-        required: true
-        default: false
-        options:
-          - true
-          - false
-
-      note:
-        description: "Note"
-        required: false
-
-  repository_dispatch:
-    types: [deploy]
+        default: "develop"
 
 jobs:
   deploy:
+    name: 🚀 Deploy to Cloud Run (${{ github.event_name == 'workflow_dispatch' && inputs.env || github.event.workflow_run.head_branch }})
     runs-on: ubuntu-latest
-    if: contains('refs/heads/develop refs/heads/main refs/heads/staging', github.ref)
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+
     permissions:
-      actions: read
-      contents: read
       id-token: write
+      contents: read
+      actions: read
 
     steps:
-      - name: Setting up environment variables via repository_dispatch
+      - name: 🧪 Set environment variables
         run: |
-          echo "APP_ENV=${{ github.event.client_payload.env }}" >> $GITHUB_ENV
-          echo "APP_VERSION=${{ github.event.client_payload.version }}" >> $GITHUB_ENV
-          echo "NOTE=${{ github.event.client_payload.note }}" >> $GITHUB_ENV
-        if: ${{ github.event_name == 'repository_dispatch' }}
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "APP_ENV=${{ inputs.env }}" >> $GITHUB_ENV
+            echo "APP_VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+          else
+            BRANCH=$(curl -s \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }} \
+              | jq -r .head_branch)
+            echo "APP_ENV=$BRANCH" >> $GITHUB_ENV
+            echo "APP_VERSION=$BRANCH" >> $GITHUB_ENV
+          fi
 
-      - name: Setting up environment variables via workflow_dispatch
-        run: |
-          echo "APP_ENV=${{ github.event.inputs.env }}" >> $GITHUB_ENV
-          echo "APP_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
-          echo "NOTE=${{ github.event.inputs.note }}" >> $GITHUB_ENV
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-
-      - uses: actions/checkout@v2
+      - name: 📥 Checkout code from correct branch
+        uses: actions/checkout@v3
         with:
           ref: ${{ env.APP_VERSION }}
 
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/setup-gcloud@v0.4.0
+      - name: 🔐 Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
+          token_format: access_token
+          workload_identity_provider: ${{ secrets.GCP_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-      - name: Deploy to Cloud Run
+      - name: 🧾 Debug environment
+        run: |
+          echo "Branch (APP_ENV): $APP_ENV"
+          echo "Version: $APP_VERSION"
+          echo "Triggered by: ${{ github.actor }}"
+          echo "Repository: ${{ github.repository }}"
+
+      - name: 🚀 Deploying ${{ github.repository }} to Cloud Run (${{ env.APP_ENV }})
         env:
-          APP_IMAGE: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}
-          SERVICE_NAME: ${{ github.event.repository.name }}-dev
-          APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
+          APP_IMAGE: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}-${{ env.APP_ENV }}
+          SERVICE_NAME: ${{ github.event.repository.name }}-${{ env.APP_ENV }}
+          APP_VERSION: ${{ env.APP_VERSION }}
           GCP_CLOUD_RUN_REGION: ${{ secrets.GCP_CLOUD_RUN_REGION }}
           GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
         run: |
-          gcloud run deploy ${{ env.SERVICE_NAME }} \
-          --region=${{ env.GCP_CLOUD_RUN_REGION }} \
-          --image ${{ env.APP_IMAGE }}:develop \
-          --project ${{ env.GCP_PROJECT_ID }}
+          echo "Deploying $SERVICE_NAME with image $APP_IMAGE:$APP_VERSION..."
+          gcloud run deploy $SERVICE_NAME \
+            --region=$GCP_CLOUD_RUN_REGION \
+            --image $APP_IMAGE:$APP_VERSION \
+            --project $GCP_PROJECT_ID \
+            --platform=managed \
+            --quiet \
+            --allow-unauthenticated
 
-      - uses: sarisia/actions-status-discord@v1
+      - name: 🔔 Notify Discord
+        uses: sarisia/actions-status-discord@v1
         if: always()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
-          content: "<@&888117099246026772> alert ! deployed ${{ github.event.repository.name }} to ${{ github.event.inputs.env }} by ${{ github.actor }}"
-          title: "Deploy to ${{ github.event.inputs.env }}:${{ github.event.inputs.version }}"
+          content: |
+            <@&888117099246026772> ✅ Deploy Alert!
+            Repo: ${{ github.event.repository.name }}
+            Branch: ${{ env.APP_ENV }}
+            Triggered by: ${{ github.actor }}
+          title: "Deploy: `${{ github.event.repository.name }}` → `${{ env.APP_ENV }}`"
           description: |
-            Build Status: ${{ job.status }} On Repository: ${{ github.event.repository.name }} Version: ${{ steps.get_version.outputs.VERSION }}
-          url: "https://github.com/Utotech-organize/rome-backoffice"
+            Status: `${{ job.status }}`
+            Version: `${{ env.APP_VERSION }}`
+          url: "https://github.com/${{ github.repository }}/tree/${{ env.APP_VERSION }}"
