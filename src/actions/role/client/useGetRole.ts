@@ -1,14 +1,14 @@
 import { useSession } from "next-auth/react";
 import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
+import { RoleFormValues } from "@/schemas/role/role";
 import {
-  fetchCreateProducts,
-  fetchDeleteProducts,
+  fetchCreateRole,
+  fetchDeleteRole,
   fetchGetRole,
   fetchMe,
   fetchRole,
-  fetchUpdateProducts,
+  fetchUpdateRole,
 } from "../server/role";
-import { ProductsFormValues } from "@/schemas/products/product";
 
 export const useGetMe = () =>
   useQuery({
@@ -52,7 +52,7 @@ export const useGetRole = (id: string) => {
   });
 };
 
-export const useCreateProducts = () => {
+export const useCreateRole = () => {
   const data = useSession();
   const userDetails = data.data?.user;
 
@@ -60,12 +60,12 @@ export const useCreateProducts = () => {
   const accessToken = user?.user?.auth?.accessToken;
 
   return useMutation({
-    mutationFn: (values: ProductsFormValues) =>
-      fetchCreateProducts(values, accessToken),
+    mutationFn: (values: RoleFormValues) =>
+      fetchCreateRole(values, accessToken),
   });
 };
 
-export const useUpdateProducts = (id: string) => {
+export const useUpdateRole = (id: string) => {
   const data = useSession();
   const userDetails = data.data?.user;
 
@@ -73,12 +73,12 @@ export const useUpdateProducts = (id: string) => {
   const accessToken = user?.user?.auth?.accessToken;
 
   return useMutation({
-    mutationFn: (values: ProductsFormValues) =>
-      fetchUpdateProducts(id, accessToken, values),
+    mutationFn: (values: RoleFormValues) =>
+      fetchUpdateRole(id, accessToken, values),
   });
 };
 
-export const useDeleteProducts = () => {
+export const useDeleteRole = () => {
   const data = useSession();
   const userDetails = data.data?.user;
 
@@ -86,7 +86,7 @@ export const useDeleteProducts = () => {
   const accessToken = user?.user?.auth?.accessToken;
 
   return useMutation({
-    mutationFn: (id: string) => fetchDeleteProducts(id, accessToken),
+    mutationFn: (id: string) => fetchDeleteRole(id, accessToken),
   });
 };
 

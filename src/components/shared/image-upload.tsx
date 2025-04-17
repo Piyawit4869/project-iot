@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { Upload } from "lucide-react";
 import { useUpload } from "@/actions/upload/client/useGetUpload";
@@ -37,7 +36,7 @@ export default function ImageUpload({ value, onChange }: ImageProps) {
   return (
     <div className="flex flex-col items-center gap-4 mt-2">
       {value && (
-        <Image
+        <img
           src={value}
           alt="Preview"
           className="rounded-xl max-w-full h-auto border"
@@ -47,7 +46,7 @@ export default function ImageUpload({ value, onChange }: ImageProps) {
       )}
 
       {!value && preview && (
-        <Image
+        <img
           src={preview}
           alt="Preview"
           className="rounded-xl max-w-full h-auto border"

@@ -1,5 +1,5 @@
 import { env } from "@/constants/common";
-import { ProductsFormValues } from "@/schemas/products/product";
+import { RoleFormValues } from "@/schemas/role/role";
 import { apiAxios } from "@/utils/axiosInterceptor";
 import axios from "axios";
 
@@ -29,7 +29,7 @@ export const fetchRole = async (
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    return res.data.res.items.items;
+    return res.data.res.items;
   } catch (error) {
     return error;
   }
@@ -48,34 +48,30 @@ export const fetchGetRole = async (id: string, accessToken: string) => {
   }
 };
 
-export const fetchCreateProducts = async (
-  payload: ProductsFormValues,
+export const fetchCreateRole = async (
+  payload: RoleFormValues,
   accessToken: string | undefined
 ) => {
   try {
-    const res = await axios.post(
-      `${env.base_url}/crud/products/create`,
-      payload,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const res = await axios.post(`${env.base_url}/crud/roles`, payload, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     return res.data;
   } catch (error) {
     return error;
   }
 };
 
-export const fetchUpdateProducts = async (
+export const fetchUpdateRole = async (
   id: string,
   accessToken: string,
-  payload: ProductsFormValues
+  payload: RoleFormValues
 ) => {
   try {
     const res = await axios.put(
-      `${env.base_url}/crud/products/edit/${id}`,
+      `${env.base_url}/crud/roles/edit/${id}`,
       payload,
       {
         headers: {
@@ -89,9 +85,9 @@ export const fetchUpdateProducts = async (
   }
 };
 
-export const fetchDeleteProducts = async (id: string, accessToken: string) => {
+export const fetchDeleteRole = async (id: string, accessToken: string) => {
   try {
-    const res = await axios.delete(`${env.base_url}/crud/products/${id}`, {
+    const res = await axios.delete(`${env.base_url}/crud/roles/delete/${id}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

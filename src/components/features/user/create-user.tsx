@@ -313,7 +313,7 @@ export const CreateUsers = () => {
                     <FormItem className="mt-4">
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input type="password" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
