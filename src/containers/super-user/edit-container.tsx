@@ -1,11 +1,7 @@
 import { EditUsers } from "@/components/features/super-user";
 
 const EditUsersContainer = () => {
-  return (
-    <div className="flex flex-col gap-4">
-      <EditUsers />
-    </div>
-  );
+  return <EditUsers />;
 };
 
 export default EditUsersContainer;

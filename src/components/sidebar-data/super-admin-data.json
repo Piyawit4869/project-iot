@@ -9,7 +9,7 @@
     {
       "name": "Home",
       "key": "home",
-      "path": "/superadmin",
+      "path": "/super-admin",
       "icon": "Home",
       "isActive": false
     }
@@ -23,7 +23,7 @@
       "subMenu": [
         {
           "name": "Index",
-          "path": "/superadmin/organization",
+          "path": "/super-admin/organization",
           "icon": "BarChart2",
           "isActive": false
         }
@@ -37,7 +37,7 @@
       "subMenu": [
         {
           "name": "Overview",
-          "path": "/superadmin/user",
+          "path": "/super-admin/user",
           "icon": "BarChart2",
           "isActive": false
         }

@@ -8,7 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Control } from "@/components/shared/topsection";
+import { Tabcontrol } from "@/components/shared/topsection";
 import GlobalButton from "@/components/shared/global-button";
 import {
   Form,
@@ -52,7 +52,7 @@ export const UpdateOrganization = () => {
     mutate(values, {
       onSuccess: (data) => {
         console.log("✅ Created successfully:", data);
-        router.push("/superadmin/organization/");
+        router.push("/super-admin/organization/");
       },
       onError: (err) => {
         console.error("❌ Failed to create:", err);
@@ -67,69 +67,74 @@ export const UpdateOrganization = () => {
         : undefined;
 
       form.reset({
-        active: data.active || "",
-        status: data.status || "",
-        fromType: data.fromType || "",
-        taxId: data.taxId || "",
-        type: data.type || "",
-        code: data.code || "",
+        active: data.active ?? "",
+        status: data.status ?? "",
+        fromType: data.fromType ?? "",
+        taxId: data.taxId ?? "",
+        type: data.type ?? "",
+        code: data.code ?? "",
         openingDate: openingDate,
-        nameTh: data.nameTh || "",
-        nameEn: data.nameEn || "",
-        descriptionsTh: data.descriptionsTh || "",
-        descriptionsEn: data.descriptionsEn || "",
-        websiteUrl: data.websiteUrl || "",
-        registerVat: data.registerVat || "",
-        contactName: data.contactName || "",
-        contactEmail: data.contactEmail || "",
-        contactPhone: data.contactPhone || "",
-        contactLine: data.contactLine || "",
-        contactFacebook: data.contactFacebook || "",
-        contactWhatsapp: data.contactWhatsapp || "",
-        contactWebsite: data.contactWebsite || "",
-        contactNote: data.contactNote || "",
-        logoUrl: data.logoUrl || "",
+        nameTh: data.nameTh ?? "",
+        nameEn: data.nameEn ?? "",
+        descriptionsTh: data.descriptionsTh ?? "",
+        descriptionsEn: data.descriptionsEn ?? "",
+        websiteUrl: data.websiteUrl ?? "",
+        registerVat: data.registerVat ?? "",
+        contactName: data.contactName ?? "",
+        contactEmail: data.contactEmail ?? "",
+        contactPhone: data.contactPhone ?? "",
+        contactLine: data.contactLine ?? "",
+        contactFacebook: data.contactFacebook ?? "",
+        contactWhatsapp: data.contactWhatsapp ?? "",
+        contactWebsite: data.contactWebsite ?? "",
+        contactNote: data.contactNote ?? "",
+        logoUrl: data.logoUrl ?? "",
       });
     }
   }, [data, form]);
 
-  console.log(data);
-
   return (
     <div className="hidden flex-1 flex-col space-y-3 p-8 md:flex">
-      <div>
-        <Control
-          title="Update Organization"
-          backpath="/superadmin/organization"
-          buttons={[
-            <GlobalButton
-              label="Edit"
-              key={"update button"}
-              type="submit"
-              loading={isSubmitting}
-              form="organizations"
-            />,
-          ]}
-        />
-      </div>
-      <div className="flex gap-8">
-        <Card className="w-full">
-          <Form {...form}>
-            <form
-              id="organizations"
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="flex-row space-y-6 max-w-2xl p-8"
-            >
-              <h2 className="text-2xl font-bold underline">
-                Organization Info
-              </h2>
-
+      <Tabcontrol
+        title="Edit Organization"
+        backpath="/super-admin/organization"
+        buttons={[
+          <GlobalButton
+            label="Edit"
+            key={"update button"}
+            type="submit"
+            loading={isSubmitting}
+            form="organizations"
+          />,
+        ]}
+      />
+      <Form {...form}>
+        <form id="organizations" onSubmit={form.handleSubmit(onSubmit)}>
+          <Card className="space-y-4 p-8">
+            <h2 className="text-2xl font-bold underline">Organization Info</h2>
+            <div className="grid grid-cols-2 gap-8 mt-2 flex justify-center">
               <FormField
                 control={form.control}
                 name="active"
                 render={({ field }) => (
                   <FormItem className="flex">
                     <FormLabel className="px-2">Active</FormLabel>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="registerVat"
+                render={({ field }) => (
+                  <FormItem className="flex">
+                    <FormLabel className="px-2">Register VAT</FormLabel>
                     <FormControl>
                       <Switch
                         checked={field.value}
@@ -222,7 +227,7 @@ export const UpdateOrganization = () => {
                   <FormItem>
                     <FormLabel>Tax Id</FormLabel>
                     <FormControl>
-                      <Input placeholder="Please Enter Tax Id" {...field} />
+                      <Input placeholder="Please Enter taxId" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -423,22 +428,6 @@ export const UpdateOrganization = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="registerVat"
-                render={({ field }) => (
-                  <FormItem className="flex">
-                    <FormLabel className="px-2">Register VAT</FormLabel>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
               <FormField
                 control={form.control}
@@ -582,10 +571,10 @@ export const UpdateOrganization = () => {
                   </FormItem>
                 )}
               />
-            </form>
-          </Form>
-        </Card>
-      </div>
+            </div>
+          </Card>
+        </form>
+      </Form>
     </div>
   );
 };

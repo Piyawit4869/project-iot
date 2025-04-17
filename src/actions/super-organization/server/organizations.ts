@@ -2,7 +2,7 @@ import { env } from "@/constants/common";
 import { apiAxios } from "@/utils/axiosInterceptor";
 import axios from "axios";
 import {
-  cre_OrganizationFormValues,
+  CreateOrganizationFormValues,
   up_OrganizationFormValues,
 } from "@/schemas/super-organization/organization";
 
@@ -39,7 +39,7 @@ export const fetchOrganization = async (
 };
 
 export const fetchCreateOrganization = async (
-  payload: cre_OrganizationFormValues,
+  payload: CreateOrganizationFormValues,
   accessToken: string | undefined
 ) => {
   try {

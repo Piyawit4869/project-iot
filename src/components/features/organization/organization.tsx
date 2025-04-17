@@ -6,7 +6,7 @@ import { Metadata } from "next";
 
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { Control } from "@/components/shared/topsection";
+import { Tabcontrol } from "@/components/shared/topsection";
 import { CollapeTable, SubTable } from "@/components/shared/collape-table";
 import { usePaginate } from "@/actions/super-organization/client/useGetOrganizations";
 export const metadata: Metadata = {
@@ -41,7 +41,7 @@ const columns: ColumnDef<Task>[] = [
     accessorKey: "nameEn",
     header: "Name (EN)",
     cell: (info) => (
-      <Link href={`/superadmin/organization/${info.row.original.id}`}>
+      <Link href={`/super-admin/organization/${info.row.original.id}`}>
         <span className="hover:text-red-500">{info.getValue() as string}</span>
       </Link>
     ),
@@ -94,7 +94,7 @@ const columns: ColumnDef<Task>[] = [
     accessorKey: "",
     header: "Actions",
     cell: (info) => (
-      <Link href={`/superadmin/organization/${info.row.original.id}`}>
+      <Link href={`/super-admin/organization/${info.row.original.id}`}>
         <Button className="text-sm">Edit</Button>
       </Link>
     ),
@@ -103,20 +103,15 @@ const columns: ColumnDef<Task>[] = [
 
 export const Organization = () => {
   return (
-    <>
-      <div className="items-center justify-between space-y-2">
-        <Control
-          title="Organization"
-          buttons={[
-            <Link
-              href={`/superadmin/organization/create`}
-              key={"create button"}
-            >
-              <Button key={"create button"}>Create</Button>
-            </Link>,
-          ]}
-        />
-      </div>
+    <div className="items-center justify-between space-y-2">
+      <Tabcontrol
+        title="Organization"
+        buttons={[
+          <Link href={`/super-admin/organization/create`} key={"create button"}>
+            <Button key={"create button"}>Create</Button>
+          </Link>,
+        ]}
+      />
       <CollapeTable
         queryFunction={usePaginate}
         columns={columns}
@@ -133,6 +128,6 @@ export const Organization = () => {
           />
         )}
       />
-    </>
+    </div>
   );
 };
