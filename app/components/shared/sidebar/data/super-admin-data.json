@@ -1,0 +1,33 @@
+{
+  "head": [
+    {
+      "name": "Rome",
+      "logo": "/logo.png"
+    }
+  ],
+  "home": [
+    {
+      "name": "องค์กร",
+      "key": "organization",
+      "path": "/super-admin/organization",
+      "icon": "TvMinimal",
+      "isActive": false
+    }
+  ],
+  "main": [
+    {
+      "name": "ผู้ใช้",
+      "key": "user",
+      "icon": "UserRound",
+      "isActive": false,
+      "subMenu": [
+        {
+          "name": "หน้าแรก",
+          "path": "/super-admin/user",
+          "icon": "BarChart2",
+          "isActive": false
+        }
+      ]
+    }
+  ]
+}
