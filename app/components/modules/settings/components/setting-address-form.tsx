@@ -18,7 +18,7 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
   return (
     <Form {...form}>
       <div className="flex flex-col w-full space-y-8 p-8">
-        {/* <Tabcontrol
+        {/* <TabControl
         title="ที่อยู่ติดต่อ"
         buttons={[
           <Link

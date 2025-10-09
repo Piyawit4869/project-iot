@@ -25,8 +25,6 @@ export default function CreateUsers() {
   const navigate = useNavigate();
   const { data } = useGetAllDepartments(true);
 
-  console.log({ data });
-
   const form = useForm<UsersFormValues>({
     resolver: zodResolver(UsersFormSchema as any),
     defaultValues: {

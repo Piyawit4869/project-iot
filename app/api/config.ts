@@ -1,8 +1,7 @@
 import axios from "axios";
 
 const AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_PUBLIC_API_URL,
-  // withCredentials: true, // ส่ง cookie HttpOnly ไปกับทุก request
+  baseURL: import.meta.env.PUBLIC_API_URL,
 });
 
 AxiosInstance.interceptors.request.use(

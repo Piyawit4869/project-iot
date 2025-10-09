@@ -62,7 +62,7 @@ export default function HomeComponent() {
       nameLocal: "แชท",
       icon: MessageCircleMore,
       color: "bg-gradient-to-br from-orange-500 to-red-500",
-      path: "/organization/message",
+      path: "/message",
     },
 
     {
@@ -71,7 +71,7 @@ export default function HomeComponent() {
       nameLocal: "ลูกค้า",
       icon: ShieldUser,
       color: "bg-gradient-to-br from-cyan-500 to-blue-500",
-      path: "/organization/customer",
+      path: "/customer",
     },
     {
       id: "order",
@@ -79,7 +79,7 @@ export default function HomeComponent() {
       nameLocal: "ออเดอร์",
       icon: BookA,
       color: "bg-gradient-to-br from-red-500 to-pink-500",
-      path: "/organization/orders",
+      path: "/orders",
     },
 
     {
@@ -88,7 +88,7 @@ export default function HomeComponent() {
       nameLocal: "คลังสินค้า",
       icon: Warehouse,
       color: "bg-gradient-to-br from-orange-500 to-pink-500",
-      path: "/organization/inventory",
+      path: "/inventory",
     },
 
     {
@@ -97,7 +97,7 @@ export default function HomeComponent() {
       nameLocal: "สินค้า",
       icon: Package,
       color: "bg-gradient-to-br from-cyan-500 to-teal-500",
-      path: "/organization/products",
+      path: "/products",
     },
     {
       id: "employee",
@@ -105,7 +105,7 @@ export default function HomeComponent() {
       nameLocal: "พนักงาน",
       icon: User,
       color: "bg-gradient-to-br from-purple-500 to-blue-500",
-      path: "/organization/user",
+      path: "/user",
     },
     {
       id: "settings",
@@ -113,7 +113,7 @@ export default function HomeComponent() {
       nameLocal: "การตั้งค่า",
       icon: Settings,
       color: "bg-gradient-to-br from-orange-500 to-yellow-500",
-      path: "/organization/setting-organization",
+      path: "/setting-organization",
     },
   ];
 

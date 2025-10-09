@@ -54,7 +54,7 @@ export default function LoginForm() {
           src={PageNotFound}
           alt="Login Image"
           // fill
-          className="object-cover"
+          className="w-full h-full object-cover"
           // priority
         />
         <div className="absolute inset-0 flex items-center justify-center px-10 text-white bg-black/30 ">

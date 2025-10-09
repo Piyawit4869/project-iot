@@ -2,7 +2,7 @@
   "head": [
     {
       "name": "Utotech co., ltd",
-      "path": "/organization",
+      "path": "/",
       "logo": "/logo.png"
     }
   ],
@@ -10,7 +10,7 @@
     {
       "name": "หน้าแรก",
       "key": "home",
-      "path": "/organization",
+      "path": "/",
       "icon": "Home",
       "isActive": false
     },
@@ -18,7 +18,7 @@
       "name": "แชท",
       "key": "messages",
       "icon": "MessageCircleMore",
-      "path": "/organization/message",
+      "path": "/message",
       "isActive": false
     },
     {
@@ -26,35 +26,35 @@
       "key": "customner",
       "icon": "ShieldUser",
       "isActive": false,
-      "path": "/organization/customer"
+      "path": "/customer"
     },
     {
       "name": "ออเดอร์",
       "key": "orders",
       "icon": "BookA",
       "isActive": false,
-      "path": "/organization/orders"
+      "path": "/orders"
     },
     {
       "name": "คลังสินค้า",
       "key": "inventory",
-      "path": "/organization/inventory",
       "icon": "Warehouse",
-      "isActive": false
+      "isActive": false,
+      "path": "/inventory"
     },
     {
       "name": "สินค้า",
       "key": "product",
-      "path": "/organization/products",
       "icon": "Package",
-      "isActive": false
+      "isActive": false,
+      "path": "/products"
     },
 
     {
       "name": "พนักงาน",
       "key": "employee",
       "path": "/users",
-      "icon": "Users",
+      "icon": "User",
       "isActive": false
     },
     {
@@ -62,14 +62,14 @@
       "key": "setting-organization",
       "icon": "Settings",
       "isActive": false,
-      "path": "/organization/setting-organization"
+      "path": "/setting-organization"
     },
     {
       "name": "ประวัติการเข้าสู่ระบบ",
       "key": "loginLog",
-      "path": "/organization/login-log",
       "icon": "History",
-      "isActive": false
+      "isActive": false,
+      "path": "/login-log"
     }
   ],
   "main": []
