@@ -2,14 +2,13 @@
 import React from "react";
 import { LabelList, Legend, Pie, PieChart, Sector } from "recharts";
 import { Search } from "lucide-react";
-
+import type { RelationshipCircleProps } from "~/schemas/customer/customer";
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
-import { RelationshipCircleProps } from "@/features/customer/constants/type";
+  type ChartConfig,
+} from "../ui/chart";
 
 export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
   chartData,
