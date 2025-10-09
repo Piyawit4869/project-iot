@@ -1,0 +1,209 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, ShieldCheck, User2 } from "lucide-react";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { useSearchParams } from "react-router";
+import { toast } from "sonner";
+import {
+  useGetConnectionLine,
+  useUpdateConnectionLine,
+} from "~/api/client/settings";
+import { GlobalModal } from "~/components/shared/modal/modal";
+import { TabControl } from "~/components/shared/tab-control";
+import { Button } from "~/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { ConnectLineSchema, type ConnectLineValues } from "~/schemas/settings";
+
+interface LineContainerSettingsProps {}
+
+export const LineContainerSettings: React.FC<LineContainerSettingsProps> = (
+  props
+) => {
+  const [sp] = useSearchParams();
+  const id = sp.get("id") as string;
+
+  const { mutate: UpdateConnectionLine } = useUpdateConnectionLine(id);
+
+  const { data } = useGetConnectionLine(id);
+
+  const form = useForm<ConnectLineValues>({
+    resolver: zodResolver(ConnectLineSchema),
+  });
+
+  const handleOnSubmit = (values: ConnectLineValues) => {
+    GlobalModal.info({
+      title: "ยืนยันการบันทึกการตั้งค่า Line Official",
+      description: "คุณต้องการบันทึกค่าการเชื่อมต่อ Line Official ใช่หรือไม่",
+      confirmText: "ยืนยัน",
+      cancelText: "ยกเลิก",
+      onConfirm: async () => {
+        const toastId = toast.loading("กำลังบันทึกการเชื่อมต่อ...");
+        try {
+          UpdateConnectionLine(values, {
+            onSuccess: () => {
+              toast.success("บันทึกการเชื่อมต่อสำเร็จ !", {
+                id: toastId,
+                duration: 2500,
+                position: "bottom-right",
+              });
+            },
+            onError: (error) => {
+              console.error("Update connection error:", error);
+              toast.error("เกิดข้อผิดพลาดขณะบันทึกการเชื่อมต่อ", {
+                id: toastId,
+              });
+            },
+          });
+        } catch (error) {
+          toast.error("เกิดข้อผิดพลาดที่ไม่คาดคิด", { id: toastId });
+        }
+      },
+    });
+  };
+
+  React.useEffect(() => {
+    if (data) {
+      form.reset({
+        id: data?.id ?? "",
+        name: data?.name ?? "",
+        channelId: data?.channelId ?? "",
+        channelSecret: data?.channelSecret ?? "",
+        accessToken: data?.accessToken ?? "",
+      });
+    }
+  }, [data, form]);
+
+  return (
+    <div>
+      <TabControl
+        title="ROME Assistant"
+        noneSticky={true}
+        backpath="/setting-organization/third-party"
+        buttons={[
+          <Button
+            key="save-btn"
+            type="submit"
+            form="config-line"
+            className="w-full"
+          >
+            บันทึก
+          </Button>,
+        ]}
+      />
+      <Form {...form}>
+        <form id="config-line" onSubmit={form.handleSubmit(handleOnSubmit)}>
+          <div className="flex w-full flex-col space-y-6 bg-[var(--background)] text-[var(--foreground)]">
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--card)]">
+              <div className="flex flex-col items-center justify-center py-10">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-500">
+                  <Check className="h-8 w-8 text-white" />
+                </div>
+                <p className="mt-3 text-lg font-semibold text-[var(--card-foreground)]">
+                  เชื่อมต่อสำเร็จ
+                </p>
+              </div>
+
+              <div className="px-6 pb-4">
+                <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--muted)]">
+                        <User2 className="h-6 w-6 text-[var(--muted-foreground)]" />
+                      </div>
+                      <div className="absolute -right-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500">
+                        <ShieldCheck className="h-3.5 w-3.5 text-white" />
+                      </div>
+                    </div>
+                    <p className="text-lg font-semibold text-[var(--card-foreground)]">
+                      ข้อมูลการเชื่อมต่อ Line Official
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>ชื่อช่องทาง</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="1234567890"
+                              className="bg-[var(--input)] text-[var(--foreground)]"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[var(--destructive)]" />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      name="channelId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Channel ID</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="1234567890"
+                              className="bg-[var(--input)] text-[var(--foreground)]"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[var(--destructive)]" />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      name="channelSecret"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Channel Secret</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="1234567890abcdefghijk"
+                              className="bg-[var(--input)] text-[var(--foreground)]"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[var(--destructive)]" />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      name="accessToken"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            Channel access token (long-lived)
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="w231-12abcdefg1234567890"
+                              className="bg-[var(--input)] text-[var(--foreground)]"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[var(--destructive)]" />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </Form>
+    </div>
+  );
+};

@@ -58,8 +58,18 @@ export default [
       ...prefix("setting-organization", [
         index("routes/backoffice/settings/setting.tsx"),
         route("branch", "routes/backoffice/settings/branch/branch.tsx"),
-        // route("third-party", "routes/backoffice/settings/third-party.tsx"),
-        // route("permission", "routes/backoffice/settings/permission.tsx"),
+        route(
+          "third-party",
+          "routes/backoffice/settings/third-party/third-party.tsx"
+        ),
+        route(
+          "third-party/line/:id",
+          "routes/backoffice/settings/third-party/third-party-line.tsx"
+        ),
+        // route(
+        //   "third-party/ai/:id",
+        //   "routes/backoffice/settings/third-party/third-party-open-ai.tsx"
+        // ),
       ]),
     ]),
   ]),
