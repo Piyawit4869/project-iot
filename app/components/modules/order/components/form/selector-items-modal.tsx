@@ -1,33 +1,32 @@
 "use client";
 
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-
-import { ReactElement, useEffect, useState } from "react";
-import { GlobalImage } from "../global-image";
-
-import { Badge } from "@/components/ui";
 import * as Icons from "lucide-react";
-import { cn } from "@/libs/utils";
+
+import { X, Package, Hourglass } from "lucide-react";
+import { useEffect, useState, type ReactElement } from "react";
+import { usePaginate } from "~/api/client/product/useProductQuery";
+import { GlobalImage } from "~/components/shared/global-image";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import { X, Package, Hourglass } from "lucide-react";
-import { Item } from "@/types/global";
-import { usePaginate } from "@/hooks/queries/useProductQuery";
+} from "~/components/ui/accordion";
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
+import { Input } from "~/components/ui/input";
+import { ScrollArea } from "~/components/ui/scroll-area";
+import { cn } from "~/lib/utils";
+import type { Item } from "~/types/global";
 
 type VariantType =
   | "default"
@@ -168,7 +167,7 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                             className="w-[45px] h-[45px] md:w-[70px] md:h-[70px] rounded-lg object-cover"
                           />
 
-                          {/* รายละเอียดสินค้า */}
+                          {/* detail product */}
                           <Accordion
                             type="single"
                             collapsible

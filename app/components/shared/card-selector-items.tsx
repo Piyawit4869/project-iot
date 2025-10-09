@@ -1,7 +1,7 @@
 import React from "react";
 
 import { GlobalImage } from "./global-image";
-import { SelectorItemsModal } from "./modal/selector-items-modal";
+import { SelectorItemsModal } from "../modules/order/components/form/selector-items-modal";
 
 import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";
