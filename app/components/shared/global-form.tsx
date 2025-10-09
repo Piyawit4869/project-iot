@@ -1,25 +1,24 @@
+import ImageUpload from "./image-upload";
+import * as Icons from "lucide-react";
+import type { Control, FieldValues, Path } from "react-hook-form";
+import { cn } from "~/lib/utils";
 import {
+  FormControl,
   FormField,
   FormItem,
-  FormControl,
-  FormMessage,
   FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
+  FormMessage,
+} from "../ui/form";
+import { Switch } from "../ui/switch";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Control, FieldValues, Path } from "react-hook-form";
-import { ReactNode } from "react";
-import { cn } from "@/libs/utils";
-import ImageUpload from "./image-upload";
-import * as Icons from "lucide-react";
+} from "../ui/select";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 
 type FieldType =
   | "input"
@@ -32,7 +31,7 @@ type FieldType =
 
 interface GlobalFormFieldProps<
   T extends FieldValues,
-  Name extends Path<T> = Path<T>,
+  Name extends Path<T> = Path<T>
 > {
   control: Control<T>;
   name: Name;
@@ -46,6 +45,7 @@ interface GlobalFormFieldProps<
   setShowPassword?: React.Dispatch<React.SetStateAction<boolean>>;
   showPassword?: boolean;
   loading?: boolean;
+  disable?: boolean;
 }
 
 const Spinner = () => (
@@ -56,7 +56,7 @@ const InputWrapper = ({
   children,
   loading,
 }: {
-  children: ReactNode;
+  children: React.ReactNode;
   loading: boolean;
 }) => (
   <div className="relative w-full">
@@ -82,6 +82,7 @@ export const GlobalFormField = <T extends FieldValues, Name extends Path<T>>({
   setShowPassword,
   showPassword = false,
   loading = false,
+  disable = false,
 }: GlobalFormFieldProps<T, Name>) => {
   const isRequired = checkFields.has(name as string);
 
@@ -107,6 +108,7 @@ export const GlobalFormField = <T extends FieldValues, Name extends Path<T>>({
               {type === "image" ? (
                 <ImageUpload
                   value={field.value}
+                  disabled={disable}
                   onChange={(v) => {
                     field.onChange(v);
                     onChange?.(v as T[Name]);
@@ -117,12 +119,14 @@ export const GlobalFormField = <T extends FieldValues, Name extends Path<T>>({
                   {type === "textarea" ? (
                     <Textarea
                       {...field}
+                      disabled={disable}
                       placeholder={placeholder}
                       onChange={handleStringChange}
                     />
                   ) : type === "switch" ? (
                     <Switch
                       checked={Boolean(field.value)}
+                      disabled={disable}
                       onCheckedChange={(v) => {
                         field.onChange(v);
                         onChange?.(v as T[Name]);
@@ -130,6 +134,7 @@ export const GlobalFormField = <T extends FieldValues, Name extends Path<T>>({
                     />
                   ) : type === "select" ? (
                     <Select
+                      disabled={disable}
                       value={field.value}
                       onValueChange={(v) => {
                         field.onChange(v as T[Name]);
@@ -150,6 +155,7 @@ export const GlobalFormField = <T extends FieldValues, Name extends Path<T>>({
                   ) : type === "password" ? (
                     <div className="relative">
                       <Input
+                        disabled={disable}
                         type={showPassword ? "text" : "password"}
                         {...field}
                         placeholder="กรอกรหัสผ่าน"
@@ -164,6 +170,7 @@ export const GlobalFormField = <T extends FieldValues, Name extends Path<T>>({
                   ) : (
                     <Input
                       {...field}
+                      disabled={disable}
                       type="text"
                       placeholder={placeholder}
                       onChange={handleStringChange}

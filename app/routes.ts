@@ -44,24 +44,15 @@ export default [
     //     route("/:id", "routes/users/single.tsx"),
     //     route("/create", "routes/users/create.tsx"),
     //   ]),
-    //   // profile
-    //   ...prefix("profile", [
-    //     index("routes/locations/index.tsx"),
-    //     route("/:id", "routes/locations/single.tsx"),
-    //     route("/create", "routes/locations/create.tsx"),
-    //   ]),
-    //   // departusersment
-    //   ...prefix("users", [
-    //     index("routes/department/index.tsx"),
-    //     route("/:id", "routes/department/single.tsx"),
-    //     route("/create", "routes/department/create.tsx"),
-    //   ]),
-    //   // setting
-    //   ...prefix("setting", [
-    //     index("routes/department/index.tsx"),
-    //     route("/:id", "routes/department/single.tsx"),
-    //     route("/create", "routes/department/create.tsx"),
-    //   ]),
+
+    layout("routes/backoffice/settings/setting-layout.tsx", [
+      ...prefix("setting-organization", [
+        index("routes/backoffice/settings/setting.tsx"),
+        route("branch", "routes/backoffice/settings/branch/branch.tsx"),
+        // route("third-party", "routes/backoffice/settings/third-party.tsx"),
+        // route("permission", "routes/backoffice/settings/permission.tsx"),
+      ]),
+    ]),
   ]),
 
   // ]),

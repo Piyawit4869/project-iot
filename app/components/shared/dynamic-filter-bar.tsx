@@ -86,6 +86,9 @@ export function DynamicFilterBar<TData>({
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [sp] = useSearchParams();
+  const router = useNavigate();
+  const location = useLocation();
+
   const { isMobile } = useSidebar();
 
   const [form, setForm] = React.useState<Record<string, any>>({});
@@ -183,7 +186,7 @@ export function DynamicFilterBar<TData>({
                           <SelectValue placeholder={f.label as string} />
                         </SelectTrigger>
                         <SelectContent>
-                          {f.options?.map((o) => (
+                          {f.options?.map((o: any) => (
                             <SelectItem
                               key={`${f.id}-${o.value}`}
                               value={String(o.value)}

@@ -1,5 +1,3 @@
-"use client";
-
 import type { Table } from "@tanstack/react-table";
 import {
   ChevronLeft,
@@ -9,7 +7,6 @@ import {
 } from "lucide-react";
 
 import { useEffect, useRef } from "react";
-
 import { Button } from "../ui/button";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
 import {
@@ -34,7 +31,11 @@ export function TablePagination<TData>({
   sizeParamKey = "limit",
 }: TablePaginationProps<TData>) {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+
+  const router = useNavigate();
+  const location = useLocation();
+  const pathname = location.pathname;
+
   const [sp] = useSearchParams();
 
   // --- helpers ------------------------------------------------------

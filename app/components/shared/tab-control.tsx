@@ -1,5 +1,7 @@
 import * as Icons from "lucide-react";
-import type { ReactNode } from "react";
+
+import React from "react";
+
 import { Card, CardTitle } from "../ui/card";
 import { Link } from "react-router";
 
@@ -12,7 +14,7 @@ interface CardWithFormProps {
   title: string | React.ReactElement;
   backpath?: string | (() => void);
   subtitle?: string;
-  buttons?: ReactNode[];
+  buttons?: React.ReactNode[];
   admin?: boolean;
   tag?: TagProps;
   noneSticky?: boolean;
@@ -71,7 +73,7 @@ export function TabControl({
           </div>
 
           <div className="w-full md:w-1/2 flex justify-end gap-3 mt-2 sm:mt-0 ">
-            {buttons?.map((button: ReactNode, index: number) => (
+            {buttons?.map((button: React.ReactNode, index: number) => (
               <div key={index}>{button}</div>
             ))}
           </div>
