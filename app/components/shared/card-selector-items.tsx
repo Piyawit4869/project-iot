@@ -1,8 +1,11 @@
 import React from "react";
-import { Badge, Card } from "../ui";
+
 import { GlobalImage } from "./global-image";
 import { SelectorItemsModal } from "./modal/selector-items-modal";
-import { Item } from "@/types/global";
+
+import { Card } from "../ui/card";
+import { Badge } from "../ui/badge";
+import type { Item } from "~/types/global";
 
 interface CardSelectorItemsProps {
   multiple?: boolean;
