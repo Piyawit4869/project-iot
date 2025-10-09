@@ -16,6 +16,7 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GlobalModalStatic } from "./components/shared/modal/global-modal-static";
 import type { Route } from "./routes/backoffice/customer/+types";
+import { RouteProvider } from "./providers/RouteProvider";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const token = await getAccessToken(request);
@@ -23,11 +24,11 @@ export async function loader({ request }: Route.LoaderArgs) {
   try {
     const me = await getMe(token ?? "");
 
-    const user = me?.data?.user;
+    const user = me;
 
-    const user_data = me; // ! talk p aon
+    const user_data = me;
 
-    return { user, token, user_data };
+    return { user, token, user_data, me };
   } catch {
     return { token: "" };
   }
@@ -81,7 +82,9 @@ export default function App() {
         expand={false}
         toastOptions={{ className: "font-inter" }}
       />
-      <Outlet />
+      <RouteProvider>
+        <Outlet />
+      </RouteProvider>
     </QueryClientProvider>
   );
 }

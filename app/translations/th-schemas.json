@@ -1,0 +1,20 @@
+{
+  "Invalid email": "กรุณากรอกอีเมล",
+  "Invalid nameTh": "กรุณากรอกชื่อองค์กรภาษาไทย",
+  "Invalid userName": "กรุณากรอกชื่อผู้ใช้",
+  "Invalid nameEn": "กรุณากรอกชื่อองค์กรภาษาอังกฤษ",
+  "Invalid taxId": "กรุณากรอกหมายเลขภาษา 13 หลัก",
+  "Invalid website URL": "URL เว็บไซต์ไม่ถูกต้อง",
+  "Invalid phone number": "กรุณากรอกเบอร์โทรศัพท์",
+  "Invalid domainName": "กรุณากรอกชื่อโดเมน",
+  "Invalid contactName": "กรุณากรอกชื่อผู้ติดต่อ",
+  "Address name is required": "กรุณากรอกชื่อที่อยู่",
+  "City is required": "กรุณากรอกชื่อเมือง",
+  "Province is required": "กรุณากรอกชื่อจังหวัด",
+  "Postal code is required": "กรุณากรอกรหัสไปรษณีย์",
+  "Invalid photo URL": "กรุณาใส่รูปภาพ",
+  "Text display is required": "กรุณากรอกข้อความที่จะแสดง",
+  "Invalid domain format": "รูปแบบโดเมนไม่ถูกต้อง",
+  "Theme is required": "กรุณาเลือกธีม",
+  "Tax ID must be numeric only": "หมายเลขประจำตัวผู้เสียภาษีต้องเป็นตัวเลขเท่านั้น"
+}

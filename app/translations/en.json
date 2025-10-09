@@ -1,0 +1,388 @@
+
+{
+"components_home" : "Home",
+"components_assistant" : "Assistant",
+"components_attendance" : "Attendance",
+"components_overview" : "Overview",
+"components_work_information" : "Work Information",
+"components_whitelist" : "Whitelist",
+"components_approval" : "Approval",
+"components_notation" : "Notation",
+"components_all_notation" : "All Notation",
+"components_products_and_service" : "Products and service",
+"components_products" : "Products",
+"components_customer" : "Customer",
+"components_all_customer" : "all customer",
+"components_employee" : "Employee",
+"components_employee_" : "Employee",
+"components_role" : "Role",
+"components_employee_role" : "Employee Role",
+"components_setting" : "Setting",
+"components_organization" : "Organization",
+"components_branch" : "Branch",
+"components_address" : "Address",
+"components_assistant_setting" : "Assistant Setting",
+"components_settings" : "Settings",
+"components_main_sidrbar" : "Feature",
+
+
+
+"home_header" : 
+    "Welcome to HRM Portal",
+"home_description" : 
+    "Manage employees, documents, attendance, and performance — all in one place.",
+"home_attendance" : "Attendance",
+"home_attendance_description" : 
+    "Track check-in and check-out data in real-time.",
+"home_notation" : "Notation",
+"home_notation_description" : 
+    "Manage important HR documents and policies.",
+"home_Projects" : "Projects",
+"home_projects_description" : 
+     "Assign employees to projects and monitor timelines.",
+"home_performance" : "Performance","home_performance_description" : 
+    "Evaluate employee performance with built-in tools.",
+
+"all" : "Chat Results",
+"assistant_title_today" : "Today",
+"assistant_title_yesterday" : "Yesterday",
+"chat_ai" : "Hi, Marry! How can I help you?",
+"chatBot_chat_input" : "Type your message here...",
+
+"products_and_Services" : "Products and Services",
+"products_botton_create" : "create",
+"products_botton_text-sm" : "Edit",
+
+"products_accessorKey_imageUrl" : "Image",
+"products_accessorKey_sku" : "SKU",
+"products_accessorKey_name" : "Name",
+"products_accessorKey_description" : "Description",
+"products_accessorKey_price" : "Price",
+"products_accessorKey_actions" : "Actions",
+
+"shared_toolbar_placeholder" : "Filter tasks...",
+"shared_global_table_" : "Rows per page",
+
+"shared_global_table_of_" : "of",
+"shared_global_table_row_" : "row selected",
+
+"shared_global_table" : "Page",
+"shared_global_table_of" : "of",
+
+"edit_products" : "Edit Products",
+"edit_products_save" : "Save",
+"edit_products_delete" : "Delete",
+
+"edit_products_products_information" : 
+    "Products Information",
+"edit_products_name" : "name",
+"edit_products_brand" : "brand",
+"edit_products_detail" : "detail",
+"edit_products_description" : "description",
+
+"edit_products_products_detail" : 
+    "products Detail",
+"edit_products_bottleSize" : "bottleSize",
+"edit_products_weight" : "weight",
+"edit_products_width" : "width",
+"edit_products_height" : "Height",
+
+"edit_products_products_country" : 
+    "Prtoduct Country",
+"edit_products_country" : "country",
+"edit_products_subregion" : "subRegion",
+"edit_products_vintage" : "vintage",
+"edit_products_manufactureddate" : "manufacturedDate",
+"edit_products_expiredate" : "expireDate",
+"edit_products_reference" : "reference",
+
+"edit_products_products_price" : "Products Price",
+"edit_products_price" : "price",
+"edit_products_sku" : "SKU",
+"edit_products_quantity" : "quantity",
+
+"edit_products_products_image" : "Products Image",
+"edit_products_products_image_" : "Products Image",
+
+"edit_products_category" : "category",
+"edit_products_type" : "type",
+"edit_products_colour" : "colour",
+"edit_products_alcohol" : "alcohol",
+
+"edit_products_create_products" : "Create Products",
+"edit_products_create" : "Create",
+
+"edit_products_products_information_" : "Products Information",
+"edit_products_name_" : "name",
+"edit_products_brand_" : "brand",
+"edit_products_detail_" : "detail",
+"edit_products_description_" : "description",
+
+"edit_products_products_detail_" : 
+    "products Detail",
+"edit_products_bottleSize_" : "bottleSize",
+"edit_products_weight_" : "weight",
+"edit_products_width_" : "width",
+"edit_products_height_" : "Height",
+
+"edit_products_products_country_" : 
+    "Prtoduct Country",
+"edit_products_country_" : "country",
+"edit_products_subregion_" : "subRegion",
+"edit_products_vintage_" : "vintage",
+"edit_products_manufactureddate_" : "manufacturedDate",
+"edit_products_expiredate_" : "expireDate",
+"edit_products_reference_" : "reference",
+
+"edit_products_products_status_" : "Products status",
+"edit_products_price_" : "price",
+"edit_products_sku_" : "SKU",
+"edit_products_quantity_" : "quantity",
+
+"edit_products_products_image__" : "Products Image",
+"edit_products_products_image_-" : "Products Image",
+
+"edit_products_category_" : "category",
+"edit_products_type_" : "type",
+"edit_products_colour_" : "colour",
+"edit_products_alcohol_" : "alcohol",
+
+"users_index_user" : "Users",
+"users_index_create" : "Create",
+
+"users_index_image" : "Image",
+"users_index_user_name" : "User Name",
+"users_index_email" : "Email",
+"users_index_phone" : "Phone",
+"users_index_action" : "Action",
+"users_index_edit" : "Edit",
+
+"users_index_create_users" : "Create Users",
+"users_index_create_create" : "create",
+
+"users_index_users_information" : "Users Information",
+"users_index_users_user_name" : "User Name",
+"users_index_users_prefix" : "Prefix",
+"users_index_users_first_name" : "First Name",
+"users_index_users_last_name" : "Last Name",
+"users_index_users_first_name(th)" : "First Name(Th)",
+"users_index_users_last_name(th)" : "Last Name(Th)",
+"users_index_users_birth_date" : "Birth Date",
+
+"users_create_users_contact" : "Contact",
+"users_create_users_email" : "Email",
+"users_create_users_phone" : "Phone",
+
+"users_create_users_role_" : "Role",
+"users_create_users_tole" : "Role",
+"users_create_users_employee_tole": "Employee Role",
+
+"users_create_users_user_image" : "User Image",
+"users_create_users_image" : "Image",
+
+"users_create_users_active_" : "Active",
+"users_create_users_active" : "Active",
+
+"users_create_users_password_" : "Password",
+"users_create_users_password" : "Password",
+
+"users_edit_users_edit_users" : "Edit Users",
+"users_edit_users_save" : "Save",
+"users_edit_users_delete" : "Delete",
+
+"users_edit_users_information" : "Users Information",
+"users_edit_users_user_name" : "User Name",
+"users_edit_users_prefix" : "Prefix",
+"users_edit_users_first_name" : "First Name",
+"users_edit_users_last_name" : "Last Name",
+"users_edit_users_first_name(th)" : "First Name(Th)",
+"users_edit_users_last_name(th)" : "Last Name(Th)",
+"users_edit_users_birth_date" : "Birth Date",
+
+"users_edit_users_contact": "Contact",
+"users_edit_users_email": "Email",
+"users_edit_users_phone": "Phone",
+
+"users_edit_users_role_" : "Role",
+"users_edit_users_tole" : "Role",
+"users_edit_users_employee_tole": "Employee Role",
+
+"users_edit_users_user_image" : "User Image",
+"users_edit_users_image" : "Image",
+
+"users_edit_users_active_" : "Active",
+"users_edit_users_active" : "Active",
+
+"users_work_information_header" : 
+"Work Information",
+"users_work_information_description" : 
+"Here's a list of your tasks for this month!",
+
+"users_work_information_overview" :
+"Overview",
+"users_work_information_analytics" :
+"Analytics",
+
+"users_work_information_overview_content" :
+"Overview Content",
+"users_work_information_analytics_content" :
+"Analytics Content",
+
+"attendance_header" : "Attendance",
+"attendance_create" : "Create",
+
+"attendance_name" : "Name",
+"attendance_status" : "Status",
+"attendance_dueDate" : "DueDate",
+
+"work_information_header" : 
+"Work Information",
+"work_information_create" : "Create",
+"work_information_all" : "All",
+"work_information_primary" : "Primary",
+"work_information_extra" : "Extra",
+"work_information_ot" : "OT",
+
+"work_information_name" : "Name",
+"work_information_status" : "Status",
+"work_information_dueDate" : "DueDate",
+
+"whitelist_header" : "Whitelist",
+"whitelist_create" : "Create",
+
+"whitelist_all" : "All",
+"whitelist_pending" : "Pending",
+"whitelist_approved" : "Approved",
+"whitelist_rejected" : "Rejected",
+
+"whitelist_name" : "Name",
+"whitelist_status" : "Status",
+"whitelist_duedate" : "DueDate",
+
+"approved_header" : "Approval",
+"approved_create" : "Create",
+
+"approved_all" : "All",
+"approved_pending" : "Pending",
+"approved_approved" : "Approved",
+"approved_rejected" : "Rejected",
+
+"approved_name" : "Name",
+"approved_status" : "Status",
+"approved_duedate" : "DueDate",
+
+"role_create-role" : "Create Role",
+"role_create" : "Create",
+"role_status" : "Status",
+"role_name_role" : "Name Role",
+"role_description" : "Description",
+
+"role_index_role_header" : "Role",
+"role_index_role_cereate" : "Create",
+"role_index_role_name" : "Name",
+"role_index_role_description" : "Description",
+"role_index_role_action" : "Action",
+"role_index_role_edit" : "Edit",
+
+"setting_chatbot-setting_neme" : "Name",
+"setting_chatbot-setting_system" : "System instructions",
+"setting_chatbot-setting_model" : "Model",
+"setting_chatbot-setting_file" : "File Search",
+"setting_chatbot-setting_code" : "Code Interpreter",
+"setting_chatbot-setting_temperature" : "Temperature",
+"setting_chatbot-setting_Top P" : "Top P:",
+"setting_chatbot-setting_save" : "Save",
+
+"setting_index_setting" : "Setting",
+"setting_index_create" : "Create",
+"setting_index_organization active" : "Organization Active",
+"setting_index_theme" : "Theme",
+"setting_indextext_display" : "Text Display",
+"setting_indextext_domainname" : "DomainName",
+"setting_indextext_default language" : "Default Language",
+
+"organization_index_header" : "Organization",
+"organization_index_create" : "Create",
+"organization_index_organization" : "Organization Information",
+"organization_index_name" : "Name (TH)",
+"organization_index_name-" : "Name (EN)",
+"organization_index_descriptions" : "descriptions (TH)",
+"organization_index_descriptions-" : "descriptions (EN)",
+"organization_index_opening date" : "Opening Date",
+"organization_index_active" : "Organization Active",
+"organization_index_registration" : "Registration Details",
+"organization_index_register" : "Register VAT",
+"organization_index_fromtype" : "fromType",
+"organization_index_tax ID" : "Tax ID",
+"organization_index_type" : "Type & Status",
+"organization_index_status" : "Status",
+"organization_index_type_" : "Type",
+"organization_index_website" : "Website & Domain",
+"organization_index_link" : "Link Website",
+"organization_index_domain" : "Domain Name",
+
+"branch_index_header" : "Branch",
+"branch_index_reate" : "Create",
+"branch_index_branch_information" : "Branch Information",
+"branch_index_name" : "Name (TH)",
+"branch_index_name-" : "Name (EN)",
+"branch_index_descriptions" : "descriptions (TH)",
+"branch_index_descriptions-" : "descriptions (EN)",
+"branch_index_opening date" : "Opening Date",
+"branch_index_active" : "Branch Active",
+"branch_index_registration" : "Registration Details",
+"branch_index_register" : "Register VAT",
+"branch_index_fromtype" : "fromType",
+"branch_index_tax ID" : "Tax ID",
+"branch_index_type" : "Type & Status",
+"branch_index_status" : "Status",
+"branch_index_type_" : "Type",
+"branch_index_website" : "Website & Domain",
+"branch_index_link" : "Link Website",
+"branch_index_domain" : "Domain Name",
+
+"address_index_address" : "Address",
+"address_index_create" : "Create",
+"address_index_active" : "Active",
+"address_index_ismain" : "isMain",
+"address_index_language" : "Language",
+"address_index_address name" : "Address Name",
+"address_index_building" : "Building",
+"address_index_roomno" : "RoomNo",
+"address_index_floorno" : "FloorNo",
+"address_index_village" : "Village",
+"address_index_villageNo" : "VillageNo",
+"address_index_houseno" : "HouseNo",
+"address_index_alley" : "Alley",
+"address_index_road" : "Road",
+"address_index_nation" : "Nation",
+"address_index_sub district" : "Sub District",
+"address_index_district" : "District",
+"address_index_province" : "Province",
+"address_index_postalcode" : "PostalCode",
+"address_index_note" : "Note",
+
+"employee_role_index_header" : "Employee Role",
+"employee_role_index_create" : "Create",
+"employee_role_index_name" : "์Name",
+"employee_role_index_description" : "Description",
+"employee_role_index_action" : "Action",
+"employee_role_index_edit" : "Edit",
+
+"customer_index_header" : "Custome",
+"customer_index_create" : "Create",
+"customer_index_company" : "Company",
+"customer_index_name" : "Name",
+"customer_index_email" : "Email",
+"customer_index_phone" : "Phone",
+"customer_index_action" : "Action",
+"customer_index_edit" : "Edit",
+
+"notation_index_header" : "Notatio",
+"notation_index_create" : "Create",
+"notation_index_document number" : "Document Number",
+"notation_index_document name" : "Document Name",
+"notation_index_status" : "Status",
+"notation_index_action" : "Action",
+"notation_index_edit" : "Edit"
+}
