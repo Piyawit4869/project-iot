@@ -4,7 +4,6 @@ import React, { useState } from "react";
 
 import { DataTable } from "~/components/shared/data-table";
 
-import { Tabcontrol } from "~/components/shared/topsection";
 import { Button } from "~/components/ui/button";
 import { FileDown, FileUp, Plus } from "lucide-react";
 
@@ -16,6 +15,7 @@ import { useUserColumns } from "./component/columns";
 import { useAllUserSummary, usePaginate } from "~/api/client/user";
 import { Link } from "react-router";
 import { TabIndexTableUser, UserFilterFields } from "./component/initData";
+import { TabControl } from "~/components/shared/tab-control";
 
 export default function Users() {
   const { data: user, isLoading } = useAllUserSummary();
@@ -33,7 +33,7 @@ export default function Users() {
   };
   return (
     <div className="flex flex-col w-full space-y-8 p-8 dark:bg-background">
-      <Tabcontrol
+      <TabControl
         title="พนักงาน"
         buttons={[
           <GlobalButton
