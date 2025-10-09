@@ -3,13 +3,13 @@
 import * as React from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  type ColumnDef,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -20,16 +20,18 @@ import {
   TableRow,
 } from "../ui/table";
 import { FileSearch, CheckIcon } from "lucide-react";
-import { cn } from "@/libs/utils";
+
 import { TablePagination } from "./global-table";
 import { SkeletonLoading } from "./skeleton-loading";
 import { DataTableToolbar } from "./toolbar";
-import { UseQueryResult } from "@tanstack/react-query";
+
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
+import { cn } from "~/lib/utils";
+import type { UseQueryResult } from "@tanstack/react-query";
 
 function Checkbox({
   className,
@@ -56,7 +58,7 @@ const FormSchema = z.object({
 
 interface DataTableProps<
   TData extends Record<string, unknown>,
-  TKey extends keyof TData & string = keyof TData & string,
+  TKey extends keyof TData & string = keyof TData & string
 > {
   columns: ColumnDef<TData>[];
   queryFunction: (params: {
@@ -71,7 +73,7 @@ interface DataTableProps<
 
 export function TableCheckBox<
   TData extends Record<string, unknown>,
-  TKey extends keyof TData & string = keyof TData & string,
+  TKey extends keyof TData & string = keyof TData & string
 >({ columns, queryFunction, rowIdKey }: DataTableProps<TData, TKey>) {
   const [pagination, setPagination] = React.useState({
     pageIndex: 0,

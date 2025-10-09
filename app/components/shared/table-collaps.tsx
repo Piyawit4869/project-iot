@@ -3,8 +3,6 @@
 import * as React from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import {
-  ColumnDef,
-  Row,
   getCoreRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
@@ -12,11 +10,13 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-  ColumnFiltersState,
-  PaginationState,
-  SortingState,
-  VisibilityState,
   flexRender,
+  type ColumnDef,
+  type ColumnFiltersState,
+  type PaginationState,
+  type Row,
+  type SortingState,
+  type VisibilityState,
 } from "@tanstack/react-table";
 
 import {
@@ -28,8 +28,8 @@ import {
   TableRow,
 } from "../ui/table";
 
-import { UseQueryResult } from "@tanstack/react-query";
 import { SkeletonLoading } from "./skeleton-loading";
+import type { UseQueryResult } from "@tanstack/react-query";
 
 interface CollapeTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

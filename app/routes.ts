@@ -23,6 +23,15 @@ export default [
     // Home => Dashboard analytic
     index("routes/backoffice/home.tsx"),
 
+    ...prefix("users", [
+      index("routes/backoffice/users/index.tsx"),
+      // route("/:id/edit", "routes/users/single/edit.tsx"),
+      // route("/:id", "routes/users/single/view.tsx"),
+      // route("/create", "routes/users/create.tsx"),
+    ]),
+
+    //   // customer
+    //   ...prefix("customer", [
     // ...prefix(":organization", [
     //   // message
     //   ...prefix("message", [
