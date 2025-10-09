@@ -1,11 +1,14 @@
+import type { Table } from "@tanstack/react-table";
 import {
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
+
 import { useEffect, useRef } from "react";
 import { Button } from "../ui/button";
+import { useLocation, useNavigate, useSearchParams } from "react-router";
 import {
   Select,
   SelectContent,
@@ -13,8 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import type { Table } from "@tanstack/react-table";
-import { useLocation, useNavigate, useSearchParams } from "react-router";
 
 interface TablePaginationProps<TData> {
   table: Table<TData>;
@@ -29,6 +30,8 @@ export function TablePagination<TData>({
   pageParamKey = "page",
   sizeParamKey = "limit",
 }: TablePaginationProps<TData>) {
+  const navigate = useNavigate();
+
   const router = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
@@ -40,10 +43,8 @@ export function TablePagination<TData>({
     const next = new URLSearchParams(sp?.toString() ?? "");
     next.set(pageParamKey, String(pageIndex0 + 1)); // 1-based in URL
     next.set(sizeParamKey, String(pageSize));
-    // router.replace(`${pathname}?${next.toString()}`, { scroll: false });
-    router(`${pathname}?${next.toString()}`, {
-      replace: true,
-    });
+    navigate(`${pathname}?${next.toString()}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const setPageIndex = (i: number) => {

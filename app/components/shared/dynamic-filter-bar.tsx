@@ -3,7 +3,11 @@
 import * as React from "react";
 
 import { Search, X } from "lucide-react";
+import type { FilterField } from "../modules/[organization]/customer/utils/filter";
 import type { Table } from "@tanstack/react-table";
+
+import { useLocation, useNavigate, useSearchParams } from "react-router";
+import { useSidebar } from "../ui/sidebar";
 import { Input } from "../ui/input";
 import {
   Select,
@@ -14,9 +18,6 @@ import {
 } from "../ui/select";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
-import { useSidebar } from "../ui/sidebar";
-import { useLocation, useNavigate, useSearchParams } from "react-router";
-import type { FilterField } from "~/utils/filters";
 
 // --- helpers: encode/decode values into URL params -----------------
 
@@ -82,11 +83,11 @@ export function DynamicFilterBar<TData>({
   fields,
   className,
 }: Props<TData>) {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const [sp] = useSearchParams();
   const router = useNavigate();
   const location = useLocation();
-  const pathname = location.pathname;
-
-  const [sp] = useSearchParams();
 
   const { isMobile } = useSidebar();
 
@@ -127,7 +128,8 @@ export function DynamicFilterBar<TData>({
     });
 
     nextSp.set("page", "1"); // optional
-    router(`${pathname}?${nextSp.toString()}`, { replace: true });
+    navigate(`${pathname}?${nextSp.toString()}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Clear → reset everything
@@ -141,7 +143,8 @@ export function DynamicFilterBar<TData>({
     const nextSp = new URLSearchParams(sp?.toString() ?? "");
     fields.forEach((f) => nextSp.delete(f.id));
     nextSp.set("page", "1");
-    router(`${pathname}?${nextSp.toString()}`, { replace: false });
+    navigate(`${pathname}?${nextSp.toString()}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (

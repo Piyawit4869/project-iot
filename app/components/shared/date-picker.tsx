@@ -1,8 +1,9 @@
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
+import { th } from "date-fns/locale";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
-import { th } from "date-fns/locale";
+
 import { Calendar } from "../ui/calendar";
 
 interface DatePickerProps {

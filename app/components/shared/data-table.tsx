@@ -10,22 +10,17 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-  type ColumnDef,
-  type ColumnFiltersState,
-  type ColumnSizingState,
-  type PaginationState,
-  type SortingState,
-  type VisibilityState,
 } from "@tanstack/react-table";
-import { TablePagination } from "./global-table";
-import { SkeletonLoading } from "./skeleton-loading";
-import { FileSearch } from "lucide-react";
-import { SortableHeader } from "./sortIconTable";
-import { DynamicFilterBar } from "./dynamic-filter-bar";
-import { ColumnResizer } from "./column-resizer";
-import type { UseQueryResult } from "@tanstack/react-query";
-import { useSidebar } from "../ui/sidebar";
-import { cn } from "~/lib/utils";
+
+import type {
+  ColumnDef,
+  ColumnFiltersState,
+  ColumnSizingState,
+  PaginationState,
+  SortingState,
+  VisibilityState,
+} from "@tanstack/react-table";
+
 import {
   Table,
   TableBody,
@@ -35,6 +30,15 @@ import {
   TableRow,
 } from "../ui/table";
 
+import { TablePagination } from "./global-table";
+import { type UseQueryResult } from "@tanstack/react-query";
+import { SkeletonLoading } from "./skeleton-loading";
+import { FileSearch } from "lucide-react";
+import { SortableHeader } from "./sortIconTable";
+import { DynamicFilterBar } from "./dynamic-filter-bar";
+import { ColumnResizer } from "./column-resizer";
+import { useSidebar } from "../ui/sidebar";
+import { cn } from "~/lib/utils";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   offSearch?: boolean;

@@ -1,7 +1,10 @@
+"use client";
+
 import { useState } from "react";
+
 import React from "react";
 
-import PlaceholderImage from "public/assets/images/placeholder.webp";
+import PlaceholderImage from "/assets/images/placeholder.webp";
 import { cn } from "~/lib/utils";
 
 interface GlobalImageProps {
@@ -23,7 +26,7 @@ const GlobalImageComponent: React.FC<GlobalImageProps> = ({
   const [hasError, setHasError] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const imageSrc = !src || hasError ? PlaceholderImage : src;
+  const imageSrc = !src || hasError ? (PlaceholderImage as any).src : src;
 
   const ImagePreview: React.FC<{
     src: string;
