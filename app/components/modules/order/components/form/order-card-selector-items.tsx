@@ -1,8 +1,8 @@
 import React from "react";
-import { Badge } from "../ui";
-import { GlobalImage } from "./global-image";
-import { SelectorItemsModal } from "../modules/order/components/form/selector-items-modal";
-import { Item } from "@/types/global";
+import { GlobalImage } from "~/components/shared/global-image";
+import { SelectorItemsModal } from "~/components/modules/order/components/form/selector-items-modal";
+import { Badge } from "~/components/ui/badge";
+import type { Item } from "~/types/global";
 
 interface CardSelectorItemsProps {
   multiple?: boolean;

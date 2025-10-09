@@ -91,8 +91,8 @@ export function DynamicFilterBar<TData>({
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const { id } = useParams<{ id: string }>();
-  const getId = id ?? "";
+  const params = useParams();
+  const id = params?.id as string;
 
   const { isMobile } = useSidebar();
 
@@ -101,14 +101,14 @@ export function DynamicFilterBar<TData>({
   React.useEffect(() => {
     const next: Record<string, any> = {};
     fields.forEach((f) => {
-      next[f.id] = decodeValue(f.kind, getId);
+      next[f.id] = decodeValue(f.kind, id);
     });
     setForm(next);
     fields.forEach((f) => {
       table.getColumn(f.id)?.setFilterValue(next[f.id]);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getId, fields, table]);
+  }, [id, fields, table]);
 
   // convenience setter
   const update = (id: string, value: any) => {
@@ -123,7 +123,7 @@ export function DynamicFilterBar<TData>({
       table.getColumn(f.id)?.setFilterValue(form[f.id]);
     });
 
-    const nextSp = new URLSearchParams(getId?.toString() ?? "");
+    const nextSp = new URLSearchParams(id?.toString() ?? "");
     // clear old filters
     fields.forEach((f) => nextSp.delete(f.id));
 
@@ -145,7 +145,7 @@ export function DynamicFilterBar<TData>({
 
     table.resetColumnFilters();
 
-    const nextSp = new URLSearchParams(getId?.toString() ?? "");
+    const nextSp = new URLSearchParams(id?.toString() ?? "");
     fields.forEach((f) => nextSp.delete(f.id));
     nextSp.set("page", "1");
     navigate(`${pathname}?${nextSp.toString()}`);

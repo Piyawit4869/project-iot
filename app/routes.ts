@@ -47,6 +47,12 @@ export default [
       route("/:id", "routes/backoffice/customer/single.tsx"),
       // route("/:id/edit", "routes/tickets/single/edit.tsx"),
     ]),
+    ...prefix("orders", [
+      index("routes/backoffice/orders/index.tsx"),
+      route("/create", "routes/backoffice/orders/create.tsx"),
+      route("/:id", "routes/backoffice/orders/single.tsx"),
+      // route("/:id/edit", "routes/tickets/single/edit.tsx"),
+    ]),
     //   // products
     //   ...prefix("products", [
     //     index("routes/users/index.tsx"),

@@ -18,25 +18,25 @@ import {
 } from "~/schemas/customer/customer-form";
 
 export const useCustomerSetup = () => {
-  const { id } = useParams<{ id: string }>();
-  const getId = id ?? "";
+  const params = useParams();
+  const id = params?.id as string;
 
   const {
     data: customer,
     isLoading: loadCustomer,
     refetch: fetchCustomer,
-  } = useCustomer(getId);
+  } = useCustomer(id);
   const {
     data: customerNote,
     isLoading: loadCustomerNote,
     refetch: fetchCustomerNote,
-  } = useCustomerNote(getId);
+  } = useCustomerNote(id);
 
   const {
     data: customerAISetting,
     isLoading: loadCustomerAISetting,
     refetch: fetchCustomercAISetting,
-  } = useCustomerAiSetting(getId);
+  } = useCustomerAiSetting(id);
 
   const { data: users, isLoading: loadingUser } = usePaginateUsers({
     pageIndex: 1,

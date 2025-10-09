@@ -13,11 +13,11 @@ import type { ContactValues } from "~/schemas/customer/customer-form";
 
 export const useCustomerAction = () => {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
-  const getId = id ?? "";
+  const params = useParams();
+  const id = params?.id as string;
 
   const { mutate: deleted } = useDeleteCustomer();
-  const { mutate: createContact } = useCreateContact(getId);
+  const { mutate: createContact } = useCreateContact(id);
   const { mutate: updateContact } = useUpdateContact();
   const { mutate: deletedContact } = useDeleteContact();
 
@@ -31,7 +31,7 @@ export const useCustomerAction = () => {
         const toastId = toast.loading("กำลังลบข้อมูลลูกค้า...", {
           position: "bottom-right",
         });
-        deleted(getId, {
+        deleted(id, {
           onSuccess: () => {
             toast.success("ลบข้อมูลลูกค้าเรียบร้อยแล้ว !", {
               id: toastId,

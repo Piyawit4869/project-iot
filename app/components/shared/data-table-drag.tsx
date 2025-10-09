@@ -20,21 +20,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  Row,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -44,24 +30,8 @@ import {
   ColumnsIcon,
   GripVerticalIcon,
 } from "lucide-react";
-import { z, ZodTypeAny } from "zod";
-
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
+import { z, type ZodTypeAny } from "zod/v3";
+import { Button } from "../ui/button";
 import {
   Table,
   TableBody,
@@ -69,9 +39,38 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+} from "../ui/table";
+import {
+  flexRender,
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+  type ColumnDef,
+  type ColumnFiltersState,
+  type Row,
+  type SortingState,
+  type VisibilityState,
+} from "@tanstack/react-table";
+import { Tabs, TabsContent } from "../ui/tabs";
 import { DataTableToolbar } from "./toolbar";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Label } from "../ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 type DataTableDragProps<T extends ZodTypeAny> = {
   label?: string;
