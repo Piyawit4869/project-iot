@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { cn } from "@/libs/utils";
 import * as Icons from "lucide-react";
 import { useId } from "react";
-import { useUpload } from "@/actions/upload/client/useGetUpload";
 import { GlobalImage } from "./global-image";
+import { cn } from "~/lib/utils";
+import { useUpload } from "~/api/client/upload";
 
 type ImageUploadMultiProps = {
   value: string[];

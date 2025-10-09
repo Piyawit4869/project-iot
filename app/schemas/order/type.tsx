@@ -118,6 +118,7 @@ export interface ProductColumn {
   quantity: number;
   costPrice: number;
   active: boolean;
+  updatedById: string;
 }
 
 export interface OrderFormProps {

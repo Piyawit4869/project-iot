@@ -25,7 +25,7 @@ export const ProductOptionSchema = z.object({
 });
 
 export const ProductVariantSchema = z.object({
-  id: z.string().uuid().optional(),
+  id: z.uuid().optional(),
   title: z.string().trim(),
   optionValues: z.array(z.string()).default([]),
   // เก็บเป็น string ให้ตรงกับ UI ปัจจุบัน

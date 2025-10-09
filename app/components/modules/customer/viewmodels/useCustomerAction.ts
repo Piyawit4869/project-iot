@@ -39,7 +39,7 @@ export const useCustomerAction = () => {
               duration: 2500,
               position: "bottom-right",
             });
-            navigate(`/organization/customer`);
+            navigate(`/customer`);
           },
           onError: () => {
             toast.error("ไม่สามารถลบข้อมูลลูกค้าได้", {

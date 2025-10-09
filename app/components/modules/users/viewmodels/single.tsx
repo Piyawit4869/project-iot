@@ -63,7 +63,7 @@ export default function SingleUsers() {
         }
       : undefined,
     base: data && {
-      href: `/user/${data?.id}`,
+      href: `/users/${data?.id}`,
       label: displayName,
       uuid: data?.id,
     },

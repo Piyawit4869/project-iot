@@ -15,7 +15,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { SkeletonLoading } from "./skeleton-loading";
 import { GlobalImage } from "./global-image";
-import { useRouteLoaderData } from "react-router";
+import { useNavigate, useRouteLoaderData } from "react-router";
 
 type ItemMenuType = {
   key: string;
@@ -26,6 +26,7 @@ type ItemMenuType = {
 
 export function Menu() {
   const { me } = useRouteLoaderData("root");
+  const navigate = useNavigate();
   const [isDark, setIsDark] = React.useState<boolean>(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("theme") === "dark";
@@ -68,13 +69,13 @@ export function Menu() {
     {
       key: "profile",
       label: "โปรไฟล์",
-      path: `/organization/user/${me?.id}`, // เปลี่ยนเป็น dynamic user id
+      path: `/users/${me?.id}`, // เปลี่ยนเป็น dynamic user id
       icon: Icons.User,
     },
     {
       key: "setting",
       label: "ตั้งค่า",
-      path: "/organization/setting-organization",
+      path: "/setting-organization",
       icon: Icons.Settings,
     },
   ];
@@ -185,7 +186,7 @@ export function Menu() {
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            // onClick={() => signOut()}
+            onClick={() => navigate("/logout")}
             className="cursor-pointer"
           >
             <Icons.LogOut className="ml-1 mr-2 w-5 h-5" />

@@ -1,5 +1,4 @@
 // import { type RouteConfig, index } from "@react-router/dev/routes";
-
 // export default [index("routes/home.tsx")] satisfies RouteConfig;
 
 import {
@@ -13,7 +12,7 @@ import {
 export default [
   // Public
   route("login", "routes/login.tsx"),
-  //   route("/logout", "routes/logout.tsx"),
+  route("/logout", "routes/logout.tsx"),
 
   // Protected wrapper
   // Admin area layout (protected)
@@ -29,6 +28,20 @@ export default [
       route("create", "routes/backoffice/users/create.tsx"),
       route("/:id", "routes/backoffice/users/single.tsx"),
       // route("/:id", "routes/backoffice/users/edit.tsx"),
+    ]),
+
+    // Products
+    ...prefix("products", [
+      index("routes/backoffice/products/index.tsx"),
+      route("create", "routes/backoffice/products/create.tsx"),
+      route(":id", "routes/backoffice/products/single.tsx"),
+    ]),
+
+    // Inventories
+    ...prefix("inventory", [
+      index("routes/backoffice/inventory/index.tsx"),
+      route("create", "routes/backoffice/inventory/create.tsx"),
+      route(":id", "routes/backoffice/inventory/single.tsx"),
     ]),
 
     //   // customer
@@ -69,6 +82,8 @@ export default [
         // route("permission", "routes/backoffice/settings/permission.tsx"),
       ]),
     ]),
+
+    route("login-log", "routes/backoffice/login-log.tsx"),
   ]),
 
   // ]),
