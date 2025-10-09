@@ -3,10 +3,15 @@
 import * as React from "react";
 
 import { Search, X } from "lucide-react";
-import type { FilterField } from "../modules/[organization]/customer/utils/filter";
+import type { FilterField } from "../modules/customer/utils/filter";
 import type { Table } from "@tanstack/react-table";
 
-import { useLocation, useNavigate, useSearchParams } from "react-router";
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router";
 import { useSidebar } from "../ui/sidebar";
 import { Input } from "../ui/input";
 import {
@@ -85,9 +90,9 @@ export function DynamicFilterBar<TData>({
 }: Props<TData>) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const [sp] = useSearchParams();
-  const router = useNavigate();
-  const location = useLocation();
+
+  const { id } = useParams<{ id: string }>();
+  const getId = id ?? "";
 
   const { isMobile } = useSidebar();
 
@@ -96,14 +101,14 @@ export function DynamicFilterBar<TData>({
   React.useEffect(() => {
     const next: Record<string, any> = {};
     fields.forEach((f) => {
-      next[f.id] = decodeValue(f.kind, sp.get(f.id));
+      next[f.id] = decodeValue(f.kind, getId);
     });
     setForm(next);
     fields.forEach((f) => {
       table.getColumn(f.id)?.setFilterValue(next[f.id]);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sp, fields, table]);
+  }, [getId, fields, table]);
 
   // convenience setter
   const update = (id: string, value: any) => {
@@ -118,7 +123,7 @@ export function DynamicFilterBar<TData>({
       table.getColumn(f.id)?.setFilterValue(form[f.id]);
     });
 
-    const nextSp = new URLSearchParams(sp?.toString() ?? "");
+    const nextSp = new URLSearchParams(getId?.toString() ?? "");
     // clear old filters
     fields.forEach((f) => nextSp.delete(f.id));
 
@@ -140,7 +145,7 @@ export function DynamicFilterBar<TData>({
 
     table.resetColumnFilters();
 
-    const nextSp = new URLSearchParams(sp?.toString() ?? "");
+    const nextSp = new URLSearchParams(getId?.toString() ?? "");
     fields.forEach((f) => nextSp.delete(f.id));
     nextSp.set("page", "1");
     navigate(`${pathname}?${nextSp.toString()}`);

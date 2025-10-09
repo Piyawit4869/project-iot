@@ -25,9 +25,7 @@ type ItemMenuType = {
 };
 
 export function Menu() {
-  const { user: me } = useRouteLoaderData("root");
-
-  // อ่านค่า dark mode จาก localStorage แค่ตอนเริ่มต้น (mount)
+  const { me } = useRouteLoaderData("root");
   const [isDark, setIsDark] = React.useState<boolean>(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("theme") === "dark";
@@ -35,7 +33,6 @@ export function Menu() {
     return false;
   });
 
-  // ซิงก์ dark class และ localStorage เมื่อ isDark เปลี่ยน
   React.useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add("dark");

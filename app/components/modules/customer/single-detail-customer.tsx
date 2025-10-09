@@ -3,7 +3,7 @@
 import { Link, Save, X } from "lucide-react";
 
 import React from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import { toast } from "sonner";
 import { useCustomerViewModel } from "./viewmodels/useCustomerViewModel";
 import { useGetAllUsers } from "~/api/client/customer/useGetUsers";
@@ -22,19 +22,27 @@ import { Card, CardContent } from "~/components/ui/card";
 import { DataTable } from "~/components/shared/data-table";
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
 import { useOrdersPaginateFilter } from "~/api/client/order/useGetOrder";
+import { FormCustomerDetailCard } from "./components/form/customer-detail-form";
+import { FormCustomerInfoCard } from "./components/form/customer-info-form";
+import { FormCustomerContact } from "./components/form/customer-contact-form";
+import { ViewCustomerDeatailCard } from "./components/view/customer-detail-view";
+import { ViewCustomerInfoCard } from "./components/view/customer-info-view";
+import { ViewCustomerContact } from "./components/view/customer-contact";
+import { RelationshipCard } from "./components/relationship";
+import { ViewCustomerActivityLog } from "./components/customer-activityLog";
 
 export default function SingDetailleCustomer() {
   const navigate = useNavigate();
-  const [sp] = useSearchParams();
-  const id = sp.get("id") ?? "";
+  const { id } = useParams<{ id: string }>();
+  const getId = id ?? "";
 
   const {
     state: { customer, loadCustomer, formUpdate, isUpdating },
   } = useCustomerViewModel();
 
   const { isLoading } = useGetAllUsers();
-  const { data: getData, isLoading: isLoadingAiNote } = useGetAiNote(id);
-  const { mutate: update, isPending } = useUpdateCustomer(id);
+  const { data: getData, isLoading: isLoadingAiNote } = useGetAiNote(getId);
+  const { mutate: update, isPending } = useUpdateCustomer(getId);
   const [isEdit, setIsEdit] = React.useState(false);
   const [AIOpen, setAIOpen] = React.useState(false);
 
@@ -52,20 +60,20 @@ export default function SingDetailleCustomer() {
   const nameContactState = formUpdate.getFieldState("contacts.0.name");
   const { isDirty } = formUpdate.formState;
 
-  useEntityBreadcrumb({
-    feature: "customer",
-    entity: customer
-      ? {
-          id: id,
-          name: fullName || lineName || otherName,
-        }
-      : undefined,
-    base: customer && {
-      href: `/customers/${id}`,
-      label: fullName || lineName || otherName,
-      uuid: id,
-    },
-  });
+  // useEntityBreadcrumb({
+  //   feature: "customer",
+  //   entity: customer
+  //     ? {
+  //         id: id,
+  //         name: fullName || lineName || otherName,
+  //       }
+  //     : undefined,
+  //   base: customer && {
+  //     href: `/customers/${id}`,
+  //     label: fullName || lineName || otherName,
+  //     uuid: id,
+  //   },
+  // });
 
   const onUpdate = (values: CustomerValues) => {
     const payload = Object.assign({}, values);
@@ -133,8 +141,6 @@ export default function SingDetailleCustomer() {
       consentPii: dataFromAI.consentPii ?? baseValues.consentPii,
       remark: dataFromAI.summary || baseValues.remark,
     };
-
-    console.log({ payload });
 
     GlobalModal.info({
       title: "ยืนยันการ Sync ข้อมูลจาก AI ",
@@ -276,7 +282,7 @@ export default function SingDetailleCustomer() {
             <form id="customer" onSubmit={formUpdate.handleSubmit(onUpdate)}>
               <div className="flex w-full gap-3 flex-col md:flex-row">
                 <div className="flex-1 flex flex-col gap-3 transition-all">
-                  {/* {isEdit ? (
+                  {isEdit ? (
                     <>
                       <FormCustomerDetailCard
                         form={formUpdate}
@@ -307,18 +313,18 @@ export default function SingDetailleCustomer() {
                         loading={loadCustomer}
                       />
                     </>
-                  )} */}
+                  )}
                 </div>
 
                 <div className="flex-1 flex flex-col gap-3 transition-all h-full">
-                  {/* <RelationshipCard
+                  <RelationshipCard
                     form={formUpdate}
                     customer={customer}
                     loading={loadCustomer}
                     isEdit={isEdit}
                     users={[]}
                   />
-                  <ViewCustomerActivityLog loading={loadCustomer} /> */}
+                  <ViewCustomerActivityLog loading={loadCustomer} />
                 </div>
               </div>
             </form>

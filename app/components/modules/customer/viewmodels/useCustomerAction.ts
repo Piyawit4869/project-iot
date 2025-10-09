@@ -1,6 +1,6 @@
 "use client";
 
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import { toast } from "sonner";
 import {
   useCreateContact,
@@ -13,11 +13,11 @@ import type { ContactValues } from "~/schemas/customer/customer-form";
 
 export const useCustomerAction = () => {
   const navigate = useNavigate();
-  const [sp] = useSearchParams();
-  const id = sp.get("id") ?? "";
+  const { id } = useParams<{ id: string }>();
+  const getId = id ?? "";
 
   const { mutate: deleted } = useDeleteCustomer();
-  const { mutate: createContact } = useCreateContact(id);
+  const { mutate: createContact } = useCreateContact(getId);
   const { mutate: updateContact } = useUpdateContact();
   const { mutate: deletedContact } = useDeleteContact();
 
@@ -31,7 +31,7 @@ export const useCustomerAction = () => {
         const toastId = toast.loading("กำลังลบข้อมูลลูกค้า...", {
           position: "bottom-right",
         });
-        deleted(id, {
+        deleted(getId, {
           onSuccess: () => {
             toast.success("ลบข้อมูลลูกค้าเรียบร้อยแล้ว !", {
               id: toastId,
