@@ -49,8 +49,6 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
             nickName || ""
           }`.trim();
 
-          console.log({ id });
-
           return (
             <Link to={`/users/${id}`}>
               <span className="text-sm text-muted-foreground hover:underline">
@@ -186,30 +184,33 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
       {
         id: "actions",
         header: "การดำเนินการ",
-        cell: ({ row }) => (
-          <div className="flex items-center gap-2">
-            <Link to={`/users/${row.original.id}}`}>
-              <Button
-                className="h-9 w-9 p-0 bg-[#737373] hover:bg-[#5E5E5E]"
-                aria-label="แก้ไข"
-                title="แก้ไข"
-              >
-                <PenLine className="w-4 h-4 text-white" />
-              </Button>
-            </Link>
+        cell: (info) => {
+          const id = info.row.original.id;
+          return (
+            <div className="flex items-center gap-2">
+              <Link to={`/users/${id}`}>
+                <Button
+                  className="h-9 w-9 p-0 bg-[#737373] hover:bg-[#5E5E5E]"
+                  aria-label="แก้ไข"
+                  title="แก้ไข"
+                >
+                  <PenLine className="w-4 h-4 text-white" />
+                </Button>
+              </Link>
 
-            <div className="w-9">
-              <GlobalButton
-                label=""
-                icon={<Trash className="w-4 h-4 text-white" />}
-                onClick={() => {}}
-                className="h-10 w-10 p-0 bg-[#FF7062] text-white hover:bg-[#E8594B] hover:text-white transition-colors"
-                aria-label="ลบ"
-                disabled
-              />
+              <div className="w-9">
+                <GlobalButton
+                  label=""
+                  icon={<Trash className="w-4 h-4 text-white" />}
+                  onClick={() => {}}
+                  className="h-10 w-10 p-0 bg-[#FF7062] text-white hover:bg-[#E8594B] hover:text-white transition-colors"
+                  aria-label="ลบ"
+                  disabled
+                />
+              </div>
             </div>
-          </div>
-        ),
+          );
+        },
       },
     ],
     []

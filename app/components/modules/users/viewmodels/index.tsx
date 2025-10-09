@@ -15,7 +15,7 @@ import { useUserColumns } from "../component/columns";
 import { useAllUserSummary, usePaginate } from "~/api/client/user";
 import { Link } from "react-router";
 import { TabControl } from "~/components/shared/tab-control";
-import { TabIndexTableUser } from "~/types/user/init-data";
+import { TabIndexTableUser, UserFilterFields } from "~/types/user/init-data";
 
 export default function Users() {
   const { data: user, isLoading } = useAllUserSummary();
@@ -98,7 +98,7 @@ export default function Users() {
             </TabsList>
           </Tabs>
         }
-        // customerFilterFields={UserFilterFields}
+        customerFilterFields={UserFilterFields}
         isCustomLoading={isLoading}
       />
     </div>

@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import ImageUpload from "~/components/shared/image-upload";
 
 import { GlobalFormField } from "~/components/shared/global-form";
-import { getRequiredPaths } from "~/utils/getRequiredPathsFromZod";
+
 import { DatePicker } from "~/components/shared/date-picker";
 import { RequiredLabel } from "~/components/shared/required-design";
 import {
@@ -42,6 +42,7 @@ import {
 } from "~/components/ui/popover";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
+import { getRequiredPaths } from "~/utils/form-adapter";
 
 type OptionItem = { id: string; name: string; active?: boolean };
 
@@ -257,7 +258,7 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                             );
                           })}
 
-                          {/* <Popover
+                          <Popover
                             open={openSub}
                             onOpenChange={(v) => {
                               setOpenSub(v);
@@ -304,7 +305,7 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                                 </CommandList>
                               </Command>
                             </PopoverContent>
-                          </Popover> */}
+                          </Popover>
                           <Popover
                             open={openSub}
                             onOpenChange={(v) => {

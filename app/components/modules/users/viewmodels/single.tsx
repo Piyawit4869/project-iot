@@ -8,7 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Card } from "~/components/ui/card";
 
 import dayjs from "dayjs";
-import "dayjs/locale/th";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 
@@ -26,14 +25,15 @@ import {
 import { useNavigate, useParams } from "react-router";
 import { UsersFormSchema, type UsersFormValues } from "~/schemas/users/user";
 import { TabControl } from "~/components/shared/tab-control";
-import { UserDocuments } from "../components/formDocuments";
 import { UserSocalmedias } from "../components/formSocalmedia";
 import { UserStudy } from "../components/formStudy";
 import { UserWorkExperience } from "../components/formworkExperiences";
 import { UserSkills } from "../components/formSkills";
 import { UserCompensation } from "../components/formCompensation";
 import { UserProfileEdit } from "../components/formInformationEdit";
-import { EditUsersView } from "./edit-users-view";
+import { UserDocuments } from "../components/formDocuments";
+import { SingleUsersView } from "./single-users-view";
+
 dayjs.locale("th");
 
 const isSameEmail = (a?: string | null, b?: string | null) => {
@@ -42,7 +42,7 @@ const isSameEmail = (a?: string | null, b?: string | null) => {
   return A === B;
 };
 
-export const EditUsers = () => {
+export default function SingleUsers() {
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
 
@@ -305,7 +305,7 @@ export const EditUsers = () => {
                 data?.profile?.lastName ?? ""
               }`
         }
-        backpath="/user"
+        backpath="/users"
         buttons={[
           isEdit ? (
             <div className="w-full flex flex-row pl-10" key="edit-actions">
@@ -418,7 +418,7 @@ export const EditUsers = () => {
               </form>
             </Form>
           ) : (
-            <EditUsersView
+            <SingleUsersView
               data={data}
               onEdit={() => setIsEdit(true)}
               onDelete={() => params.id && handleDelete(params.id)}
@@ -429,4 +429,4 @@ export const EditUsers = () => {
       )}
     </div>
   );
-};
+}

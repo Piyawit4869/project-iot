@@ -21,9 +21,11 @@ import { UserStudy } from "../components/formStudy";
 import { UserSocalmedias } from "../components/formSocalmedia";
 import { UserDocuments } from "../components/formDocuments";
 
-export const CreateUsers = () => {
+export default function CreateUsers() {
   const navigate = useNavigate();
   const { data } = useGetAllDepartments(true);
+
+  console.log({ data });
 
   const form = useForm<UsersFormValues>({
     resolver: zodResolver(UsersFormSchema as any),
@@ -158,4 +160,4 @@ export const CreateUsers = () => {
       </Form>
     </div>
   );
-};
+}

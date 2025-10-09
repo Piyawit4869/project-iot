@@ -53,8 +53,8 @@
     {
       "name": "พนักงาน",
       "key": "employee",
-      "path": "/organization/user",
-      "icon": "User",
+      "path": "/users",
+      "icon": "Users",
       "isActive": false
     },
     {

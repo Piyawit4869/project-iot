@@ -41,7 +41,9 @@ const GlobalButton = ({
       variant={variant}
       disabled={loading || disabled}
       style={{ width: "100%" }}
-      className={`${className} ${variant === "outline" && "border"} rounded-md px-4 py-2 flex items-center justify-center`}
+      className={`${className} ${
+        variant === "outline" && "border"
+      } rounded-md px-4 py-2 flex items-center justify-center`}
     >
       {loading ? <Loader2 className="animate-spin" /> : null}
       {icon ? <span className="inline-flex">{icon}</span> : null}

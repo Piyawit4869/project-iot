@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Card } from "~/components/ui/card";
 import type { UsersFormValues } from "~/schemas/users/user";
@@ -18,7 +16,7 @@ type EditUsersViewProps = {
   onDelete?: () => void;
 };
 
-export const EditUsersView: React.FC<EditUsersViewProps> = ({
+export const SingleUsersView: React.FC<EditUsersViewProps> = ({
   data = {},
   loading = false,
 }) => {
