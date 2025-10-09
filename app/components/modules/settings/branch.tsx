@@ -3,8 +3,10 @@ import { PenLine } from "lucide-react";
 import { Link } from "react-router";
 import { usePaginateBranch } from "~/api/client/settings";
 import { DataTable } from "~/components/shared/data-table";
-import { GlobalStatusBadge } from "~/components/shared/global-statusTag";
-import { Tabcontrol } from "~/components/shared/topsection";
+import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
+
+import { TabControl } from "~/components/shared/tab-control";
+
 import { Button } from "~/components/ui/button";
 import { DateISOToDisplayDate } from "~/utils/date-format";
 
@@ -147,7 +149,7 @@ const columns: ColumnDef<Task>[] = [
 export const Branch: React.FC<BranchPageProps> = (props) => {
   return (
     <div className="flex flex-col w-full space-y-8">
-      <Tabcontrol title="สาขา" noneSticky={true} />
+      <TabControl title="สาขา" noneSticky={true} />
       {/* เปลี่ยน queryFunction  */}
       <DataTable
         queryFunction={usePaginateBranch}

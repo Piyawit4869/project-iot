@@ -1,6 +1,6 @@
 import { Briefcase, MapPinCheck, Settings } from "lucide-react";
 import React from "react";
-import { Tabcontrol } from "~/components/shared/topsection";
+
 import { Card } from "~/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import type { TabKey } from "~/types/settings";
@@ -27,6 +27,7 @@ import { RenderHeaderButtons } from "./components/render-header-buttons";
 import { useRouteLoaderData } from "react-router";
 import { SettingAddressForm } from "./components/setting-address-form";
 import { SettingForm } from "./components/setting-setting-form";
+import { TabControl } from "~/components/shared/tab-control";
 
 interface SettingsPageProps {}
 
@@ -229,7 +230,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
       className="w-full"
     >
       <div className="mb-4">
-        <Tabcontrol
+        <TabControl
           title="องค์กร"
           buttons={RenderHeaderButtons({
             isEditing,

@@ -6,10 +6,11 @@ import {
   FileUp,
 } from "lucide-react";
 import React from "react";
-import { Tabcontrol } from "~/components/shared/topsection";
+
 import GlobalButton from "~/components/shared/global-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Link, Outlet, useLocation } from "react-router";
+import { TabControl } from "~/components/shared/tab-control";
 
 export default function SettingLayout({
   children,
@@ -37,7 +38,7 @@ export default function SettingLayout({
   return (
     <React.Fragment>
       <div className="flex flex-col w-full space-y-8 px-8 pt-8">
-        <Tabcontrol
+        <TabControl
           title="การตั้งค่า"
           buttons={[
             <GlobalButton
