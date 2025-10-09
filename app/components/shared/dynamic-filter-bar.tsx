@@ -1,22 +1,23 @@
 "use client";
 
 import * as React from "react";
-import { Table } from "@tanstack/react-table";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Search, X } from "lucide-react";
+import type { FilterField } from "../modules/[organization]/customer/utils/filter";
+import type { Table } from "@tanstack/react-table";
+
+import { useLocation, useNavigate, useSearchParams } from "react-router";
+import { useSidebar } from "../ui/sidebar";
+import { Input } from "../ui/input";
 import {
   Select,
-  SelectTrigger,
   SelectContent,
   SelectItem,
+  SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { FilterField } from "@/app/(backoffice)/[organization]/customer/_modules/utils/filter";
-import { useSidebar } from "../ui";
-import { Search, X } from "lucide-react";
+} from "../ui/select";
+import { Checkbox } from "../ui/checkbox";
+import { Button } from "../ui/button";
 
 // --- helpers: encode/decode values into URL params -----------------
 
@@ -82,9 +83,9 @@ export function DynamicFilterBar<TData>({
   fields,
   className,
 }: Props<TData>) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const sp = useSearchParams();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const [sp] = useSearchParams();
   const { isMobile } = useSidebar();
 
   const [form, setForm] = React.useState<Record<string, any>>({});
@@ -124,7 +125,8 @@ export function DynamicFilterBar<TData>({
     });
 
     nextSp.set("page", "1"); // optional
-    router.replace(`${pathname}?${nextSp.toString()}`, { scroll: false });
+    navigate(`${pathname}?${nextSp.toString()}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Clear → reset everything
@@ -138,7 +140,8 @@ export function DynamicFilterBar<TData>({
     const nextSp = new URLSearchParams(sp?.toString() ?? "");
     fields.forEach((f) => nextSp.delete(f.id));
     nextSp.set("page", "1");
-    router.replace(`${pathname}?${nextSp.toString()}`, { scroll: false });
+    navigate(`${pathname}?${nextSp.toString()}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (

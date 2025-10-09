@@ -1,24 +1,20 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import {
-  Command,
-  CommandInput,
-  CommandList,
-  CommandItem,
-} from "@/components/ui/command";
+
 import { Check, Plus } from "lucide-react";
 import { FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { GlobalTagsBadge } from "./global-tags";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { Button } from "../ui/button";
+import { Command, CommandInput, CommandItem, CommandList } from "../ui/command";
 
 interface TagsSelectorModalProps {
   form: any;

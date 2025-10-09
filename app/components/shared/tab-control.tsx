@@ -1,7 +1,7 @@
-import React, { ReactNode } from "react";
-import { Card, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
 import * as Icons from "lucide-react";
+import type { ReactNode } from "react";
+import { Card, CardTitle } from "../ui/card";
+import { Link } from "react-router";
 
 interface TagProps {
   label: string;
@@ -18,7 +18,7 @@ interface CardWithFormProps {
   noneSticky?: boolean;
 }
 
-export function Tabcontrol({
+export function TabControl({
   title,
   backpath,
   subtitle,
@@ -36,7 +36,7 @@ export function Tabcontrol({
             {backpath ? (
               <div className="flex text-headFont gap-2 items-center">
                 {typeof backpath === "string" ? (
-                  <Link href={backpath} passHref>
+                  <Link to={backpath}>
                     <Icons.ChevronLeft className="text-base cursor-pointer" />
                   </Link>
                 ) : (
@@ -55,8 +55,8 @@ export function Tabcontrol({
                       tag.variant === "success"
                         ? "bg-green-100 text-green-700"
                         : tag.variant === "warning"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-red-100 text-red-700"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : "bg-red-100 text-red-700"
                     }`}
                   >
                     {tag.label}
@@ -79,59 +79,4 @@ export function Tabcontrol({
       </Card>
     </div>
   );
-}
-
-//TOFIX design responsive
-{
-  /* <Card className="p-4">
-  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-    {backpath ? (
-      <div className="flex flex-col sm:flex-row items-start sm:items-center text-headFont gap-2">
-        {typeof backpath === "string" ? (
-          <Link href={backpath} passHref>
-            <Icons.ChevronLeft className="text-base cursor-pointer" />
-          </Link>
-        ) : (
-          <button onClick={backpath} className="text-base cursor-pointer">
-            <Icons.ChevronLeft />
-          </button>
-        )}
-
-        <CardTitle className="text-xl break-words whitespace-normal">
-          {title}
-        </CardTitle>
-
-        {tag && (
-          <span
-            className={`ml-2 px-2 py-0.5 text-sm rounded-full ${
-              tag.variant === "success"
-                ? "bg-green-100 text-green-700"
-                : tag.variant === "warning"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : "bg-red-100 text-red-700"
-            }`}
-          >
-            {tag.label}
-          </span>
-        )}
-      </div>
-    ) : (
-      <CardTitle className="text-2xl break-words whitespace-normal">
-        {title}
-      </CardTitle>
-    )}
-
-    {subtitle && (
-      <CardTitle className="text-xl break-words whitespace-normal">
-        {subtitle}
-      </CardTitle>
-    )}
-
-    <div className="flex space-x-2">
-      {buttons?.map((button: ReactNode, index: number) => (
-        <div key={index}>{button}</div>
-      ))}
-    </div>
-  </div>
-</Card>; */
 }

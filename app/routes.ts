@@ -18,6 +18,8 @@ export default [
   // Protected wrapper
   // Admin area layout (protected)
   layout("routes/backoffice-layout.tsx", [
+    // route("routes/backoffice/[organization]/customer/index.tsx"),
+
     // Home => Dashboard analytic
     index("routes/backoffice/home.tsx"),
 
@@ -29,13 +31,13 @@ export default [
     //     route("/:id", "routes/tickets/single/view.tsx"),
     //     route("/create", "routes/tickets/create.tsx"),
     //   ]),
-    //   // customer
-    //   ...prefix("customer", [
-    //     index("routes/tickets/index.tsx"),
-    //     route("/:id/edit", "routes/tickets/single/edit.tsx"),
-    //     route("/:id", "routes/tickets/single/view.tsx"),
-    //     route("/create", "routes/tickets/create.tsx"),
-    //   ]),
+    // customer
+    ...prefix("customer", [
+      index("routes/backoffice/customer/index.tsx"),
+      route("/create", "routes/backoffice/customer/create/index.tsx"),
+      // route("/:id/edit", "routes/tickets/single/edit.tsx"),
+      // route("/:id", "routes/tickets/single/view.tsx"),
+    ]),
     //   // products
     //   ...prefix("products", [
     //     index("routes/users/index.tsx"),

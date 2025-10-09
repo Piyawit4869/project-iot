@@ -1,16 +1,17 @@
 "use client";
 
-import { Table } from "@tanstack/react-table";
+import type { Table } from "@tanstack/react-table";
 import {
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
 import { useEffect, useRef } from "react";
 
 import { Button } from "../ui/button";
+import { useLocation, useNavigate, useSearchParams } from "react-router";
 import {
   Select,
   SelectContent,
@@ -32,16 +33,17 @@ export function TablePagination<TData>({
   pageParamKey = "page",
   sizeParamKey = "limit",
 }: TablePaginationProps<TData>) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const sp = useSearchParams();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const [sp] = useSearchParams();
 
   // --- helpers ------------------------------------------------------
   const updateUrl = (pageIndex0: number, pageSize: number) => {
     const next = new URLSearchParams(sp?.toString() ?? "");
     next.set(pageParamKey, String(pageIndex0 + 1)); // 1-based in URL
     next.set(sizeParamKey, String(pageSize));
-    router.replace(`${pathname}?${next.toString()}`, { scroll: false });
+    navigate(`${pathname}?${next.toString()}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const setPageIndex = (i: number) => {
