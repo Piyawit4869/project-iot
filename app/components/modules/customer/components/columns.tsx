@@ -101,7 +101,7 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
         const id = row.original.id;
         const name = fullName(row.original);
         return (
-          <Link to={`/organization/customer/${id}`}>
+          <Link to={`/customer/${id}`}>
             <span className="text-sm text-muted-foreground hover:underline">
               {name}
             </span>
@@ -126,7 +126,7 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
         }`.trim();
 
         return (
-          <Link to={`/organization/customer/${id}`}>
+          <Link to={` /customer/${id}`}>
             <span className="text-sm text-muted-foreground hover:underline">
               {fullName || "-"}
             </span>
@@ -340,7 +340,7 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
       enableSorting: false,
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
-          <Link to={`/organization/customer/${row.original.id}`}>
+          <Link to={`/customer/${row.original.id}`}>
             <Button
               className="h-9 w-9 p-0 bg-[#737373] hover:bg-[#5E5E5E]"
               aria-label="แก้ไข"

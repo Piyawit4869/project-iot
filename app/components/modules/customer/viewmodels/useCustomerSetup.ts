@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import React from "react";
 import { useForm, type Resolver } from "react-hook-form";
-import { useSearchParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import {
   useContact,
   useCustomer,
@@ -18,25 +18,25 @@ import {
 } from "~/schemas/customer/customer-form";
 
 export const useCustomerSetup = () => {
-  const [sp] = useSearchParams();
-  const id = sp.get("id") ?? "";
+  const { id } = useParams<{ id: string }>();
+  const getId = id ?? "";
 
   const {
     data: customer,
     isLoading: loadCustomer,
     refetch: fetchCustomer,
-  } = useCustomer(id);
+  } = useCustomer(getId);
   const {
     data: customerNote,
     isLoading: loadCustomerNote,
     refetch: fetchCustomerNote,
-  } = useCustomerNote(id);
+  } = useCustomerNote(getId);
 
   const {
     data: customerAISetting,
     isLoading: loadCustomerAISetting,
     refetch: fetchCustomercAISetting,
-  } = useCustomerAiSetting(id);
+  } = useCustomerAiSetting(getId);
 
   const { data: users, isLoading: loadingUser } = usePaginateUsers({
     pageIndex: 1,

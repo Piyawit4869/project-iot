@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import { usePathname } from "next/navigation";
-import translations from "../../../transtate/th-breadcamp.json";
+import translations from "~/translations/th-breadcamp.json";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,10 +10,11 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
-import { useRoute } from "@/providers/RouteProvider";
+import { useLocation } from "react-router";
+import { useRoute } from "~/providers/RouteProvider";
 
 export const HeaderBreadcrumb = () => {
-  const pathname = usePathname() as string;
+  const { pathname } = useLocation();
   const pathSegments = pathname.split("/").filter((segment) => segment);
 
   const { crumbs } = useRoute();
