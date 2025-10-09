@@ -76,24 +76,24 @@ export default function SettingLayout({
           className="w-full"
         >
           <TabsList>
-            <Link to="/organization/setting-organization">
+            <Link to="/setting-organization">
               <TabsTrigger value="manageorganization">
                 องค์กร
                 <Building className="w-4 h-4 mr-2" />
               </TabsTrigger>
             </Link>
-            <Link to="/organization/setting-organization/branch">
+            <Link to="/setting-organization/branch">
               <TabsTrigger value="branch">
                 สาขา
                 <Building2 className="w-4 h-4 mr-2" />
               </TabsTrigger>
             </Link>
-            <Link to="/organization/setting-organization/third-party">
+            {/* <Link to="/organization/setting-organization/third-party">
               <TabsTrigger value="third-party">
                 การเชื่อมต่อภายนอก
                 <BotMessageSquare className="w-4 h-4 mr-2" />
               </TabsTrigger>
-            </Link>
+            </Link> */}
 
             {/* <Link href="/organization/setting-organization/permission">
               <TabsTrigger value="permission">

@@ -41,7 +41,7 @@ export function TablePagination<TData>({
     next.set(pageParamKey, String(pageIndex0 + 1)); // 1-based in URL
     next.set(sizeParamKey, String(pageSize));
     // router.replace(`${pathname}?${next.toString()}`, { scroll: false });
-    router(`${location.pathname}?${next.toString()}`, {
+    router(`${pathname}?${next.toString()}`, {
       replace: true,
     });
   };

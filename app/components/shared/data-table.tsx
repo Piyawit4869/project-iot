@@ -187,9 +187,9 @@ export function DataTable<TData, TValue>({
           </>
         )}
       </div> */}
-      {/* {customerFilterFields && (
+      {customerFilterFields && (
         <DynamicFilterBar table={table} fields={customerFilterFields} />
-      )} */}
+      )}
 
       {addOn && <div>{addOn}</div>}
 
@@ -292,7 +292,7 @@ export function DataTable<TData, TValue>({
         </div>
       )}
 
-      {/* <TablePagination table={table} data={totalItems} /> */}
+      <TablePagination table={table} data={totalItems} />
     </div>
   );
 }

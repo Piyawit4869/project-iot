@@ -146,15 +146,14 @@ const columns: ColumnDef<Task>[] = [
 
 export const Branch: React.FC<BranchPageProps> = (props) => {
   return (
-    // <div className="flex flex-col w-full space-y-8">
-    //   <Tabcontrol title="สาขา" noneSticky={true} />
-    //   {/* เปลี่ยน queryFunction  */}
-    //   {/* <DataTable
-    //     queryFunction={usePaginateBranch}
-    //     columns={columns}
-    //     offFilter={true}
-    //   /> */}
-    // </div>
-    <>devv</>
+    <div className="flex flex-col w-full space-y-8">
+      <Tabcontrol title="สาขา" noneSticky={true} />
+      {/* เปลี่ยน queryFunction  */}
+      <DataTable
+        queryFunction={usePaginateBranch}
+        columns={columns}
+        offFilter={true}
+      />
+    </div>
   );
 };

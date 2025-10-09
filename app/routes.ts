@@ -23,7 +23,7 @@ export default [
     layout("routes/backoffice/settings/setting-layout.tsx", [
       ...prefix("setting-organization", [
         index("routes/backoffice/settings/setting.tsx"),
-        // route("branch", "routes/backoffice/settings/branch/branch.tsx"),
+        route("branch", "routes/backoffice/settings/branch/branch.tsx"),
         // route("third-party", "routes/backoffice/settings/third-party.tsx"),
         // route("permission", "routes/backoffice/settings/permission.tsx"),
       ]),
