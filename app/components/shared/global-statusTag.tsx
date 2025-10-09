@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import {
   UserPlus,
   CheckCircle,
@@ -13,6 +12,7 @@ import {
   Trash,
   X,
 } from "lucide-react";
+import { Badge } from "../ui/badge";
 
 /* How to use
 1. choose or add color in badgeVariants
