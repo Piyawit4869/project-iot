@@ -1,7 +1,8 @@
-import React, { ReactNode } from "react";
-import { Card, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
+import { Card, CardTitle } from "~/components/ui/card";
+
 import * as Icons from "lucide-react";
+import type { ReactNode } from "react";
+import { Link } from "react-router";
 
 interface TagProps {
   label: string;
@@ -36,7 +37,7 @@ export function Tabcontrol({
             {backpath ? (
               <div className="flex text-headFont gap-2 items-center">
                 {typeof backpath === "string" ? (
-                  <Link href={backpath} passHref>
+                  <Link to={backpath}>
                     <Icons.ChevronLeft className="text-base cursor-pointer" />
                   </Link>
                 ) : (
@@ -55,8 +56,8 @@ export function Tabcontrol({
                       tag.variant === "success"
                         ? "bg-green-100 text-green-700"
                         : tag.variant === "warning"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-red-100 text-red-700"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : "bg-red-100 text-red-700"
                     }`}
                   >
                     {tag.label}

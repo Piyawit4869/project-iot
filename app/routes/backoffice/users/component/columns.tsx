@@ -1,0 +1,214 @@
+import { GlobalImage } from "~/components/shared/global-image";
+import { GlobalStatusBadge } from "~/components/shared/global-statusTag";
+import { PenLine, Trash } from "lucide-react";
+import GlobalButton from "~/components/shared/global-button";
+import { useMemo } from "react";
+import { formatDateBirthDay } from "~/components/shared/global-format";
+import type { ColumnDef } from "@tanstack/react-table";
+import { Link } from "react-router";
+import { Button } from "~/components/ui/button";
+import { statusMap, type UserColumn } from "./initData";
+
+export const useUserColumns = (): ColumnDef<UserColumn>[] => {
+  const columns = useMemo<ColumnDef<UserColumn>[]>(
+    () => [
+      {
+        accessorKey: "profile.imageUrl",
+        header: "รูปภาพ",
+        cell: (info) => {
+          const url = info.getValue() as string;
+          const userName = info.row.original?.userName;
+
+          return (
+            <GlobalImage
+              src={url}
+              alt="user-image"
+              width={60}
+              height={60}
+              className="rounded-xl w-[60px] h-[60px] object-cover object-center"
+              fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${userName}`}
+            />
+          );
+        },
+      },
+      {
+        accessorKey: "profile",
+        header: "ชื่อ",
+        cell: (info) => {
+          const id = info.row.original.id;
+          const nickName = info.row.original.profile?.nickName
+            ? `( ${info.row.original.profile?.nickName} )`
+            : "";
+
+          const fullName = `${info.row.original.profile?.prefix || ""} ${
+            info.row.original.profile?.firstName || ""
+          } ${info.row.original.profile?.lastName || ""} ${
+            nickName || ""
+          }`.trim();
+
+          return (
+            <Link to={`/organization/user/${id}`}>
+              <span className="text-sm text-muted-foreground hover:underline">
+                {fullName || "-"}
+              </span>
+            </Link>
+          );
+        },
+      },
+      {
+        accessorKey: "emId",
+        header: "รหัสพนักงาน",
+        cell: (info) => (
+          <span className="">{(info.getValue() as string) || "-"}</span>
+        ),
+      },
+      {
+        accessorKey: "userName",
+        header: "User Name",
+        cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
+      },
+      {
+        accessorKey: "email",
+        header: "อีเมล",
+        minSize: 600,
+
+        cell: (info) => (
+          <span className="text-sm text-muted-foreground">
+            {(info.getValue() as string) || "-"}
+          </span>
+        ),
+      },
+      {
+        accessorKey: "active",
+        header: "เปิดใช้งาน",
+        cell: (info) => {
+          const status = info.getValue() as string;
+          return (
+            <span className="">
+              <GlobalStatusBadge value={status} />
+            </span>
+          );
+        },
+      },
+      {
+        accessorKey: "status",
+        header: "สถานะ",
+        cell: (info) => {
+          const status = info.getValue() as string;
+
+          const current = statusMap[status] || {
+            label: status || "-",
+            className: "text-xs",
+            icon: null,
+          };
+
+          return (
+            <div className="mt-1">
+              <span
+                className={`inline-flex items-center justify-center rounded-xl border py-1 px-3 text-sm font-medium w-fit whitespace-nowrap shrink-0 gap-1 transition-colors ${current.className}`}
+              >
+                {current.icon && (
+                  <span className="w-3 h-3 flex items-center justify-center">
+                    {current.icon}
+                  </span>
+                )}
+                {current.label}
+              </span>
+            </div>
+          );
+        },
+      },
+
+      {
+        accessorKey: "phone",
+        header: "เบอร์โทรศัพท์",
+        cell: (info) => (
+          <span className="">
+            {(info.row.original.profile?.phone as string) || "-"}
+          </span>
+        ),
+      },
+      {
+        accessorKey: "departmentName",
+        header: "แผนก",
+        cell: (info) => (
+          <span className="">{(info.getValue() as string) || "-"}</span>
+        ),
+      },
+      {
+        accessorKey: "gender",
+        header: "เพศ",
+        cell: (info) => (
+          <span className="">
+            {(info.row.original.profile?.gender as string) || "-"}
+          </span>
+        ),
+      },
+      {
+        accessorKey: "birthDate",
+        header: "วัน / เดือน / ปีเกิด",
+        cell: (info) => {
+          const value = info.row.original.profile?.birthDate as string;
+          return <span className="">{formatDateBirthDay(value)}</span>;
+        },
+      },
+      {
+        accessorKey: "updatedAt",
+        header: "วันที่แก้ไข",
+        cell: (info) => {
+          const value = info.getValue() as string;
+          return <span className="">{formatDateBirthDay(value)}</span>;
+        },
+      },
+      {
+        accessorKey: "updatedBy",
+        header: "ผู้ที่แก้ไข",
+        cell: (info) => {
+          const id = info.row.original.updatedById;
+          const name = (info.getValue() as string) || "-";
+
+          return id ? (
+            <Link to={`/organization/user/${id}`}>
+              <span className="text-sm text-muted-foreground hover:underline">
+                {name}
+              </span>
+            </Link>
+          ) : (
+            <span className="text-sm text-muted-foreground">{name}</span>
+          );
+        },
+      },
+      {
+        id: "actions",
+        header: "การดำเนินการ",
+        cell: ({ row }) => (
+          <div className="flex items-center gap-2">
+            <Link to={`/organization/user/${row.original.id}}`}>
+              <Button
+                className="h-9 w-9 p-0 bg-[#737373] hover:bg-[#5E5E5E]"
+                aria-label="แก้ไข"
+                title="แก้ไข"
+              >
+                <PenLine className="w-4 h-4 text-white" />
+              </Button>
+            </Link>
+
+            <div className="w-9">
+              <GlobalButton
+                label=""
+                icon={<Trash className="w-4 h-4 text-white" />}
+                onClick={() => {}}
+                className="h-10 w-10 p-0 bg-[#FF7062] text-white hover:bg-[#E8594B] hover:text-white transition-colors"
+                aria-label="ลบ"
+                disabled
+              />
+            </div>
+          </div>
+        ),
+      },
+    ],
+    []
+  );
+
+  return columns;
+};

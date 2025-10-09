@@ -1,13 +1,25 @@
 "use client";
 
 import * as React from "react";
+
+import { TablePagination } from "./global-table";
+import { SkeletonLoading } from "./skeleton-loading";
+import { FileSearch, Table } from "lucide-react";
+import { SortableHeader } from "./sortIconTable";
+import { DynamicFilterBar } from "./dynamic-filter-bar";
+
+import { ColumnResizer } from "./column-resizer";
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  ColumnSizingState,
-  PaginationState,
-  SortingState,
-  VisibilityState,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
+import { useSidebar } from "../ui/sidebar";
+import { cn } from "~/lib/utils";
+import type { UseQueryResult } from "@tanstack/react-query";
+import {
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -16,26 +28,13 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  type ColumnDef,
+  type ColumnFiltersState,
+  type ColumnSizingState,
+  type PaginationState,
+  type SortingState,
+  type VisibilityState,
 } from "@tanstack/react-table";
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
-
-import { TablePagination } from "./global-table";
-import { UseQueryResult } from "@tanstack/react-query";
-import { SkeletonLoading } from "./skeleton-loading";
-import { FileSearch } from "lucide-react";
-import { SortableHeader } from "./sortIconTable";
-import { DynamicFilterBar } from "./dynamic-filter-bar";
-import { useSidebar } from "../ui";
-import { cn } from "@/libs/utils";
-import { ColumnResizer } from "./column-resizer";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   offSearch?: boolean;
@@ -236,16 +235,16 @@ export function DataTable<TData, TValue>({
                         {header.isPlaceholder
                           ? null
                           : header.column.id === "actions" ||
-                              header.column.id === "imageUrl" ||
-                              header.column.id === "profile.imageUrl"
-                            ? flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )
-                            : flexRender(
-                                <SortableHeader column={header.column} />,
-                                header.getContext()
-                              )}
+                            header.column.id === "imageUrl" ||
+                            header.column.id === "profile.imageUrl"
+                          ? flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )
+                          : flexRender(
+                              <SortableHeader column={header.column} />,
+                              header.getContext()
+                            )}
 
                         <ColumnResizer header={header} />
                       </TableHead>
