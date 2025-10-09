@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouteLoaderData, useSearchParams } from "react-router";
+import { useParams, useRouteLoaderData, useSearchParams } from "react-router";
 import {
   useAllContactsByCustomer,
   useAllCustomer,
@@ -10,14 +10,14 @@ import {
 
 export const useCustomerFetch = () => {
   const { me: user } = useRouteLoaderData("root");
-  const [sp] = useSearchParams();
-  const id = sp.get("id") ?? "";
+  const { id } = useParams<{ id: string }>();
+  const getId = id ?? "";
 
   const {
     data: contacts,
     isLoading: loadContacts,
     refetch: refetchContacts,
-  } = useAllContactsByCustomer(id);
+  } = useAllContactsByCustomer(getId);
 
   const {
     data: allCustomers,

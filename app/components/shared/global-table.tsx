@@ -8,7 +8,12 @@ import {
 
 import { useEffect, useRef } from "react";
 import { Button } from "../ui/button";
-import { useLocation, useNavigate, useSearchParams } from "react-router";
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router";
 import {
   Select,
   SelectContent,
@@ -37,10 +42,12 @@ export function TablePagination<TData>({
   const pathname = location.pathname;
 
   const [sp] = useSearchParams();
+  const { id } = useParams<{ id: string }>();
+  const getId = id ?? "";
 
   // --- helpers ------------------------------------------------------
   const updateUrl = (pageIndex0: number, pageSize: number) => {
-    const next = new URLSearchParams(sp?.toString() ?? "");
+    const next = new URLSearchParams(getId?.toString() ?? "");
     next.set(pageParamKey, String(pageIndex0 + 1)); // 1-based in URL
     next.set(sizeParamKey, String(pageSize));
     navigate(`${pathname}?${next.toString()}`);
