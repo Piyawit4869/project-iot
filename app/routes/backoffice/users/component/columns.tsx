@@ -1,5 +1,5 @@
 import { GlobalImage } from "~/components/shared/global-image";
-import { GlobalStatusBadge } from "~/components/shared/global-statusTag";
+
 import { PenLine, Trash } from "lucide-react";
 import GlobalButton from "~/components/shared/global-button";
 import { useMemo } from "react";
@@ -8,6 +8,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
 import { statusMap, type UserColumn } from "./initData";
+import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 
 export const useUserColumns = (): ColumnDef<UserColumn>[] => {
   const columns = useMemo<ColumnDef<UserColumn>[]>(
