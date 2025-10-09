@@ -6,9 +6,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 
 export type DayKey = "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun";
 
@@ -193,13 +193,12 @@ export default function WorkingHoursSection({
                 ? selectedDays.days.length === 7
                   ? "ทั้งหมด"
                   : selectedDays.days.length > 1
-                    ? `${DAY_LABEL[selectedDays.days[0] ?? "mon"]} - ${
-                        DAY_LABEL[
-                          selectedDays.days[selectedDays.days.length - 1] ??
-                            "mon"
-                        ]
-                      }`
-                    : DAY_LABEL[selectedDays.days[0] ?? "mon"]
+                  ? `${DAY_LABEL[selectedDays.days[0] ?? "mon"]} - ${
+                      DAY_LABEL[
+                        selectedDays.days[selectedDays.days.length - 1] ?? "mon"
+                      ]
+                    }`
+                  : DAY_LABEL[selectedDays.days[0] ?? "mon"]
                 : ""}
             </DialogTitle>
           </DialogHeader>

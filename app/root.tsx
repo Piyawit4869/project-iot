@@ -22,9 +22,12 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   try {
     const me = await getMe(token ?? "");
+
     const user = me?.data?.user;
 
-    return { user, token };
+    const user_data = me; // ! talk p aon
+
+    return { user, token, user_data };
   } catch {
     return { token: "" };
   }

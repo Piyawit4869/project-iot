@@ -1,8 +1,8 @@
-import { useModalStore } from "@/components/shared/modal/modal-controller";
-import type {
-  ModalOptions,
-  ModalType,
-} from "@/components/shared/modal/modal-controller";
+import {
+  useModalStore,
+  type ModalOptions,
+  type ModalType,
+} from "./modal-controller";
 
 function showModal(type: ModalType, options: Omit<ModalOptions, "type">) {
   useModalStore.getState().show({

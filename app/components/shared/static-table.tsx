@@ -3,13 +3,12 @@
 
 import * as React from "react";
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
+  type ColumnDef,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -17,9 +16,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"; // Ensure correct path to shadcn/ui table components
-
-import { Button } from "@/components/ui/button"; // Assuming you have this button component
+} from "../ui/table";
+import { Button } from "../ui/button";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

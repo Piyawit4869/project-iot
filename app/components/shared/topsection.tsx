@@ -1,7 +1,7 @@
-import React, { ReactNode } from "react";
-import { Card, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
+import React from "react";
 import * as Icons from "lucide-react";
+import { Card, CardTitle } from "../ui/card";
+import { Link } from "react-router";
 
 interface TagProps {
   label: string;
@@ -12,7 +12,7 @@ interface CardWithFormProps {
   title: string | React.ReactElement;
   backpath?: string | (() => void);
   subtitle?: string;
-  buttons?: ReactNode[];
+  buttons?: React.ReactNode[];
   admin?: boolean;
   tag?: TagProps;
   noneSticky?: boolean;
@@ -36,7 +36,7 @@ export function Tabcontrol({
             {backpath ? (
               <div className="flex text-headFont gap-2 items-center">
                 {typeof backpath === "string" ? (
-                  <Link href={backpath} passHref>
+                  <Link to={backpath}>
                     <Icons.ChevronLeft className="text-base cursor-pointer" />
                   </Link>
                 ) : (
@@ -55,8 +55,8 @@ export function Tabcontrol({
                       tag.variant === "success"
                         ? "bg-green-100 text-green-700"
                         : tag.variant === "warning"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-red-100 text-red-700"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : "bg-red-100 text-red-700"
                     }`}
                   >
                     {tag.label}
@@ -71,7 +71,7 @@ export function Tabcontrol({
           </div>
 
           <div className="w-full md:w-1/2 flex justify-end gap-3 mt-2 sm:mt-0 ">
-            {buttons?.map((button: ReactNode, index: number) => (
+            {buttons?.map((button: React.ReactNode, index: number) => (
               <div key={index}>{button}</div>
             ))}
           </div>
