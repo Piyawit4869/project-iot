@@ -2,10 +2,11 @@
 
 import React, { useId, useMemo } from "react";
 import * as Icons from "lucide-react";
-import { cn } from "@/libs/utils";
-import { useUpload } from "@/actions/upload/client/useGetUpload";
+
 import { toast } from "sonner";
-import { Skeleton } from "../ui";
+import { Skeleton } from "../ui/skeleton";
+import { useUpload } from "~/api/client/upload";
+import { cn } from "~/lib/utils";
 
 export type UploadedFile = {
   url: string;

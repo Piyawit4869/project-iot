@@ -7,8 +7,10 @@ import { formatDateBirthDay } from "~/components/shared/global-format";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
-import { statusMap, type UserColumn } from "./initData";
+
 import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
+import type { UserColumn } from "~/types/user/type-user";
+import { statusMap } from "~/types/user/init-data";
 
 export const useUserColumns = (): ColumnDef<UserColumn>[] => {
   const columns = useMemo<ColumnDef<UserColumn>[]>(
@@ -47,8 +49,10 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
             nickName || ""
           }`.trim();
 
+          console.log({ id });
+
           return (
-            <Link to={`/organization/user/${id}`}>
+            <Link to={`/users/${id}`}>
               <span className="text-sm text-muted-foreground hover:underline">
                 {fullName || "-"}
               </span>
@@ -169,7 +173,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
           const name = (info.getValue() as string) || "-";
 
           return id ? (
-            <Link to={`/organization/user/${id}`}>
+            <Link to={`/users/${id}`}>
               <span className="text-sm text-muted-foreground hover:underline">
                 {name}
               </span>
@@ -184,7 +188,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         header: "การดำเนินการ",
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
-            <Link to={`/organization/user/${row.original.id}}`}>
+            <Link to={`/users/${row.original.id}}`}>
               <Button
                 className="h-9 w-9 p-0 bg-[#737373] hover:bg-[#5E5E5E]"
                 aria-label="แก้ไข"

@@ -6,60 +6,63 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ImageUpload from "~/components/shared/image-upload";
 
 import { GlobalFormField } from "~/components/shared/global-form";
+import { getRequiredPaths } from "~/utils/getRequiredPathsFromZod";
 import { DatePicker } from "~/components/shared/date-picker";
-
 import { RequiredLabel } from "~/components/shared/required-design";
-
-import { GlobalImage } from "~/components/shared/global-image";
-import { Check, Command, X } from "lucide-react";
-import type { UseFormReturn } from "react-hook-form";
-import { UsersFormSchema, type UsersFormValues } from "../user-schema/user";
-import { CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Checkbox } from "@radix-ui/react-checkbox";
-
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@radix-ui/react-select";
-import { Switch } from "@radix-ui/react-switch";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
-import {
+  Command,
   CommandEmpty,
   CommandInput,
   CommandItem,
   CommandList,
 } from "~/components/ui/command";
+import { GlobalImage } from "~/components/shared/global-image";
+import { Check, X } from "lucide-react";
+import type { UseFormReturn } from "react-hook-form";
+import { UsersFormSchema, type UsersFormValues } from "~/schemas/users/user";
+import { CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+
+import { Input } from "~/components/ui/input";
+import { Switch } from "~/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
+import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
+
+type OptionItem = { id: string; name: string; active?: boolean };
 
 export interface UserFormProfileProps {
   form: UseFormReturn<UsersFormValues>;
   data?: Partial<UsersFormValues>;
   loading?: boolean;
+  departments: any;
 }
 
-export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
+export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
   form,
-  data,
+  departments,
   loading = false,
 }) => {
-  // const checkFields = new Set(getRequiredPaths(UsersFormSchema));
+  const checkFields = new Set(getRequiredPaths(UsersFormSchema as any));
   const [debouncedStatusSearch] = useState<string>("");
-  const [openSub, setOpenSub] = React.useState(false);
   const [search, setSearch] = React.useState("");
+  const [openSub, setOpenSub] = React.useState(false);
 
-  const userDepartments = Array.isArray(data) ? data : [];
+  const userDepartments = Array.isArray(departments) ? departments : [];
 
   const filtered = userDepartments.filter((item: any) => {
     const a = item.name?.toLowerCase().includes(search.toLowerCase());
@@ -67,35 +70,17 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
     return a;
   });
 
-  const pw = form.watch("password");
-  const cf = form.watch("confirmPassword");
-
-  useEffect(() => {
-    if ((!pw && !cf) || pw === cf) {
-      form.clearErrors("confirmPassword");
-      return;
-    }
-    form.setError("confirmPassword", {
-      type: "validate",
-    });
-  }, [pw, cf, form]);
-
   const statusOptions = [
+    { label: "พนักงานงานใหม่", value: "new_user" },
     { label: "ใช้งานอยู่", value: "active" },
-    { label: "ทดลองงาน", value: "probation" },
-    { label: "ลาหยุดชั่วคราว", value: "on_leave" },
-    { label: "ลาออกแล้ว", value: "resigned" },
-    { label: "เลิกจ้าง", value: "terminated" },
+    { label: "พนักงานที่ไม่ใช้งานมานาน", value: "inactive" },
+    { label: "พนักงานที่ถูกระงับการใช้งาน", value: "suspended" },
+    { label: "พนักงานที่ลบบัญชีออกจากระบบ", value: "deleted" },
   ] as const;
 
   const filteredStatusOptions = statusOptions.filter((o) =>
     o.label.toLowerCase().includes(debouncedStatusSearch.toLowerCase())
   );
-
-  // types ที่ไม่ใช้ any
-
-  type OptionItem = { id: string; name: string; active?: boolean }; // ของ list ที่ใช้เลือก
-
   return (
     <>
       <CardHeader>
@@ -133,84 +118,53 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                 )}
               />
 
+              <FormField
+                control={form.control}
+                name="active"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="mb-0">การใช้งาน เปิด/ปิด</FormLabel>
+                    <FormControl>
+                      <Switch
+                        className="mt-3"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
               <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
                 {/* <GlobalFormField
                   control={form.control}
                   name="userName"
                   label="ชื่อพนักงาน"
                   type="input"
-                  // checkFields={checkFields}
+                  checkFields={checkFields}
                   placeholder="กรอกชื่อพนักงาน"
-                />
+                /> */}
                 <GlobalFormField
                   control={form.control}
                   name="email"
                   label="อีเมล"
                   type="input"
-                  // checkFields={checkFields}
+                  checkFields={checkFields}
                   placeholder="กรอกอีเมล"
-                /> */}
-
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <RequiredLabel required>รหัสผ่าน</RequiredLabel>
-                      <FormControl>
-                        <Input
-                          type="input"
-                          placeholder="กรอกรหัสผ่าน"
-                          aria-invalid={!!form.formState.errors.confirmPassword}
-                          className={
-                            (pw || cf) && pw !== cf ? "border-destructive" : ""
-                          }
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
                 />
-
-                <FormField
-                  control={form.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <RequiredLabel required>ยืนยันรหัสผ่าน</RequiredLabel>
-                      <FormControl>
-                        <Input
-                          type="input"
-                          placeholder="กรอกรหัสผ่านยืนยัน"
-                          aria-invalid={!!form.formState.errors.confirmPassword}
-                          className={
-                            (pw || cf) && pw !== cf ? "border-destructive" : ""
-                          }
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                      {(pw || cf) && pw !== cf ? (
-                        <p className="text-sm text-destructive mt-1"></p>
-                      ) : null}
-                    </FormItem>
-                  )}
-                />
-
                 <FormField
                   control={form.control}
                   name="status"
                   render={({ field }) => (
                     <FormItem className="min-auto">
-                      <FormLabel>สถานะ</FormLabel>
+                      <FormLabel>สถานะพนักงาน</FormLabel>
                       <FormControl>
                         <Select
                           onValueChange={field.onChange}
                           value={field.value}
                         >
                           <SelectTrigger className="w-full">
-                            <SelectValue placeholder="เลือกสถานะองค์กร" />
+                            <SelectValue placeholder="เลือกสถานะ" />
                           </SelectTrigger>
                           <SelectContent>
                             {filteredStatusOptions.map((option) => (
@@ -228,25 +182,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
-
-                <FormField
-                  control={form.control}
-                  name="active"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="mb-0">สถานะ</FormLabel>
-                      <FormControl>
-                        <Switch
-                          className="mt-3"
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
               </div>
-
               <div className="md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
@@ -257,13 +193,15 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                           id: string;
                           name: string;
                           active: boolean;
+                          department: any;
                         }[])
                       : [];
 
-                    const toRef = (item: OptionItem) => ({
+                    const toRef = (item: any) => ({
                       id: item.id,
                       name: item.name,
                       active: item.active ?? true,
+                      department: item,
                     });
 
                     const selectedIds = new Set(selected.map((s) => s.id));
@@ -290,10 +228,13 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                       <FormItem>
                         <RequiredLabel required>แผนก</RequiredLabel>
                         <div className="flex flex-wrap gap-2">
-                          {selected.map((ref) => {
-                            const dep = findDep(ref.id);
-                            const depId = ref.id;
-                            const depName = dep?.name ?? ref.name ?? "-";
+                          {selected.map((s) => {
+                            const dep = findDep(s.id);
+                            const depId = s.id;
+                            const depName =
+                              dep?.department?.name ??
+                              s.department?.name ??
+                              "-";
                             return (
                               <div
                                 key={depId}
@@ -316,6 +257,54 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                             );
                           })}
 
+                          {/* <Popover
+                            open={openSub}
+                            onOpenChange={(v) => {
+                              setOpenSub(v);
+                              if (!v) field.onBlur?.();
+                            }}
+                          >
+                            <PopoverTrigger asChild>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                className="px-4 py-2 rounded-full"
+                              >
+                                เพิ่มแผนก +
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-64">
+                              <Command>
+                                <CommandInput
+                                  placeholder="ค้นหา..."
+                                  value={search}
+                                  onValueChange={setSearch}
+                                />
+                                <CommandEmpty>ไม่มีข้อมูล</CommandEmpty>
+                                <CommandList>
+                                  {(filtered ?? []).map((item: OptionItem) => {
+                                    const checked = selectedIds.has(item.id);
+                                    return (
+                                      <CommandItem
+                                        key={item.id}
+                                        onSelect={() => toggle(item)}
+                                      >
+                                        <Checkbox
+                                          checked={checked}
+                                          onCheckedChange={() => toggle(item)}
+                                          className="mr-2"
+                                        />
+                                        {item.name}
+                                        {checked && (
+                                          <Check className="ml-auto h-4 w-4" />
+                                        )}
+                                      </CommandItem>
+                                    );
+                                  })}
+                                </CommandList>
+                              </Command>
+                            </PopoverContent>
+                          </Popover> */}
                           <Popover
                             open={openSub}
                             onOpenChange={(v) => {
@@ -381,19 +370,6 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
 
               <h1 className="font-bold">ข้อมูลส่วนตัว</h1>
               <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
-                {/* <GlobalFormField
-                  control={form.control}
-                  name="profile.prefix"
-                  label="คำนำหน้า"
-                  type="select"
-                  placeholder="mr"
-                  // checkFields={checkFields}
-                  selectOptions={[
-                    { label: "นาย", value: "mr" },
-                    { label: "นาง", value: "mrs" },
-                    { label: "นางสาว", value: "ms" },
-                  ]}
-                /> */}
                 <FormField
                   control={form.control}
                   name="profile.nickName"
@@ -407,16 +383,31 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                           value={field.value ?? undefined}
                         />
                       </FormControl>
+
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+                <GlobalFormField
+                  control={form.control}
+                  name="profile.prefix"
+                  label="คำนำหน้า"
+                  type="select"
+                  placeholder="นาย, นาง, นางสาว"
+                  checkFields={checkFields}
+                  selectOptions={[
+                    { label: "นาย", value: "mr" },
+                    { label: "นาง", value: "mrs" },
+                    { label: "นางสาว", value: "ms" },
+                  ]}
+                />
+
                 <FormField
                   control={form.control}
                   name="profile.firstName"
                   render={({ field }) => (
                     <FormItem>
-                      <RequiredLabel required>ชื่อ (อังกฤษ)</RequiredLabel>
+                      <RequiredLabel required>ชื่อ</RequiredLabel>
                       <FormControl>
                         <Input placeholder="กรอกชื่อ" {...field} />
                       </FormControl>
@@ -429,7 +420,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                   name="profile.lastName"
                   render={({ field }) => (
                     <FormItem>
-                      <RequiredLabel required>นามสกุล (อังกฤษ)</RequiredLabel>
+                      <RequiredLabel required>นามสกุล</RequiredLabel>
                       <FormControl>
                         <Input placeholder="กรอกนามสกุล" {...field} />
                       </FormControl>
@@ -437,6 +428,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="profile.firstNameTh"
@@ -471,19 +463,45 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
-                {/* <GlobalFormField
+                {/* <FormField
+                  control={form.control}
+                  name="profile.firstNameTh"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ชื่อ (ไทย)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="กรอกชื่อ" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="profile.lastNameTh"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>นามสกุล (ไทย)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="กรอกนามสกุล" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                /> */}
+                <GlobalFormField
                   control={form.control}
                   name="profile.gender"
                   label="เพศ"
                   type="select"
                   placeholder="ชาย / หญิง"
-                  // checkFields={checkFields}
+                  checkFields={checkFields}
                   selectOptions={[
                     { label: "ชาย", value: "male" },
                     { label: "หญิง", value: "female" },
                     { label: "ไม่ระบุ", value: "not_specified" },
                   ]}
-                /> */}
+                />
                 <FormField
                   control={form.control}
                   name="profile.birthDate"
