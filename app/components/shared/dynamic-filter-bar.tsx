@@ -2,13 +2,13 @@
 
 import * as React from "react";
 
-import { Input } from "~/components/ui/input";
-import { Button } from "~/components/ui/button";
-
 import { Search, X } from "lucide-react";
+import type { FilterField } from "../modules/[organization]/customer/utils/filter";
 import type { Table } from "@tanstack/react-table";
-import type { FilterField } from "~/types/global";
+
+import { useLocation, useNavigate, useSearchParams } from "react-router";
 import { useSidebar } from "../ui/sidebar";
+import { Input } from "../ui/input";
 import {
   Select,
   SelectContent,
@@ -16,8 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Checkbox } from "@radix-ui/react-checkbox";
-import { useLocation, useNavigate, useSearchParams } from "react-router";
+import { Checkbox } from "../ui/checkbox";
+import { Button } from "../ui/button";
 
 // --- helpers: encode/decode values into URL params -----------------
 
@@ -84,9 +84,11 @@ export function DynamicFilterBar<TData>({
   className,
 }: Props<TData>) {
   const navigate = useNavigate();
-  const location = useLocation();
-  const pathname = location.pathname;
+  const { pathname } = useLocation();
   const [sp] = useSearchParams();
+  const router = useNavigate();
+  const location = useLocation();
+
   const { isMobile } = useSidebar();
 
   const [form, setForm] = React.useState<Record<string, any>>({});
@@ -127,6 +129,7 @@ export function DynamicFilterBar<TData>({
 
     nextSp.set("page", "1"); // optional
     navigate(`${pathname}?${nextSp.toString()}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Clear → reset everything
@@ -141,6 +144,7 @@ export function DynamicFilterBar<TData>({
     fields.forEach((f) => nextSp.delete(f.id));
     nextSp.set("page", "1");
     navigate(`${pathname}?${nextSp.toString()}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -182,7 +186,7 @@ export function DynamicFilterBar<TData>({
                           <SelectValue placeholder={f.label as string} />
                         </SelectTrigger>
                         <SelectContent>
-                          {f.options?.map((o) => (
+                          {f.options?.map((o: any) => (
                             <SelectItem
                               key={`${f.id}-${o.value}`}
                               value={String(o.value)}

@@ -9,22 +9,25 @@ import {
 } from "react-router";
 import { Toaster } from "sonner";
 
-import type { Route } from "./+types/root";
 import "./app.css";
 import { getAccessToken } from "./services/session.server";
 import { getMe } from "./api/server/auth";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GlobalModalStatic } from "./components/shared/modal/global-modal-static";
+import type { Route } from "./routes/backoffice/customer/+types";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const token = await getAccessToken(request);
 
   try {
     const me = await getMe(token ?? "");
+
     const user = me?.data?.user;
 
-    return { user, token };
+    const user_data = me; // ! talk p aon
+
+    return { user, token, user_data };
   } catch {
     return { token: "" };
   }

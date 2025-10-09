@@ -7,6 +7,7 @@ export const getMe = async (token: string) => {
     const res = await axios.get(`${baseURL}/auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+
     return res.data;
   } catch (error) {
     throw error;

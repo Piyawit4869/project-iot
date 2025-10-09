@@ -2,23 +2,6 @@
 
 import * as React from "react";
 
-import { TablePagination } from "./global-table";
-import { SkeletonLoading } from "./skeleton-loading";
-import { FileSearch, Table } from "lucide-react";
-import { SortableHeader } from "./sortIconTable";
-import { DynamicFilterBar } from "./dynamic-filter-bar";
-
-import { ColumnResizer } from "./column-resizer";
-import {
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
-import { useSidebar } from "../ui/sidebar";
-import { cn } from "~/lib/utils";
-import type { UseQueryResult } from "@tanstack/react-query";
 import {
   flexRender,
   getCoreRowModel,
@@ -28,13 +11,35 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-  type ColumnDef,
-  type ColumnFiltersState,
-  type ColumnSizingState,
-  type PaginationState,
-  type SortingState,
-  type VisibilityState,
 } from "@tanstack/react-table";
+
+import type {
+  ColumnDef,
+  ColumnFiltersState,
+  ColumnSizingState,
+  PaginationState,
+  SortingState,
+  VisibilityState,
+} from "@tanstack/react-table";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
+
+import { TablePagination } from "./global-table";
+import { type UseQueryResult } from "@tanstack/react-query";
+import { SkeletonLoading } from "./skeleton-loading";
+import { FileSearch } from "lucide-react";
+import { SortableHeader } from "./sortIconTable";
+import { DynamicFilterBar } from "./dynamic-filter-bar";
+import { ColumnResizer } from "./column-resizer";
+import { useSidebar } from "../ui/sidebar";
+import { cn } from "~/lib/utils";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   offSearch?: boolean;

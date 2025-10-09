@@ -1,0 +1,27 @@
+"use server";
+
+import { ApiConfig } from "~/api/config";
+import type { CustomerSupportFormValues } from "~/schemas/customer/support/support";
+
+export const fetchCreateCustomerSupport = async (
+  payload: CustomerSupportFormValues
+) => {
+  try {
+    const res = await ApiConfig.post(
+      `/crud/customers/supports/create`,
+      payload
+    );
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchDeleteCustomerSupport = async (id: string) => {
+  try {
+    const res = await ApiConfig.delete(`/crud/customers/supports/delete/${id}`);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
