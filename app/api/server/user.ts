@@ -1,8 +1,8 @@
 "use server";
 
-import type { UsersFormValues } from "~/routes/backoffice/users/user-schema/user";
+import type { UsersFormValues } from "~/schemas/users/user";
 import { ApiConfig } from "../config";
-import type { PasswordFormValues } from "~/routes/backoffice/users/user-schema/password-user";
+import type { PasswordFormValues } from "~/schemas/users/password-user";
 
 export const fetchUserPagination = async (params: {
   page: number;

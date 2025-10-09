@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
-
 import { PlusIcon } from "lucide-react";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
-import { CompensationModal } from "./formCompensationModal";
+
 import dayjs from "dayjs";
-import type { UsersFormValues } from "../user-schema/user";
 import { useFieldArray, useWatch, type UseFormReturn } from "react-hook-form";
+import type { UsersFormValues } from "~/schemas/users/user";
 import { CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
+import { UserStudyModal } from "./formStudyModal";
 
 export interface UserFormProfileProps {
   form: UseFormReturn<UsersFormValues>;
@@ -17,45 +17,44 @@ export interface UserFormProfileProps {
   loading?: boolean;
 }
 
-export const UserCompensation: React.FC<UserFormProfileProps> = ({
+export const UserStudy: React.FC<UserFormProfileProps> = ({
   form,
   data,
   loading = false,
 }) => {
   const {
-    fields: cfFields,
-    // append: appendCf,
-    remove: removeCf,
-    update: updateCf,
-    replace: replaceCf,
+    fields: eduFields,
+    // append: appendEdu,
+    remove: removeEdu,
+    update: updateEdu,
+    replace: replaceEdu,
   } = useFieldArray({
     control: form.control,
-    name: "profile.compensationConfigs",
+    name: "profile.educationInformations",
   });
 
-  const cfValues = useWatch({
+  const eduValues = useWatch({
     control: form.control,
-    name: "profile.compensationConfigs",
+    name: "profile.educationInformations",
   });
 
   const [open, setOpen] = React.useState(false);
   const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
 
-  const handleOpenCreate = () => {
+  const handleOnOpenModal = () => {
     const nextIndex =
-      form.getValues("profile.compensationConfigs")?.length ?? 0;
+      form.getValues("profile.educationInformations")?.length ?? 0;
 
-    // updateCf(nextIndex, {
-    //   baseSalary: 0,
-    //   currency: "",
-    //   bonusEligible: false,
-    //   bonusRate: undefined,
-    //   allowance: undefined,
-    //   insurance: "",
-    //   providentFund: false,
-    //   contractType: "",
-    //   effectiveDate: "",
-    //   expireDate: "",
+    // updateEdu(nextIndex, {
+    //   // id: uid(),
+    //   institution: "",
+    //   degree: "",
+    //   major: "",
+    //   faculty: "",
+    //   gpa: undefined,
+    //   startDate: "",
+    //   endDate: "",
+    //   isGraduated: false,
     //   description: "",
     // });
 
@@ -70,21 +69,20 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
 
   const handleClose = () => {
     if (editingIndex !== null) {
-      const v = form.getValues(`profile.compensationConfigs.${editingIndex}`);
+      const v = form.getValues(`profile.educationInformations.${editingIndex}`);
       const blank =
-        !v?.baseSalary &&
-        !v?.currency &&
-        !v?.bonusEligible &&
-        !v?.bonusRate &&
-        !v?.allowance &&
-        !v?.insurance &&
-        !v?.providentFund &&
-        !v?.contractType &&
-        !v?.effectiveDate &&
-        !v?.expireDate &&
-        !v?.description;
+        !v?.institution &&
+        !v?.degree &&
+        !v?.major &&
+        !v?.faculty &&
+        !v?.gpa &&
+        !v?.startDate &&
+        !v?.endDate &&
+        !v?.isGraduated;
 
-      if (blank) removeCf(editingIndex);
+      if (blank) {
+        removeEdu(editingIndex);
+      }
     }
     setOpen(false);
     setEditingIndex(null);
@@ -94,7 +92,7 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
     if (editingIndex === null) return;
 
     GlobalModal.info({
-      title: "บันทึกค่าตอบแทน",
+      title: "บันทึกประวัติการศึกษา",
       description: "คุณต้องการทำรายการ ใช่หรือไม่?",
       confirmText: "ยืนยัน",
       cancelText: "ยกเลิก",
@@ -102,42 +100,23 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
         const toastId = toast.loading("กำลังบันทึกข้อมูล...");
         try {
           const current = form.getValues(
-            `profile.compensationConfigs.${editingIndex}`
+            `profile.educationInformations.${editingIndex}`
           );
-
-          updateCf(editingIndex, {
-            baseSalary:
-              current?.baseSalary === undefined ||
-              current?.baseSalary === null ||
-              (current as any)?.baseSalary === ""
-                ? 0
-                : Number(current.baseSalary),
-            currency: current?.currency ?? "",
-            bonusEligible: !!current?.bonusEligible,
-            bonusRate:
-              current?.bonusRate === undefined ||
-              current?.bonusRate === null ||
-              (current as any)?.bonusRate === ""
-                ? undefined
-                : Number(current.bonusRate),
-            allowance:
-              current?.allowance === undefined ||
-              current?.allowance === null ||
-              (current as any)?.allowance === ""
-                ? undefined
-                : Number(current.allowance),
-            insurance: current?.insurance ?? "",
-            providentFund: !!current?.providentFund,
-            contractType: current?.contractType ?? "",
-            effectiveDate: current?.effectiveDate ?? "",
-            expireDate: current?.expireDate ?? "",
+          updateEdu(editingIndex, {
+            ...current,
+            gpa: current?.gpa ?? undefined,
+            isGraduated: !!current?.isGraduated,
+            degree: current?.degree ?? "",
+            major: current?.major ?? "",
+            faculty: current?.faculty ?? "",
             description: current?.description ?? "",
+            startDate: current?.startDate ?? "",
+            endDate: current?.endDate ?? "",
           });
-
           toast.success("บันทึกเรียบร้อยแล้ว!", { id: toastId });
           setOpen(false);
           setEditingIndex(null);
-        } catch {
+        } catch (e) {
           toast.error("ดำเนินการไม่สำเร็จ กรุณาลองใหม่ภายหลัง", {
             id: toastId,
           });
@@ -148,14 +127,15 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
 
   const handleDelete = (index: number) => {
     GlobalModal.warning({
-      title: "ลบค่าตอบแทน",
+      title: "ลบประวัติการศึกษา",
       description: "คุณต้องการทำรายการ ใช่หรือไม่?",
       confirmText: "ยืนยัน",
       cancelText: "ยกเลิก",
       onConfirm: () => {
         const toastId = toast.loading("กำลังลบข้อมูล...");
         try {
-          removeCf(index);
+          removeEdu(index);
+
           if (editingIndex === index) {
             setOpen(false);
             setEditingIndex(null);
@@ -163,7 +143,7 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
             setEditingIndex(editingIndex - 1);
           }
           toast.success("ลบรายการเรียบร้อยแล้ว", { id: toastId });
-        } catch {
+        } catch (e) {
           toast.error("ลบรายการไม่สำเร็จ กรุณาลองใหม่ภายหลัง", { id: toastId });
         }
       },
@@ -173,31 +153,22 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
   useEffect(() => {
     if (!data) return;
     const fromApi =
-      data.profile?.compensationConfigs ??
-      (data as any)?.compensationConfigs ??
+      data.profile?.educationInformations ??
+      (data as any)?.educationInformations ??
       [];
-    const normalized = fromApi.map((e: any) => ({
-      baseSalary:
-        e.baseSalary === null ||
-        e.baseSalary === undefined ||
-        e.baseSalary === ""
+
+    const forms = fromApi.map((e: any) => ({
+      institution: e.institution ?? "",
+      degree: e.degree ?? "",
+      major: e.major ?? "",
+      faculty: e.faculty ?? "",
+      gpa:
+        e.gpa === null || e.gpa === undefined || e.gpa === ""
           ? undefined
-          : Number(e.baseSalary),
-      currency: e.currency ?? "TH",
-      bonusEligible: !!e.bonusEligible,
-      bonusRate:
-        e.bonusRate === null || e.bonusRate === undefined || e.bonusRate === ""
-          ? undefined
-          : Number(e.bonusRate),
-      allowance:
-        e.allowance === null || e.allowance === undefined || e.allowance === ""
-          ? undefined
-          : Number(e.allowance),
-      insurance: e.insurance ?? "",
-      providentFund: !!e.providentFund,
-      contractType: e.contractType ?? "",
-      effectiveDate: e.effectiveDate ?? "",
-      expireDate: e.expireDate ?? "",
+          : Number(e.gpa),
+      startDate: e.startDate ?? "",
+      endDate: e.endDate ?? "",
+      isGraduated: !!e.isGraduated,
       description: e.description ?? "",
     }));
 
@@ -207,12 +178,12 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
       profile: {
         ...form.getValues("profile"),
         ...(data.profile ?? {}),
-        compensationConfigs: normalized,
+        educationInformations: forms,
       },
     });
 
-    replaceCf(normalized);
-  }, [data, form, replaceCf]);
+    replaceEdu(forms);
+  }, [data, form, replaceEdu]);
 
   return (
     <>
@@ -227,76 +198,62 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
         <CardContent className="space-y-4">
           <div className="lg:col-span-2 flex flex-col gap-3 mt-5">
             <div className="flex items-center justify-between">
-              <h1 className="font-bold">ค่าตอบแทน</h1>
+              <h1 className="font-bold">การศึกษา</h1>
               <Button
                 type="button"
                 size="sm"
-                onClick={handleOpenCreate}
-                aria-label="เพิ่มค่าตอบแทน"
+                onClick={handleOnOpenModal}
+                aria-label="เพิ่มประวัติการศึกษา"
               >
                 <PlusIcon />
               </Button>
             </div>
 
-            {cfFields.length === 0 ? (
+            {eduFields.length === 0 ? (
               <div className="rounded-xl text-sm text-muted-foreground">
-                ยังไม่มีค่าตอบแทน กรุณากดปุ่ม “+” เพื่อเพิ่มรายการแรก
+                ยังไม่มีประวัติการศึกษา กรุณากดปุ่ม “+” เพื่อเพิ่มรายการแรก
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-5">
-                {cfFields.map((row, index) => {
-                  const v = (cfValues?.[index] as any) ?? {};
-                  const salary =
-                    v?.baseSalary !== undefined && v?.baseSalary !== null
-                      ? Number(v.baseSalary)
-                      : undefined;
-                  const currency = v?.currency && String(v.currency).trim();
-                  const contract =
-                    v?.contractType && String(v.contractType).trim();
+                {eduFields.map((row, index) => {
+                  const ev = (eduValues?.[index] as any) ?? {};
+                  const inst =
+                    typeof ev?.institution === "string"
+                      ? ev.institution.trim()
+                      : "";
 
                   const formatDate = (d?: string) =>
                     d ? dayjs(d).format("DD MMMM YYYY") : "-";
 
                   const period =
-                    v?.startDate || v?.endDate
-                      ? `${formatDate(v?.startDate)} - ${
-                          v?.isGraduated
-                            ? formatDate(v?.endDate)
-                            : v?.endDate
-                            ? formatDate(v?.endDate)
+                    ev?.startDate || ev?.endDate
+                      ? `${formatDate(ev?.startDate)} - ${
+                          ev?.isGraduated
+                            ? formatDate(ev?.endDate)
+                            : ev?.endDate
+                            ? formatDate(ev?.endDate)
                             : "ปัจจุบัน"
                         }`
-                      : "-";
+                      : "";
 
                   const details = [
-                    { label: "สกุลเงิน", value: currency ?? "-" },
+                    { label: "ระดับการศึกษา", value: ev?.degree ?? "-" },
+                    { label: "สาขา", value: ev?.major ?? "-" },
+                    { label: "คณะ", value: ev?.faculty ?? "-" },
                     {
-                      label: "โบนัส",
-                      value: v?.bonusEligible
-                        ? v?.bonusRate !== undefined &&
-                          v?.bonusRate !== null &&
-                          v?.bonusRate !== ""
-                          ? `มี (${v.bonusRate}%)`
-                          : "มี"
-                        : "-",
-                    },
-                    {
-                      label: "เบี้ยเลี้ยง",
+                      label: "เกรดเฉลี่ย",
                       value:
-                        v?.allowance !== undefined &&
-                        v?.allowance !== null &&
-                        String(v.allowance) !== ""
-                          ? (Number(v.allowance), currency || "-")
-                          : "",
+                        ev?.gpa !== undefined &&
+                        ev?.gpa !== null &&
+                        String(ev.gpa) !== ""
+                          ? ev.gpa
+                          : "-",
                     },
-                    { label: "ประกัน", value: v?.insurance ?? "-" },
                     {
-                      label: "กองทุนสำรองเลี้ยงชีพ",
-                      value: v?.providentFund ? "มี" : "-",
+                      label: "ช่วงเวลา",
+                      value: period ?? "-",
                     },
-                    { label: "สัญญา", value: contract ?? "-" },
-                    { label: "ช่วงเวลา", value: period ?? "-" },
-                    { label: "หมายเหตุ", value: v?.description ?? "-" },
+                    { label: "รายละเอียด", value: ev?.description ?? "-" },
                   ].filter((d) => d.value && String(d.value).trim().length > 0);
 
                   return (
@@ -307,11 +264,9 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
                       <div className="flex items-center justify-between">
                         <div className="min-w-0">
                           <h4 className="font-semibold truncate">
-                            {salary !== undefined && !Number.isNaN(salary)
-                              ? `เงินเดือนพื้นฐาน: ${salary}`
-                              : contract
-                              ? `สัญญา: ${contract}`
-                              : `ค่าตอบแทน #${index + 1}`}
+                            {inst
+                              ? `การศึกษา: ${inst}`
+                              : `ประวัติการศึกษา #${index + 1}`}
                           </h4>
 
                           {details.length > 0 && (
@@ -320,7 +275,7 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
                                 <p
                                   key={d.label}
                                   className={
-                                    d.label === "หมายเหตุ"
+                                    d.label === "รายละเอียด"
                                       ? "break-words"
                                       : "truncate"
                                   }
@@ -339,7 +294,7 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
                           <Button
                             type="button"
                             variant="secondary"
-                            aria-label={`แก้ไขค่าตอบแทน #${index + 1}`}
+                            aria-label={`แก้ไขประวัติการศึกษา #${index + 1}`}
                             onClick={() => handleOpenEdit(index)}
                           >
                             แก้ไข
@@ -347,7 +302,7 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
                           <Button
                             type="button"
                             variant="outline"
-                            aria-label={`ลบค่าตอบแทน #${index + 1}`}
+                            aria-label={`ลบประวัติการศึกษา #${index + 1}`}
                             onClick={() => handleDelete(index)}
                           >
                             ลบรายการนี้
@@ -364,20 +319,19 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
       )}
 
       {editingIndex !== null && (
-        <CompensationModal
+        <UserStudyModal
           open={open}
           title={
             form.getValues(
-              `profile.compensationConfigs.${editingIndex}.baseSalary`
+              `profile.educationInformations.${editingIndex}.institution`
             )
-              ? "แก้ไขค่าตอบแทน"
-              : "เพิ่มค่าตอบแทน"
+              ? "แก้ไขประวัติการศึกษา"
+              : "เพิ่มประวัติการศึกษา"
           }
           form={form}
           indexPath={editingIndex}
           onClose={handleClose}
           onSubmit={handleSubmitFromModal}
-          updateCf={updateCf}
         />
       )}
     </>

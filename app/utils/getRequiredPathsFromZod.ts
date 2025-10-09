@@ -1,5 +1,5 @@
-import { ZodEffects, type ZodTypeAny } from "node_modules/zod/v3/types.cjs";
 import { ZodObject, ZodOptional, ZodDefault } from "zod";
+import { ZodEffects, type ZodTypeAny } from "zod/v3";
 
 type ZodShape = Record<string, ZodTypeAny>;
 

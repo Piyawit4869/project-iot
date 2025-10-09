@@ -7,9 +7,10 @@ import { PlusIcon } from "lucide-react";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 import { DocumentModal } from "./formDocumentsModal";
-import type { UsersFormValues } from "../user-schema/user";
+
 import { CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
+import type { UsersFormValues } from "~/schemas/users/user";
 // import dayjs from "dayjs";
 
 export interface UserFormProfileProps {

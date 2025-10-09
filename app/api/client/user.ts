@@ -11,8 +11,8 @@ import {
   fetchGetAllDepartments,
   fetchUserSummary,
 } from "../server/user";
-import type { UsersFormValues } from "~/routes/backoffice/users/user-schema/user";
-import type { PasswordFormValues } from "~/routes/backoffice/users/user-schema/password-user";
+import type { UsersFormValues } from "~/schemas/users/user";
+import type { PasswordFormValues } from "~/schemas/users/password-user";
 
 export const usePaginate = ({
   pageIndex,

@@ -16,7 +16,6 @@ import {
   FormControl,
 } from "~/components/ui/form";
 import { Switch } from "~/components/ui/switch";
-import "react-datepicker/dist/react-datepicker.css";
 // import ImageUpload from "@/components/shared/image-upload";
 import { DatePicker } from "~/components/shared/date-picker";
 import { RequiredLabel } from "~/components/shared/required-design";
@@ -31,7 +30,7 @@ import {
 
 import type { UseFormReturn } from "react-hook-form";
 import { Input } from "~/components/ui/input";
-import type { UsersFormValues } from "../user-schema/user";
+import type { UsersFormValues } from "~/schemas/users/user";
 
 type Props = {
   open: boolean;

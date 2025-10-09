@@ -16,11 +16,9 @@ import {
   FormControl,
 } from "~/components/ui/form";
 
-import "react-datepicker/dist/react-datepicker.css";
 import { DatePicker } from "~/components/shared/date-picker";
 import { RequiredLabel } from "~/components/shared/required-design";
 import type { UseFormReturn } from "react-hook-form";
-import type { UsersFormValues } from "../user-schema/user";
 import {
   Select,
   SelectContent,
@@ -30,6 +28,7 @@ import {
 } from "~/components/ui/select";
 import { Input } from "~/components/ui/input";
 import { Switch } from "~/components/ui/switch";
+import type { UsersFormValues } from "~/schemas/users/user";
 
 type Props = {
   open: boolean;
