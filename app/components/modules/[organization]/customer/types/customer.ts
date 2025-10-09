@@ -96,7 +96,7 @@ export const customerRequestResponseSchema = z.object({
   consentPii: z.boolean().nullable(),
   taxId: z.string().nullable(),
   contactNumber: z.string().nullable(),
-  email: z.string().email().nullable(),
+  email: z.email().nullable(),
   inspector: z.string().nullable(),
 
   eventKeyDate: z.string().datetime().nullable(),

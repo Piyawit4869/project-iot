@@ -38,6 +38,7 @@ export const fetchOrderPaginationFilter = async (params: {
 }) => {
   try {
     const res = await ApiConfig.get(`/crud/orders/paginate`, {
+      //TO FIX
       params:
         params.limit === 0
           ? {
@@ -84,13 +85,7 @@ export const fetchCreateOrder = async (payload: OrderFormValues) => {
 
     return res.data;
   } catch (error) {
-    // if (axios.isAxiosError(error)) {
-    //   console.error("HTTP", error.response?.status);
-    //   console.error("DATA →", JSON.stringify(error.response?.data, null, 2)); // สำคัญสุด
-    //   console.error("HEADERS →", error.response?.headers);
-    // }
-    throw error;
-    // throw error;
+    return error;
   }
 };
 

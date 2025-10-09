@@ -1,5 +1,5 @@
-import CustomerPage from "~/components/modules/[organization]/customer/customer";
+import Customer from "~/components/modules/[organization]/customer/customer";
 
-export default function CustomerPageContainer() {
-  return <CustomerPage />;
+export default function CustomerPage() {
+  return <Customer />;
 }

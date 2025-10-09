@@ -172,7 +172,7 @@ export default function SingDetailleCustomer() {
       confirmText: "ยืนยัน",
       cancelText: "ยกเลิก",
       onConfirm: () => {
-        navigate("/organization/customer");
+        navigate("/customer");
       },
       onCancel: () => {
         useModalStore.getState().hide();
@@ -204,7 +204,7 @@ export default function SingDetailleCustomer() {
     if (isEdit) {
       cancelEdit();
     } else {
-      navigate("/organization/customer");
+      navigate("/customer");
     }
   };
 

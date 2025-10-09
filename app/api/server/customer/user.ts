@@ -103,12 +103,10 @@ export const fetchDeleteUsers = async (id: string) => {
   }
 };
 
-export const fetchGetAllDepartments = async (params: { isAll: boolean }) => {
+export const fetchGetAllDepartments = async (params: boolean) => {
   try {
     const { data } = await ApiConfig.get(`/crud/departments/`, {
-      params: {
-        isAll: params.isAll,
-      },
+      params,
     });
 
     return data;

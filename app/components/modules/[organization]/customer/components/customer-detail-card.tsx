@@ -28,7 +28,7 @@ export const CustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
     const hasOther = position || email || department;
     form.clearErrors(["contacts.0.name", "contacts.0.phone"]);
 
-    // มีชื่อแต่ไม่มีเบอร์
+    // have name no phone
     if (name && !phone && !hasOther) {
       form.setError("contacts.0.phone", {
         type: "manual",
@@ -37,7 +37,7 @@ export const CustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
       return;
     }
 
-    // มีเบอร์แต่ไม่มีชื่อ
+    // have phone no name
     if (phone && !name && !hasOther) {
       form.setError("contacts.0.name", {
         type: "manual",
@@ -46,7 +46,7 @@ export const CustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
       return;
     }
 
-    //ฟิลด์อื่น โดยที่ชื่อหรือเบอร์ไม่ครบ
+    //other field but no enter name and phone
     if (hasOther && (!name || !phone)) {
       if (!name) {
         form.setError("contacts.0.name", {

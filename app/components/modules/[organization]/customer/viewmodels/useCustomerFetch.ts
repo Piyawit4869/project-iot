@@ -13,8 +13,6 @@ export const useCustomerFetch = () => {
   const [sp] = useSearchParams();
   const id = sp.get("id") ?? "";
 
-  console.log({ user });
-
   const {
     data: contacts,
     isLoading: loadContacts,

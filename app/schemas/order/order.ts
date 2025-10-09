@@ -80,7 +80,7 @@ export const branchSchema = z.object({
   websiteUrl: z.string().url(),
   registerVat: z.boolean(),
   contactName: z.string().nullable(),
-  contactEmail: z.string().email().nullable(),
+  contactEmail: z.email().nullable(),
   contactPhone: z.string(),
   contactLine: z.string().nullable(),
   contactFacebook: z.string().nullable(),

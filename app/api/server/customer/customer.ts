@@ -80,10 +80,7 @@ export const fetchUpdateCustomer = async (
   payload: CustomerValues
 ) => {
   try {
-    const res = await ApiConfig.put(
-      `ApiConfig/crud/customers/edit/${id}`,
-      payload
-    );
+    const res = await ApiConfig.put(`/crud/customers/edit/${id}`, payload);
 
     return res.data;
   } catch (error) {
@@ -97,7 +94,7 @@ export const fetchAiReplySettings = async (
 ) => {
   try {
     const res = await ApiConfig.put(
-      `ApiConfig/crud/customers/edit/${id}/ai-reply-settings`,
+      `/crud/customers/edit/${id}/ai-reply-settings`,
       payload
     );
 
@@ -109,7 +106,7 @@ export const fetchAiReplySettings = async (
 
 export const fetchDeleteCustomer = async (id: string) => {
   try {
-    const res = await ApiConfig.delete(`ApiConfig/crud/customers/delete/${id}`);
+    const res = await ApiConfig.delete(`/crud/customers/delete/${id}`);
     return res.data;
   } catch (error) {
     return error;
@@ -208,7 +205,7 @@ export const fetchCreateCustomerNote = async (
 ) => {
   try {
     const res = await ApiConfig.post(
-      `ApiConfig/crud/customers/create/${id}/note`,
+      `/crud/customers/create/${id}/note`,
       payload
     );
 
@@ -223,10 +220,7 @@ export const fetchUpdateCustomerNote = async (
   payload: CustomerUpdateValueNote
 ) => {
   try {
-    const res = await ApiConfig.put(
-      `ApiConfig/crud/customers/edit/${id}/note`,
-      payload
-    );
+    const res = await ApiConfig.put(`/crud/customers/edit/${id}/note`, payload);
 
     return res.data;
   } catch (error) {
@@ -262,12 +256,9 @@ export const fetchDeleteCustomerNote = async (
   payload: CustomerDeleteValueNote
 ) => {
   try {
-    const res = await ApiConfig.delete(
-      `ApiConfig/crud/customers/delete/${id}/note`,
-      {
-        data: payload,
-      }
-    );
+    const res = await ApiConfig.delete(`/crud/customers/delete/${id}/note`, {
+      data: payload,
+    });
     return res.data;
   } catch (error) {
     return error;

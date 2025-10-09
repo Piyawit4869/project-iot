@@ -82,7 +82,7 @@ export const useDeleteUsers = () => {
 export const useGetAllDepartments = (isAll: boolean) =>
   useQuery({
     queryKey: ["user-all"],
-    queryFn: () => fetchGetAllDepartments({ isAll }),
+    queryFn: () => fetchGetAllDepartments(isAll),
   });
 
 export const useAllUserSummary = () => {

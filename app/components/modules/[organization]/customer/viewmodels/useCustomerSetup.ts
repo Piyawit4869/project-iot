@@ -128,16 +128,6 @@ export const useCustomerSetup = () => {
   const { isSubmitting: isCreating, isDirty: isDirtyCreate } =
     formCreate.formState;
 
-  React.useEffect(() => {
-    const handler = (e: BeforeUnloadEvent) => {
-      if (isDirtyCreate) {
-        e.preventDefault();
-      }
-    };
-    window.addEventListener("beforeunload", handler);
-    return () => window.removeEventListener("beforeunload", handler);
-  }, [isDirtyCreate]);
-
   const formUpdate = useForm<CustomerValues>({
     resolver: zodResolver(CustomerSchema) as Resolver<CustomerValues>,
     mode: "onSubmit",
@@ -203,26 +193,25 @@ export const useCustomerSetup = () => {
     },
   });
 
-  const {
-    isSubmitting: isUpdating,
-    isDirty: isDirtyUpdate,
-    errors,
-  } = formUpdate.formState;
+  const { isSubmitting: isUpdating, isDirty: isDirtyUpdate } =
+    formUpdate.formState;
+
+  const [expandedIndex, setExpandedIndex] = React.useState<number | null>(null);
+  const [contactId, setContactId] = React.useState<string>("");
+
+  const { data: contact, isLoading: loadContact } = useContact(contactId);
+
+  const [expandedCreate, setExpandedCreate] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
-      if (isDirtyCreate || isDirtyUpdate) {
+      if (isDirtyCreate) {
         e.preventDefault();
-        e.returnValue = "";
       }
     };
     window.addEventListener("beforeunload", handler);
     return () => window.removeEventListener("beforeunload", handler);
-  }, [isDirtyCreate, isDirtyUpdate]);
-
-  React.useEffect(() => {
-    console.log({ errors });
-  }, [errors]);
+  }, [isDirtyCreate]);
 
   React.useEffect(() => {
     if (customer) {
@@ -288,12 +277,16 @@ export const useCustomerSetup = () => {
     }
   }, [customer]);
 
-  const [expandedIndex, setExpandedIndex] = React.useState<number | null>(null);
-  const [contactId, setContactId] = React.useState<string>("");
-
-  const { data: contact, isLoading: loadContact } = useContact(contactId);
-
-  const [expandedCreate, setExpandedCreate] = React.useState<boolean>(false);
+  React.useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (isDirtyCreate || isDirtyUpdate) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [isDirtyCreate, isDirtyUpdate]);
 
   return {
     formCreate,

@@ -1,5 +1,3 @@
-"use client";
-
 import { useNavigate } from "react-router";
 import { useCustomerViewModel } from "./viewmodels/useCustomerViewModel";
 
@@ -76,7 +74,7 @@ export default function CreateCustomer() {
 
   const cancelCreate = () => {
     if (!isDirty) {
-      navigate("/organization/customer");
+      navigate("/customer");
     } else {
       GlobalModal.info({
         title: "ยืนยันการออกจากหน้าสร้างลูกค้า",
@@ -85,7 +83,7 @@ export default function CreateCustomer() {
         confirmText: "ยืนยัน",
         cancelText: "ยกเลิก",
         onConfirm: () => {
-          navigate("/organization/customer");
+          navigate("/customer");
         },
         onCancel: () => {
           useModalStore.getState().hide();
