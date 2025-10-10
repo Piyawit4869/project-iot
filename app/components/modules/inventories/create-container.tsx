@@ -177,8 +177,10 @@ const InventoryCreateContainer = () => {
                 )}
               </div>
 
-              <div className="mt-6">
-                <DataTable data={data?.products ?? []} columns={columns} />
+              <div className="mt-6 ">
+                <div className="max-w-[1550px]  ">
+                  <DataTable data={data?.products ?? []} columns={columns} />
+                </div>
               </div>
             </div>
           )}

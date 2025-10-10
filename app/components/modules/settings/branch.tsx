@@ -125,13 +125,13 @@ const columns: ColumnDef<Task>[] = [
 
   {
     accessorKey: "",
-    header: "การดำเนินการ",
+    header: "องค์กร",
     cell: ({ row }) => {
       const id = row.original.id;
 
       return (
-        <div className="ml-10">
-          <Link to={`/organization/setting-organization/branch/${id}`}>
+        <div>
+          {/* <Link to={`/setting-organization/branch/${id}`}>
             <Button
               className=" h-9 w-9 bg-[#737373] hover:bg-[#5E5E5E]"
               aria-label="แก้ไขสินค้า"
@@ -139,7 +139,13 @@ const columns: ColumnDef<Task>[] = [
             >
               <PenLine className="w-4 h-4 text-white" />
             </Button>
-          </Link>
+          </Link> */}
+          <div
+            className="inline-flex items-center justify-center h-7 px-3 rounded-md bg-[#737373] text-white text-xs font-medium select-none"
+            title="องค์กรในเครือ"
+          >
+            องค์กรในเครือ
+          </div>
         </div>
       );
     },

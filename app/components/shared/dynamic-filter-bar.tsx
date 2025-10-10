@@ -167,14 +167,16 @@ export function DynamicFilterBar<TData>({
               switch (f.kind) {
                 case "text":
                   return (
-                    <div key={f.id}>
-                      <span>ค้นหา{String(f.label)}</span>
+                    <div key={f.id} className="mb-3">
+                      <span className="block text-sm font-medium mb-1">
+                        {String(f.label)}
+                      </span>
                       <Input
                         key={f.id}
-                        placeholder={String(f.label)}
+                        placeholder={`ค้นหา${String(f.label)}`}
                         value={(form[f.id] as string) ?? ""}
                         onChange={(e) => update(f.id, e.target.value)}
-                        className="w-full mt-1 md:w-[240px]"
+                        className="w-full md:w-[240px]"
                       />
                     </div>
                   );

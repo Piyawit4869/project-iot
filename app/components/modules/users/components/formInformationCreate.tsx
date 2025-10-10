@@ -1,4 +1,23 @@
+import { Check, X } from "lucide-react";
+import React, { useEffect } from "react";
+import { useState } from "react";
+import type { UseFormReturn } from "react-hook-form";
+import { DatePicker } from "~/components/shared/date-picker";
+import { GlobalFormField } from "~/components/shared/global-form";
+import { GlobalImage } from "~/components/shared/global-image";
+import ImageUpload from "~/components/shared/image-upload";
+import { RequiredLabel } from "~/components/shared/required-design";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
+import { Button } from "~/components/ui/button";
+import { CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Checkbox } from "~/components/ui/checkbox";
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "~/components/ui/command";
 import {
   FormControl,
   FormField,
@@ -6,34 +25,12 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import React, { useEffect, useState } from "react";
-import ImageUpload from "~/components/shared/image-upload";
-
-import { DatePicker } from "~/components/shared/date-picker";
-
-import { RequiredLabel } from "~/components/shared/required-design";
-
-import { GlobalImage } from "~/components/shared/global-image";
-import { Check, Command, X } from "lucide-react";
-import type { UseFormReturn } from "react-hook-form";
-import { CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-
-import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-import {
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "~/components/ui/command";
-import { UsersFormSchema, type UsersFormValues } from "~/schemas/users/user";
-import { GlobalFormField } from "~/components/shared/global-form";
-import { getRequiredPaths } from "~/utils/form-adapter";
 import {
   Select,
   SelectContent,
@@ -42,7 +39,8 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Switch } from "~/components/ui/switch";
-import { Checkbox } from "~/components/ui/checkbox";
+import { UsersFormSchema, type UsersFormValues } from "~/schemas/users/user";
+import { getRequiredPaths } from "~/utils/form-adapter";
 
 export interface UserFormProfileProps {
   form: UseFormReturn<UsersFormValues>;
@@ -61,6 +59,8 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
   const [search, setSearch] = React.useState("");
 
   const userDepartments = Array.isArray(data) ? data : [];
+
+  console.log({ userDepartments });
 
   const filtered = userDepartments.filter((item: any) => {
     const a = item.name?.toLowerCase().includes(search.toLowerCase());
