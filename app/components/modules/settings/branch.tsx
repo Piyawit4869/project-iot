@@ -4,20 +4,12 @@ import { Link } from "react-router";
 import { usePaginateBranch } from "~/api/client/settings";
 import { DataTable } from "~/components/shared/data-table";
 import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
-
 import { TabControl } from "~/components/shared/tab-control";
-
 import { Button } from "~/components/ui/button";
+import type { Task } from "~/types/settings";
 import { DateISOToDisplayDate } from "~/utils/date-format";
 
 interface BranchPageProps {}
-
-interface Task {
-  id: string;
-  title: string;
-  status: "pending" | "in-progress" | "done";
-  dueDate: string;
-}
 
 const columns: ColumnDef<Task>[] = [
   {
@@ -123,33 +115,27 @@ const columns: ColumnDef<Task>[] = [
     },
   },
 
-  {
-    accessorKey: "",
-    header: "องค์กร",
-    cell: ({ row }) => {
-      const id = row.original.id;
+  // { // !! FIXME: OPEN WHEN REFACTOR SUCCESS [P'Pech]
+  //   accessorKey: "",
+  //   header: "การดำเนินการ",
+  //   cell: ({ row }) => {
+  //     const id = row.original.id;
 
-      return (
-        <div>
-          {/* <Link to={`/setting-organization/branch/${id}`}>
-            <Button
-              className=" h-9 w-9 bg-[#737373] hover:bg-[#5E5E5E]"
-              aria-label="แก้ไขสินค้า"
-              title="แก้ไขสินค้า"
-            >
-              <PenLine className="w-4 h-4 text-white" />
-            </Button>
-          </Link> */}
-          <div
-            className="inline-flex items-center justify-center h-7 px-3 rounded-md bg-[#737373] text-white text-xs font-medium select-none"
-            title="องค์กรในเครือ"
-          >
-            องค์กรในเครือ
-          </div>
-        </div>
-      );
-    },
-  },
+  //     return (
+  //       <div className="ml-10">
+  //         <Link to={`/organization/setting-organization/branch/${id}`}>
+  //           <Button
+  //             className=" h-9 w-9 bg-[#737373] hover:bg-[#5E5E5E]"
+  //             aria-label="แก้ไขสินค้า"
+  //             title="แก้ไขสินค้า"
+  //           >
+  //             <PenLine className="w-4 h-4 text-white" />
+  //           </Button>
+  //         </Link>
+  //       </div>
+  //     );
+  //   },
+  // },
 ];
 
 export const Branch: React.FC<BranchPageProps> = (props) => {
