@@ -1,7 +1,7 @@
 {
   "dashboard": "แดชบอร์ด",
   "setting": "ตั้งค่า",
-  "user": "พนักงาน",
+  "users": "พนักงาน",
   "profile": "โปรไฟล์",
   "organization": "การตั้งค่าองค์กร",
   "setting-organization": "การตั้งค่าองค์กร",
@@ -41,5 +41,5 @@
   "third-party": "การเชื่อมต่อภายนอก",
   "ai": "ROME Assistant",
   "line": "Line",
-  "login-log" : "ประวัติการเข้าสู่ระบบ"
+  "login-log": "ประวัติการเข้าสู่ระบบ"
 }

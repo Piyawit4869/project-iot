@@ -13,10 +13,10 @@ export const ViewCustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
   form,
   loading = false,
 }) => {
-  const { id } = useParams<{ id: string }>();
-  const getId = id ?? "";
+  const params = useParams();
+  const id = params?.id as string;
 
-  const { data: customer } = useCustomer(getId);
+  const { data: customer } = useCustomer(id);
 
   return (
     <Card>

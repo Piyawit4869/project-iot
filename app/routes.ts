@@ -1,5 +1,4 @@
 // import { type RouteConfig, index } from "@react-router/dev/routes";
-
 // export default [index("routes/home.tsx")] satisfies RouteConfig;
 
 import {
@@ -13,7 +12,7 @@ import {
 export default [
   // Public
   route("login", "routes/login.tsx"),
-  //   route("/logout", "routes/logout.tsx"),
+  route("/logout", "routes/logout.tsx"),
 
   // Protected wrapper
   // Admin area layout (protected)
@@ -23,11 +22,26 @@ export default [
     // Home => Dashboard analytic
     index("routes/backoffice/home.tsx"),
 
+    // User
     ...prefix("users", [
       index("routes/backoffice/users/index.tsx"),
-      // route("/:id/edit", "routes/users/single/edit.tsx"),
-      // route("/:id", "routes/users/single/view.tsx"),
-      // route("/create", "routes/users/create.tsx"),
+      route("create", "routes/backoffice/users/create.tsx"),
+      route("/:id", "routes/backoffice/users/single.tsx"),
+      // route("/:id", "routes/backoffice/users/edit.tsx"),
+    ]),
+
+    // Products
+    ...prefix("products", [
+      index("routes/backoffice/products/index.tsx"),
+      route("create", "routes/backoffice/products/create.tsx"),
+      route(":id", "routes/backoffice/products/single.tsx"),
+    ]),
+
+    // Inventories
+    ...prefix("inventory", [
+      index("routes/backoffice/inventory/index.tsx"),
+      route("create", "routes/backoffice/inventory/create.tsx"),
+      route(":id", "routes/backoffice/inventory/single.tsx"),
     ]),
 
     //   // customer
@@ -45,6 +59,12 @@ export default [
       index("routes/backoffice/customer/index.tsx"),
       route("/create", "routes/backoffice/customer/create.tsx"),
       route("/:id", "routes/backoffice/customer/single.tsx"),
+      // route("/:id/edit", "routes/tickets/single/edit.tsx"),
+    ]),
+    ...prefix("orders", [
+      index("routes/backoffice/orders/index.tsx"),
+      route("/create", "routes/backoffice/orders/create.tsx"),
+      route("/:id", "routes/backoffice/orders/single.tsx"),
       // route("/:id/edit", "routes/tickets/single/edit.tsx"),
     ]),
     //   // products
@@ -72,6 +92,8 @@ export default [
         // ),
       ]),
     ]),
+
+    route("login-log", "routes/backoffice/login-log.tsx"),
   ]),
 
   // ]),

@@ -33,16 +33,16 @@ import { ViewCustomerActivityLog } from "./components/customer-activityLog";
 
 export default function SingDetailleCustomer() {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
-  const getId = id ?? "";
+  const params = useParams();
+  const id = params?.id as string;
 
   const {
     state: { customer, loadCustomer, formUpdate, isUpdating },
   } = useCustomerViewModel();
 
   const { isLoading } = useGetAllUsers();
-  const { data: getData, isLoading: isLoadingAiNote } = useGetAiNote(getId);
-  const { mutate: update, isPending } = useUpdateCustomer(getId);
+  const { data: getData, isLoading: isLoadingAiNote } = useGetAiNote(id);
+  const { mutate: update, isPending } = useUpdateCustomer(id);
   const [isEdit, setIsEdit] = React.useState(false);
   const [AIOpen, setAIOpen] = React.useState(false);
 

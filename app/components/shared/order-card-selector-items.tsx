@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge } from "../ui";
 import { GlobalImage } from "./global-image";
-import { SelectorItemsModal } from "./modal/selector-items-modal";
+import { SelectorItemsModal } from "../modules/order/components/form/selector-items-modal";
 import { Item } from "@/types/global";
 
 interface CardSelectorItemsProps {

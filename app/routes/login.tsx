@@ -18,7 +18,7 @@ export async function action({ request }: Route.ActionArgs) {
     const password = formData.get("password")?.toString() ?? "";
 
     const res = await login({ user, password });
-    console.log({ res });
+
     if (!res?.accessToken) {
       throw new Error("Invalid email or password");
     }

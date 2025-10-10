@@ -10,14 +10,14 @@ import {
 
 export const useCustomerFetch = () => {
   const { me: user } = useRouteLoaderData("root");
-  const { id } = useParams<{ id: string }>();
-  const getId = id ?? "";
+  const params = useParams();
+  const id = params?.id as string;
 
   const {
     data: contacts,
     isLoading: loadContacts,
     refetch: refetchContacts,
-  } = useAllContactsByCustomer(getId);
+  } = useAllContactsByCustomer(id);
 
   const {
     data: allCustomers,

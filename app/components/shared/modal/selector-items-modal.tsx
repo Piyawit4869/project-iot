@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Dialog,
   DialogTrigger,
@@ -7,27 +5,27 @@ import {
   DialogHeader,
   DialogFooter,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "~/components/ui/dialog";
+import { Input } from "~/components/ui/input";
+import { Checkbox } from "~/components/ui/checkbox";
+import { Button } from "~/components/ui/button";
+import { ScrollArea } from "~/components/ui/scroll-area";
 
-import { ReactElement, useEffect, useState } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 import { GlobalImage } from "../global-image";
 
-import { Badge } from "@/components/ui";
 import * as Icons from "lucide-react";
-import { cn } from "@/libs/utils";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "~/components/ui/accordion";
 import { X, Package, Hourglass } from "lucide-react";
-import { Item } from "@/types/global";
-import { usePaginate } from "@/hooks/queries/useProductQuery";
+import { cn } from "~/lib/utils";
+import { Badge } from "~/components/ui/badge";
+import { usePaginate } from "~/api/client/product/useProductQuery";
+import type { Item } from "~/types/global";
 
 type VariantType =
   | "default"

@@ -37,21 +37,20 @@ export function TablePagination<TData>({
 }: TablePaginationProps<TData>) {
   const navigate = useNavigate();
 
-  const router = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
 
   const [sp] = useSearchParams();
-  const { id } = useParams<{ id: string }>();
-  const getId = id ?? "";
+  const params = useParams();
+  const id = params?.id as string;
 
   // --- helpers ------------------------------------------------------
   const updateUrl = (pageIndex0: number, pageSize: number) => {
-    const next = new URLSearchParams(getId?.toString() ?? "");
+    const next = new URLSearchParams(id?.toString() ?? "");
     next.set(pageParamKey, String(pageIndex0 + 1)); // 1-based in URL
     next.set(sizeParamKey, String(pageSize));
-    navigate(`${pathname}?${next.toString()}`);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate(`${pathname}?${next.toString()}`, { preventScrollReset: true });
+    // window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const setPageIndex = (i: number) => {
