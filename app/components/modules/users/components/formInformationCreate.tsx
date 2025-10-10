@@ -60,8 +60,6 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
 
   const userDepartments = Array.isArray(data) ? data : [];
 
-  console.log({ userDepartments });
-
   const filtered = userDepartments.filter((item: any) => {
     const a = item.name?.toLowerCase().includes(search.toLowerCase());
 
