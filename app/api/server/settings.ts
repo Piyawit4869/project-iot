@@ -1,6 +1,9 @@
 import type {
   AddressSchemaValues,
+  ConnectAiValues,
+  ConnectLineValues,
   OrganizationFormValues,
+  PushMessageValues,
   SettingSchemaValues,
 } from "~/schemas/settings";
 import { ApiConfig } from "../config";
@@ -83,5 +86,110 @@ export const fetchBranchPagination = async (params: {
     return res.data;
   } catch (error) {
     throw error;
+  }
+};
+
+export const fetchChatBotPagination = async (params: {
+  page: number;
+  limit: number;
+}) => {
+  try {
+    const res = await ApiConfig.get("/configurations/integrations", {
+      params,
+    });
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchUpdateConnectionLine = async (
+  id: string,
+  payload: ConnectLineValues
+) => {
+  try {
+    const res = await ApiConfig.put(
+      `/thirdparty/line/config/${id}/edit`,
+      payload
+    );
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchGetConnectionLine = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(`/thirdparty/line/config/${id}`);
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchUpdateConnectionAi = async (
+  id: string,
+  payload: ConnectAiValues
+) => {
+  try {
+    const res = await ApiConfig.put(
+      `/thridparty/openai/config/${id}/edit`,
+      payload
+    );
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchGetConnectionAi = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(`/thridparty/openai/config/${id}`);
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchRoomChatAILoadMore = async (
+  chatRoomId: string,
+  offset = 0,
+  limit = 10
+) => {
+  try {
+    const res = await ApiConfig.get(`/chats/${chatRoomId}/messages`, {
+      params: { offset, limit, type: "assistant" },
+    });
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchSendMessage = async (payload: PushMessageValues) => {
+  try {
+    const res = await ApiConfig.post(`/chats/push-message`, payload);
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchRoomChatLoadMore = async (offset = 0, limit = 20) => {
+  try {
+    const res = await ApiConfig.get(`/crud/chats/rooms`, {
+      params: { offset, limit },
+    });
+
+    return res.data;
+  } catch (error) {
+    return error;
   }
 };

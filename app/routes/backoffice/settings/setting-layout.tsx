@@ -89,12 +89,12 @@ export default function SettingLayout({
                 <Building2 className="w-4 h-4 mr-2" />
               </TabsTrigger>
             </Link>
-            {/* <Link to="/organization/setting-organization/third-party">
+            <Link to="/setting-organization/third-party">
               <TabsTrigger value="third-party">
                 การเชื่อมต่อภายนอก
                 <BotMessageSquare className="w-4 h-4 mr-2" />
               </TabsTrigger>
-            </Link> */}
+            </Link>
 
             {/* <Link href="/organization/setting-organization/permission">
               <TabsTrigger value="permission">
