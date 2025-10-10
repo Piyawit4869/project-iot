@@ -80,7 +80,7 @@ export default function App() {
         position="bottom-right"
         richColors
         expand={false}
-        toastOptions={{ className: "font-inter" }}
+        toastOptions={{ className: "font-[IBMPlexSansThai]" }}
       />
       <RouteProvider>
         <Outlet />

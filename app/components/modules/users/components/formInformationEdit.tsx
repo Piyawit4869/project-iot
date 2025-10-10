@@ -270,54 +270,6 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                                 type="button"
                                 variant="outline"
                                 className="px-4 py-2 rounded-full"
-                              >
-                                เพิ่มแผนก +
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-64">
-                              <Command>
-                                <CommandInput
-                                  placeholder="ค้นหา..."
-                                  value={search}
-                                  onValueChange={setSearch}
-                                />
-                                <CommandEmpty>ไม่มีข้อมูล</CommandEmpty>
-                                <CommandList>
-                                  {(filtered ?? []).map((item: OptionItem) => {
-                                    const checked = selectedIds.has(item.id);
-                                    return (
-                                      <CommandItem
-                                        key={item.id}
-                                        onSelect={() => toggle(item)}
-                                      >
-                                        <Checkbox
-                                          checked={checked}
-                                          onCheckedChange={() => toggle(item)}
-                                          className="mr-2"
-                                        />
-                                        {item.name}
-                                        {checked && (
-                                          <Check className="ml-auto h-4 w-4" />
-                                        )}
-                                      </CommandItem>
-                                    );
-                                  })}
-                                </CommandList>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
-                          <Popover
-                            open={openSub}
-                            onOpenChange={(v) => {
-                              setOpenSub(v);
-                              if (!v) field.onBlur?.();
-                            }}
-                          >
-                            <PopoverTrigger asChild>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                className="px-4 py-2 rounded-full"
                                 disabled={!!selected.length}
                               >
                                 เพิ่มแผนก +
