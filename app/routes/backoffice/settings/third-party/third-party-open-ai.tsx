@@ -1,4 +1,3 @@
-import { env } from "process";
 import { OpenAiContainerSettingsChatBot } from "~/components/modules/settings/components/open-ai-container/open-ai-container-settings-chat-bot";
 import { CustomerProvider } from "~/hooks/customer/useCustomerStore";
 import { ChatProvider } from "~/providers/chat/useChat";
@@ -7,7 +6,8 @@ import { ChatRoomProvider } from "~/providers/chat/useChatRoom";
 import { MessageProvider } from "~/providers/chat/useMessage";
 
 export default function ThirdPartyOpenAiPage() {
-  const apiSocket = new URL(env.base_url ?? "http://localhost:3000").origin;
+  const apiSocket =
+    import.meta.env.VITE_PUBLIC_API_URL ?? "http://localhost:3000";
 
   return (
     <ChatProvider>

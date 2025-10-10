@@ -128,16 +128,14 @@ function buildColumns(
 
         return (
           <div className="ml-7">
-            {task.platform === "line" && (
-              <Button
-                className=" h-9 w-9 bg-[#737373] hover:bg-[#5E5E5E]"
-                type="button"
-                onClick={() => onEdit(task)}
-                disabled={status === "inactive"}
-              >
-                <PenLine className="w-4 h-4 text-white" />
-              </Button>
-            )}
+            <Button
+              className=" h-9 w-9 bg-[#737373] hover:bg-[#5E5E5E]"
+              type="button"
+              onClick={() => onEdit(task)}
+              disabled={status === "inactive"}
+            >
+              <PenLine className="w-4 h-4 text-white" />
+            </Button>
           </div>
         );
       },

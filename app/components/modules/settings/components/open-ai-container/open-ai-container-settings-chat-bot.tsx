@@ -1,7 +1,7 @@
 import React from "react";
 import { FormProvider, useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouteLoaderData, useSearchParams } from "react-router";
+import { useParams, useRouteLoaderData, useSearchParams } from "react-router";
 import {
   useGetConnectionAi,
   useUpdateConnectionAi,
@@ -30,8 +30,8 @@ export const OpenAiContainerSettingsChatBot: React.FC<
 > = (props) => {
   const { api } = props;
 
-  const [sp] = useSearchParams();
-  const id = sp.get("id") as string;
+  const params = useParams();
+  const id = (params?.id as string) ?? "";
 
   const { mutate: UpdateConnectionAi } = useUpdateConnectionAi(String(id));
   const { refetch: refetchChatAI } = useGetConnectionAi(String(id));

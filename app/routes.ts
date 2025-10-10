@@ -86,10 +86,10 @@ export default [
           "third-party/line/:id",
           "routes/backoffice/settings/third-party/third-party-line.tsx"
         ),
-        // route(
-        //   "third-party/ai/:id",
-        //   "routes/backoffice/settings/third-party/third-party-open-ai.tsx"
-        // ),
+        route(
+          "third-party/ai/:id",
+          "routes/backoffice/settings/third-party/third-party-open-ai.tsx"
+        ),
       ]),
     ]),
 
