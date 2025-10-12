@@ -21,6 +21,7 @@ export default [
 
     // Home => Dashboard analytic
     index("routes/backoffice/home.tsx"),
+    route("message", "routes/backoffice/messages/index.tsx"),
 
     // User
     ...prefix("users", [

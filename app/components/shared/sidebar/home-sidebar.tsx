@@ -37,7 +37,7 @@ export function HomeSidebar({
 
   React.useEffect(() => {
     const index = home.findIndex((item) =>
-      item.path.includes(segments[1] || "")
+      item.path.includes(segments[0] || "")
     );
 
     if (index) {

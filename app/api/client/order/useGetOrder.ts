@@ -84,6 +84,7 @@ export const useGetOrder = (id: string) => {
   return useQuery({
     queryKey: ["order", id],
     queryFn: () => fetchOrder(id),
+    enabled: !!id,
   });
 };
 

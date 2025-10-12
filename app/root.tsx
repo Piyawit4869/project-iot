@@ -66,6 +66,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const env = import.meta.env.PUBLIC_API_URL;
+  const envBase = import.meta.env.BASE_URL;
+  console.log({ env, envBase });
   const [queryClient] = React.useState(() => new QueryClient());
   const { token } = useRouteLoaderData("root");
 
