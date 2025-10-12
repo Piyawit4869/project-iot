@@ -26,7 +26,6 @@ export default function LoginForm() {
   const submit = useSubmit();
 
   const [showPassword, setShowPassword] = React.useState(false);
-  const [isRedirecting, setIsRedirecting] = React.useState(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -37,7 +36,7 @@ export default function LoginForm() {
   });
 
   const { isSubmitting, errors } = form.formState;
-  const isProcessing = isSubmitting || isRedirecting;
+  const isProcessing = isSubmitting;
 
   const onSubmit = async (values: LoginFormValues) => {
     const payload = {

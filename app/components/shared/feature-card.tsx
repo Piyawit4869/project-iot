@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "../ui";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 const FeatureCard = ({
   icon,

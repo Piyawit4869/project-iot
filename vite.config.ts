@@ -10,6 +10,9 @@ export default ({ mode }: { mode: any }) => {
     plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
     define: {
       "import.meta.env.PUBLIC_API_URL": JSON.stringify(env.PUBLIC_API_URL),
+      "import.meta.env.SESSION_SECRET": JSON.stringify(env.SESSION_SECRET),
+      "import.meta.env.NODE_ENV": JSON.stringify(env.NODE_ENV),
+      "import.meta.env.BASE_URL": JSON.stringify(env.BASE_URL),
     },
   });
 };
