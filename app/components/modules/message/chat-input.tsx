@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
-import { FileImage, Send, Loader2 } from "lucide-react";
+import { FileImage, Send, Loader2, PlusCircle } from "lucide-react";
 import React from "react";
 import { MessageLabelType } from "~/types/global";
 import { useIsMobile } from "~/hooks/use-mobile";
@@ -13,6 +13,7 @@ import {
   useCustomer,
   type CustomerMessage,
 } from "~/providers/customer-provider";
+import LineTemplatePickerModal from "./line-template-picker-modal";
 // import { socketConfig } from "@/libs/sockets";
 // import { env } from "@/constants/common";
 
@@ -146,6 +147,8 @@ export default function ChatInput({ selectedRoom }: { selectedRoom: any }) {
     e.target.value = "";
   };
 
+  const handleOpenUtilModal = () => {};
+
   React.useEffect(() => {
     const existingMesssge = messages.find((p) => p.roomId === selectedRoom.id);
     if (existingMesssge) {
@@ -197,7 +200,9 @@ export default function ChatInput({ selectedRoom }: { selectedRoom: any }) {
         className="hidden"
       />
 
-      <div className="flex justify-end p-4 ">
+      <div className="flex justify-end p-4 gap-2">
+        <LineTemplatePickerModal />
+
         <Button
           variant="ghost"
           size="icon"

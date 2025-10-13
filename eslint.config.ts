@@ -1,79 +1,104 @@
+// eslint.config.js (Flat Config)
 import js from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
-import reactPlugin from "eslint-plugin-react";
+import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
 import unusedImports from "eslint-plugin-unused-imports";
 import { defineConfig } from "eslint/config";
 
 export default defineConfig([
-  // ข้ามโฟลเดอร์ที่ไม่ต้องตรวจ
+  // 1) ข้ามโฟลเดอร์ที่ไม่ต้องตรวจ
   {
     ignores: ["**/node_modules/**", ".react-router/**", "dist/**", "build/**"],
   },
 
-  // ฐานสำหรับไฟล์ทุกชนิด
+  // 2) ฐานสำหรับทุกไฟล์
   {
-    files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+    files: ["**/*.{js,cjs,mjs,jsx,ts,tsx,mts,cts}"],
     languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: { ...globals.browser, ...globals.node },
     },
-    // ใช้ config พื้นฐานของ JS
-    extends: [js.configs.recommended],
     plugins: {
-      // react ใช้ผ่านบล็อกแยกด้านล่าง (configs.flat)
-      // typescript-eslint ใช้ผ่านบล็อกแยกด้านล่าง (configs.recommended)
+      react,
+      "react-hooks": reactHooks,
+      "react-refresh": reactRefresh,
       "unused-imports": unusedImports,
     },
+    settings: {
+      react: { version: "detect" },
+    },
+    // ฐานกฎของ JS
+    extends: [js.configs.recommended],
     rules: {
-      // ตั้งตามสไตล์ Next.js ที่คุณต้องการ
-      "no-unused-vars": "off",
+      // เปิดเตือน "อิมพอร์ตไม่ได้ใช้" ให้เป็นเส้นเหลือง
       "unused-imports/no-unused-imports": "warn",
+
+      // ป้องกันกรณีประกาศแต่ไม่ใช้ (ฝั่ง JS) ให้เตือนเป็นเส้นเหลือง
+      // และยกเว้นตัวที่ตั้งชื่อขึ้นต้นด้วย "_" (รองรับ loader/action ของ React Router 7)
+      "no-unused-vars": [
+        "warn",
+        {
+          args: "after-used",
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
+
+      // React/Vite quality-of-life
+      "react/react-in-jsx-scope": "off",
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+      "react-refresh/only-export-components": [
+        "warn",
+        { allowConstantExport: true },
+      ],
     },
   },
 
-  // เพิ่ม React แนะนำแบบ flat
-  reactPlugin.configs.flat.recommended,
-
-  // บล็อกสำหรับ TypeScript (รวม @typescript-eslint)
+  // 3) กฎสำหรับ TypeScript เพิ่มเติม (จะ override ของ JS แบบพอดีงาน TS)
   {
     files: ["**/*.{ts,tsx,mts,cts}"],
-    // ใช้ชุดกฎแนะนำของ @typescript-eslint
-    extends: [
-      ...tseslint.configs.recommended, // ถ้าต้องการ type-aware ใช้ recommendedTypeChecked และใส่ project ด้านล่าง
-    ],
+    // ชุดแนะนำของ @typescript-eslint (แบบ non-type-aware)
+    extends: [...tseslint.configs.recommended],
     plugins: {
       "@typescript-eslint": tseslint.plugin,
+      "unused-imports": unusedImports,
     },
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        // ถ้าอยากให้เป็น type-aware ให้ปลดคอมเมนต์สองบรรทัดล่างนี้
+        ecmaVersion: "latest",
+        sourceType: "module",
+        // ถ้าต้องการ type-aware linting ให้ปลดคอมเมนต์ 2 บรรทัดล่างและติดตั้ง project references ให้พร้อม
         // project: ["./tsconfig.json"],
         // tsconfigRootDir: import.meta.dirname,
-        sourceType: "module",
-        ecmaVersion: "latest",
       },
     },
     rules: {
-      // สไตล์แบบ Next.js ที่ต้องการ
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": "warn",
-    },
-  },
+      // ใช้กฎของ TS แทน base rule (เตือนเป็นเส้นเหลือง)
 
-  // บล็อกเฉพาะ React/JSX เพิ่มเติม (ถ้าต้องการ)
-  {
-    files: ["**/*.{jsx,tsx}"],
-    settings: {
-      react: { version: "detect" },
-    },
-    rules: {
-      // ใส่กฎ React เพิ่มได้ เช่น:
-      // "react/jsx-uses-react": "off", // ไม่จำเป็นกับ React 17+
-      "react/react-in-jsx-scope": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          args: "after-used",
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
+
+      // ยังเตือนอิมพอร์ตที่ไม่ได้ใช้
+      "unused-imports/no-unused-imports": "warn",
+
+      // ปิดข้อห้าม any (ปรับตามสไตล์ที่ต้องการได้)
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
 ]);

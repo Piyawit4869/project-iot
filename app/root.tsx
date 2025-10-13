@@ -35,6 +35,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export const links: Route.LinksFunction = () => [
+  { rel: "icon", href: "/assets/images/rome.png" },
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",
@@ -53,6 +54,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>ROME Platform</title>
         <Meta />
         <Links />
       </head>
@@ -66,9 +68,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const env = import.meta.env.PUBLIC_API_URL;
-  const envBase = import.meta.env.BASE_URL;
-  console.log({ env, envBase });
   const [queryClient] = React.useState(() => new QueryClient());
   const { token } = useRouteLoaderData("root");
 

@@ -6,13 +6,13 @@ import { PenLine, Trash } from "lucide-react";
 import { toast } from "sonner";
 
 // import rome from "@/public/images/rome.png";
-import rome from "public/assets/images/rome.png";
+import rome from "/assets/images/rome.png";
 
-import lineLogo from "public/assets/images/logoChannel/LINE_logo.webp";
-import facebookLogo from "public/assets/images/logoChannel/Facebook_Logo.png";
-import tiktokLogo from "public/assets/images/logoChannel/tiktok_logo.png";
-import shopeeLogo from "public/assets/images/logoChannel/Shopee_logo.png";
-import igLogo from "public/assets/images/logoChannel/Instagram_icon.png";
+import lineLogo from "/assets/images/logoChannel/LINE_logo.webp";
+import facebookLogo from "/assets/images/logoChannel/Facebook_Logo.png";
+import tiktokLogo from "/assets/images/logoChannel/tiktok_logo.png";
+import shopeeLogo from "/assets/images/logoChannel/Shopee_logo.png";
+import igLogo from "/assets/images/logoChannel/Instagram_icon.png";
 import { useQueryClient } from "@tanstack/react-query";
 import { GlobalTagsBadge } from "~/components/shared/global-tags";
 import type { CustomerType } from "../types/customer";

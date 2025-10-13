@@ -19,6 +19,7 @@ import { socketConfig } from "~/lib/sockets";
 import type { ChatRoomSchemaType } from "~/schemas/message/message";
 import { usePaginatedMessages } from "~/api/client/message/useMessage";
 import { useChat, type Message } from "~/providers/chat/useChat";
+import StatusToolbar from "./status-toolbar";
 
 // import { useChatRoom } from "@/stores/chat/useRoom";
 
@@ -269,8 +270,12 @@ export default function ChatMessages({
           </Button> */
   }
   return (
-    <div className="flex flex-col h-[calc(100vh-300px)] bg-white dark:bg-secondary">
-      <div className="flex items-center justify-end gap-4 p-2 border-b bg-white dark:bg-background">
+    <div className="flex flex-col h-[calc(100vh-100px)] bg-white dark:bg-secondary">
+      <div className="flex items-center justify-between gap-4 p-2 border-b bg-white dark:bg-background">
+        <div className="hidden xl:block">
+          <StatusToolbar value={"done"} />
+        </div>
+
         <div className="flex items-center gap-3">
           <Button
             type="button"
