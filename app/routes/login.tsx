@@ -7,7 +7,6 @@ import LoginForm from "~/components/modules/auth/login-form";
 export async function loader({ request }: Route.LoaderArgs) {
   const user = await getUser(request);
   const api = process.env.PUBLIC_API_URL;
-  console.log({ api });
 
   if (user?.id) {
     return redirect("/");

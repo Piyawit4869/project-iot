@@ -300,7 +300,7 @@ export default function ChatMessages({
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col max-h-[calc(100vh-200px)]">
+      <div className="flex flex-1 flex-col max-h-[calc(100vh-175px)]">
         <div
           ref={scrollAreaRef}
           className="flex h-full flex-col space-y-6 overflow-y-auto px-4 z-0 relative dark:bg-background"

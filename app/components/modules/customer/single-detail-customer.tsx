@@ -60,20 +60,20 @@ export default function SingDetailleCustomer() {
   const nameContactState = formUpdate.getFieldState("contacts.0.name");
   const { isDirty } = formUpdate.formState;
 
-  // useEntityBreadcrumb({
-  //   feature: "customer",
-  //   entity: customer
-  //     ? {
-  //         id: id,
-  //         name: fullName || lineName || otherName,
-  //       }
-  //     : undefined,
-  //   base: customer && {
-  //     href: `/customers/${id}`,
-  //     label: fullName || lineName || otherName,
-  //     uuid: id,
-  //   },
-  // });
+  useEntityBreadcrumb({
+    feature: "customer",
+    entity: customer
+      ? {
+          id: id,
+          name: fullName || lineName || otherName,
+        }
+      : undefined,
+    base: customer && {
+      href: `/customers/${id}`,
+      label: fullName || lineName || otherName,
+      uuid: id,
+    },
+  });
 
   const onUpdate = (values: CustomerValues) => {
     const payload = Object.assign({}, values);

@@ -13,8 +13,9 @@ import {
 
 import React from "react";
 import GlobalButton from "~/components/shared/global-button";
-import PageNotFound from "/assets/images/background.jpg";
+import BgLogin from "/assets/images/bg-login.png";
 import LogoImage from "/assets/images/rome.png";
+import LogoUtotechImage from "/assets/images/logo.webp";
 import { useActionData, useNavigation, useSubmit } from "react-router";
 import { loginFormSchema, type LoginFormValues } from "~/schemas/login";
 
@@ -48,34 +49,70 @@ export default function LoginForm() {
   };
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
-      <div className="hidden lg:block relative w-1/2 h-screen">
+      <div className="hidden lg:block relative w-3/4 h-screen">
         <img
-          src={PageNotFound}
+          src={BgLogin}
           alt="Login Image"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 flex items-center justify-center px-10 text-white bg-black/30 ">
-          <div>
-            <p className="text-4xl font-bold mb-4">Rome</p>
-            <p className="text-lg max-w-lg">
+        <div>
+          <div className="absolute inset-0 flex items-center flex-col text-white bg-black/30">
+            {/* <div className="absolute top-[10%] flex flex-col items-center">
+              <p className="text-4xl font-bold mb-2">ROME</p>
+              <p className="text-lg max-w-xl text-center">
+                ปลดล็อกพลังแห่งระบบอัตโนมัติและเพิ่มประสิทธิภาพการทำงาน
+                จัดการการเข้างาน บันทึกข้อมูล และจัดการ Work flow
+                ของคุณได้อย่างง่ายดาย
+              </p>
+            </div> */}
+
+            {/* <div className="absolute flex bottom-[10%] items-center flex-col text-white bg-black/30"> */}
+            <div className="absolute bottom-5 left-5 flex flex-col items-center">
+              <p className="text-md font-bold mb-2">
+                © 2025 Copyrights All Rights Reserved powered by Utotech
+                Co.,Ltd.
+              </p>
+            </div>
+
+            <div className="absolute bottom-3 right-5 flex flex-col items-center">
+              <a
+                href="https://utotech.co.th/home"
+                target="_blank"
+                className="text-lg font-bold mb-2"
+              >
+                {/* https://utotech.co.th */}
+                <img
+                  src={LogoUtotechImage}
+                  alt="logo"
+                  width={60}
+                  height={60}
+                  className="w-full h-[60px] object-cover"
+                />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full flex flex-col items-center justify-center px-6 py-12 lg:w-1/4">
+        <div className="mb-8 flex flex-col items-center space-y-2 py-10 pt-6">
+          <img
+            src={LogoImage}
+            alt="logo"
+            width={120}
+            height={120}
+            className="w-full h-[200px] object-contain"
+          />
+          {/* <h1 className="text-2xl font-bold text-foreground">ROME</h1> */}
+
+          <div className="flex flex-col items-center">
+            <p className="text-2xl font-bold mb-2">ROME</p>
+            <p className="text-sm text-gray-500 max-w-xl text-center">
               ปลดล็อกพลังแห่งระบบอัตโนมัติและเพิ่มประสิทธิภาพการทำงาน
               จัดการการเข้างาน บันทึกข้อมูล และจัดการ Work flow
               ของคุณได้อย่างง่ายดาย
             </p>
           </div>
-        </div>
-      </div>
-
-      <div className="mt-20 sm:mt-30 md:mt-40 mb-4 sm:mb-6 w-full lg:w-1/2 flex flex-col items-center justify-center px-6 py-12">
-        <div className="lg:hidden mb-8 flex flex-col items-center space-y-2 py-10 pt-6">
-          <img
-            src={LogoImage}
-            alt="logo"
-            width={0}
-            height={0}
-            className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24"
-          />
-          <h1 className="text-2xl font-bold text-foreground">ROME</h1>
         </div>
 
         <Form {...form}>
@@ -84,7 +121,7 @@ export default function LoginForm() {
             className="space-y-6 w-full max-w-sm"
           >
             <div className="flex justify-center">
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 className="text-xl font-semibold text-foreground">
                 เข้าสู่ระบบ
               </h2>
             </div>
@@ -146,6 +183,16 @@ export default function LoginForm() {
             )}
           </form>
         </Form>
+
+        <div className="mt-10 flex flex-row gap-2">
+          <a href="" className="hover:underline">
+            นโยบายเว็บไซต์
+          </a>
+          |
+          <a href="" className="hover:underline">
+            นโยบายการรักษาความมั่นคงปลอดภัย
+          </a>
+        </div>
       </div>
     </div>
   );

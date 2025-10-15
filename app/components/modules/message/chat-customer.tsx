@@ -793,7 +793,7 @@ export default function ChatCustomerInfo({
                                           `https://api.dicebear.com/9.x/initials/svg?seed=${item.userName}`
                                         }
                                         alt={item?.userName || ""}
-                                        className="w-5 h-5 rounded-2xl"
+                                        className="w-10 h-10 rounded-2xl"
                                       />
                                       <div className="flex flex-col text-sm">
                                         <span>
@@ -985,7 +985,7 @@ export default function ChatCustomerInfo({
                                           `https://api.dicebear.com/9.x/initials/svg?seed=${item.userName}`
                                         }
                                         alt={item?.userName || ""}
-                                        className="w-5 h-5 rounded-2xl"
+                                        className="w-10 h-10 rounded-2xl"
                                       />
                                       <div className="flex flex-col text-sm">
                                         <span>

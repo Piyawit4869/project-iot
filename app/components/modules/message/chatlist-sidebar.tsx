@@ -13,6 +13,7 @@ import { useRouteLoaderData } from "react-router";
 import { socketConfig } from "~/lib/sockets";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
+import { FileUp } from "lucide-react";
 
 interface Props {
   handleChangeSelectedRoom: (room: any) => void;
@@ -91,14 +92,15 @@ export default function ChatlistSidebar({
   return (
     <aside className="h-full border-r dark:bg-background flex flex-col border-l">
       <div className="p-3 border-b flex flex-col">
-        <div className="flex justify-between">
+        <div className="flex justify-between px-0">
           <h2 className="text-lg font-semibold">แชท</h2>
-          <Button variant="link" className="px-0">
-            นำออกข้อมูล
+          <Button variant="link" className="px-0 py-0">
+            {/* <FileUp /> */}
+            <p className="hidden md:block">นำออกข้อมูล</p>
           </Button>
         </div>
 
-        <Input placeholder="ค้นหา" className="w-full" />
+        <Input placeholder="ค้นหา" className="bg-white w-full" />
       </div>
 
       <div

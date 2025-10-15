@@ -49,7 +49,7 @@ export const OrderDetail: React.FC<OrderFormProps> = (props) => {
             <Tabs defaultValue="details">
               <TabsList>
                 <TabsTrigger value="details">รายละเอียดสินค้า</TabsTrigger>
-                <TabsTrigger value="credit">เครดิต</TabsTrigger>
+                <TabsTrigger value="credit">AI Insight</TabsTrigger>
               </TabsList>
 
               <TabsContent value="details">
