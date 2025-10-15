@@ -63,27 +63,27 @@ export default function StatusToolbar({ value, onChange, className }: Props) {
         </Tooltip>
 
         {/* ปุ่ม: ดำเนินการแล้ว + Popover */}
-        <Popover open={open} onOpenChange={setOpen}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "h-9 px-3 rounded-md border-muted-foreground/30",
-                    value === "done" && "border-primary text-primary"
-                  )}
-                  onClick={setDone}
-                >
-                  <CheckCircle className="mr-2 h-[18px] w-[18px]" />
-                  ดำเนินการแล้ว
-                </Button>
-              </PopoverTrigger>
-            </TooltipTrigger>
-            <TooltipContent>กำหนดเป็น "ดำเนินการแล้ว"</TooltipContent>
-          </Tooltip>
+        {/* <Popover open={open} onOpenChange={setOpen}> */}
 
-          <PopoverContent
+        <Tooltip>
+          <TooltipTrigger asChild>
+            {/* <PopoverTrigger asChild> */}
+            <Button
+              variant="outline"
+              className={cn(
+                "h-9 px-3 rounded-md border-muted-foreground/30",
+                value === "done" && "border-primary text-primary"
+              )}
+              onClick={setDone}
+            >
+              <CheckCircle className="mr-2 h-[18px] w-[18px]" />
+              ดำเนินการแล้ว
+            </Button>
+            {/* </PopoverTrigger> */}
+          </TooltipTrigger>
+          <TooltipContent>กำหนดเป็น "ดำเนินการแล้ว"</TooltipContent>
+        </Tooltip>
+        {/* <PopoverContent
             align="start"
             sideOffset={6}
             className="w-[260px] text-sm"
@@ -111,7 +111,7 @@ export default function StatusToolbar({ value, onChange, className }: Props) {
               </div>
             </div>
           </PopoverContent>
-        </Popover>
+        </Popover> */}
 
         {/* ช่องค้นหา (ตามสไตล์ภาพ) */}
         <div className="ml-1 flex items-center gap-2">

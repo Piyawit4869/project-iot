@@ -126,7 +126,7 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
         }`.trim();
 
         return (
-          <Link to={` /customer/${id}`}>
+          <Link to={`/customer/${id}`}>
             <span className="text-sm text-muted-foreground hover:underline">
               {fullName || "-"}
             </span>

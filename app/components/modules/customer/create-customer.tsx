@@ -57,7 +57,7 @@ export default function CreateCustomer() {
               duration: 2500,
               position: "bottom-right",
             });
-            navigate(`/organization/customer/${data.id}`);
+            navigate(`/customer/${data.id}`);
           },
           onError: () => {
             toast.error("เกิดข้อผิดพลาดในการสร้างลูกค้า", {
