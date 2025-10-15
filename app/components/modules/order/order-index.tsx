@@ -44,9 +44,10 @@ export default function OrdersIndex() {
                 <span className="hidden sm:inline">&nbsp;นำเข้าข้อมูล</span>
               </>
             }
+            variant="outline"
             disabled
             key="import-button"
-            className="bg-blue-300 text-black hover:bg-blue-500 hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+            // className="bg-blue-300 text-black hover:bg-blue-500 hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
           />,
           <GlobalButton
             label={
@@ -55,9 +56,10 @@ export default function OrdersIndex() {
                 <span className="hidden sm:inline">&nbsp;นำออกข้อมูล</span>
               </>
             }
+            variant="outline"
             disabled
             key="export-button"
-            className="bg-yellow-300 text-black hover:bg-yellow-500 hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+            // className="bg-yellow-300 text-black hover:bg-yellow-500 hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
           />,
           <Button
             key="create-button"
@@ -91,7 +93,7 @@ export default function OrdersIndex() {
                 <TabsTrigger
                   key={c.label}
                   value={c.status}
-                  className="relative px-4 py-2 !bg-transparent !shadow-none !border-0 rounded-none after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
+                  className="hover:bg-gray-200 relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
                 >
                   {c.icon} {c.label} ({c.value})
                 </TabsTrigger>

@@ -280,7 +280,7 @@ export default function ChatMessages({
           <Button
             type="button"
             size={"sm"}
-            className=" bg-yellow-300 text-black hover:bg-yellow-200 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+            className=" bg-muted-foreground text-background hover:bg-gray-200 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
             onClick={() => {
               setAIOpen(true);
             }}
@@ -290,7 +290,7 @@ export default function ChatMessages({
           <Button
             type="button"
             size={"sm"}
-            className="px-3 py-1 bg-black hover:bg-gray-600 text-sm text-white dark:bg-primary"
+            className="px-3 py-1 bg-black hover:bg-gray-600 text-sm text-background dark:bg-primary"
             onClick={() => {
               setCheckStatusOpen(true);
             }}

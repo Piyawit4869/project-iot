@@ -288,15 +288,24 @@ export default function MenuWhenNoData() {
                 <TabsContent value="product">
                   <div className="flex flex-row item-center justify-between gap-12">
                     <p className="text-sm font-semibold mb-2">สินค้าที่สนใจ</p>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      disabled
-                      className="h-[30px] w-[90px] p-2 gap-2 border-amber-500"
-                    >
-                      <PlusCircleIcon />
-                      <span className="text-[12px]">เพิ่มสินค้า</span>
-                    </Button>
+                    <div>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-[30px] w-[70px] px-2 gap-2 mr-2"
+                        disabled
+                      >
+                        <span className="text-[12px]">กรอง</span>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-[30px] w-[70px] p-2 px-3"
+                        disabled
+                      >
+                        <span className="text-[12px]">ตะกร้า</span>
+                      </Button>
+                    </div>
                   </div>
                   <p className="text-gray-400 mt-4 text-center">
                     กดเลือกแชทเพื่อใช้งาน Feature

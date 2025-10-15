@@ -98,11 +98,11 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
       header: "ชื่อ",
       enableSorting: true,
       cell: ({ row }) => {
-        const id = row.original.id;
+        // const id = row.original.id;
         const name = fullName(row.original);
         return (
-          <Link to={`/customer/${id}`}>
-            <span className="text-sm text-muted-foreground hover:underline">
+          <Link to={`/customer/${row.original.id}`}>
+            <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline">
               {name}
             </span>
           </Link>
@@ -114,7 +114,6 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
       accessorKey: "profile",
       header: "ชื่อจริงลูกค้า",
       cell: (info) => {
-        const id = info.row.original.id;
         const nickName = info.row.original.profile?.nickName
           ? `( ${info.row.original.profile?.nickName} )`
           : "";
@@ -126,8 +125,8 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
         }`.trim();
 
         return (
-          <Link to={` /customer/${id}`}>
-            <span className="text-sm text-muted-foreground hover:underline">
+          <Link to={`/customer/${info.row.original.id}`}>
+            <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline">
               {fullName || "-"}
             </span>
           </Link>
@@ -315,7 +314,7 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
 
         return id ? (
           <Link to={`/organization/user/${id}`}>
-            <span className="text-sm text-muted-foreground hover:underline">
+            <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline">
               {name}
             </span>
           </Link>

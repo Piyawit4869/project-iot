@@ -87,8 +87,9 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
               placeholder="TH, EN, JP"
               disable={isEditing}
               selectOptions={[
-                { label: "Thai", value: "TH" },
-                { label: "English", value: "EN" },
+                { label: "TH", value: "TH" },
+                { label: "EN", value: "EN" },
+                // { label: "JP", value: "JP" },
               ]}
             />
             {/* <FormField

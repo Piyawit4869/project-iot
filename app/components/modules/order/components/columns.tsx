@@ -41,7 +41,7 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
         const name = getValue() as string;
         return (
           <Link to={`/orders/${row.original.id}`}>
-            <span className="text-sm text-muted-foreground hover:underline">
+            <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline">
               {name ?? "-"}
             </span>
           </Link>
@@ -63,7 +63,7 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
           .join(" ");
 
         return (
-          <span className="hover:underline">
+          <span className="hover:text-blue-400 hover:underline">
             <Link to={`/customer/${customer.id}`}>
               {fullName || customer.name || "-"}
             </Link>

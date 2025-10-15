@@ -43,6 +43,7 @@ import {
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { getRequiredPaths } from "~/utils/form-adapter";
+import { nationalityMap, religionMap } from "~/initData/user-initData";
 
 type OptionItem = { id: string; name: string; active?: boolean };
 
@@ -528,7 +529,13 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                         <Input
                           placeholder="กรอกสัญชาติ"
                           {...field}
-                          value={field.value ?? undefined}
+                          value={
+                            nationalityMap[
+                              field.value as keyof typeof nationalityMap
+                            ] ??
+                            field.value ??
+                            ""
+                          }
                         />
                       </FormControl>
                       <FormMessage />
@@ -545,7 +552,13 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                         <Input
                           placeholder="กรอกศาสนา"
                           {...field}
-                          value={field.value ?? undefined}
+                          value={
+                            religionMap[
+                              field.value as keyof typeof religionMap
+                            ] ??
+                            field.value ??
+                            ""
+                          }
                         />
                       </FormControl>
                       <FormMessage />

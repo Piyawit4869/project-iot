@@ -66,7 +66,7 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
               placeholder="Green Village"
             />
 
-            <GlobalFormField
+            {/* <GlobalFormField
               control={form.control}
               name="roomNo"
               label="หมายเลขห้อง"
@@ -82,6 +82,15 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
               type="input"
               checkFields={checkFields}
               placeholder="1"
+            /> */}
+
+            <GlobalFormField
+              control={form.control}
+              name="houseNo"
+              label="เลขที่บ้าน"
+              type="input"
+              checkFields={checkFields}
+              placeholder="5"
             />
 
             <GlobalFormField
@@ -91,15 +100,6 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
               type="input"
               checkFields={checkFields}
               placeholder="2"
-            />
-
-            <GlobalFormField
-              control={form.control}
-              name="houseNo"
-              label="หมายเลขบ้าน"
-              type="input"
-              checkFields={checkFields}
-              placeholder="5"
             />
 
             <GlobalFormField

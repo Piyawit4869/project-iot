@@ -80,7 +80,7 @@ export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
 
           return (
             <Link to={`/inventory/${id}`}>
-              <span className="text-sm text-muted-foreground hover:underline">
+              <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline">
                 {name}
               </span>
             </Link>
@@ -140,12 +140,12 @@ export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
 
           return id ? (
             <Link to={`/users/${id}`}>
-              <span className="text-sm text-muted-foreground hover:underline">
+              <span className="text-muted-foreground hover:text-blue-400 hover:underline">
                 {name}
               </span>
             </Link>
           ) : (
-            <span className="text-sm text-muted-foreground">{name}</span>
+            <span className="text-muted-foreground">{name}</span>
           );
         },
       },

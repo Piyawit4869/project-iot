@@ -8,14 +8,11 @@ import { GlobalImage } from "~/components/shared/global-image";
 import type { UsersFormValues } from "~/schemas/users/user";
 import { CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { InfoRow } from "~/components/shared/InfoRow";
-
-const statusOptions = [
-  { label: "ใช้งานอยู่", value: "active" },
-  { label: "ทดลองงาน", value: "probation" },
-  { label: "ลาหยุดชั่วคราว", value: "on_leave" },
-  { label: "ลาออกแล้ว", value: "resigned" },
-  { label: "เลิกจ้าง", value: "terminated" },
-] as const;
+import {
+  nationalityMap,
+  religionMap,
+  statusOptions,
+} from "~/initData/user-initData";
 
 function getLabel<T extends { label: string; value: string }>(
   value?: string,
@@ -150,8 +147,22 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
               }
             />
             <InfoRow label="เลขประจำตัวผู้เสียภาษี" value={profile.taxId} />
-            <InfoRow label="สัญชาติ" value={profile.nationality} />
-            <InfoRow label="ศาสนา" value={profile.religion} />
+            {/* <InfoRow label="สัญชาติ" value={profile.nationality} />
+            <InfoRow label="ศาสนา" value={profile.religion} /> */}
+            <InfoRow
+              label="สัญชาติ"
+              value={
+                nationalityMap[profile.nationality as any] ??
+                profile.nationality ??
+                "-"
+              }
+            />
+            <InfoRow
+              label="ศาสนา"
+              value={
+                religionMap[profile.religion as any] ?? profile.religion ?? "-"
+              }
+            />
             <InfoRow label="น้ำหนัก" value={profile.weight} />
             <InfoRow label="ส่วนสูง" value={profile.height} />
             <InfoRow

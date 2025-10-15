@@ -99,7 +99,7 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
 
         return (
           <Link to={`/products/${id}`}>
-            <span className="text-sm text-muted-foreground hover:underline">
+            <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline">
               {name}
             </span>
           </Link>
@@ -199,12 +199,12 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
 
         return id ? (
           <Link to={`/users/${id}`}>
-            <span className="text-sm text-muted-foreground hover:underline">
+            <span className=" text-muted-foreground hover:text-blue-400 hover:underline">
               {name}
             </span>
           </Link>
         ) : (
-          <span className="text-sm text-muted-foreground">{name}</span>
+          <span className=" text-muted-foreground">{name}</span>
         );
       },
     },

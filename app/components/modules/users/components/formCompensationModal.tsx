@@ -41,8 +41,8 @@ type Props = {
 };
 
 const unitOptions = [
-  { value: "THB", label: "THB" },
-  { value: "USD", label: "USD" },
+  { value: "THB", label: "บาท" },
+  { value: "USD", label: "ดอลลาร์" },
 ];
 
 export const CompensationModal: React.FC<Props> = ({

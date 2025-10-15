@@ -10,6 +10,7 @@ import type { UsersFormValues } from "~/schemas/users/user";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { InfoRow } from "~/components/shared/InfoRow";
+import { currencyMap } from "~/initData/user-initData";
 
 type CompensationConfig =
   UsersFormValues["profile"]["compensationConfigs"][number];
@@ -88,7 +89,14 @@ export const UserCompensation: React.FC<UserCompensationViewProps> = ({
                           label="เงินเดือนพื้นฐาน"
                           value={(row.baseSalary, row.baseSalary)}
                         />
-                        <InfoRow label="สกุลเงิน" value={row.currency || "-"} />
+                        <InfoRow
+                          label="สกุลเงิน"
+                          value={
+                            currencyMap[row.currency as any] ??
+                            row.currency ??
+                            "-"
+                          }
+                        />
 
                         <InfoRow
                           label="มีสิทธิ์โบนัสหรือไม่"
