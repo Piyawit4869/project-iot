@@ -278,7 +278,7 @@ export default function SingleUsers() {
         DeleteUsers(id, {
           onSuccess: () => {
             toast.success("ลบพนักงานเรียบร้อยแล้ว!", { id: toastId });
-            navigate("/user");
+            navigate("/users");
           },
           onError: () => {
             toast.error("เกิดข้อผิดพลาดขณะลบพนักงาน", { id: toastId });

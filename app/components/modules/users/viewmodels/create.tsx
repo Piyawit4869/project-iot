@@ -85,7 +85,7 @@ export default function CreateUsers() {
         mutate(values, {
           onSuccess: (data) => {
             toast.success("สร้างพนักงานเรียบร้อยแล้ว!", { id: toastId });
-            navigate(`/organization/user/${data?.id}`);
+            navigate(`/users/${data?.id}`);
           },
           onError: () => {
             toast.error("เกิดข้อผิดพลาดขณะสร้างพนักงาน", { id: toastId });

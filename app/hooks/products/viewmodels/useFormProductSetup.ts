@@ -214,6 +214,55 @@ export const useFormProductSetup = (id: string) => {
         active: true,
       } as unknown as ProductCreateDTO);
     }
+
+    //  if (data) {
+    //    form.reset({
+    //      id: data.id ?? "",
+    //      name: data.name ?? "",
+    //      sku: data.sku ?? "",
+    //      status: data.status ?? "active",
+    //      description: data.description ?? "",
+    //      imageUrl: data.imageUrl ?? "",
+    //      imageUrls: data.imageUrls ?? [],
+    //      salePrice: data.salePrice ?? 0,
+    //      compareAtPrice: data.compareAtPrice ?? 0,
+    //      costPrice: data.costPrice ?? 0,
+    //      discountPrice: data.discountPrice ?? 0,
+    //      vatPrice: data.vatPrice ?? 0,
+    //      availableForSale: data.availableForSale ?? 0,
+    //      weight: data.weight ?? 0,
+    //      unit: data.unit ?? "kilogram",
+    //      matType: data.matType ?? "non_material",
+    //      productCategory: data.productCategory ?? "",
+    //      categories: data.categories ?? [],
+    //      options: data.options ?? [],
+    //      variants: data.variants ?? [],
+    //      active: data.active ?? true,
+    //    } as unknown as ProductCreateDTO);
+    //  } else {
+    //    form.reset({
+    //      name: "",
+    //      sku: "",
+    //      status: "active",
+    //      description: "",
+    //      imageUrl: "",
+    //      imageUrls: [],
+    //      salePrice: 0,
+    //      compareAtPrice: 0,
+    //      costPrice: 0,
+    //      discountPrice: 0,
+    //      vatPrice: 0,
+    //      availableForSale: 0,
+    //      weight: 0,
+    //      unit: "kilogram",
+    //      matType: "non_material",
+    //      productCategory: "",
+    //      categories: [],
+    //      options: [],
+    //      variants: [],
+    //      active: true,
+    //    } as unknown as ProductCreateDTO);
+    //  }
   }, [
     form,
     data,

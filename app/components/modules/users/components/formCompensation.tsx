@@ -270,7 +270,15 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
                       : "-";
 
                   const details = [
-                    { label: "สกุลเงิน", value: currency ?? "-" },
+                    {
+                      label: "สกุลเงิน",
+                      value:
+                        currency === "THB"
+                          ? "บาท"
+                          : currency === "USD"
+                          ? "ดอลลาร์"
+                          : currency,
+                    },
                     {
                       label: "โบนัส",
                       value: v?.bonusEligible

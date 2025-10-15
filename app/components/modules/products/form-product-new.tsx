@@ -446,8 +446,8 @@ export const FormProductNew: React.FC<FormProductProps> = ({
                         control={form.control}
                         name="unit"
                         render={({ field }) => (
-                          <FormItem className="flex-1 mt-[14px]">
-                            <FormLabel></FormLabel>
+                          <FormItem>
+                            <FormLabel>หน่วย</FormLabel>
                             <Select
                               value={field.value}
                               onValueChange={field.onChange}
@@ -482,102 +482,102 @@ export const FormProductNew: React.FC<FormProductProps> = ({
             </Card>
 
             <Card className="p-4 space-y-3">
-              <h1 className="text-md font-semibold mb-8 mt-6">
-                การจัดระเบียบสินค้า
-              </h1>
-              <FormField
-                control={form.control}
-                name="matType"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>ประเภท</FormLabel>
-                    <Select
-                      value={field.value || "material"}
-                      onValueChange={field.onChange}
-                    >
-                      <FormControl className="w-full shadow-none">
-                        <SelectTrigger>
-                          <SelectValue placeholder="เลือกประเภท" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="w-full">
-                        {matTypeOptions.map((item) => (
-                          <SelectItem key={item.value} value={item.value}>
-                            {item.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <h1 className="text-sm font-semibold mb-2 mt-6">แท็กสินค้า</h1>
-              <InputTags
-                value={values}
-                onChange={setValues}
-                placeholder="กรอกแท็ก"
-                className="max-w-[500px]"
-              />
-              <h3 className="text-xs text-gray-400 p-1">
-                กด Enter หรือพิมพ์คั่นด้วย comma(,) เพื่อเพิ่มแท็ก
-              </h3>
-
-              <div className="flex flex-row gap-3 mt-6 w-[100%]">
+              <div>
+                {" "}
+                <h1 className="text-md font-semibold mb-8 mt-6">
+                  การจัดระเบียบสินค้า
+                </h1>
                 <FormField
                   control={form.control}
-                  name="productCategory"
+                  name="matType"
                   render={({ field }) => (
-                    <FormItem className="flex-1 mt-[14px] relative">
-                      <FormLabel>หมวดหมู่</FormLabel>
+                    <FormItem className="flex-1">
+                      <FormLabel>ประเภท</FormLabel>
                       <Select
-                        value={field.value || ""}
-                        onValueChange={(val) => field.onChange(val)}
+                        value={field.value || "material"}
+                        onValueChange={field.onChange}
                       >
-                        <FormControl>
-                          <SelectTrigger className="w-full shadow-none">
-                            <SelectValue placeholder="เลือกหมวดหมู่" />
+                        <FormControl className="w-full shadow-none">
+                          <SelectTrigger>
+                            <SelectValue placeholder="เลือกประเภท" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="w-full">
-                          {categories?.map((item: Category) => (
-                            <SelectItem key={item.name} value={item.name}>
-                              {item.name}
+                          {matTypeOptions.map((item) => (
+                            <SelectItem key={item.value} value={item.value}>
+                              {item.label}
                             </SelectItem>
                           ))}
-
-                          <div className="flex gap-2 mt-2 w-full">
-                            <input
-                              type="text"
-                              placeholder="เพิ่มหมวดหมู่ใหม่"
-                              value={newCategory}
-                              onChange={(e) => setNewCategory(e.target.value)}
-                              className="flex-1 p-2 border rounded-sm text-base"
-                            />
-                            <Button
-                              onClick={() => {
-                                if (newCategory.trim() !== "") {
-                                  create({
-                                    name: newCategory,
-                                    active: true,
-                                    code: "",
-                                    description: "",
-                                  });
-                                  setNewCategory("");
-                                }
-                              }}
-                              type="button"
-                              className="p-2 text-sm w-[80px] flex justify-center items-center"
-                            >
-                              เพิ่ม
-                            </Button>
-                          </div>
                         </SelectContent>
                       </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <h1 className="text-sm font-semibold mb-2 mt-6">แท็กสินค้า</h1>
+                <InputTags
+                  value={values}
+                  onChange={setValues}
+                  placeholder="กรอกแท็ก"
+                  className="max-w-[500px]"
+                />
+                <h3 className="text-xs text-gray-400 p-1">
+                  กด Enter หรือพิมพ์คั่นด้วย comma(,) เพื่อเพิ่มแท็ก
+                </h3>
+                <div className="flex flex-row gap-3 mt-6 w-[100%]">
+                  <FormField
+                    control={form.control}
+                    name="productCategory"
+                    render={({ field }) => (
+                      <FormItem className="flex-1 mt-[14px] relative">
+                        <FormLabel>หมวดหมู่</FormLabel>
+                        <Select
+                          value={field.value || ""}
+                          onValueChange={(val) => field.onChange(val)}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full shadow-none">
+                              <SelectValue placeholder="เลือกหมวดหมู่" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="w-full">
+                            {categories?.map((item: Category) => (
+                              <SelectItem key={item.name} value={item.name}>
+                                {item.name}
+                              </SelectItem>
+                            ))}
 
-                      {/* ปุ่มลบค่า */}
-                      {/* {field.value && (
+                            <div className="flex gap-2 mt-2 w-full">
+                              <input
+                                type="text"
+                                placeholder="เพิ่มหมวดหมู่ใหม่"
+                                value={newCategory}
+                                onChange={(e) => setNewCategory(e.target.value)}
+                                className="flex-1 p-2 border rounded-sm text-base"
+                              />
+                              <Button
+                                onClick={() => {
+                                  if (newCategory.trim() !== "") {
+                                    create({
+                                      name: newCategory,
+                                      active: true,
+                                      code: "",
+                                      description: "",
+                                    });
+                                    setNewCategory("");
+                                  }
+                                }}
+                                type="button"
+                                className="p-2 text-sm w-[80px] flex justify-center items-center"
+                              >
+                                เพิ่ม
+                              </Button>
+                            </div>
+                          </SelectContent>
+                        </Select>
+
+                        {/* ปุ่มลบค่า */}
+                        {/* {field.value && (
                         <Button
                           type="button"
                           onClick={() => field.onChange("")}
@@ -586,10 +586,11 @@ export const FormProductNew: React.FC<FormProductProps> = ({
                           <span className="text-xl text-gray-600">×</span>
                         </Button>
                       )} */}
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             </Card>
           </div>
