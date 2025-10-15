@@ -1,12 +1,13 @@
 import type { Route } from "./+types/login";
-import { createUserSession, getUserId } from "~/services/session.server";
+import { createUserSession, getUser } from "~/services/session.server";
 import { redirect } from "react-router";
-import { login } from "~/api/server/auth";
+import { getMe, login } from "~/api/server/auth";
 import LoginForm from "~/components/modules/auth/login-form";
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const userId = await getUserId(request);
-  if (userId) {
+  const user = await getUser(request);
+
+  if (user?.id) {
     return redirect("/");
   }
 }
@@ -18,18 +19,22 @@ export async function action({ request }: Route.ActionArgs) {
     const password = formData.get("password")?.toString() ?? "";
 
     const res = await login({ user, password });
+    const accessToken = res.accessToken;
+    const refreshToken = res.refreshToken;
+
+    const me = await getMe(accessToken ?? "");
 
     if (!res?.accessToken) {
       throw new Error("Invalid email or password");
     }
 
-    const accessToken = res.accessToken;
-
     return await createUserSession({
       request,
-      userId: user,
+      user: me,
       accessToken,
-      remember: true,
+      refreshToken,
+      // refreshTokenMaxAgeSec: 60,
+      // remember: true,
     });
   } catch (error) {
     if (error instanceof Error) {

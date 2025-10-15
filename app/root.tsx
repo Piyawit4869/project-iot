@@ -10,8 +10,7 @@ import {
 import { Toaster } from "sonner";
 
 import "./app.css";
-import { getAccessToken } from "./services/session.server";
-import { getMe } from "./api/server/auth";
+import { getAccessToken, getUser } from "./services/session.server";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GlobalModalStatic } from "./components/shared/modal/global-modal-static";
@@ -19,18 +18,14 @@ import type { Route } from "./routes/backoffice/customer/+types";
 import { RouteProvider } from "./providers/RouteProvider";
 
 export async function loader({ request }: Route.LoaderArgs) {
+  //TODO:FIX TO NOT PASS ACCESS TOKEN
   const token = await getAccessToken(request);
+  const user = await getUser(request);
 
-  try {
-    const me = await getMe(token ?? "");
-
-    const user = me;
-
-    const user_data = me;
-
-    return { user, token, user_data, me };
-  } catch {
-    return { token: "" };
+  if (user?.id) {
+    return { user, token, me: user };
+  } else {
+    return { user: null, token: null };
   }
 }
 

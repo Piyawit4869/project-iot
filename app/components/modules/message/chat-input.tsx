@@ -90,6 +90,17 @@ export default function ChatInput({ selectedRoom }: { selectedRoom: any }) {
     //   timestamp: new Date().toISOString(),
     //   sender: "คุณ",
     // });
+    // console.log({
+    //   chatRoomId: selectedRoom.id,
+    //   lineSubId: selectedRoom.customer?.lineSubId ?? "",
+    //   message: messageText,
+    //   messageType: "text",
+    //   isAiReply: false,
+    //   recipient: selectedRoom.customer?.fullName ?? "Unknown",
+    //   customerId: selectedRoom.customerId ?? "",
+    //   platform: "backoffice",
+    //   messageLabel: MessageLabelType.SENDTEXT,
+    // });
     send({
       chatRoomId: selectedRoom.id,
       lineSubId: selectedRoom.customer?.lineSubId ?? "",

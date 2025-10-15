@@ -13,7 +13,6 @@ import { useRouteLoaderData } from "react-router";
 import { socketConfig } from "~/lib/sockets";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { Expand, Icon } from "lucide-react";
 
 interface Props {
   handleChangeSelectedRoom: (room: any) => void;
@@ -64,8 +63,6 @@ export default function ChatlistSidebar({
       setAllRooms(chatRooms);
     }
   }, [chatRooms]);
-
-  console.log({ chatRooms });
 
   const { currentRoomId } = useChat();
   const scrollRef = useRef<HTMLDivElement>(null);

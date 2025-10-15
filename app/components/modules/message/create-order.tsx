@@ -55,8 +55,6 @@ export function CreateOrderDialog({
   const { customer: currentCustomer, refetchCustomer } = useChatRoom();
   const { data: getProducts, isLoading } = useGetProducts();
 
-  console.log({ getProducts });
-
   // const { data: getProducts, isLoading } = useProductsWithEnable({
   //   enabled: open,
   // });
