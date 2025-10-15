@@ -11,6 +11,8 @@ import {
 } from "~/providers/chat/useChatRoom";
 import { useRouteLoaderData } from "react-router";
 import { socketConfig } from "~/lib/sockets";
+import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
 
 interface Props {
   handleChangeSelectedRoom: (room: any) => void;
@@ -62,8 +64,6 @@ export default function ChatlistSidebar({
     }
   }, [chatRooms]);
 
-  console.log({ chatRooms });
-
   const { currentRoomId } = useChat();
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -90,8 +90,15 @@ export default function ChatlistSidebar({
 
   return (
     <aside className="h-full border-r dark:bg-background flex flex-col border-l">
-      <div className="p-3 border-b flex items-center justify-between ">
-        <h2 className="text-lg font-semibold">แชท</h2>
+      <div className="p-3 border-b flex flex-col">
+        <div className="flex justify-between">
+          <h2 className="text-lg font-semibold">แชท</h2>
+          <Button variant="link" className="px-0">
+            นำออกข้อมูล
+          </Button>
+        </div>
+
+        <Input placeholder="ค้นหา" className="w-full" />
       </div>
 
       <div

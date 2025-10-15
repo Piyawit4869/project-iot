@@ -26,7 +26,7 @@ export const getProducts = async () => {
     const res = await ApiConfig.get(`/crud/products`);
     return res.data;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 

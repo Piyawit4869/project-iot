@@ -16,6 +16,7 @@ export default [
 
   // Protected wrapper
   // Admin area layout (protected)
+  // ...prefix(":organization", [
   layout("routes/backoffice-layout.tsx", [
     // route("routes/backoffice/[organization]/customer/index.tsx"),
 
@@ -96,6 +97,7 @@ export default [
 
     route("login-log", "routes/backoffice/login-log.tsx"),
   ]),
+  // ]),
 
   // ]),
 

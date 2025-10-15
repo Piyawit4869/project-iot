@@ -1,11 +1,9 @@
-"use client";
-
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
 import { SkeletonLoading } from "./skeleton-loading"; // your own skeleton
+import { useLocation } from "react-router";
 
 export default function RouteLoader() {
-  const pathname = usePathname();
+  const { pathname } = useLocation();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
