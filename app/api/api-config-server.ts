@@ -1,8 +1,7 @@
 import axios from "axios";
-import { env } from "~/utils/common/env";
 
 const AxiosInstance = axios.create({
-  baseURL: env.PUBLIC_API_URL,
+  baseURL: import.meta.env.PUBLIC_API_URL,
 });
 
 AxiosInstance.interceptors.request.use(

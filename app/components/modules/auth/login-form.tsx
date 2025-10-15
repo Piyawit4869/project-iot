@@ -13,8 +13,8 @@ import {
 
 import React from "react";
 import GlobalButton from "~/components/shared/global-button";
-import PageNotFound from "public/assets/images/background.jpg";
-import LogoImage from "public/assets/images/rome.png";
+import PageNotFound from "/assets/images/background.jpg";
+import LogoImage from "/assets/images/rome.png";
 import { useActionData, useNavigation, useSubmit } from "react-router";
 import { loginFormSchema, type LoginFormValues } from "~/schemas/login";
 
@@ -52,9 +52,7 @@ export default function LoginForm() {
         <img
           src={PageNotFound}
           alt="Login Image"
-          // fill
           className="w-full h-full object-cover"
-          // priority
         />
         <div className="absolute inset-0 flex items-center justify-center px-10 text-white bg-black/30 ">
           <div>
