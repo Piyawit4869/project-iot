@@ -29,7 +29,7 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
     (row: ProductColumn) => {
       GlobalModal.warning({
         title: "ลบสินค้า",
-        description: `คุณต้องการลบสินค้านี้ใช่หรือไม่?ห)`,
+        description: `คุณต้องการลบสินค้านี้ใช่หรือไม่?`,
         confirmText: "ยืนยัน",
         cancelText: "ยกเลิก",
         onConfirm: async () => {
@@ -38,8 +38,7 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
             await new Promise<void>((resolve, reject) => {
               deleteMutate(row.id, {
                 onSuccess: () => {
-                  //to test for reload index page
-                  // navigate(location.pathname, { replace: true });
+                  navigate(location.pathname, { replace: true });
 
                   resolve();
                 },
