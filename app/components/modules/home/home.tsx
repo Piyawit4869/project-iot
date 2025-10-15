@@ -105,7 +105,7 @@ export default function HomeComponent() {
       nameLocal: "พนักงาน",
       icon: User,
       color: "bg-gradient-to-br from-purple-500 to-blue-500",
-      path: "/user",
+      path: "/users",
     },
     {
       id: "settings",

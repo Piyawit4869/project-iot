@@ -193,7 +193,7 @@ function ChatItem({
     <div
       className={cn(
         "sm:justify-center",
-        currentRoomId === roomId && "bg-gray-300",
+        currentRoomId === roomId && "bg-gray-300 dark:bg-gray-700",
         resize <= 25 && "justify-center",
         "flex items-center px-4 py-3 hover:bg-border cursor-pointer transition w-full"
         // unread && "bg-gray-200"

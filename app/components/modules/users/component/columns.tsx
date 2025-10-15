@@ -51,7 +51,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
 
           return (
             <Link to={`/users/${id}`}>
-              <span className="text-sm text-muted-foreground hover:underline">
+              <span className=" text-muted-foreground hover:text-blue-400 hover:underline">
                 {fullName || "-"}
               </span>
             </Link>
@@ -172,12 +172,12 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
 
           return id ? (
             <Link to={`/users/${id}`}>
-              <span className="text-sm text-muted-foreground hover:underline">
+              <span className="text-muted-foreground hover:text-blue-400 hover:underline">
                 {name}
               </span>
             </Link>
           ) : (
-            <span className="text-sm text-muted-foreground">{name}</span>
+            <span className="text-muted-foreground">{name}</span>
           );
         },
       },
