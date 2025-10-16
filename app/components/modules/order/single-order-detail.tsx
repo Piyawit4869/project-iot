@@ -28,17 +28,17 @@ export default function SingleOrdersDetail() {
   const columns = useOrderColumnTable();
   const products = order?.orderDetails?.products;
 
-  // useEntityBreadcrumb({
-  //   feature: "order",
-  //   entity: order
-  //     ? { id: order.id, name: order?.docName ?? order.id }
-  //     : undefined,
-  //   base: order && {
-  //     href: `/orders/${order?.id}`,
-  //     label: order?.docName,
-  //     uuid: order?.id,
-  //   },
-  // });
+  useEntityBreadcrumb({
+    feature: "order",
+    entity: order
+      ? { id: order.id, name: order?.docName ?? order.id }
+      : undefined,
+    base: order && {
+      href: `/orders/${order?.id}`,
+      label: order?.docName,
+      uuid: order?.id,
+    },
+  });
 
   return (
     <div className="flex flex-col w-full space-y-8 p-8">

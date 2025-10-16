@@ -28,13 +28,18 @@ import {
   useGetConnectionLine,
   useUpdateConnectionLine,
 } from "~/api/client/settings";
-import { useSearchParams, useNavigate } from "react-router";
+import { useSearchParams, useNavigate, useParams } from "react-router";
+import { useEntityBreadcrumb } from "~/providers/RouteProvider";
 
 export const LineContainerSettings: React.FC = () => {
   const [sp] = useSearchParams();
   const navigate = useNavigate();
+  const params = useParams();
+  const id = (params?.id as string) ?? "";
 
-  const id = sp.get("id") ?? "";
+  const { mutate: UpdateConnectionLine } = useUpdateConnectionLine(id);
+  const { data } = useGetConnectionLine(id ?? "");
+
   const tabFromUrl = sp.get("tab") ?? "config-line";
   const viewFromUrl = sp.get("view") ?? "list";
 
@@ -46,9 +51,6 @@ export const LineContainerSettings: React.FC = () => {
     });
     navigate({ search: curr.toString() }, { replace: true });
   };
-
-  const { mutate: UpdateConnectionLine } = useUpdateConnectionLine(id);
-  const { data } = useGetConnectionLine(id);
 
   const form = useForm<ConnectLineValues>({
     resolver: zodResolver(ConnectLineSchema),
@@ -111,6 +113,16 @@ export const LineContainerSettings: React.FC = () => {
     setSearch({ tab: "massage-line", view: "create", replyId: null });
   const goEdit = (replyId: string) =>
     setSearch({ tab: "massage-line", view: "edit", replyId });
+
+  useEntityBreadcrumb({
+    feature: "line",
+    entity: data ? { id: data.id, name: data?.name ?? data.id } : undefined,
+    base: data && {
+      href: `/setting-organization/third-party/line/${data?.id}`,
+      label: data?.name,
+      uuid: data?.id,
+    },
+  });
 
   return (
     <div className="flex flex-col w-full">

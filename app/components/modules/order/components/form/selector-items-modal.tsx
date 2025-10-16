@@ -155,7 +155,6 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                       )}
                     >
                       <div className="flex justify-between gap-3 md:gap-6 w-full">
-                        {/* 左: เช็คบ็อกซ์ + รูป + ชื่อ/รายละเอียดสั้น */}
                         <div className="flex items-center gap-3 md:gap-6">
                           <Checkbox
                             checked={selectedItems.includes(item.id)}
@@ -175,7 +174,7 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                             alt={item.name}
                             className="w-[48px] h-[48px] md:w-[70px] md:h-[70px] rounded-lg object-cover border"
                           />
-                          {/* รายละเอียดย่อ + เพิ่มแบบพับเก็บได้ */}
+
                           <Accordion
                             type="single"
                             collapsible
@@ -185,7 +184,6 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                               value={`item-${item.id}`}
                               className="border-none"
                             >
-                              {/* ซ่อนไอคอนลูกศร */}
                               <AccordionTrigger className="p-0 hover:no-underline [&>svg]:hidden">
                                 <div className="flex flex-col text-left">
                                   <span className="text-sm font-medium truncate max-w-[180px] md:max-w-[260px]">
@@ -219,7 +217,6 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                           </Accordion>
                         </div>
 
-                        {/* ขวา: ราคา + สถานะ */}
                         <div className="flex flex-col items-end gap-1 min-w-[92px]">
                           <span className="font-semibold text-sm text-blue-600">
                             {item.salePrice} ฿
@@ -255,7 +252,6 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                 </li>
               )}
 
-              {/* ภาพตัวอย่างแบบเต็มหน้าจอ */}
               {previewUrl && (
                 <div
                   className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4"
