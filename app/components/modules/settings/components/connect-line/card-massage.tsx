@@ -26,17 +26,14 @@ export default function MessageCardForm() {
   };
 
   return (
-    <div className="w-[70%] space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold">การ์ดเมสเสจ</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          ข้อความในรูปแบบการ์ดที่รวมเนื้อหาต่างๆ เอาไว้ในที่เดียว
-          โดยระบบจะแสดงผลแบบภาพสไลด์ที่ผู้คนสามารถเปิดการ์ดไปด้านข้างเพื่อดูเนื้อหาการ์ดอื่นได้
-        </p>
-      </header>
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="flex w-full flex-col  space-y-6">
+          <h1 className="text-2xl font-bold">การ์ดเมสเสจ</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            ข้อความในรูปแบบการ์ดที่รวมเนื้อหาต่างๆ เอาไว้ในที่เดียว
+            โดยระบบจะแสดงผลแบบภาพสไลด์ที่ผู้คนสามารถเปิดการ์ดไปด้านข้างเพื่อดูเนื้อหาการ์ดอื่นได้
+          </p>
           <Card>
             <CardHeader>
               <CardTitle>รายละเอียดการ์ด</CardTitle>
@@ -68,9 +65,7 @@ export default function MessageCardForm() {
                 )}
               />
             </CardContent>
-          </Card>
 
-          <Card>
             <CardHeader>
               <CardTitle>ตั้งค่าการ์ด</CardTitle>
             </CardHeader>
@@ -94,15 +89,14 @@ export default function MessageCardForm() {
                 )}
               />
             </CardContent>
+            <div className="flex justify-end p-5">
+              <Button type="submit" className="bg-green-600 hover:bg-green-700">
+                บันทึก
+              </Button>
+            </div>
           </Card>
-
-          <div className="flex justify-end">
-            <Button type="submit" className="bg-green-600 hover:bg-green-700">
-              บันทึก
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+        </div>
+      </form>
+    </Form>
   );
 }

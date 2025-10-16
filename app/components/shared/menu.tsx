@@ -35,8 +35,6 @@ export function Menu() {
     return false;
   });
 
-  console.log("me : ", me);
-
   React.useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add("dark");

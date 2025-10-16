@@ -5,12 +5,11 @@ import {
   Box,
   CirclePlus,
   Notebook,
-  PlusCircleIcon,
   PlusIcon,
+  SendHorizonal,
   Settings,
   X,
 } from "lucide-react";
-import React from "react";
 import { useRouteLoaderData } from "react-router";
 import {
   Tooltip,
@@ -26,8 +25,41 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
+import { Avatar } from "~/components/ui/avatar";
+import { Card } from "~/components/ui/card";
 
-/* import { useState } from "react"; */
+export const MOCK_PRODUCTS = [
+  {
+    id: "p001",
+    name: "เสื้อเชิ้ตผ้าฝ้ายสีขาว",
+    sku: "SHIRT-WH-001",
+    available: 25,
+    salePrice: 490,
+    status: "active",
+    imageUrl:
+      "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=300&q=80",
+  },
+  {
+    id: "p002",
+    name: "กางเกงผ้าแสลคทรงตรง",
+    sku: "PANTS-BL-002",
+    available: 0,
+    salePrice: 690,
+    status: "inactive",
+    imageUrl:
+      "https://images.unsplash.com/photo-1593032465171-c9f6b7a0a9b3?w=300&q=80",
+  },
+  {
+    id: "p003",
+    name: "กระเป๋าผ้าแคนวาสพรีเมียม",
+    sku: "BAG-CV-003",
+    available: 12,
+    salePrice: 350,
+    status: "active",
+    imageUrl:
+      "https://images.unsplash.com/photo-1606813908914-632f8baf5b9e?w=300&q=80",
+  },
+];
 
 export default function MenuWhenNoData() {
   const { me } = useRouteLoaderData("root");
@@ -213,10 +245,10 @@ export default function MenuWhenNoData() {
                   </div>
 
                   <p className="text-gray-400 mt-4 text-center">
-                    กดเลือกแชทเพื่อใช้งาน Feature
+                    ตัวอย่างการเขียนโน้ตเกี่ยวกับบุคลิกลูกค้า
                   </p>
-                  {/* <div>
-                    <div className="flex flex-col justify-between w-full border-t pt-4 ">
+                  <div>
+                    <div className="flex flex-col justify-between w-full pt-4 ">
                       <div className="flex justify-between"></div>
                       <Textarea
                         placeholder="พิมพ์โน้ตของคุณที่นี่..."
@@ -226,68 +258,14 @@ export default function MenuWhenNoData() {
 
                       <p className="text-xs text-gray-400 mt-2">
                         ยังไม่มีโน้ต
-                        คุณสามารถเขียนบันทึกเกี่ยวกับลูกค้ารายนี้ได้ที่นี่
-                      </p>
-                    </div>
-
-                    <div className="space-y-2 flex flex-col mt-3">
-                      <div className="flex justify-between">
-                        <label className="text-sm font-semibold">
-                          รายละเอียดสินค้า/บริการ
-                        </label>
-                      </div>
-                      <Textarea
-                        placeholder="พิมพ์รายละเอียดสินค้า/บริการของคุณที่นี่..."
-                        disabled
-                        rows={4}
-                      />
-
-                      <p className="text-xs text-gray-400">
-                        ยังไม่มีรายละเอียดสินค้า/บริการ <br />
-                        คุณสามารถเขียนบันทึกเกี่ยวกับรายละเอียดสินค้า/บริการได้ที่นี่
-                      </p>
-                    </div>
-
-                    <div className="space-y-2 flex flex-col mt-3">
-                      <div className="flex justify-between">
-                        <label className="text-sm font-semibold">
-                          เงื่อนไขราคาและโปรโมชั่น
-                        </label>
-                      </div>
-                      <Textarea
-                        placeholder="พิมพ์เงื่อนไขราคาและโปรโมชั่นของคุณที่นี่..."
-                        disabled
-                        rows={4}
-                      />
-
-                      <p className="text-xs text-gray-400">
-                        ยังไม่มีเงื่อนไขราคาและโปรโมชั่น <br />
-                        คุณสามารถเขียนบันทึกเกี่ยวกับเงื่อนไขราคาและโปรโมชั่นได้ที่นี่
-                      </p>
-                    </div>
-
-                    <div className="space-y-2 flex flex-col mt-3">
-                      <div className="flex justify-between">
-                        <label className="text-sm font-semibold">
-                          บุคลิกหรือลักษณะนิสัย
-                        </label>
-                      </div>
-                      <Textarea
-                        placeholder="พิมพ์บุคลิกหรือลักษณะนิสัยที่นี่..."
-                        disabled
-                        rows={4}
-                      />
-
-                      <p className="text-xs text-gray-400">
-                        ยังไม่มีบุคลิกหรือลักษณะนิสัย <br />
                         คุณสามารถเขียนบันทึกเกี่ยวกับบุคลิกหรือลักษณะนิสัยได้ที่นี่
                       </p>
                     </div>
-                  </div> */}
+                  </div>
                 </TabsContent>
 
                 <TabsContent value="product">
-                  <div className="flex flex-row item-center justify-between gap-12">
+                  <div className="flex flex-row items-center justify-between gap-12">
                     <p className="text-sm font-semibold mb-2">สินค้าที่สนใจ</p>
                     <div>
                       <Button
@@ -308,71 +286,53 @@ export default function MenuWhenNoData() {
                       </Button>
                     </div>
                   </div>
+
                   <p className="text-gray-400 mt-4 text-center">
-                    กดเลือกแชทเพื่อใช้งาน Feature
+                    ตัวอย่างการเลือกสินค้า
                   </p>
-                  {/* <div>
-                    <div className="flex flex-col justify-between w-full border-t pt-4 ">
-                      <div className="flex flex-row item-center justify-between gap-12">
-                        <p className="text-sm font-semibold mb-2">
-                          สินค้าที่สนใจ
-                        </p>
 
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-[30px] w-[90px] p-2 gap-2 border-amber-500"
-                          disabled={true}
-                        >
-                          <PlusCircleIcon />
-                          <span className="text-[12px] ">เพิ่มสินค้า</span>
-                        </Button>
-                        <SelectorItemsModal
-                          selected={["1", "2", "3"]}
-                          onChange={() => {}}
-                          customButton={
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              className="h-[30px] w-[90px] p-2 gap-2 border-amber-500"
-                              disabled={true}
-                            >
-                              <PlusCircleIcon />
-                              <span className="text-[12px] ">เพิ่มสินค้า</span>
-                            </Button>
-                          }
-                          items={[]}
+                  <ul className="mt-6 border rounded-md divide-y bg-background">
+                    {MOCK_PRODUCTS.map((item) => (
+                      <li
+                        key={item.id}
+                        className="flex items-center gap-3 p-3 hover:bg-muted/50 transition-colors"
+                      >
+                        <img
+                          src={item.imageUrl}
+                          alt={item.name}
+                          className="w-12 h-12 rounded object-cover border"
                         />
-                      </div>
 
-                      <div className="flex flex-col">
-                        <p className="text-center text-xs text-gray-400 mt-10">
-                          ยังไม่มีสินค้าที่สนใจ
-                        </p>
-                      </div>
-
-                      <GlobalButton
-                        label="สร้างออเดอร์"
-                        className="mt-8"
-                        disabled
-                      />
-                    </div>
-
-                    <div className="space-y-3 border-t-1 pt-2">
-                      <p className="text-sm text-muted-foreground mb-2 font-semibold">
-                        รายการสินค้าในระบบ
-                      </p>
-                      <Input placeholder="ค้นหาด้วยชื่อ" disabled />
-
-                      <ScrollArea className="h-35 rounded-md border p-1">
-                        <ul>
-                          <p className="text-center text-sm text-muted-foreground py-4">
-                            ยังไม่มีสินค้าในระบบ
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">{item.name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {item.sku}
                           </p>
-                        </ul>
-                      </ScrollArea>
-                    </div>
-                  </div> */}
+                          <p className="text-xs text-muted-foreground">
+                            สินค้าคงเหลือ: {item.available} ชิ้น
+                          </p>
+                        </div>
+
+                        {/* ส่วนราคากับแท็กสถานะ */}
+                        <div className="flex flex-col items-end gap-1">
+                          <span className="text-sm font-semibold text-blue-600">
+                            {item.salePrice} ฿
+                          </span>
+                          <span
+                            className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                              item.status === "active"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-gray-100 text-gray-500"
+                            }`}
+                          >
+                            {item.status === "active"
+                              ? "สั่งซื้อได้"
+                              : "สินค้าหมด"}
+                          </span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
                 </TabsContent>
 
                 <TabsContent value="settingAI">
@@ -388,66 +348,71 @@ export default function MenuWhenNoData() {
                       <Settings />
                     </Button>
                   </div>
-                  <p className="text-gray-400 mt-4 text-center">
-                    กดเลือกแชทเพื่อใช้งาน Feature
+                  <p className="text-gray-400 text-center py-5">
+                    ตัวอย่างหน้าจอการพูดคุยกับแชท AI
                   </p>
-                  {/* <div className="flex w-full border-t pt-4 ">
-                    <div
-                      className={cn(
-                        "w-full text-popover-foreground outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
-                      )}
-                    >
-                      <div className="flex items-center justify-between mt-6 mb-3">
-                        <Label htmlFor="ai-enabled" className="text-sm">
-                          เปิดใช้งานตลอดเวลา
-                        </Label>
-                        <Switch id="ai-enabled" disabled />
-                      </div>
+                  <div className="max-w-xl mx-auto bg-background rounded-xl shadow p-4 border">
+                    <h2 className="text-lg font-semibold mb-3">
+                      ตัวอย่างหน้าจอ
+                    </h2>
 
-                      <div className="flex items-center justify-between mt-6 mb-3">
-                        <Label
-                          htmlFor="ai-enabled-condition"
-                          className="text-sm"
-                        >
-                          ใช้งาน AI ตามเงื่อนไข
-                        </Label>
-                        <Switch id="ai-enabled-condition" disabled />
-                      </div>
-
-                      <div
-                        className={cn(
-                          "mt-4 space-y-4 transition-all",
-                          "opacity-50 pointer-events-none"
-                        )}
-                      >
-                        <div className="flex flex-col gap-2">
-                          <Label className="text-sm">
-                            ช่วงเวลาที่ให้ AI ตอบ
-                          </Label>
-                          <div className="flex items-center gap-2">
-                            <Input type="time" className="w-[120px]" />
-                            <span className="text-sm">ถึง</span>
-                            <Input type="time" className="w-[120px]" disabled />
-                          </div>
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                          <Label className="text-sm">
-                            หากไม่มีการตอบกลับจากเซลภายใน (ชั่วโมง)
-                          </Label>
-                          <div className="flex items-center gap-2">
-                            <Input type="time" className="w-[120px]" disabled />
-                          </div>
-                        </div>
-                      </div>
-
-                      <GlobalButton
-                        label="บันทึกการตั้งค่า AI"
-                        className="mt-8"
-                        disabled
-                      />
+                    <div className="flex items-start gap-2 mb-6">
+                      <Avatar className="bg-gradient-to-br from-purple-400 to-indigo-400 text-white flex items-center justify-center">
+                        AI
+                      </Avatar>
+                      <Card className="bg-muted px-3 py-2 max-w-[90%]">
+                        <p className="text-sm">
+                          สวัสดีค่ะ ขอทราบชื่อคุณลูกค้าได้ไหมคะ 😊
+                        </p>
+                        {/* <span className="block text-xs text-muted-foreground mt-1">
+                          26 ก.ย. 2025, 00:55
+                        </span> */}
+                      </Card>
                     </div>
-                  </div> */}
+
+                    <div className="flex items-start gap-2 mb-6 justify-end">
+                      <Card className="bg-primary text-primary-foreground px-3 py-2 max-w-[80%]">
+                        <p className="text-sm">Kira</p>
+                        {/* <span className="block text-xs text-primary-foreground/70 mt-1 text-right">
+                          26 ก.ย. 2025, 00:55
+                        </span> */}
+                      </Card>
+                      <Avatar className="bg-black text-white flex items-center justify-center">
+                        U
+                      </Avatar>
+                    </div>
+
+                    <div className="flex items-start gap-2 mb-6">
+                      <Avatar className="bg-gradient-to-br from-purple-400 to-indigo-400 text-white flex items-center justify-center">
+                        AI
+                      </Avatar>
+                      <Card className="bg-muted px-3 py-2 max-w-[80%]">
+                        <p className="text-sm">
+                          สวัสดีค่ะ ยินดีต้อนรับสู่ OGGa Idea น้อง OGGa AI ค่ะ
+                          ขอทราบชื่อคุณลูกค้าได้ไหมคะ 😊
+                        </p>
+                        {/* <span className="block text-xs text-muted-foreground mt-1">
+                          26 ก.ย. 2025, 00:57
+                        </span> */}
+                      </Card>
+                    </div>
+
+                    <div className="border-t pt-4 mt-6">
+                      <div className="flex items-center gap-2 text-muted-foreground opacity-60">
+                        {/* กล่องข้อความจำลอง */}
+                        <div className="border rounded-lg px-3 py-2 w-full bg-muted cursor-not-allowed">
+                          <span className="text-sm">
+                            สอบถามข้อมูลเกี่ยวกับลูกค้าคนนี้...
+                          </span>
+                        </div>
+
+                        {/* ปุ่มส่ง (จำลอง กดไม่ได้) */}
+                        <div className="p-2 rounded-full bg-muted cursor-not-allowed">
+                          <SendHorizonal className="h-4 w-4" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </TabsContent>
               </Tabs>
             </div>

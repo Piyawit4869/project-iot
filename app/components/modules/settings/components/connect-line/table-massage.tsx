@@ -1,9 +1,7 @@
 "use client";
 
 import React from "react";
-
-import { Plus, Search } from "lucide-react";
-import { useLocation, useNavigate } from "react-router";
+import { MessageCircle, Plus, Search } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -11,33 +9,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { DataTable } from "~/components/shared/data-table";
 import { useLineMassagePaginate } from "~/api/client/settings";
 import { LineMassageColumns } from "./columns-massage";
+import { Link } from "react-router";
 
 type MassageFilter = "all" | "starred" | "draft" | "published";
 
-interface LineMassagePageProps {
-  total?: number; // จำนวนทั้งหมด เช่น 47
-  onCreate?: () => void; // กดปุ่ม + สร้างใหม่
+interface TableMassageProps {
+  onCreate?: () => void;
+  onEdit?: (id: string) => void;
   onSearch?: (q: string) => void;
   onFilterChange?: (f: MassageFilter) => void;
   defaultFilter?: MassageFilter;
-  /** คุณจะยัดตารางของคุณเองลงมาใน children ได้เลย */
-  children?: React.ReactNode;
 }
 
-export default function LineMassagePageShell({
-  total = 0,
+export default function TableMassage({
   onCreate,
+  onEdit,
   onSearch,
   onFilterChange,
   defaultFilter = "all",
-  children,
-}: LineMassagePageProps) {
+}: TableMassageProps) {
   const [q, setQ] = React.useState("");
   const [filter, setFilter] = React.useState<MassageFilter>(defaultFilter);
 
@@ -50,13 +45,25 @@ export default function LineMassagePageShell({
 
   return (
     <div className="flex w-full flex-col gap-6">
-      {/* Header */}
-      <div className="space-y-1">
-        <h1 className="text-xl font-semibold">ข้อความตอบกลับ</h1>
-        <p className="text-sm text-muted-foreground">
-          คุณสามารถค้นหาและจัดการข้อความตอบกลับที่ใช้งานบ่อย
-          เพื่อความรวดเร็วในการตอบกลับลูกค้า
-        </p>
+      <div className="flex items-start justify-between">
+        <div className="space-y-1">
+          <h1 className="text-xl font-semibold">ข้อความตอบกลับ</h1>
+          <p className="text-sm text-muted-foreground">
+            คุณสามารถค้นหาและจัดการข้อความตอบกลับที่ใช้งานบ่อย
+            เพื่อความรวดเร็วในการตอบกลับลูกค้า
+          </p>
+        </div>
+
+        <Link to="/message" key="link">
+          <Button
+            key="button"
+            variant="outline"
+            className="flex items-center gap-2 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+          >
+            <MessageCircle className="h-4 w-4" />
+            <span className="hidden sm:inline">กลับไปที่แชท</span>
+          </Button>
+        </Link>
       </div>
 
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -83,9 +90,7 @@ export default function LineMassagePageShell({
             <Input
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") onSearch?.(q.trim());
-              }}
+              onKeyDown={(e) => e.key === "Enter" && onSearch?.(q.trim())}
               placeholder="ใส่ชื่อข้อความตอบกลับ"
               className="pl-8"
               aria-label="ค้นหาข้อความตอบกลับ"
@@ -93,7 +98,6 @@ export default function LineMassagePageShell({
           </div>
           <Button
             onClick={() => onSearch?.(q.trim())}
-            variant="default"
             type="button"
             className="whitespace-nowrap"
           >
@@ -101,7 +105,7 @@ export default function LineMassagePageShell({
           </Button>
 
           <Button
-            onClick={() => {}}
+            onClick={onCreate}
             type="button"
             className="ml-1 whitespace-nowrap"
           >
@@ -111,14 +115,10 @@ export default function LineMassagePageShell({
         </div>
       </div>
 
-      <div className="rounded-xl ">
+      <div className="rounded-xl">
         <DataTable
           queryFunction={({ pageIndex, pageSize }) =>
-            Paginate({
-              pageIndex,
-              pageSize,
-              limit: pageSize,
-            })
+            Paginate({ pageIndex, pageSize, limit: pageSize })
           }
           columns={columns}
         />

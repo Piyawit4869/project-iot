@@ -16,64 +16,13 @@ export const LineMassageColumns = (): ColumnDef<UserColumn>[] => {
   const columns = useMemo<ColumnDef<UserColumn>[]>(
     () => [
       {
-        accessorKey: "profile.imageUrl",
-        header: "รูปภาพ",
-        cell: (info) => {
-          const url = info.getValue() as string;
-          const userName = info.row.original?.userName;
-
-          return (
-            <GlobalImage
-              src={url}
-              alt="user-image"
-              width={60}
-              height={60}
-              className="rounded-xl w-[60px] h-[60px] object-cover object-center"
-              fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${userName}`}
-            />
-          );
-        },
-      },
-      {
-        accessorKey: "profile",
+        accessorKey: "name",
         header: "ชื่อ",
-        cell: (info) => {
-          const id = info.row.original.id;
-          const nickName = info.row.original.profile?.nickName
-            ? `( ${info.row.original.profile?.nickName} )`
-            : "";
-
-          const fullName = `${info.row.original.profile?.prefix || ""} ${
-            info.row.original.profile?.firstName || ""
-          } ${info.row.original.profile?.lastName || ""} ${
-            nickName || ""
-          }`.trim();
-
-          return (
-            <Link to={`/users/${id}`}>
-              <span className=" text-muted-foreground hover:text-blue-400 hover:underline">
-                {fullName || "-"}
-              </span>
-            </Link>
-          );
-        },
-      },
-      {
-        accessorKey: "emId",
-        header: "รหัสพนักงาน",
-        cell: (info) => (
-          <span className="">{(info.getValue() as string) || "-"}</span>
-        ),
-      },
-      {
-        accessorKey: "userName",
-        header: "User Name",
         cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
       },
       {
-        accessorKey: "email",
-        header: "อีเมล",
-        minSize: 600,
+        accessorKey: "content.messages.text",
+        header: "ข้อความ",
 
         cell: (info) => (
           <span className="text-sm text-muted-foreground">
@@ -82,79 +31,16 @@ export const LineMassageColumns = (): ColumnDef<UserColumn>[] => {
         ),
       },
       {
-        accessorKey: "active",
-        header: "เปิดใช้งาน",
-        cell: (info) => {
-          const status = info.getValue() as string;
-          return (
-            <span className="">
-              <GlobalStatusBadge value={status} />
-            </span>
-          );
-        },
-      },
-      {
-        accessorKey: "status",
-        header: "สถานะ",
-        cell: (info) => {
-          const status = info.getValue() as string;
+        accessorKey: "description",
+        header: "รายละเอียด",
 
-          const current = statusMap[status] || {
-            label: status || "-",
-            className: "text-xs",
-            icon: null,
-          };
+        cell: (info) => (
+          <span className="text-sm text-muted-foreground">
+            {(info.getValue() as string) || "-"}
+          </span>
+        ),
+      },
 
-          return (
-            <div className="mt-1">
-              <span
-                className={`inline-flex items-center justify-center rounded-xl border py-1 px-3 text-sm font-medium w-fit whitespace-nowrap shrink-0 gap-1 transition-colors ${current.className}`}
-              >
-                {current.icon && (
-                  <span className="w-3 h-3 flex items-center justify-center">
-                    {current.icon}
-                  </span>
-                )}
-                {current.label}
-              </span>
-            </div>
-          );
-        },
-      },
-      {
-        accessorKey: "birthDate",
-        header: "วัน / เดือน / ปีเกิด",
-        cell: (info) => {
-          const value = info.row.original.profile?.birthDate as string;
-          return <span className="">{formatDateBirthDay(value)}</span>;
-        },
-      },
-      {
-        accessorKey: "updatedAt",
-        header: "วันที่แก้ไข",
-        cell: (info) => {
-          const value = info.getValue() as string;
-          return <span className="">{formatDateBirthDay(value)}</span>;
-        },
-      },
-      {
-        accessorKey: "updatedBy",
-        header: "ผู้ที่แก้ไข",
-        cell: (info) => {
-          const id = info.row.original.updatedById;
-          const name = (info.getValue() as string) || "-";
-
-          return id ? (
-            <Link to={`/users/${id}`}>
-              <span className="text-muted-foreground hover:text-blue-400 hover:underline">
-                {name}
-              </span>
-            </Link>
-          ) : (
-            <span className="text-muted-foreground">{name}</span>
-          );
-        },
-      },
       {
         id: "actions",
         header: "การดำเนินการ",

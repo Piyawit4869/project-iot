@@ -208,8 +208,6 @@ export const fetchLineMassagePaginate = async (params: {
       params: p,
     });
 
-    console.log({ res });
-
     return res.data;
   } catch (error) {
     return error;

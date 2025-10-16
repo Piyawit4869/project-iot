@@ -28,11 +28,24 @@ import {
   useGetConnectionLine,
   useUpdateConnectionLine,
 } from "~/api/client/settings";
-import { useSearchParams } from "react-router";
+import { useSearchParams, useNavigate } from "react-router";
 
 export const LineContainerSettings: React.FC = () => {
   const [sp] = useSearchParams();
-  const id = sp.get("id") as string;
+  const navigate = useNavigate();
+
+  const id = sp.get("id") ?? "";
+  const tabFromUrl = sp.get("tab") ?? "config-line";
+  const viewFromUrl = sp.get("view") ?? "list";
+
+  const setSearch = (partial: Record<string, string | null | undefined>) => {
+    const curr = new URLSearchParams(sp);
+    Object.entries(partial).forEach(([k, v]) => {
+      if (v === null || v === undefined) curr.delete(k);
+      else curr.set(k, String(v));
+    });
+    navigate({ search: curr.toString() }, { replace: true });
+  };
 
   const { mutate: UpdateConnectionLine } = useUpdateConnectionLine(id);
   const { data } = useGetConnectionLine(id);
@@ -41,8 +54,13 @@ export const LineContainerSettings: React.FC = () => {
     resolver: zodResolver(ConnectLineSchema),
   });
 
-  // state สำหรับควบคุมแท็บ
-  const [tab, setTab] = React.useState("config-line");
+  const [tab, setTab] = React.useState(tabFromUrl);
+  React.useEffect(() => setTab(tabFromUrl), [tabFromUrl]);
+
+  const handleChangeTab = (v: string) => {
+    setTab(v);
+    setSearch({ tab: v, view: v === "massage-line" ? viewFromUrl : null });
+  };
 
   const handleOnSubmit = (values: ConnectLineValues) => {
     GlobalModal.info({
@@ -68,7 +86,7 @@ export const LineContainerSettings: React.FC = () => {
               });
             },
           });
-        } catch (error) {
+        } catch {
           toast.error("เกิดข้อผิดพลาดที่ไม่คาดคิด", { id: toastId });
         }
       },
@@ -86,6 +104,13 @@ export const LineContainerSettings: React.FC = () => {
       });
     }
   }, [data, form]);
+
+  const goList = () =>
+    setSearch({ tab: "massage-line", view: "list", replyId: null });
+  const goCreate = () =>
+    setSearch({ tab: "massage-line", view: "create", replyId: null });
+  const goEdit = (replyId: string) =>
+    setSearch({ tab: "massage-line", view: "edit", replyId });
 
   return (
     <div className="flex flex-col w-full">
@@ -107,14 +132,13 @@ export const LineContainerSettings: React.FC = () => {
 
       <Form {...form}>
         <form id="config-line" onSubmit={form.handleSubmit(handleOnSubmit)}>
-          <Tabs value={tab} onValueChange={setTab} className="mt-4">
+          <Tabs value={tab} onValueChange={handleChangeTab} className="mt-4">
             <TabsList className="mb-4">
               <TabsTrigger value="config-line">ข้อมูล</TabsTrigger>
               <TabsTrigger value="massage-line">ข้อความตอบกลับ</TabsTrigger>
               <TabsTrigger value="config-card">การ์ดเมสเสจ</TabsTrigger>
             </TabsList>
 
-            {/* --- แท็บข้อมูล --- */}
             <TabsContent value="config-line">
               <div className="flex w-full flex-col space-y-6 bg-[var(--background)] text-[var(--foreground)]">
                 <div className="rounded-xl border border-[var(--border)] bg-[var(--card)]">
@@ -221,10 +245,26 @@ export const LineContainerSettings: React.FC = () => {
             </TabsContent>
 
             <TabsContent value="massage-line">
-              <div className="flex flex-col gap-6">
-                <ReplyMessageForm />
-                <TableMassage />
-              </div>
+              {viewFromUrl === "list" && (
+                <TableMassage onCreate={goCreate} onEdit={goEdit} />
+              )}
+
+              {viewFromUrl === "create" && (
+                <ReplyMessageForm
+                  mode="create"
+                  onCancel={goList}
+                  onSaved={goList}
+                />
+              )}
+
+              {viewFromUrl === "edit" && (
+                <ReplyMessageForm
+                  mode="edit"
+                  replyId={sp.get("replyId") ?? ""}
+                  onCancel={goList}
+                  onSaved={goList}
+                />
+              )}
             </TabsContent>
 
             <TabsContent value="config-card">
