@@ -25,6 +25,7 @@ import {
 } from "~/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Button } from "~/components/ui/button";
+import { Textarea } from "~/components/ui/textarea";
 
 /* import { useState } from "react"; */
 

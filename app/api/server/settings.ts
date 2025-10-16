@@ -193,3 +193,25 @@ export const fetchRoomChatLoadMore = async (offset = 0, limit = 20) => {
     return error;
   }
 };
+
+export const fetchLineMassagePaginate = async (params: {
+  page: number;
+  itemsPerPage: number;
+  limit: number;
+}) => {
+  try {
+    const p = Object.assign({});
+    p.page = params.page;
+    p.limit = params.limit;
+
+    const res = await ApiConfig.get(`/thirdparty/line/content-reply/paginate`, {
+      params: p,
+    });
+
+    console.log({ res });
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};

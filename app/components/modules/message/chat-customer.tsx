@@ -28,11 +28,7 @@ import { DialogFooter, DialogHeader } from "~/components/ui/dialog";
 import { Dialog, DialogContent, DialogTitle } from "~/components/ui/dialog";
 import ChatMessagesWithAI from "./chat-message-with-ai";
 import HeroSearch from "./hero-search";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-} from "@radix-ui/react-accordion";
+
 import {
   Command,
   CommandEmpty,
@@ -86,6 +82,11 @@ import { Checkbox } from "~/components/ui/checkbox";
 import { Badge } from "~/components/ui/badge";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
 
 interface UserProps {
   id: string;
@@ -1157,40 +1158,30 @@ export default function ChatCustomerInfo({
                       onChange={(e) => setSearch(e.target.value)}
                     />
 
-                    <ScrollArea className="h-[calc(100vh-480px)] rounded-md border p-1">
+                    <ScrollArea className="h-[calc(100vh-480px)] rounded-md border p-2 bg-white">
                       <ul className="space-y-2">
-                        {filtered &&
-                          filtered.length > 0 &&
+                        {filtered && filtered.length > 0 ? (
                           filtered.map((item: Product) => (
                             <li
-                              key={item && item.id}
-                              className="flex items-center justify-between gap-4 p-2 hover:bg-muted rounded-md"
+                              key={item?.id}
+                              className="flex items-center justify-between gap-4 p-3 rounded-lg hover:bg-muted/60 transition-colors"
                             >
-                              {item && item.id && (
+                              {item?.id && (
                                 <div
                                   className="flex gap-2 cursor-pointer w-full"
-                                  onClick={() => {}}
+                                  onClick={() => toggleCartItem(item)}
                                 >
-                                  <div className="flex flex-row items-center gap-2">
-                                    <Checkbox
-                                      checked={isInCart(item.id)}
-                                      onCheckedChange={() =>
-                                        toggleCartItem(item)
-                                      }
-                                    />
-                                  </div>
+                                  <Checkbox
+                                    checked={isInCart(item.id)}
+                                    onCheckedChange={() => toggleCartItem(item)}
+                                  />
 
-                                  <div
-                                    className="flex flex-row items-center justify-between gap-2  w-full"
-                                    onClick={() => {
-                                      toggleCartItem(item);
-                                    }}
-                                  >
-                                    <div className="flex flex-row items-center gap-2">
+                                  <div className="flex items-center justify-between gap-2 w-full">
+                                    <div className="flex items-center gap-3">
                                       <GlobalImage
                                         src={item.imageUrl ?? ""}
                                         alt={item.name ?? ""}
-                                        className="w-[40px] h-[40px] rounded-lg items-center object-cover"
+                                        className="w-[50px] h-[50px] rounded-md object-cover border"
                                       />
 
                                       <Accordion
@@ -1199,38 +1190,46 @@ export default function ChatCustomerInfo({
                                         className="w-full"
                                       >
                                         <AccordionItem
-                                          value="item-1"
-                                          className="align-middle items-start"
+                                          value={`item-${item.id}`}
+                                          className="border-none"
                                         >
-                                          <AccordionTrigger>
-                                            <div className="flex flex-col items-start">
-                                              <div className="text-[12px] truncate max-w-[125px]">
-                                                {item.name}
+                                          <AccordionItem
+                                            value={`item-${item.id}`}
+                                            className="border-none"
+                                          >
+                                            <AccordionTrigger className="p-0 hover:no-underline [&>svg]:hidden">
+                                              <div className="flex flex-col items-start text-left">
+                                                <span className="text-sm font-medium truncate max-w-[150px]">
+                                                  {item.name}
+                                                </span>
+                                                <span className="text-xs text-muted-foreground">
+                                                  {item.sku}
+                                                </span>
+                                                <span className="text-xs text-muted-foreground">
+                                                  สินค้าคงเหลือ :{" "}
+                                                  {item.available} ชิ้น
+                                                </span>
+                                                <Badge
+                                                  variant="outline"
+                                                  className={cn(
+                                                    "mt-1 px-2 py-0.5 text-xs rounded-full border-none",
+                                                    item.status === "active"
+                                                      ? "bg-green-100 text-green-700"
+                                                      : "bg-gray-100 text-gray-500"
+                                                  )}
+                                                >
+                                                  {item.status === "active"
+                                                    ? "สั่งซื้อได้"
+                                                    : "สินค้าหมด"}
+                                                </Badge>
                                               </div>
-
-                                              <div className="text-[10px] text-gray-500 ">
-                                                {item.sku}
-                                              </div>
-                                              <Badge
-                                                variant="outline"
-                                                className={cn(
-                                                  "p-1.5 py-0.5 text-[10px] rounded-full",
-                                                  item.status === "active"
-                                                    ? "bg-green-400 text-black font-bold"
-                                                    : "bg-gray-500 text-white font-bold"
-                                                )}
-                                              >
-                                                {item.status === "active"
-                                                  ? "สั่งซื้อได้"
-                                                  : "สินค้าหมด"}
-                                              </Badge>
-                                            </div>
-                                          </AccordionTrigger>
+                                            </AccordionTrigger>
+                                          </AccordionItem>
                                         </AccordionItem>
                                       </Accordion>
                                     </div>
 
-                                    <div className="flex flex-col items-end justify-between align-middle">
+                                    <div className="flex flex-col items-end gap-1">
                                       <span className="font-semibold text-sm text-blue-600">
                                         {item.salePrice} ฿
                                       </span>
@@ -1238,7 +1237,7 @@ export default function ChatCustomerInfo({
                                       <Button
                                         variant="outline"
                                         size="icon"
-                                        className="h-6 w-6"
+                                        className="h-7 w-7"
                                         onClick={(e) => {
                                           e.preventDefault();
                                           e.stopPropagation();
@@ -1252,11 +1251,10 @@ export default function ChatCustomerInfo({
                                 </div>
                               )}
                             </li>
-                          ))}
-
-                        {filtered.length === 0 && (
+                          ))
+                        ) : (
                           <p className="text-center text-sm text-muted-foreground py-4">
-                            No items found
+                            ไม่พบสินค้าในรายการ
                           </p>
                         )}
                       </ul>
