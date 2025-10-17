@@ -65,7 +65,7 @@ const badgeVariants = {
   active: "border-transparent bg-[#00A57C] text-white", // ใช้งาน / พร้อม / มีสินค้า
   warning: "border-transparent bg-[#FFBE3D] text-black", // รอดำเนินการ / ผู้ใช้ใหม่
   risk: "border-transparent bg-[#ED4949] text-white", // มีปัญหา / หมด / ระงับ
-  orange: "border-transparent bg-orange text-white", // นิติบุคคล / เด่น
+  orange: "border-transparent bg-[#fe9239] text-white", // นิติบุคคล / เด่น
   lightGreen: "border-transparent bg-[#06C755] text-white", // สดใส / จอง / บุคคลธรรมดา
   white: "border-transparent bg-[#D9D9D9] text-black", // ไม่ใช้งาน / จาง / ลบ
   normal: "border-transparent bg-[#1F78FF] text-white", // แจ้งเตือน / ลูกค้าประจำ / Coming Soon

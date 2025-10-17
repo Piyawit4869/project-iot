@@ -50,11 +50,12 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
           }`.trim();
 
           return (
-            <Link to={`/users/${id}`}>
-              <span className=" text-muted-foreground hover:text-blue-400 hover:underline">
+            <span className="text-blue-400 hover:text-blue-300 hover:underline">
+              <Link to={`/users/${id}`}>
+                {/* <span className=" text-muted-foreground hover:text-blue-400 hover:underline"> */}
                 {fullName || "-"}
-              </span>
-            </Link>
+              </Link>
+            </span>
           );
         },
       },

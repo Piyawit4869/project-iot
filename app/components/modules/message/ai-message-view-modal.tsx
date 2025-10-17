@@ -21,7 +21,6 @@ export function AIMessageView({ open, onOpenChange }: ChecklistDialogProps) {
 
   const { customer: currentCustomer } = useChatRoom();
 
-  console.log({ currentCustomer });
   const { data, isLoading } = useGetAiNote(currentCustomer?.id);
 
   return (

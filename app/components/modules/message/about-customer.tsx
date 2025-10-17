@@ -143,8 +143,6 @@ export const AboutCustomer: React.FC<ChecklistDialogProps> = (props) => {
     });
   }, [open, form, customer]);
 
-  // const currentCustomer = useCustomer(customerId);
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
