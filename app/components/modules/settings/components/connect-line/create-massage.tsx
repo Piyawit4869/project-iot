@@ -34,19 +34,24 @@ export default function ReplyMessageForm({
 }: Props) {
   const form = useForm<ReplyValues>({
     resolver: zodResolver(ReplySchema),
-    defaultValues: { title: "", message: "" },
+    defaultValues: {
+      name: "",
+      description: "",
+      text: "",
+    },
   });
 
   // โหลดข้อมูลเดิมเมื่อแก้ไข
-  React.useEffect(() => {
-    if (mode === "edit" && replyId) {
-      // TODO: ดึงข้อมูลด้วย replyId แล้ว form.reset(...)
-      // ตัวอย่าง: form.reset({ title: data.title, message: data.message });
-    }
-  }, [mode, replyId, form]);
+  // React.useEffect(() => {
+  //   if (mode === "edit" && replyId) {
+  // TODO: ดึงข้อมูลด้วย replyId แล้ว form.reset(...)
+  // ตัวอย่าง: form.reset({ title: data.title, message: data.message });
+  //   }
+  // }, [mode, replyId, form]);
 
-  const titleLen = form.watch("title")?.length ?? 0;
-  const msgLen = form.watch("message")?.length ?? 0;
+  const name = form.watch("name")?.length ?? 0;
+  const description = form.watch("description")?.length ?? 0;
+  const text = form.watch("text")?.length ?? 0;
 
   const onSubmit = (values: ReplyValues) => {
     GlobalModal.info({
@@ -69,7 +74,7 @@ export default function ReplyMessageForm({
               : "บันทึกข้อความตอบกลับสำเร็จ !",
             { id: toastId, duration: 2000, position: "bottom-right" }
           );
-          onSaved?.(); // กลับหน้ารายการ
+          onSaved?.();
         } catch {
           toast.error("เกิดข้อผิดพลาดขณะบันทึก", { id: toastId });
         }
@@ -88,13 +93,13 @@ export default function ReplyMessageForm({
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name="title"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <div className="flex items-end justify-between">
                     <FormLabel>ชื่อ</FormLabel>
                     <span className="text-xs text-muted-foreground">
-                      {titleLen}/30
+                      {name}/30
                     </span>
                   </div>
                   <FormControl>
@@ -110,13 +115,29 @@ export default function ReplyMessageForm({
 
             <FormField
               control={form.control}
-              name="message"
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex items-end justify-between">
+                    <FormLabel>รายละเอียด</FormLabel>
+                  </div>
+                  <FormControl>
+                    <Input placeholder="ใส่รายละเอียด" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="text"
               render={({ field }) => (
                 <FormItem>
                   <div className="flex items-end justify-between">
                     <FormLabel>ข้อความ</FormLabel>
                     <span className="text-xs text-muted-foreground">
-                      {msgLen}/1000
+                      {text}/1000
                     </span>
                   </div>
                   <FormControl>

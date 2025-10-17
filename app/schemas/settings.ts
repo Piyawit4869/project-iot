@@ -113,8 +113,9 @@ export const ConnectLineSchema = z.object({
 export type ConnectLineValues = z.infer<typeof ConnectLineSchema>;
 
 export const ReplySchema = z.object({
-  title: z.string().min(1, "กรุณากรอกชื่อ").max(30),
-  message: z.string().min(1, "กรุณากรอกข้อความ").max(1000),
+  name: z.string().min(1, "กรุณากรอกชื่อ").max(30),
+  description: z.string().optional(),
+  text: z.string().min(1, "กรุณากรอกข้อความ").max(1000),
 });
 export type ReplyValues = z.infer<typeof ReplySchema>;
 
