@@ -1,49 +1,40 @@
-# Stage 1: Install dependencies and build the project
-FROM node:22.12.0-alpine AS builder
-
-# Install pnpm globally via npm (instead of Corepack)
+# === Stage 1: Development dependencies ===
+FROM node:20-alpine AS development-dependencies-env
 RUN npm install -g pnpm
-
-# Set working directory
+COPY . /app
 WORKDIR /app
-
-# Copy package.json and pnpm-lock.yaml
-COPY package.json pnpm-lock.yaml ./
-
-# Install dependencies
 RUN pnpm install --frozen-lockfile
 
-# Copy the rest of the application files
-COPY . .
+# === Stage 2: Production dependencies (no dev deps) ===
+FROM node:20-alpine AS production-dependencies-env
+RUN npm install -g pnpm
+COPY ./package.json ./pnpm-lock.yaml /app/
+WORKDIR /app
+RUN pnpm install --frozen-lockfile --prod
 
-# Build the Next.js project
-RUN pnpm build
+# === Stage 3: Build stage ===
+FROM node:20-alpine AS build-env
+RUN npm install -g pnpm
+COPY . /app/
+COPY --from=development-dependencies-env /app/node_modules /app/node_modules
+WORKDIR /app
+RUN pnpm run build
 
-# Install only production dependencies
-RUN pnpm install --frozen-lockfile --prod --ignore-scripts
-
-# Stage 2: Create optimized production image
-FROM node:22.12.0-alpine AS runner
-
-# Install pnpm globally
+# === Stage 4: Runtime image ===
+FROM node:20-alpine
 RUN npm install -g pnpm
 
-# Set environment variables
-ENV NODE_ENV=production
-ENV PORT=80
-
-# Set working directory
+# Set the working directory to /app
 WORKDIR /app
 
-# Copy necessary files from the builder stage
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/pnpm-lock.yaml ./
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
+# Copy the package.json and pnpm-lock.yaml
+COPY ./package.json ./pnpm-lock.yaml /app/
 
-# Expose the port for GCP Cloud Run
-EXPOSE 80
+# Copy production dependencies and the build output from previous stages
+COPY --from=production-dependencies-env /app/node_modules /app/node_modules
+COPY --from=build-env /app/build /app/build
 
-# Start the application
+EXPOSE 3000
+
+# Set the entrypoint to the run.sh script
 CMD ["pnpm", "start"]

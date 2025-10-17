@@ -1,0 +1,76 @@
+{
+  "head": [
+    {
+      "name": "Utotech co., ltd",
+      "path": "/",
+      "logo": "/logo.png"
+    }
+  ],
+  "home": [
+    {
+      "name": "หน้าแรก",
+      "key": "home",
+      "path": "/",
+      "icon": "Home",
+      "isActive": false
+    },
+    {
+      "name": "แชท",
+      "key": "messages",
+      "icon": "MessageCircleMore",
+      "path": "/message",
+      "isActive": false
+    },
+    {
+      "name": "ลูกค้า",
+      "key": "customner",
+      "icon": "ShieldUser",
+      "isActive": false,
+      "path": "/customer"
+    },
+    {
+      "name": "ออเดอร์",
+      "key": "orders",
+      "icon": "BookA",
+      "isActive": false,
+      "path": "/orders"
+    },
+    {
+      "name": "คลังสินค้า",
+      "key": "inventory",
+      "icon": "Warehouse",
+      "isActive": false,
+      "path": "/inventory"
+    },
+    {
+      "name": "สินค้า",
+      "key": "product",
+      "icon": "Package",
+      "isActive": false,
+      "path": "/products"
+    },
+
+    {
+      "name": "พนักงาน",
+      "key": "employee",
+      "path": "/users",
+      "icon": "User",
+      "isActive": false
+    },
+    {
+      "name": "การตั้งค่า",
+      "key": "setting-organization",
+      "icon": "Settings",
+      "isActive": false,
+      "path": "/setting-organization"
+    },
+    {
+      "name": "ประวัติการเข้าสู่ระบบ",
+      "key": "loginLog",
+      "icon": "History",
+      "isActive": false,
+      "path": "/login-log"
+    }
+  ],
+  "main": []
+}
