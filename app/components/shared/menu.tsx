@@ -16,6 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { SkeletonLoading } from "./skeleton-loading";
 import { GlobalImage } from "./global-image";
 import { useNavigate, useRouteLoaderData } from "react-router";
+import { User, Mail, IdCard, Shield } from "lucide-react";
 
 type ItemMenuType = {
   key: string;
@@ -51,13 +52,13 @@ export function Menu() {
   const firstName = me?.profile?.firstName?.trim();
   const lastName = me?.profile?.lastName?.trim();
   const userName = me?.userName?.trim();
-  const mainDepartment = me?.mainDepartment;
+  const email = me?.email?.trim();
+  const role = me?.mainDepartment;
 
   const hasFullName = firstName || lastName;
 
   const displayFullname = hasFullName
-    ? `${firstName ?? ""} ${lastName ?? ""}`.trim() +
-      (userName ? ` (${userName})` : "")
+    ? `${firstName ?? ""} ${lastName ?? ""}`.trim()
     : userName ?? "";
 
   // const [language, setLanguage] = React.useState<"en" | "th">("th");
@@ -144,10 +145,26 @@ export function Menu() {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>
-            <div>
-              <div className="text-[#ff520e]">{me?.email ?? "-"}</div>
-              <div> {displayFullname}</div>
-              <div className="text-[#00bfa5]"> {mainDepartment}</div>
+            <div className="space-y-1 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <User className="h-4 w-4 text-primary" />
+                <span>{displayFullname ?? "-"}</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-primary" />
+                <span>{email ?? "-"}</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <IdCard className="h-4 w-4 text-primary" />
+                <span>{userName ?? "-"}</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Shield className="h-4 w-4 text-primary" />
+                <span>{role ?? "-"}</span>
+              </div>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />

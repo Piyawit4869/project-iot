@@ -1,105 +1,47 @@
-name: Deploy to Cloud Run
-
+name: Deploy
 on:
-  workflow_run:
-    workflows:
-      - Build Checked
-    types:
-      - completed
-    branches:
-      - develop
-      - demo
-      - staging
-      - main
-
   workflow_dispatch:
     inputs:
-      env:
-        description: "Environment"
+      image:
+        description: 'Full Artifact Registry image URL (region-docker.pkg.dev/project/repo:tag)'
         required: true
-        default: "develop"
-      version:
-        description: "Version (branch or tag)"
+      service:
+        description: 'Cloud Run service name'
         required: true
-        default: "develop"
 
 jobs:
   deploy:
-    name: 🚀 Deploy to Cloud Run (${{ github.event_name == 'workflow_dispatch' && inputs.env || github.event.workflow_run.head_branch }})
     runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'workflow_dispatch' ||
-      github.event.workflow_run.conclusion == 'success'
-
+    environment: 'gcp-cicd'
     permissions:
       id-token: write
       contents: read
-      actions: read
+
+    env:
+      REGION: asia-southeast1
 
     steps:
-      - name: 🧪 Set environment variables
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "APP_ENV=${{ inputs.env }}" >> $GITHUB_ENV
-            echo "APP_VERSION=${{ inputs.version }}" >> $GITHUB_ENV
-          else
-            BRANCH=$(curl -s \
-              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }} \
-              | jq -r .head_branch)
-            echo "APP_ENV=$BRANCH" >> $GITHUB_ENV
-            echo "APP_VERSION=$BRANCH" >> $GITHUB_ENV
-          fi
+      - uses: actions/checkout@v4
 
-      - name: 📥 Checkout code from correct branch
-        uses: actions/checkout@v3
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
         with:
-          ref: ${{ env.APP_VERSION }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          export_default_credentials: true
 
-      - name: 🔐 Authenticate to Google Cloud
-        uses: google-github-actions/auth@v1
+      - name: Auth to GCP via OIDC
+        uses: google-github-actions/auth@v2
         with:
-          token_format: access_token
-          workload_identity_provider: ${{ secrets.GCP_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.DEPLOY_SA }}
 
-      - name: 🧾 Debug environment
+      - name: Deploy to Cloud Run
         run: |
-          echo "Branch (APP_ENV): $APP_ENV"
-          echo "Version: $APP_VERSION"
-          echo "Triggered by: ${{ github.actor }}"
-          echo "Repository: ${{ github.repository }}"
+          echo "Deploying service: ${{ github.event.inputs.service }}"
+          echo "Using image: ${{ github.event.inputs.image }}"
 
-      - name: 🚀 Deploying ${{ github.repository }} to Cloud Run (${{ env.APP_ENV }})
-        env:
-          APP_IMAGE: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}-${{ env.APP_ENV }}
-          SERVICE_NAME: ${{ github.event.repository.name }}-${{ env.APP_ENV }}
-          APP_VERSION: ${{ env.APP_VERSION }}
-          GCP_CLOUD_RUN_REGION: ${{ secrets.GCP_CLOUD_RUN_REGION }}
-          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-        run: |
-          echo "Deploying $SERVICE_NAME with image $APP_IMAGE:$APP_VERSION..."
-          gcloud run deploy $SERVICE_NAME \
-            --region=$GCP_CLOUD_RUN_REGION \
-            --image $APP_IMAGE:$APP_VERSION \
-            --project $GCP_PROJECT_ID \
-            --platform=managed \
-            --quiet \
+          gcloud run deploy ${{ github.event.inputs.service }} \
+            --image ${{ github.event.inputs.image }} \
+            --region $REGION \
+            --platform managed \
             --allow-unauthenticated
-
-      - name: 🔔 Notify Discord
-        uses: sarisia/actions-status-discord@v1
-        if: always()
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          status: ${{ job.status }}
-          content: |
-            <@&888117099246026772> ✅ Deploy Alert!
-            Repo: ${{ github.event.repository.name }}
-            Branch: ${{ env.APP_ENV }}
-            Triggered by: ${{ github.actor }}
-          title: "Deploy: `${{ github.event.repository.name }}` → `${{ env.APP_ENV }}`"
-          description: |
-            Status: `${{ job.status }}`
-            Version: `${{ env.APP_VERSION }}`
-          url: "https://github.com/${{ github.repository }}/tree/${{ env.APP_VERSION }}"

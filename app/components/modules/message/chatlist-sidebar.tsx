@@ -110,25 +110,26 @@ export default function ChatlistSidebar({
         {isLoading ? (
           <LoadingSkeleton />
         ) : allRooms.length > 0 ? (
-          allRooms.map((chat: any, i: any) => (
+          allRooms.map((room: any, i: any) => (
             <ChatItem
-              key={chat?.id + i}
-              roomId={chat?.id ?? ""}
+              key={room?.id + i}
+              roomId={room?.id ?? ""}
               selectedRoom={currentRoomId}
               resize={resize}
-              name={chat?.customer?.fullName || chat?.name}
-              message={chat?.latestMessage?.messageLabel}
+              name={room?.name}
+              message={room?.latestMessage?.messageLabel}
               time={
-                chat?.updatedAt
-                  ? dayjs(chat?.latestMessage?.createdAt).format("h:mm A") || ""
+                room?.updatedAt
+                  ? dayjs(room?.latestMessage?.createdAt).format("h:mm A") || ""
                   : "-"
               }
-              image={chat?.customer?.imageUrl || ""}
-              unread={chat?.unreadMessageCount > 0}
-              countUnreadMessage={chat?.unreadMessageCount || 0}
+              image={room?.imageUrl || ""}
+              unread={room?.unreadMessageCount > 0}
+              countUnreadMessage={room?.unreadMessageCount || 0}
               currentCustomer={currentCustomer}
               onChatClick={() => {
-                handleChangeSelectedRoom(chat);
+                console.log({ room });
+                handleChangeSelectedRoom(room);
                 setSidebarOpen(false);
                 setOnSelectRoom(true);
                 // removeMessage(); // clear messages from previous room
