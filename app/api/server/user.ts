@@ -8,10 +8,12 @@ export const fetchUserPagination = async (params: {
   page: number;
   limit: number;
   status: string;
+  name?: string;
 }) => {
   try {
     const p = Object.assign({});
     p.page = params.page;
+    p.name = params.name;
     p.limit = params.limit;
     if (params.status && params.status !== "all") {
       p.status = params.status;

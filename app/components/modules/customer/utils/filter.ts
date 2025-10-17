@@ -18,7 +18,7 @@ export type FilterField = {
 };
 
 export const customerFilterFields: FilterField[] = [
-  { id: "profile.name", label: "ผู้ติดต่อ", kind: "text" },
+  { id: "profile.name", label: "ชื่อ", kind: "text" },
   // { id: "email", label: "อีเมล", kind: "text" },
   {
     id: "status",

@@ -85,7 +85,7 @@ export default function TableMassage({
         </div>
 
         <div className="flex w-full md:w-auto items-center gap-2">
-          <div className="relative w-full md:w-[280px]">
+          {/* <div className="relative w-full md:w-[280px]">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               value={q}
@@ -102,7 +102,7 @@ export default function TableMassage({
             className="whitespace-nowrap"
           >
             ค้นหา
-          </Button>
+          </Button> */}
 
           <Button
             onClick={onCreate}
