@@ -1,106 +1,112 @@
-name: Build Checked
+name: Build
 
 on:
   push:
     branches:
-      - "**"
+      - develop
+
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to build (only main and uat allowed)'
+        required: true
+        default: 'uat'
+        type: choice
+        options:
+          - uat
+          - main
+
+      version:
+        description: 'Version tag to build (e.g., 1.0.0)'
+        required: true
+        default: '1.0.0'
+        type: string
+
+      environment:
+        description: 'Environment to deploy (dev, uat, prod)'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - uat
+          - prod
 
 jobs:
-  code-check:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "20"
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Set up pnpm store path
-        id: pnpm-cache
-        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - name: Cache pnpm dependencies
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build project
-        run: pnpm build
-
   build:
-    needs: code-check
     runs-on: ubuntu-latest
-    if: contains('refs/heads/develop refs/heads/main refs/heads/staging', github.ref)
+    if: contains('refs/heads/main refs/heads/uat refs/heads/develop', github.ref)
+    environment: 'gcp-cicd'
     permissions:
-      actions: read
-      contents: read
       id-token: write
+      contents: read
+      actions: write
+    env:
+      GAR_REGION: asia-southeast1
+      REGION: asia-southeast1
 
     steps:
-      - name: 📥 Check out repository code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v1
+      - name: Extract repo name
+        run: echo "REPO=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+
+      - name: Extract service name
+        run: echo "SERVICE_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
         with:
-          workload_identity_provider: ${{ secrets.GCP_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          export_default_credentials: true
 
-      - name: 🏷️ Get the current version (branch name)
+      - name: Auth to GCP via OIDC
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.DEPLOY_SA }}
+
+      - name: Configure Docker auth
+        run: gcloud auth configure-docker $GAR_REGION-docker.pkg.dev --quiet
+
+      - name: Get version
         id: get_version
         run: |
-          echo "VERSION=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.version }}" ] && [ "${{ github.event.inputs.branch }}" != "develop" ]; then
+            BRANCH=${{ github.event.inputs.branch }}
 
-      - name: 🐳 Build Docker Image
+            if [ "$BRANCH" = "uat" ]; then
+              echo "VERSION=${{ github.event.inputs.version }}-rc" >> $GITHUB_OUTPUT
+            else
+              echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "VERSION=dev" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build & push image
+        id: build
         env:
           APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
-          APP_IMAGE: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}-${{ github.ref_name }}
+          APP_IMAGE: ${{ env.GAR_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-docker-images/${{ env.REPO }}
         run: |
           echo "🔧 Building image..."
-          echo "APP_IMAGE: $APP_IMAGE"
           echo "APP_VERSION: $APP_VERSION"
-          docker build -t $APP_IMAGE:$APP_VERSION .
+          echo "APP_IMAGE: $APP_IMAGE"
+          docker build -t "$APP_IMAGE:$APP_VERSION" .
 
-      - name: 🔐 Configure Docker to use GCP Artifact Registry
-        run: |-
-          gcloud auth configure-docker --quiet
-          gcloud auth configure-docker ${{ secrets.GCP_IMAGE_REGISTRY }} --quiet
-
-      - name: 📤 Push Docker Image to Artifact Registry
-        env:
-          APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
-          APP_IMAGE: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}-${{ github.ref_name }}
-        run: |-
           echo "🚀 Pushing image..."
-          echo "Pushing $APP_IMAGE:$APP_VERSION"
-          docker push $APP_IMAGE:$APP_VERSION
+          docker push "$APP_IMAGE:$APP_VERSION"
 
-      - name: 🐛 Debug Output
-        run: |
-          echo "Branch: ${{ github.ref_name }}"
-          echo "GITHUB_REF: $GITHUB_REF"
-          echo "Repository: ${{ github.event.repository.name }}"
-          echo "Version: ${{ steps.get_version.outputs.VERSION }}"
-          echo "Full Image: ${{ secrets.GCP_IMAGE_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ github.event.repository.name }}-${{ github.ref_name }}:${{ steps.get_version.outputs.VERSION }}"
+          echo "image=$APP_IMAGE:$APP_VERSION" >> $GITHUB_OUTPUT
 
-      - name: 🔔 Notify Discord (Build)
-        uses: sarisia/actions-status-discord@v1
-        if: always()
+      - name: Invoke Deploy workflow
+        uses: benc-uk/workflow-dispatch@v1
         with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          status: ${{ job.status }}
-          title: "Build by ${{ github.actor }}"
-          description: "Build container prepared to deploy artifact"
-          url: "https://github.com/Utotech-organize/rome-core"
+          workflow: deploy.yml
+          ref: ${{ github.ref }}
+          inputs: |
+            {
+              "image": "${{ steps.build.outputs.image }}",
+              "service": "${{ env.REPO }}-${{ github.event.inputs.environment || 'dev' }}"
+            }
