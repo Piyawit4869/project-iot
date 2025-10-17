@@ -83,12 +83,12 @@ export default function SettingLayout({
                 <Building className="w-4 h-4 mr-2" />
               </TabsTrigger>
             </Link>
-            <Link to="/setting-organization/branch">
+            {/* <Link to="/setting-organization/branch">
               <TabsTrigger value="branch">
                 สาขา
                 <Building2 className="w-4 h-4 mr-2" />
               </TabsTrigger>
-            </Link>
+            </Link> */}
             <Link to="/setting-organization/third-party">
               <TabsTrigger value="third-party">
                 การเชื่อมต่อภายนอก
