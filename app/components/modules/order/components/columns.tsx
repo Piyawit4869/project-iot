@@ -61,8 +61,8 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
           .join(" ");
 
         return (
-          <span className="text-blue-400 hover:text-blue-300 hover:underline">
-            {/* <span className="hover:text-blue-400 hover:underline"> */}
+          // <span className="text-blue-400 hover:text-blue-300 hover:underline">
+          <span className="hover:text-blue-400 hover:underline">
             <Link to={`/customer/${customer.id}`}>
               {fullName || customer.name || "-"}
             </Link>

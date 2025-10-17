@@ -25,6 +25,9 @@ export const DateISOToDisplayDate = (iso: string): string => {
 };
 
 export const DateTimeStampChatDisplay = (timestamp: string | Date): string => {
+  if (!timestamp) {
+    return "";
+  }
   const time = dayjs(timestamp);
 
   if (time.isToday()) {

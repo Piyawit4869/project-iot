@@ -120,7 +120,7 @@ export default function ChatlistSidebar({
               resize={resize}
               name={room?.name}
               message={room?.latestMessage ?? ""}
-              time={room?.createdAt ?? ""}
+              time={room?.updatedAt ?? ""}
               image={room?.imageUrl || ""}
               unread={room?.unreadMessageCount > 0}
               countUnreadMessage={room?.unreadMessageCount || 0}
@@ -206,28 +206,43 @@ function ChatItem({
           alt={name}
           className="w-[40px] h-[40px] rounded-full object-cover"
         />
+
+        {!autoReadMsg && countUnreadMessage > 0 && (
+          <span
+            className="absolute top-0 right-0 inline-grid place-items-center min-w-5 h-5 px-1 rounded-full bg-red-500 text-white text-xs font-medium"
+            aria-hidden
+          >
+            {countUnreadMessage}
+          </span>
+        )}
       </div>
 
       {resize > 25 && (
         <div className="hidden ml-3 lg:flex flex-col min-w-0 flex-1">
           <div className="flex justify-between items-center gap-2 min-w-0">
             <div className="flex justify-between items-center gap-2 min-w-0">
-              <p className={cn("text-sm truncate")}>{name}</p>
-              {/* <TagLabel
-                label="ดำเนินการแล้ว"
-                icon={<CheckCircle className="mr-2 h-[14px] w-[14px]" />}
-                color="green"
-              /> */}
-              <TagLabel
-                label="ต้องดำเนินการ"
-                icon={<MessagesSquare className="mr-2 h-[14px] w-[14px]" />}
-                color="orange"
-              />
+              <p className={cn("text-sm truncate max-w-[160px]")}>{name}</p>
             </div>
 
-            <span className="text-xs text-black-400 whitespace-nowrap shrink-0">
-              {DateTimeStampChatDisplay(time ?? "")}
-            </span>
+            <div className="flex flex-col justify-end">
+              <span className="text-xs text-black-400 whitespace-nowrap shrink-0 text-end">
+                {DateTimeStampChatDisplay(time ?? "")}
+              </span>
+
+              <div>
+                {/* <TagLabel
+                  label="ดำเนินการแล้ว"
+                  icon={<CheckCircle className="mr-1 h-[10px] w-[10px]" />}
+                  color="green"
+                /> */}
+                <TagLabel
+                  label="ต้องดำเนินการ"
+                  icon={<MessagesSquare className="mr-1 h-[10px] w-[10px]" />}
+                  color="orange"
+                  className="text-[10px]"
+                />
+              </div>
+            </div>
           </div>
           <div className="flex flex-row justify-between">
             <p
@@ -238,15 +253,6 @@ function ChatItem({
             >
               {message}
             </p>
-
-            {!autoReadMsg && countUnreadMessage > 0 && (
-              <span
-                className="ml-2 inline-grid place-items-center min-w-5 h-5 px-1 rounded-full bg-red-500 text-white text-xs font-medium"
-                aria-hidden
-              >
-                {countUnreadMessage}
-              </span>
-            )}
           </div>
         </div>
       )}

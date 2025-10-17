@@ -38,9 +38,7 @@ export default function ChatbotSpaceNew({
     data: customerSingle,
     isLoading,
     refetch,
-  } = useCustomer(
-    selectedRoom && selectedRoom.customer && selectedRoom.customer.id
-  );
+  } = useCustomer(selectedRoom && selectedRoom.customerId);
 
   const [autoScroll, setAutoScroll] = React.useState(true);
   const [isCreateOrderOpen, setCreateOrderOpen] = React.useState(false);
@@ -114,7 +112,7 @@ export default function ChatbotSpaceNew({
                         </DrawerTrigger>
                         <DrawerContent>
                           <div className="mx-auto w-full">
-                            {selectedRoom.id && selectedRoom.customer ? (
+                            {selectedRoom.id ? (
                               <ChatCustomerInfo
                                 refetchCustomer={refetch}
                                 setCreateOrderOpen={setCreateOrderOpen}
@@ -181,7 +179,9 @@ export default function ChatbotSpaceNew({
           {customerInfoOpen && (
             <ResizablePanel minSize={20} maxSize={25} className="min-w-[300px]">
               <aside className="hidden md:flex w-full">
-                {selectedRoom && selectedRoom?.id && selectedRoom?.customer ? (
+                {selectedRoom &&
+                selectedRoom?.id &&
+                selectedRoom?.customerId ? (
                   <ChatCustomerInfo
                     refetchCustomer={refetch}
                     setCreateOrderOpen={setCreateOrderOpen}
