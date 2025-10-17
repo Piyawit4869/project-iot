@@ -28,12 +28,14 @@ export default function ChatMessages({
   autoScroll,
   setAutoScroll,
   selectedRoom,
+  customer,
 }: {
   api: string;
   autoScroll: boolean;
   setAutoScroll: React.Dispatch<React.SetStateAction<boolean>>;
   selectedRoom: ChatRoomSchemaType;
   isCreateOrderOpen: boolean;
+  customer: any;
 }) {
   const { me } = useRouteLoaderData("root");
 
@@ -416,7 +418,11 @@ export default function ChatMessages({
         onOpenChange={setCheckStatusOpen}
       />
 
-      <AIMessageView open={AIOpen} onOpenChange={setAIOpen} />
+      <AIMessageView
+        open={AIOpen}
+        onOpenChange={setAIOpen}
+        customer={customer}
+      />
 
       {previewUrl && (
         <div
