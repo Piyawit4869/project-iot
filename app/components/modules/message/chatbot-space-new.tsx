@@ -50,8 +50,6 @@ export default function ChatbotSpaceNew({
   const [addCustomerDetail, setAddCustomerDetail] =
     React.useState<boolean>(false);
 
-  console.log({ selectedRoom });
-
   return (
     <div className="h-[calc(100vh-56px)]">
       <OrderProvider>
