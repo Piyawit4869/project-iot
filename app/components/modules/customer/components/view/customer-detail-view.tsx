@@ -10,13 +10,13 @@ import { FormField } from "~/components/ui/form";
 import type { CustomerFormCreateProps } from "~/schemas/customer/customer";
 
 export const ViewCustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
+  customer,
   form,
   loading = false,
 }) => {
   const params = useParams();
   const id = params?.id as string;
 
-  const { data: customer } = useCustomer(id);
   const mainSupport = customer?.supports?.find((s: any) => s.isMain);
   const secondarySupports = customer?.supports?.filter((s: any) => !s.isMain);
 
@@ -37,7 +37,7 @@ export const ViewCustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
         </CardContent>
       ) : (
         <CardContent className="space-y-4">
-          <GlobalStatusBadge value={customer.active} />
+          <GlobalStatusBadge value={customer?.active} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
             <FormTextRow
               control={form.control}

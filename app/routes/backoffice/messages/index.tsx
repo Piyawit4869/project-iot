@@ -19,7 +19,6 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function MessagePage() {
   const { data } = useLoaderData();
-  console.log({ data });
 
   const apiSocket = env.PUBLIC_API_URL;
 

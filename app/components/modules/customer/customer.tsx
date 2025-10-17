@@ -50,7 +50,6 @@ export default function Customer() {
             variant="outline"
             disabled
             key="import-button"
-            // className="bg-blue-300 text-black hover:bg-blue-500 hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
           />,
           <GlobalButton
             label={
@@ -62,7 +61,6 @@ export default function Customer() {
             variant="outline"
             disabled
             key="export-button"
-            // className="bg-yellow-300 text-black hover:bg-yellow-500 hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
           />,
           <Link to="/customer/create" key="create-link">
             <Button
@@ -110,6 +108,4 @@ export default function Customer() {
       />
     </div>
   );
-
-  // return <>Customer</>;
 }

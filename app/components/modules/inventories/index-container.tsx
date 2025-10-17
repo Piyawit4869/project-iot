@@ -28,6 +28,7 @@ export const InventoryIndexContainer = () => {
   const [status, setStatus] = useState("all");
 
   const items = TabIndexTableinventorys(categories);
+
   const handleChangeTab = (values: any) => {
     setStatus(values);
   };
@@ -84,25 +85,25 @@ export const InventoryIndexContainer = () => {
           })
         }
         columns={columns}
-        addOn={
-          <Tabs
-            defaultValue="all"
-            onValueChange={handleChangeTab}
-            className={cn("block", isMobile && "hidden")}
-          >
-            <TabsList>
-              {items.map((c) => (
-                <TabsTrigger
-                  key={c.label}
-                  value={c.status}
-                  className="hover:bg-gray-200 relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
-                >
-                  {c.icon} {c.label} ({c.value})
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-        }
+        // addOn={
+        //   <Tabs
+        //     defaultValue="all"
+        //     onValueChange={handleChangeTab}
+        //     className={cn("block", isMobile && "hidden")}
+        //   >
+        //     <TabsList>
+        //       {items.map((c) => (
+        //         <TabsTrigger
+        //           key={c.label}
+        //           value={c.status}
+        //           className="hover:bg-gray-200 relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
+        //         >
+        //           {c.icon} {c.label} ({c.value})
+        //         </TabsTrigger>
+        //       ))}
+        //     </TabsList>
+        //   </Tabs>
+        // }
         customerFilterFields={InventorysFilterFields}
         isCustomLoading={isLoading}
       />

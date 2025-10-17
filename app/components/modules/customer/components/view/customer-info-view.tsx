@@ -10,14 +10,10 @@ import { Label } from "~/components/ui/label";
 import type { CustomerFormCreateProps } from "~/schemas/customer/customer";
 
 export const ViewCustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
+  customer,
   form,
   loading = false,
 }) => {
-  const params = useParams();
-  const id = params?.id as string;
-
-  const { data: customer } = useCustomer(id);
-
   return (
     <Card>
       <CardHeader>
@@ -43,7 +39,7 @@ export const ViewCustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
               width={140}
               height={140}
               className="rounded-xl object-contain object-center  "
-              fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${customer.name}`}
+              fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${customer?.name}`}
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-7 pt-4">

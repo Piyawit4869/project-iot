@@ -26,7 +26,6 @@ export function AIMessageView({
 
   // const { customer: currentCustomer } = useChatRoom(); // !! old for render privider
 
-  // console.log({ currentCustomer });
   // const { data, isLoading } = useGetAiNote(currentCustomer?.id);
 
   return (

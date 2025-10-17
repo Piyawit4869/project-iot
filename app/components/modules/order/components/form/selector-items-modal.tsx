@@ -78,8 +78,6 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
     name: debouncedSearch,
   });
 
-  console.log({ products });
-
   const toggleItem = (id: string) => {
     if (multiple) {
       setSelectedItems((prev) =>

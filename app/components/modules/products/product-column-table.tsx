@@ -98,11 +98,12 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
         const name = info.getValue() as string;
 
         return (
-          <Link to={`/products/${id}`}>
-            <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline">
+          <span className="text-blue-400 hover:text-blue-300 hover:underline">
+            <Link to={`/products/${id}`}>
+              {/* <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline"> */}
               {name}
-            </span>
-          </Link>
+            </Link>
+          </span>
         );
       },
     },

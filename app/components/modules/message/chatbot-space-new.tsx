@@ -73,7 +73,7 @@ export default function ChatbotSpaceNew({
           {/* <ResizableHandle withHandle className="hidden lg:flex " /> */}
           <ResizablePanel defaultSize={50}>
             <>
-              {selectedRoom && selectedRoom.id && selectedRoom.customer ? (
+              {selectedRoom && selectedRoom.id && selectedRoom ? (
                 <div className="flex flex-col w-full h-full bg-white dark:bg-secondary">
                   <div className="flex items-center  border-b px-4 py-2 dark:bg-background">
                     <div className="flex items-center w-full gap-2 h-[36px] justify-between">

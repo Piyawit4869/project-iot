@@ -47,7 +47,6 @@ export default function SingDetailleCustomer() {
   const [AIOpen, setAIOpen] = React.useState(false);
 
   const dataFromAI = getData?.customerData;
-  const ordersPaginateFilter = useOrdersPaginateFilter;
 
   const data = customer?.profile;
   const otherName = data?.name;
@@ -285,15 +284,18 @@ export default function SingDetailleCustomer() {
                   {isEdit ? (
                     <>
                       <FormCustomerDetailCard
+                        customer={customer}
                         form={formUpdate}
                         loading={loadCustomer}
                       />
                       <FormCustomerInfoCard
+                        customer={customer}
                         form={formUpdate}
                         loading={loadCustomer}
                         dataFromAI={dataFromAI || []}
                       />
                       <FormCustomerContact
+                        customer={customer}
                         form={formUpdate}
                         loading={loadCustomer}
                       />
@@ -301,14 +303,17 @@ export default function SingDetailleCustomer() {
                   ) : (
                     <>
                       <ViewCustomerDeatailCard
+                        customer={customer}
                         form={formUpdate}
                         loading={loadCustomer}
                       />
                       <ViewCustomerInfoCard
+                        customer={customer}
                         form={formUpdate}
                         loading={loadCustomer}
                       />
                       <ViewCustomerContact
+                        customer={customer}
                         form={formUpdate}
                         loading={loadCustomer}
                       />

@@ -53,7 +53,7 @@ export function Menu() {
   const lastName = me?.profile?.lastName?.trim();
   const userName = me?.userName?.trim();
   const email = me?.email?.trim();
-  const role = me?.role?.name?.trim();
+  const role = me?.mainDepartment;
 
   const hasFullName = firstName || lastName;
 
@@ -83,7 +83,7 @@ export function Menu() {
   ];
 
   return (
-    <div className="justify-between items-center flex gap-3">
+    <div className="justify-between items-center flex gap-1 pr-3">
       {/* <button
         onClick={toggleLanguage}
         className="relative w-10 h-5 rounded-full border border-border shadow-inner transition-colors duration-300"
@@ -182,20 +182,20 @@ export function Menu() {
                 </a>
               </DropdownMenuItem>
             ))}
-            <div className="pl-2 flex items-center gap-2">
-              <Icons.Palette className="w-4 h-4 text-muted-foreground" />
 
+            <DropdownMenuItem>
+              <Icons.Palette className="w-5 h-5" />
               <button
                 onClick={toggleDarkMode}
-                className="pl-2 relative w-10 h-5 rounded-full border border-border shadow-inner transition-colors duration-300"
+                className="relative w-10 h-5 rounded-full border border-border shadow-inner transition-colors duration-300"
               >
                 <span
                   className={`absolute top-[1px] left-[2px] h-4 w-4 flex items-center justify-center rounded-full transition-all duration-300
-        ${
-          isDark
-            ? "translate-x-[18px] bg-blue-500"
-            : "translate-x-0 bg-yellow-400"
-        } text-white`}
+          ${
+            isDark
+              ? "translate-x-[18px] bg-blue-500"
+              : "translate-x-0 bg-yellow-400"
+          } text-white`}
                 >
                   {isDark ? (
                     <Icons.Moon className="h-[12px] w-[12px]" />
@@ -204,8 +204,9 @@ export function Menu() {
                   )}
                 </span>
               </button>
-            </div>
+            </DropdownMenuItem>
           </DropdownMenuGroup>
+
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => navigate("/logout")}
