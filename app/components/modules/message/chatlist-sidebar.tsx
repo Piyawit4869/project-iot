@@ -13,7 +13,9 @@ import { useRouteLoaderData } from "react-router";
 import { socketConfig } from "~/lib/sockets";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { FileUp } from "lucide-react";
+import { MessagesSquare } from "lucide-react";
+import { TagLabel } from "~/components/shared/tag-label";
+import { DateTimeStampChatDisplay } from "~/utils/date-format";
 
 interface Props {
   handleChangeSelectedRoom: (room: any) => void;
@@ -117,18 +119,13 @@ export default function ChatlistSidebar({
               selectedRoom={currentRoomId}
               resize={resize}
               name={room?.name}
-              message={room?.latestMessage?.messageLabel}
-              time={
-                room?.updatedAt
-                  ? dayjs(room?.latestMessage?.createdAt).format("h:mm A") || ""
-                  : "-"
-              }
+              message={room?.latestMessage ?? ""}
+              time={room?.createdAt ?? ""}
               image={room?.imageUrl || ""}
               unread={room?.unreadMessageCount > 0}
               countUnreadMessage={room?.unreadMessageCount || 0}
               currentCustomer={currentCustomer}
               onChatClick={() => {
-                console.log({ room });
                 handleChangeSelectedRoom(room);
                 setSidebarOpen(false);
                 setOnSelectRoom(true);
@@ -214,10 +211,22 @@ function ChatItem({
       {resize > 25 && (
         <div className="hidden ml-3 lg:flex flex-col min-w-0 flex-1">
           <div className="flex justify-between items-center gap-2 min-w-0">
-            <p className={cn("text-sm truncate")}>{name}</p>
+            <div className="flex justify-between items-center gap-2 min-w-0">
+              <p className={cn("text-sm truncate")}>{name}</p>
+              {/* <TagLabel
+                label="ดำเนินการแล้ว"
+                icon={<CheckCircle className="mr-2 h-[14px] w-[14px]" />}
+                color="green"
+              /> */}
+              <TagLabel
+                label="ต้องดำเนินการ"
+                icon={<MessagesSquare className="mr-2 h-[14px] w-[14px]" />}
+                color="orange"
+              />
+            </div>
 
             <span className="text-xs text-black-400 whitespace-nowrap shrink-0">
-              {time}
+              {DateTimeStampChatDisplay(time ?? "")}
             </span>
           </div>
           <div className="flex flex-row justify-between">

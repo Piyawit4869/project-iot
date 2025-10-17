@@ -21,9 +21,7 @@ export default function MessageCardForm() {
     defaultValues: { name: "", category: "" },
   });
 
-  const onSubmit = (values: MessageCardFormValues) => {
-    console.log(values);
-  };
+  const onSubmit = (values: MessageCardFormValues) => {};
 
   return (
     <Form {...form}>

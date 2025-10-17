@@ -139,6 +139,7 @@ export default function ChatbotSpaceNew({
                     autoScroll={autoScroll}
                     setAutoScroll={setAutoScroll}
                     isCreateOrderOpen={isCreateOrderOpen}
+                    customer={customerSingle}
                   />
                 </div>
               ) : (
