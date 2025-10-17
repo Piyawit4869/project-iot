@@ -14,15 +14,20 @@ import { useGetAiNote } from "~/api/client/customer/useCustomer";
 type ChecklistDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  customer: any;
 };
 
-export function AIMessageView({ open, onOpenChange }: ChecklistDialogProps) {
+export function AIMessageView({
+  open,
+  onOpenChange,
+  customer,
+}: ChecklistDialogProps) {
   const [, setFields] = React.useState<AiFieldsState>();
 
-  const { customer: currentCustomer } = useChatRoom();
+  // const { customer: currentCustomer } = useChatRoom(); // !! old for render privider
 
-  console.log({ currentCustomer });
-  const { data, isLoading } = useGetAiNote(currentCustomer?.id);
+  // console.log({ currentCustomer });
+  // const { data, isLoading } = useGetAiNote(currentCustomer?.id);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -32,7 +37,7 @@ export function AIMessageView({ open, onOpenChange }: ChecklistDialogProps) {
         </DialogHeader>
 
         <div className="flex flex-col space-y-2 mt-4 max-h-[50vh] overflow-y-auto">
-          {isLoading ? (
+          {/* {isLoading ? ( // !! old for render loading
             <div className="flex justify-center">
               <SkeletonLoading className="w-[440px] h-[390px] " />
             </div>
@@ -40,9 +45,15 @@ export function AIMessageView({ open, onOpenChange }: ChecklistDialogProps) {
             <AiCustomerFields
               defaultOpen={["customerStatus", "businessType", "customerName"]}
               onChange={setFields}
-              data={data?.customerData}
+              data={customer}
             />
-          )}
+          )} */}
+
+          <AiCustomerFields
+            defaultOpen={["customerStatus", "businessType", "customerName"]}
+            onChange={setFields}
+            data={customer}
+          />
         </div>
       </DialogContent>
     </Dialog>
