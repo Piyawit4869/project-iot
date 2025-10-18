@@ -18,6 +18,8 @@ export default [
 
   layout("routes/public-layout.tsx", [
     route("public/catelog", "routes/public/catelog/index.tsx"),
+    route("public/notation-view", "routes/public/notation-view/index.tsx"),
+    route("public/notation-view/:id", "routes/public/notation-view/single.tsx"),
   ]),
 
   // Protected wrapper
