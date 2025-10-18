@@ -99,7 +99,7 @@ export function ProductCard({
             className="flex-1 rounded-xl text-xs"
             onClick={() => onViewDetails?.(product)}
           >
-            View Details
+            ดูรายละเอียด
           </Button>
           <Button
             size="sm"
@@ -107,7 +107,7 @@ export function ProductCard({
             disabled={isAddToCartDisabled}
             onClick={() => onAddToCart?.(product)}
           >
-            Add to Cart
+            เพ่ิมเข้าตะกร้าสินค้า
           </Button>
         </div>
       </CardContent>
