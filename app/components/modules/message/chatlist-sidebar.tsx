@@ -119,8 +119,8 @@ export default function ChatlistSidebar({
               selectedRoom={currentRoomId}
               resize={resize}
               name={room?.name}
-              message={room?.latestMessage ?? ""}
-              time={room?.updatedAt ?? ""}
+              message={room?.latestMessage?.message ?? ""}
+              time={room?.latestMessage?.createdAt ?? ""}
               image={room?.imageUrl || ""}
               unread={room?.unreadMessageCount > 0}
               countUnreadMessage={room?.unreadMessageCount || 0}

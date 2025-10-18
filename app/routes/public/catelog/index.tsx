@@ -155,10 +155,12 @@ export default function ShoppingPage() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-6 lg:py-8">
         <div className="mb-8">
-          <h1 className="text-3xl lg:text-4xl font-bold mb-2">Shop Products</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl lg:text-4xl font-bold mb-2">
+            แคตตาลอคสิ้นค้า
+          </h1>
+          {/* <p className="text-muted-foreground">
             Discover our amazing collection of products
-          </p>
+          </p> */}
         </div>
 
         <div className="flex gap-8">
@@ -227,7 +229,7 @@ export default function ShoppingPage() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                      No Image
+                      ไม่มีรูปภาพ
                     </div>
                   )}
                 </div>
@@ -364,7 +366,7 @@ export default function ShoppingPage() {
                       selectedProduct.status === "discontinued"
                     }
                   >
-                    Add to Cart
+                    เพ่ิมเข้าตะกร้าสินค้า
                   </Button>
                 </div>
               </div>

@@ -18,7 +18,7 @@ import { useLoaderData } from "react-router";
 // }
 
 export default function MessagePage() {
-  const { data } = useLoaderData();
+  // const { data } = useLoaderData();
 
   const apiSocket = env.PUBLIC_API_URL;
 

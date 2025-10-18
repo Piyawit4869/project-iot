@@ -75,7 +75,7 @@ export function FilterPanel({
     <Card className={`p-6 rounded-2xl border-0 bg-card shadow-sm ${className}`}>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Filters</h2>
+          <h2 className="text-lg font-semibold">ตัวกรอง</h2>
           {hasActiveFilters && (
             <Button
               variant="ghost"
@@ -83,16 +83,16 @@ export function FilterPanel({
               onClick={clearAllFilters}
               className="text-xs rounded-xl"
             >
-              Clear All
+              ล้างทั้งหมด
             </Button>
           )}
         </div>
 
-        {/* Search */}
+        {/* ค้นหา */}
         <div className="space-y-2">
-          <Label className="text-sm font-medium">Search</Label>
+          <Label className="text-sm font-medium">ค้นหา</Label>
           <Input
-            placeholder="Search products..."
+            placeholder="ค้นหาสินค้า..."
             value={queryState.q || ""}
             onChange={(e) => onUpdateQuery({ q: e.target.value || undefined })}
             className="rounded-xl"
@@ -101,9 +101,9 @@ export function FilterPanel({
 
         <Separator />
 
-        {/* Category */}
+        {/* หมวดหมู่ */}
         <div className="space-y-2">
-          <Label className="text-sm font-medium">Category</Label>
+          <Label className="text-sm font-medium">หมวดหมู่</Label>
           <Select
             value={queryState.category || ""}
             onValueChange={(value) =>
@@ -113,10 +113,10 @@ export function FilterPanel({
             }
           >
             <SelectTrigger className="rounded-xl">
-              <SelectValue placeholder="All categories" />
+              <SelectValue placeholder="ทุกหมวดหมู่" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all-categories">All categories</SelectItem>
+              <SelectItem value="all-categories">ทุกหมวดหมู่</SelectItem>
               {filterOptions.categories.map((category) => (
                 <SelectItem key={category} value={category}>
                   {category.charAt(0).toUpperCase() + category.slice(1)}
@@ -128,13 +128,13 @@ export function FilterPanel({
 
         <Separator />
 
-        {/* Price Range */}
+        {/* ช่วงราคา */}
         <div className="space-y-2">
-          <Label className="text-sm font-medium">Price Range</Label>
+          <Label className="text-sm font-medium">ช่วงราคา</Label>
           <div className="flex gap-2">
             <Input
               type="number"
-              placeholder="Min"
+              placeholder="ต่ำสุด"
               value={queryState.priceMin || ""}
               onChange={(e) =>
                 onUpdateQuery({
@@ -145,7 +145,7 @@ export function FilterPanel({
             />
             <Input
               type="number"
-              placeholder="Max"
+              placeholder="สูงสุด"
               value={queryState.priceMax || ""}
               onChange={(e) =>
                 onUpdateQuery({
@@ -159,9 +159,9 @@ export function FilterPanel({
 
         <Separator />
 
-        {/* Status */}
+        {/* สถานะสินค้า */}
         <div className="space-y-2">
-          <Label className="text-sm font-medium">Availability</Label>
+          <Label className="text-sm font-medium">สถานะสินค้า</Label>
           <Select
             value={queryState.status || ""}
             onValueChange={(value: any) =>
@@ -171,10 +171,10 @@ export function FilterPanel({
             }
           >
             <SelectTrigger className="rounded-xl">
-              <SelectValue placeholder="All statuses" />
+              <SelectValue placeholder="ทุกสถานะ" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all-statuses">All statuses</SelectItem>
+              <SelectItem value="all-statuses">ทุกสถานะ</SelectItem>
               {filterOptions.statuses.map((status) => (
                 <SelectItem key={status.value} value={status.value}>
                   {status.label}
@@ -186,11 +186,11 @@ export function FilterPanel({
 
         <Separator />
 
-        {/* Size */}
+        {/* ขนาด */}
         {filterOptions.sizes.length > 0 && (
           <>
             <div className="space-y-3">
-              <Label className="text-sm font-medium">Size</Label>
+              <Label className="text-sm font-medium">ขนาด</Label>
               <div className="space-y-2">
                 {filterOptions.sizes.map((size) => (
                   <div key={size} className="flex items-center space-x-2">
@@ -216,11 +216,11 @@ export function FilterPanel({
           </>
         )}
 
-        {/* Color */}
+        {/* สี */}
         {filterOptions.colors.length > 0 && (
           <>
             <div className="space-y-3">
-              <Label className="text-sm font-medium">Color</Label>
+              <Label className="text-sm font-medium">สี</Label>
               <div className="space-y-2">
                 {filterOptions.colors.map((color) => (
                   <div key={color} className="flex items-center space-x-2">
@@ -252,10 +252,10 @@ export function FilterPanel({
           </>
         )}
 
-        {/* Pattern */}
+        {/* ลวดลาย */}
         {filterOptions.patterns.length > 0 && (
           <div className="space-y-3">
-            <Label className="text-sm font-medium">Pattern</Label>
+            <Label className="text-sm font-medium">ลวดลาย</Label>
             <div className="space-y-2">
               {filterOptions.patterns.map((pattern) => (
                 <div key={pattern} className="flex items-center space-x-2">
