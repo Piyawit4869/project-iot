@@ -54,8 +54,8 @@ export type ProductFormValues = {
 };
 
 export const ProductsFilterFields: FilterField[] = [
-  { id: "name", label: "ชื่อสินค้า", kind: "text" },
-  { id: "sku", label: "รหัสสินค้า", kind: "text" },
+  { id: "name", label: "ชื่อสินค้า", kind: "text", showIn: "main" },
+  { id: "sku", label: "รหัสสินค้า", kind: "text", showIn: "main" },
   {
     id: "status",
     label: "สถานะ",

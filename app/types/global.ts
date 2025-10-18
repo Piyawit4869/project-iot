@@ -28,7 +28,8 @@ export type FilterKind =
   | "select"
   | "boolean"
   | "numberRange"
-  | "dateRange";
+  | "dateRange"
+  | "date";
 
 export type FilterField = {
   id: string;
@@ -38,4 +39,5 @@ export type FilterField = {
   options?: { label: string; value: string | number | boolean }[];
   placeholder?: string;
   showOnlyMobile?: boolean;
+  showIn?: "main" | "advanced" | "both";
 };

@@ -1,24 +1,8 @@
 import type { ReactNode } from "react";
-
-export type FilterKind =
-  | "text"
-  | "select"
-  | "boolean"
-  | "numberRange"
-  | "dateRange";
-
-export type FilterField = {
-  id: string;
-  path?: string;
-  label: ReactNode | string;
-  kind: FilterKind;
-  options?: { label: string; value: string | number | boolean }[];
-  placeholder?: string;
-  showOnlyMobile?: boolean;
-};
+import type { FilterField } from "~/types/global";
 
 export const customerFilterFields: FilterField[] = [
-  { id: "profile.name", label: "ผู้ติดต่อ", kind: "text" },
+  { id: "profile.name", label: "ผู้ติดต่อ", kind: "text", showIn: "main" },
   // { id: "email", label: "อีเมล", kind: "text" },
   {
     id: "status",

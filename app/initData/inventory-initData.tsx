@@ -9,6 +9,7 @@ import {
   Lock,
   XCircle,
 } from "lucide-react";
+import type { FilterField } from "~/types/global";
 
 export interface InventoryColumn {
   id: string;
@@ -23,25 +24,8 @@ export interface InventoryColumn {
   deletedBy: string | null;
 }
 
-export type FilterKind =
-  | "text"
-  | "select"
-  | "boolean"
-  | "numberRange"
-  | "dateRange";
-
-export type FilterField = {
-  id: string;
-  path?: string;
-  label: ReactNode | string;
-  kind: FilterKind;
-  options?: { label: string; value: string | number | boolean }[];
-  placeholder?: string;
-  showOnlyMobile?: boolean;
-};
-
 export const InventorysFilterFields: FilterField[] = [
-  { id: "name", label: "ชื่อคลังสินค้า", kind: "text" },
+  { id: "name", label: "ชื่อคลังสินค้า", kind: "text", showIn: "main" },
   // { id: "stockQty", label: "จำนวน", kind: "text" },
   {
     id: "status",

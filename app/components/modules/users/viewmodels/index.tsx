@@ -13,9 +13,10 @@ import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useSidebar } from "~/components/ui/sidebar";
 import { useUserColumns } from "../component/columns";
 import { useAllUserSummary, usePaginate } from "~/api/client/user";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { TabControl } from "~/components/shared/tab-control";
 import { TabIndexTableUser, UserFilterFields } from "~/types/user/init-data";
+import { pickSearchParams } from "../../customer/utils/search-params";
 
 export default function Users() {
   const { data: user, isLoading } = useAllUserSummary();
@@ -24,11 +25,17 @@ export default function Users() {
   const columns = useUserColumns();
   const { isMobile } = useSidebar();
   const [status, setStatus] = useState("all");
+  const [sp] = useSearchParams();
+  const filters = React.useMemo(
+    () => pickSearchParams(sp, ["userName", "email", "status"]),
+    [sp]
+  );
 
   const items = TabIndexTableUser(user);
   const handleChangeTab = (values: any) => {
     setStatus(values);
   };
+
   return (
     <div className="flex flex-col w-full space-y-8 p-8 dark:bg-background">
       <TabControl
@@ -76,6 +83,7 @@ export default function Users() {
             pageIndex,
             status: status === "all" ? "" : status,
             limit: pageSize,
+            ...filters,
           })
         }
         columns={columns}

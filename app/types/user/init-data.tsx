@@ -10,12 +10,12 @@ import {
   UserPlus,
   XCircle,
 } from "lucide-react";
-import type { extendedUser, FilterField } from "./type-user";
+import type { extendedUser } from "./type-user";
+import type { FilterField } from "../global";
 
-// ค่อยมาเปลี่ยน status
 export const UserFilterFields: FilterField[] = [
-  { id: "userName", label: "ผู้ติดต่อ", kind: "text" },
-  { id: "email", label: "อีเมล", kind: "text" },
+  { id: "userName", label: "ผู้ติดต่อ", kind: "text", showIn: "main" },
+  { id: "email", label: "อีเมล", kind: "text", showIn: "main" },
   {
     id: "status",
     label: "สถานะ",

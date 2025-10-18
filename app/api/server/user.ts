@@ -8,22 +8,30 @@ export const fetchUserPagination = async (params: {
   page: number;
   limit: number;
   status: string;
-  name?: string;
+  userName?: string;
+  email?: string;
+  emId?: string;
+  active?: boolean;
+  phone?: number;
+  gender?: number;
 }) => {
   try {
-    const p = Object.assign({});
-    p.page = params.page;
-    p.name = params.name;
-    p.limit = params.limit;
-    if (params.status && params.status !== "all") {
-      p.status = params.status;
+    const p = { ...params } as any;
+    // p.page = params.page;
+    // p.userName = params.userName;
+    // p.email = params.email;
+    // p.limit = params.limit;
+    if (params.status && params.status === "all") {
+      delete p.status;
     }
 
-    const { data } = await ApiConfig.get(`/crud/users/paginate`, {
+    const res = await ApiConfig.get(`/crud/users/paginate`, {
       params: p,
     });
 
-    return data;
+    console.log({ res });
+
+    return res.data;
   } catch (error) {
     return error;
   }

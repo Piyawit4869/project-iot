@@ -5,7 +5,8 @@ export type FilterKind =
   | "select"
   | "boolean"
   | "numberRange"
-  | "dateRange";
+  | "dateRange"
+  | "date";
 
 export type FilterField = {
   id: string;
