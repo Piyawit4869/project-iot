@@ -16,7 +16,10 @@ import { useAllUserSummary, usePaginate } from "~/api/client/user";
 import { Link, useSearchParams } from "react-router";
 import { TabControl } from "~/components/shared/tab-control";
 import { TabIndexTableUser, UserFilterFields } from "~/types/user/init-data";
-import { pickSearchParams } from "../../customer/utils/search-params";
+import {
+  parseDateRangeParam,
+  pickSearchParams,
+} from "../../customer/utils/search-params";
 
 export default function Users() {
   const { data: user, isLoading } = useAllUserSummary();
@@ -27,9 +30,25 @@ export default function Users() {
   const [status, setStatus] = useState("all");
   const [sp] = useSearchParams();
   const filters = React.useMemo(
-    () => pickSearchParams(sp, ["userName", "email", "status"]),
+    () =>
+      pickSearchParams(sp, [
+        "userName",
+        "email",
+        "status",
+        // "emId",
+        // "active",
+        // "phone",
+        // "gender",
+      ]),
     [sp]
   );
+
+  const created = parseDateRangeParam(sp, "createdAt") ?? {};
+  const updated = parseDateRangeParam(sp, "updatedAt") ?? {};
+  const createdFrom = created.fromDate;
+  const createdTo = created.toDate;
+  const updatedFrom = updated.fromDate;
+  const updatedTo = updated.toDate;
 
   const items = TabIndexTableUser(user);
   const handleChangeTab = (values: any) => {
@@ -84,6 +103,10 @@ export default function Users() {
             status: status === "all" ? "" : status,
             limit: pageSize,
             ...filters,
+            createdFrom,
+            createdTo,
+            updatedFrom,
+            updatedTo,
           })
         }
         columns={columns}

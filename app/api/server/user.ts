@@ -14,6 +14,12 @@ export const fetchUserPagination = async (params: {
   active?: boolean;
   phone?: number;
   gender?: number;
+  createdBy?: string;
+  updatedBy?: string;
+  createdFrom?: string;
+  createdTo?: string;
+  updatedFrom?: string;
+  updatedTo?: string;
 }) => {
   try {
     const p = { ...params } as any;
@@ -28,8 +34,6 @@ export const fetchUserPagination = async (params: {
     const res = await ApiConfig.get(`/crud/users/paginate`, {
       params: p,
     });
-
-    console.log({ res });
 
     return res.data;
   } catch (error) {

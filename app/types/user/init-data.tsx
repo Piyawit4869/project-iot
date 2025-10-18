@@ -17,6 +17,18 @@ export const UserFilterFields: FilterField[] = [
   { id: "userName", label: "ผู้ติดต่อ", kind: "text", showIn: "main" },
   { id: "email", label: "อีเมล", kind: "text", showIn: "main" },
   {
+    id: "createdAt",
+    label: "วันที่สร้างบัญชี",
+    kind: "dateRange",
+    showIn: "advanced",
+  },
+  {
+    id: "updatedAt",
+    label: "วันที่แก้ไขล่าสุด",
+    kind: "dateRange",
+    showIn: "advanced",
+  },
+  {
     id: "status",
     label: "สถานะ",
     kind: "select",
