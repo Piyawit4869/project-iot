@@ -90,27 +90,27 @@ export const SingleUsersView: React.FC<EditUsersViewProps> = ({
         </div>
 
         <div className="md:w-[65%] w-full flex flex-col gap-5">
-          <Card className="p-2">
+          <Card className="p-2p py-8">
             <UserCompensation data={data} loading={loading} />
           </Card>
 
-          <Card className="p-2">
+          <Card className="p-2 py-8">
             <UserSkills data={data} loading={loading} />
           </Card>
 
-          <Card className="p-2">
+          <Card className="p-2 py-8">
             <UserWorkExperience data={data} loading={loading} />
           </Card>
 
-          <Card className="p-2">
+          <Card className="p-2 py-8">
             <UserStudy data={data} loading={loading} />
           </Card>
 
-          <Card className="p-2">
+          <Card className="p-2 py-8">
             <UserSocalmedias data={data} loading={loading} />
           </Card>
 
-          <Card className="p-2">
+          <Card className="p-2 py-8">
             <UserDocuments data={data} loading={loading} />
           </Card>
 

@@ -390,27 +390,27 @@ export default function SingleUsers() {
                   </div>
 
                   <div className="md:w-[65%] w-full flex flex-col gap-5">
-                    <Card className="p-2">
+                    <Card className="p-2 py-8">
                       <UserCompensation form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2">
+                    <Card className="p-2 py-8">
                       <UserSkills form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2">
+                    <Card className="p-2 py-8">
                       <UserWorkExperience form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2">
+                    <Card className="p-2 py-8">
                       <UserStudy form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2">
+                    <Card className="p-2 py-8">
                       <UserSocalmedias form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2">
+                    <Card className="p-2 py-8">
                       <UserDocuments form={form} data={data} />
                     </Card>
                   </div>
