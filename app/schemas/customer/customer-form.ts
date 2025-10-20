@@ -223,14 +223,35 @@ export const supportUserSchema = z.object({
   userId: z.string().uuid(),
 });
 
+export const CustomerTagSchema = z.object({
+  id: z.uuid(),
+  name: z.string(),
+  active: z.boolean(),
+  priority: z.number().int(),
+  customerId: z.uuid(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  deletedAt: z.string().nullable().optional(),
+  createdBy: z.string().nullable().optional(),
+  createdById: z.string().nullable().optional(),
+  updatedBy: z.string().nullable().optional(),
+  updatedById: z.string().nullable().optional(),
+  deletedBy: z.string().nullable().optional(),
+  deletedById: z.string().nullable().optional(),
+  code: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
+  ordering: z.any().nullable().optional(),
+  note: z.string().nullable().optional(),
+});
+
 export const QueryCustomerSchema = z.object({
   id: z.string().uuid(),
   status: CustomerStatusEnum,
   type: CustomerTypeEnum,
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
   deletedAt: z.string().nullable().optional(),
-  createdBy: z.string(),
+  createdBy: z.string().nullable().optional(),
   createdById: z.string().nullable().optional(),
   updatedBy: z.string().nullable().optional(),
   updatedById: z.string().nullable().optional(),
@@ -257,9 +278,7 @@ export const QueryCustomerSchema = z.object({
   contacts: z.array(z.any()),
   supports: z.array(z.any()),
   profile: ProfileSchema.optional(),
-
   chatRoomAssistantId: z.string().optional(),
-
   aiReplySettings: z.array(
     z
       .object({
@@ -274,6 +293,7 @@ export const QueryCustomerSchema = z.object({
       .optional()
       .nullable()
   ),
+  tags: z.array(CustomerTagSchema).optional(),
 });
 
 export type Customer = z.infer<typeof QueryCustomerSchema>;
