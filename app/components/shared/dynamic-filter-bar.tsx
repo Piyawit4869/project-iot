@@ -34,6 +34,29 @@ import { DatePicker } from "./date-picker";
 
 type ExtendedFilterField = BaseFilterField & {
   showIn?: "main" | "advanced" | "both";
+  min?: number;
+  max?: number;
+  step?: number;
+};
+
+const clampBetween = (
+  val: string | number | undefined,
+  min?: number,
+  max?: number
+) => {
+  if (val === "" || val == null) return undefined;
+  const n = Number(val);
+  if (Number.isNaN(n)) return undefined;
+  if (typeof min === "number" && typeof max === "number" && min > max) {
+    // กรณีกำหนด min/max ผิดพลาด ให้สลับเพื่อกันพัง
+    return Math.min(Math.max(n, max), min);
+  }
+  if (typeof min === "number")
+    return typeof max === "number"
+      ? Math.min(Math.max(n, min), max)
+      : Math.max(n, min);
+  if (typeof max === "number") return Math.min(n, max);
+  return n;
 };
 
 function encodeValue(kind: ExtendedFilterField["kind"], val: any): string {
@@ -393,6 +416,7 @@ export function DynamicFilterBar<TData>({
                   <span className="text-sm">{f.label}</span>
                 </label>
               );
+
             case "numberRange":
               return (
                 <div key={f.id} className="mb-3">
@@ -402,35 +426,73 @@ export function DynamicFilterBar<TData>({
                   <div className="flex items-center gap-2">
                     <Input
                       type="number"
-                      min={0}
+                      min={f.min ?? 0}
+                      max={typeof f.max === "number" ? f.max : undefined}
+                      step={f.step ?? "any"}
                       inputMode="decimal"
                       pattern="\d*\.?\d*"
                       placeholder={`${f.label} min`}
                       value={(form[f.id]?.min ?? "") as any}
                       onKeyDown={blockInvalidNumberKey}
                       onPaste={blockInvalidPaste}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const rawMin = clampBetween(
+                          e.target.value,
+                          f.min,
+                          f.max
+                        );
+                        const current = form[f.id] ?? {};
+                        let nextMax = current.max;
+
+                        // ถ้า min ใหม่ > max ปัจจุบัน → ดัน max ขึ้นตาม min
+                        if (
+                          typeof rawMin === "number" &&
+                          typeof nextMax === "number" &&
+                          rawMin > nextMax
+                        ) {
+                          nextMax = rawMin;
+                        }
                         update(f.id, {
-                          ...(form[f.id] ?? {}),
-                          min: clampMin0(e.target.value),
-                        })
-                      }
+                          ...current,
+                          min: rawMin,
+                          max: clampBetween(nextMax, f.min, f.max),
+                        });
+                      }}
                     />
                     <Input
                       type="number"
-                      min={0}
+                      min={f.min ?? 0}
+                      max={typeof f.max === "number" ? f.max : undefined}
+                      step={f.step ?? "any"}
                       inputMode="decimal"
                       pattern="\d*\.?\d*"
                       placeholder={`${f.label} max`}
                       value={(form[f.id]?.max ?? "") as any}
                       onKeyDown={blockInvalidNumberKey}
                       onPaste={blockInvalidPaste}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const rawMax = clampBetween(
+                          e.target.value,
+                          f.min,
+                          f.max
+                        );
+                        const current = form[f.id] ?? {};
+                        let nextMin = current.min;
+
+                        // ถ้า max ใหม่ < min ปัจจุบัน → ดัน min ลงตาม max
+                        if (
+                          typeof rawMax === "number" &&
+                          typeof nextMin === "number" &&
+                          rawMax < nextMin
+                        ) {
+                          nextMin = rawMax;
+                        }
                         update(f.id, {
-                          ...(form[f.id] ?? {}),
-                          max: clampMin0(e.target.value),
-                        })
-                      }
+                          ...current,
+                          min: clampBetween(nextMin, f.min, f.max),
+                          max: rawMax,
+                        });
+                      }}
                     />
                   </div>
                 </div>
@@ -444,7 +506,9 @@ export function DynamicFilterBar<TData>({
                   </span>
                   <Input
                     type="number"
-                    min={0}
+                    min={typeof f.min === "number" ? f.min : undefined}
+                    max={typeof f.max === "number" ? f.max : undefined}
+                    step={f.step ?? "any"}
                     inputMode="decimal"
                     pattern="\d*\.?\d*"
                     placeholder={`${f.label}`}
@@ -456,7 +520,9 @@ export function DynamicFilterBar<TData>({
                     }
                     onKeyDown={blockInvalidNumberKey}
                     onPaste={blockInvalidPaste}
-                    onChange={(e) => update(f.id, clampMin0(e.target.value))}
+                    onChange={(e) =>
+                      update(f.id, clampBetween(e.target.value, f.min, f.max))
+                    }
                   />
                 </div>
               );

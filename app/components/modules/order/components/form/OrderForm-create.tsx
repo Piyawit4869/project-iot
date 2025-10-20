@@ -76,6 +76,18 @@ export const OrderForm: React.FC<OrderFormProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormField
           control={form.control}
+          name="docNo"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>เลขที่ออเดอร์</FormLabel>
+              <FormControl>
+                <Input placeholder="12345" {...field} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="docName"
           render={({ field }) => (
             <FormItem>
@@ -118,18 +130,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
             </FormItem>
           )}
         />
-        {/* <FormField
-          control={form.control}
-          name="docNo"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>เลขที่ออเดอร์</FormLabel>
-              <FormControl>
-                <Input placeholder="12345" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        /> */}
+
         {/* <FormField
           control={form.control}
           name="suppliers"

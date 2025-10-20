@@ -23,6 +23,8 @@ export const fetchCustomerPagination = async (params: {
   name?: string;
   fullname?: string;
   customerPlatform?: string;
+  priorityForm?: number;
+  priorityTo?: number;
   priority?: number;
   tags?: string;
   customerType?: string;
