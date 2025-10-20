@@ -18,11 +18,15 @@ import {
   organizationType,
   prefix,
 } from "~/initData/customer-initData";
+import React from "react";
+import { copyTextToClipboard } from "~/lib/utils";
+import { Link } from "lucide-react";
 type FormTextRowProps<T extends FieldValues> = {
   control: Control<T>;
   name: FieldPath<T>;
   label: string;
   type?: "text" | "phone" | "date" | "number" | "dateFull";
+  canCopy?: boolean;
 };
 
 function getLabel(
@@ -37,8 +41,11 @@ export function FormTextRow<T extends FieldValues>({
   name,
   label,
   type = "text",
+  canCopy,
 }: FormTextRowProps<T>) {
   const value = useWatch({ control, name });
+
+  const [copied, setCopied] = React.useState(false);
 
   const allOptions = [
     ...customerStatus,
@@ -72,9 +79,34 @@ export function FormTextRow<T extends FieldValues>({
       break;
   }
 
+  const handleCopy = async () => {
+    const success = await copyTextToClipboard(displayValue as string);
+    setCopied(success);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  console.log({ copied });
+
   return (
     <div className="flex flex-col w-full">
-      <span>{label}</span>
+      {canCopy ? (
+        <div className="flex flex-row gap-2 items-center">
+          <span>{label}</span>
+          <div className="flex flex-row gap-2">
+            <Link
+              size={16}
+              className="cursor-pointer hover:text-blue-400"
+              onClick={handleCopy}
+            />
+            <span className="text-[#b4b4c5] text-sm">
+              {copied && "คัดลอกแล้ว"}
+            </span>
+          </div>
+        </div>
+      ) : (
+        <span>{label}</span>
+      )}
+
       <span className="mt-2 text-sm text-[#71717A]">{displayValue}</span>
     </div>
   );
