@@ -14,6 +14,14 @@ export default [
   route("login", "routes/login.tsx"),
   route("/logout", "routes/logout.tsx"),
 
+  // route("public", "routes/public.tsx", [index("routes/backoffice/home.tsx")]),
+
+  layout("routes/public-layout.tsx", [
+    route("public/catelog", "routes/public/catelog/index.tsx"),
+    route("public/notation-view", "routes/public/notation-view/index.tsx"),
+    route("public/notation-view/:id", "routes/public/notation-view/single.tsx"),
+  ]),
+
   // Protected wrapper
   // Admin area layout (protected)
   // ...prefix(":organization", [

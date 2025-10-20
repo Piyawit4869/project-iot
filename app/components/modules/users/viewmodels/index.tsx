@@ -23,7 +23,7 @@ import {
 
 export default function Users() {
   const { data: user, isLoading } = useAllUserSummary();
-  const Paginate = usePaginate;
+  const paginate = usePaginate;
 
   const columns = useUserColumns();
   const { isMobile } = useSidebar();
@@ -98,17 +98,13 @@ export default function Users() {
       />
 
       <DataTable
-        queryFunction={({ pageIndex, pageSize }) =>
-          Paginate({
-            pageIndex,
+        queryFunction={(res) =>
+          paginate({
+            pageIndex: res.pageIndex,
             status: status === "all" ? "" : status,
-            limit: pageSize,
-            ...filters,
-            createdFrom,
-            createdTo,
-            updatedFrom,
-            updatedTo,
-          } as any)
+            limit: res.pageSize,
+            // params : { }
+          })
         }
         columns={columns}
         addOn={

@@ -117,87 +117,83 @@ const InventoryDetailContainer = () => {
         ) : (
           <FormInventory form={form} onSubmit={onSubmit.update} />
         )}
+      </Card>
 
-        {loading.inventory ? (
-          <IndexLayoutTableLoading />
-        ) : (
-          <div>
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold">ข้อมูลคลังสินค้า</h2>
+      {loading.inventory ? (
+        <IndexLayoutTableLoading />
+      ) : (
+        <div>
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold">ข้อมูลคลังสินค้า</h2>
 
-              <div className="flex gap-2">
-                <SelectorItemsModal
-                  items={products.filter((item: { id: string }) => !!item.id)}
-                  selected={selectItemIds}
-                  onChange={handleChangeItems}
-                  customButton={
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-[30px] w-[90px] p-2 gap-2 border-amber-500"
-                    >
-                      <PlusCircleIcon />
-                      <span className="text-[12px]">เพิ่มสินค้า</span>
-                    </Button>
-                  }
-                />
-              </div>
-            </div>
-
-            <div className="flex flex-col">
-              {productSelected.length > 0 ? (
-                productSelected.map((ps: any) => (
-                  <div
-                    key={ps.id ?? "-"}
-                    className="flex flex-row items-center gap-2 mb-2 mt-3"
+            <div className="flex gap-2 mb-2">
+              <SelectorItemsModal
+                items={products.filter((item: { id: string }) => !!item.id)}
+                selected={selectItemIds}
+                onChange={handleChangeItems}
+                customButton={
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-[30px] w-[90px] p-2 gap-2 border-amber-500"
                   >
-                    <GlobalImage
-                      src={ps.imageUrl ?? "-"}
-                      alt="product-image"
-                      className="rounded-xl w-[35px] h-[35px] object-cover object-center"
-                    />
-                    <div className="flex flex-col w-1/2 gap-1">
-                      <div>
-                        <span className="text-sm font-medium truncate">
-                          {ps.name ?? "-"}
-                        </span>
-                        <h2 className="text-sm font-light text-gray-400 truncate">
-                          {ps.description ?? "-"}
-                        </h2>
-                      </div>
-
-                      <div className="flex flex-row justify-between">
-                        <span className="font-semibold text-sm text-blue-600">
-                          {ps.salePrice ?? "-"} ฿
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-row items-center gap-1">
-                      {renderAvailabilityBadge(ps.status)}
-                      <button
-                        className="border-l-2"
-                        onClick={() => handleRemoveSelected(ps.id!)}
-                        aria-label="remove-selected-product"
-                      >
-                        <Trash2 size="18px" color="red" />
-                      </button>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-center text-xs text-gray-400 mt-10"></p>
-              )}
-            </div>
-
-            <div className="mt-6">
-              <div className="w-full max-w-full xl:max-w-screen-xl 2xl:max-w-screen-2xl overflow-x-auto">
-                <DataTable data={data?.products ?? []} columns={columns} />
-              </div>
+                    <PlusCircleIcon />
+                    <span className="text-[12px]">เพิ่มสินค้า</span>
+                  </Button>
+                }
+              />
             </div>
           </div>
-        )}
-      </Card>
+
+          {/* <div className="flex flex-col">
+            {productSelected.length > 0 ? (
+              productSelected.map((ps: any) => (
+                <div
+                  key={ps.id ?? "-"}
+                  className="flex flex-row items-center gap-2 mb-2"
+                >
+                  <GlobalImage
+                    src={ps.imageUrl ?? "-"}
+                    alt="product-image"
+                    className="rounded-xl w-[35px] h-[35px] object-cover object-center"
+                  />
+                  <div className="flex flex-col w-1/2 gap-1">
+                    <div>
+                      <span className="text-sm font-medium truncate">
+                        {ps.name ?? "-"}
+                      </span>
+                      <h2 className="text-sm font-light text-gray-400 truncate">
+                        {ps.description ?? "-"}
+                      </h2>
+                    </div>
+
+                    <div className="flex flex-row justify-between">
+                      <span className="font-semibold text-sm text-blue-600">
+                        {ps.salePrice ?? "-"} ฿
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-row items-center gap-1">
+                    {renderAvailabilityBadge(ps.status)}
+                    <button
+                      className="border-l-2"
+                      onClick={() => handleRemoveSelected(ps.id!)}
+                      aria-label="remove-selected-product"
+                    >
+                      <Trash2 size="18px" color="red" />
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-xs text-gray-400 mt-10"></p>
+            )}
+          </div> */}
+
+          <DataTable data={data?.products ?? []} columns={columns} />
+        </div>
+      )}
     </div>
   );
 };
