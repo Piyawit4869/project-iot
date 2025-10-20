@@ -14,6 +14,7 @@ import { useOrderColumnTable } from "./components/order-column-table";
 import { ViewCardGoods } from "./components/view-goods";
 import { TabControl } from "~/components/shared/tab-control";
 import { OrderDetail } from "./components/order-detail";
+import { Card } from "~/components/ui/card";
 
 export default function SingleOrdersDetail() {
   const params = useParams();
@@ -88,12 +89,16 @@ export default function SingleOrdersDetail() {
               <SkeletonLoading className="min-h-[120px]" />
             </>
           ) : (
-            // <div className="flex justify-center items-center h-64">
-            //   <span className="text-2xl">⏳ กำลังโหลดข้อมูล...</span>
-            // </div>
-            <ViewCardGoods columns={columns} data={products} quantity={0} />
-
-            // <DataTableDrag columns={columns} data={products} />
+            <>
+              <Card className="p-3 space-y-3 w-full">
+                <h1 className="font-semibold p-3 text-xl">รายการสินค้า</h1>
+                <div className="text-center text-gray-500 pb-5">
+                  ยังไม่มีสินค้าที่เลือก
+                </div>
+              </Card>
+              <ViewCardGoods columns={columns} data={products} quantity={0} />
+              {/* <DataTableDrag columns={columns} data={products} /> */}
+            </>
           )}
         </div>
       </div>

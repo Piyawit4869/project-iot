@@ -74,7 +74,7 @@ export const ViewOrderDetail = ({ order }: OrderFormEditProps) => {
       </div>
       <Card className="w-full p-6 mt-4">
         <div className="flex flex-row">
-          <h1 className="font-semibold">ข้อมูลลูกค้า</h1>
+          <h1 className="font-semibold text-lg">ข้อมูลลูกค้า</h1>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
@@ -109,8 +109,19 @@ export const ViewOrderDetail = ({ order }: OrderFormEditProps) => {
           />
         </div>
       </Card>
-      <h1 className="font-semibold my-6">การชำระเงิน</h1>
-      <Card className="p-4 space-y-4 w-full">
+      <div className="my-6">
+        <h1 className="font-semibold text-lg mb-5">การชำระเงิน</h1>
+        <InfoItem label="ส่วนลด" value={customerData?.discount || "-"} />
+
+        <InfoItem
+          label="สกุลเงิน"
+          value={
+            currencyType?.find((item) => item.value === dataOrder?.currency)
+              ?.label || "THB"
+          }
+        />
+      </div>
+      <Card className="p-4 w-full">
         <h3 className="font-semibold text-lg">สรุปราคาสินค้า</h3>
 
         <div className="flex justify-between">
@@ -179,32 +190,19 @@ export const ViewOrderDetail = ({ order }: OrderFormEditProps) => {
           <span>{dataOrder?.grandTotal || 0} ฿</span>
         </div>
       </Card>
+
       <div className="grid grid-cols-1 gap-4 mt-5">
-        <Select
-          value={
-            currencyType?.some((item) => item.value === dataOrder?.currency)
-              ? dataOrder?.currency
-              : "THB"
-          }
-        >
-          <SelectTrigger className="w-full pointer-events-none">
-            <SelectValue placeholder="เลือกสกุลเงิน" />
-          </SelectTrigger>
-          <SelectContent>
-            {currencyType?.map((item) => (
-              <SelectItem key={item.value} value={item.value}>
-                {item.icon} {item.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="grid grid-cols-1 gap-4 mt-5">
-        <Textarea
-          readOnly
-          value={dataOrder?.note || ""}
-          className="cursor-default pointer-events-none"
-        />
+        <div className="col-span-2">
+          <label className="block text-sm font-medium mb-1 text-gray-700">
+            หมายเหตุ
+          </label>
+          <Textarea
+            readOnly
+            value={dataOrder?.note || ""}
+            className="cursor-default pointer-events-none"
+            placeholder="ไม่มีหมายเหตุ"
+          />
+        </div>
       </div>
     </>
   );
