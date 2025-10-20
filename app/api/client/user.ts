@@ -24,6 +24,12 @@ export const usePaginate = ({
   active,
   phone,
   gender,
+  createdBy,
+  updatedBy,
+  createdFrom,
+  createdTo,
+  updatedFrom,
+  updatedTo,
 }: {
   pageIndex: number;
   status?: string;
@@ -53,6 +59,12 @@ export const usePaginate = ({
       active,
       phone,
       gender,
+      createdBy,
+      updatedBy,
+      createdFrom,
+      createdTo,
+      updatedFrom,
+      updatedTo,
     ],
     queryFn: () =>
       fetchUserPagination({
@@ -65,6 +77,12 @@ export const usePaginate = ({
         active,
         phone,
         gender,
+        createdBy,
+        updatedBy,
+        createdFrom,
+        createdTo,
+        updatedFrom,
+        updatedTo,
       }),
     placeholderData: keepPreviousData,
     enabled: !!pageIndex,

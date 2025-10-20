@@ -56,6 +56,40 @@ export type ProductFormValues = {
 export const ProductsFilterFields: FilterField[] = [
   { id: "name", label: "ชื่อสินค้า", kind: "text", showIn: "main" },
   { id: "sku", label: "รหัสสินค้า", kind: "text", showIn: "main" },
+  // { id: "barcode", label: "บาร์โค้ด", kind: "text", showIn: "main" },
+  { id: "available", label: "จำนวนสินค้า", kind: "number", showIn: "main" },
+  {
+    id: "availableForSale",
+    label: "สินค้าที่สามารถขายได้",
+    kind: "number",
+    showIn: "main",
+  },
+  {
+    id: "matType",
+    label: "ประเภทวัสดุ",
+    kind: "select",
+    showIn: "main",
+    options: [
+      { label: "วัสดุ", value: "material" },
+      { label: "ไม่ใช่วัสดุ", value: "non_material" },
+    ],
+  },
+  { id: "salePrice", label: "ราคาขาย", kind: "number", showIn: "main" },
+  { id: "vatPrice", label: "ราคาพร้อมภาษี", kind: "number", showIn: "main" },
+  { id: "createdBy", label: "ผู้สร้าง", kind: "text", showIn: "advanced" },
+  { id: "updatedBy", label: "ผู้ที่แก้ไข", kind: "text", showIn: "advanced" },
+  {
+    id: "createdAt",
+    label: "วันที่สร้างบัญชี",
+    kind: "dateRange",
+    showIn: "advanced",
+  },
+  {
+    id: "updatedAt",
+    label: "วันที่แก้ไขล่าสุด",
+    kind: "dateRange",
+    showIn: "advanced",
+  },
   {
     id: "status",
     label: "สถานะ",

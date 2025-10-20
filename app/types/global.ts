@@ -28,6 +28,7 @@ export type FilterKind =
   | "select"
   | "boolean"
   | "numberRange"
+  | "number"
   | "dateRange"
   | "date";
 

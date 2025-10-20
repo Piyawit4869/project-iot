@@ -14,19 +14,65 @@ export const usePaginate = ({
   pageSize,
   status = "",
   limit,
+  name,
+  productCount,
+  productCanSale,
+  createdBy,
+  updatedBy,
+  // createdAt,
+  // updatedAt,
+  createdFrom,
+  createdTo,
+  updatedFrom,
+  updatedTo,
 }: {
   pageIndex: number;
   pageSize: number;
   status: string;
   limit: number;
+  name?: string;
+  productCount?: string;
+  productCanSale?: string;
+  createdBy?: string;
+  updatedBy?: string;
+  // createdAt?: string;
+  // updatedAt?: string;
+  createdFrom?: string;
+  createdTo?: string;
+  updatedFrom?: string;
+  updatedTo?: string;
 }) => {
   return useQuery({
-    queryKey: ["paginate", pageIndex, pageSize, status, limit],
+    queryKey: [
+      "paginate",
+      pageIndex,
+      pageSize,
+      status,
+      limit,
+      name,
+      productCount,
+      productCanSale,
+      createdBy,
+      updatedBy,
+      createdFrom,
+      createdTo,
+      updatedFrom,
+      updatedTo,
+    ],
     queryFn: () =>
       getInventoryPaginate({
         page: pageIndex,
         limit: pageSize,
         status: status,
+        name,
+        productCount,
+        productCanSale,
+        createdBy,
+        updatedBy,
+        createdFrom,
+        createdTo,
+        updatedFrom,
+        updatedTo,
       }),
     placeholderData: keepPreviousData,
     enabled: !!pageIndex && !!pageSize,

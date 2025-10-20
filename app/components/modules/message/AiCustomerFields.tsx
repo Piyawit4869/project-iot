@@ -254,7 +254,7 @@ export function AiCustomerFields({
       </div>
 
       <div>
-        อีเมลล์ : <span className="font-semibold">{data?.email ?? "-"}</span>
+        อีเมล : <span className="font-semibold">{data?.email ?? "-"}</span>
       </div>
       <div>
         วันที่อยากใช้ของ (วันนัดสำคัญ) :{" "}

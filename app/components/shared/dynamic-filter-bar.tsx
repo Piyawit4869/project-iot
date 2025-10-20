@@ -47,13 +47,17 @@ function encodeValue(kind: ExtendedFilterField["kind"], val: any): string {
       const { min, max } = (val ?? {}) as { min?: number; max?: number };
       return [min ?? "", max ?? ""].join(":");
     }
+
+    case "number": {
+      return String(val);
+    }
     case "dateRange": {
       const { from, to } = (val ?? {}) as { from?: string; to?: string };
       return [from ?? "", to ?? ""].join(":");
     }
+
     case "date": {
-      const { from, to } = (val ?? {}) as { from?: string; to?: string };
-      return [from ?? "", to ?? ""].join(":");
+      return String(val);
     }
     default:
       return "";
@@ -75,15 +79,19 @@ function decodeValue(kind: ExtendedFilterField["kind"], raw: string | null) {
       if (min == null && max == null) return undefined;
       return { min, max };
     }
+
+    case "number": {
+      const n = Number(raw);
+      return Number.isNaN(n) ? undefined : n;
+    }
     case "dateRange": {
       const [from, to] = raw.split(":");
       if (!from && !to) return undefined;
       return { from: from || undefined, to: to || undefined };
     }
+
     case "date": {
-      const [from, to] = raw.split(":");
-      if (!from && !to) return undefined;
-      return { from: from || undefined, to: to || undefined };
+      return raw || undefined;
     }
     default:
       return undefined;
@@ -129,6 +137,9 @@ function formatDisplayValue(
       if (max != null) return `≤ ${max}`;
       return "";
     }
+
+    case "number":
+      return val != null && val !== "" ? String(val) : "";
     case "dateRange": {
       const { from, to } = val ?? {};
       if (from && to) return `${from} – ${to}`;
@@ -136,9 +147,9 @@ function formatDisplayValue(
       if (to) return `ถึง ${to}`;
       return "";
     }
+
     case "date": {
-      const date = val?.from ?? "";
-      return date || "";
+      return val || "";
     }
     default:
       return "";
@@ -156,8 +167,9 @@ function resetValueByKind(kind: ExtendedFilterField["kind"]) {
       return { min: undefined, max: undefined };
     case "dateRange":
       return { from: undefined, to: undefined };
+    case "number":
     case "date":
-      return { from: undefined, to: undefined };
+      return undefined;
     default:
       return undefined;
   }
@@ -237,9 +249,6 @@ export function DynamicFilterBar<TData>({
   };
 
   const onClear = () => {
-    // const cleared: Record<string, any> = {};
-    // extFields.forEach((f) => (cleared[f.id] = undefined));
-    // setForm(cleared);
     setApplied({});
 
     table.resetColumnFilters();
@@ -287,6 +296,7 @@ export function DynamicFilterBar<TData>({
     nextSp.set("page", "1");
     setSearchParams(nextSp);
   };
+
   const renderSameFieldsBlock = (mode: "main" | "advanced") => (
     <div className={`flex flex-wrap items-center gap-5 ${className ?? ""}`}>
       {extFields
@@ -379,46 +389,76 @@ export function DynamicFilterBar<TData>({
                   />
                 </div>
               );
-            case "dateRange":
+            case "number":
               return (
-                <div key={f.id} className="flex items-center gap-2">
+                <div key={f.id} className="mb-3">
+                  <span className="block text-sm font-medium mb-1">
+                    {String(f.label)}
+                  </span>
                   <Input
-                    type="date"
+                    type="number"
+                    placeholder={`${f.label}`}
                     className="w-[160px]"
-                    value={(form[f.id]?.from ?? "") as any}
-                    onChange={(e) =>
-                      update(f.id, {
-                        ...(form[f.id] ?? {}),
-                        from: e.target.value || undefined,
-                      })
+                    value={
+                      form[f.id] === undefined || form[f.id] === null
+                        ? ""
+                        : (form[f.id] as number | string)
                     }
-                  />
-                  <Input
-                    type="date"
-                    className="w-[160px]"
-                    value={(form[f.id]?.to ?? "") as any}
                     onChange={(e) =>
-                      update(f.id, {
-                        ...(form[f.id] ?? {}),
-                        to: e.target.value || undefined,
-                      })
+                      update(
+                        f.id,
+                        e.target.value === ""
+                          ? undefined
+                          : Number(e.target.value)
+                      )
                     }
                   />
                 </div>
               );
+            case "dateRange":
+              return (
+                <div key={f.id} className="flex flex-col gap-1">
+                  <span className="block text-sm font-medium mb-1">
+                    {String(f.label)}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="date"
+                      className="w-[160px]"
+                      value={(form[f.id]?.from ?? "") as any}
+                      onChange={(e) =>
+                        update(f.id, {
+                          ...(form[f.id] ?? {}),
+                          from: e.target.value || undefined,
+                        })
+                      }
+                    />
+                    <Input
+                      type="date"
+                      className="w-[160px]"
+                      value={(form[f.id]?.to ?? "") as any}
+                      onChange={(e) =>
+                        update(f.id, {
+                          ...(form[f.id] ?? {}),
+                          to: e.target.value || undefined,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              );
+
             case "date":
               return (
-                <div key={f.id} className="flex items-center gap-2">
+                <div key={f.id} className="mb-3">
+                  <span className="block text-sm font-medium mb-1">
+                    {String(f.label)}
+                  </span>
                   <Input
                     type="date"
                     className="w-[160px]"
-                    value={(form[f.id]?.from ?? "") as any}
-                    onChange={(e) =>
-                      update(f.id, {
-                        ...(form[f.id] ?? {}),
-                        from: e.target.value || undefined,
-                      })
-                    }
+                    value={(form[f.id] ?? "") as any}
+                    onChange={(e) => update(f.id, e.target.value || undefined)}
                   />
                 </div>
               );

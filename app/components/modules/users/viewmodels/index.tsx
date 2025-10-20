@@ -35,10 +35,11 @@ export default function Users() {
         "userName",
         "email",
         "status",
-        // "emId",
-        // "active",
-        // "phone",
-        // "gender",
+        "emId",
+        "active",
+        "phone",
+        "gender",
+        "updatedBy",
       ]),
     [sp]
   );
@@ -107,7 +108,7 @@ export default function Users() {
             createdTo,
             updatedFrom,
             updatedTo,
-          })
+          } as any)
         }
         columns={columns}
         addOn={
@@ -121,7 +122,7 @@ export default function Users() {
                 <TabsTrigger
                   key={c.label}
                   value={c.status}
-                  className="hover:bg-gray-200 relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
+                  className="hover:bg-border relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
                 >
                   {c.icon} {c.label} ({c.value})
                 </TabsTrigger>

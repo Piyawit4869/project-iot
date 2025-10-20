@@ -4,15 +4,21 @@ export const getInventoryPaginate = async (params: {
   page?: number;
   limit?: number;
   status: string;
+  name?: string;
+  productCount?: string;
+  productCanSale?: string;
+  createdBy?: string;
+  updatedBy?: string;
+  createdFrom?: string;
+  createdTo?: string;
+  updatedFrom?: string;
+  updatedTo?: string;
 }) => {
   try {
-    const p = Object.assign({});
-    p.page = params.page;
-    p.limit = params.limit;
-    if (params.status && params.status !== "all") {
-      p.status = params.status;
+    const p = { ...params } as any;
+    if (params.status && params.status === "all") {
+      delete p.status;
     }
-
     const { data } = await ApiConfig.get(`/crud/inventories/paginate`, {
       params: p,
     });
