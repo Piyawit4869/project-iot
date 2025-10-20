@@ -9,3 +9,12 @@ export function cn(...inputs: ClassValue[]) {
 export function isUUIDv4(str: string): boolean {
   return validate(str) && version(str) === 4;
 }
+
+export async function copyTextToClipboard(text: string) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
