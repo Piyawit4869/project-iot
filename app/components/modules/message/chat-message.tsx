@@ -71,8 +71,6 @@ export default function ChatMessages({
 
   const { messages: socketMessages, addMessage } = useChat();
 
-  console.log({ selectedRoom });
-
   const {
     data: messagesData,
     fetchNextPage,
