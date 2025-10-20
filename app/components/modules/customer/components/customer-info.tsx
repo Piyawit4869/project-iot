@@ -37,6 +37,8 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
   form,
   loading = false,
 }) => {
+  // const getOrgType = form.watch("organizationDetails.orgType");
+
   return (
     <Card>
       <CardHeader>
@@ -655,6 +657,7 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
             <FormField
               control={form.control}
               name="organizationDetails.orgType"
+              rules={{ required: true }}
               render={({ field }) => (
                 <FormItem>
                   <RequiredLabel>ประเภทสำนักงาน/บริษัท</RequiredLabel>
@@ -680,6 +683,28 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
                 </FormItem>
               )}
             />
+
+            <div></div>
+            {/* {getOrgType === "others" && (
+              <FormField
+                control={form.control}
+                name="organizationDetails.orgTypeOther"
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <FormItem>
+                    <RequiredLabel>ประเภทสำนักงาน/บริษัท</RequiredLabel>
+                    <FormControl className="w-full">
+                      <Input
+                        value={field.value || ""}
+                        placeholder=""
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )} */}
             <FormField
               control={form.control}
               name="organizationDetails.websiteUrl"

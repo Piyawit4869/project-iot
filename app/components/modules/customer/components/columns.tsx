@@ -1,7 +1,7 @@
 // features/customer/table/useCustomerColumns.tsx
 "use client";
 
-import { PenLine, Trash } from "lucide-react";
+import { Eye, PenLine, Trash } from "lucide-react";
 
 import { toast } from "sonner";
 
@@ -341,7 +341,7 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
               className="h-9 w-9 p-0 bg-[#737373] hover:bg-[#5E5E5E]"
               aria-label="แก้ไข"
             >
-              <PenLine className="w-4 h-4 text-white" />
+              <Eye className="w-4 h-4 text-white" />
             </Button>
           </Link>
           <Button

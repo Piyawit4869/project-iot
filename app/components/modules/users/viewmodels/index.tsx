@@ -16,6 +16,10 @@ import { useAllUserSummary, usePaginate } from "~/api/client/user";
 import { Link, useSearchParams } from "react-router";
 import { TabControl } from "~/components/shared/tab-control";
 import { TabIndexTableUser, UserFilterFields } from "~/types/user/init-data";
+import {
+  parseDateRangeParam,
+  pickSearchParams,
+} from "../../customer/utils/search-params";
 
 export default function Users() {
   const { data: user, isLoading } = useAllUserSummary();
@@ -24,11 +28,34 @@ export default function Users() {
   const columns = useUserColumns();
   const { isMobile } = useSidebar();
   const [status, setStatus] = useState("all");
+  const [sp] = useSearchParams();
+  const filters = React.useMemo(
+    () =>
+      pickSearchParams(sp, [
+        "userName",
+        "email",
+        "status",
+        "emId",
+        "active",
+        "phone",
+        "gender",
+        "updatedBy",
+      ]),
+    [sp]
+  );
+
+  const created = parseDateRangeParam(sp, "createdAt") ?? {};
+  const updated = parseDateRangeParam(sp, "updatedAt") ?? {};
+  const createdFrom = created.fromDate;
+  const createdTo = created.toDate;
+  const updatedFrom = updated.fromDate;
+  const updatedTo = updated.toDate;
 
   const items = TabIndexTableUser(user);
   const handleChangeTab = (values: any) => {
     setStatus(values);
   };
+
   return (
     <div className="flex flex-col w-full space-y-8 p-8 dark:bg-background">
       <TabControl
@@ -91,7 +118,7 @@ export default function Users() {
                 <TabsTrigger
                   key={c.label}
                   value={c.status}
-                  className="hover:bg-gray-200 relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
+                  className="hover:bg-border relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
                 >
                   {c.icon} {c.label} ({c.value})
                 </TabsTrigger>

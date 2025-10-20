@@ -35,7 +35,7 @@ import { TablePagination } from "./global-table";
 import { type UseQueryResult } from "@tanstack/react-query";
 import { SkeletonLoading } from "./skeleton-loading";
 import { FileSearch } from "lucide-react";
-import { SortableHeader } from "./sortIconTable";
+import { SortableHeader } from "./sort-table-header";
 import { DynamicFilterBar } from "./dynamic-filter-bar";
 import { ColumnResizer } from "./column-resizer";
 import { useSidebar } from "../ui/sidebar";
@@ -53,6 +53,7 @@ interface DataTableProps<TData, TValue> {
   data?: TData[];
   customerFilterFields?: any;
   isCustomLoading?: boolean;
+  showAdvancedButton?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -64,6 +65,7 @@ export function DataTable<TData, TValue>({
   data: propData,
   customerFilterFields,
   isCustomLoading,
+  showAdvancedButton,
 }: DataTableProps<TData, TValue>) {
   const { isMobile, state } = useSidebar();
 
@@ -193,7 +195,11 @@ export function DataTable<TData, TValue>({
         )}
       </div> */}
       {customerFilterFields && (
-        <DynamicFilterBar table={table} fields={customerFilterFields} />
+        <DynamicFilterBar
+          table={table}
+          fields={customerFilterFields}
+          showAdvanced={showAdvancedButton}
+        />
       )}
 
       {addOn && <div>{addOn}</div>}

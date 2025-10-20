@@ -13,6 +13,9 @@ import { cn } from "~/lib/utils";
 import { OrderFilterFields, TabIndexTableOrder } from "~/schemas/order/type";
 import { useOrderViewModel } from "./viewmodels/useOrderViewModel";
 import { useOrderColumns } from "./components/columns";
+import { useSearchParams } from "react-router";
+import React from "react";
+import { pickSearchParams } from "../customer/utils/search-params";
 
 export default function OrdersIndex() {
   const {
@@ -20,6 +23,20 @@ export default function OrdersIndex() {
     actions: { onNavigateCreate },
   } = useOrderViewModel();
   const [status, setStatus] = useState("all");
+  const [sp] = useSearchParams();
+  const filters = React.useMemo(
+    () =>
+      pickSearchParams(sp, [
+        "status",
+        "docName",
+        "name",
+        "profit",
+        "total",
+        "docStatus",
+      ]),
+    [sp]
+  );
+
   const { data: Order, isLoading } = useAllOrderSummary();
   const { isMobile } = useSidebar();
 
@@ -79,7 +96,8 @@ export default function OrdersIndex() {
             pageSize,
             status: status === "all" ? "" : status,
             limit: pageSize,
-          })
+            ...filters,
+          } as any)
         }
         columns={columns}
         addOn={
@@ -93,7 +111,7 @@ export default function OrdersIndex() {
                 <TabsTrigger
                   key={c.label}
                   value={c.status}
-                  className="hover:bg-gray-200 relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
+                  className="hover:bg-border relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
                 >
                   {c.icon} {c.label} ({c.value})
                 </TabsTrigger>

@@ -13,9 +13,21 @@ import { useRouteLoaderData } from "react-router";
 import { socketConfig } from "~/lib/sockets";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { MessagesSquare } from "lucide-react";
+import { Menu, MessagesSquare, X } from "lucide-react";
 import { TagLabel } from "~/components/shared/tag-label";
 import { DateTimeStampChatDisplay } from "~/utils/date-format";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
+import { Separator } from "~/components/ui/separator";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandList,
+} from "~/components/ui/command";
 
 interface Props {
   handleChangeSelectedRoom: (room: any) => void;
@@ -95,13 +107,62 @@ export default function ChatlistSidebar({
       <div className="p-3 border-b flex flex-col">
         <div className="flex justify-between px-0">
           <h2 className="text-lg font-semibold">แชท</h2>
-          <Button variant="link" className="px-0 py-0">
-            {/* <FileUp /> */}
-            <p className="hidden md:block">นำออกข้อมูล</p>
-          </Button>
         </div>
 
-        <Input placeholder="ค้นหา" className="bg-white w-full" />
+        <div className="flex items-center justify-between gap-4 px-0">
+          <div className="flex items-center gap-1">
+            <Menu className="w-4 h-4" />
+            <p className="text-sm font-semibold">ทั้งหมด</p>
+          </div>
+          <Input placeholder="ค้นหา" className="bg-white" />
+        </div>
+
+        {/* <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-[30px] w-[70px] px-2 gap-2"
+            >
+              <span className="text-[12px]">กรอง</span>
+            </Button>
+          </PopoverTrigger>
+
+          <PopoverContent className="w-[280px] p-0" align="start">
+            <div className="flex items-center justify-between px-3 py-2">
+              <span className="text-sm font-medium">สถานะสินค้า</span>
+              {countFilterOption > 0 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-2"
+                  onClick={clearAllFilterStatus}
+                >
+                  <X className="h-3.5 w-3.5 mr-1" />
+                  เคลียร์
+                </Button>
+              )}
+            </div>
+
+            <Separator />
+
+            <Command>
+              <CommandList>
+                <CommandEmpty>ไม่พบรายการ</CommandEmpty>
+                <CommandGroup></CommandGroup>
+              </CommandList>
+            </Command>
+
+            <div className="p-3 flex items-center justify-end gap-2">
+              <Button variant="ghost" size="sm" onClick={() => setOpen(false)}>
+                ปิด
+              </Button>
+              <Button size="sm" onClick={handleApplyFilterStatus}>
+                ใช้ตัวกรอง
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover> */}
       </div>
 
       <div

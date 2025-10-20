@@ -88,24 +88,33 @@ export function FormTextRow<T extends FieldValues>({
   return (
     <div className="flex flex-col w-full">
       {canCopy ? (
-        <div className="flex flex-row gap-2 items-center">
-          <span>{label}</span>
-          <div className="flex flex-row gap-2">
-            <Link
-              size={16}
-              className="cursor-pointer hover:text-blue-400"
-              onClick={handleCopy}
-            />
-            <span className="text-[#b4b4c5] text-sm">
-              {copied && "คัดลอกแล้ว"}
-            </span>
+        <>
+          <div className="flex flex-row gap-2 items-center">
+            <span className="dark:text-[#ffffff]">{label}</span>
+            <div className="flex flex-row gap-2">
+              <Link
+                size={16}
+                className="cursor-pointer hover:text-blue-400"
+                onClick={handleCopy}
+              />
+              <span className="text-[#b4b4c5] text-sm">
+                {copied && "คัดลอกแล้ว"}
+              </span>
+            </div>
           </div>
-        </div>
-      ) : (
-        <span>{label}</span>
-      )}
 
-      <span className="mt-2 text-sm text-[#71717A]">{displayValue}</span>
+          <span className="mt-2 text-sm text-[#71717A]  dark:text-[#b4b4c5]">
+            {displayValue}
+          </span>
+        </>
+      ) : (
+        <>
+          <span className="dark:text-[#ffffff]">{label}</span>
+          <span className="mt-2 text-sm text-[#71717A]  dark:text-[#b4b4c5]">
+            {displayValue}
+          </span>
+        </>
+      )}
     </div>
   );
 }
