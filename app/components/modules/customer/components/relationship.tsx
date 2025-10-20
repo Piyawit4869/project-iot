@@ -11,6 +11,8 @@ import { NotesCard } from "./cardZone/NoteCard";
 import { RemarkCard } from "./cardZone/RemarkCard";
 import { TagsCard } from "./cardZone/TagsCard";
 import { AICard } from "./cardZone/AiCard";
+import { useGetAnalyzeCustomer } from "~/api/client/customer/useCustomer";
+import { useParams } from "react-router";
 
 export const RelationshipCard: React.FC<CustomerRelationshipFormProps> = ({
   form,
@@ -18,6 +20,8 @@ export const RelationshipCard: React.FC<CustomerRelationshipFormProps> = ({
   loading,
   isEdit,
 }) => {
+  const params = useParams();
+  const id = params?.id as string;
   const {
     state: {
       customerNote,
@@ -27,6 +31,9 @@ export const RelationshipCard: React.FC<CustomerRelationshipFormProps> = ({
     },
   } = useCustomerViewModel();
 
+  const { data: analyzeCustomer, isLoading: loadAnalyzeCustomer } =
+    useGetAnalyzeCustomer(id);
+
   return (
     <div className="flex flex-col gap-3 h-full">
       <Card className="h-auto">
@@ -35,14 +42,14 @@ export const RelationshipCard: React.FC<CustomerRelationshipFormProps> = ({
             ความสัมพันธ์ลูกค้า
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4 pt-4">
-          {loading ? (
+        <CardContent className="space-y-4 ">
+          {loadAnalyzeCustomer ? (
             <>
               <div className="flex justify-center">
                 <SkeletonLoading
                   shape="rounded"
-                  width="w-[180px]"
-                  height="h-[180px]"
+                  width="w-[190px]"
+                  height="h-[190px]"
                   className="mb-10"
                 />
               </div>
@@ -53,7 +60,7 @@ export const RelationshipCard: React.FC<CustomerRelationshipFormProps> = ({
             </>
           ) : (
             <div className="flex justify-center">
-              <DualProgressCircle chartData={[]} />
+              <DualProgressCircle chartData={analyzeCustomer} />
             </div>
           )}
         </CardContent>

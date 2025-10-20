@@ -35,6 +35,9 @@ export const RemarkCard = ({
                 <Textarea
                   value={field.value || ""}
                   rows={4}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
                   placeholder="กรอกหมายเหตุ เช่น  Important customer"
                 ></Textarea>
               </FormControl>
