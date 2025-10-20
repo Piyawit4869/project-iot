@@ -88,9 +88,7 @@ export default function MessageCardForm() {
               />
             </CardContent>
             <div className="flex justify-end p-5">
-              <Button type="submit" className="bg-green-600 hover:bg-green-700">
-                บันทึก
-              </Button>
+              <Button type="submit">บันทึก</Button>
             </div>
           </Card>
         </div>

@@ -103,7 +103,7 @@ export default function CreateCustomer() {
               <GlobalButton
                 label={
                   <>
-                    <Save /> บันทึก
+                    <Save /> สร้าง
                   </>
                 }
                 type="submit"
@@ -122,7 +122,7 @@ export default function CreateCustomer() {
           <form id="customer" onSubmit={formCreate.handleSubmit(onCreate)}>
             <div className="flex flex-col md:flex-row gap-4">
               <div className="w-full md:w-1/2 md:order-1">
-                <CustomerInfoCard form={formCreate} />
+                <CustomerInfoCard form={formCreate} customer={null} />
               </div>
               <div className="w-full md:w-1/2 md:order-2 flex flex-col ">
                 <CustomerDeatailCard form={formCreate} />

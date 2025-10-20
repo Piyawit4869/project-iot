@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ShieldCheck, User2 } from "lucide-react";
+import { Check, Save, ShieldCheck, User2 } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -54,6 +54,13 @@ export const LineContainerSettings: React.FC = () => {
 
   const form = useForm<ConnectLineValues>({
     resolver: zodResolver(ConnectLineSchema),
+    defaultValues: {
+      id: "",
+      name: "",
+      channelId: "",
+      channelSecret: "",
+      accessToken: "",
+    },
   });
 
   const [tab, setTab] = React.useState(tabFromUrl);
@@ -124,22 +131,29 @@ export const LineContainerSettings: React.FC = () => {
     },
   });
 
-  return (
-    <div className="flex flex-col w-full">
-      <TabControl
-        title="ROME Assistant"
-        noneSticky={true}
-        backpath="/setting-organization/third-party"
-        buttons={[
+  const headerButtons =
+    tab === "config-line"
+      ? [
           <Button
             key="save-btn"
             type="submit"
             form="config-line"
             className="w-full"
           >
-            บันทึก
+            <>
+              <Save /> สร้าง
+            </>
           </Button>,
-        ]}
+        ]
+      : [];
+
+  return (
+    <div className="flex flex-col w-full">
+      <TabControl
+        title="ROME Assistant"
+        noneSticky={true}
+        backpath="/setting-organization/third-party"
+        buttons={headerButtons}
       />
 
       <Form {...form}>

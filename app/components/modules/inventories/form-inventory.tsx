@@ -29,7 +29,7 @@ export const FormInventory: React.FC<FormInventoryProps> = (
   return (
     <Form {...form}>
       <form id="inventory" onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex gap-8 mt-4 ">
+        <div className="flex gap-8 mt-4  w-[60%]">
           <div className="flex flex-3 flex-col gap-6">
             <h1 className=" font-bold">ข้อมูลคลังสินค้า</h1>
 
