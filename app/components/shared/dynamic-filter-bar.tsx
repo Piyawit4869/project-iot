@@ -25,7 +25,11 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "../ui/dialog";
-import { formatDateFull } from "./global-format";
+import {
+  formatDateAndTime,
+  formatDateFull,
+  formatDateTH,
+} from "./global-format";
 import { DatePicker } from "./date-picker";
 
 type ExtendedFilterField = BaseFilterField & {
@@ -149,8 +153,8 @@ function formatDisplayValue(
 
     case "dateRange": {
       const { from, to } = val ?? {};
-      const fromText = formatDateFull(from);
-      const toText = formatDateFull(to);
+      const fromText = formatDateTH(from);
+      const toText = formatDateTH(to);
 
       if (fromText && toText) return `${fromText} – ${toText}`;
       if (fromText) return `ตั้งแต่ ${fromText}`;
@@ -159,7 +163,7 @@ function formatDisplayValue(
     }
 
     case "date": {
-      return formatDateFull(val);
+      return formatDateTH(val);
     }
 
     default:
@@ -308,6 +312,26 @@ export function DynamicFilterBar<TData>({
     setSearchParams(nextSp);
   };
 
+  const blockInvalidNumberKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "-" || e.key === "e" || e.key === "E" || e.key === "+") {
+      e.preventDefault();
+    }
+  };
+
+  const blockInvalidPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    const text = e.clipboardData.getData("text");
+    if (!/^\d*\.?\d*$/.test(text)) {
+      e.preventDefault();
+    }
+  };
+
+  const clampMin0 = (val: string) => {
+    if (val === "") return undefined;
+    const n = Number(val);
+    if (Number.isNaN(n)) return undefined;
+    return Math.max(0, n);
+  };
+
   const renderSameFieldsBlock = (mode: "main" | "advanced") => (
     <div className={`flex flex-wrap items-center gap-5 ${className ?? ""}`}>
       {extFields
@@ -371,37 +395,47 @@ export function DynamicFilterBar<TData>({
               );
             case "numberRange":
               return (
-                <div key={f.id} className="flex items-center gap-2">
-                  <Input
-                    type="number"
-                    placeholder={`${f.label} min`}
-                    className="w-[110px]"
-                    value={(form[f.id]?.min ?? "") as any}
-                    onChange={(e) =>
-                      update(f.id, {
-                        ...(form[f.id] ?? {}),
-                        min: e.target.value
-                          ? Number(e.target.value)
-                          : undefined,
-                      })
-                    }
-                  />
-                  <Input
-                    type="number"
-                    placeholder={`${f.label} max`}
-                    className="w-[110px]"
-                    value={(form[f.id]?.max ?? "") as any}
-                    onChange={(e) =>
-                      update(f.id, {
-                        ...(form[f.id] ?? {}),
-                        max: e.target.value
-                          ? Number(e.target.value)
-                          : undefined,
-                      })
-                    }
-                  />
+                <div key={f.id} className="mb-3">
+                  <span className="block text-sm font-medium mb-1">
+                    {String(f.label)}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      min={0}
+                      inputMode="decimal"
+                      pattern="\d*\.?\d*"
+                      placeholder={`${f.label} min`}
+                      value={(form[f.id]?.min ?? "") as any}
+                      onKeyDown={blockInvalidNumberKey}
+                      onPaste={blockInvalidPaste}
+                      onChange={(e) =>
+                        update(f.id, {
+                          ...(form[f.id] ?? {}),
+                          min: clampMin0(e.target.value),
+                        })
+                      }
+                    />
+                    <Input
+                      type="number"
+                      min={0}
+                      inputMode="decimal"
+                      pattern="\d*\.?\d*"
+                      placeholder={`${f.label} max`}
+                      value={(form[f.id]?.max ?? "") as any}
+                      onKeyDown={blockInvalidNumberKey}
+                      onPaste={blockInvalidPaste}
+                      onChange={(e) =>
+                        update(f.id, {
+                          ...(form[f.id] ?? {}),
+                          max: clampMin0(e.target.value),
+                        })
+                      }
+                    />
+                  </div>
                 </div>
               );
+
             case "number":
               return (
                 <div key={f.id} className="mb-3">
@@ -410,6 +444,9 @@ export function DynamicFilterBar<TData>({
                   </span>
                   <Input
                     type="number"
+                    min={0}
+                    inputMode="decimal"
+                    pattern="\d*\.?\d*"
                     placeholder={`${f.label}`}
                     className="min-w-[160px]"
                     value={
@@ -417,20 +454,16 @@ export function DynamicFilterBar<TData>({
                         ? ""
                         : (form[f.id] as number | string)
                     }
-                    onChange={(e) =>
-                      update(
-                        f.id,
-                        e.target.value === ""
-                          ? undefined
-                          : Number(e.target.value)
-                      )
-                    }
+                    onKeyDown={blockInvalidNumberKey}
+                    onPaste={blockInvalidPaste}
+                    onChange={(e) => update(f.id, clampMin0(e.target.value))}
                   />
                 </div>
               );
+
             case "dateRange":
               return (
-                <div key={f.id} className="flex flex-col gap-1">
+                <div key={f.id} className="mb-3 flex flex-col gap-1">
                   <span className="block text-sm font-medium mb-1">
                     {String(f.label)}
                   </span>
@@ -512,7 +545,7 @@ export function DynamicFilterBar<TData>({
           )}
         </div>
 
-        <div className="ml-auto mt-3 md:mt-0 md:self-stretch flex items-end gap-2">
+        <div className="ml-auto mb-3 md:mt-0 md:self-stretch flex items-end gap-2">
           {shouldShowAdvanced && (
             <Dialog open={advancedOpen} onOpenChange={setAdvancedOpen}>
               <DialogTrigger asChild>
@@ -529,7 +562,7 @@ export function DynamicFilterBar<TData>({
                 {renderSameFieldsBlock("advanced")}
 
                 <DialogFooter className="mt-6 flex justify-end">
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 ">
                     <Button type="button" variant="outline" onClick={onClear}>
                       <X />
                       ล้างค้นหา
