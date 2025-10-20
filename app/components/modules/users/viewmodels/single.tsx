@@ -332,18 +332,18 @@ export default function SingleUsers() {
           ) : (
             <div className="w-full flex flex-row pl-10">
               <GlobalButton
-                label="แก้ไข"
-                key="update-button"
-                type="button"
-                className="mr-4 max-w-[90px]"
-                onClick={() => setIsEdit(true)}
-              />
-              <GlobalButton
                 label="ลบ"
                 variant="outline"
                 key="delete-btn"
-                className="max-w-[90px] mr-15"
+                className="mr-4 max-w-[90px]"
                 onClick={() => params.id && handleDelete(params.id)}
+              />
+              <GlobalButton
+                label="แก้ไข"
+                key="update-button"
+                type="button"
+                className="max-w-[90px] mr-15"
+                onClick={() => setIsEdit(true)}
               />
             </div>
           ),

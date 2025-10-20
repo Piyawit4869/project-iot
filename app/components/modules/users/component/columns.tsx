@@ -1,6 +1,6 @@
 import { GlobalImage } from "~/components/shared/global-image";
 
-import { PenLine, Trash } from "lucide-react";
+import { Eye, PenLine, Trash } from "lucide-react";
 import GlobalButton from "~/components/shared/global-button";
 import { useMemo } from "react";
 import { formatDateBirthDay } from "~/components/shared/global-format";
@@ -199,7 +199,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
                   aria-label="แก้ไข"
                   title="แก้ไข"
                 >
-                  <PenLine className="w-4 h-4 text-white" />
+                  <Eye className="w-4 h-4 text-white" />
                 </Button>
               </Link>
 
