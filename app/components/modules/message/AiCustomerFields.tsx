@@ -96,8 +96,10 @@ type Props = {
   value?: AiFieldsState;
   defaultValue?: AiFieldsState;
   onChange?: (v: AiFieldsState) => void;
+  onClickBtn?: () => void;
   defaultOpen?: FieldKey[];
   data: CustomerRequestResponse;
+  closeBtn?: boolean;
 };
 
 const statusTh: Record<string, string> = {
@@ -109,18 +111,20 @@ const statusTh: Record<string, string> = {
 };
 
 const displayStatus = (s: CustomerStatusValue | null) =>
-  s ? statusTh[s] ?? s : "-";
+  s ? statusTh[s] ?? s : "ยังไม่มีข้อมูล";
 
 const displayConsent = (b: boolean | null) =>
-  b === null ? "-" : b ? "ยินยอม" : "ไม่ยินยอม";
+  b === null ? "ยังไม่มีข้อมูล" : b ? "ยินยอม" : "ไม่ยินยอม";
 
 export function AiCustomerFields({
   // title = "ข้อมูลลูกค้าประเมินผ่าน AI",
+  closeBtn,
   value,
   defaultValue,
   onChange,
   defaultOpen,
   data,
+  onClickBtn,
 }: Props) {
   const navigate = useNavigate();
 
@@ -137,6 +141,22 @@ export function AiCustomerFields({
   const [state, setState] = React.useState<AiFieldsState>(
     value ?? defaultValue ?? emptyState(defaultOpen)
   );
+
+  const infoItems = [
+    { label: "สรุปคำขอ", value: data?.summary },
+    { label: "ชื่อลูกค้าผู้ติดต่อ (ชื่อผู้ติดต่อ)", value: data?.customerName },
+    { label: "เบอร์โทรศัพท์ผู้ติดต่อ", value: data?.contactNumber },
+    { label: "อีเมลผู้ติดต่อ", value: data?.email },
+    {
+      label: "วันที่อยากใช้ของ (วันนัดสำคัญ)",
+      value: formatDateAndTime(data?.eventKeyDate),
+    },
+    { label: "ใช้ในงานอะไร (กิจกรรม)", value: data?.activityType },
+    { label: "สถานะลูกค้า", value: displayStatus(data?.customerStatus) },
+    { label: "ยินยอมข้อมูลส่วนบุคคล", value: displayConsent(data?.consentPii) },
+    { label: "เลขผู้เสียภาษี", value: data?.taxId },
+    { label: "ลักษณะการคุยของลูกค้า (อุปนิสัย)", value: data?.personality },
+  ];
 
   React.useEffect(() => {
     if (value) setState(value);
@@ -161,9 +181,9 @@ export function AiCustomerFields({
 
   return (
     // <div className="space-y-3 my-2">
-    //   <div>สถานะลูกค้า : {data.customerStatus ?? "-"}</div>
-    //   <div>อุปนิสัย : {data.personality ?? "-"}</div>
-    //   <span>อุปนิสัย : {data.personality ?? "-"}</span>
+    //   <div>สถานะลูกค้า : {data.customerStatus ?? "ยังไม่มีข้อมูล"}</div>
+    //   <div>อุปนิสัย : {data.personality ?? "ยังไม่มีข้อมูล"}</div>
+    //   <span>อุปนิสัย : {data.personality ?? "ยังไม่มีข้อมูล"}</span>
     //   <Accordion
     //     type="multiple"
     //     value={open}
@@ -239,8 +259,15 @@ export function AiCustomerFields({
     //   </Accordion>
     // </div>
     <div className="space-y-3 my-2">
-      <div>
-        สรุปคำขอ : <span className="font-semibold">{data?.summary || "-"}</span>
+      <div className="space-y-2">
+        {infoItems.map((item, index) => (
+          <div className="flex flex-row flex-wrap ">
+            <span className="font-bold">{item.label} :</span>
+            <span className="pl-4 text-[#71717A]">
+              {item.value || "ยังไม่มีข้อมูล"}
+            </span>
+          </div>
+        ))}
       </div>
 
       <div>
@@ -271,13 +298,13 @@ export function AiCustomerFields({
       <div>
         สถานะลูกค้า :{" "}
         <span className="font-semibold">
-          {displayStatus(data?.customerStatus)}
+          {displayStatus(data && data.customerStatus)}
         </span>
       </div>
       <div>
         ยินยอมข้อมูลส่วนบุคคล :{" "}
         <span className="font-semibold">
-          {displayConsent(data?.consentPii)}
+          {displayConsent(data && data.consentPii)}
         </span>
       </div>
       <div>
@@ -292,27 +319,31 @@ export function AiCustomerFields({
       <div>สร้างเมื่อ : {formatDateAndTime(data.createdAt)}</div>
       <div>แก้ไขเมื่อ : {formatDateAndTime(data.updatedAt)}</div> */}
 
-      <div className="flex justify-between items-center gap-2 min-w-0">
+      <div className="flex justify-between items-center gap-2 mt-5 min-w-0">
         <GlobalButton
           key="sync-ai"
           type="button"
-          onClick={() => {}}
+          onClick={() => onClickBtn?.()}
           variant="secondary"
           className="flex-1  bg-[#2e498d] text-white hover:bg-[#142a60] hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
           icon={<Link />}
           label={<span className="hidden sm:inline">Sync ข้อมูล AI</span>}
         />
-        <GlobalButton
-          key="navigate-customer-details"
-          type="button"
-          onClick={() => {
-            navigate(`/customer/${data.id}`);
-          }}
-          variant="secondary"
-          className="flex-1  bg-[#34cf16] text-white hover:bg-[#142a60] hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-          icon={<Navigation />}
-          label={<span className="hidden sm:inline">ไปยังหน้ารายละเอียด</span>}
-        />
+        {closeBtn ?? (
+          <GlobalButton
+            key="navigate-customer-details"
+            type="button"
+            onClick={() => {
+              navigate(`/customer/${data.id}`);
+            }}
+            variant="secondary"
+            className="flex-1  bg-[#34cf16] text-white hover:bg-[#142a60] hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+            icon={<Navigation />}
+            label={
+              <span className="hidden sm:inline">ไปยังหน้ารายละเอียด</span>
+            }
+          />
+        )}
       </div>
 
       {/* <div className="text-xs text-muted-foreground mt-4">

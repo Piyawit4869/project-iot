@@ -144,12 +144,12 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
         {sortedNotes.map((note: TNote) => (
           <div
             key={note.id}
-            className="border rounded-lg p-3 bg-white shadow-sm space-y-2"
+            className="border rounded-lg p-3 bg-white shadow-sm space-y-2 dark:bg-muted "
           >
-            <p className="whitespace-pre-line text-sm text-gray-800">
+            <p className="whitespace-pre-line text-sm text-gray-800 dark:text-[#b4b4c5]">
               {note.note}
             </p>
-            <div className="flex items-center justify-between text-xs text-gray-500">
+            <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
               <span>
                 {DateISOToDisplayDate(note.created_at ?? note.createdAt ?? "")}{" "}
                 {note.user_name ?? note.userName ?? ""}

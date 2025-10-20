@@ -87,12 +87,12 @@ export const NotesCard = ({
                 refetchCustomer={fetchCustomerNote ?? (() => {})}
               />
             </span>
-            <span className="text-sm text-gray-500 flex mt-3">
+            <span className="text-sm text-[#71717A]  dark:text-[#b4b4c5] flex mt-3">
               หากต้องการเพิ่มโน้ตกรุณากดที่ปุ่ม + เพื่อเพิ่มโน้ต
             </span>
           </>
         ) : (
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-[#71717A]  dark:text-[#b4b4c5]">
             ลูกค้ารายนี้ยังไม่มีโน้ต หากต้องการเพิ่มโน้ตกรุณากดที่ปุ่มแก้ไข
           </span>
         )}

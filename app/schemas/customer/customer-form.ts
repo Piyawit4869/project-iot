@@ -16,6 +16,7 @@ const OrganizationTypeEnum = z.enum([
   "ordinary_partnership",
   "shop",
   "body_of_person",
+  "others",
 ]);
 export const chartItemSchema = z.object({
   name: z.string().optional(),
@@ -47,7 +48,11 @@ const ProfileSchema = z.object({
   lineName: z.string().optional().nullable(),
   faceBookName: z.string().optional().nullable(),
   nickName: z.string().optional().nullable(),
-  firstName: z.string().nonempty("กรุณากรอกชื่อ"),
+  firstName: z
+    .string()
+    .nullable()
+    .transform((val) => val ?? "")
+    .refine((val) => val.trim() !== "", { message: "กรุณากรอกชื่อ" }),
 
   lastName: z
     .string()
@@ -84,6 +89,7 @@ const ProfileSchema = z.object({
 const OrganizationDetailsSchema = z.object({
   fromType: CustomerTypeEnum.optional(),
   orgType: OrganizationTypeEnum.optional(),
+  orgTypeOther: z.string().optional().nullable(),
   branchCode: z.string().optional().nullable(),
   businessName: z.string().optional().nullable(),
   businessPhone: z.preprocess((val) => {

@@ -51,7 +51,7 @@ export const ViewCustomerActivityLog: React.FC<CustomerFormCreateProps> = ({
 
           <CardContent className="space-y-4">
             {activities.length === 0 ? (
-              <div className="text-md mt-6 flex justify-center text-neutral-500">
+              <div className="text-md mx-6 flex justify-center text-[#71717A]  dark:text-[#b4b4c5]">
                 ยังไม่มีกิจกรรม
               </div>
             ) : (

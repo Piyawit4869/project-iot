@@ -44,7 +44,9 @@ export const RemarkCard = ({
       ) : remark ? (
         <span>{remark}</span>
       ) : (
-        <span className="text-sm text-[#71717A]">ไม่มีหมายเหตุ</span>
+        <span className="text-sm text-[#71717A]  dark:text-[#b4b4c5]">
+          ไม่มีหมายเหตุ
+        </span>
       )}
     </CardContent>
   </Card>
