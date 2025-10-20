@@ -6,7 +6,7 @@ import {
 
 import React from "react";
 import { useCustomer } from "~/api/client/customer/useCustomer";
-import { usePaginatedChatRooms } from "~/api/client/settings";
+import { usePaginatedChatRooms } from "~/api/client/message/useMessage";
 import { useDebounce } from "~/hooks/use-debounce";
 import type { Customer } from "~/schemas/customer/customer-form";
 import type { ChatRoomSchemaType } from "~/schemas/settings";
