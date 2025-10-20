@@ -178,7 +178,8 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
                 <text
                   x={x}
                   y={y}
-                  fill="#000"
+                  fill="currentColor"
+                  className="text-black dark:text-white"
                   fontSize={14}
                   textAnchor={x > cx ? "start" : "end"}
                   dominantBaseline="central"
@@ -233,7 +234,7 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
                                 setFocusedName("");
                               }}
                             >
-                              {entry.name}: {entry.process.toFixed(1)}%
+                              {entry.name} : {entry.process.toFixed(1)}%
                             </span>
                             <span
                               onClick={(e) => {
