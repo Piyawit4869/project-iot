@@ -116,8 +116,11 @@ export const ViewOrderDetail = ({ order }: OrderFormEditProps) => {
         <InfoItem
           label="สกุลเงิน"
           value={
-            currencyType?.find((item) => item.value === dataOrder?.currency)
-              ?.label || "THB"
+            (currencyType &&
+              currencyType?.find(
+                (item) => item.value === dataOrder?.currency || "-"
+              )?.label) ||
+            "THB"
           }
         />
       </div>
