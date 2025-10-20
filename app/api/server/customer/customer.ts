@@ -146,6 +146,19 @@ export const fetchAllContact = async () => {
   }
 };
 
+export const fetchGetAnalyzeCustomer = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(
+      `/crud/customers/${id}/summary-chat-message
+       `
+    );
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const fetchAllContactByCustomer = async (id: string) => {
   try {
     const res = await ApiConfig.get(

@@ -151,6 +151,7 @@ export const FormCustomerContact: React.FC<CustomerFormCreateProps> = ({
                       value={field.value || ""}
                       placeholder="กรอกเบอร์โทรสำนักงาน/บริษัท"
                       onChange={onlyNumber(field)}
+                      maxLength={10}
                     />
                   </FormControl>
                   <FormMessage />

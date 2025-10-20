@@ -16,6 +16,12 @@ const OrganizationTypeEnum = z.enum([
   "ordinary_partnership",
   "shop",
   "body_of_person",
+  "company_limited",
+  "public_company_limited",
+  "limited_partnership",
+  "foundation",
+  "association",
+  "joint_venture",
   "others",
 ]);
 export const chartItemSchema = z.object({

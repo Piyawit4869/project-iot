@@ -102,9 +102,6 @@ export interface DualProgressCircleProps {
   progress?: number | undefined;
 }
 
-export interface RelationshipCircleProps {
-  chartData?: { name?: string; progress?: number; fill?: string }[];
-}
 // export interface DualProgressCircleProps {
 //   chartData?: chartItemSchema[];
 // }

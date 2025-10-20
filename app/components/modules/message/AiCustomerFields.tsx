@@ -4,7 +4,16 @@ import * as React from "react";
 import { formatDateAndTime } from "~/components/shared/global-format";
 import type { CustomerRequestResponse } from "../customer/types/customer";
 import GlobalButton from "~/components/shared/global-button";
-import { Link, Navigation } from "lucide-react";
+import {
+  icons,
+  Link,
+  Mail,
+  MessageSquare,
+  Navigation,
+  Package,
+  Phone,
+  User,
+} from "lucide-react";
 import { useNavigate } from "react-router";
 
 type FieldKey =
@@ -143,13 +152,22 @@ export function AiCustomerFields({
   );
 
   const infoItems = [
-    { label: "สรุปคำขอ", value: data?.summary },
-    { label: "ชื่อลูกค้าผู้ติดต่อ (ชื่อผู้ติดต่อ)", value: data?.customerName },
-    { label: "เบอร์โทรศัพท์ผู้ติดต่อ", value: data?.contactNumber },
-    { label: "อีเมลผู้ติดต่อ", value: data?.email },
+    { label: "สรุปคำขอ", value: data?.summary, icon: <MessageSquare /> },
+    {
+      label: "ชื่อลูกค้าผู้ติดต่อ (ชื่อผู้ติดต่อ)",
+      value: data?.customerName,
+      icon: <User />,
+    },
+    {
+      label: "เบอร์โทรศัพท์ผู้ติดต่อ",
+      value: data?.contactNumber,
+      icon: <Phone />,
+    },
+    { label: "อีเมลผู้ติดต่อ", value: data?.email, icon: <Mail /> },
     {
       label: "วันที่อยากใช้ของ (วันนัดสำคัญ)",
       value: formatDateAndTime(data?.eventKeyDate),
+      icon: <Package />,
     },
     { label: "ใช้ในงานอะไร (กิจกรรม)", value: data?.activityType },
     { label: "สถานะลูกค้า", value: displayStatus(data?.customerStatus) },
@@ -270,51 +288,6 @@ export function AiCustomerFields({
         ))}
       </div>
 
-      <div>
-        ชื่อลูกค้าผู้ติดต่อ (ชื่อผู้ติดต่อ) :{" "}
-        <span className="font-semibold">{data?.customerName ?? "-"}</span>
-      </div>
-
-      <div>
-        เบอร์โทร :{" "}
-        <span className="font-semibold">{data?.contactNumber ?? "-"}</span>
-      </div>
-
-      <div>
-        อีเมล : <span className="font-semibold">{data?.email ?? "-"}</span>
-      </div>
-      <div>
-        วันที่อยากใช้ของ (วันนัดสำคัญ) :{" "}
-        <span className="font-semibold">
-          {formatDateAndTime(data?.eventKeyDate)}
-        </span>
-      </div>
-
-      <div>
-        ใช้ในงานอะไร (กิจกรรม) :{" "}
-        <span className="font-semibold">{data?.activityType ?? "-"}</span>
-      </div>
-
-      <div>
-        สถานะลูกค้า :{" "}
-        <span className="font-semibold">
-          {displayStatus(data && data.customerStatus)}
-        </span>
-      </div>
-      <div>
-        ยินยอมข้อมูลส่วนบุคคล :{" "}
-        <span className="font-semibold">
-          {displayConsent(data && data.consentPii)}
-        </span>
-      </div>
-      <div>
-        เลขผู้เสียภาษี :{" "}
-        <span className="font-semibold">{data?.taxId ?? "-"}</span>
-      </div>
-      <div>
-        ลักษณะการคุยของลูกค้า (อุปนิสัย) :{" "}
-        <span className="font-semibold">{data?.personality ?? "-"}</span>
-      </div>
       {/* <div>วันเตรียมงาน : {formatDateAndTime(data.eventSetupDate)}</div>
       <div>สร้างเมื่อ : {formatDateAndTime(data.createdAt)}</div>
       <div>แก้ไขเมื่อ : {formatDateAndTime(data.updatedAt)}</div> */}
