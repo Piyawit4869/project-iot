@@ -23,6 +23,18 @@ export enum MessageLabelType {
   SENDSTICKER = "ส่งสติ้กเกอร์",
 }
 
+//line message type
+export enum LineMessageType {
+  TEXT = "text",
+  IMAGE = "image",
+  VIDEO = "video",
+  AUDIO = "audio",
+  LOCATION = "location",
+  STICKER = "sticker",
+  FLEX = "flex",
+  CAROUSEL = "carousel",
+}
+
 export type FilterKind =
   | "text"
   | "select"

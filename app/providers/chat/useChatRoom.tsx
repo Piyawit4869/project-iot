@@ -7,6 +7,7 @@ import {
 import React from "react";
 import { useCustomer } from "~/api/client/customer/useCustomer";
 import { usePaginatedChatRooms } from "~/api/client/settings";
+import { useDebounce } from "~/hooks/use-debounce";
 import type { Customer } from "~/schemas/customer/customer-form";
 import type { ChatRoomSchemaType } from "~/schemas/settings";
 
@@ -256,9 +257,11 @@ type ChatRoomContextType = {
   setOnSelectRoom: (onSelectRoom: boolean) => void;
   autoReadMsg: boolean;
   setAutoReadMsg: (onSelectRoom: boolean) => void;
-
   rooms: any;
   setRooms: React.Dispatch<React.SetStateAction<any>>;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
+  search: string;
+  filterRoom: any;
 };
 
 const ChatRoomContext = React.createContext<ChatRoomContextType | undefined>(
@@ -283,13 +286,18 @@ export const ChatRoomProvider = ({
     users: [],
     latestMessage: { id: "", message: "", createdAt: "" },
   };
+
+  const [search, setSearch] = React.useState<string>("");
+
+  const debouncedSearch = useDebounce(search);
+
   const {
     data: chatRooms,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = usePaginatedChatRooms();
+  } = usePaginatedChatRooms(debouncedSearch);
   const [realtimeChatRooms, setRealtimeChatRooms] = React.useState<any>();
   const [selectedRoom, setSelectedRoom] =
     React.useState<ChatRoomSchemaType>(initialState);
@@ -297,6 +305,7 @@ export const ChatRoomProvider = ({
   const [rooms, setRooms] = React.useState<any[]>(
     computeRooms(chatRooms, realtimeChatRooms)
   );
+
   const { data: customer, refetch: refetchCustomer } = useCustomer(
     selectedRoom.customerId
   );
@@ -305,6 +314,12 @@ export const ChatRoomProvider = ({
   const [customerInfoOpen, setCustomerInfoOpen] = React.useState(true);
   const [onSelectRoom, setOnSelectRoom] = React.useState<boolean>(false);
   const [autoReadMsg, setAutoReadMsg] = React.useState<boolean>(false);
+
+  const filterRoom = React.useMemo(() => {
+    if (search === "" || !chatRooms) return [];
+
+    return computeRooms(chatRooms, realtimeChatRooms);
+  }, [chatRooms, realtimeChatRooms]);
 
   return (
     <ChatRoomContext.Provider
@@ -330,6 +345,9 @@ export const ChatRoomProvider = ({
         setAutoReadMsg,
         rooms,
         setRooms,
+        search,
+        setSearch,
+        filterRoom,
       }}
     >
       {children}

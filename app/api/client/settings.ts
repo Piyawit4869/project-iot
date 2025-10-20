@@ -146,10 +146,11 @@ export const useSendMessage = () => {
   });
 };
 
-export const usePaginatedChatRooms = () => {
+export const usePaginatedChatRooms = (name: string) => {
   return useInfiniteQuery({
-    queryKey: ["roomChat"],
-    queryFn: async ({ pageParam }) => fetchRoomChatLoadMore(pageParam, 20),
+    queryKey: ["roomChat", name],
+    queryFn: async ({ pageParam }) =>
+      fetchRoomChatLoadMore(pageParam, 20, name),
 
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {

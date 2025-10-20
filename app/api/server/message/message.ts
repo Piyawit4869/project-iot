@@ -38,6 +38,32 @@ export const fetchSendMessage = async (payload: PushMessageValues) => {
   }
 };
 
+export const markAsProcess = async (chatRoomId: string, isProcess: boolean) => {
+  try {
+    const res = await ApiConfig.put(
+      `/crud/chats/rooms/${chatRoomId}/mark-is-process`,
+      { isProcess }
+    );
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const markAsDone = async (chatRoomId: string, done: boolean) => {
+  try {
+    const res = await ApiConfig.put(
+      `/crud/chats/rooms/${chatRoomId}/mark-as-done`,
+      { done }
+    );
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const fetchAllMessageWithRoomId = async (
   roomId: string,
   offset = 0,

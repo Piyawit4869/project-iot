@@ -182,10 +182,14 @@ export const fetchSendMessage = async (payload: PushMessageValues) => {
   }
 };
 
-export const fetchRoomChatLoadMore = async (offset = 0, limit = 20) => {
+export const fetchRoomChatLoadMore = async (
+  offset = 0,
+  limit = 20,
+  name: string
+) => {
   try {
     const res = await ApiConfig.get(`/crud/chats/rooms`, {
-      params: { offset, limit },
+      params: { offset, limit, name },
     });
 
     return res.data;
