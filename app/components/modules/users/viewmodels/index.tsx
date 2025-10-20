@@ -104,7 +104,12 @@ export default function Users() {
             status: status === "all" ? "" : status,
             limit: res.pageSize,
             // params : { }
-          })
+            ...filters,
+            createdFrom,
+            createdTo,
+            updatedFrom,
+            updatedTo,
+          } as any)
         }
         columns={columns}
         addOn={

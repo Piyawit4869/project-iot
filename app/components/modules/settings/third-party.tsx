@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { PenLine } from "lucide-react";
+import { Eye, PenLine } from "lucide-react";
 import React from "react";
 import { redirect, useNavigate } from "react-router";
 import { usePaginateChatBot } from "~/api/client/settings";
@@ -134,7 +134,7 @@ function buildColumns(
               onClick={() => onEdit(task)}
               disabled={status === "inactive"}
             >
-              <PenLine className="w-4 h-4 text-white" />
+              <Eye className="w-4 h-4 text-white" />
             </Button>
           </div>
         );
