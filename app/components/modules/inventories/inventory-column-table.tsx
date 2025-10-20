@@ -109,8 +109,13 @@ export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
       {
         accessorKey: "description",
         header: "คำอธิบาย",
-        cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
+        cell: (info) => (
+          <span className="line-clamp-2 text-sm text-gray-700">
+            {(info.getValue() as string) || "-"}
+          </span>
+        ),
       },
+
       {
         accessorKey: "createdAt",
         header: "วันที่สร้าง",

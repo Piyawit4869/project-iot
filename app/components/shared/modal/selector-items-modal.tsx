@@ -193,7 +193,7 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                                   สินค้าคงเหลือ : {item.available} ชิ้น
                                 </h2>
                                 <h2 className="text-sm font-light text-gray-400">
-                                  สินค้าพร้อมจำหน่าย : {item.availableForSale}
+                                  สินค้าพร้อมจำหน่าย : {item.availableForSale}{" "}
                                   ชิ้น
                                 </h2>
                                 <h2 className="text-sm font-light text-gray-400">

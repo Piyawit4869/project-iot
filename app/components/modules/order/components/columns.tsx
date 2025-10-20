@@ -9,7 +9,7 @@ import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { Button } from "~/components/ui/button";
 import type { OrderType } from "~/schemas/order/type";
-// import { useOrderViewModel } from "../viewmodels/useOrderViewModel";
+
 export const useOrderColumns = (): ColumnDef<OrderType>[] => {
   const qc = useQueryClient();
   const deleteOrders = useDeleteOrder();
@@ -36,7 +36,7 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
   return [
     {
       accessorKey: "docName",
-      header: "ชื่อออเดอร์",
+      header: "เลขที่",
       cell: ({ getValue, row }) => {
         const name = getValue() as string;
         return (
@@ -70,10 +70,21 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
         );
       },
     },
-
+    {
+      accessorKey: "docStatus",
+      header: "สถานะออเดอร์",
+      cell: (info) => {
+        const status = info.getValue() as string;
+        return (
+          <span className="flex justify-center">
+            <GlobalStatusBadge value={status} />
+          </span>
+        );
+      },
+    },
     {
       accessorKey: "orderDetails.createdAt",
-      header: "วันที่สั่งซื้อ",
+      header: "วันที่ออกเอกสาร",
       cell: (info) => {
         const date = info.getValue() as string;
         return <span>{formatDateTH(date)}</span>;
@@ -85,19 +96,18 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
       accessorFn: (row: OrderType) => row.orderDetails?.products?.length ?? 0,
       cell: ({ getValue }) => <span>{`${getValue()} รายการ`}</span>,
     },
-
-    {
-      accessorKey: "status",
-      header: "สถานะการชำระเงิน",
-      cell: (info) => {
-        const status = info.getValue() as string;
-        return (
-          <span className="flex justify-center">
-            <GlobalStatusBadge value={status} />
-          </span>
-        );
-      },
-    },
+    // {
+    //   accessorKey: "status",
+    //   header: "สถานะการชำระเงิน",
+    //   cell: (info) => {
+    //     const status = info.getValue() as string;
+    //     return (
+    //       <span className="flex justify-center">
+    //         <GlobalStatusBadge value={status} />
+    //       </span>
+    //     );
+    //   },
+    // },
     {
       accessorKey: "profit",
       header: "กำไรโดยประมาณ",
@@ -118,18 +128,7 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
         );
       },
     },
-    {
-      accessorKey: "docStatus",
-      header: "สถานะออเดอร์",
-      cell: (info) => {
-        const status = info.getValue() as string;
-        return (
-          <span className="flex justify-center">
-            <GlobalStatusBadge value={status} />
-          </span>
-        );
-      },
-    },
+
     {
       id: "actions",
       header: "การดำเนินการ",

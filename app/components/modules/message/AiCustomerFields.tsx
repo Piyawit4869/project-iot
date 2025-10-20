@@ -270,6 +270,51 @@ export function AiCustomerFields({
         ))}
       </div>
 
+      <div>
+        ชื่อลูกค้าผู้ติดต่อ (ชื่อผู้ติดต่อ) :{" "}
+        <span className="font-semibold">{data?.customerName ?? "-"}</span>
+      </div>
+
+      <div>
+        เบอร์โทร :{" "}
+        <span className="font-semibold">{data?.contactNumber ?? "-"}</span>
+      </div>
+
+      <div>
+        อีเมล : <span className="font-semibold">{data?.email ?? "-"}</span>
+      </div>
+      <div>
+        วันที่อยากใช้ของ (วันนัดสำคัญ) :{" "}
+        <span className="font-semibold">
+          {formatDateAndTime(data?.eventKeyDate)}
+        </span>
+      </div>
+
+      <div>
+        ใช้ในงานอะไร (กิจกรรม) :{" "}
+        <span className="font-semibold">{data?.activityType ?? "-"}</span>
+      </div>
+
+      <div>
+        สถานะลูกค้า :{" "}
+        <span className="font-semibold">
+          {displayStatus(data && data.customerStatus)}
+        </span>
+      </div>
+      <div>
+        ยินยอมข้อมูลส่วนบุคคล :{" "}
+        <span className="font-semibold">
+          {displayConsent(data && data.consentPii)}
+        </span>
+      </div>
+      <div>
+        เลขผู้เสียภาษี :{" "}
+        <span className="font-semibold">{data?.taxId ?? "-"}</span>
+      </div>
+      <div>
+        ลักษณะการคุยของลูกค้า (อุปนิสัย) :{" "}
+        <span className="font-semibold">{data?.personality ?? "-"}</span>
+      </div>
       {/* <div>วันเตรียมงาน : {formatDateAndTime(data.eventSetupDate)}</div>
       <div>สร้างเมื่อ : {formatDateAndTime(data.createdAt)}</div>
       <div>แก้ไขเมื่อ : {formatDateAndTime(data.updatedAt)}</div> */}

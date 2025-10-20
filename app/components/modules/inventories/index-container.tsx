@@ -7,7 +7,7 @@ import { FileDown, FileUp, Plus } from "lucide-react";
 
 import GlobalButton from "~/components/shared/global-button";
 import { cn } from "~/lib/utils";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { useSidebar } from "~/components/ui/sidebar";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import {
@@ -19,6 +19,10 @@ import {
   usePaginate,
 } from "~/api/client/inventories/useInventoryQuery";
 import { useInventoryColumnTable } from "./inventory-column-table";
+import {
+  parseDateRangeParam,
+  pickSearchParams,
+} from "../customer/utils/search-params";
 
 export const InventoryIndexContainer = () => {
   const { data: categories, isLoading } = useAllInventorysSummary();
@@ -26,6 +30,25 @@ export const InventoryIndexContainer = () => {
   const { isMobile } = useSidebar();
   const columns = useInventoryColumnTable();
   const [status, setStatus] = useState("all");
+  const [sp] = useSearchParams();
+  const filters = React.useMemo(
+    () =>
+      pickSearchParams(sp, [
+        "name",
+        "productCount",
+        "productCanSale",
+        "createdBy",
+        "updatedBy",
+      ]),
+    [sp]
+  );
+
+  const created = parseDateRangeParam(sp, "createdAt") ?? {};
+  const updated = parseDateRangeParam(sp, "updatedAt") ?? {};
+  const createdFrom = created.fromDate;
+  const createdTo = created.toDate;
+  const updatedFrom = updated.fromDate;
+  const updatedTo = updated.toDate;
 
   const items = TabIndexTableinventorys(categories);
 
@@ -82,28 +105,35 @@ export const InventoryIndexContainer = () => {
             pageSize,
             status: status === "all" ? "" : status,
             limit: pageSize,
+            ...filters,
+            createdFrom,
+            createdTo,
+            updatedFrom,
+            updatedTo,
           })
         }
         columns={columns}
-        // addOn={
-        //   <Tabs
-        //     defaultValue="all"
-        //     onValueChange={handleChangeTab}
-        //     className={cn("block", isMobile && "hidden")}
-        //   >
-        //     <TabsList>
-        //       {items.map((c) => (
-        //         <TabsTrigger
-        //           key={c.label}
-        //           value={c.status}
-        //           className="hover:bg-gray-200 relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
-        //         >
-        //           {c.icon} {c.label} ({c.value})
-        //         </TabsTrigger>
-        //       ))}
-        //     </TabsList>
-        //   </Tabs>
-        // }
+        addOn={
+          <Tabs
+            defaultValue="all"
+            onValueChange={handleChangeTab}
+            className={cn("block", isMobile && "hidden")}
+          >
+            <TabsList>
+              {items &&
+                items.length > 0 &&
+                items.map((c) => (
+                  <TabsTrigger
+                    key={c.label}
+                    value={c.status}
+                    className="hover:bg-border relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
+                  >
+                    {c.icon} {c.label} ({c.value})
+                  </TabsTrigger>
+                ))}
+            </TabsList>
+          </Tabs>
+        }
         customerFilterFields={InventorysFilterFields}
         isCustomLoading={isLoading}
       />

@@ -77,16 +77,11 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
     },
     {
       accessorKey: "active",
-      header: "เปิดใช้งาน",
+      header: "การใช้งาน",
       cell: (info) => {
         const status = (info.getValue() as string) || "-";
         return <GlobalStatusBadge value={status} />;
       },
-    },
-    {
-      accessorKey: "sku",
-      header: "รหัสสินค้า",
-      cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
     },
     {
       accessorKey: "name",
@@ -106,6 +101,11 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
           </span>
         );
       },
+    },
+    {
+      accessorKey: "sku",
+      header: "รหัสสินค้า",
+      cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
     },
     {
       accessorKey: "barcode",
