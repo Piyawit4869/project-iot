@@ -8,6 +8,7 @@ import isYesterday from "dayjs/plugin/isYesterday";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 
 import "dayjs/locale/th";
+import { isValid, parseISO } from "date-fns";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -48,3 +49,15 @@ export const DateTimeStampChatDisplay = (timestamp: string | Date): string => {
 
   return time.format("DD MMM YYYY");
 };
+
+export function toSafeDate(v?: string | Date) {
+  if (!v) return undefined;
+  if (v instanceof Date) return isValid(v) ? v : undefined;
+  if (typeof v === "string") {
+    const iso = parseISO(v);
+    if (isValid(iso)) return iso;
+    const d2 = new Date(v);
+    return isValid(d2) ? d2 : undefined;
+  }
+  return undefined;
+}

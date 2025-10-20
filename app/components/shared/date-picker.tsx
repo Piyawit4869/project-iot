@@ -1,9 +1,10 @@
 import { CalendarIcon } from "lucide-react";
-import { format, parseISO, isValid, formatISO } from "date-fns";
+import { format, formatISO } from "date-fns";
 import { th } from "date-fns/locale";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
+import { toSafeDate } from "~/utils/date-format";
 
 interface DatePickerProps {
   value?: string | Date;
@@ -11,22 +12,9 @@ interface DatePickerProps {
   placeholder?: string;
 }
 
-function toSafeDate(v?: string | Date) {
-  if (!v) return undefined;
-  if (v instanceof Date) return isValid(v) ? v : undefined;
-  if (typeof v === "string") {
-    const iso = parseISO(v);
-    if (isValid(iso)) return iso;
-    const d2 = new Date(v);
-    return isValid(d2) ? d2 : undefined;
-  }
-  return undefined;
-}
-
 export function DatePicker({ value, onChange, placeholder }: DatePickerProps) {
   const [show, setShow] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
   const selectedDate = toSafeDate(value);
 
   useEffect(() => {
