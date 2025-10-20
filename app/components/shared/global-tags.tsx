@@ -124,9 +124,16 @@ const tagsKey: Record<
 interface GlobalTagsBadgeProps {
   value: TagsKey | string;
   onClick?: () => void;
+  fontSize?: number;
+  paddingX?: number;
 }
 
-export function GlobalTagsBadge({ value, onClick }: GlobalTagsBadgeProps) {
+export function GlobalTagsBadge({
+  value,
+  onClick,
+  fontSize = 14,
+  paddingX = 3,
+}: GlobalTagsBadgeProps) {
   const status = tagsKey[value as TagsKey];
   const label = status?.label || value;
   const icon = status?.icon || null;
@@ -136,7 +143,7 @@ export function GlobalTagsBadge({ value, onClick }: GlobalTagsBadgeProps) {
 
   return (
     <Badge
-      className={`inline-flex items-center justify-center rounded-xl border py-1 px-3 text-[14px] font-medium w-fit whitespace-nowrap shrink-0 gap-1 transition-colors dark:bg-gray-700 ${colorTag}`}
+      className={`inline-flex items-center justify-center rounded-xl border py-1 px-${paddingX} text-[${fontSize}px] font-medium w-fit whitespace-nowrap shrink-0 gap-1 transition-colors dark:bg-gray-700 ${colorTag}`}
     >
       {icon} {label}
       {onClick && (

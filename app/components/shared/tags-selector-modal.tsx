@@ -119,13 +119,15 @@ export const TagsSelectorModal: React.FC<TagsSelectorModalProps> = (props) => {
           <FormItem>
             <FormControl className="w-full">
               <div className="flex flex-wrap gap-2 space-y-2">
-                {selectedTags.map((tag) => (
-                  <GlobalTagsBadge
-                    key={tag}
-                    value={tag}
-                    onClick={() => handleDeleteTag(tag)}
-                  />
-                ))}
+                {selectedTags.map((tag) => {
+                  return (
+                    <GlobalTagsBadge
+                      key={tag}
+                      value={tag}
+                      onClick={() => handleDeleteTag(tag)}
+                    />
+                  );
+                })}
 
                 <Dialog open={open} onOpenChange={handleOnClose}>
                   <DialogTrigger asChild>
