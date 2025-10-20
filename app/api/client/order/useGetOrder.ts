@@ -21,6 +21,7 @@ export const useOrdersPaginate = ({
   limit,
   isAll,
   docName,
+  docNo,
   name,
   profit,
   total,
@@ -32,6 +33,7 @@ export const useOrdersPaginate = ({
   limit: number;
   isAll?: boolean;
   docName?: string;
+  docNo?: string;
   name?: string;
   profit?: number;
   total?: number;
@@ -45,6 +47,7 @@ export const useOrdersPaginate = ({
       status,
       limit,
       docName,
+      docNo,
       name,
       profit,
       total,
@@ -56,6 +59,7 @@ export const useOrdersPaginate = ({
         limit: isAll ? 0 : pageSize,
         status: status,
         docName,
+        docNo,
         name,
         profit,
         total,

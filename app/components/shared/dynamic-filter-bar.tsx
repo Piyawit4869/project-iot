@@ -25,6 +25,8 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "../ui/dialog";
+import { formatDateFull } from "./global-format";
+import { DatePicker } from "./date-picker";
 
 type ExtendedFilterField = BaseFilterField & {
   showIn?: "main" | "advanced" | "both";
@@ -119,17 +121,21 @@ function formatDisplayValue(
     (typeof val === "object" && !Object.keys(val).length)
   )
     return "";
+
   switch (kind) {
     case "text":
       return String(val);
+
     case "select": {
       const s = String(val);
       const label =
         field.options?.find((o: any) => String(o.value) === s)?.label ?? s;
       return String(label);
     }
+
     case "boolean":
       return val ? "ใช่" : "ไม่ใช่";
+
     case "numberRange": {
       const { min, max } = val ?? {};
       if (min != null && max != null) return `${min} – ${max}`;
@@ -140,17 +146,22 @@ function formatDisplayValue(
 
     case "number":
       return val != null && val !== "" ? String(val) : "";
+
     case "dateRange": {
       const { from, to } = val ?? {};
-      if (from && to) return `${from} – ${to}`;
-      if (from) return `ตั้งแต่ ${from}`;
-      if (to) return `ถึง ${to}`;
+      const fromText = formatDateFull(from);
+      const toText = formatDateFull(to);
+
+      if (fromText && toText) return `${fromText} – ${toText}`;
+      if (fromText) return `ตั้งแต่ ${fromText}`;
+      if (toText) return `ถึง ${toText}`;
       return "";
     }
 
     case "date": {
-      return val || "";
+      return formatDateFull(val);
     }
+
     default:
       return "";
   }
@@ -424,27 +435,19 @@ export function DynamicFilterBar<TData>({
                     {String(f.label)}
                   </span>
                   <div className="flex items-center gap-2">
-                    <Input
-                      type="date"
-                      className="w-[160px]"
-                      value={(form[f.id]?.from ?? "") as any}
-                      onChange={(e) =>
-                        update(f.id, {
-                          ...(form[f.id] ?? {}),
-                          from: e.target.value || undefined,
-                        })
+                    <DatePicker
+                      value={form[f.id]?.from ?? ""}
+                      onChange={(val) =>
+                        update(f.id, { ...(form[f.id] ?? {}), from: val })
                       }
+                      placeholder="จากวันที่"
                     />
-                    <Input
-                      type="date"
-                      className="w-[160px]"
-                      value={(form[f.id]?.to ?? "") as any}
-                      onChange={(e) =>
-                        update(f.id, {
-                          ...(form[f.id] ?? {}),
-                          to: e.target.value || undefined,
-                        })
+                    <DatePicker
+                      value={form[f.id]?.to ?? ""}
+                      onChange={(val) =>
+                        update(f.id, { ...(form[f.id] ?? {}), to: val })
                       }
+                      placeholder="ถึงวันที่"
                     />
                   </div>
                 </div>
@@ -456,14 +459,14 @@ export function DynamicFilterBar<TData>({
                   <span className="block text-sm font-medium mb-1">
                     {String(f.label)}
                   </span>
-                  <Input
-                    type="date"
-                    className="w-[160px]"
-                    value={(form[f.id] ?? "") as any}
-                    onChange={(e) => update(f.id, e.target.value || undefined)}
+                  <DatePicker
+                    value={form[f.id] ?? ""}
+                    onChange={(val) => update(f.id, val)}
+                    placeholder={`เลือก${f.label}`}
                   />
                 </div>
               );
+
             default:
               return null;
           }
@@ -509,7 +512,7 @@ export function DynamicFilterBar<TData>({
           )}
         </div>
 
-        <div className="ml-auto mt-3 flex items-center gap-2">
+        <div className="ml-auto mt-3 md:mt-0 md:self-stretch flex items-end gap-2">
           {shouldShowAdvanced && (
             <Dialog open={advancedOpen} onOpenChange={setAdvancedOpen}>
               <DialogTrigger asChild>
@@ -525,13 +528,12 @@ export function DynamicFilterBar<TData>({
 
                 {renderSameFieldsBlock("advanced")}
 
-                <DialogFooter className="flex items-center justify-between gap-2">
-                  <Button type="button" variant="outline" onClick={onClear}>
-                    <X />
-                    ล้างค้นหา
-                  </Button>
-
+                <DialogFooter className="mt-6 flex justify-end">
                   <div className="flex gap-2">
+                    <Button type="button" variant="outline" onClick={onClear}>
+                      <X />
+                      ล้างค้นหา
+                    </Button>
                     <Button
                       type="button"
                       variant="ghost"
@@ -554,7 +556,6 @@ export function DynamicFilterBar<TData>({
               </DialogContent>
             </Dialog>
           )}
-
           <Button type="button" variant="outline" onClick={onClear}>
             <X />
             ล้างค้นหา

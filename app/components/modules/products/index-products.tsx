@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import React from "react";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
 
 import { DataTable } from "~/components/shared/data-table";
 import { TabControl } from "~/components/shared/tab-control";
 import { Button } from "~/components/ui/button";
 import { FileDown, FileUp, Plus } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
 import GlobalButton from "~/components/shared/global-button";
 import { cn } from "~/lib/utils";
-import { Link, useSearchParams } from "react-router";
-import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useSidebar } from "~/components/ui/sidebar";
+
 import { useProductColumnTable } from "./product-column-table";
 import {
   ProductsFilterFields,
@@ -19,7 +21,6 @@ import {
   useAllProductsSummary,
   useProductPaginate,
 } from "~/api/client/products/useGetProducts";
-import React from "react";
 import {
   parseDateRangeParam,
   pickSearchParams,
@@ -28,12 +29,15 @@ import {
 export const ProductIndexContainer = () => {
   const { data: categories, isLoading } = useAllProductsSummary();
   const columns = useProductColumnTable();
-
   const { isMobile } = useSidebar();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [sp, setSearchParams] = useSearchParams();
   const [status, setStatus] = useState("all");
-  const [sp] = useSearchParams();
-  const filters = React.useMemo(
+  const [tableKey, setTableKey] = useState(0);
+
+  const filters = useMemo(
     () =>
       pickSearchParams(sp, [
         "sku",
@@ -49,6 +53,7 @@ export const ProductIndexContainer = () => {
       ]),
     [sp]
   );
+
   const created = parseDateRangeParam(sp, "createdAt") ?? {};
   const updated = parseDateRangeParam(sp, "updatedAt") ?? {};
   const createdFrom = created.fromDate;
@@ -57,8 +62,20 @@ export const ProductIndexContainer = () => {
   const updatedTo = updated.toDate;
 
   const items = TabIndexTableProducts(categories);
-  const handleChangeTab = (values: any) => {
-    setStatus(values);
+
+  const clearAllFilters = useCallback(() => {
+    setSearchParams({});
+
+    navigate(location.pathname, { replace: true });
+  }, [setSearchParams, navigate, location.pathname]);
+
+  const handleChangeTab = (val: string) => {
+    const hadQuery = sp.toString().length > 0;
+    setStatus(val);
+    clearAllFilters();
+    if (hadQuery) {
+      setTableKey((k) => k + 1);
+    }
   };
 
   const paginate = useProductPaginate;
@@ -78,7 +95,6 @@ export const ProductIndexContainer = () => {
             variant="outline"
             disabled
             key="import-button"
-            // className="bg-blue-300 text-black hover:bg-blue-500 hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
           />,
           <GlobalButton
             label={
@@ -90,7 +106,6 @@ export const ProductIndexContainer = () => {
             variant="outline"
             disabled
             key="export-button"
-            // className="bg-yellow-300 text-black hover:bg-yellow-500 hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
           />,
           <Link to="/products/create" key="create-link">
             <Button
@@ -105,6 +120,7 @@ export const ProductIndexContainer = () => {
       />
 
       <DataTable
+        key={tableKey}
         queryFunction={({ pageIndex, pageSize, sorting = [] }) =>
           paginate({
             pageIndex,
@@ -122,7 +138,7 @@ export const ProductIndexContainer = () => {
         columns={columns}
         addOn={
           <Tabs
-            defaultValue="all"
+            value={status}
             onValueChange={handleChangeTab}
             className={cn("block", isMobile && "hidden")}
           >

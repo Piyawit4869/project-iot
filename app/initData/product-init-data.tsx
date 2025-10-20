@@ -80,7 +80,7 @@ export const ProductsFilterFields: FilterField[] = [
   { id: "updatedBy", label: "ผู้ที่แก้ไข", kind: "text", showIn: "advanced" },
   {
     id: "createdAt",
-    label: "วันที่สร้างบัญชี",
+    label: "วันที่สร้าง",
     kind: "dateRange",
     showIn: "advanced",
   },

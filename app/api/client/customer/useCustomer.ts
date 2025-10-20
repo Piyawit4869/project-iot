@@ -23,6 +23,7 @@ import {
   fetchUpdateCustomerChatDetailsAndTags,
   fetchUpdateCustomerNote,
   fetchUpdateCustomerTags,
+  fetchGetAnalyzeCustomer,
 } from "../../server/customer/customer";
 import type {
   ContactValues,
@@ -63,7 +64,7 @@ export const useCustomerPaginate = ({
   name?: string;
   fullname?: string;
   customerPlatform?: string;
-  priority?: string;
+  priority?: number;
   tags?: string;
   customerType?: string;
   phone?: string;
@@ -72,6 +73,7 @@ export const useCustomerPaginate = ({
   createdFrom?: string;
   createdTo?: string;
   updatedFrom?: string;
+
   updatedTo?: string;
 }) => {
   return useQuery({
@@ -98,7 +100,7 @@ export const useCustomerPaginate = ({
     queryFn: () =>
       fetchCustomerPagination({
         page: pageIndex,
-        itemsPerPage: pageSize,
+        // itemsPerPage: pageSize,
         status: status,
         limit: limit,
         name,
@@ -203,6 +205,14 @@ export const useAllContacts = () => {
     queryKey: ["contacts"],
     queryFn: () => fetchAllContact(),
     enabled: true,
+  });
+};
+
+export const useGetAnalyzeCustomer = (id: string) => {
+  return useQuery({
+    queryKey: ["analyze-customer", id],
+    queryFn: () => fetchGetAnalyzeCustomer(id),
+    enabled: !!id,
   });
 };
 

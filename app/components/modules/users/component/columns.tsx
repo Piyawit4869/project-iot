@@ -11,7 +11,10 @@ import { Button } from "~/components/ui/button";
 import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import type { UserColumn } from "~/types/user/type-user";
 import { statusMap } from "~/types/user/init-data";
-import { formatDateFull } from "~/components/shared/global-format";
+import {
+  formatDateFull,
+  formatPhoneNumber,
+} from "~/components/shared/global-format";
 
 export const useUserColumns = (): ColumnDef<UserColumn>[] => {
   const columns = useMemo<ColumnDef<UserColumn>[]>(
@@ -123,15 +126,14 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
           );
         },
       },
-
       {
         accessorKey: "phone",
         header: "เบอร์โทรศัพท์",
-        cell: (info) => (
-          <span className="">
-            {(info.row.original.profile?.phone as string) || "-"}
-          </span>
-        ),
+        enableSorting: false,
+        cell: (info) => {
+          const phone = info.row.original.profile?.phone as string;
+          return <span>{phone ? formatPhoneNumber(phone) : "-"}</span>;
+        },
       },
       {
         accessorKey: "departmentName",

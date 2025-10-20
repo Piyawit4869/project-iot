@@ -182,12 +182,13 @@ export const CustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <RequiredLabel>
-                    เบอร์โทรศัพท์ (ตัวเลขเท่านั้น) <FormMessage />{" "}
+                    เบอร์โทรศัพท์ผู้ติดต่อ (ตัวเลขเท่านั้น) <FormMessage />{" "}
                   </RequiredLabel>
                   <FormControl className="w-full">
                     <Input
                       value={field.value || ""}
                       placeholder="กรอกเบอร์โทรศัพท์ผู้ติดต่อ เช่น 0612345678"
+                      maxLength={10}
                       onChange={onlyNumber(field)}
                     />
                   </FormControl>

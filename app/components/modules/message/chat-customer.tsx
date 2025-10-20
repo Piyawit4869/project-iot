@@ -89,6 +89,7 @@ import {
 } from "~/components/ui/accordion";
 import { useDebounce } from "~/hooks/use-debounce";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
+import { GlobalTagsBadge } from "~/components/shared/global-tags";
 
 interface UserProps {
   id: string;
@@ -569,7 +570,7 @@ export default function ChatCustomerInfo({
 
   return (
     <>
-      <aside className="flex flex-col w-full bg-white dark:bg-background justify-between xl:h-[calc(100vh-50px)] xl:px-1">
+      <aside className="flex flex-col w-full bg-white dark:bg-background justify-between xl:h-[calc(100vh-50px)] xl:px-1 border-l">
         <div>
           <div className="py-4 px-2 flex w-full mt-6 items-center justify-between gap-2 h-[60px] rounded-2xl bg-background">
             <div>
@@ -622,6 +623,24 @@ export default function ChatCustomerInfo({
               className="cursor-pointer"
               onClick={() => setAddCustomerDetail(true)}
             />
+          </div>
+
+          <div className="py-4 px-2 mt-2">
+            <div className="gap-2 flex flex-row flex-wrap">
+              {currentCustomer &&
+                currentCustomer.tags &&
+                currentCustomer.tags.length > 0 &&
+                currentCustomer.tags.map((item: any) => {
+                  return (
+                    <GlobalTagsBadge
+                      key={item.id}
+                      value={item.name}
+                      fontSize={10}
+                      paddingX={1.5}
+                    />
+                  );
+                })}
+            </div>
           </div>
 
           <div className="px-4">
@@ -682,61 +701,6 @@ export default function ChatCustomerInfo({
                         ))}
                     </div>
                   ) : (
-                    // <Popover
-                    //   open={isPopoverOpen && addingMainSupport}
-                    //   onOpenChange={setIsPopoverOpen}
-                    // >
-                    //   <PopoverTrigger asChild>
-                    //     <button
-                    //       type="button"
-                    //       onClick={() => handleOpenPopover(true)}
-                    //       className="rounded-full object-cover"
-                    //     >
-                    //       <CirclePlus className="w-9 h-9 text-gray-300" />
-                    //     </button>
-                    //   </PopoverTrigger>
-                    //   <PopoverContent className="w-[200px] p-0">
-                    //     <div className="flex flex-col p-2 max-h-[200px] overflow-y-auto">
-                    //       {!isLoading &&
-                    //         allUser &&
-                    //         allUser.length > 0 &&
-                    //         allUser
-                    //           .filter(
-                    //             (user: UserProps) =>
-                    //               !supportedUserIds.has(user.id)
-                    //           )
-                    //           ?.map((item: UserProps) => (
-                    //             <button
-                    //               key={item.id}
-                    //               onClick={() => handleUserButtonClick(item.id)}
-                    //               className="flex items-center gap-2 p-2 hover:bg-muted rounded-md text-left w-full"
-                    //               disabled={isCreatingSupport}
-                    //             >
-                    //               <span className="text-sm font-medium">
-                    //                 {item.userName}
-                    //               </span>
-                    //             </button>
-                    //           ))}
-
-                    //       {isCreatingSupport && (
-                    //         <span className="flex items-center justify-center text-sm text-muted-foreground p-2">
-                    //           กำลังเพิ่มผู้รับผิดชอบ...
-                    //         </span>
-                    //       )}
-                    //       {allUser &&
-                    //         allUser.length > 0 &&
-                    //         allUser.filter(
-                    //           (user: UserProps) =>
-                    //             !supportedUserIds.has(user.id)
-                    //         ).length === 0 && (
-                    //           <span className="flex items-center justify-center text-sm text-muted-foreground p-2">
-                    //             ไม่มีผู้ใช้ให้เลือก
-                    //           </span>
-                    //         )}
-                    //     </div>
-                    //   </PopoverContent>
-                    // </Popover>
-
                     <Popover
                       open={isPopoverOpenMain}
                       onOpenChange={setIsPopoverOpenMain}
