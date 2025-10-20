@@ -61,7 +61,13 @@ export const MOCK_PRODUCTS = [
   },
 ];
 
-export default function MenuWhenNoData() {
+interface MenuWhenNoDataProps {
+  hasCustomerId?: boolean;
+}
+
+export default function MenuWhenNoData({
+  hasCustomerId = true,
+}: MenuWhenNoDataProps) {
   const { me } = useRouteLoaderData("root");
 
   const classForTaps = `
@@ -93,8 +99,12 @@ export default function MenuWhenNoData() {
   const logoUrl = organization?.logoUrl;
 
   return (
-    <>
-      <aside className="pt-2 flex flex-col w-full h-[calc(100vh-50px)] border-l border-r overflow-auto bg-white dark:bg-background px-4 justify-between">
+    <div className="relative">
+      <aside
+        className={`pt-2 flex flex-col w-full h-[calc(100vh-50px)] border-l border-r overflow-auto bg-white dark:bg-background px-4 justify-between ${
+          !hasCustomerId ? "opacity-50 pointer-events-none" : ""
+        }`}
+      >
         <div>
           <button className="flex w-full items-center justify-between gap-2 h-[60px] rounded-b-2xl px-2 py-4 bg-background sticky top-0 z-30 transition-colors">
             <div className="flex gap-2 ">
@@ -418,7 +428,15 @@ export default function MenuWhenNoData() {
             </div>
           </div>
         </div>
+        {!hasCustomerId && (
+          <div className="absolute top-0 left-0 w-full h-full z-50 flex items-center justify-center bg-white/80 dark:bg-background/80">
+            <p className="text-center text-md font-semibold p-10">
+              ข้อมูลชุดนี้เป็นข้อมูล import และ รอการตอบกลับจากไลน์
+              เพื่อเริ่มต้นการใช้งานระบบ
+            </p>
+          </div>
+        )}
       </aside>
-    </>
+    </div>
   );
 }

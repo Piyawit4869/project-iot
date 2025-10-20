@@ -123,7 +123,15 @@ export default function ChatbotSpaceNew({
                                 api={api}
                               />
                             ) : (
-                              <MenuWhenNoData />
+                              <MenuWhenNoData
+                                hasCustomerId={
+                                  !selectedRoom
+                                    ? true
+                                    : selectedRoom?.customerId
+                                    ? true
+                                    : false
+                                }
+                              />
                             )}
                           </div>
                         </DrawerContent>
@@ -192,7 +200,15 @@ export default function ChatbotSpaceNew({
                     api={api}
                   />
                 ) : (
-                  <MenuWhenNoData />
+                  <MenuWhenNoData
+                    hasCustomerId={
+                      !selectedRoom
+                        ? true
+                        : selectedRoom?.customerId
+                        ? true
+                        : false
+                    }
+                  />
                 )}
               </aside>
             </ResizablePanel>
