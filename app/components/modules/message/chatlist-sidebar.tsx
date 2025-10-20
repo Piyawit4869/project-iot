@@ -104,27 +104,6 @@ export default function ChatlistSidebar({
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   React.useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        setInputOpen(false);
-      }
-    };
-
-    if (inputOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [inputOpen]);
-
-  React.useEffect(() => {
     const socket = socketConfig(api);
 
     if (me?.branchId) {
