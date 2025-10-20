@@ -30,14 +30,14 @@ export const formatDateTH = (
   if (!date) return "-";
   const d = dayjs(date);
   const thaiYear = d.year() + 543;
-  return `${d.format("DD/MMM/")}/${thaiYear} `;
+  return `${d.format("DD/MMM/")}${thaiYear} `;
 };
 
 export const formatDateBirthDay = (date?: string | Date | null): string => {
   if (!date) return "-";
   const d = dayjs(date);
   const thaiYear = d.year() + 543;
-  return `${d.format("DD/MM/")}/${thaiYear} `;
+  return `${d.format("DD/MM/")}${thaiYear} `;
 };
 
 export const formatDateFull = (date?: string | Date | null): string => {
