@@ -400,7 +400,7 @@ export function DynamicFilterBar<TData>({
                   <Input
                     type="number"
                     placeholder={`${f.label}`}
-                    className="w-[160px]"
+                    className="min-w-[160px]"
                     value={
                       form[f.id] === undefined || form[f.id] === null
                         ? ""

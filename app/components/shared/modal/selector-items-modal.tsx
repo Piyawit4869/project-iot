@@ -134,24 +134,29 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
         </DialogHeader>
 
         <div className="space-y-3">
-          <ScrollArea className="h-80 md:min-h-100 rounded-md border p-1">
+          <ScrollArea className="h-80 md:min-h-100 rounded-md border p-2 bg-white">
             <ul className="space-y-2">
               {products?.items && products.items.length > 0 ? (
-                <ul>
-                  {products.items.map((item: any) => (
+                products.items.map((item: any) => {
+                  const isOut =
+                    Number(item.available) === 0 ||
+                    Number(item.availableForSale) === 0;
+
+                  return (
                     <li
                       key={item.id}
-                      className="flex items-center justify-between gap-4 hover:bg-muted rounded-md"
+                      className={cn(
+                        "flex items-center justify-between gap-4 rounded-xl p-3",
+                        "hover:bg-muted/60 transition-colors",
+                        isOut && "opacity-70"
+                      )}
                     >
-                      <div className="flex justify-between gap-2 cursor-pointer w-full">
-                        <div className="flex flex-row items-center gap-3 md:gap-6">
+                      <div className="flex justify-between gap-3 md:gap-6 w-full">
+                        <div className="flex items-center gap-3 md:gap-6">
                           <Checkbox
                             checked={selectedItems.includes(item.id)}
                             onCheckedChange={() => toggleItem(item.id ?? "")}
-                            disabled={
-                              item.available === 0 ||
-                              item.availableForSale === 0
-                            }
+                            disabled={isOut}
                             className={cn(
                               "w-5 h-5 rounded-md border-2",
                               "data-[state=checked]:bg-black data-[state=checked]:border-black",
@@ -160,69 +165,69 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                               "disabled:opacity-50 disabled:cursor-not-allowed"
                             )}
                           />
+
                           <GlobalImage
                             src={item.imageUrl || ""}
                             alt={item.name}
-                            className="w-[45px] h-[45px] md:w-[70px] md:h-[70px] rounded-lg object-cover"
+                            className="w-[48px] h-[48px] md:w-[70px] md:h-[70px] rounded-lg object-cover border"
                           />
 
-                          {/* รายละเอียดสินค้า */}
                           <Accordion
                             type="single"
                             collapsible
-                            className="w-full "
+                            className="w-full"
                           >
-                            <AccordionItem value="item-1">
-                              <AccordionTrigger>{item.name}</AccordionTrigger>
-                              <AccordionContent className="flex flex-col gap-1 text-balance">
-                                <h2 className="text-sm font-light text-gray-400">
-                                  รหัสสินค้า: {item.sku}
-                                </h2>
-                                <h2 className="text-sm font-light text-gray-400">
+                            <AccordionItem
+                              value={`item-${item.id}`}
+                              className="border-none"
+                            >
+                              <AccordionTrigger className="p-0 hover:no-underline ">
+                                <div className="flex flex-col text-left">
+                                  <span className="text-sm font-medium truncate max-w-[180px] md:max-w-[260px]">
+                                    {item.name}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground truncate max-w-[220px]">
+                                    {item.sku}
+                                  </span>
+                                  <span className="text-[11px] text-muted-foreground">
+                                    คงเหลือ: {item.available} ชิ้น
+                                  </span>
+                                </div>
+                              </AccordionTrigger>
+
+                              <AccordionContent className="pt-2 space-y-1 text-xs text-muted-foreground">
+                                <p>รหัสสินค้า: {item.sku}</p>
+                                <p className="leading-5">
                                   รายละเอียด:{" "}
-                                  <span className="md:hidden">
-                                    {" "}
-                                    {item.description || "ไม่มีรายละเอียด"}
-                                  </span>
-                                  <span className="hidden md:inline">
-                                    {item.description ||
-                                      "สินค้านี้ยังไม่มีรายละเอียด"}
-                                  </span>
-                                </h2>
-                                <h2 className="text-sm font-light text-gray-400">
-                                  สินค้าคงเหลือ : {item.available} ชิ้น
-                                </h2>
-                                <h2 className="text-sm font-light text-gray-400">
-                                  สินค้าพร้อมจำหน่าย : {item.availableForSale}{" "}
-                                  ชิ้น
-                                </h2>
-                                <h2 className="text-sm font-light text-gray-400">
-                                  ภาษีมูลค่าเพิ่ม : {item.vatPrice} %
-                                </h2>
-                                <h2 className="text-sm font-light text-gray-400">
-                                  ส่วนลด : {item.discountPrice} ฿
-                                </h2>
+                                  {item.description
+                                    ? item.description
+                                    : "สินค้านี้ยังไม่มีรายละเอียด"}
+                                </p>
+                                <p>สินค้าคงเหลือ: {item.available} ชิ้น</p>
+                                <p>
+                                  พร้อมจำหน่าย: {item.availableForSale} ชิ้น
+                                </p>
+                                <p>ภาษีมูลค่าเพิ่ม: {item.vatPrice} %</p>
+                                <p>ส่วนลด: {item.discountPrice} ฿</p>
                               </AccordionContent>
                             </AccordionItem>
                           </Accordion>
                         </div>
 
-                        <div className="flex flex-col items-end">
+                        <div className="flex flex-col items-end gap-1 min-w-[92px]">
                           <span className="font-semibold text-sm text-blue-600">
                             {item.salePrice} ฿
                           </span>
                           <Badge
                             variant="outline"
                             className={cn(
-                              "px-2 py-0 text-[10px] rounded-full",
-                              item.available === 0 ||
-                                item.availableForSale === 0
-                                ? "bg-gray-500 text-white font-bold pt-1"
-                                : "bg-green-600 text-white font-bold pt-1"
+                              "px-2 py-0.5 text-[10px] rounded-full border-none",
+                              isOut
+                                ? "bg-gray-200 text-gray-700"
+                                : "bg-green-100 text-green-700"
                             )}
                           >
-                            {item.available === 0 ||
-                            item.availableForSale === 0 ? (
+                            {isOut ? (
                               <>
                                 <span className="md:hidden">หมด</span>
                                 <span className="hidden md:inline">
@@ -236,15 +241,17 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                         </div>
                       </div>
                     </li>
-                  ))}
-                </ul>
+                  );
+                })
               ) : (
-                <div className="text-center py-4 text-gray-500"></div>
+                <li className="text-center py-6 text-sm text-muted-foreground">
+                  ไม่พบสินค้าในรายการ
+                </li>
               )}
 
               {previewUrl && (
                 <div
-                  className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4 h-full"
+                  className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4"
                   role="dialog"
                   aria-modal="true"
                   onClick={() => setPreviewUrl("")}
@@ -254,7 +261,7 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                     onClick={(e) => e.stopPropagation()}
                   >
                     <button
-                      className="absolute top-2 right-2 bg-white/90 rounded-full p-1"
+                      className="absolute top-3 right-3 bg-white/95 rounded-full p-1.5 shadow"
                       onClick={() => setPreviewUrl("")}
                       aria-label="ปิด"
                     >
@@ -264,8 +271,8 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                       src={previewUrl}
                       alt="preview"
                       className="w-full h-full object-contain"
-                      width={1200}
-                      height={800}
+                      width={1600}
+                      height={1000}
                     />
                   </div>
                 </div>
