@@ -16,6 +16,7 @@ import {
 } from "~/api/client/customer/useCustomer";
 import { TabControl } from "~/components/shared/tab-control";
 import { parseDateRangeParam, pickSearchParams } from "./utils/search-params";
+import { formatForNumber } from "~/components/shared/global-format";
 
 export default function Customer() {
   const { data: categories, isLoading } = useAllCustomerSummary();
@@ -159,7 +160,7 @@ export default function Customer() {
                       value={c.status}
                       className="hover:bg-border relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
                     >
-                      {c.icon} {c.label} ({c.value})
+                      {c.icon} {c.label} ({formatForNumber(c.value)})
                     </TabsTrigger>
                   ))}
                 </TabsList>
@@ -196,7 +197,7 @@ export default function Customer() {
                       value={c.status}
                       className="hover:bg-border relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
                     >
-                      {c.icon} {c.label} ({c.value})
+                      {c.icon} {c.label} ({formatForNumber(c.value)})
                     </TabsTrigger>
                   ))}
                 </TabsList>
@@ -233,7 +234,7 @@ export default function Customer() {
                       value={c.status}
                       className="hover:bg-border relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
                     >
-                      {c.icon} {c.label} ({c.value})
+                      {c.icon} {c.label} ({formatForNumber(c.value)})
                     </TabsTrigger>
                   ))}
                 </TabsList>
