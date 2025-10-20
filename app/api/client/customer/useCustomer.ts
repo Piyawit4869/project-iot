@@ -42,20 +42,78 @@ export const useCustomerPaginate = ({
   pageSize = 10,
   status = "",
   limit,
+  name,
+  fullname,
+  customerPlatform,
+  priority,
+  tags,
+  customerType,
+  phone,
+  createdBy,
+  updatedBy,
+  createdFrom,
+  createdTo,
+  updatedFrom,
+  updatedTo,
 }: {
   pageIndex: number;
   pageSize: number;
   status: string;
   limit: number;
+  name?: string;
+  fullname?: string;
+  customerPlatform?: string;
+  priority?: string;
+  tags?: string;
+  customerType?: string;
+  phone?: number;
+  createdBy?: string;
+  updatedBy?: string;
+  createdFrom?: string;
+  createdTo?: string;
+  updatedFrom?: string;
+  updatedTo?: string;
 }) => {
   return useQuery({
-    queryKey: ["customer-paginate", pageIndex, pageSize, status, limit],
+    queryKey: [
+      "customer-paginate",
+      pageIndex,
+      pageSize,
+      status,
+      limit,
+      name,
+      fullname,
+      customerPlatform,
+      priority,
+      tags,
+      customerType,
+      phone,
+      createdBy,
+      updatedBy,
+      createdFrom,
+      createdTo,
+      updatedFrom,
+      updatedTo,
+    ],
     queryFn: () =>
       fetchCustomerPagination({
         page: pageIndex,
         itemsPerPage: pageSize,
         status: status,
         limit: limit,
+        name,
+        fullname,
+        customerPlatform,
+        priority,
+        tags,
+        customerType,
+        phone,
+        createdBy,
+        updatedBy,
+        createdFrom,
+        createdTo,
+        updatedFrom,
+        updatedTo,
       }),
     enabled: !!pageIndex && !!pageSize,
   });

@@ -17,31 +17,40 @@ export const formatNumber = (
   });
 };
 
+export const formatForNumber = (
+  value: number | null | undefined,
+  options?: Intl.NumberFormatOptions
+) => {
+  if (value == null) return "0.00";
+  return value.toLocaleString("th-TH");
+};
 export const formatDateTH = (
   date: string | Date | null | undefined
 ): string => {
   if (!date) return "-";
   const d = dayjs(date);
-  // const buddhistYear = d.year() + 543;
-  return `${d.format("DD MMM YYYY")}`;
+  const thaiYear = d.year() + 543;
+  return `${d.format("DD/MMM/")}/${thaiYear} `;
 };
 
 export const formatDateBirthDay = (date?: string | Date | null): string => {
   if (!date) return "-";
   const d = dayjs(date);
-  return `${d.format("DD/MM/YYYY")} `;
+  const thaiYear = d.year() + 543;
+  return `${d.format("DD/MM/")}/${thaiYear} `;
 };
 
 export const formatDateFull = (date?: string | Date | null): string => {
   if (!date) return "-";
   const d = dayjs(date);
-  return `${d.format("DD MMMM YYYY")} `;
+  const thaiYear = d.year() + 543;
+  return `${d.format("DD MMMM ")}/${thaiYear} `;
 };
-
 export const formatDateAndTime = (date?: string | Date | null): string => {
   if (!date) return "-";
   const d = dayjs(date);
-  return `${d.format("DD/MM/YYYY HH:mm น.")} `;
+  const thaiYear = d.year() + 543;
+  return `${d.format("DD/MM")}/${thaiYear} ${d.format("HH:mm")} น.`;
 };
 
 export function formatPhoneNumber(phone?: string) {

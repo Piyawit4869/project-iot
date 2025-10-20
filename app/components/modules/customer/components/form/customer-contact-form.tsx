@@ -26,6 +26,7 @@ export const FormCustomerContact: React.FC<CustomerFormCreateProps> = ({
   form,
   loading = false,
 }) => {
+  // const getOrgType = form.watch("organizationDetails.orgType");
   return (
     <Card>
       <CardHeader>
@@ -112,6 +113,28 @@ export const FormCustomerContact: React.FC<CustomerFormCreateProps> = ({
                 </FormItem>
               )}
             />
+
+            <div></div>
+            {/* {getOrgType === "others" && (
+              <FormField
+                control={form.control}
+                name="organizationDetails.orgTypeOther"
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <FormItem>
+                    <RequiredLabel>โปรดกรอกประเภทบริษัท</RequiredLabel>
+                    <FormControl className="w-full">
+                      <Input
+                        value={field.value || ""}
+                        placeholder=""
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )} */}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -176,9 +199,7 @@ export const FormCustomerContact: React.FC<CustomerFormCreateProps> = ({
               name="organizationDetails.importantDate"
               render={({ field }) => (
                 <FormItem>
-                  <RequiredLabel required>
-                    วันสำคัญของสำนักงาน/บริษัท
-                  </RequiredLabel>
+                  <RequiredLabel>วันสำคัญของสำนักงาน/บริษัท</RequiredLabel>
                   <FormControl className="w-full">
                     <DatePicker
                       value={field.value ?? undefined}
@@ -195,9 +216,7 @@ export const FormCustomerContact: React.FC<CustomerFormCreateProps> = ({
               name="organizationDetails.openingDate"
               render={({ field }) => (
                 <FormItem>
-                  <RequiredLabel required>
-                    วันก่อตั้งของสำนักงาน/บริษัท
-                  </RequiredLabel>
+                  <RequiredLabel>วันก่อตั้งของสำนักงาน/บริษัท</RequiredLabel>
                   <FormControl className="w-full">
                     <DatePicker
                       value={field.value ?? undefined}

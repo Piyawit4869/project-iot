@@ -14,9 +14,6 @@ export const ViewCustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
   form,
   loading = false,
 }) => {
-  const params = useParams();
-  const id = params?.id as string;
-
   const mainSupport = customer?.supports?.find((s: any) => s.isMain);
   const secondarySupports = customer?.supports?.filter((s: any) => !s.isMain);
 
@@ -91,7 +88,7 @@ export const ViewCustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
               <span>ผู้รับผิดชอบหลัก</span>
               <span className="mt-2 text-sm text-[#71717A]">
                 {mainSupport ? (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 text-[#71717A]  dark:text-[#b4b4c5]">
                     <GlobalImage
                       src={
                         mainSupport.imageUrl ||
@@ -110,7 +107,7 @@ export const ViewCustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
 
             <div className="flex flex-col w-full">
               <span>ผู้รับผิดชอบรอง</span>
-              <span className=" text-sm text-[#71717A]">
+              <span className=" mt-2 text-sm text-[#71717A]  dark:text-[#b4b4c5]">
                 {secondarySupports && secondarySupports.length > 0 ? (
                   secondarySupports.map((s: any) => (
                     <div key={s.id} className="flex items-center mt-2 gap-2">

@@ -20,13 +20,24 @@ export const fetchCustomerPagination = async (params: {
   itemsPerPage: number;
   status: string;
   limit: number;
+  name?: string;
+  fullname?: string;
+  customerPlatform?: string;
+  priority?: string;
+  tags?: string;
+  customerType?: string;
+  phone?: number;
+  createdBy?: string;
+  updatedBy?: string;
+  createdFrom?: string;
+  createdTo?: string;
+  updatedFrom?: string;
+  updatedTo?: string;
 }) => {
   try {
-    const p = Object.assign({});
-    p.page = params.page;
-    p.limit = params.limit;
-    if (params.status && params.status !== "all") {
-      p.status = params.status;
+    const p = { ...params } as any;
+    if (params.status && params.status === "all") {
+      delete p.status;
     }
 
     const res = await ApiConfig.get(`/crud/customers/paginate`, {

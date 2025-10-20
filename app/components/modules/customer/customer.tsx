@@ -4,7 +4,7 @@ import { FileDown, FileUp, Plus } from "lucide-react";
 
 import { useSidebar } from "~/components/ui/sidebar";
 import GlobalButton from "~/components/shared/global-button";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { Button } from "~/components/ui/button";
 
 import { useCustomerColumns } from "./components/columns";
@@ -20,6 +20,8 @@ import {
   useCustomerPaginate,
 } from "~/api/client/customer/useCustomer";
 import { TabControl } from "~/components/shared/tab-control";
+import React from "react";
+import { parseDateRangeParam, pickSearchParams } from "./utils/search-params";
 
 export default function Customer() {
   const { data: categories, isLoading } = useAllCustomerSummary();
@@ -28,6 +30,29 @@ export default function Customer() {
 
   const columns = useCustomerColumns();
   const [status, setStatus] = useState("all");
+  const [sp] = useSearchParams();
+  const filters = React.useMemo(
+    () =>
+      pickSearchParams(sp, [
+        "name",
+        // "fullname",
+        "customerPlatform",
+        "priority",
+        "tags",
+        "customerType",
+        "phone",
+        "createdBy",
+        "updatedBy",
+      ]),
+    [sp]
+  );
+
+  const created = parseDateRangeParam(sp, "createdAt") ?? {};
+  const updated = parseDateRangeParam(sp, "updatedAt") ?? {};
+  const createdFrom = created.fromDate;
+  const createdTo = created.toDate;
+  const updatedFrom = updated.fromDate;
+  const updatedTo = updated.toDate;
 
   const items = TabIndexTable(categories);
 
@@ -81,7 +106,12 @@ export default function Customer() {
             pageSize,
             status: status === "all" ? "" : status,
             limit: pageSize,
-          })
+            ...filters,
+            createdFrom,
+            createdTo,
+            updatedFrom,
+            updatedTo,
+          } as any)
         }
         columns={columns}
         addOn={
@@ -95,7 +125,7 @@ export default function Customer() {
                 <TabsTrigger
                   key={c.label}
                   value={c.status}
-                  className="hover:bg-gray-200 relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
+                  className="hover:bg-border relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
                 >
                   {c.icon} {c.label} ({c.value})
                 </TabsTrigger>

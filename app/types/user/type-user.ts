@@ -137,23 +137,6 @@ export interface UserColumn {
   userDepartments: UserDepartment[];
 }
 
-export type FilterKind =
-  | "text"
-  | "select"
-  | "boolean"
-  | "numberRange"
-  | "dateRange";
-
-export type FilterField = {
-  id: string;
-  path?: string;
-  label: ReactNode | string;
-  kind: FilterKind;
-  options?: { label: string; value: string | number | boolean }[];
-  placeholder?: string;
-  showOnlyMobile?: boolean;
-};
-
 export type extendedUser = {
   active: number;
   churned: number;

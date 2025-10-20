@@ -20,20 +20,46 @@ export const useOrdersPaginate = ({
   status = "",
   limit,
   isAll,
+  docName,
+  name,
+  profit,
+  total,
+  docStatus,
 }: {
   pageIndex: number;
   pageSize: number;
   status: string;
   limit: number;
   isAll?: boolean;
+  docName?: string;
+  name?: string;
+  profit?: number;
+  total?: number;
+  docStatus?: string;
 }) => {
   return useQuery({
-    queryKey: ["paginate", pageIndex, pageSize, status, limit],
+    queryKey: [
+      "paginate",
+      pageIndex,
+      pageSize,
+      status,
+      limit,
+      docName,
+      name,
+      profit,
+      total,
+      docStatus,
+    ],
     queryFn: () =>
       fetchOrderPagination({
         page: pageIndex,
         limit: isAll ? 0 : pageSize,
         status: status,
+        docName,
+        name,
+        profit,
+        total,
+        docStatus,
       }),
   });
 };

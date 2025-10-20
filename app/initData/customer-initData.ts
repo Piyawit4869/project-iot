@@ -37,6 +37,7 @@ export const organizationType = [
   { label: "ห้างหุ้นส่วนสามัญ", value: "ordinary_partnership" },
   { label: "ร้านค้า", value: "shop" },
   { label: "บุคคลธรรมดา", value: "body_of_person" },
+  { label: "อื่น ๆ ", value: "others" },
 ];
 
 export const customerStatus: CustomerStatusOption[] = [
