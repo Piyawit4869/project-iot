@@ -449,24 +449,28 @@ function ChatItem({
                 {message}
               </p>
 
-              <div className="flex flex-col items-center  justify-end w-[90px]">
-                {roomDetail?.isDone && (
-                  <TagLabel
-                    label="ดำเนินการแล้ว"
-                    icon={<CheckCircle className="mr-1 h-[10px] w-[10px]" />}
-                    color="green"
-                  />
-                )}
+              {(roomDetail?.isDone || roomDetail?.isProcess) && (
+                <div className="flex flex-col items-center  justify-end w-[90px]">
+                  {roomDetail?.isDone && (
+                    <TagLabel
+                      label="ดำเนินการแล้ว"
+                      icon={<CheckCircle className="mr-1 h-[10px] w-[10px]" />}
+                      color="green"
+                    />
+                  )}
 
-                {roomDetail?.isProcess && (
-                  <TagLabel
-                    label="ต้องดำเนินการ"
-                    icon={<MessagesSquare className="mr-1 h-[10px] w-[10px]" />}
-                    color="orange"
-                    className="text-[10px]"
-                  />
-                )}
-              </div>
+                  {roomDetail?.isProcess && (
+                    <TagLabel
+                      label="ต้องดำเนินการ"
+                      icon={
+                        <MessagesSquare className="mr-1 h-[10px] w-[10px]" />
+                      }
+                      color="orange"
+                      className="text-[10px]"
+                    />
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

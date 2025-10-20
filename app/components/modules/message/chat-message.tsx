@@ -339,7 +339,7 @@ export default function ChatMessages({
                 ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
                     msg.imageUrl
                   )}`
-                : customer?.profile?.imageUrl;
+                : msg?.imageUrl;
 
             const formattedTime = dayjs(
               msg.createdAt ? msg.createdAt : msg.timestamp
