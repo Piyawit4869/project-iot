@@ -30,7 +30,7 @@ export function TabControl({
   noneSticky = false,
 }: CardWithFormProps) {
   return (
-    <div className={noneSticky ? "mb-4 z-0" : "sticky top-[52px] z-10 mb-4"}>
+    <div className={noneSticky ? "mb-4 z-0" : "sticky top-[52px] z-9 mb-4"}>
       {/* <Card className={`p-4 ${!admin ? "mt-4" : "mt-2"}`}> */}
       <Card className={"p-4"}>
         <div className="flex flex-row flex-wrap justify-between">

@@ -90,7 +90,6 @@ export const FormInventory: React.FC<FormInventoryProps> = (
                 </FormItem>
               )}
             />
-            <Separator className="my-6" />
           </div>
         </div>
       </form>

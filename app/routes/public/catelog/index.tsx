@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { mockProducts } from "./_modules/data/mockProducts";
 import { useProductFilters } from "./_modules/hooks/useProductFilters";
