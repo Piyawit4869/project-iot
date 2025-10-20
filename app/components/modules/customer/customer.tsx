@@ -12,7 +12,7 @@ import { useCustomerColumns } from "./components/columns";
 import { customerFilterFields } from "./utils/filter";
 import { TabIndexTable } from "./utils/tab-index-table";
 
-import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { cn } from "~/lib/utils";
 import { DataTable } from "~/components/shared/data-table";
 import {
@@ -99,43 +99,141 @@ export default function Customer() {
         ]}
       />
 
-      <DataTable
-        queryFunction={({ pageIndex, pageSize }) =>
-          customerPaginate({
-            pageIndex,
-            pageSize,
-            status: status === "all" ? "" : status,
-            limit: pageSize,
-            ...filters,
-            createdFrom,
-            createdTo,
-            updatedFrom,
-            updatedTo,
-          } as any)
-        }
-        columns={columns}
-        addOn={
-          <Tabs
-            defaultValue="all"
-            onValueChange={handleChangeTab}
-            className={cn("block", isMobile && "hidden")}
+      <Tabs
+        defaultValue="allCustomer"
+        className={cn("block", isMobile && "hidden")}
+      >
+        <TabsList>
+          <TabsTrigger
+            value="allCustomer"
+            className="hover:bg-border mb-3 relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
           >
-            <TabsList>
-              {items.map((c) => (
-                <TabsTrigger
-                  key={c.label}
-                  value={c.status}
-                  className="hover:bg-border relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
-                >
-                  {c.icon} {c.label} ({c.value})
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-        }
-        customerFilterFields={customerFilterFields}
-        isCustomLoading={isLoading}
-      />
+            ลูกค้าทั้งหมด
+          </TabsTrigger>
+          <TabsTrigger
+            value="ordinary_person"
+            className="hover:bg-border  mb-3  relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
+          >
+            ลูกค้าบุคคลธรรมดา
+          </TabsTrigger>
+          <TabsTrigger
+            value="juristic_person"
+            className="hover:bg-border  mb-3  relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
+          >
+            ลูกค้านิติบุคคล
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="allCustomer">
+          <DataTable
+            queryFunction={({ pageIndex, pageSize }) =>
+              customerPaginate({
+                pageIndex,
+                pageSize,
+                status: status === "all" ? "" : status,
+                limit: pageSize,
+                ...filters,
+                createdFrom,
+                createdTo,
+                updatedFrom,
+                updatedTo,
+              } as any)
+            }
+            columns={columns}
+            addOn={
+              <Tabs defaultValue="all" onValueChange={handleChangeTab}>
+                <TabsList>
+                  {items.map((c) => (
+                    <TabsTrigger
+                      key={c.label}
+                      value={c.status}
+                      className="hover:bg-border relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
+                    >
+                      {c.icon} {c.label} ({c.value})
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            }
+            customerFilterFields={customerFilterFields}
+            isCustomLoading={isLoading}
+          />
+        </TabsContent>
+
+        <TabsContent value="ordinary_person">
+          <DataTable
+            queryFunction={({ pageIndex, pageSize }) =>
+              customerPaginate({
+                pageIndex,
+                pageSize,
+                status: status === "all" ? "" : status,
+                customerType: "ordinary_person",
+                limit: pageSize,
+                ...filters,
+                createdFrom,
+                createdTo,
+                updatedFrom,
+                updatedTo,
+              } as any)
+            }
+            columns={columns}
+            addOn={
+              <Tabs defaultValue="all" onValueChange={handleChangeTab}>
+                <TabsList>
+                  {items.map((c) => (
+                    <TabsTrigger
+                      key={c.label}
+                      value={c.status}
+                      className="hover:bg-border relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
+                    >
+                      {c.icon} {c.label} ({c.value})
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            }
+            customerFilterFields={customerFilterFields}
+            isCustomLoading={isLoading}
+          />
+        </TabsContent>
+
+        <TabsContent value="juristic_person">
+          <DataTable
+            queryFunction={({ pageIndex, pageSize }) =>
+              customerPaginate({
+                pageIndex,
+                pageSize,
+                status: status === "all" ? "" : status,
+                limit: pageSize,
+                customerType: "juristic_person",
+                ...filters,
+                createdFrom,
+                createdTo,
+                updatedFrom,
+                updatedTo,
+              } as any)
+            }
+            columns={columns}
+            addOn={
+              <Tabs defaultValue="all" onValueChange={handleChangeTab}>
+                <TabsList>
+                  {items.map((c) => (
+                    <TabsTrigger
+                      key={c.label}
+                      value={c.status}
+                      className="hover:bg-border relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
+                    >
+                      {c.icon} {c.label} ({c.value})
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            }
+            customerFilterFields={customerFilterFields}
+            isCustomLoading={isLoading}
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

@@ -311,6 +311,7 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
                       type="number"
                       placeholder="กรอกอายุลูกค้า เช่น 25"
                       onChange={onlyNumber(field)}
+                      maxLength={2}
                     />
                   </FormControl>
                   <FormMessage />
@@ -347,6 +348,7 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
                       value={field.value || ""}
                       placeholder="กรอกเลขประจำตัวผู้เสียภาษี 13 หลัก"
                       onChange={onlyNumber(field)}
+                      maxLength={13}
                     />
                   </FormControl>
                   <FormMessage />
@@ -431,6 +433,7 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
                       value={field.value || ""}
                       placeholder="กรอกเบอร์โทรศัพท์ เช่น 0912345678"
                       onChange={onlyNumber(field)}
+                      maxLength={10}
                     />
                   </FormControl>
                   <FormMessage />
@@ -580,6 +583,7 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
                       value={field.value || ""}
                       placeholder="กรอกเบอร์โทรสำนักงาน/บริษัท เช่น 0421234567"
                       onChange={onlyNumber(field)}
+                      maxLength={10}
                     />
                   </FormControl>
                   <FormMessage />

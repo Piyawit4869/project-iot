@@ -17,7 +17,7 @@ import type {
 
 export const fetchCustomerPagination = async (params: {
   page: number;
-  itemsPerPage: number;
+  itemsPerPage?: number;
   status: string;
   limit: number;
   name?: string;
@@ -138,6 +138,19 @@ export const fetchCustomerSummary = async () => {
 export const fetchAllContact = async () => {
   try {
     const res = await ApiConfig.get(`/crud/customer-contacts`);
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchGetAnalyzeCustomer = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(
+      `/crud/customers/${id}/summary-chat-message
+       `
+    );
 
     return res.data;
   } catch (error) {

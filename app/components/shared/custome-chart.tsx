@@ -1,37 +1,43 @@
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
-
 import { cn } from "~/lib/utils";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
 
-export type ChartConfig = {
-  [k in string]: {
-    label?: React.ReactNode;
-    icon?: React.ComponentType;
-  } & (
-    | { color?: string; theme?: never }
-    | { color?: never; theme: Record<keyof typeof THEMES, string> }
-  );
-};
+// -------------------------
+// Types
+// -------------------------
+export type ChartConfigItem = {
+  label?: React.ReactNode;
+  icon?: React.ComponentType;
+} & (
+  | { color?: string; theme?: never }
+  | { color?: never; theme: Record<keyof typeof THEMES, string> }
+);
+
+export type ChartConfig = Record<string, ChartConfigItem>;
 
 type ChartContextProps = {
   config: ChartConfig;
 };
 
+// -------------------------
+// Context
+// -------------------------
 const ChartContext = React.createContext<ChartContextProps | null>(null);
 
 function useChart() {
   const context = React.useContext(ChartContext);
-
   if (!context) {
     throw new Error("useChart must be used within a <ChartContainer />");
   }
-
   return context;
 }
 
+// -------------------------
+// Chart Container
+// -------------------------
 function ChartContainer({
   id,
   className,
@@ -67,14 +73,15 @@ function ChartContainer({
   );
 }
 
+// -------------------------
+// Chart Style
+// -------------------------
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
-    ([, config]) => config.theme || config.color
+    ([, item]) => item.color || item.theme
   );
 
-  if (!colorConfig.length) {
-    return null;
-  }
+  if (!colorConfig.length) return null;
 
   return (
     <style
@@ -84,10 +91,8 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
             ([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
-  .map(([key, itemConfig]) => {
-    const color =
-      itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
-      itemConfig.color;
+  .map(([key, item]) => {
+    const color = item.theme?.[theme as keyof typeof item.theme] || item.color;
     return color ? `  --color-${key}: ${color};` : null;
   })
   .join("\n")}
@@ -100,6 +105,9 @@ ${colorConfig
   );
 };
 
+// -------------------------
+// Tooltip
+// -------------------------
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
 function ChartTooltipContent({
@@ -127,17 +135,15 @@ function ChartTooltipContent({
   const { config } = useChart();
 
   const tooltipLabel = React.useMemo(() => {
-    if (hideLabel || !payload?.length) {
-      return null;
-    }
+    if (hideLabel || !payload?.length) return null;
 
     const [item] = payload;
     const key = `${labelKey || item?.dataKey || item?.name || "value"}`;
     const itemConfig = getPayloadConfigFromPayload(config, item, key);
-    const value =
-      !labelKey && typeof label === "string"
-        ? config[label as keyof typeof config]?.label || label
-        : itemConfig?.label;
+    const configItem =
+      !labelKey && typeof label === "string" ? config[label] : itemConfig;
+
+    const value = configItem?.label ?? label;
 
     if (labelFormatter) {
       return (
@@ -146,11 +152,7 @@ function ChartTooltipContent({
         </div>
       );
     }
-
-    if (!value) {
-      return null;
-    }
-
+    if (!value) return null;
     return <div className={cn("font-medium", labelClassName)}>{value}</div>;
   }, [
     label,
@@ -162,9 +164,7 @@ function ChartTooltipContent({
     labelKey,
   ]);
 
-  if (!active || !payload?.length) {
-    return null;
-  }
+  if (!active || !payload?.length) return null;
 
   const nestLabel = payload.length === 1 && indicator !== "dot";
 
@@ -248,6 +248,9 @@ function ChartTooltipContent({
   );
 }
 
+// -------------------------
+// Legend
+// -------------------------
 const ChartLegend = RechartsPrimitive.Legend;
 
 function ChartLegendContent({
@@ -263,9 +266,7 @@ function ChartLegendContent({
   }) {
   const { config } = useChart();
 
-  if (!payload?.length) {
-    return null;
-  }
+  if (!payload?.length) return null;
 
   return (
     <div
@@ -293,9 +294,7 @@ function ChartLegendContent({
               ) : (
                 <div
                   className="h-2 w-2 shrink-0 rounded-[2px]"
-                  style={{
-                    backgroundColor: item.color,
-                  }}
+                  style={{ backgroundColor: item.color }}
                 />
               )}
               {itemConfig?.label}
@@ -306,15 +305,15 @@ function ChartLegendContent({
   );
 }
 
-// Helper to extract item config from a payload.
+// -------------------------
+// Helper
+// -------------------------
 function getPayloadConfigFromPayload(
   config: ChartConfig,
   payload: unknown,
   key: string
-) {
-  if (typeof payload !== "object" || payload === null) {
-    return undefined;
-  }
+): ChartConfigItem | undefined {
+  if (typeof payload !== "object" || payload === null) return undefined;
 
   const payloadPayload =
     "payload" in payload &&
@@ -325,26 +324,21 @@ function getPayloadConfigFromPayload(
 
   let configLabelKey: string = key;
 
-  if (
-    key in payload &&
-    typeof payload[key as keyof typeof payload] === "string"
-  ) {
-    configLabelKey = payload[key as keyof typeof payload] as string;
-  } else if (
+  if (key in payload && typeof (payload as any)[key] === "string")
+    configLabelKey = (payload as any)[key];
+  else if (
     payloadPayload &&
     key in payloadPayload &&
-    typeof payloadPayload[key as keyof typeof payloadPayload] === "string"
-  ) {
-    configLabelKey = payloadPayload[
-      key as keyof typeof payloadPayload
-    ] as string;
-  }
+    typeof (payloadPayload as any)[key] === "string"
+  )
+    configLabelKey = (payloadPayload as any)[key];
 
-  return configLabelKey in config
-    ? config[configLabelKey]
-    : config[key as keyof typeof config];
+  return config[configLabelKey];
 }
 
+// -------------------------
+// Exports
+// -------------------------
 export {
   ChartContainer,
   ChartTooltip,
