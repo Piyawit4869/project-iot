@@ -146,7 +146,7 @@ export const useSendMessage = () => {
   });
 };
 
-export const usePaginatedChatRooms = ({ name }: { name: string }) => {
+export const usePaginatedChatRooms = (name: string) => {
   return useInfiniteQuery({
     queryKey: ["roomChat", name],
     queryFn: async ({ pageParam }) =>

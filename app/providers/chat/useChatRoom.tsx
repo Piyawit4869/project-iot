@@ -297,7 +297,7 @@ export const ChatRoomProvider = ({
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = usePaginatedChatRooms({ name: debouncedSearch });
+  } = usePaginatedChatRooms(debouncedSearch);
   const [realtimeChatRooms, setRealtimeChatRooms] = React.useState<any>();
   const [selectedRoom, setSelectedRoom] =
     React.useState<ChatRoomSchemaType>(initialState);
@@ -317,6 +317,7 @@ export const ChatRoomProvider = ({
 
   const filterRoom = React.useMemo(() => {
     if (search === "" || !chatRooms) return [];
+
     return computeRooms(chatRooms, realtimeChatRooms);
   }, [chatRooms, realtimeChatRooms]);
 
