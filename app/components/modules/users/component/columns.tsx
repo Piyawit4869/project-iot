@@ -84,7 +84,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
       },
       {
         accessorKey: "active",
-        header: "เปิดใช้งาน",
+        header: "การใช้งาน",
         cell: (info) => {
           const status = info.getValue() as string;
           return (
@@ -142,11 +142,15 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
       {
         accessorKey: "gender",
         header: "เพศ",
-        cell: (info) => (
-          <span className="">
-            {(info.row.original.profile?.gender as string) || "-"}
-          </span>
-        ),
+        cell: (info) => {
+          const genderMap: Record<string, string> = {
+            male: "ชาย",
+            female: "หญิง",
+            not_specified: "ไม่ระบุ",
+          };
+          const value = info.row.original.profile?.gender as string;
+          return <span>{genderMap[value] ?? "-"}</span>;
+        },
       },
       {
         accessorKey: "birthDate",

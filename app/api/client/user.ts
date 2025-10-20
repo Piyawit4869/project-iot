@@ -18,21 +18,71 @@ export const usePaginate = ({
   pageIndex,
   status = "",
   limit,
-  name,
+  userName,
+  email,
+  emId,
+  active,
+  phone,
+  gender,
+  createdBy,
+  updatedBy,
+  createdFrom,
+  createdTo,
+  updatedFrom,
+  updatedTo,
 }: {
   pageIndex: number;
   status?: string;
   limit: number;
-  name?: string;
+  userName?: string;
+  email?: string;
+  emId?: string;
+  active?: boolean;
+  phone?: number;
+  gender?: number;
+  createdBy?: string;
+  updatedBy?: string;
+  createdFrom?: string;
+  createdTo?: string;
+  updatedFrom?: string;
+  updatedTo?: string;
 }) => {
   return useQuery({
-    queryKey: ["paginate", pageIndex, status, limit, name],
+    queryKey: [
+      "paginate",
+      pageIndex,
+      status,
+      limit,
+      userName,
+      email,
+      emId,
+      active,
+      phone,
+      gender,
+      createdBy,
+      updatedBy,
+      createdFrom,
+      createdTo,
+      updatedFrom,
+      updatedTo,
+    ],
     queryFn: () =>
       fetchUserPagination({
         page: pageIndex,
         status: status,
         limit: limit,
-        name: name,
+        userName,
+        email,
+        emId,
+        active,
+        phone,
+        gender,
+        createdBy,
+        updatedBy,
+        createdFrom,
+        createdTo,
+        updatedFrom,
+        updatedTo,
       }),
     placeholderData: keepPreviousData,
     enabled: !!pageIndex,
