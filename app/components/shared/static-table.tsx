@@ -18,6 +18,7 @@ import {
   TableRow,
 } from "../ui/table";
 import { Button } from "../ui/button";
+import { formatForNumber } from "./global-format";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -116,7 +117,8 @@ export function StaticTable<TData, TValue>({
         </Button>
         <span className="text-sm text-muted-foreground">
           หน้า {table.getState().pagination.pageIndex + 1} จากทั้งหมด{" "}
-          {table.getPageCount() ? table.getPageCount() : 1} หน้า
+          {formatForNumber(table.getPageCount() ? table.getPageCount() : 1)}{" "}
+          หน้า
         </span>
       </div>
     </div>

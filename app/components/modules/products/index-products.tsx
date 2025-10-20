@@ -7,7 +7,7 @@ import { FileDown, FileUp, Plus } from "lucide-react";
 
 import GlobalButton from "~/components/shared/global-button";
 import { cn } from "~/lib/utils";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useSidebar } from "~/components/ui/sidebar";
 import { useProductColumnTable } from "./product-column-table";
@@ -19,6 +19,11 @@ import {
   useAllProductsSummary,
   useProductPaginate,
 } from "~/api/client/products/useGetProducts";
+import React from "react";
+import {
+  parseDateRangeParam,
+  pickSearchParams,
+} from "../customer/utils/search-params";
 
 export const ProductIndexContainer = () => {
   const { data: categories, isLoading } = useAllProductsSummary();
@@ -27,6 +32,29 @@ export const ProductIndexContainer = () => {
   const { isMobile } = useSidebar();
 
   const [status, setStatus] = useState("all");
+  const [sp] = useSearchParams();
+  const filters = React.useMemo(
+    () =>
+      pickSearchParams(sp, [
+        "sku",
+        "name",
+        "barcode",
+        "available",
+        "availableForSale",
+        "matType",
+        "salePrice",
+        "vatPrice",
+        "createdBy",
+        "updatedBy",
+      ]),
+    [sp]
+  );
+  const created = parseDateRangeParam(sp, "createdAt") ?? {};
+  const updated = parseDateRangeParam(sp, "updatedAt") ?? {};
+  const createdFrom = created.fromDate;
+  const createdTo = created.toDate;
+  const updatedFrom = updated.fromDate;
+  const updatedTo = updated.toDate;
 
   const items = TabIndexTableProducts(categories);
   const handleChangeTab = (values: any) => {
@@ -84,7 +112,12 @@ export const ProductIndexContainer = () => {
             sorting,
             status: status === "all" ? "" : status,
             limit: pageSize,
-          })
+            ...filters,
+            createdFrom,
+            createdTo,
+            updatedFrom,
+            updatedTo,
+          } as any)
         }
         columns={columns}
         addOn={
@@ -98,7 +131,7 @@ export const ProductIndexContainer = () => {
                 <TabsTrigger
                   key={c.label}
                   value={c.status}
-                  className="hover:bg-gray-200 relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
+                  className="hover:bg-border relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
                 >
                   {c.icon} {c.label} ({c.value})
                 </TabsTrigger>

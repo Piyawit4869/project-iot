@@ -33,7 +33,7 @@ export default function StatusToolbar({ value, onChange, className }: Props) {
   };
   const setDone = () => {
     onChange?.("done");
-    // ไม่ปิด popover ทันที เผื่อผู้ใช้กด “ส่งอีเมลล์”
+    // ไม่ปิด popover ทันที เผื่อผู้ใช้กด “ส่งอีเมล”
   };
 
   return (
@@ -102,11 +102,11 @@ export default function StatusToolbar({ value, onChange, className }: Props) {
                   className="text-primary underline underline-offset-4"
                   onClick={(e) => {
                     e.preventDefault();
-                    // TODO: ใส่ลอจิกส่งอีเมลล์ของคุณที่นี่
+                    // TODO: ใส่ลอจิกส่งอีเมลของคุณที่นี่
                     setOpen(false);
                   }}
                 >
-                  ส่งอีเมลล์
+                  ส่งอีเมล
                 </a>
               </div>
             </div>

@@ -10,12 +10,48 @@ import {
   UserPlus,
   XCircle,
 } from "lucide-react";
-import type { extendedUser, FilterField } from "./type-user";
+import type { extendedUser } from "./type-user";
+import type { FilterField } from "../global";
 
-// ค่อยมาเปลี่ยน status
 export const UserFilterFields: FilterField[] = [
-  { id: "userName", label: "ผู้ติดต่อ", kind: "text" },
-  { id: "email", label: "อีเมล", kind: "text" },
+  { id: "userName", label: "ผู้ติดต่อ", kind: "text", showIn: "main" },
+  { id: "email", label: "อีเมล", kind: "text", showIn: "main" },
+  { id: "emId", label: "รหัสพนักงาน", kind: "text", showIn: "main" },
+  {
+    id: "active",
+    label: "เปิดใช้งาน / ปิดใช้งาน",
+    kind: "select",
+    showIn: "main",
+    options: [
+      { label: "เปิดใช้งาน", value: "active" },
+      { label: "ปิดใช้งาน", value: "inactive" },
+    ],
+  },
+  { id: "phone", label: "เบอร์โทรศัพท์", kind: "number", showIn: "main" },
+  {
+    id: "gender",
+    label: "เพศ",
+    kind: "select",
+    showIn: "main",
+    options: [
+      { label: "ชาย", value: "male" },
+      { label: "หญิง", value: "female" },
+      { label: "ไม่ระบุ", value: "not_specified" },
+    ],
+  },
+  // { id: "updatedBy", label: "ผู้ที่แก้ไข", kind: "text", showIn: "advanced" },
+  {
+    id: "createdAt",
+    label: "วันที่สร้างบัญชี",
+    kind: "dateRange",
+    showIn: "advanced",
+  },
+  {
+    id: "updatedAt",
+    label: "วันที่แก้ไขล่าสุด",
+    kind: "dateRange",
+    showIn: "advanced",
+  },
   {
     id: "status",
     label: "สถานะ",

@@ -30,6 +30,8 @@ import { ViewCustomerInfoCard } from "./components/view/customer-info-view";
 import { ViewCustomerContact } from "./components/view/customer-contact";
 import { RelationshipCard } from "./components/relationship";
 import { ViewCustomerActivityLog } from "./components/customer-activityLog";
+import { AIMessageView } from "../message/ai-message-view-modal";
+import { useOrderColumns } from "../order/components/columns";
 
 export default function SingDetailleCustomer() {
   const navigate = useNavigate();
@@ -42,6 +44,8 @@ export default function SingDetailleCustomer() {
 
   const { isLoading } = useGetAllUsers();
   const { data: getData, isLoading: isLoadingAiNote } = useGetAiNote(id);
+
+  const columns = useOrderColumns();
   const { mutate: update, isPending } = useUpdateCustomer(id);
   const [isEdit, setIsEdit] = React.useState(false);
   const [AIOpen, setAIOpen] = React.useState(false);
@@ -336,32 +340,37 @@ export default function SingDetailleCustomer() {
           </Form>
 
           <Card>
-            <div className="flex gap-2 mt-5 mx-6">
+            <div className="flex gap-2 mx-6">
               <span className="text-base font-bold pb-4">
                 ออเดอร์ที่เคยสั่งซื้อ
               </span>
             </div>
             <CardContent>
-              {/* <DataTable
+              <DataTable
                 offSearch
                 offFilter
                 queryFunction={({ pageIndex, pageSize }) =>
-                  ordersPaginateFilter({ pageIndex, pageSize, customerId: id })
+                  useOrdersPaginateFilter({
+                    pageIndex,
+                    pageSize,
+                    customerId: id,
+                  })
                 }
-                columns={columnsOrders}
-              /> */}
+                columns={columns}
+              />
             </CardContent>
           </Card>
         </div>
       </CustomerProvider>
 
-      {/* <AIMessageView
+      <AIMessageView
         open={AIOpen}
         onOpenChange={setAIOpen}
-        data={getData}
+        customer={getData}
         onClickBtn={onSync}
-        isLoading={isLoadingAiNote}
-      /> */}
+        closeBtn={true}
+        // isLoading={isLoadingAiNote}
+      />
     </>
   );
 }

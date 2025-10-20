@@ -103,7 +103,7 @@ const MOCK_ITEMS: TemplateItem[] = [
         position: "Sale Admin",
         note: "สนับสนุนฝ่ายขาย",
         callText: "โทรหาคุณการ์ฟิว",
-        emailText: "ส่งอีเมลล์",
+        emailText: "ส่งอีเมล",
         tel: "0912345678",
         email: "garfeild@example.com",
       },
@@ -114,7 +114,7 @@ const MOCK_ITEMS: TemplateItem[] = [
         position: "Client Solutions",
         note: "ผู้เชี่ยวชาญลูกค้าองค์กร",
         callText: "โทรหาคุณมอลลี่",
-        emailText: "ส่งอีเมลล์",
+        emailText: "ส่งอีเมล",
         tel: "0891112222",
         email: "molly@example.com",
       },
@@ -187,7 +187,7 @@ function ProfileCardPreview({ data }: { data: ProfileCardData }) {
                   {data.callText ?? "โทรหา"}
                 </button>
                 <button className="w-full border rounded-xl px-3 py-2 text-sm hover:bg-gray-50">
-                  {data.emailText ?? "ส่งอีเมลล์"}
+                  {data.emailText ?? "ส่งอีเมล"}
                 </button>
               </div>
             </div>
@@ -233,7 +233,7 @@ function ProfileCard({ p }: { p: ProfileCardData }) {
           href={p.email ? `mailto:${p.email}` : "#"}
           className="block text-sm text-blue-700 hover:underline"
         >
-          {p.emailText ?? "ส่งอีเมลล์"}
+          {p.emailText ?? "ส่งอีเมล"}
         </a>
       </div>
     </div>

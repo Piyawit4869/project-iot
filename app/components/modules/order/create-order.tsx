@@ -245,7 +245,7 @@ export default function CreateOrder() {
                 )}
                 <OrderProduct
                   selectedProducts={productsSelected}
-                  onAddProduct={handleAddProduct}
+                  onAddProduct={handleAddProduct as any}
                 />
               </Card>
             </div>

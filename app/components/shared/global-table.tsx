@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { formatForNumber } from "./global-format";
 
 interface TablePaginationProps<TData> {
   table: Table<TData>;
@@ -102,8 +103,8 @@ export function TablePagination<TData>({
   return (
     <div className="flex flex-col gap-4 items-start justify-between px-2 md:flex-col lg:flex-row lg:items-center">
       <div className="text-sm text-muted-foreground whitespace-nowrap break-words max-w-full">
-        {table.getFilteredRowModel().rows.length} รายการ จากทั้งหมด {totalItems}{" "}
-        รายการ
+        {table.getFilteredRowModel().rows.length} รายการ จากทั้งหมด{" "}
+        {formatForNumber(totalItems)} รายการ
       </div>
 
       <div className="flex items-center space-x-6 lg:space-x-8">
@@ -117,7 +118,7 @@ export function TablePagination<TData>({
               <SelectValue placeholder={pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
-              {[10, 20, 50].map((size) => (
+              {[20, 50, 100].map((size) => (
                 <SelectItem key={size} value={`${size}`}>
                   {size}
                 </SelectItem>
