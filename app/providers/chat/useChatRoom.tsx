@@ -261,6 +261,7 @@ type ChatRoomContextType = {
   setRooms: React.Dispatch<React.SetStateAction<any>>;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
   search: string;
+  filterRoom: any;
 };
 
 const ChatRoomContext = React.createContext<ChatRoomContextType | undefined>(
@@ -304,6 +305,7 @@ export const ChatRoomProvider = ({
   const [rooms, setRooms] = React.useState<any[]>(
     computeRooms(chatRooms, realtimeChatRooms)
   );
+
   const { data: customer, refetch: refetchCustomer } = useCustomer(
     selectedRoom.customerId
   );
@@ -312,6 +314,11 @@ export const ChatRoomProvider = ({
   const [customerInfoOpen, setCustomerInfoOpen] = React.useState(true);
   const [onSelectRoom, setOnSelectRoom] = React.useState<boolean>(false);
   const [autoReadMsg, setAutoReadMsg] = React.useState<boolean>(false);
+
+  const filterRoom = React.useMemo(() => {
+    if (search === "" || !chatRooms) return [];
+    return computeRooms(chatRooms, realtimeChatRooms);
+  }, [chatRooms, realtimeChatRooms]);
 
   return (
     <ChatRoomContext.Provider
@@ -339,6 +346,7 @@ export const ChatRoomProvider = ({
         setRooms,
         search,
         setSearch,
+        filterRoom,
       }}
     >
       {children}

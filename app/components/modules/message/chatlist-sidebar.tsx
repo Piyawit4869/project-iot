@@ -70,7 +70,7 @@ export default function ChatlistSidebar({
     currentCustomer,
   } = details;
 
-  const { search, setSearch } = useChatRoom();
+  const { search, setSearch, filterRoom } = useChatRoom();
 
   const [allRooms, setAllRooms] = React.useState<ChatRoom[]>([]);
 
@@ -257,8 +257,29 @@ export default function ChatlistSidebar({
         </Popover>
 
         {inputOpen &&
-          (search ? (
-            <></>
+          (search !== "" ? (
+            filterRoom &&
+            filterRoom.length > 0 &&
+            filterRoom.map((room: any, i: number) => (
+              <ChatItem
+                key={room?.id + i}
+                roomId={room?.id ?? ""}
+                selectedRoom={currentRoomId}
+                resize={resize}
+                name={room?.name}
+                message={room?.latestMessage?.message ?? ""}
+                time={room?.latestMessage?.createdAt ?? ""}
+                image={room?.imageUrl || ""}
+                unread={room?.unreadMessageCount > 0}
+                countUnreadMessage={room?.unreadMessageCount || 0}
+                currentCustomer={currentCustomer}
+                onChatClick={() => {
+                  handleChangeSelectedRoom(room);
+                  setSidebarOpen(false);
+                  setOnSelectRoom(true);
+                }}
+              />
+            ))
           ) : (
             <React.Fragment>
               <div className="flex flex-col gap-3 w-full mt-2 px-3 pb-2">
