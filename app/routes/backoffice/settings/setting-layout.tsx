@@ -47,9 +47,10 @@ export default function SettingLayout({
                   <FileDown /> นำเข้าข้อมูล
                 </React.Fragment>
               }
+              variant="outline"
               disabled
               key={"import-button"}
-              className="bg-blue-300 text-black hover:bg-blue-500 hover:text-white"
+              // className="bg-blue-300 text-black hover:bg-blue-500 hover:text-white"
             />,
             <GlobalButton
               label={
@@ -57,9 +58,10 @@ export default function SettingLayout({
                   <FileUp /> นำออกข้อมูล
                 </>
               }
+              variant="outline"
               disabled
               key={"export-button"}
-              className="bg-yellow-300 text-black hover:bg-yellow-500 hover:text-white"
+              // className="bg-yellow-300 text-black hover:bg-yellow-500 hover:text-white"
             />,
           ]}
         />

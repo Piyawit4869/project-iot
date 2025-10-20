@@ -59,18 +59,18 @@ export const EditProducts = () => {
           tag={{ label: "เปิดใช้งาน", variant: "success" }}
           buttons={[
             <GlobalButton
-              label="บันทึก"
-              key={"create button"}
-              type="submit"
-              loading={isSubmitting}
-              form="products"
-            />,
-            <GlobalButton
               label="ลบสินค้า"
               variant="outline"
               key={"delete button"}
               loading={isSubmitting}
               onClick={onSubmit.remove}
+            />,
+            <GlobalButton
+              label="บันทึก"
+              key={"create button"}
+              type="submit"
+              loading={isSubmitting}
+              form="products"
             />,
           ]}
         />

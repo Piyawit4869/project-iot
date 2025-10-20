@@ -27,18 +27,18 @@ export const RenderHeaderButtons = ({
 
   return [
     <GlobalButton
-      label="บันทึก"
-      key="save-btn"
-      type="submit"
-      form={activeTab}
-    />,
-    <GlobalButton
       label="ยกเลิก"
       key="cancel-btn"
       type="button"
       className="ml-2"
       onClick={handleClickCancleButton}
       variant="secondary"
+    />,
+    <GlobalButton
+      label="บันทึก"
+      key="save-btn"
+      type="submit"
+      form={activeTab}
     />,
   ];
 };

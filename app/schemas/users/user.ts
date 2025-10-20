@@ -21,7 +21,7 @@ export const UsersFormSchema = z.object({
     gender: z.string().default(""),
     birthDate: z.string().nullable().default(null),
     phone: z.string().nullable(),
-    age: z.coerce.number().min(1, "กรุณาระบุอายุ"),
+    age: z.coerce.number().nullable(),
     imageUrl: z.string().default(""),
     photoUrl: z.string().default(""),
     taxId: z.string().nullable().optional(),

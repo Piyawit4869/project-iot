@@ -521,9 +521,13 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                   name="profile.age"
                   render={({ field }) => (
                     <FormItem>
-                      <RequiredLabel required>อายุ</RequiredLabel>
+                      <FormLabel>อายุ</FormLabel>
                       <FormControl>
-                        <Input placeholder="กรอกอายุ" {...field} />
+                        <Input
+                          placeholder="กรอกอายุ"
+                          {...field}
+                          value={field.value ?? undefined}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
