@@ -32,7 +32,7 @@ export const CustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
     if (name && !phone && !hasOther) {
       form.setError("contacts.0.phone", {
         type: "manual",
-        message: "กรุณากรอกเบอร์โทรศัพท์ผู้ติดต่อ",
+        message: "กรุณากรอกเบอร์โทร",
       });
       return;
     }
@@ -57,7 +57,7 @@ export const CustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
       if (!phone) {
         form.setError("contacts.0.phone", {
           type: "manual",
-          message: "กรุณากรอกเบอร์โทรศัพท์ผู้ติดต่อ",
+          message: "กรุณากรอกเบอร์โทร",
         });
       }
     }
@@ -80,7 +80,7 @@ export const CustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
         </CardContent>
       ) : (
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name={`contacts.0.name`}
@@ -155,7 +155,7 @@ export const CustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name={`contacts.0.email`}
@@ -181,7 +181,9 @@ export const CustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
               name={`contacts.0.phone`}
               render={({ field }) => (
                 <FormItem>
-                  <RequiredLabel>เบอร์โทรศัพท์</RequiredLabel>
+                  <RequiredLabel>
+                    เบอร์โทรศัพท์ (ตัวเลขเท่านั้น) <FormMessage />{" "}
+                  </RequiredLabel>
                   <FormControl className="w-full">
                     <Input
                       value={field.value || ""}
@@ -189,7 +191,6 @@ export const CustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
                       onChange={onlyNumber(field)}
                     />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />

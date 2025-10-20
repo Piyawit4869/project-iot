@@ -74,14 +74,8 @@ export const ViewCustomerContact: React.FC<CustomerFormCreateProps> = ({
               control={form.control}
               name="organizationDetails.businessEmail"
               label="อีเมล"
-            />
-            <FormTextRow
-              control={form.control}
-              name="organizationDetails.websiteUrl"
-              label="เว็บไซต์"
               canCopy={true}
             />
-
             <FormTextRow
               control={form.control}
               name="organizationDetails.importantDate"
@@ -95,6 +89,15 @@ export const ViewCustomerContact: React.FC<CustomerFormCreateProps> = ({
               label="วันก่อตั้งของสำนักงาน/บริษัท"
               type="dateFull"
             />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+            <FormTextRow
+              control={form.control}
+              name="organizationDetails.websiteUrl"
+              label="เว็บไซต์"
+              canCopy={true}
+            />
+
             <FormTextRow
               control={form.control}
               name="organizationDetails.note"

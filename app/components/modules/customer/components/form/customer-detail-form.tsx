@@ -34,7 +34,7 @@ export const FormCustomerDetailCard: React.FC<CustomerFormCreateProps> = ({
     if (name && !phone && !hasOther) {
       form.setError("contacts.0.phone", {
         type: "manual",
-        message: "กรุณากรอกเบอร์โทรศัพท์ผู้ติดต่อ",
+        message: "กรุณากรอกเบอร์โทร",
       });
       return;
     }
@@ -59,7 +59,7 @@ export const FormCustomerDetailCard: React.FC<CustomerFormCreateProps> = ({
       if (!phone) {
         form.setError("contacts.0.phone", {
           type: "manual",
-          message: "กรุณากรอกเบอร์โทรศัพท์ผู้ติดต่อ",
+          message: "กรุณากรอกเบอร์โทร",
         });
       }
     }
@@ -88,7 +88,9 @@ export const FormCustomerDetailCard: React.FC<CustomerFormCreateProps> = ({
               name={`contacts.0.name`}
               render={({ field }) => (
                 <FormItem>
-                  <RequiredLabel>ผู้ติดต่อ</RequiredLabel>
+                  <RequiredLabel>
+                    ผู้ติดต่อ <FormMessage />
+                  </RequiredLabel>
                   <FormControl className="w-full">
                     <Input
                       value={field.value || ""}
@@ -98,7 +100,6 @@ export const FormCustomerDetailCard: React.FC<CustomerFormCreateProps> = ({
                       }}
                     />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -162,7 +163,9 @@ export const FormCustomerDetailCard: React.FC<CustomerFormCreateProps> = ({
               name={`contacts.0.phone`}
               render={({ field }) => (
                 <FormItem>
-                  <RequiredLabel>เบอร์โทรศัพท์ผู้ติดต่อ</RequiredLabel>
+                  <RequiredLabel>
+                    เบอร์โทรศัพท์ผู้ติดต่อ (ตัวเลขเท่านั้น) <FormMessage />
+                  </RequiredLabel>
                   <FormControl className="w-full">
                     <Input
                       value={field.value || ""}
@@ -170,7 +173,6 @@ export const FormCustomerDetailCard: React.FC<CustomerFormCreateProps> = ({
                       onChange={onlyNumber(field)}
                     />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />

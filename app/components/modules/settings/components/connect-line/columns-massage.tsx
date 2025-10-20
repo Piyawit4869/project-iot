@@ -3,7 +3,7 @@ import { GlobalImage } from "~/components/shared/global-image";
 import { PenLine, Trash } from "lucide-react";
 import GlobalButton from "~/components/shared/global-button";
 import { useMemo } from "react";
-import { formatDateBirthDay } from "~/components/shared/global-format";
+
 import type { ColumnDef } from "@tanstack/react-table";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";

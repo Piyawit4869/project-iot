@@ -43,7 +43,7 @@ export const FormCustomerContact: React.FC<CustomerFormCreateProps> = ({
           <SkeletonLoading />
         </CardContent>
       ) : (
-        <CardContent className="space-y-4">
+        <div className="space-y-4 px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormTextRow
               control={form.control}
@@ -143,7 +143,9 @@ export const FormCustomerContact: React.FC<CustomerFormCreateProps> = ({
               name="organizationDetails.businessPhone"
               render={({ field }) => (
                 <FormItem>
-                  <RequiredLabel>เบอร์โทรสำนักงาน/บริษัท</RequiredLabel>
+                  <RequiredLabel>
+                    เบอร์โทรสำนักงาน/บริษัท (ตัวเลขเท่านั้น)
+                  </RequiredLabel>
                   <FormControl className="w-full">
                     <Input
                       value={field.value || ""}
@@ -161,7 +163,7 @@ export const FormCustomerContact: React.FC<CustomerFormCreateProps> = ({
               name={"organizationDetails.businessFax"}
               render={({ field }) => (
                 <FormItem>
-                  <RequiredLabel>เบอร์โทรสาร</RequiredLabel>
+                  <RequiredLabel>เบอร์โทรสาร (ตัวเลขเท่านั้น)</RequiredLabel>
                   <FormControl className="w-full">
                     <Input
                       value={field.value || ""}
@@ -227,6 +229,8 @@ export const FormCustomerContact: React.FC<CustomerFormCreateProps> = ({
                 </FormItem>
               )}
             />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
             <FormField
               control={form.control}
               name="organizationDetails.websiteUrl"
@@ -286,7 +290,7 @@ export const FormCustomerContact: React.FC<CustomerFormCreateProps> = ({
               )}
             />
           </div>
-        </CardContent>
+        </div>
       )}
     </Card>
   );

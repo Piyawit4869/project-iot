@@ -33,11 +33,17 @@ export const cards = [
 ];
 
 export const organizationType = [
-  { label: "ผู้เสียภาษี", value: "taxpayer" },
+  { label: "บุคคลธรรมดา", value: "taxpayer" },
   { label: "ห้างหุ้นส่วนสามัญ", value: "ordinary_partnership" },
   { label: "ร้านค้า", value: "shop" },
-  { label: "บุคคลธรรมดา", value: "body_of_person" },
-  { label: "อื่น ๆ ", value: "others" },
+  { label: "คณะบุคคล", value: "body_of_person" },
+  { label: "บริษัทจำกัด", value: "company_limited" },
+  { label: "บริษัทมหาชนจำกัด", value: "public_company_limited" },
+  { label: "ห้างหุ้นส่วนจำกัด", value: "limited_partnership" },
+  { label: "มูลนิธิ", value: "foundation" },
+  { label: "สมาคม", value: "association" },
+  { label: "กิจการร่วมค้า", value: "joint_venture" },
+  { label: "อื่น ๆ", value: "others" },
 ];
 
 export const customerStatus: CustomerStatusOption[] = [

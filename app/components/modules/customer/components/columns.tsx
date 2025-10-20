@@ -19,7 +19,7 @@ import type { CustomerType } from "../types/customer";
 import type { ColumnDef } from "@tanstack/react-table";
 import {
   formatDateAndTime,
-  formatDateBirthDay,
+  formatDateFull,
   formatPhoneNumber,
 } from "~/components/shared/global-format";
 import { StarRating } from "~/components/shared/StarRating";
@@ -30,6 +30,10 @@ import { Link } from "react-router";
 import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import { Button } from "~/components/ui/button";
 import { useDeleteCustomer } from "~/api/client/customer/useCustomer";
+import {
+  DateISOToDisplayDate,
+  DateISOToDisplayDateWithNoTime,
+} from "~/utils/date-format";
 
 const fullName = (c: CustomerType) =>
   c.profile?.name ||
@@ -276,7 +280,7 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
       enableSorting: false,
       cell: (info) => {
         const birthDate = info.getValue() as string | null | undefined;
-        return <span>{birthDate ? formatDateBirthDay(birthDate) : "-"}</span>;
+        return <span>{birthDate ? formatDateFull(birthDate) : "-"}</span>;
       },
     },
     {

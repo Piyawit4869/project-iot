@@ -265,7 +265,7 @@ export default function SingDetailleCustomer() {
                       phoneContactState.invalid ||
                       nameContactState.invalid
                     }
-                    className="flex-1  flex items-center gap-1 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+                    className="flex-1  flex items-center gap-1 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm dark:disabled:bg-transparent dark:disabled:text-white dark:disabled:border-white  dark:disabled:border-1"
                     icon={<Save />}
                     label={<span className="hidden sm:inline">บันทึก</span>}
                   />

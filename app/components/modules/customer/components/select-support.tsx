@@ -123,7 +123,7 @@ export const CustomerSupportSelector: React.FC<CustomerFormCreateProps> = ({
                         value={search}
                         onValueChange={setSearch}
                       />
-                      <CommandList>
+                      <CommandList className=" overflow-auto scrollbar-hide">
                         {isLoading ? (
                           <div className="p-5 text-gray-400 text-sm">
                             กำลังโหลด...
@@ -232,7 +232,7 @@ export const CustomerSupportSelector: React.FC<CustomerFormCreateProps> = ({
               </Button>
             </PopoverTrigger>
 
-            <PopoverContent className="w-90 max-w-full p-2 flex ml-2">
+            <PopoverContent className="w-90 max-w-full p-2 flex ml-2 ">
               <Command>
                 <CommandInput
                   placeholder="ค้นหาผู้รับผิดชอบรอง"
