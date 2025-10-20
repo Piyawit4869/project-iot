@@ -444,7 +444,6 @@ export function DynamicFilterBar<TData>({
                         const current = form[f.id] ?? {};
                         let nextMax = current.max;
 
-                        // ถ้า min ใหม่ > max ปัจจุบัน → ดัน max ขึ้นตาม min
                         if (
                           typeof rawMin === "number" &&
                           typeof nextMax === "number" &&
@@ -479,7 +478,6 @@ export function DynamicFilterBar<TData>({
                         const current = form[f.id] ?? {};
                         let nextMin = current.min;
 
-                        // ถ้า max ใหม่ < min ปัจจุบัน → ดัน min ลงตาม max
                         if (
                           typeof rawMax === "number" &&
                           typeof nextMin === "number" &&
