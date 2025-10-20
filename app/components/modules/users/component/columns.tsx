@@ -3,7 +3,7 @@ import { GlobalImage } from "~/components/shared/global-image";
 import { Eye, PenLine, Trash } from "lucide-react";
 import GlobalButton from "~/components/shared/global-button";
 import { useMemo } from "react";
-import { formatDateBirthDay } from "~/components/shared/global-format";
+
 import type { ColumnDef } from "@tanstack/react-table";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
@@ -11,6 +11,7 @@ import { Button } from "~/components/ui/button";
 import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import type { UserColumn } from "~/types/user/type-user";
 import { statusMap } from "~/types/user/init-data";
+import { formatDateFull } from "~/components/shared/global-format";
 
 export const useUserColumns = (): ColumnDef<UserColumn>[] => {
   const columns = useMemo<ColumnDef<UserColumn>[]>(
@@ -157,7 +158,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         header: "วัน / เดือน / ปีเกิด",
         cell: (info) => {
           const value = info.row.original.profile?.birthDate as string;
-          return <span className="">{formatDateBirthDay(value)}</span>;
+          return <span className="">{formatDateFull(value)}</span>;
         },
       },
       {
@@ -165,7 +166,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         header: "วันที่แก้ไข",
         cell: (info) => {
           const value = info.getValue() as string;
-          return <span className="">{formatDateBirthDay(value)}</span>;
+          return <span className="">{formatDateFull(value)}</span>;
         },
       },
       {

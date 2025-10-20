@@ -29,7 +29,7 @@ export type CustomerType = {
 };
 
 export interface CustomerFormCreateProps {
-  customer: any;
+  customer?: any;
   form: UseFormReturn<CustomerValues>;
   loading?: boolean;
   dataFromAI?: any;
