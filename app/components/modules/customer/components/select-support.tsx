@@ -194,7 +194,7 @@ export const CustomerSupportSelector: React.FC<CustomerFormCreateProps> = ({
                   alt={info.fullName}
                   className="w-7 h-7 rounded-2xl"
                 />
-                <div className="flex flex-col text-sm">
+                <div className="flex flex-col text-sm ">
                   <span>ชื่อ : {info.fullName || "-"}</span>
                   <span>อีเมล : {info.email || "-"}</span>
                   <span>ตำแหน่ง : {info.department || "-"}</span>
