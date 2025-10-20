@@ -25,6 +25,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "../ui/dialog";
+import { DatePicker } from "./date-picker";
 
 type ExtendedFilterField = BaseFilterField & {
   showIn?: "main" | "advanced" | "both";
@@ -298,7 +299,7 @@ export function DynamicFilterBar<TData>({
   };
 
   const renderSameFieldsBlock = (mode: "main" | "advanced") => (
-    <div className={`flex flex-wrap items-center gap-5 ${className ?? ""}`}>
+    <div className={`flex flex-wrap items-center gap-3 ${className ?? ""}`}>
       {extFields
         .filter((f) => isVisibleForMode(f, isMobile, mode))
         .map((f) => {
@@ -424,28 +425,31 @@ export function DynamicFilterBar<TData>({
                     {String(f.label)}
                   </span>
                   <div className="flex items-center gap-2">
-                    <Input
-                      type="date"
-                      className="w-[160px]"
-                      value={(form[f.id]?.from ?? "") as any}
-                      onChange={(e) =>
-                        update(f.id, {
-                          ...(form[f.id] ?? {}),
-                          from: e.target.value || undefined,
-                        })
-                      }
-                    />
-                    <Input
-                      type="date"
-                      className="w-[160px]"
-                      value={(form[f.id]?.to ?? "") as any}
-                      onChange={(e) =>
-                        update(f.id, {
-                          ...(form[f.id] ?? {}),
-                          to: e.target.value || undefined,
-                        })
-                      }
-                    />
+                    <div className="w-[160px]">
+                      <DatePicker
+                        value={(form[f.id]?.from as string) || undefined}
+                        onChange={(val) =>
+                          update(f.id, {
+                            ...(form[f.id] ?? {}),
+                            from: val,
+                          })
+                        }
+                        placeholder="จากวันที่"
+                      />
+                    </div>
+
+                    <div className="w-[160px]">
+                      <DatePicker
+                        value={(form[f.id]?.to as string) || undefined}
+                        onChange={(val) =>
+                          update(f.id, {
+                            ...(form[f.id] ?? {}),
+                            to: val,
+                          })
+                        }
+                        placeholder="ถึงวันที่"
+                      />
+                    </div>
                   </div>
                 </div>
               );
@@ -456,11 +460,16 @@ export function DynamicFilterBar<TData>({
                   <span className="block text-sm font-medium mb-1">
                     {String(f.label)}
                   </span>
-                  <Input
-                    type="date"
-                    className="w-[160px]"
+                  <DatePicker
                     value={(form[f.id] ?? "") as any}
-                    onChange={(e) => update(f.id, e.target.value || undefined)}
+                    onChange={(e: any) =>
+                      update(
+                        f.id,
+                        (typeof e === "string" ? e : e?.target?.value) ||
+                          undefined
+                      )
+                    }
+                    placeholder="ถึงวันที่"
                   />
                 </div>
               );
