@@ -108,7 +108,9 @@ export const FormCustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
               name="profile.firstName"
               render={({ field }) => (
                 <FormItem>
-                  <RequiredLabel required>ชื่อ</RequiredLabel>
+                  <RequiredLabel required>
+                    ชื่อ <FormMessage />
+                  </RequiredLabel>
                   <FormControl className="w-full">
                     <Input
                       value={field.value || ""}
@@ -118,7 +120,6 @@ export const FormCustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
                       }}
                     />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -211,7 +212,7 @@ export const FormCustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
               name="profile.age"
               render={({ field }) => (
                 <FormItem>
-                  <RequiredLabel>อายุ</RequiredLabel>
+                  <RequiredLabel>อายุ (ตัวเลขเท่านั้น)</RequiredLabel>
                   <FormControl className="w-full">
                     <Input
                       value={field.value || ""}
@@ -249,7 +250,9 @@ export const FormCustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
               name="profile.taxId"
               render={({ field }) => (
                 <FormItem>
-                  <RequiredLabel>เลขประจำตัวผู้เสียภาษี</RequiredLabel>
+                  <RequiredLabel>
+                    เลขประจำตัวผู้เสียภาษี (ตัวเลขเท่านั้น)
+                  </RequiredLabel>
                   <FormControl className="w-full">
                     <Input
                       value={field.value || ""}
@@ -293,7 +296,7 @@ export const FormCustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
               name="profile.phone"
               render={({ field }) => (
                 <FormItem>
-                  <RequiredLabel>เบอร์โทรศัพท์</RequiredLabel>
+                  <RequiredLabel>เบอร์โทรศัพท์ (ตัวเลขเท่านั้น)</RequiredLabel>
                   <FormControl className="w-full">
                     <Input
                       value={field.value || ""}

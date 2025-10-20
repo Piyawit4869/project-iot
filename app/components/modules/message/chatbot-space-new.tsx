@@ -123,7 +123,15 @@ export default function ChatbotSpaceNew({
                                 api={api}
                               />
                             ) : (
-                              <MenuWhenNoData />
+                              <MenuWhenNoData
+                                hasCustomerId={
+                                  !selectedRoom
+                                    ? true
+                                    : selectedRoom?.customerId
+                                    ? true
+                                    : false
+                                }
+                              />
                             )}
                           </div>
                         </DrawerContent>
@@ -178,7 +186,7 @@ export default function ChatbotSpaceNew({
           {/* <ResizableHandle withHandle className="hidden lg:flex" /> */}
           {customerInfoOpen && (
             <ResizablePanel minSize={20} maxSize={25} className="min-w-[300px]">
-              <aside className="hidden md:flex w-full">
+              <aside className="w-full">
                 {selectedRoom &&
                 selectedRoom?.id &&
                 selectedRoom?.customerId ? (
@@ -192,7 +200,15 @@ export default function ChatbotSpaceNew({
                     api={api}
                   />
                 ) : (
-                  <MenuWhenNoData />
+                  <MenuWhenNoData
+                    hasCustomerId={
+                      !selectedRoom
+                        ? true
+                        : selectedRoom?.customerId
+                        ? true
+                        : false
+                    }
+                  />
                 )}
               </aside>
             </ResizablePanel>

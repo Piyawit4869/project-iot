@@ -71,7 +71,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
   // const totalNoVat = (Price ?? 0) - (discount ?? 0) - (wht ?? 0);
   const totalAddVat = (Price ?? 0) + (totalVat ?? 0) - (discount ?? 0);
   return (
-    <Card className="p-6 space-y-6">
+    <Card className="p-6">
       <h3 className="font-semibold text-xl">ข้อมูลออเดอร์</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormField
@@ -187,7 +187,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
       </div>
 
       <Card className="w-full p-4.5">
-        <h1 className="font-semibold">ข้อมูลลูกค้า</h1>
+        <h1 className="font-semibold text-xl">ข้อมูลลูกค้า</h1>
         <div className="grid grid-cols-1 gap-3 mt-3">
           <FormField
             control={form.control}
@@ -330,7 +330,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
         </div>
       </Card>
 
-      <h1 className="font-semibold">การชำระเงิน</h1>
+      <h1 className="font-semibold text-xl">การชำระเงิน</h1>
 
       <div className="grid grid-cols-1 gap-4">
         <FormField
@@ -378,7 +378,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
         />
       </div>
 
-      <Card className="p-4 space-y-4 w-full">
+      <Card className="p-4 w-full">
         <h3 className="font-semibold text-lg">สรุปราคาสินค้า</h3>
 
         <div className="flex justify-between">

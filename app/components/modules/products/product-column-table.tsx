@@ -10,7 +10,6 @@ import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 
-import { formatDateBirthDay } from "~/components/shared/global-format";
 import {
   Link,
   // useLocation,
@@ -18,6 +17,7 @@ import {
 } from "react-router";
 import { useDeleteProduct } from "~/api/client/product/useProductQuery";
 import type { ProductColumn } from "~/schemas/order/type";
+import { formatDateFull } from "~/components/shared/global-format";
 
 export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
   const navigate = useNavigate();
@@ -175,7 +175,7 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
       header: "วันที่สร้าง",
       cell: (info) => {
         const value = info.getValue() as string;
-        return <span>{formatDateBirthDay(value)}</span>;
+        return <span>{formatDateFull(value)}</span>;
       },
     },
     {
@@ -188,7 +188,7 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
       header: "วันที่แก้ไข",
       cell: (info) => {
         const value = info.getValue() as string;
-        return <span>{formatDateBirthDay(value)}</span>;
+        return <span>{formatDateFull(value)}</span>;
       },
     },
     {

@@ -199,7 +199,7 @@ export const contactSchema = z.object({
   ),
   position: z.string().optional(),
   department: z.string().optional(),
-  email: z.string().email("อีเมลไม่ถูกต้อง").optional(),
+  email: z.email("อีเมลไม่ถูกต้อง").optional(),
   contactPlatform: z.string().optional(),
   platformId: z.string().optional(),
   isPrimary: z.boolean().optional(),

@@ -73,7 +73,7 @@ export const useCustomerSetup = () => {
         prefix: null,
         taxId: null,
         position: null,
-        country: "ประเทศไทย",
+        country: "ไทย",
         nation: "ไทย",
         lineName: null,
         faceBookName: null,

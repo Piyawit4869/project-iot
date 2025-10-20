@@ -7,6 +7,7 @@ import {
 import React from "react";
 import { useCustomer } from "~/api/client/customer/useCustomer";
 import { usePaginatedChatRooms } from "~/api/client/settings";
+import { useDebounce } from "~/hooks/use-debounce";
 import type { Customer } from "~/schemas/customer/customer-form";
 import type { ChatRoomSchemaType } from "~/schemas/settings";
 
@@ -256,9 +257,10 @@ type ChatRoomContextType = {
   setOnSelectRoom: (onSelectRoom: boolean) => void;
   autoReadMsg: boolean;
   setAutoReadMsg: (onSelectRoom: boolean) => void;
-
   rooms: any;
   setRooms: React.Dispatch<React.SetStateAction<any>>;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
+  search: string;
 };
 
 const ChatRoomContext = React.createContext<ChatRoomContextType | undefined>(
@@ -283,13 +285,18 @@ export const ChatRoomProvider = ({
     users: [],
     latestMessage: { id: "", message: "", createdAt: "" },
   };
+
+  const [search, setSearch] = React.useState<string>("");
+
+  const debouncedSearch = useDebounce(search);
+
   const {
     data: chatRooms,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = usePaginatedChatRooms();
+  } = usePaginatedChatRooms({ name: debouncedSearch });
   const [realtimeChatRooms, setRealtimeChatRooms] = React.useState<any>();
   const [selectedRoom, setSelectedRoom] =
     React.useState<ChatRoomSchemaType>(initialState);
@@ -330,6 +337,8 @@ export const ChatRoomProvider = ({
         setAutoReadMsg,
         rooms,
         setRooms,
+        search,
+        setSearch,
       }}
     >
       {children}

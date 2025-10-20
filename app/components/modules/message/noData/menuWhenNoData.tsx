@@ -61,14 +61,20 @@ export const MOCK_PRODUCTS = [
   },
 ];
 
-export default function MenuWhenNoData() {
+interface MenuWhenNoDataProps {
+  hasCustomerId?: boolean;
+}
+
+export default function MenuWhenNoData({
+  hasCustomerId = true,
+}: MenuWhenNoDataProps) {
   const { me } = useRouteLoaderData("root");
 
   const classForTaps = `
      group relative inline-flex items-center gap-2
      rounded-md text-sm font-semibold
      px-3 py-2 hover:bg-popover hover:text-foreground dark:hover:bg-popover dark:hover:text-white
-     w-25
+     w-full
      text-gray-500 data-[state=active]:text-white
      data-[state=active]:text-[#19142A]
      data-[state=inactive]:hover:bg-gray-100
@@ -93,8 +99,12 @@ export default function MenuWhenNoData() {
   const logoUrl = organization?.logoUrl;
 
   return (
-    <>
-      <aside className="pt-2 flex flex-col w-full h-[calc(100vh-50px)] border-l border-r overflow-auto bg-white dark:bg-background px-4 justify-between">
+    <div className="relative">
+      <aside
+        className={`pt-2 flex flex-col w-full h-[calc(100vh-50px)] border-l border-r overflow-auto bg-white dark:bg-background px-4 justify-between ${
+          !hasCustomerId ? "opacity-50 pointer-events-none" : ""
+        }`}
+      >
         <div>
           <button className="flex w-full items-center justify-between gap-2 h-[60px] rounded-b-2xl px-2 py-4 bg-background sticky top-0 z-30 transition-colors">
             <div className="flex gap-2 ">
@@ -221,13 +231,13 @@ export default function MenuWhenNoData() {
                   </Popover>
                 </div>
               </div>
+
               <Tabs defaultValue="note">
-                <TabsList className="w-full">
+                <TabsList className="w-full ">
                   {dataInTaps.map(({ value, label, Icon }) => (
                     <TabsTrigger
                       key={value}
                       value={value}
-                      // className="px-3 py-2 rounded-md hover:bg-popover hover:text-foreground dark:hover:bg-popover dark:hover:text-white"
                       className={classForTaps}
                     >
                       <Icon className="w-4 h-4" />
@@ -237,102 +247,108 @@ export default function MenuWhenNoData() {
                 </TabsList>
 
                 <TabsContent value="note">
-                  <div className="flex items-center justify-between ">
-                    <label className="text-sm font-semibold">โน้ต</label>
-                    <button type="button" className="text-gray-400 " disabled>
-                      <PlusIcon />
-                    </button>
-                  </div>
+                  <div className="max-w-xl mx-auto w-full overflow-auto">
+                    <div className="flex items-center justify-between ">
+                      <label className="text-sm font-semibold">โน้ต</label>
+                      <button type="button" className="text-gray-400 " disabled>
+                        <PlusIcon />
+                      </button>
+                    </div>
 
-                  <p className="text-gray-400 mt-4 text-center">
-                    ตัวอย่างการเขียนโน้ตเกี่ยวกับบุคลิกลูกค้า
-                  </p>
-                  <div>
-                    <div className="flex flex-col justify-between w-full pt-4 ">
-                      <div className="flex justify-between"></div>
-                      <Textarea
-                        placeholder="พิมพ์โน้ตของคุณที่นี่..."
-                        disabled
-                        rows={4}
-                      />
+                    <p className="text-gray-400 mt-4 text-center">
+                      ตัวอย่างการเขียนโน้ตเกี่ยวกับบุคลิกลูกค้า
+                    </p>
+                    <div>
+                      <div className="flex flex-col justify-between w-auto pt-4 overflow-auto">
+                        <div className="flex justify-between"></div>
+                        <Textarea
+                          placeholder="พิมพ์โน้ตของคุณที่นี่..."
+                          disabled
+                          rows={4}
+                        />
 
-                      <p className="text-xs text-gray-400 mt-2">
-                        ยังไม่มีโน้ต
-                        คุณสามารถเขียนบันทึกเกี่ยวกับบุคลิกหรือลักษณะนิสัยได้ที่นี่
-                      </p>
+                        <p className="text-xs text-gray-400 mt-2">
+                          ยังไม่มีโน้ต
+                          คุณสามารถเขียนบันทึกเกี่ยวกับบุคลิกหรือลักษณะนิสัยได้ที่นี่
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </TabsContent>
 
                 <TabsContent value="product">
-                  <div className="flex flex-row items-center justify-between gap-12">
-                    <p className="text-sm font-semibold mb-2">สินค้าที่สนใจ</p>
-                    <div>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-[30px] w-[70px] px-2 gap-2 mr-2"
-                        disabled
-                      >
-                        <span className="text-[12px]">กรอง</span>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-[30px] w-[70px] p-2 px-3"
-                        disabled
-                      >
-                        <span className="text-[12px]">ตะกร้า</span>
-                      </Button>
+                  <div className="max-w-xl mx-auto w-full">
+                    <div className="flex flex-row items-center justify-between gap-12">
+                      <p className="text-sm font-semibold mb-2">
+                        สินค้าที่สนใจ
+                      </p>
+                      <div>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-[30px] w-[70px] px-2 gap-2 mr-2"
+                          disabled
+                        >
+                          <span className="text-[12px]">กรอง</span>
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-[30px] w-[70px] p-2 px-3"
+                          disabled
+                        >
+                          <span className="text-[12px]">ตะกร้า</span>
+                        </Button>
+                      </div>
                     </div>
+
+                    <p className="text-gray-400 mt-4 text-center">
+                      ตัวอย่างการเลือกสินค้า
+                    </p>
+
+                    <ul className="mt-6 border rounded-md divide-y  bg-background">
+                      {MOCK_PRODUCTS.map((item) => (
+                        <li
+                          key={item.id}
+                          className="flex items-center gap-3 p-3 hover:bg-muted/50 transition-colors"
+                        >
+                          <img
+                            src={item.imageUrl}
+                            alt={item.name}
+                            className="w-12 h-12 rounded object-cover border"
+                          />
+
+                          <div className="flex-1">
+                            <p className="text-sm font-medium">{item.name}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {item.sku}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              สินค้าคงเหลือ: {item.available} ชิ้น
+                            </p>
+                          </div>
+
+                          {/* ส่วนราคากับแท็กสถานะ */}
+                          <div className="flex flex-col items-end gap-1">
+                            <span className="text-sm font-semibold text-blue-600">
+                              {item.salePrice} ฿
+                            </span>
+                            <span
+                              className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                                item.status === "active"
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-gray-100 text-gray-500"
+                              }`}
+                            >
+                              {item.status === "active"
+                                ? "สั่งซื้อได้"
+                                : "สินค้าหมด"}
+                            </span>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-
-                  <p className="text-gray-400 mt-4 text-center">
-                    ตัวอย่างการเลือกสินค้า
-                  </p>
-
-                  <ul className="mt-6 border rounded-md divide-y bg-background">
-                    {MOCK_PRODUCTS.map((item) => (
-                      <li
-                        key={item.id}
-                        className="flex items-center gap-3 p-3 hover:bg-muted/50 transition-colors"
-                      >
-                        <img
-                          src={item.imageUrl}
-                          alt={item.name}
-                          className="w-12 h-12 rounded object-cover border"
-                        />
-
-                        <div className="flex-1">
-                          <p className="text-sm font-medium">{item.name}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {item.sku}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            สินค้าคงเหลือ: {item.available} ชิ้น
-                          </p>
-                        </div>
-
-                        {/* ส่วนราคากับแท็กสถานะ */}
-                        <div className="flex flex-col items-end gap-1">
-                          <span className="text-sm font-semibold text-blue-600">
-                            {item.salePrice} ฿
-                          </span>
-                          <span
-                            className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                              item.status === "active"
-                                ? "bg-green-100 text-green-700"
-                                : "bg-gray-100 text-gray-500"
-                            }`}
-                          >
-                            {item.status === "active"
-                              ? "สั่งซื้อได้"
-                              : "สินค้าหมด"}
-                          </span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
                 </TabsContent>
 
                 <TabsContent value="settingAI">
@@ -360,7 +376,7 @@ export default function MenuWhenNoData() {
                       <Avatar className="bg-gradient-to-br from-purple-400 to-indigo-400 text-white flex items-center justify-center">
                         AI
                       </Avatar>
-                      <Card className="bg-muted px-3 py-2 max-w-[90%]">
+                      <Card className="bg-muted px-3 py-2">
                         <p className="text-sm">
                           สวัสดีค่ะ ขอทราบชื่อคุณลูกค้าได้ไหมคะ 😊
                         </p>
@@ -386,7 +402,7 @@ export default function MenuWhenNoData() {
                       <Avatar className="bg-gradient-to-br from-purple-400 to-indigo-400 text-white flex items-center justify-center">
                         AI
                       </Avatar>
-                      <Card className="bg-muted px-3 py-2 max-w-[80%]">
+                      <Card className="bg-muted px-3 py-2 ">
                         <p className="text-sm">
                           สวัสดีค่ะ ยินดีต้อนรับสู่ OGGa Idea น้อง OGGa AI ค่ะ
                           ขอทราบชื่อคุณลูกค้าได้ไหมคะ 😊
@@ -418,7 +434,15 @@ export default function MenuWhenNoData() {
             </div>
           </div>
         </div>
+        {!hasCustomerId && (
+          <div className="absolute top-0 left-0 w-full h-full z-50 flex items-center justify-center bg-white/80 dark:bg-background/80">
+            <p className="text-center text-md font-semibold p-10">
+              ข้อมูลชุดนี้เป็นข้อมูล import และ รอการตอบกลับจากไลน์
+              เพื่อเริ่มต้นการใช้งานระบบ
+            </p>
+          </div>
+        )}
       </aside>
-    </>
+    </div>
   );
 }

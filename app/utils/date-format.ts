@@ -1,3 +1,4 @@
+import buddhistEra from "dayjs/plugin/buddhistEra";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
@@ -13,6 +14,7 @@ dayjs.extend(timezone);
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
 dayjs.extend(relativeTime);
+dayjs.extend(buddhistEra);
 dayjs.extend(localizedFormat);
 
 export const DateISOToDisplayDate = (iso: string): string => {
@@ -21,7 +23,13 @@ export const DateISOToDisplayDate = (iso: string): string => {
   return dayjs(iso)
     .tz("Asia/Bangkok")
     .locale("th")
-    .format("D MMM YYYY H.mm น.");
+    .format("DD/MM/BBBB HH:mm น.");
+};
+
+export const DateISOToDisplayDateWithNoTime = (iso: string): string => {
+  if (!iso) return "";
+
+  return dayjs(iso).tz("Asia/Bangkok").locale("th").format("DD/MM/BBBB");
 };
 
 export const DateTimeStampChatDisplay = (timestamp: string | Date): string => {

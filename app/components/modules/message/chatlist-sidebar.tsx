@@ -1,6 +1,4 @@
-import React, { useEffect, useRef } from "react";
-import dayjs from "dayjs";
-
+import React from "react";
 import { GlobalImage } from "~/components/shared/global-image";
 import { cn } from "~/lib/utils";
 import { useChat } from "~/providers/chat/useChat";
@@ -11,9 +9,21 @@ import {
 } from "~/providers/chat/useChatRoom";
 import { useRouteLoaderData } from "react-router";
 import { socketConfig } from "~/lib/sockets";
-import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { Menu, MessagesSquare, X } from "lucide-react";
+import {
+  CheckCircle,
+  ChevronDown,
+  Clock,
+  FileUp,
+  Inbox,
+  Mail,
+  Menu,
+  MessagesSquare,
+  OctagonAlert,
+  Search,
+  User,
+  X,
+} from "lucide-react";
 import { TagLabel } from "~/components/shared/tag-label";
 import { DateTimeStampChatDisplay } from "~/utils/date-format";
 import {
@@ -24,9 +34,10 @@ import {
 import { Separator } from "~/components/ui/separator";
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
+  CommandItem,
   CommandList,
+  CommandSeparator,
 } from "~/components/ui/command";
 
 interface Props {
@@ -43,6 +54,11 @@ export default function ChatlistSidebar({
 }: Props) {
   const { me } = useRouteLoaderData("root");
 
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [inputOpen, setInputOpen] = React.useState<boolean>(false);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
   const {
     chatRooms,
     isLoading,
@@ -54,7 +70,59 @@ export default function ChatlistSidebar({
     currentCustomer,
   } = details;
 
+  const { search, setSearch } = useChatRoom();
+
   const [allRooms, setAllRooms] = React.useState<ChatRoom[]>([]);
+
+  const { currentRoomId } = useChat();
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el || isFetchingNextPage || !hasNextPage) return;
+
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 50) {
+      fetchNextPage();
+    }
+  };
+
+  const handleCloseSearch = React.useCallback(() => {
+    setSearch("");
+    setInputOpen(false);
+  }, [setInputOpen, setSearch]);
+
+  React.useEffect(() => {
+    const el = scrollRef.current;
+    if (
+      el &&
+      el.scrollHeight <= el.clientHeight &&
+      hasNextPage &&
+      !isFetchingNextPage
+    ) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  React.useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        setInputOpen(false);
+      }
+    };
+
+    if (inputOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [inputOpen]);
 
   React.useEffect(() => {
     const socket = socketConfig(api);
@@ -78,140 +146,216 @@ export default function ChatlistSidebar({
     }
   }, [chatRooms]);
 
-  const { currentRoomId } = useChat();
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const handleScroll = () => {
-    const el = scrollRef.current;
-    if (!el || isFetchingNextPage || !hasNextPage) return;
-
-    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 50) {
-      fetchNextPage();
-    }
-  };
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (
-      el &&
-      el.scrollHeight <= el.clientHeight &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      fetchNextPage();
-    }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
   return (
     <aside className="h-full border-r dark:bg-background flex flex-col border-l">
       <div className="p-3 border-b flex flex-col">
         <div className="flex justify-between px-0">
           <h2 className="text-lg font-semibold">แชท</h2>
         </div>
+      </div>
 
-        <div className="flex items-center justify-between gap-4 px-0">
-          <div className="flex items-center gap-1">
-            <Menu className="w-4 h-4" />
-            <p className="text-sm font-semibold">ทั้งหมด</p>
-          </div>
-          <Input placeholder="ค้นหา" className="bg-white" />
-        </div>
-
-        {/* <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-[30px] w-[70px] px-2 gap-2"
-            >
-              <span className="text-[12px]">กรอง</span>
-            </Button>
-          </PopoverTrigger>
-
-          <PopoverContent className="w-[280px] p-0" align="start">
-            <div className="flex items-center justify-between px-3 py-2">
-              <span className="text-sm font-medium">สถานะสินค้า</span>
-              {countFilterOption > 0 && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 px-2"
-                  onClick={clearAllFilterStatus}
+      <div ref={containerRef} className="relative">
+        <Popover open={open} onOpenChange={setOpen}>
+          <div className="p-3">
+            {inputOpen ? (
+              <div className="flex items-center gap-2">
+                <input
+                  ref={inputRef}
+                  autoFocus
+                  type="text"
+                  placeholder="ค้นหา"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="border border-gray-300 rounded-md px-3 py-1 text-sm bg-white w-full transition-all duration-200 focus:outline-none focus:ring-0 focus:border-gray-300"
+                />
+                <button
+                  onClick={handleCloseSearch}
+                  className="px-2 py-1 bg-gray-200 rounded-md text-sm hover:bg-gray-300 transition-colors"
                 >
-                  <X className="h-3.5 w-3.5 mr-1" />
-                  เคลียร์
-                </Button>
-              )}
-            </div>
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between gap-4 transition-all duration-200">
+                <PopoverTrigger asChild>
+                  <button className="flex items-center gap-1">
+                    <Menu className="w-4 h-4" />
+                    <p className="text-sm font-semibold">ทั้งหมด</p>
+                  </button>
+                </PopoverTrigger>
 
-            <Separator />
+                <input
+                  type="text"
+                  placeholder="ค้นหา"
+                  value={search}
+                  className="border border-gray-300 rounded-md px-3 py-1 text-sm bg-white w-1/2 transition-all duration-200 focus:outline-none focus:ring-0 focus:border-gray-300"
+                  onClick={() => setInputOpen(true)}
+                />
+              </div>
+            )}
+          </div>
 
-            <Command>
-              <CommandList>
-                <CommandEmpty>ไม่พบรายการ</CommandEmpty>
-                <CommandGroup></CommandGroup>
+          <Separator className="w-full m-0" />
+
+          <PopoverContent
+            align="start"
+            className="p-0 w-64 max-h-none overflow-visible"
+          >
+            <Command className="max-h-none overflow-visible">
+              <CommandList className="max-h-none overflow-visible">
+                <CommandGroup heading="">
+                  <CommandItem className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Inbox className="w-4 h-4 text-gray-500" /> ทั้งหมด
+                    </div>
+                    <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
+                      3
+                    </span>
+                  </CommandItem>
+                  <CommandSeparator />
+                  <CommandItem className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-gray-500" /> อินบ็อกซ์
+                    </div>
+                    <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
+                      3
+                    </span>
+                  </CommandItem>
+                  <CommandItem className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-gray-500" /> ยังไม่อ่าน
+                    </div>
+                    <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
+                      3
+                    </span>
+                  </CommandItem>
+                  <CommandItem className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-gray-500" /> ดำเนินการ
+                  </CommandItem>
+                  <CommandItem className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-gray-500" /> เสร็จสิ้น
+                  </CommandItem>
+                </CommandGroup>
+                <CommandSeparator />
+
+                <CommandGroup>
+                  <CommandItem className="flex items-center gap-2">
+                    <FileUp className="w-4 h-4 text-gray-500" /> นำออกข้อมูล
+                  </CommandItem>
+                  <CommandSeparator />
+                  <CommandItem className="flex items-center gap-2">
+                    <User className="w-4 h-4 text-gray-500" /> รับผิดชอบ
+                  </CommandItem>
+                  <CommandSeparator />
+                  <CommandItem className="flex items-center gap-2">
+                    <OctagonAlert className="w-4 h-4 text-gray-500" /> สแปม
+                  </CommandItem>
+                </CommandGroup>
               </CommandList>
             </Command>
-
-            <div className="p-3 flex items-center justify-end gap-2">
-              <Button variant="ghost" size="sm" onClick={() => setOpen(false)}>
-                ปิด
-              </Button>
-              <Button size="sm" onClick={handleApplyFilterStatus}>
-                ใช้ตัวกรอง
-              </Button>
-            </div>
           </PopoverContent>
-        </Popover> */}
+        </Popover>
+
+        {inputOpen &&
+          (search ? (
+            <></>
+          ) : (
+            <React.Fragment>
+              <div className="flex flex-col gap-3 w-full mt-2 px-3 pb-2">
+                <p className="text-sm font-semibold">การค้นหาล่าสุด</p>
+                {["ไอที", "ไอ", "ทีม"].map((item, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center justify-between cursor-pointer hover:bg-gray-100 rounded-md p-1"
+                    onClick={() => console.log("Click on item:", item)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-300">
+                        <Search className="w-3 h-3 text-gray-600" />
+                      </div>
+                      <p className="text-sm font-semibold">{item}</p>
+                    </div>
+
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 px-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log("Click delete on item:", item);
+                      }}
+                    >
+                      <X className="w-4 h-4 text-gray-500 hover:text-gray-700" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+
+              <Separator className="w-full m-0" />
+
+              <div className="flex gap-3 mt-2 px-3">
+                <button
+                  className="text-sm font-semibold hover:text-gray-700"
+                  onClick={() =>
+                    console.log("ปิดใช้งานการบันทึกอัตโนมัติ clicked")
+                  }
+                >
+                  <p className="text-xs font-semibold">
+                    ปิดใช้งานการบันทึกอัตโนมัติ
+                  </p>
+                </button>
+                <p className="text-xs font-semibold">|</p>
+                <button
+                  className="text-sm font-semibold hover:text-gray-700"
+                  onClick={() => console.log("ลบทั้งหมด clicked")}
+                >
+                  <p className="text-xs font-semibold">ลบทั้งหมด</p>
+                </button>
+              </div>
+            </React.Fragment>
+          ))}
       </div>
 
-      <div
-        className="flex-1 overflow-y-auto"
-        ref={scrollRef}
-        onScroll={handleScroll}
-      >
-        {isLoading ? (
-          <LoadingSkeleton />
-        ) : allRooms.length > 0 ? (
-          allRooms.map((room: any, i: any) => (
-            <ChatItem
-              key={room?.id + i}
-              roomId={room?.id ?? ""}
-              selectedRoom={currentRoomId}
-              resize={resize}
-              name={room?.name}
-              message={room?.latestMessage?.message ?? ""}
-              time={room?.latestMessage?.createdAt ?? ""}
-              image={room?.imageUrl || ""}
-              unread={room?.unreadMessageCount > 0}
-              countUnreadMessage={room?.unreadMessageCount || 0}
-              currentCustomer={currentCustomer}
-              onChatClick={() => {
-                handleChangeSelectedRoom(room);
-                setSidebarOpen(false);
-                setOnSelectRoom(true);
-                // removeMessage(); // clear messages from previous room
+      {!inputOpen && (
+        <div
+          className="flex-1 overflow-y-auto"
+          ref={scrollRef}
+          onScroll={handleScroll}
+        >
+          {isLoading ? (
+            <LoadingSkeleton />
+          ) : allRooms.length > 0 ? (
+            allRooms.map((room: any, i: number) => (
+              <ChatItem
+                key={room?.id + i}
+                roomId={room?.id ?? ""}
+                selectedRoom={currentRoomId}
+                resize={resize}
+                name={room?.name}
+                message={room?.latestMessage?.message ?? ""}
+                time={room?.latestMessage?.createdAt ?? ""}
+                image={room?.imageUrl || ""}
+                unread={room?.unreadMessageCount > 0}
+                countUnreadMessage={room?.unreadMessageCount || 0}
+                currentCustomer={currentCustomer}
+                onChatClick={() => {
+                  handleChangeSelectedRoom(room);
+                  setSidebarOpen(false);
+                  setOnSelectRoom(true);
+                }}
+              />
+            ))
+          ) : (
+            <EmptyChat />
+          )}
 
-                // Zero out unread count in realtimeChatRooms (optional)
-                // setRealtimeChatRooms?.((prev: any) => {
-                //   if (prev?.id === chat?.id) {
-                //     return { ...prev, unreadMessageCount: 0 };
-                //   }
-                //   return prev;
-                // });
-              }}
-            />
-          ))
-        ) : (
-          <EmptyChat />
-        )}
-
-        {hasNextPage && (
-          <div className="p-4 text-center text-gray-400 ">
-            กำลังโหลดเพิ่มเติม...
-          </div>
-        )}
-      </div>
+          {hasNextPage && (
+            <div className="p-4 text-center text-gray-400">
+              กำลังโหลดเพิ่มเติม...
+            </div>
+          )}
+        </div>
+      )}
     </aside>
   );
 }

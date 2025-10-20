@@ -56,12 +56,12 @@ export const NotesCard = ({
                 return (
                   <div
                     key={item.id ?? index}
-                    className="border rounded-lg p-3 bg-white shadow-sm space-y-2 w-full"
+                    className="border rounded-lg p-3 bg-white shadow-sm space-y-2 w-full dark:bg-muted"
                   >
-                    <p className="whitespace-pre-line text-sm text-gray-800">
+                    <p className="whitespace-pre-line text-sm text-gray-800 dark:text-gray-400">
                       {item.note}
                     </p>
-                    <div className="flex items-center justify-between text-xs text-gray-500">
+                    <div className="flex items-center justify-between text-xs text-gray-500 ">
                       <span>
                         {DateISOToDisplayDate(
                           item.created_at ?? item.createdAt ?? ""

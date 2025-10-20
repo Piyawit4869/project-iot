@@ -22,18 +22,27 @@ import {
 
 const badgeVariants = {
   default: "border-transparent bg-black text-white",
-  vip: "border-transparent bg-[#FFDB00] text-black",
-  new: "border-[#51C0FF] bg-[#EDF9FF] text-[#3ea9e6]",
-  regular: "border-[#1056BD] bg-[#EDF9FF]  text-[#1056BD]",
-  interested: "border-[#8B5CF6] bg-[#F7F3FF] text-[#8B5CF6]",
-  inactive: "border-[#BDBDBD] bg-[#F6F6F6] text-[#525252]",
-  promo: "border-[#FE9239] bg-[#FFF7ED] text-[#FE9239]",
-  highPurchase: "border-[#10A957] bg-[#EFFEF5] text-[#10A957]",
-  complaint: "border-[#AB0909] bg-[#FFF7ED] text-[#AB0909]",
-  wholesale: "border-[#C54009] bg-[#FFF0F0] text-[#C54009]",
+  vip: "border-transparent bg-[#FFDB00] text-black dark:text-[#b18b09] dark:bg-[#E0E0DB]",
+  new: "border-[#51C0FF] bg-[#EDF9FF] text-[#3ea9e6] dark:text-[#558388] dark:bg-[#BDBBBB]",
+  regular:
+    "border-[#1056BD] bg-[#EDF9FF]  text-[#1056BD] dark:text-[#023773] dark:bg-[#BDBBBB]",
+  interested:
+    "border-[#8B5CF6] bg-[#F7F3FF] text-[#8B5CF6] dark:text-[#682BAA] dark:bg-[#BDBBBB]",
+  inactive:
+    "border-[#BDBDBD] bg-[#F6F6F6] text-[#525252] dark:text-[#483928]   dark:bg-[#BDBBBB]",
+  promo:
+    "border-[#FE9239] bg-[#FFF7ED] text-[#FE9239] dark:text-[#BC6B25] dark:bg-[#BDBBBB]",
+  highPurchase:
+    "border-[#10A957] bg-[#EFFEF5] text-[#10A957] dark:text-[#027421] dark:bg-[#BDBBBB]",
+  complaint:
+    "border-[#AB0909] bg-[#FFF7ED] text-[#AB0909] dark:text-[#963C16] dark:bg-[#BDBBBB]",
+  wholesale:
+    "border-[#C54009] bg-[#FFF0F0] text-[#C54009]  dark:text-[#B33333] dark:bg-[#BDBBBB]",
 
-  member: "border-[#00BFA5] bg-[[#EDF9FF] text-[#00BFA5]",
-  walkIn: "border-[#525252] bg-[#F6F6F6] text-[#525252]",
+  member:
+    "border-[#00BFA5] bg-[[#EDF9FF] text-[#00BFA5]  dark:text-[#167E64] dark:bg-[#BDBBBB]",
+  walkIn:
+    "border-[#525252] bg-[#F6F6F6] text-[#525252] dark:text-[#000000] dark:bg-[#BDBBBB]",
 };
 
 export type TagsKey =
@@ -48,7 +57,7 @@ export type TagsKey =
   | "ลูกค้าขายส่ง"
   | "ลูกค้าปลีก"
   | "สมาชิก"
-  | "Walk";
+  | "Walk-in";
 
 const tagsKey: Record<
   TagsKey,
@@ -105,7 +114,11 @@ const tagsKey: Record<
     icon: <UserPlus size={14} />,
   },
   สมาชิก: { label: "สมาชิก", variant: "member", icon: <UserPlus size={14} /> },
-  Walk: { label: "Walk-in", variant: "walkIn", icon: <UserPlus size={14} /> },
+  "Walk-in": {
+    label: "Walk in",
+    variant: "walkIn",
+    icon: <UserPlus size={14} />,
+  },
 };
 
 interface GlobalTagsBadgeProps {
@@ -123,7 +136,7 @@ export function GlobalTagsBadge({ value, onClick }: GlobalTagsBadgeProps) {
 
   return (
     <Badge
-      className={`inline-flex items-center justify-center rounded-xl border py-1 px-3 text-xs font-medium w-fit whitespace-nowrap shrink-0 gap-1 transition-colors ${colorTag}`}
+      className={`inline-flex items-center justify-center rounded-xl border py-1 px-3 text-[14px] font-medium w-fit whitespace-nowrap shrink-0 gap-1 transition-colors dark:bg-gray-700 ${colorTag}`}
     >
       {icon} {label}
       {onClick && (
