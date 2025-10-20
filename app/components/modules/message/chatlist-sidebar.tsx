@@ -442,7 +442,7 @@ function ChatItem({
                 className={cn(
                   "text-sm truncate text-black-400  sm:max-w-[200px] lg:max-w-[250px] min-w-[170px] whitespace-nowrap overflow-hidden",
                   unread && "font-medium",
-                  (roomDetail?.isDone || roomDetail?.isProcess) &&
+                  ((roomDetail && roomDetail.done) || roomDetail.isProcess) &&
                     "truncate w-[80px]"
                 )}
               >
@@ -450,7 +450,7 @@ function ChatItem({
               </p>
 
               <div className="flex flex-col items-center  justify-end w-[90px]">
-                {roomDetail?.isDone && (
+                {roomDetail && roomDetail.done && (
                   <TagLabel
                     label="ดำเนินการแล้ว"
                     icon={<CheckCircle className="mr-1 h-[10px] w-[10px]" />}
@@ -458,12 +458,11 @@ function ChatItem({
                   />
                 )}
 
-                {roomDetail?.isProcess && (
+                {roomDetail && roomDetail.isProcess && (
                   <TagLabel
                     label="ต้องดำเนินการ"
                     icon={<MessagesSquare className="mr-1 h-[10px] w-[10px]" />}
                     color="orange"
-                    className="text-[10px]"
                   />
                 )}
               </div>

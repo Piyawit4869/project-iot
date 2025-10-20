@@ -7,6 +7,7 @@ interface TagLabelProps {
   icon?: React.ReactNode;
   color?: "blue" | "green" | "red" | "gray" | "orange";
   className?: string;
+  textSize?: number;
 }
 
 export const TagLabel: React.FC<TagLabelProps> = ({
@@ -14,6 +15,7 @@ export const TagLabel: React.FC<TagLabelProps> = ({
   icon = <CheckCircle className="mr-1.5 h-[14px] w-[14px]" />,
   color = "blue",
   className,
+  textSize = 10,
 }) => {
   const colorMap = {
     blue: "bg-blue-100 text-blue-700",
@@ -26,7 +28,7 @@ export const TagLabel: React.FC<TagLabelProps> = ({
   return (
     <span
       className={cn(
-        "inline-flex items-center text-xs font-medium px-1.5 py-1 pt-1.5 rounded-full shrink-0 align-middle",
+        `inline-flex items-center text-xs font-medium px-1.5 py-1 pt-1.5 rounded-full shrink-0 align-middle text-[${textSize}px]`,
         colorMap[color],
         className
       )}
