@@ -390,20 +390,19 @@ export default function ChatMessages({
                     <MessageText text={msg.message} />
                   </div>
                 ) : (
-                  <div
-                    onClick={() => setPreviewUrl(msg.message)}
-                    className="cursor-pointer"
-                  >
-                    <img
-                      src={msg.message}
-                      width={100}
-                      height={100}
-                      // notShowPreview={
-                      //   msg.message ===
-                      //   "https://api.dicebear.com/9.x/initials/svg?seed=X&backgroundColor=ffd5dc&scale=100"
-                      // }
-                    />
-                  </div>
+                  <>
+                    {msg.message ===
+                    "https://api.dicebear.com/9.x/initials/svg?seed=X&backgroundColor=ffd5dc&scale=100" ? (
+                      <img src={msg.message} width={100} height={100} />
+                    ) : (
+                      <div
+                        onClick={() => setPreviewUrl(msg.message)}
+                        className="cursor-pointer"
+                      >
+                        <img src={msg.message} width={100} height={100} />
+                      </div>
+                    )}
+                  </>
                 )}
 
                 <span className="text-[10px] text-muted-foreground mt-1">
