@@ -3,6 +3,9 @@ import * as React from "react";
 
 import { formatDateAndTime } from "~/components/shared/global-format";
 import type { CustomerRequestResponse } from "../customer/types/customer";
+import GlobalButton from "~/components/shared/global-button";
+import { Link, Navigation } from "lucide-react";
+import { useNavigate } from "react-router";
 
 type FieldKey =
   | "customerStatus"
@@ -119,6 +122,8 @@ export function AiCustomerFields({
   defaultOpen,
   data,
 }: Props) {
+  const navigate = useNavigate();
+
   const emptyState = (checkedKeys: FieldKey[] = []): AiFieldsState =>
     FIELDS.reduce((acc, f) => {
       acc[f.key] = {
@@ -286,6 +291,29 @@ export function AiCustomerFields({
       {/* <div>วันเตรียมงาน : {formatDateAndTime(data.eventSetupDate)}</div>
       <div>สร้างเมื่อ : {formatDateAndTime(data.createdAt)}</div>
       <div>แก้ไขเมื่อ : {formatDateAndTime(data.updatedAt)}</div> */}
+
+      <div className="flex justify-between items-center gap-2 min-w-0">
+        <GlobalButton
+          key="sync-ai"
+          type="button"
+          onClick={() => {}}
+          variant="secondary"
+          className="flex-1  bg-[#2e498d] text-white hover:bg-[#142a60] hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+          icon={<Link />}
+          label={<span className="hidden sm:inline">Sync ข้อมูล AI</span>}
+        />
+        <GlobalButton
+          key="navigate-customer-details"
+          type="button"
+          onClick={() => {
+            navigate(`/customer/${data.id}`);
+          }}
+          variant="secondary"
+          className="flex-1  bg-[#34cf16] text-white hover:bg-[#142a60] hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+          icon={<Navigation />}
+          label={<span className="hidden sm:inline">ไปยังหน้ารายละเอียด</span>}
+        />
+      </div>
 
       {/* <div className="text-xs text-muted-foreground mt-4">
         <div>

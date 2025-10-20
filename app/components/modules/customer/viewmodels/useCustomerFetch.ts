@@ -1,6 +1,11 @@
 "use client";
 
-import { useParams, useRouteLoaderData, useSearchParams } from "react-router";
+import {
+  useLocation,
+  useParams,
+  useRouteLoaderData,
+  useSearchParams,
+} from "react-router";
 import {
   useAllContactsByCustomer,
   useAllCustomer,
@@ -10,9 +15,11 @@ import {
 
 export const useCustomerFetch = () => {
   const { me: user } = useRouteLoaderData("root");
+  const location = useLocation();
   const params = useParams();
   const id = params?.id as string;
 
+  const createKey = location?.pathname?.includes("create") ? "create" : "";
   const {
     data: contacts,
     isLoading: loadContacts,
@@ -23,9 +30,9 @@ export const useCustomerFetch = () => {
     data: allCustomers,
     isLoading: loadCustomers,
     refetch: refetchCustomers,
-  } = useAllCustomer();
+  } = useAllCustomer(id ?? createKey);
 
-  const { data, isLoading } = useAllCustomerSummary();
+  const { data, isLoading } = useAllCustomerSummary(id ?? createKey);
 
   return {
     me: user,

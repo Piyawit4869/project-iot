@@ -30,21 +30,17 @@ export default function ChatbotSpaceNew({
   chatRooms: any;
 }) {
   const { customerInfoOpen, setCustomerInfoOpen } = useChatRoom();
-
   const isMobile = useIsMobile();
-
   const [selectedRoom, setSelectedRoom] = React.useState<any>();
+  const [showChatList, setShowChatList] = React.useState(true);
 
   const {
     data: customerSingle,
     isLoading,
     refetch,
-  } = useCustomer(
-    selectedRoom && selectedRoom.customer && selectedRoom.customer.id
-  );
+  } = useCustomer(selectedRoom && selectedRoom.customerId);
 
   const [autoScroll, setAutoScroll] = React.useState(true);
-
   const [isCreateOrderOpen, setCreateOrderOpen] = React.useState(false);
   const [resize, setResize] = React.useState(0);
   const [drawer, setDrawer] = React.useState(false);
@@ -56,24 +52,26 @@ export default function ChatbotSpaceNew({
     <div className="h-[calc(100vh-56px)]">
       <OrderProvider>
         <ResizablePanelGroup direction="horizontal">
-          <ResizablePanel
-            defaultSize={40}
-            minSize={6}
-            maxSize={40}
-            className="min-w-[75px] max-w-[80px] lg:max-w-[350px]"
-            onResize={(size) => setResize(size)}
-          >
-            <ChatlistContainer
-              chatRooms={chatRooms}
-              resize={resize}
-              api={api}
-              handleChangeSelectedRoom={(room) => setSelectedRoom(room)}
-            />
-          </ResizablePanel>
-          <ResizableHandle withHandle className="hidden lg:flex " />
+          {showChatList && (
+            <ResizablePanel
+              defaultSize={40}
+              minSize={6}
+              maxSize={40}
+              className="min-w-[75px] max-w-[80px] lg:max-w-[350px]"
+              onResize={(size) => setResize(size)}
+            >
+              <ChatlistContainer
+                chatRooms={chatRooms}
+                resize={resize}
+                api={api}
+                handleChangeSelectedRoom={(room) => setSelectedRoom(room)}
+              />
+            </ResizablePanel>
+          )}
+          {/* <ResizableHandle withHandle className="hidden lg:flex " /> */}
           <ResizablePanel defaultSize={50}>
             <>
-              {selectedRoom && selectedRoom.id && selectedRoom.customer ? (
+              {selectedRoom && selectedRoom.id && selectedRoom ? (
                 <div className="flex flex-col w-full h-full bg-white dark:bg-secondary">
                   <div className="flex items-center  border-b px-4 py-2 dark:bg-background">
                     <div className="flex items-center w-full gap-2 h-[36px] justify-between">
@@ -114,7 +112,7 @@ export default function ChatbotSpaceNew({
                         </DrawerTrigger>
                         <DrawerContent>
                           <div className="mx-auto w-full">
-                            {selectedRoom.id && selectedRoom.customer ? (
+                            {selectedRoom.id ? (
                               <ChatCustomerInfo
                                 refetchCustomer={refetch}
                                 setCreateOrderOpen={setCreateOrderOpen}
@@ -139,6 +137,7 @@ export default function ChatbotSpaceNew({
                     autoScroll={autoScroll}
                     setAutoScroll={setAutoScroll}
                     isCreateOrderOpen={isCreateOrderOpen}
+                    customer={customerSingle}
                   />
                 </div>
               ) : (
@@ -150,6 +149,14 @@ export default function ChatbotSpaceNew({
                   <div className="flex flex-col w-full h-full bg-white dark:bg-secondary">
                     <div className="flex items-center justify-between border-b px-4 py-2 dark:bg-background">
                       <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setShowChatList(!showChatList)}
+                          className="hidden md:flex"
+                        >
+                          <Settings2 className="h-4 w-4" />
+                        </Button>
                         <h2 className="text-lg font-semibold">Rome Chat AI</h2>
                       </div>
 
@@ -168,11 +175,13 @@ export default function ChatbotSpaceNew({
               )}
             </>
           </ResizablePanel>
-          <ResizableHandle withHandle className="hidden lg:flex" />
+          {/* <ResizableHandle withHandle className="hidden lg:flex" /> */}
           {customerInfoOpen && (
             <ResizablePanel minSize={20} maxSize={25} className="min-w-[300px]">
               <aside className="hidden md:flex w-full">
-                {selectedRoom && selectedRoom?.id && selectedRoom?.customer ? (
+                {selectedRoom &&
+                selectedRoom?.id &&
+                selectedRoom?.customerId ? (
                   <ChatCustomerInfo
                     refetchCustomer={refetch}
                     setCreateOrderOpen={setCreateOrderOpen}

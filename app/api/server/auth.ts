@@ -1,6 +1,7 @@
 import axios from "axios";
+import { env } from "~/utils/common/env";
 
-const baseURL = process.env.PUBLIC_API_URL;
+const baseURL = env.PUBLIC_API_URL;
 
 export const getMe = async (token: string) => {
   try {

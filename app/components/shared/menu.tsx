@@ -16,6 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { SkeletonLoading } from "./skeleton-loading";
 import { GlobalImage } from "./global-image";
 import { useNavigate, useRouteLoaderData } from "react-router";
+import { User, Mail, IdCard, Shield } from "lucide-react";
 
 type ItemMenuType = {
   key: string;
@@ -51,12 +52,13 @@ export function Menu() {
   const firstName = me?.profile?.firstName?.trim();
   const lastName = me?.profile?.lastName?.trim();
   const userName = me?.userName?.trim();
+  const email = me?.email?.trim();
+  const role = me?.mainDepartment;
 
   const hasFullName = firstName || lastName;
 
   const displayFullname = hasFullName
-    ? `${firstName ?? ""} ${lastName ?? ""}`.trim() +
-      (userName ? ` (${userName})` : "")
+    ? `${firstName ?? ""} ${lastName ?? ""}`.trim()
     : userName ?? "";
 
   // const [language, setLanguage] = React.useState<"en" | "th">("th");
@@ -81,7 +83,7 @@ export function Menu() {
   ];
 
   return (
-    <div className="justify-between items-center flex gap-3">
+    <div className="justify-between items-center flex gap-1 pr-3">
       {/* <button
         onClick={toggleLanguage}
         className="relative w-10 h-5 rounded-full border border-border shadow-inner transition-colors duration-300"
@@ -94,26 +96,6 @@ export function Menu() {
           {language.toUpperCase()}
         </span>
       </button> */}
-
-      <button
-        onClick={toggleDarkMode}
-        className="relative w-10 h-5 rounded-full border border-border shadow-inner transition-colors duration-300"
-      >
-        <span
-          className={`absolute top-[1px] left-[2px] h-4 w-4 flex items-center justify-center rounded-full transition-all duration-300
-          ${
-            isDark
-              ? "translate-x-[18px] bg-blue-500"
-              : "translate-x-0 bg-yellow-400"
-          } text-white`}
-        >
-          {isDark ? (
-            <Icons.Moon className="h-[12px] w-[12px]" />
-          ) : (
-            <Icons.Sun className="h-[12px] w-[12px]" />
-          )}
-        </span>
-      </button>
 
       <Popover>
         <PopoverTrigger asChild>
@@ -163,9 +145,26 @@ export function Menu() {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>
-            <div>
-              <div>{me?.email ?? "-"}</div>
-              <div> {displayFullname}</div>
+            <div className="space-y-1 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <User className="h-4 w-4 text-primary" />
+                <span>{displayFullname ?? "-"}</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-primary" />
+                <span>{email ?? "-"}</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <IdCard className="h-4 w-4 text-primary" />
+                <span>{userName ?? "-"}</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Shield className="h-4 w-4 text-primary" />
+                <span>{role ?? "-"}</span>
+              </div>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
@@ -183,7 +182,31 @@ export function Menu() {
                 </a>
               </DropdownMenuItem>
             ))}
+
+            <DropdownMenuItem>
+              <Icons.Palette className="w-5 h-5" />
+              <button
+                onClick={toggleDarkMode}
+                className="relative w-10 h-5 rounded-full border border-border shadow-inner transition-colors duration-300"
+              >
+                <span
+                  className={`absolute top-[1px] left-[2px] h-4 w-4 flex items-center justify-center rounded-full transition-all duration-300
+          ${
+            isDark
+              ? "translate-x-[18px] bg-blue-500"
+              : "translate-x-0 bg-yellow-400"
+          } text-white`}
+                >
+                  {isDark ? (
+                    <Icons.Moon className="h-[12px] w-[12px]" />
+                  ) : (
+                    <Icons.Sun className="h-[12px] w-[12px]" />
+                  )}
+                </span>
+              </button>
+            </DropdownMenuItem>
           </DropdownMenuGroup>
+
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => navigate("/logout")}

@@ -13,13 +13,13 @@ import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useSidebar } from "~/components/ui/sidebar";
 import { useUserColumns } from "../component/columns";
 import { useAllUserSummary, usePaginate } from "~/api/client/user";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { TabControl } from "~/components/shared/tab-control";
 import { TabIndexTableUser, UserFilterFields } from "~/types/user/init-data";
 
 export default function Users() {
   const { data: user, isLoading } = useAllUserSummary();
-  const Paginate = usePaginate;
+  const paginate = usePaginate;
 
   const columns = useUserColumns();
   const { isMobile } = useSidebar();
@@ -71,11 +71,12 @@ export default function Users() {
       />
 
       <DataTable
-        queryFunction={({ pageIndex, pageSize }) =>
-          Paginate({
-            pageIndex,
+        queryFunction={(res) =>
+          paginate({
+            pageIndex: res.pageIndex,
             status: status === "all" ? "" : status,
-            limit: pageSize,
+            limit: res.pageSize,
+            // params : { }
           })
         }
         columns={columns}

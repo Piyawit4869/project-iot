@@ -98,14 +98,11 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
       header: "ชื่อ",
       enableSorting: true,
       cell: ({ row }) => {
-        // const id = row.original.id;
         const name = fullName(row.original);
         return (
-          <Link to={`/customer/${row.original.id}`}>
-            <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline">
-              {name}
-            </span>
-          </Link>
+          <span className="text-blue-400 hover:text-blue-300 hover:underline">
+            <Link to={`/customer/${row.original.id}`}>{name}</Link>
+          </span>
         );
       },
     },

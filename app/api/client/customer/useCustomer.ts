@@ -88,10 +88,11 @@ export const useGetAiNote = (id: string) =>
     queryFn: () => fetchCustomerNoteAiById(id),
   });
 
-export const useAllCustomer = () =>
+export const useAllCustomer = (id?: string) =>
   useQuery({
     queryKey: ["customer-all"],
     queryFn: () => fetchCustomerAll(),
+    enabled: !id,
   });
 
 export const useCustomer = (id: string) =>
@@ -182,11 +183,11 @@ export const useDeleteContact = () => {
   });
 };
 
-export const useAllCustomerSummary = () => {
+export const useAllCustomerSummary = (id?: string) => {
   return useQuery({
     queryKey: ["contacts"],
     queryFn: () => fetchCustomerSummary(),
-    enabled: true,
+    enabled: !id,
   });
 };
 

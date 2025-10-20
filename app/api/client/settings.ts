@@ -10,6 +10,7 @@ import {
   fetchGetConnectionAi,
   fetchGetConnectionLine,
   fetchGetOrganizations,
+  fetchLineMassagePaginate,
   fetchRoomChatAILoadMore,
   fetchRoomChatLoadMore,
   fetchSendMessage,
@@ -156,5 +157,26 @@ export const usePaginatedChatRooms = () => {
 
       return meta?.hasMore ? meta.offset + meta?.limit : undefined;
     },
+  });
+};
+
+export const useLineMassagePaginate = ({
+  pageIndex,
+  pageSize = 10,
+  limit,
+}: {
+  pageIndex: number;
+  pageSize: number;
+  limit: number;
+}) => {
+  return useQuery({
+    queryKey: ["customer-paginate", pageIndex, pageSize, limit],
+    queryFn: () =>
+      fetchLineMassagePaginate({
+        page: pageIndex,
+        itemsPerPage: pageSize,
+        limit: limit,
+      }),
+    enabled: !!pageIndex && !!pageSize,
   });
 };
