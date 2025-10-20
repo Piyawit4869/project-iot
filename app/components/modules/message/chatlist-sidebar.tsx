@@ -1,5 +1,4 @@
-import React, { useRef } from "react";
-
+import React from "react";
 import { GlobalImage } from "~/components/shared/global-image";
 import { cn } from "~/lib/utils";
 import { useChat } from "~/providers/chat/useChat";
@@ -71,32 +70,12 @@ export default function ChatlistSidebar({
     currentCustomer,
   } = details;
 
+  const { search, setSearch } = useChatRoom();
+
   const [allRooms, setAllRooms] = React.useState<ChatRoom[]>([]);
 
-  React.useEffect(() => {
-    const socket = socketConfig(api);
-
-    if (me?.branchId) {
-      socket.emit("rooms", `${me.branchId}`);
-    }
-
-    socket.on("rooms", (room: any) => {
-      setAllRooms((prev) => mergeRoomImmutable(prev, room));
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [me]);
-
-  React.useEffect(() => {
-    if (chatRooms) {
-      setAllRooms(chatRooms);
-    }
-  }, [chatRooms]);
-
   const { currentRoomId } = useChat();
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef = React.useRef<HTMLDivElement>(null);
 
   const handleScroll = () => {
     const el = scrollRef.current;
@@ -106,6 +85,11 @@ export default function ChatlistSidebar({
       fetchNextPage();
     }
   };
+
+  const handleCloseSearch = React.useCallback(() => {
+    setSearch("");
+    setInputOpen(false);
+  }, [setInputOpen, setSearch]);
 
   React.useEffect(() => {
     const el = scrollRef.current;
@@ -140,6 +124,28 @@ export default function ChatlistSidebar({
     };
   }, [inputOpen]);
 
+  React.useEffect(() => {
+    const socket = socketConfig(api);
+
+    if (me?.branchId) {
+      socket.emit("rooms", `${me.branchId}`);
+    }
+
+    socket.on("rooms", (room: any) => {
+      setAllRooms((prev) => mergeRoomImmutable(prev, room));
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [me]);
+
+  React.useEffect(() => {
+    if (chatRooms) {
+      setAllRooms(chatRooms);
+    }
+  }, [chatRooms]);
+
   return (
     <aside className="h-full border-r dark:bg-background flex flex-col border-l">
       <div className="p-3 border-b flex flex-col">
@@ -158,10 +164,12 @@ export default function ChatlistSidebar({
                   autoFocus
                   type="text"
                   placeholder="ค้นหา"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   className="border border-gray-300 rounded-md px-3 py-1 text-sm bg-white w-full transition-all duration-200 focus:outline-none focus:ring-0 focus:border-gray-300"
                 />
                 <button
-                  onClick={() => setInputOpen(false)}
+                  onClick={handleCloseSearch}
                   className="px-2 py-1 bg-gray-200 rounded-md text-sm hover:bg-gray-300 transition-colors"
                 >
                   ✕
@@ -179,6 +187,7 @@ export default function ChatlistSidebar({
                 <input
                   type="text"
                   placeholder="ค้นหา"
+                  value={search}
                   className="border border-gray-300 rounded-md px-3 py-1 text-sm bg-white w-1/2 transition-all duration-200 focus:outline-none focus:ring-0 focus:border-gray-300"
                   onClick={() => setInputOpen(true)}
                 />
@@ -247,61 +256,64 @@ export default function ChatlistSidebar({
           </PopoverContent>
         </Popover>
 
-        {inputOpen && (
-          <div>
-            <div className="flex flex-col gap-3 w-full mt-2 px-3 pb-2">
-              <p className="text-sm font-semibold">การค้นหาล่าสุด</p>
-              {["ไอที", "ไอ", "ทีม"].map((item, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between cursor-pointer hover:bg-gray-100 rounded-md p-1"
-                  onClick={() => console.log("Click on item:", item)}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-300">
-                      <Search className="w-3 h-3 text-gray-600" />
-                    </div>
-                    <p className="text-sm font-semibold">{item}</p>
-                  </div>
-
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 px-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      console.log("Click delete on item:", item);
-                    }}
+        {inputOpen &&
+          (search ? (
+            <></>
+          ) : (
+            <React.Fragment>
+              <div className="flex flex-col gap-3 w-full mt-2 px-3 pb-2">
+                <p className="text-sm font-semibold">การค้นหาล่าสุด</p>
+                {["ไอที", "ไอ", "ทีม"].map((item, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center justify-between cursor-pointer hover:bg-gray-100 rounded-md p-1"
+                    onClick={() => console.log("Click on item:", item)}
                   >
-                    <X className="w-4 h-4 text-gray-500 hover:text-gray-700" />
-                  </Button>
-                </div>
-              ))}
-            </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-300">
+                        <Search className="w-3 h-3 text-gray-600" />
+                      </div>
+                      <p className="text-sm font-semibold">{item}</p>
+                    </div>
 
-            <Separator className="w-full m-0" />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 px-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log("Click delete on item:", item);
+                      }}
+                    >
+                      <X className="w-4 h-4 text-gray-500 hover:text-gray-700" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
 
-            <div className="flex gap-3 mt-2 px-3">
-              <button
-                className="text-sm font-semibold hover:text-gray-700"
-                onClick={() =>
-                  console.log("ปิดใช้งานการบันทึกอัตโนมัติ clicked")
-                }
-              >
-                <p className="text-xs font-semibold">
-                  ปิดใช้งานการบันทึกอัตโนมัติ
-                </p>
-              </button>
-              <p className="text-xs font-semibold">|</p>
-              <button
-                className="text-sm font-semibold hover:text-gray-700"
-                onClick={() => console.log("ลบทั้งหมด clicked")}
-              >
-                <p className="text-xs font-semibold">ลบทั้งหมด</p>
-              </button>
-            </div>
-          </div>
-        )}
+              <Separator className="w-full m-0" />
+
+              <div className="flex gap-3 mt-2 px-3">
+                <button
+                  className="text-sm font-semibold hover:text-gray-700"
+                  onClick={() =>
+                    console.log("ปิดใช้งานการบันทึกอัตโนมัติ clicked")
+                  }
+                >
+                  <p className="text-xs font-semibold">
+                    ปิดใช้งานการบันทึกอัตโนมัติ
+                  </p>
+                </button>
+                <p className="text-xs font-semibold">|</p>
+                <button
+                  className="text-sm font-semibold hover:text-gray-700"
+                  onClick={() => console.log("ลบทั้งหมด clicked")}
+                >
+                  <p className="text-xs font-semibold">ลบทั้งหมด</p>
+                </button>
+              </div>
+            </React.Fragment>
+          ))}
       </div>
 
       {!inputOpen && (
