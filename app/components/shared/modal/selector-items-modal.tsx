@@ -204,9 +204,9 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                                     : "สินค้านี้ยังไม่มีรายละเอียด"}
                                 </p>
                                 <p>สินค้าคงเหลือ: {item.available} ชิ้น</p>
-                                <p>
+                                {/* <p>
                                   พร้อมจำหน่าย: {item.availableForSale} ชิ้น
-                                </p>
+                                </p> */}
                                 <p>ภาษีมูลค่าเพิ่ม: {item.vatPrice} %</p>
                                 <p>ส่วนลด: {item.discountPrice} ฿</p>
                               </AccordionContent>
