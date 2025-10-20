@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { type ColumnDef } from "@tanstack/react-table";
-import { PenLine, Trash } from "lucide-react";
+import { Eye, PenLine, Trash } from "lucide-react";
 import GlobalButton from "~/components/shared/global-button";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
@@ -127,7 +127,20 @@ export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
       {
         accessorKey: "createdBy",
         header: "ผู้สร้าง",
-        cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
+        cell: (info) => {
+          const id = info.row.original.createdById;
+          const name = (info.getValue() as string) || "-";
+
+          return id ? (
+            <Link to={`/users/${id}`}>
+              <span className="text-muted-foreground hover:text-blue-400 hover:underline">
+                {name}
+              </span>
+            </Link>
+          ) : (
+            <span className="text-muted-foreground">{name}</span>
+          );
+        },
       },
       {
         accessorKey: "updatedAt",
@@ -166,7 +179,7 @@ export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
                 aria-label="แก้ไขสินค้า"
                 title="แก้ไขสินค้า"
               >
-                <PenLine className="w-4 h-4 text-white" />
+                <Eye className="w-4 h-4 text-white" />
               </Button>
             </Link>
 

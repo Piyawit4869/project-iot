@@ -332,18 +332,18 @@ export default function SingleUsers() {
           ) : (
             <div className="w-full flex flex-row pl-10">
               <GlobalButton
-                label="แก้ไข"
-                key="update-button"
-                type="button"
-                className="mr-4 max-w-[90px]"
-                onClick={() => setIsEdit(true)}
-              />
-              <GlobalButton
                 label="ลบ"
                 variant="outline"
                 key="delete-btn"
-                className="max-w-[90px] mr-15"
+                className="mr-4 max-w-[90px]"
                 onClick={() => params.id && handleDelete(params.id)}
+              />
+              <GlobalButton
+                label="แก้ไข"
+                key="update-button"
+                type="button"
+                className="max-w-[90px] mr-15"
+                onClick={() => setIsEdit(true)}
               />
             </div>
           ),
@@ -390,27 +390,27 @@ export default function SingleUsers() {
                   </div>
 
                   <div className="md:w-[65%] w-full flex flex-col gap-5">
-                    <Card className="p-2">
+                    <Card className="p-2 py-8">
                       <UserCompensation form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2">
+                    <Card className="p-2 py-8">
                       <UserSkills form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2">
+                    <Card className="p-2 py-8">
                       <UserWorkExperience form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2">
+                    <Card className="p-2 py-8">
                       <UserStudy form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2">
+                    <Card className="p-2 py-8">
                       <UserSocalmedias form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2">
+                    <Card className="p-2 py-8">
                       <UserDocuments form={form} data={data} />
                     </Card>
                   </div>

@@ -79,6 +79,7 @@ export const ViewCustomerContact: React.FC<CustomerFormCreateProps> = ({
               control={form.control}
               name="organizationDetails.websiteUrl"
               label="เว็บไซต์"
+              canCopy={true}
             />
 
             <FormTextRow

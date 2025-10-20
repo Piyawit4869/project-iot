@@ -66,7 +66,7 @@ export const useCustomerPaginate = ({
   priority?: string;
   tags?: string;
   customerType?: string;
-  phone?: number;
+  phone?: string;
   createdBy?: string;
   updatedBy?: string;
   createdFrom?: string;

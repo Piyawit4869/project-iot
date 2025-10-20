@@ -3,7 +3,7 @@ import { Button } from "~/components/ui/button";
 import { type ColumnDef } from "@tanstack/react-table";
 
 import { GlobalImage } from "~/components/shared/global-image";
-import { PenLine, Trash } from "lucide-react";
+import { Eye, PenLine, Trash } from "lucide-react";
 
 import GlobalButton from "~/components/shared/global-button";
 import { GlobalModal } from "~/components/shared/modal/modal";
@@ -220,7 +220,7 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
               aria-label="แก้ไขสินค้า"
               title="แก้ไขสินค้า"
             >
-              <PenLine className="w-4 h-4 text-white" />
+              <Eye className="w-4 h-4 text-white" />
             </Button>
           </Link>
 

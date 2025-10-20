@@ -9,9 +9,10 @@ import { Calendar } from "../ui/calendar";
 interface DatePickerProps {
   value?: string;
   onChange?: (date: string | undefined) => void;
+  placeholder?: string;
 }
 
-export function DatePicker({ value, onChange }: DatePickerProps) {
+export function DatePicker({ value, onChange, placeholder }: DatePickerProps) {
   const [show, setShow] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -40,7 +41,7 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
         {value ? (
           format(new Date(value), "PPP", { locale: th })
         ) : (
-          <span className="text-gray-500">เลือกวันที่</span>
+          <span className="text-gray-500">{placeholder ?? "เลือกวันที่"}</span>
         )}
         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
       </Button>
