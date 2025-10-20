@@ -9,6 +9,7 @@ import { useCustomerViewModel } from "./viewmodels/useCustomerViewModel";
 import { useGetAllUsers } from "~/api/client/customer/useGetUsers";
 import {
   useGetAiNote,
+  useGetAnalyzeCustomer,
   useUpdateCustomer,
 } from "~/api/client/customer/useCustomer";
 import type { CustomerValues } from "~/schemas/customer/customer-form";
@@ -39,7 +40,7 @@ export default function SingDetailleCustomer() {
   const id = params?.id as string;
 
   const {
-    state: { customer, loadCustomer, formUpdate, isUpdating },
+    state: { customer, loadCustomer, formUpdate, isUpdating, fetchCustomer },
   } = useCustomerViewModel();
 
   const { isLoading } = useGetAllUsers();
@@ -109,6 +110,7 @@ export default function SingDetailleCustomer() {
               return;
             }
             toast.success("แก้ไขข้อมูลลูกค้าสำเร็จ !", { id: toastId });
+            fetchCustomer();
             setIsEdit(false);
           },
           onError: () => {

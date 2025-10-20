@@ -171,6 +171,7 @@ export const FormCustomerDetailCard: React.FC<CustomerFormCreateProps> = ({
                       value={field.value || ""}
                       placeholder="กรอกเบอร์โทรศัพท์ผู้ติดต่อ เช่น 0612345678"
                       onChange={onlyNumber(field)}
+                      maxLength={10}
                     />
                   </FormControl>
                 </FormItem>

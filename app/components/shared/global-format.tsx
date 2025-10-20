@@ -6,6 +6,7 @@ import timezone from "dayjs/plugin/timezone";
 import relativeTime from "dayjs/plugin/relativeTime";
 import isToday from "dayjs/plugin/isToday";
 import isYesterday from "dayjs/plugin/isYesterday";
+import buddhistEra from "dayjs/plugin/buddhistEra";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 
 dayjs.extend(customParseFormat);
@@ -16,6 +17,7 @@ dayjs.extend(timezone);
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
 dayjs.extend(relativeTime);
+dayjs.extend(buddhistEra);
 dayjs.extend(localizedFormat);
 
 export const formatNumber = (
@@ -37,9 +39,8 @@ export const formatForNumber = (
   if (value == null) return "0.00";
   return value.toLocaleString("th-TH");
 };
-export const formatDateTH = (
-  date: string | Date | null | undefined
-): string => {
+
+export const formatDateTH = (date?: string | Date | null): string => {
   if (!date) return "";
 
   return dayjs(date).tz("Asia/Bangkok").locale("th").format("DD/MM/BBBB");

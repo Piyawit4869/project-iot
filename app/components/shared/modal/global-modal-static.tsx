@@ -44,7 +44,7 @@ export function GlobalModalStatic() {
 
   return (
     <Dialog open={open} onOpenChange={hide}>
-      <DialogContent>
+      <DialogContent className="dark:bg-[#1d1d1d]">
         <DialogHeader className="flex items-center justify-center gap-2">
           {type && iconMap[type]}
           <DialogTitle>{title}</DialogTitle>
@@ -63,7 +63,7 @@ export function GlobalModalStatic() {
             onClick={handleConfirm}
             disabled={loading}
             type="button"
-            className="w-1/2 max-w-[222px]"
+            className="w-1/2 max-w-[222px] bg-black dark:text-white hover:dark:bg-[#080808]"
           >
             {confirmText || "ยืนยัน"}
           </Button>
