@@ -508,23 +508,6 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="profile.taxId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>เลขประจำตัวผู้เสียภาษี</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="กรอกเลขประจำตัวผู้เสียภาษี"
-                          {...field}
-                          value={field.value ?? undefined}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
                   name="profile.nationality"
                   render={({ field }) => (
                     <FormItem>
@@ -603,8 +586,8 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                       <FormLabel>วันที่เริ่มงาน</FormLabel>
                       <FormControl>
                         <DatePicker
-                          value={field.value ?? undefined}
-                          onChange={(val) => field.onChange(val ?? undefined)}
+                          value={field.value || ""}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />
@@ -619,8 +602,25 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                       <FormLabel>วันที่สิ้นสุดงาน</FormLabel>
                       <FormControl>
                         <DatePicker
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="profile.taxId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>เลขประจำตัวผู้เสียภาษี</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="กรอกเลขประจำตัวผู้เสียภาษี"
+                          {...field}
                           value={field.value ?? undefined}
-                          onChange={(val) => field.onChange(val ?? undefined)}
                         />
                       </FormControl>
                       <FormMessage />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import { DataTable } from "~/components/shared/data-table";
 import { TabControl } from "~/components/shared/tab-control";
@@ -7,7 +7,7 @@ import { FileDown, FileUp, Plus } from "lucide-react";
 
 import GlobalButton from "~/components/shared/global-button";
 import { cn } from "~/lib/utils";
-import { Link, useSearchParams } from "react-router";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
 import { useSidebar } from "~/components/ui/sidebar";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import {
@@ -29,9 +29,13 @@ export const InventoryIndexContainer = () => {
 
   const { isMobile } = useSidebar();
   const columns = useInventoryColumnTable();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [sp, setSearchParams] = useSearchParams();
   const [status, setStatus] = useState("all");
-  const [sp] = useSearchParams();
-  const filters = React.useMemo(
+  const [tableKey, setTableKey] = useState(0);
+
+  const filters = useMemo(
     () =>
       pickSearchParams(sp, [
         "name",
@@ -52,8 +56,19 @@ export const InventoryIndexContainer = () => {
 
   const items = TabIndexTableinventorys(categories);
 
-  const handleChangeTab = (values: any) => {
-    setStatus(values);
+  const clearAllFilters = useCallback(() => {
+    setSearchParams({});
+
+    navigate(location.pathname, { replace: true });
+  }, [setSearchParams, navigate, location.pathname]);
+
+  const handleChangeTab = (val: string) => {
+    const hadQuery = sp.toString().length > 0;
+    setStatus(val);
+    clearAllFilters();
+    if (hadQuery) {
+      setTableKey((k) => k + 1);
+    }
   };
 
   const paginate = usePaginate;
@@ -99,6 +114,7 @@ export const InventoryIndexContainer = () => {
         ]}
       />
       <DataTable
+        key={tableKey}
         queryFunction={({ pageIndex, pageSize }) =>
           paginate({
             pageIndex,
@@ -115,7 +131,7 @@ export const InventoryIndexContainer = () => {
         columns={columns}
         addOn={
           <Tabs
-            defaultValue="all"
+            value={status}
             onValueChange={handleChangeTab}
             className={cn("block", isMobile && "hidden")}
           >

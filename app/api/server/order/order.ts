@@ -12,6 +12,7 @@ export const fetchOrderPagination = async (params: {
   status: string;
   limit?: number;
   docName?: string;
+  docNo?: string;
   name?: string;
   profit?: number;
   total?: number;

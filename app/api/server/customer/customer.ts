@@ -17,13 +17,13 @@ import type {
 
 export const fetchCustomerPagination = async (params: {
   page: number;
-  itemsPerPage: number;
-  status: string;
   limit: number;
+  status: string;
+  itemsPerPage?: number;
   name?: string;
   fullname?: string;
   customerPlatform?: string;
-  priority?: string;
+  priority?: number;
   tags?: string;
   customerType?: string;
   phone?: string;
@@ -35,16 +35,17 @@ export const fetchCustomerPagination = async (params: {
   updatedTo?: string;
 }) => {
   try {
-    const p = Object.assign({});
-    p.page = params.page;
-    p.limit = params.limit;
-    if (params.status && params.status !== "all") {
-      p.status = params.status;
+    const p = Object.fromEntries(
+      Object.entries(params).filter(
+        ([_, v]) => v !== undefined && v !== "" && v !== null
+      )
+    );
+
+    if (p.status === "all") {
+      delete p.status;
     }
 
-    const res = await ApiConfig.get(`/crud/customers/paginate`, {
-      params: p,
-    });
+    const res = await ApiConfig.get(`/crud/customers/paginate`, { params: p });
 
     return res.data;
   } catch (error) {

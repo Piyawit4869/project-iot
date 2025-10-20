@@ -30,10 +30,6 @@ import { Link } from "react-router";
 import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import { Button } from "~/components/ui/button";
 import { useDeleteCustomer } from "~/api/client/customer/useCustomer";
-import {
-  DateISOToDisplayDate,
-  DateISOToDisplayDateWithNoTime,
-} from "~/utils/date-format";
 
 const fullName = (c: CustomerType) =>
   c.profile?.name ||
