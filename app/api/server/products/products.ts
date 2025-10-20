@@ -55,6 +55,7 @@ export const fetchProducts = async (params: {
         ...params.searchTerms,
       },
     });
+
     return res.data;
   } catch (error) {
     return error;

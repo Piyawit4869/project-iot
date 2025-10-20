@@ -6,7 +6,7 @@ import { TabControl } from "~/components/shared/tab-control";
 import GlobalButton from "~/components/shared/global-button";
 import { IndexLayoutTableLoading } from "~/components/shared/index-table-loading";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
-import { PlusCircleIcon, Trash2 } from "lucide-react";
+import { PlusCircleIcon, Save, Trash2 } from "lucide-react";
 import { SelectorItemsModal } from "~/components/shared/modal/selector-items-modal";
 import { GlobalImage } from "~/components/shared/global-image";
 import { DataTable } from "~/components/shared/data-table";
@@ -82,7 +82,11 @@ const InventoryCreateContainer = () => {
           backpath="/inventory"
           buttons={[
             <GlobalButton
-              label="สร้าง"
+              label={
+                <>
+                  <Save /> สร้าง
+                </>
+              }
               key="create button"
               type="submit"
               loading={isSubmitting}

@@ -119,6 +119,8 @@ export function DataTable<TData, TValue>({
 
   const [isLoadingState, setIsLoadingState] = React.useState<boolean>(true);
 
+  const isServer = Boolean(queryFunction);
+
   const table = useReactTable({
     data: rows,
     pageCount,
@@ -142,9 +144,9 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    ...(isServer ? {} : { getFilteredRowModel: getFilteredRowModel() }),
+    ...(isServer ? {} : { getPaginationRowModel: getPaginationRowModel() }),
+    ...(isServer ? {} : { getSortedRowModel: getSortedRowModel() }),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
 

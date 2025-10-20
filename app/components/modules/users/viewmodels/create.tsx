@@ -20,6 +20,7 @@ import { UserWorkExperience } from "../components/formworkExperiences";
 import { UserStudy } from "../components/formStudy";
 import { UserSocalmedias } from "../components/formSocalmedia";
 import { UserDocuments } from "../components/formDocuments";
+import { Save } from "lucide-react";
 
 export default function CreateUsers() {
   const navigate = useNavigate();
@@ -102,7 +103,11 @@ export default function CreateUsers() {
         backpath="/users"
         buttons={[
           <GlobalButton
-            label="สร้าง"
+            label={
+              <>
+                <Save /> สร้าง
+              </>
+            }
             key="create-button"
             type="submit"
             loading={isSubmitting}

@@ -3,6 +3,7 @@ import GlobalButton from "~/components/shared/global-button";
 import { useProductViewModel } from "~/hooks/products/viewmodels/useProductViewModel";
 import { IndexLayoutTableLoading } from "~/components/shared/index-table-loading";
 import { FormProductNew } from "./form-product-new";
+import { Save } from "lucide-react";
 
 export const CreateProducts = () => {
   const {
@@ -42,7 +43,11 @@ export const CreateProducts = () => {
         backpath="/products"
         buttons={[
           <GlobalButton
-            label="สร้าง"
+            label={
+              <>
+                <Save /> สร้าง
+              </>
+            }
             key={"create button"}
             type="submit"
             loading={isSubmitting}

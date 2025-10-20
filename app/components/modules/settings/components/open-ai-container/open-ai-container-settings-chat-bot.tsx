@@ -21,6 +21,7 @@ import { ChatBotChatMessagesAndConfig } from "./chat-bot-chat-messages-and-confi
 import { useChat, type Message } from "~/providers/chat/useChat";
 import { socketConfig } from "~/lib/sockets";
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
+import { Save } from "lucide-react";
 
 interface OpenAiContainerSettingsChatBotProps {
   api: string;
@@ -150,7 +151,9 @@ export const OpenAiContainerSettingsChatBot: React.FC<
             form="config-ai"
             className="w-full"
           >
-            บันทึก
+            <>
+              <Save /> สร้าง
+            </>
           </Button>,
         ]}
       />
