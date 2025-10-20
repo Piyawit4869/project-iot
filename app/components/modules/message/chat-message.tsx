@@ -323,14 +323,14 @@ export default function ChatMessages({
           )}
 
           {combinedMessages.map((msg, index) => {
-            const isUser = msg.platform === "backoffice";
+            const isBackoffice = msg.platform === "backoffice";
 
             const avatarFallback =
               msg.imageUrl && !msg.imageUrl.includes("http")
                 ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
                     msg.imageUrl
                   )}`
-                : msg.imageUrl;
+                : customer?.profile?.imageUrl;
 
             const formattedTime = dayjs(
               msg.createdAt ? msg.createdAt : msg.timestamp
@@ -340,7 +340,7 @@ export default function ChatMessages({
               <div
                 key={`${msg.lineSubId}+${index}+${msg.sender}`}
                 className={`flex max-w-[75%] flex-col gap-1 ${
-                  isUser ? "ml-auto items-end" : "mr-auto items-start"
+                  isBackoffice ? "ml-auto items-end" : "mr-auto items-start"
                 }`}
               >
                 <div className="flex items-center gap-2 mb-1">
@@ -362,7 +362,7 @@ export default function ChatMessages({
                 {msg.messageType === "text" ? (
                   <div
                     className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
-                      isUser
+                      isBackoffice
                         ? "bg-blue-500 text-white"
                         : "bg-muted text-primary"
                     }`}
