@@ -100,7 +100,7 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
               verticalAlign="bottom"
               content={() => (
                 <div className="flex justify-center w-full">
-                  <span className="text-base text-zinc-400">
+                  <span className="text-base text-[#71717A]  dark:text-[#b4b4c5]">
                     ยังไม่มีการพูดคุยกับลูกค้า
                   </span>
                 </div>

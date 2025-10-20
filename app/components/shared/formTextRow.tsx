@@ -74,8 +74,10 @@ export function FormTextRow<T extends FieldValues>({
 
   return (
     <div className="flex flex-col w-full">
-      <span>{label}</span>
-      <span className="mt-2 text-sm text-[#71717A]">{displayValue}</span>
+      <span className="dark:text-[#ffffff]">{label}</span>
+      <span className="mt-2 text-sm text-[#71717A]  dark:text-[#b4b4c5]">
+        {displayValue}
+      </span>
     </div>
   );
 }
