@@ -157,9 +157,9 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
           sortedNotes.map((note: TNote) => (
             <div
               key={note.id}
-              className="border rounded-lg p-3 bg-white shadow-sm space-y-2"
+              className="border rounded-lg p-3 bg-background shadow-sm space-y-2"
             >
-              <p className="whitespace-pre-line text-sm text-gray-800">
+              <p className="whitespace-pre-line text-popover-foreground text-ring">
                 {note.note}
               </p>
               <div className="flex items-center justify-between text-xs text-gray-500">
