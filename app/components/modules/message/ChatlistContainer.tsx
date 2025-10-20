@@ -24,6 +24,7 @@ export const ChatlistContainer = ({
     setSidebarOpen,
     fetchNextPage,
     setOnSelectRoom,
+    setSearch,
   } = useChatRoom();
 
   return (
@@ -44,6 +45,7 @@ export const ChatlistContainer = ({
           setOnSelectRoom,
           currentCustomer,
           handleChangeSelectedRoom,
+          setSearch,
         }}
       />
     </div>

@@ -1264,7 +1264,7 @@ export default function ChatCustomerInfo({
                 </TabsContent>
 
                 <TabsContent value="settingAI">
-                  <div className="flex flex-col gap-2">
+                  <div className="space-y-3 mt-4 max-h-[calc(100vh-420px)] overflow-auto">
                     <div className="flex flex-row justify-between items-center w-full">
                       <h3 className="text-sm font-semibold mt-1">
                         พูดคุยกับ AI
