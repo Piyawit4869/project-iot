@@ -1,17 +1,12 @@
-import { useState } from "react";
-
+import { useState, useCallback, useMemo } from "react";
 import { FileDown, FileUp, Plus } from "lucide-react";
-
 import { useSidebar } from "~/components/ui/sidebar";
 import GlobalButton from "~/components/shared/global-button";
-import { Link, useSearchParams } from "react-router";
+import { Link, useNavigate, useLocation, useSearchParams } from "react-router";
 import { Button } from "~/components/ui/button";
-
 import { useCustomerColumns } from "./components/columns";
-
 import { customerFilterFields } from "./utils/filter";
 import { TabIndexTable } from "./utils/tab-index-table";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { cn } from "~/lib/utils";
 import { DataTable } from "~/components/shared/data-table";
@@ -20,7 +15,6 @@ import {
   useCustomerPaginate,
 } from "~/api/client/customer/useCustomer";
 import { TabControl } from "~/components/shared/tab-control";
-import React from "react";
 import { parseDateRangeParam, pickSearchParams } from "./utils/search-params";
 
 export default function Customer() {
@@ -28,14 +22,19 @@ export default function Customer() {
   const { isMobile } = useSidebar();
   const customerPaginate = useCustomerPaginate;
 
-  const columns = useCustomerColumns();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [sp, setSearchParams] = useSearchParams();
   const [status, setStatus] = useState("all");
-  const [sp] = useSearchParams();
-  const filters = React.useMemo(
+  const [tableKey, setTableKey] = useState(0);
+
+  const columns = useCustomerColumns();
+
+  const filters = useMemo(
     () =>
       pickSearchParams(sp, [
         "name",
-        // "fullname",
+        "fullname",
         "customerPlatform",
         "priority",
         "tags",
@@ -56,8 +55,19 @@ export default function Customer() {
 
   const items = TabIndexTable(categories);
 
-  const handleChangeTab = (values: any) => {
-    setStatus(values);
+  const clearAllFilters = useCallback(() => {
+    setSearchParams({});
+
+    navigate(location.pathname, { replace: true });
+  }, [setSearchParams, navigate, location.pathname]);
+
+  const handleChangeTab = (val: string) => {
+    const hadQuery = sp.toString().length > 0;
+    setStatus(val);
+    clearAllFilters();
+    if (hadQuery) {
+      setTableKey((k) => k + 1);
+    }
   };
 
   return (

@@ -9,6 +9,7 @@ export const fetchUserPagination = async (params: {
   limit: number;
   status: string;
   userName?: string;
+  fullname?: string;
   email?: string;
   emId?: string;
   active?: boolean;

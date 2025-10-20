@@ -14,7 +14,7 @@ import type { extendedUser } from "./type-user";
 import type { FilterField } from "../global";
 
 export const UserFilterFields: FilterField[] = [
-  { id: "userName", label: "ผู้ติดต่อ", kind: "text", showIn: "main" },
+  { id: "fullname", label: "ชื่อ", kind: "text", showIn: "main" },
   { id: "email", label: "อีเมล", kind: "text", showIn: "main" },
   { id: "emId", label: "รหัสพนักงาน", kind: "text", showIn: "main" },
   {
@@ -23,11 +23,11 @@ export const UserFilterFields: FilterField[] = [
     kind: "select",
     showIn: "main",
     options: [
-      { label: "เปิดใช้งาน", value: "active" },
-      { label: "ปิดใช้งาน", value: "inactive" },
+      { label: "เปิดใช้งาน", value: "true" },
+      { label: "ปิดใช้งาน", value: "false" },
     ],
   },
-  { id: "phone", label: "เบอร์โทรศัพท์", kind: "number", showIn: "main" },
+  { id: "phone", label: "เบอร์โทรศัพท์", kind: "text", showIn: "main" },
   {
     id: "gender",
     label: "เพศ",
@@ -42,7 +42,7 @@ export const UserFilterFields: FilterField[] = [
   // { id: "updatedBy", label: "ผู้ที่แก้ไข", kind: "text", showIn: "advanced" },
   {
     id: "createdAt",
-    label: "วันที่สร้างบัญชี",
+    label: "วันที่สร้าง",
     kind: "dateRange",
     showIn: "advanced",
   },

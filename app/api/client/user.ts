@@ -19,6 +19,7 @@ export const usePaginate = ({
   status = "",
   limit,
   userName,
+  fullname,
   email,
   emId,
   active,
@@ -35,6 +36,7 @@ export const usePaginate = ({
   status?: string;
   limit: number;
   userName?: string;
+  fullname?: string;
   email?: string;
   emId?: string;
   active?: boolean;
@@ -54,6 +56,7 @@ export const usePaginate = ({
       status,
       limit,
       userName,
+      fullname,
       email,
       emId,
       active,
@@ -72,6 +75,7 @@ export const usePaginate = ({
         status: status,
         limit: limit,
         userName,
+        fullname,
         email,
         emId,
         active,

@@ -74,13 +74,23 @@ export default function ChatbotSpaceNew({
               {selectedRoom && selectedRoom.id && selectedRoom ? (
                 <div className="flex flex-col w-full h-full bg-white dark:bg-secondary">
                   <div className="flex items-center  border-b px-4 py-2 dark:bg-background">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setShowChatList(!showChatList)}
+                      className="hidden md:flex"
+                    >
+                      <Settings2 className="h-4 w-4" />
+                    </Button>
                     <div className="flex items-center w-full gap-2 h-[36px] justify-between">
                       {isLoading ? (
                         <SkeletonLoading className="w-[200px] h-[20px]" />
                       ) : (
-                        <h2 className="text-lg font-semibold">
-                          {customerSingle?.profile?.name ?? ""}
-                        </h2>
+                        <>
+                          <h2 className="text-lg font-semibold">
+                            {customerSingle?.profile?.name ?? ""}
+                          </h2>
+                        </>
                       )}
 
                       <Button
@@ -186,7 +196,7 @@ export default function ChatbotSpaceNew({
           {/* <ResizableHandle withHandle className="hidden lg:flex" /> */}
           {customerInfoOpen && (
             <ResizablePanel minSize={20} maxSize={25} className="min-w-[300px]">
-              <aside className="hidden md:flex w-full">
+              <aside className="w-full">
                 {selectedRoom &&
                 selectedRoom?.id &&
                 selectedRoom?.customerId ? (

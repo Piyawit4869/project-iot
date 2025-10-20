@@ -21,20 +21,24 @@ export type FilterField = {
 };
 
 export const customerFilterFields: FilterField[] = [
-  { id: "profile.name", label: "ชื่อ", kind: "text", showIn: "main" },
+  { id: "name", label: "ชื่อ", kind: "text", showIn: "main" },
   // { id: "customerPlatform", label: "Channel", kind: "text" },
   {
     id: "priority",
     label: "ลำดับความสำคัญ",
-    kind: "number",
+    kind: "numberRange",
     showIn: "main",
   },
-  { id: "tags", label: "Tags", kind: "select", showIn: "main" },
+  // { id: "tags", label: "Tags", kind: "select", showIn: "main" },
   {
     id: "customerType",
     label: "ประเภทลูกค้า",
-    kind: "text",
+    kind: "select",
     showIn: "main",
+    options: [
+      { label: "บุคคลธรรมดา", value: "ordinary_person" },
+      { label: "นิติบุคคล", value: "juristic_person" },
+    ],
   },
   { id: "phone", label: "เบอร์โทรศัพท์", kind: "text", showIn: "main" },
   { id: "createdBy", label: "ผู้สร้าง", kind: "text", showIn: "advanced" },

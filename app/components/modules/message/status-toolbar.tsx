@@ -9,31 +9,47 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
 import { cn } from "~/lib/utils";
+import { startTransition } from "react";
+import {
+  useMarkAsDone,
+  useMarkAsProcess,
+} from "~/api/client/message/useMessage";
 
 type Status = "todo" | "done";
 
 type Props = {
+  chatRoomDetail: any;
   value: Status;
   onChange?: (next: Status) => void;
   className?: string;
 };
 
-export default function StatusToolbar({ value, onChange, className }: Props) {
-  const [open, setOpen] = React.useState(false);
+export default function StatusToolbar({ chatRoomDetail, className }: Props) {
+  const { mutate: markAsProcess } = useMarkAsProcess(chatRoomDetail?.id);
+  const { mutate: markAsDone } = useMarkAsDone(chatRoomDetail?.id);
 
-  const setTodo = () => {
-    onChange?.("todo");
-    setOpen(false);
+  const [isDone, setIsDone] = React.useState(chatRoomDetail?.done);
+  const [isProcess, setIsProcess] = React.useState(chatRoomDetail?.isProcess);
+
+  const setTodo = async () => {
+    // onChange?.("todo");
+    markAsProcess(true);
+    markAsDone(false);
+    startTransition(() => {
+      setIsProcess(true);
+      setIsDone(false);
+    });
   };
   const setDone = () => {
-    onChange?.("done");
-    // ไม่ปิด popover ทันที เผื่อผู้ใช้กด “ส่งอีเมล”
+    // onChange?.("done");
+    markAsProcess(false);
+    markAsDone(true);
+
+    startTransition(() => {
+      setIsDone(true);
+      setIsProcess(false);
+    });
   };
 
   return (
@@ -44,14 +60,13 @@ export default function StatusToolbar({ value, onChange, className }: Props) {
           className
         )}
       >
-        {/* ปุ่ม: ต้องดำเนินการ */}
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
               variant="outline"
               className={cn(
                 "h-9 px-3 rounded-md border-muted-foreground/30",
-                value === "todo" && "border-primary text-primary"
+                isProcess && "border-primary text-primary"
               )}
               onClick={setTodo}
             >
@@ -62,7 +77,6 @@ export default function StatusToolbar({ value, onChange, className }: Props) {
           <TooltipContent>กำหนดเป็น "ต้องดำเนินการ"</TooltipContent>
         </Tooltip>
 
-        {/* ปุ่ม: ดำเนินการแล้ว + Popover */}
         {/* <Popover open={open} onOpenChange={setOpen}> */}
 
         <Tooltip>
@@ -72,7 +86,7 @@ export default function StatusToolbar({ value, onChange, className }: Props) {
               variant="outline"
               className={cn(
                 "h-9 px-3 rounded-md border-muted-foreground/30",
-                value === "done" && "border-primary text-primary"
+                isDone && "border-primary text-primary"
               )}
               onClick={setDone}
             >

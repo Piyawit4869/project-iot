@@ -180,7 +180,7 @@ export default function CreateOrder() {
             key="create-order"
             label={
               <>
-                <Save /> บันทึก
+                <Save /> สร้าง
               </>
             }
             type="submit"

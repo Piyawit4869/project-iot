@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import { DataTable } from "~/components/shared/data-table";
 
@@ -13,7 +13,7 @@ import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useSidebar } from "~/components/ui/sidebar";
 import { useUserColumns } from "../component/columns";
 import { useAllUserSummary, usePaginate } from "~/api/client/user";
-import { Link, useSearchParams } from "react-router";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
 import { TabControl } from "~/components/shared/tab-control";
 import { TabIndexTableUser, UserFilterFields } from "~/types/user/init-data";
 import {
@@ -27,12 +27,17 @@ export default function Users() {
 
   const columns = useUserColumns();
   const { isMobile } = useSidebar();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [sp, setSearchParams] = useSearchParams();
   const [status, setStatus] = useState("all");
-  const [sp] = useSearchParams();
-  const filters = React.useMemo(
+  const [tableKey, setTableKey] = useState(0);
+
+  const filters = useMemo(
     () =>
       pickSearchParams(sp, [
         "userName",
+        "fullname",
         "email",
         "status",
         "emId",
@@ -52,8 +57,19 @@ export default function Users() {
   const updatedTo = updated.toDate;
 
   const items = TabIndexTableUser(user);
-  const handleChangeTab = (values: any) => {
-    setStatus(values);
+  const clearAllFilters = useCallback(() => {
+    setSearchParams({});
+
+    navigate(location.pathname, { replace: true });
+  }, [setSearchParams, navigate, location.pathname]);
+
+  const handleChangeTab = (val: string) => {
+    const hadQuery = sp.toString().length > 0;
+    setStatus(val);
+    clearAllFilters();
+    if (hadQuery) {
+      setTableKey((k) => k + 1);
+    }
   };
 
   return (
@@ -98,12 +114,12 @@ export default function Users() {
       />
 
       <DataTable
+        key={tableKey}
         queryFunction={(res) =>
           paginate({
             pageIndex: res.pageIndex,
             status: status === "all" ? "" : status,
             limit: res.pageSize,
-            // params : { }
             ...filters,
             createdFrom,
             createdTo,
@@ -114,7 +130,7 @@ export default function Users() {
         columns={columns}
         addOn={
           <Tabs
-            defaultValue="all"
+            value={status}
             onValueChange={handleChangeTab}
             className={cn("block", isMobile && "hidden")}
           >
