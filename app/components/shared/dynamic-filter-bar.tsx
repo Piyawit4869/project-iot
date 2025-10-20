@@ -321,8 +321,10 @@ export function DynamicFilterBar<TData>({
               );
             case "select":
               return (
-                <div key={f.id} className="flex flex-col w-[214px]">
-                  <span>{String(f.label)}</span>
+                <div key={f.id} className="mb-3 w-[214px]">
+                  <span className="block text-sm font-medium mb-1">
+                    {String(f.label)}
+                  </span>
                   <Select
                     value={typeof form[f.id] === "string" ? form[f.id] : ""}
                     onValueChange={(v) => update(f.id, v)}
