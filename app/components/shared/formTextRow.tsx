@@ -85,8 +85,6 @@ export function FormTextRow<T extends FieldValues>({
     setTimeout(() => setCopied(false), 1500);
   };
 
-  console.log({ copied });
-
   return (
     <div className="flex flex-col w-full">
       {canCopy ? (
