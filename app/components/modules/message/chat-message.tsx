@@ -119,7 +119,7 @@ export default function ChatMessages({
     return () => {
       scrollArea.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [bottomRef.current]);
 
   React.useEffect(() => {
     if (messagesData?.pages?.length === 1) {
@@ -422,7 +422,7 @@ export default function ChatMessages({
             </button>
           )}
         </div>
-        <ChatInput selectedRoom={selectedRoom} />
+        <ChatInput selectedRoom={selectedRoom} customer={customer} />
       </div>
 
       {/* <ChecklistDialog

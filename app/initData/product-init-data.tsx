@@ -58,12 +58,12 @@ export const ProductsFilterFields: FilterField[] = [
   { id: "sku", label: "รหัสสินค้า", kind: "text", showIn: "main" },
   // { id: "barcode", label: "บาร์โค้ด", kind: "text", showIn: "main" },
   { id: "available", label: "จำนวนสินค้า", kind: "number", showIn: "main" },
-  {
-    id: "availableForSale",
-    label: "สินค้าที่สามารถขายได้",
-    kind: "number",
-    showIn: "main",
-  },
+  // {
+  //   id: "availableForSale",
+  //   label: "สินค้าที่สามารถขายได้",
+  //   kind: "number",
+  //   showIn: "main",
+  // },
   {
     id: "matType",
     label: "ประเภทวัสดุ",

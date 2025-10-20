@@ -134,11 +134,11 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
       header: "จำนวนสินค้า",
       cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
     },
-    {
-      accessorKey: "availableForSale",
-      header: "สินค้าที่สามารถขายได้",
-      cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
-    },
+    // {
+    //   accessorKey: "availableForSale",
+    //   header: "สินค้าที่สามารถขายได้",
+    //   cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
+    // },
     {
       accessorKey: "matType",
       header: "ประเภทวัสดุ",

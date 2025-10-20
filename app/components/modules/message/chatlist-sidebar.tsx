@@ -102,15 +102,17 @@ export default function ChatlistSidebar({
       fetchNextPage();
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
   React.useEffect(() => {
+    console.log({ api });
     const socket = socketConfig(api);
 
     if (me?.branchId) {
+      console.log("me?.branchId", me?.branchId);
       socket.emit("rooms", `${me.branchId}`);
     }
 
     socket.on("rooms", (room: any) => {
+      console.log({ room });
       setAllRooms((prev) => mergeRoomImmutable(prev, room));
     });
 
@@ -442,7 +444,7 @@ function ChatItem({
                 className={cn(
                   "text-sm truncate text-black-400  sm:max-w-[200px] lg:max-w-[250px] min-w-[170px] whitespace-nowrap overflow-hidden",
                   unread && "font-medium",
-                  (roomDetail?.isDone || roomDetail?.isProcess) &&
+                  ((roomDetail && roomDetail.done) || roomDetail.isProcess) &&
                     "truncate w-[80px]"
                 )}
               >
@@ -451,7 +453,7 @@ function ChatItem({
 
               {(roomDetail?.isDone || roomDetail?.isProcess) && (
                 <div className="flex flex-col items-center  justify-end w-[90px]">
-                  {roomDetail?.isDone && (
+                  {roomDetail?.done && (
                     <TagLabel
                       label="ดำเนินการแล้ว"
                       icon={<CheckCircle className="mr-1 h-[10px] w-[10px]" />}
