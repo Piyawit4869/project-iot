@@ -44,7 +44,7 @@ import { GlobalProductStatus } from "~/types/order";
 import { socketConfig } from "~/lib/sockets";
 import type { Product } from "~/schemas/product/product";
 import { useChat, type Message } from "~/providers/chat/useChat";
-import { useGetProducts } from "~/api/client/product/useProductQuery";
+import { usePaginate } from "~/api/client/product/useProductQuery";
 import {
   useAiReplySettings,
   useConnectedChatRoomAssistant,
@@ -87,6 +87,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
+import { useDebounce } from "~/hooks/use-debounce";
+import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 
 interface UserProps {
   id: string;
@@ -124,7 +126,16 @@ export default function ChatCustomerInfo({
   currentCustomer: Customer;
   api: string;
 }) {
-  const { data: products } = useGetProducts();
+  const [search, setSearch] = React.useState<string>("");
+
+  const debouncedSearch = useDebounce(search);
+
+  const { data: productsPaginate, isLoading: productsLoading } = usePaginate({
+    pageIndex: 1,
+    pageSize: 20,
+    name: debouncedSearch,
+  });
+
   const { setProducts } = useOrder();
   const { addMessageAI } = useChat();
 
@@ -187,7 +198,6 @@ export default function ChatCustomerInfo({
 
   const [, setSelectItemIds] = React.useState<string[]>([]);
   const [, setProductSelected] = React.useState<Product[]>([]);
-  const [search, setSearch] = React.useState("");
   const [isPopoverOpenMain, setIsPopoverOpenMain] = React.useState(false);
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [viewOrderDetail] = React.useState<string>("");
@@ -474,25 +484,6 @@ export default function ChatCustomerInfo({
       ? currentCustomer.supports.map((support) => support.userId)
       : []
   );
-
-  const filtered: Product[] = React.useMemo(() => {
-    const list = Array.isArray(products) ? products : [];
-    const searchText: string = search.trim().toLowerCase();
-
-    return list.filter((i) => {
-      if (!i) return false;
-
-      const matchText =
-        !searchText ||
-        (i.name?.toLowerCase().includes(searchText) ?? false) ||
-        (i.sku?.toLowerCase().includes(searchText) ?? false);
-
-      const matchStatus =
-        applied.length === 0 || (i.status && applied.includes(i.status));
-
-      return matchText && matchStatus;
-    });
-  }, [products, search, applied]);
 
   const filteredUser = allUser?.filter((item: any) =>
     item.userName?.toLowerCase().includes(search.toLowerCase())
@@ -1160,8 +1151,18 @@ export default function ChatCustomerInfo({
 
                     <ScrollArea className="h-[calc(100vh-480px)] rounded-md border p-2 bg-white">
                       <ul className="space-y-2">
-                        {filtered && filtered.length > 0 ? (
-                          filtered.map((item: Product) => (
+                        {productsLoading ? (
+                          <div className="space-y-2">
+                            {Array.from({ length: 5 }).map((_, index) => (
+                              <div key={index} className="flex flex-row gap-2">
+                                <SkeletonLoading height="h-15" width="w-1/4" />
+                                <SkeletonLoading height="h-15" />
+                              </div>
+                            ))}
+                          </div>
+                        ) : productsPaginate &&
+                          productsPaginate.items.length > 0 ? (
+                          productsPaginate.items.map((item: Product) => (
                             <li
                               key={item?.id}
                               className="flex items-center justify-between gap-4 p-3 rounded-lg hover:bg-muted/60 transition-colors"
