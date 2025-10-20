@@ -47,7 +47,7 @@ export const MOCK_PRODUCTS = [
     salePrice: 690,
     status: "inactive",
     imageUrl:
-      "https://images.unsplash.com/photo-1593032465171-c9f6b7a0a9b3?w=300&q=80",
+      "https://storage.googleapis.com/utotech-storage/2b09ef5d-39e9-4515-a21e-96ecb41196ba-081958c718bf4c63adbcc0719ee51d04473521.png",
   },
   {
     id: "p003",
@@ -57,7 +57,7 @@ export const MOCK_PRODUCTS = [
     salePrice: 350,
     status: "active",
     imageUrl:
-      "https://images.unsplash.com/photo-1606813908914-632f8baf5b9e?w=300&q=80",
+      "https://storage.googleapis.com/utotech-storage/7f06ba3d-59c7-4c49-96eb-4d8adc8c09b0-fe81ea52d26e4f87b501dff25565f7d4501363.png",
   },
 ];
 
