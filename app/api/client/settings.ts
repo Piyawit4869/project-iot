@@ -146,16 +146,14 @@ export const useSendMessage = () => {
   });
 };
 
-export const usePaginatedChatRooms = (name: string) => {
+export const usePaginatedChatRooms = () => {
   return useInfiniteQuery({
-    queryKey: ["roomChat", name],
-    queryFn: async ({ pageParam }) =>
-      fetchRoomChatLoadMore(pageParam, 20, name),
+    queryKey: ["roomChat"],
+    queryFn: async ({ pageParam }) => fetchRoomChatLoadMore(pageParam, 20),
 
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       const meta = lastPage?.meta;
-
       return meta?.hasMore ? meta.offset + meta?.limit : undefined;
     },
   });

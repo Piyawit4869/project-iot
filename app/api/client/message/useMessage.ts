@@ -73,11 +73,11 @@ export const usePaginatedMessages = (roomId: string) => {
   });
 };
 
-export const usePaginatedChatRooms = () => {
+export const usePaginatedChatRooms = (name = "") => {
   return useInfiniteQuery({
-    queryKey: ["roomChat"],
+    queryKey: ["roomChat", name],
     queryFn: async ({ pageParam }) => {
-      return fetchRoomChatLoadMore(pageParam, 20);
+      return fetchRoomChatLoadMore(pageParam, 20, name);
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {

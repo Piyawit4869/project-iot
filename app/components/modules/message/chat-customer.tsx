@@ -569,7 +569,7 @@ export default function ChatCustomerInfo({
 
   return (
     <>
-      <aside className="flex flex-col w-full bg-white dark:bg-background justify-between xl:h-[calc(100vh-50px)] xl:px-1">
+      <aside className="flex flex-col w-full bg-white dark:bg-background justify-between xl:h-[calc(100vh-50px)] xl:px-1 border-l">
         <div>
           <div className="py-4 px-2 flex w-full mt-6 items-center justify-between gap-2 h-[60px] rounded-2xl bg-background">
             <div>
