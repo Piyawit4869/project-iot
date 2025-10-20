@@ -170,7 +170,7 @@ export const AICard = ({
                 <div className="flex flex-row justify-between ">
                   <Label className="text-sm">ช่วงเวลาที่ให้ AI ตอบ</Label>
                   <div className="text-sm flex gap-3">
-                    <span> {customerAI?.startTime || "00.00"}</span>
+                    <span> {customerAI?.startTime || "00.00"} น.</span>
                     <span>ถึง</span>
                     <span>{customerAI?.endTime || "00.00"} น.</span>
                   </div>

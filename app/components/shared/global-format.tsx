@@ -1,9 +1,22 @@
 import dayjs from "dayjs";
 import "dayjs/locale/th";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import relativeTime from "dayjs/plugin/relativeTime";
+import isToday from "dayjs/plugin/isToday";
+import isYesterday from "dayjs/plugin/isYesterday";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 
 dayjs.extend(customParseFormat);
 dayjs.locale("th");
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isToday);
+dayjs.extend(isYesterday);
+dayjs.extend(relativeTime);
+dayjs.extend(localizedFormat);
 
 export const formatNumber = (
   value: number | null | undefined,
@@ -27,35 +40,28 @@ export const formatForNumber = (
 export const formatDateTH = (
   date: string | Date | null | undefined
 ): string => {
-  if (!date) return "-";
-  const d = dayjs(date);
-  const thaiYear = d.year() + 543;
-  return `${d.format("DD/MMM/")}${thaiYear} `;
-};
+  if (!date) return "";
 
-export const formatDateBirthDay = (date?: string | Date | null): string => {
-  if (!date) return "-";
-  const d = dayjs(date);
-  const thaiYear = d.year() + 543;
-  return `${d.format("DD/MM/")}${thaiYear} `;
+  return dayjs(date).tz("Asia/Bangkok").locale("th").format("DD/MM/BBBB");
 };
 
 export const formatDateFull = (date?: string | Date | null): string => {
-  if (!date) return "-";
-  const d = dayjs(date);
-  const thaiYear = d.year() + 543;
-  return `${d.format("DD MMMM ")}/${thaiYear} `;
+  if (!date) return "";
+
+  return dayjs(date).tz("Asia/Bangkok").locale("th").format("DD MMMM BBBB");
 };
 export const formatDateAndTime = (date?: string | Date | null): string => {
-  if (!date) return "-";
-  const d = dayjs(date);
-  const thaiYear = d.year() + 543;
-  return `${d.format("DD/MM")}/${thaiYear} ${d.format("HH:mm")} น.`;
+  if (!date) return "";
+
+  return dayjs(date)
+    .tz("Asia/Bangkok")
+    .locale("th")
+    .format("DD/MM/BBBB HH:mm น.");
 };
 
 export function formatPhoneNumber(phone?: string) {
   const digits = phone?.replace(/\D/g, "");
-  if (digits?.length === 9 || 10) {
+  if (digits?.length === 9 || digits?.length === 10) {
     return `${digits?.slice(0, 3)}-${digits?.slice(3, 6)}-${digits?.slice(6)}`;
   }
 

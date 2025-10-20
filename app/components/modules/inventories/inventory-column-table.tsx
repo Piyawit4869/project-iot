@@ -5,11 +5,12 @@ import GlobalButton from "~/components/shared/global-button";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
-import { formatDateBirthDay } from "~/components/shared/global-format";
+
 import { Link, useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
 import { useDeleteInventory } from "~/api/client/inventories/useInventoryQuery";
 import type { InventoryColumn } from "~/initData/inventory-initData";
+import { formatDateFull } from "~/components/shared/global-format";
 
 export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
   const navigate = useNavigate();
@@ -121,7 +122,7 @@ export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
         header: "วันที่สร้าง",
         cell: (info) => {
           const value = info.getValue() as string;
-          return <span>{formatDateBirthDay(value)}</span>;
+          return <span>{formatDateFull(value)}</span>;
         },
       },
       {
@@ -147,7 +148,7 @@ export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
         header: "วันที่แก้ไข",
         cell: (info) => {
           const value = info.getValue() as string;
-          return <span>{formatDateBirthDay(value)}</span>;
+          return <span>{formatDateFull(value)}</span>;
         },
       },
       {

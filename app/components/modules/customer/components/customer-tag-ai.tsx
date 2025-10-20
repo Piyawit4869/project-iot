@@ -14,11 +14,11 @@ export const CustomerTagAndAI: React.FC<CustomerFormCreateProps> = ({
     <>
       <Card className="mt-4">
         <CardContent>
-          <div className="flex gap-2 mt-5">
+          <div className="flex gap-2">
             <CardTitle className="text-base font-bold">หมายเหตุ</CardTitle>
           </div>
 
-          <div className="md:grid-cols-2">
+          <div className="md:grid-cols-2 mt-5">
             <FormField
               control={form.control}
               name="remark"
