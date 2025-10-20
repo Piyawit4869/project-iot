@@ -182,7 +182,7 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                               value={`item-${item.id}`}
                               className="border-none"
                             >
-                              <AccordionTrigger className="p-0 hover:no-underline [&>svg]:hidden">
+                              <AccordionTrigger className="p-0 hover:no-underline ">
                                 <div className="flex flex-col text-left">
                                   <span className="text-sm font-medium truncate max-w-[180px] md:max-w-[260px]">
                                     {item.name}

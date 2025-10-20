@@ -35,13 +35,13 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
 
   return [
     {
-      accessorKey: "docName",
+      accessorKey: "docNo",
       header: "เลขที่",
       cell: ({ getValue, row }) => {
-        const name = getValue() as string;
+        const docNo = getValue() as string;
         return (
           <span className="text-blue-400 hover:text-blue-300 hover:underline">
-            <Link to={`/orders/${row.original.id}`}>{name ?? "-"}</Link>
+            <Link to={`/orders/${row.original.id}`}>{docNo ?? "-"}</Link>
           </span>
         );
       },
