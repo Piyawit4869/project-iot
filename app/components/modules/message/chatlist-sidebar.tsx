@@ -167,7 +167,7 @@ export default function ChatlistSidebar({
                   type="text"
                   placeholder="ค้นหา"
                   value={search}
-                  className="border border-gray-300 rounded-md px-3 py-1 text-sm bg-white w-1/2 transition-all duration-200 focus:outline-none focus:ring-0 focus:border-gray-300"
+                  className="border  rounded-md px-3 py-1 text-sm bg-background w-1/2 transition-all duration-200 focus:outline-none focus:ring-0 focus:border-gray-300"
                   onClick={() => setInputOpen(true)}
                 />
               </div>
