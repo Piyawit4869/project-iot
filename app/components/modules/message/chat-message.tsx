@@ -377,7 +377,9 @@ export default function ChatMessages({
                     }`}
                   >
                     {/* {msg.message} */}
-                    <MessageText text={msg.message} />
+                    <MessageText
+                      text={typeof msg.message === "string" ? msg.message : ""}
+                    />
                   </div>
                 ) : (
                   <>
