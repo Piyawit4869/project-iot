@@ -7,6 +7,8 @@ import {
   fetchRoomChatAILoadMore,
   fetchRoomChatLoadMore,
   fetchSendMessage,
+  markAsDone,
+  markAsProcess,
 } from "~/api/server/message/message";
 
 import type {
@@ -17,6 +19,18 @@ import type {
 export const useAskQuestion = () => {
   return useMutation({
     mutationFn: (values: AskQuestionValues) => fetchAskQuestion(values),
+  });
+};
+
+export const useMarkAsProcess = (id: string) => {
+  return useMutation({
+    mutationFn: (isProcess: boolean) => markAsProcess(id, isProcess),
+  });
+};
+
+export const useMarkAsDone = (id: string) => {
+  return useMutation({
+    mutationFn: (done: boolean) => markAsDone(id, done),
   });
 };
 

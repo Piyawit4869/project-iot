@@ -20,8 +20,27 @@ import type { ChatRoomSchemaType } from "~/schemas/message/message";
 import { usePaginatedMessages } from "~/api/client/message/useMessage";
 import { useChat, type Message } from "~/providers/chat/useChat";
 import StatusToolbar from "./status-toolbar";
+import ReactLinkify from "react-linkify";
 
-// import { useChatRoom } from "@/stores/chat/useRoom";
+export function MessageText({ text }: { text: string }) {
+  return (
+    <ReactLinkify
+      componentDecorator={(decoratedHref, decoratedText, key) => (
+        <a
+          href={decoratedHref}
+          key={key}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline"
+        >
+          {decoratedText}
+        </a>
+      )}
+    >
+      {text}
+    </ReactLinkify>
+  );
+}
 
 export default function ChatMessages({
   api,
@@ -37,8 +56,6 @@ export default function ChatMessages({
   isCreateOrderOpen: boolean;
   customer: any;
 }) {
-  const { me } = useRouteLoaderData("root");
-
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const newestSeenId = React.useRef<string | null>(null);
@@ -53,6 +70,8 @@ export default function ChatMessages({
   const [buttonScrollToBottom, setButtonScrollToBottom] = React.useState(false);
 
   const { messages: socketMessages, addMessage } = useChat();
+
+  console.log({ selectedRoom });
 
   const {
     data: messagesData,
@@ -275,7 +294,7 @@ export default function ChatMessages({
     <div className="flex flex-col h-[calc(100vh-100px)] bg-white dark:bg-secondary">
       <div className="flex items-center justify-between gap-4 p-2 border-b bg-white dark:bg-background">
         <div className="hidden xl:block">
-          <StatusToolbar value={"done"} />
+          <StatusToolbar value={"done"} chatRoomDetail={selectedRoom} />
         </div>
 
         <div className="flex items-center gap-3">
@@ -359,7 +378,7 @@ export default function ChatMessages({
                   </span>
                 </div>
 
-                {msg.messageType === "text" ? (
+                {msg?.messageType === "text" || msg?.messageType === null ? (
                   <div
                     className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
                       isBackoffice
@@ -367,14 +386,23 @@ export default function ChatMessages({
                         : "bg-muted text-primary"
                     }`}
                   >
-                    {msg.message}
+                    {/* {msg.message} */}
+                    <MessageText text={msg.message} />
                   </div>
                 ) : (
                   <div
                     onClick={() => setPreviewUrl(msg.message)}
                     className="cursor-pointer"
                   >
-                    <GlobalImage src={msg.message} />
+                    <img
+                      src={msg.message}
+                      width={100}
+                      height={100}
+                      // notShowPreview={
+                      //   msg.message ===
+                      //   "https://api.dicebear.com/9.x/initials/svg?seed=X&backgroundColor=ffd5dc&scale=100"
+                      // }
+                    />
                   </div>
                 )}
 
