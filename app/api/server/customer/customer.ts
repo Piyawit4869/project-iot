@@ -47,8 +47,6 @@ export const fetchCustomerPagination = async (params: {
 
     const res = await ApiConfig.get(`/crud/customers/paginate`, { params: p });
 
-    console.log({ res });
-
     return res.data;
   } catch (error) {
     return error;
