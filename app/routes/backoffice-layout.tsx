@@ -1,4 +1,3 @@
-// import { HeaderBreadcrumb } from "~/components/shared/header-breadcrumb";
 import { Menu } from "~/components/shared/menu";
 import { AppSidebar } from "~/components/shared/sidebar";
 import { SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";
@@ -19,7 +18,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function AdminLayout() {
   return (
-    <div className="flex h-screen ">
+    <div className="flex h-screen">
       <SidebarProvider>
         <aside>
           <AppSidebar data={data} />
@@ -27,7 +26,7 @@ export default function AdminLayout() {
         <div className="flex flex-1 flex-col w-full relative">
           <main className="flex-1 w-full ">
             <div className="flex flex-col min-h-screen">
-              <header className="sticky top-0 z-10 shadow p-2 flex items-center justify-between bg-white dark:bg-background">
+              <header className="sticky top-0 z-9 shadow p-2 flex items-center justify-between bg-white dark:bg-background">
                 <div className="flex items-center gap-2 px-4">
                   <SidebarTrigger className="-ml-1" />
                   <HeaderBreadcrumb />
