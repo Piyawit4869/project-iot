@@ -17,7 +17,13 @@ import LineTemplatePickerModal from "./line-template-picker-modal";
 // import { socketConfig } from "@/libs/sockets";
 // import { env } from "@/constants/common";
 
-export default function ChatInput({ selectedRoom }: { selectedRoom: any }) {
+export default function ChatInput({
+  selectedRoom,
+  customer,
+}: {
+  selectedRoom: any;
+  customer: any;
+}) {
   // const apiSocket = new URL(env.base_url ?? "http://localhost:3000").origin;
 
   const { messages, setMessages } = useCustomer();
@@ -103,12 +109,12 @@ export default function ChatInput({ selectedRoom }: { selectedRoom: any }) {
     // });
     send({
       chatRoomId: selectedRoom.id,
-      lineSubId: selectedRoom.customer?.lineSubId ?? "",
+      lineSubId: customer?.lineSubId ?? "",
       message: messageText,
       messageType: "text",
       isAiReply: false,
-      recipient: selectedRoom.customer?.fullName ?? "Unknown",
-      customerId: selectedRoom.customerId ?? "",
+      recipient: customer?.fullName ?? "Unknown",
+      customerId: selectedRoom?.customerId ?? "",
       platform: "backoffice",
       messageLabel: MessageLabelType.SENDTEXT,
     });

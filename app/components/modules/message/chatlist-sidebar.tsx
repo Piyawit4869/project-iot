@@ -102,15 +102,17 @@ export default function ChatlistSidebar({
       fetchNextPage();
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
   React.useEffect(() => {
+    console.log({ api });
     const socket = socketConfig(api);
 
     if (me?.branchId) {
+      console.log("me?.branchId", me?.branchId);
       socket.emit("rooms", `${me.branchId}`);
     }
 
     socket.on("rooms", (room: any) => {
+      console.log({ room });
       setAllRooms((prev) => mergeRoomImmutable(prev, room));
     });
 
@@ -449,23 +451,28 @@ function ChatItem({
                 {message}
               </p>
 
-              <div className="flex flex-col items-center  justify-end w-[90px]">
-                {roomDetail && roomDetail.done && (
-                  <TagLabel
-                    label="ดำเนินการแล้ว"
-                    icon={<CheckCircle className="mr-1 h-[10px] w-[10px]" />}
-                    color="green"
-                  />
-                )}
+              {(roomDetail?.isDone || roomDetail?.isProcess) && (
+                <div className="flex flex-col items-center  justify-end w-[90px]">
+                  {roomDetail?.done && (
+                    <TagLabel
+                      label="ดำเนินการแล้ว"
+                      icon={<CheckCircle className="mr-1 h-[10px] w-[10px]" />}
+                      color="green"
+                    />
+                  )}
 
-                {roomDetail && roomDetail.isProcess && (
-                  <TagLabel
-                    label="ต้องดำเนินการ"
-                    icon={<MessagesSquare className="mr-1 h-[10px] w-[10px]" />}
-                    color="orange"
-                  />
-                )}
-              </div>
+                  {roomDetail?.isProcess && (
+                    <TagLabel
+                      label="ต้องดำเนินการ"
+                      icon={
+                        <MessagesSquare className="mr-1 h-[10px] w-[10px]" />
+                      }
+                      color="orange"
+                      className="text-[10px]"
+                    />
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
