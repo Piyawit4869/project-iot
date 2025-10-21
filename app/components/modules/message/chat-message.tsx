@@ -189,8 +189,8 @@ export default function ChatMessages({
         branchId: selectedRoom?.branchId,
       };
 
-      socket.emit("mark-read", body); // manual read
-      socket.emit("recent-chat", body);
+      // socket.emit("mark-read", body); // manual read
+      // socket.emit("recent-chat", body);
     }
   }, [isLoading, selectedRoom]);
 
