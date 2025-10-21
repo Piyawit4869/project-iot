@@ -17,8 +17,8 @@ import type {
 
 export const fetchCustomerPagination = async (params: {
   page: number;
-  limit: number;
-  status: string;
+  limit?: number;
+  status?: string;
   itemsPerPage?: number;
   name?: string;
   fullname?: string;

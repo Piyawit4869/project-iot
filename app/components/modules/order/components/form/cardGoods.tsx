@@ -9,6 +9,7 @@ import { Card } from "~/components/ui/card";
 import { GlobalImage } from "~/components/shared/global-image";
 import { formatNumber } from "~/components/shared/global-format";
 import { Button } from "~/components/ui/button";
+import PlaceholderImage from "/assets/images/placeholder.webp";
 
 type CardGoodsProps<_T> = {
   label?: string;
@@ -44,47 +45,47 @@ export function CardGoods<T extends ZodTypeAny>({
           data.length > 0 &&
           data.map((item: any, index) => {
             const itemQuantity =
-              quantities.find((q) => q.id === item.id)?.quantity ?? 1;
+              quantities.find((q) => q.id === item?.id)?.quantity ?? 1;
             return (
               <Card
                 key={`item.value-${index}`}
-                className="flex items-start justify-between p-4 gap-4 mb-5"
+                className="flex justify-between items-start  flex-row p-4 gap-4 mb-5"
               >
-                <div className="flex gap-4">
+                <div className="flex gap-4 items-start ">
                   <GlobalImage
-                    src={item.imageUrl}
+                    src={item?.imageUrl || PlaceholderImage}
                     alt="Product"
                     className="w-15 h-15 rounded-lg object-cover border"
                   />
                   <div className="flex flex-col gap-1">
-                    <h2 className="font-bold text-lg">{item.name}</h2>
+                    <h2 className="font-bold text-lg">{item?.name}</h2>
 
                     <span className="text-xs text-gray-500">
-                      {item.sku || "ยังไม่มีรหัสสินค้า"}
+                      {item?.sku || "ยังไม่มีรหัสสินค้า"}
                     </span>
                     <span className="text-sm ">
-                      ต้นทุนต่อชิ้น : {formatNumber(item.costPrice || 0)} ฿
+                      ต้นทุนต่อชิ้น : {formatNumber(item?.costPrice || 0)} ฿
                     </span>
                     <span className="text-sm ">
-                      สินค้าคงเหลือ : {item.available || 0} ชิ้น
+                      สินค้าคงเหลือ : {item?.available || 0} ชิ้น
                     </span>
-                    <span className="text-sm ">
+                    {/* <span className="text-sm ">
                       สินค้าพร้อมจำหน่าย : {item.availableForSale || 0} ชิ้น
-                    </span>
+                    </span> */}
                     <span className="text-sm ">
-                      ส่วนลด : {formatNumber(item.discountPrice || 0)} ฿
+                      ส่วนลด : {formatNumber(item?.discountPrice || 0)} ฿
                     </span>
                     <span className="text-red-600 font-semibold">
                       ราคารวม :{" "}
                       {formatNumber(
-                        itemQuantity * item.salePrice - item.discountPrice
+                        itemQuantity * item?.salePrice - item?.discountPrice
                       )}
                       ฿
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-6">
+                <div className="flex items-end gap-6">
                   {/* <div className="flex flex-col items-center">
                     <span className="text-sm ">ภาษี (รวมอยู่ด้วย)</span>
                     <span className="text-md text-[#737373]">
@@ -97,16 +98,16 @@ export function CardGoods<T extends ZodTypeAny>({
                     <input
                       type="number"
                       min={1}
-                      max={item.availableForSale}
+                      max={item.available}
                       className="w-16 h-10 text-center border rounded"
                       value={itemQuantity}
                       onChange={(e) => {
                         const val = Number(e.target.value);
                         const clamped = Math.max(
                           1,
-                          Math.min(item.availableForSale, val)
+                          Math.min(item?.available, val)
                         );
-                        const id = item.id;
+                        const id = item?.id;
                         const value = clamped;
 
                         // let qtyResult;
@@ -137,8 +138,8 @@ export function CardGoods<T extends ZodTypeAny>({
 
                   <div className="flex flex-col items-center">
                     <span className="text-sm ">ราคาขาย</span>
-                    <span className="text-md text-[#737373]  h-10">
-                      {item.salePrice}
+                    <span className="text-md text-[#737373] flex h-10 pt-2">
+                      {item?.salePrice}
                     </span>
                   </div>
 
@@ -146,7 +147,7 @@ export function CardGoods<T extends ZodTypeAny>({
                     variant="ghost"
                     size="icon"
                     className="text-red-500 hover:text-red-700"
-                    onClick={() => onRemove?.(item.id)}
+                    onClick={() => onRemove?.(item?.id)}
                   >
                     <Trash2 className="w-5 h-5" />
                   </Button>

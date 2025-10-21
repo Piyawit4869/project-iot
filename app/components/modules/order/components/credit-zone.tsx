@@ -13,7 +13,8 @@ export const CreditZone = () => {
             สรุปการขายสินค้า
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+
+        <CardContent className="space-y-4 relative">
           <div className="text-sm">
             <p className="text-gray-900">
               ขายโดย: <span className="text-gray-600">ยังไม่มีข้อมูล </span>
@@ -47,9 +48,17 @@ export const CreditZone = () => {
               <p className="text-sm text-gray-600">ยังไม่มีข้อมูล</p>
             </div>
           </div>
+
+          <DualProgressCircle />
+
+          <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white/90 dark:bg-background/80">
+            <p className="text-center text-md font-semibold p-10">
+              ฟีเจอร์นี้อยู่ระหว่างการพัฒนา
+              <br /> โปรดรอการอัปเดตเร็ว ๆ นี้
+            </p>
+          </div>
         </CardContent>
       </Card>
-      <DualProgressCircle />
     </>
   );
 };
