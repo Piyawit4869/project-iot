@@ -67,9 +67,29 @@ export const OrderForm: React.FC<OrderFormProps> = ({
   };
   // const vat = form.watch("vat");
   const discount = form.watch("discount");
+  const startDate = form.watch("startDate");
+  const expireDate = form.watch("expireDate");
+
   // const wht = form.watch("wht");
   // const totalNoVat = (Price ?? 0) - (discount ?? 0) - (wht ?? 0);
   const totalAddVat = (Price ?? 0) + (totalVat ?? 0) - (discount ?? 0);
+
+  const startDay = React.useMemo(() => {
+    const d = new Date(startDate);
+    d.setDate(d.getDate() + 1);
+    d.setHours(0, 0, 0, 0);
+
+    return d;
+  }, [startDate]);
+
+  const endDay = React.useMemo(() => {
+    const d = new Date(expireDate);
+    d.setDate(d.getDate() - 1);
+    d.setHours(0, 0, 0, 0);
+
+    return d;
+  }, [expireDate]);
+
   return (
     <Card className="p-6">
       <h3 className="font-semibold text-xl">ข้อมูลออเดอร์</h3>
@@ -164,7 +184,15 @@ export const OrderForm: React.FC<OrderFormProps> = ({
             <FormItem>
               <RequiredLabel required>วันที่สั่งซื้อออเดอร์</RequiredLabel>
               <FormControl>
-                <DatePicker value={field.value} onChange={field.onChange} />
+                <DatePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={(d) => {
+                    const dd = new Date(d);
+                    dd.setHours(0, 0, 0, 0);
+                    return dd > endDay;
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -178,7 +206,15 @@ export const OrderForm: React.FC<OrderFormProps> = ({
             <FormItem>
               <RequiredLabel required>วันที่หมดอายุ</RequiredLabel>
               <FormControl>
-                <DatePicker value={field.value} onChange={field.onChange} />
+                <DatePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={(d) => {
+                    const dd = new Date(d);
+                    dd.setHours(0, 0, 0, 0);
+                    return dd < startDay;
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
