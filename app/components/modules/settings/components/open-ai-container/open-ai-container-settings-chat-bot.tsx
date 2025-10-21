@@ -33,7 +33,9 @@ export const OpenAiContainerSettingsChatBot: React.FC<
   const { api } = props;
 
   const params = useParams();
-  const id = (params?.id as string) ?? "";
+  // const id = (params?.id as string) ?? "";
+
+  const id = "2f733c74-7d49-475c-a832-1c01b888576b";
 
   const { mutate: UpdateConnectionAi } = useUpdateConnectionAi(String(id));
   const { refetch: refetchChatAI } = useGetConnectionAi(String(id));
@@ -152,7 +154,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
             className="w-full"
           >
             <>
-              <Save /> สร้าง
+              <Save /> บันทึก
             </>
           </Button>,
         ]}
