@@ -152,6 +152,7 @@ export const useGetAiNote = (id: string) =>
   useQuery({
     queryKey: ["customer-ai-note", id],
     queryFn: () => fetchCustomerNoteAiById(id),
+    enabled: !!id,
   });
 
 export const useAllCustomer = (id?: string) =>
@@ -161,26 +162,29 @@ export const useAllCustomer = (id?: string) =>
     enabled: !id,
   });
 
-export const useCustomer = (id: string) =>
-  useQuery({
+export const useCustomer = (id: string) => {
+  return useQuery({
     queryKey: ["customer", id],
     queryFn: () => fetchCustomerById(id),
     enabled: !!id,
   });
+};
 
-export const useCustomerNote = (id: string) =>
-  useQuery({
+export const useCustomerNote = (id: string) => {
+  return useQuery({
     queryKey: ["customer-note", id],
     queryFn: () => fetchCustomerById(id),
     enabled: !!id,
   });
+};
 
-export const useCustomerAiSetting = (id: string) =>
-  useQuery({
+export const useCustomerAiSetting = (id: string) => {
+  return useQuery({
     queryKey: ["customer-ai-setting", id],
     queryFn: () => fetchCustomerById(id),
     enabled: !!id,
   });
+};
 
 export const useCreateCustomer = () => {
   return useMutation({
