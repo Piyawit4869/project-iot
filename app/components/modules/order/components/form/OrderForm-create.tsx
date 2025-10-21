@@ -78,13 +78,45 @@ export const OrderForm: React.FC<OrderFormProps> = ({
   };
   // const vat = form.watch("vat");
   const discount = form.watch("discount");
+  const startDate = form.watch("startDate");
+  const expireDate = form.watch("expireDate");
+
   // const wht = form.watch("wht");
   // const totalNoVat = (Price ?? 0) - (discount ?? 0) - (wht ?? 0);
   const totalAddVat = (Price ?? 0) + (totalVat ?? 0) - (discount ?? 0);
+
+  const startDay = React.useMemo(() => {
+    const d = new Date(startDate);
+    d.setDate(d.getDate() + 1);
+    d.setHours(0, 0, 0, 0);
+
+    return d;
+  }, [startDate]);
+
+  const endDay = React.useMemo(() => {
+    const d = new Date(expireDate);
+    d.setDate(d.getDate() - 1);
+    d.setHours(0, 0, 0, 0);
+
+    return d;
+  }, [expireDate]);
+
   return (
     <Card className="p-6">
       <h3 className="font-semibold text-xl">ข้อมูลออเดอร์</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* <FormField
+          control={form.control}
+          name="docNo"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>เลขที่ออเดอร์</FormLabel>
+              <FormControl>
+                <Input placeholder="12345" {...field} />
+              </FormControl>
+            </FormItem>
+          )}
+        /> */}
         <FormField
           control={form.control}
           name="docName"
@@ -131,18 +163,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
             </FormItem>
           )}
         />
-        {/* <FormField
-          control={form.control}
-          name="docNo"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>เลขที่ออเดอร์</FormLabel>
-              <FormControl>
-                <Input placeholder="12345" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        /> */}
+
         {/* <FormField
           control={form.control}
           name="suppliers"
@@ -179,7 +200,15 @@ export const OrderForm: React.FC<OrderFormProps> = ({
                 วันที่สั่งซื้อออเดอร์ <FormMessage />
               </RequiredLabel>
               <FormControl>
-                <DatePicker value={field.value} onChange={field.onChange} />
+                <DatePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={(d) => {
+                    const dd = new Date(d);
+                    dd.setHours(0, 0, 0, 0);
+                    return dd > endDay;
+                  }}
+                />
               </FormControl>
             </FormItem>
           )}
@@ -193,7 +222,15 @@ export const OrderForm: React.FC<OrderFormProps> = ({
                 วันที่หมดอายุ <FormMessage />
               </RequiredLabel>
               <FormControl>
-                <DatePicker value={field.value} onChange={field.onChange} />
+                <DatePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={(d) => {
+                    const dd = new Date(d);
+                    dd.setHours(0, 0, 0, 0);
+                    return dd < startDay;
+                  }}
+                />
               </FormControl>
             </FormItem>
           )}

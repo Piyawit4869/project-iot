@@ -109,7 +109,14 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
             /> */}
           </div>
           <div className="mt-5">
-            <WorkingHoursSection value={organization} />
+            <fieldset
+              disabled={isEditing}
+              className={
+                isEditing ? "pointer-events-none opacity-60 select-none" : ""
+              }
+            >
+              <WorkingHoursSection value={organization} />
+            </fieldset>
           </div>
         </div>
       </Form>

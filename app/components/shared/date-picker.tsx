@@ -10,9 +10,15 @@ interface DatePickerProps {
   value?: string | Date;
   onChange?: (date: string | undefined) => void;
   placeholder?: string;
+  disabled?: (d: string) => void;
 }
 
-export function DatePicker({ value, onChange, placeholder }: DatePickerProps) {
+export function DatePicker({
+  value,
+  onChange,
+  placeholder,
+  disabled,
+}: DatePickerProps) {
   const [show, setShow] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const selectedDate = toSafeDate(value);
@@ -47,6 +53,7 @@ export function DatePicker({ value, onChange, placeholder }: DatePickerProps) {
         <div className="absolute z-[9999] bg-white mt-2 shadow-md rounded-md">
           <Calendar
             mode="single"
+            disabled={disabled as any}
             selected={selectedDate}
             onSelect={(date) => {
               onChange?.(

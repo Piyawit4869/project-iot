@@ -10,15 +10,8 @@ import {
 import { formatDateFull } from "~/components/shared/global-format";
 import { GlobalImage } from "~/components/shared/global-image";
 import { Card } from "~/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
-import { currencyType } from "~/initData/order-initData";
+import { currencyType, notationType } from "~/initData/order-initData";
 
 type OrderFormEditProps = {
   order: any;
@@ -59,7 +52,18 @@ export const ViewOrderDetail = ({ order }: OrderFormEditProps) => {
       <div className="grid grid-cols-2 gap-4 mt-6">
         <InfoItem label="เลขที่ออเดอร์" value={dataOrder?.docNo || "-"} />
         <InfoItem label="ชื่อออเดอร์" value={dataOrder?.docName || "-"} />
-
+        <InfoItem
+          label="ประเภทเอกสาร"
+          value={
+            dataOrder?.notationType
+              ? notationType.find(
+                  (item) => item.value === dataOrder.notationType
+                )?.label || "-"
+              : "-"
+          }
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-3  mt-6">
         <InfoItem
           label="วันที่สั่งซื้อออเดอร์"
           value={
@@ -73,6 +77,7 @@ export const ViewOrderDetail = ({ order }: OrderFormEditProps) => {
           }
         />
       </div>
+
       <Card className="w-full p-6 mt-4">
         <div className="flex flex-row">
           <h1 className="font-semibold text-lg">ข้อมูลลูกค้า</h1>
