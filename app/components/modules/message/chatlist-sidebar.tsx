@@ -102,8 +102,8 @@ export default function ChatlistSidebar({
       fetchNextPage();
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
   React.useEffect(() => {
-    console.log({ api });
     const socket = socketConfig(api);
 
     if (me?.branchId) {
@@ -266,7 +266,12 @@ export default function ChatlistSidebar({
             <React.Fragment>
               <div className="flex flex-col gap-3 w-full mt-2 px-3 pb-2">
                 <p className="text-sm font-semibold">การค้นหาล่าสุด</p>
-                {["ไอที", "ไอ", "ทีม"].map((item, i) => (
+
+                <div className="h-[100px] flex items-center justify-center">
+                  <span className="text-sm">กรุณาค้นหาข้อมูล</span>
+                </div>
+
+                {/* {["ไอที", "ไอ", "ทีม"].map((item, i) => ( // !! for map data
                   <div
                     key={i}
                     className="flex items-center justify-between cursor-pointer hover:bg-gray-100 rounded-md p-1"
@@ -291,7 +296,7 @@ export default function ChatlistSidebar({
                       <X className="w-4 h-4 text-gray-500 hover:text-gray-700" />
                     </Button>
                   </div>
-                ))}
+                ))} */}
               </div>
 
               <Separator className="w-full m-0" />
