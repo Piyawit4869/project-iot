@@ -37,6 +37,8 @@ export default function Customer() {
         "name",
         "fullname",
         "customerPlatform",
+        "priorityForm",
+        "priorityTo",
         "priority",
         "tags",
         "customerType",
@@ -137,6 +139,7 @@ export default function Customer() {
 
         <TabsContent value="allCustomer">
           <DataTable
+            key={tableKey}
             queryFunction={({ pageIndex, pageSize }) =>
               customerPaginate({
                 pageIndex,
@@ -152,7 +155,11 @@ export default function Customer() {
             }
             columns={columns}
             addOn={
-              <Tabs defaultValue="all" onValueChange={handleChangeTab}>
+              <Tabs
+                value={status}
+                onValueChange={handleChangeTab}
+                className={cn("block", isMobile && "hidden")}
+              >
                 <TabsList>
                   {items.map((c) => (
                     <TabsTrigger
@@ -173,6 +180,7 @@ export default function Customer() {
 
         <TabsContent value="ordinary_person">
           <DataTable
+            key={tableKey}
             queryFunction={({ pageIndex, pageSize }) =>
               customerPaginate({
                 pageIndex,
@@ -189,7 +197,11 @@ export default function Customer() {
             }
             columns={columns}
             addOn={
-              <Tabs defaultValue="all" onValueChange={handleChangeTab}>
+              <Tabs
+                value={status}
+                onValueChange={handleChangeTab}
+                className={cn("block", isMobile && "hidden")}
+              >
                 <TabsList>
                   {items.map((c) => (
                     <TabsTrigger

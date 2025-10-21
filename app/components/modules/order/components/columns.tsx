@@ -109,7 +109,7 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
     //   },
     // },
     {
-      accessorKey: "profit",
+      accessorKey: "net",
       header: "กำไรโดยประมาณ",
       cell: (info) => {
         const price = info.getValue() as number;
