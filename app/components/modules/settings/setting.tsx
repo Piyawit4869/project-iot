@@ -132,10 +132,10 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
   });
 
   const handleOrgOnSubmit = (values: OrganizationFormValues) => {
-    if (!organizationId || !userId) {
-      toast.error("ไม่พบ ID องค์กร หรือ ไม่พบ id ของผู้ใช้งาน");
-      return;
-    }
+    // if (!organizationId || !userId) {
+    //   toast.error("ไม่พบ ID องค์กร หรือ ไม่พบ id ของผู้ใช้งาน");
+    //   return;
+    // }
     GlobalModal.info({
       title: "แก้ไขข้อมูลองค์กร",
       description: "คุณต้องการบันทึกการแก้ไขข้อมูลองค์กรใช่หรือไม่",
@@ -159,11 +159,6 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
   };
 
   const handleAddressOnSubmit = (values: AddressSchemaValues) => {
-    if (!settingAddressId || !userId) {
-      toast.error("ไม่พบ id ของที่อยู่ขององค์กร หรือ ไม่พบ id ของผู้ใช้งาน");
-      return;
-    }
-
     GlobalModal.info({
       title: "แก้ไขที่อยู่ติดต่อ",
       description: "คุณต้องการบันทึกการแก้ไขที่อยู่ติดต่อใช่หรือไม่",
@@ -188,11 +183,6 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
   };
 
   const handleSettingOnSubmit = (values: SettingSchemaValues) => {
-    if (!settingId || !userId) {
-      toast.error("ไม่พบ ID การตั้งค่า หรือ ไม่พบ id ของผู้ใช้งาน");
-      return;
-    }
-
     GlobalModal.info({
       title: "แก้ไขการตั้งค่า",
       description: "คุณต้องการบันทึกการตั้งค่าใช่หรือไม่",

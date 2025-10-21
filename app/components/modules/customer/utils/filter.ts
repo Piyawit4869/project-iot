@@ -18,28 +18,36 @@ export type FilterField = {
   placeholder?: string;
   showOnlyMobile?: boolean;
   showIn?: "main" | "advanced" | "both";
+  min?: number;
+  max?: number;
+  step?: number;
+  clamp?: boolean;
 };
 
 export const customerFilterFields: FilterField[] = [
   { id: "name", label: "ชื่อ", kind: "text", showIn: "main" },
+  { id: "fullname", label: "ชื่อลูกค้า", kind: "text", showIn: "main" },
   // { id: "customerPlatform", label: "Channel", kind: "text" },
-  {
-    id: "priority",
-    label: "ลำดับความสำคัญ",
-    kind: "numberRange",
-    showIn: "main",
-  },
+  // {
+  //   id: "priority",
+  //   label: "ลำดับความสำคัญ",
+  //   kind: "numberRange",
+  //   showIn: "main",
+  //   min: 1,
+  //   max: 5,
+  // },
+
   // { id: "tags", label: "Tags", kind: "select", showIn: "main" },
-  {
-    id: "customerType",
-    label: "ประเภทลูกค้า",
-    kind: "select",
-    showIn: "main",
-    options: [
-      { label: "บุคคลธรรมดา", value: "ordinary_person" },
-      { label: "นิติบุคคล", value: "juristic_person" },
-    ],
-  },
+  // {
+  //   id: "customerType",
+  //   label: "ประเภทลูกค้า",
+  //   kind: "select",
+  //   showIn: "main",
+  //   options: [
+  //     { label: "บุคคลธรรมดา", value: "ordinary_person" },
+  //     { label: "นิติบุคคล", value: "juristic_person" },
+  //   ],
+  // },
   { id: "phone", label: "เบอร์โทรศัพท์", kind: "text", showIn: "main" },
   { id: "createdBy", label: "ผู้สร้าง", kind: "text", showIn: "advanced" },
   {

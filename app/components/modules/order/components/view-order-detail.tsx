@@ -8,16 +8,10 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import { formatDateFull } from "~/components/shared/global-format";
+import { GlobalImage } from "~/components/shared/global-image";
 import { Card } from "~/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
-import { currencyType } from "~/initData/order-initData";
+import { currencyType, notationType } from "~/initData/order-initData";
 
 type OrderFormEditProps = {
   order: any;
@@ -40,7 +34,7 @@ export const ViewOrderDetail = ({ order }: OrderFormEditProps) => {
   const dataOrder = order;
   const customerData = dataOrder?.customer?.profile;
 
-  const totalAvailable = dataOrder.orderDetails.products.reduce(
+  const totalAvailable = dataOrder?.orderDetails?.products?.reduce(
     (sum: number, p: any) => sum + (p.quantity || 0),
     0
   );
@@ -55,10 +49,21 @@ export const ViewOrderDetail = ({ order }: OrderFormEditProps) => {
         />
       </div> */}
 
-      <div className="grid grid-cols-2 gap-3  mt-6">
+      <div className="grid grid-cols-2 gap-4 mt-6">
         <InfoItem label="เลขที่ออเดอร์" value={dataOrder?.docNo || "-"} />
         <InfoItem label="ชื่อออเดอร์" value={dataOrder?.docName || "-"} />
-
+        <InfoItem
+          label="ประเภทเอกสาร"
+          value={
+            dataOrder?.notationType
+              ? notationType.find(
+                  (item) => item.value === dataOrder.notationType
+                )?.label || "-"
+              : "-"
+          }
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-3  mt-6">
         <InfoItem
           label="วันที่สั่งซื้อออเดอร์"
           value={
@@ -72,25 +77,38 @@ export const ViewOrderDetail = ({ order }: OrderFormEditProps) => {
           }
         />
       </div>
+
       <Card className="w-full p-6 mt-4">
         <div className="flex flex-row">
           <h1 className="font-semibold text-lg">ข้อมูลลูกค้า</h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
-          <InfoItem
-            label="ชื่อลูกค้า"
-            value={
-              customerData
-                ? `${customerData.prefix ?? ""} ${
-                    customerData.firstName ?? ""
-                  } ${customerData.lastName ?? ""}`.trim()
-                : "-"
-            }
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="flex flex-row gap-4">
+            <GlobalImage
+              src={
+                customerData.imageUrl ||
+                `https://api.dicebear.com/9.x/initials/svg?seed=${customerData.firstName}`
+              }
+              className="w-13 h-13 rounded-lg"
+              alt={`${customerData.prefix ?? ""} ${
+                customerData.firstName ?? ""
+              } ${customerData.lastName ?? ""}`}
+            />
+            <InfoItem
+              label="ชื่อลูกค้า"
+              value={
+                customerData
+                  ? `${customerData.prefix ?? ""} ${
+                      customerData.firstName ?? ""
+                    } ${customerData.lastName ?? ""}`.trim()
+                  : "-"
+              }
+            />
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <InfoItem
             label="เลขประจำตัวผู้เสียภาษี"
             value={customerData?.taxId || "-"}
@@ -110,7 +128,7 @@ export const ViewOrderDetail = ({ order }: OrderFormEditProps) => {
         </div>
       </Card>
       <div className="my-6">
-        <h1 className="font-semibold text-lg mb-5">การชำระเงิน</h1>
+        <h3 className="font-semibold text-xl mb-3">การชำระเงิน</h3>
         <InfoItem label="ส่วนลด" value={customerData?.discount || "-"} />
 
         <InfoItem

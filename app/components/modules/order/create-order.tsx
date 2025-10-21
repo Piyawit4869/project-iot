@@ -22,31 +22,11 @@ import { OrderForm } from "./components/form/OrderForm-create";
 import type { ProductColumn } from "~/schemas/order/type";
 import { CardGoods } from "./components/form/cardGoods";
 import { OrderProduct } from "./components/form/OrderProduct";
+import {
+  calculateTotals,
+  generateOrderNumber,
+} from "./components/order-function";
 
-function calculateTotals(productsSelected: ProductColumn[]) {
-  const Price = productsSelected.reduce(
-    (sum, p) => sum + (p.salePrice || 0) * (p.quantity ?? 1),
-    0
-  );
-
-  const totalVat = Price * 0.07;
-
-  const totalWht = productsSelected.reduce(
-    (sum, p) => sum + (p.wht || 0) * (p.quantity ?? 1),
-    0
-  );
-
-  const totalDiscount = productsSelected.reduce(
-    (sum, p) => sum + (p.discountPrice || 0) * (p.quantity ?? 1),
-    0
-  );
-
-  const totalNet = Price + totalVat;
-
-  const totalPrice = Price + totalVat - totalWht - totalDiscount;
-
-  return { Price, totalVat, totalWht, totalDiscount, totalPrice, totalNet };
-}
 export default function CreateOrder() {
   const navigate = useNavigate();
 
@@ -86,7 +66,7 @@ export default function CreateOrder() {
     );
   };
 
-  // เพิ่มสินค้า
+  // add goods
   const handleAddProduct = (products: ProductColumn[]) => {
     const newProducts = products.filter(
       (p) => !productsSelected.some((sp) => sp.id === p.id)
@@ -94,13 +74,13 @@ export default function CreateOrder() {
     updateSelectedProducts([...productsSelected, ...newProducts]);
   };
 
-  // ลบสินค้า
+  // del goods
   const handleRemove = (id: string) => {
     const updatedProducts = productsSelected.filter((p) => p.id !== id);
     updateSelectedProducts(updatedProducts);
   };
 
-  // คำนวณ
+  // cal
   const { Price, totalVat, totalPrice } = calculateTotals(productsSelected);
 
   const discount = Number(formCreate.watch("discount") || 0);
@@ -128,6 +108,7 @@ export default function CreateOrder() {
 
     const payload = {
       ...values,
+      docNo: generateOrderNumber(),
       discount: parseFloat(discount.toFixed(2)),
       grandTotal: parseFloat(totalAddVat.toFixed(2)),
       net: parseFloat(totalPrice.toFixed(2)),
@@ -138,6 +119,8 @@ export default function CreateOrder() {
 
       orderDetail: { products: productsPayload },
     };
+
+    console.log({ payload });
 
     GlobalModal.info({
       title: "สร้างออเดอร์",
@@ -201,7 +184,6 @@ export default function CreateOrder() {
                 Price={Price}
                 totalVat={totalVat}
                 quantities={productsSelected}
-                isLoading={loadCustomers}
               />
             </div>
 

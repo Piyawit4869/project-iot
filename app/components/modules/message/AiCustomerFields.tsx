@@ -5,6 +5,8 @@ import { formatDateAndTime } from "~/components/shared/global-format";
 import type { CustomerRequestResponse } from "../customer/types/customer";
 import GlobalButton from "~/components/shared/global-button";
 import {
+  CalendarDays,
+  FileText,
   icons,
   Link,
   Mail,
@@ -12,7 +14,11 @@ import {
   Navigation,
   Package,
   Phone,
+  ShieldCheck,
+  Smile,
+  Ticket,
   User,
+  UserCheck,
 } from "lucide-react";
 import { useNavigate } from "react-router";
 
@@ -167,13 +173,29 @@ export function AiCustomerFields({
     {
       label: "วันที่อยากใช้ของ (วันนัดสำคัญ)",
       value: formatDateAndTime(data?.eventKeyDate),
-      icon: <Package />,
+      icon: <CalendarDays />,
     },
-    { label: "ใช้ในงานอะไร (กิจกรรม)", value: data?.activityType },
-    { label: "สถานะลูกค้า", value: displayStatus(data?.customerStatus) },
-    { label: "ยินยอมข้อมูลส่วนบุคคล", value: displayConsent(data?.consentPii) },
-    { label: "เลขผู้เสียภาษี", value: data?.taxId },
-    { label: "ลักษณะการคุยของลูกค้า (อุปนิสัย)", value: data?.personality },
+    {
+      label: "ใช้ในงานอะไร (กิจกรรม)",
+      value: data?.activityType,
+      icon: <Ticket />,
+    },
+    {
+      label: "สถานะลูกค้า",
+      value: displayStatus(data?.customerStatus),
+      icon: <UserCheck />,
+    },
+    {
+      label: "ยินยอมข้อมูลส่วนบุคคล",
+      value: displayConsent(data?.consentPii),
+      icon: <ShieldCheck />,
+    },
+    { label: "เลขผู้เสียภาษี", value: data?.taxId, icon: <FileText /> },
+    {
+      label: "ลักษณะการคุยของลูกค้า (อุปนิสัย)",
+      value: data?.personality,
+      icon: <Smile />,
+    },
   ];
 
   React.useEffect(() => {
@@ -279,7 +301,8 @@ export function AiCustomerFields({
     <div className="space-y-3 my-2">
       <div className="space-y-2">
         {infoItems.map((item, index) => (
-          <div className="flex flex-row flex-wrap ">
+          <div key={index} className="flex flex-row flex-wrap ">
+            <span className="flex mr-2 w-4 h-4">{item.icon}</span>
             <span className="font-bold">{item.label} :</span>
             <span className="pl-4 text-[#71717A]">
               {item.value || "ยังไม่มีข้อมูล"}

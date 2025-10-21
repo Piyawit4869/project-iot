@@ -101,11 +101,18 @@ export default function ChatMessages({
     }
   };
 
+  React.useLayoutEffect(() => {
+    const el = scrollAreaRef.current;
+    if (!el || !combinedMessages?.length) return;
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+    });
+  }, [!!combinedMessages?.length]);
+
   React.useEffect(() => {
     const scrollArea = scrollAreaRef.current;
-    if (!scrollArea) {
-      return;
-    }
+    if (!scrollArea) return;
+
     const handleScroll = () => {
       const { scrollHeight, scrollTop, clientHeight } = scrollArea;
       const isContentScrollable = scrollHeight > clientHeight;
@@ -114,8 +121,10 @@ export default function ChatMessages({
         scrollTop < scrollHeight - clientHeight - SCROLL_THRESHOLD;
       setButtonScrollToBottom(isContentScrollable && isNotAtBottom);
     };
+
     scrollArea.addEventListener("scroll", handleScroll);
     handleScroll();
+
     return () => {
       scrollArea.removeEventListener("scroll", handleScroll);
     };
@@ -128,57 +137,32 @@ export default function ChatMessages({
   }, [messagesData]);
 
   React.useEffect(() => {
-    if (!bottomRef.current) return;
-
-    if (!buttonScrollToBottom) {
-      bottomRef.current.scrollIntoView({ behavior: "smooth" });
-      setHasAutoScrolled(true);
-    }
-  }, [combinedMessages, buttonScrollToBottom]);
-
-  React.useEffect(() => {
     const el = scrollAreaRef.current;
-    if (!isScrollReady || !el) return;
+    if (!el) return;
 
-    const handleScroll = () => {
-      if (
-        el.scrollTop < 10 &&
-        hasNextPage &&
-        !isFetchingNextPage &&
-        hasScrolledOnce
-      ) {
+    const THRESHOLD = 5;
+
+    const onScroll = () => {
+      if (!hasNextPage || isFetchingNextPage) return;
+
+      if (el.scrollTop <= THRESHOLD) {
         const prevScrollHeight = el.scrollHeight;
-
         setShowTopLoading(true);
 
         fetchNextPage().finally(() => {
           setShowTopLoading(false);
-
-          flushSync(() => {
-            requestAnimationFrame(() => {
-              const newScrollHeight = el.scrollHeight;
-              const heightDiff = newScrollHeight - prevScrollHeight;
-              el.scrollTop = heightDiff;
-            });
+          requestAnimationFrame(() => {
+            const newScrollHeight = el.scrollHeight;
+            const heightDiff = newScrollHeight - prevScrollHeight;
+            el.scrollTop = heightDiff;
           });
         });
       }
-
-      if (!hasScrolledOnce && hasAutoScrolled) {
-        setHasScrolledOnce(true);
-      }
     };
 
-    el.addEventListener("scroll", handleScroll);
-    return () => el.removeEventListener("scroll", handleScroll);
-  }, [
-    isScrollReady,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-    hasScrolledOnce,
-    hasAutoScrolled,
-  ]);
+    el.addEventListener("scroll", onScroll);
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   React.useEffect(() => {
     const el = scrollAreaRef.current;
@@ -397,7 +381,7 @@ export default function ChatMessages({
                   </>
                 )}
 
-                <span className="text-[10px] text-muted-foreground mt-1">
+                <span className="text-[10px] text-muted-foreground mt-1 ">
                   {formattedTime}
                 </span>
               </div>
