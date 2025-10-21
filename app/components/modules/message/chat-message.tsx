@@ -384,6 +384,13 @@ export default function ChatMessages({
                         "https://api.dicebear.com/9.x/initials/svg?seed=X&backgroundColor=ffd5dc&scale=100" ? (
                           <img src={msg.message} width={100} height={100} />
                         ) : (
+                          // <GlobalImage
+                          //   src={msg.message}
+                          //   alt="preview"
+                          //   // className="w-full h-full object-contain"
+                          //   width={1200}
+                          //   height={800}
+                          // />
                           <div
                             onClick={() => setPreviewUrl(msg.message)}
                             className="cursor-pointer"
@@ -443,26 +450,27 @@ export default function ChatMessages({
 
       {previewUrl && (
         <div
-          className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4 h-full"
+          className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4"
           role="dialog"
           aria-modal="true"
           onClick={() => setPreviewUrl("")}
         >
           <div
-            className="relative bg-transparent rounded-lg overflow-hidden w-full h-full"
+            className="relative bg-transparent rounded-lg overflow-hidden max-w-5xl max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              className="absolute top-10 right-8 bg-white/90 rounded-full p-1 border"
+            {/* <button
+              className="absolute top-4 right-4 bg-white/90 rounded-full p-2 border"
               onClick={() => setPreviewUrl("")}
               aria-label="ปิด"
             >
               <Icons.X className="w-5 h-5" />
-            </button>
-            <GlobalImage
+            </button> */}
+
+            <img
               src={previewUrl}
               alt="preview"
-              className="w-full h-full object-contain"
+              className="w-auto h-[90vh] object-contain rounded-lg"
               width={1200}
               height={800}
             />
