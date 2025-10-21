@@ -105,7 +105,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
     <Card className="p-6">
       <h3 className="font-semibold text-xl">ข้อมูลออเดอร์</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField
+        {/* <FormField
           control={form.control}
           name="docNo"
           render={({ field }) => (
@@ -116,7 +116,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
               </FormControl>
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
           name="docName"

@@ -33,6 +33,7 @@ export const fetchProduct = async (params: {
     const res = await ApiConfig.get(`/crud/products/paginate`, {
       params: p,
     });
+
     return res.data;
   } catch (error) {
     return error;
