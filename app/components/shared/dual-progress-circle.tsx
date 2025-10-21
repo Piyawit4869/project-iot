@@ -79,8 +79,8 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
     })) ?? []),
   ];
 
-  let salerGroup = chartDataData.filter((p) => !p.name.includes("Rome"));
-  let aiGroup = chartDataData.filter((p) => p.name.includes("Rome"));
+  let salerGroup = chartDataData.filter((p) => !p.name?.includes("Rome"));
+  let aiGroup = chartDataData.filter((p) => p.name?.includes("Rome"));
 
   const totalSaler = salerGroup.reduce((sum, item) => sum + item.process, 0);
 

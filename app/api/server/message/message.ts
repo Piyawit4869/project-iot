@@ -5,6 +5,18 @@ import type {
   PushMessageValues,
 } from "~/schemas/message/message";
 
+export const fetchLineBundleConfig = async (branchId: string) => {
+  try {
+    const res = await ApiConfig.get(
+      `/thirdparty/line/config/bundle/branch/${branchId}`
+    );
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const fetchAskQuestion = async (payload: AskQuestionValues) => {
   try {
     const res = await ApiConfig.post(

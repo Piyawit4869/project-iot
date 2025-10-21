@@ -10,13 +10,20 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
-import { useLocation } from "react-router";
+import { useLocation, useRouteLoaderData } from "react-router";
 import { useRoute } from "~/providers/RouteProvider";
 import { isUUIDv4 } from "~/lib/utils";
+import { useLineBundleConfig } from "~/api/client/message/useMessage";
 
 export const HeaderBreadcrumb = () => {
+  const { me } = useRouteLoaderData("root");
   const { pathname } = useLocation();
   const pathSegments = pathname.split("/").filter((segment) => segment);
+
+  const lastSegment =
+    pathSegments?.length && pathSegments?.[pathSegments.length - 1];
+
+  // const { data } = useLineBundleConfig(me?.branchId, lastSegment === "message");
 
   const { crumbs } = useRoute();
 
