@@ -19,10 +19,11 @@ export const getInventoryPaginate = async (params: {
     if (params.status && params.status === "all") {
       delete p.status;
     }
-    const { data } = await ApiConfig.get(`/crud/inventories/paginate`, {
+    const res = await ApiConfig.get(`/crud/inventories/paginate`, {
       params: p,
     });
-    return data;
+
+    return res.data;
   } catch (error) {
     return error;
   }
