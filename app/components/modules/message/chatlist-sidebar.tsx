@@ -262,7 +262,7 @@ export default function ChatlistSidebar({
                 selectedRoom={currentRoomId}
                 resize={resize}
                 name={room?.name}
-                message={room?.latestMessage?.message ?? ""}
+                message={room?.latestMessage?.messageLabel ?? ""}
                 time={room?.latestMessage?.createdAt ?? ""}
                 image={room?.imageUrl || ""}
                 unread={room?.unreadMessageCount > 0}
@@ -354,7 +354,7 @@ export default function ChatlistSidebar({
                 selectedRoom={currentRoomId}
                 resize={resize}
                 name={room?.name}
-                message={room?.latestMessage?.message ?? ""}
+                message={room?.latestMessage?.messageLabel ?? ""}
                 time={room?.latestMessage?.createdAt ?? ""}
                 image={room?.imageUrl || ""}
                 unread={room?.unreadMessageCount > 0}
@@ -470,9 +470,9 @@ function ChatItem({
                 {message}
               </p>
 
-              {(roomDetail?.isDone || roomDetail?.isProcess) && (
+              {roomDetail && (
                 <div className="flex flex-col items-center  justify-end w-[90px]">
-                  {roomDetail?.done && (
+                  {roomDetail.done && (
                     <TagLabel
                       label="ดำเนินการแล้ว"
                       icon={<CheckCircle className="mr-1 h-[10px] w-[10px]" />}
@@ -480,7 +480,7 @@ function ChatItem({
                     />
                   )}
 
-                  {roomDetail?.isProcess && (
+                  {roomDetail.isProcess && (
                     <TagLabel
                       label="ต้องดำเนินการ"
                       icon={

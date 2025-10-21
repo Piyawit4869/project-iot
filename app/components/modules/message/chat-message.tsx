@@ -384,13 +384,6 @@ export default function ChatMessages({
                         "https://api.dicebear.com/9.x/initials/svg?seed=X&backgroundColor=ffd5dc&scale=100" ? (
                           <img src={msg.message} width={100} height={100} />
                         ) : (
-                          // <GlobalImage
-                          //   src={msg.message}
-                          //   alt="preview"
-                          //   // className="w-full h-full object-contain"
-                          //   width={1200}
-                          //   height={800}
-                          // />
                           <div
                             onClick={() => setPreviewUrl(msg.message)}
                             className="cursor-pointer"
