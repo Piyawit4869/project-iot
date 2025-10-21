@@ -201,8 +201,8 @@ export const OrderForm: React.FC<OrderFormProps> = ({
       </div>
 
       <Card className="w-full p-4.5">
-        <h3 className="font-semibold text-xl mb-3">การชำระเงิน</h3>
-        <div className="grid grid-cols-1 gap-3 mt-3">
+        <h3 className="font-semibold text-xl">การชำระเงิน</h3>
+        <div className="grid grid-cols-1 gap-3 mt-1">
           <FormField
             control={form.control}
             name="customerId"
