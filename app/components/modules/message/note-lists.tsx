@@ -11,6 +11,8 @@ import {
   useUpdateCustomerNote,
 } from "~/api/client/customer/useCustomer";
 import { DateISOToDisplayDate } from "~/utils/date-format";
+import GlobalButton from "~/components/shared/global-button";
+import { GetNoteFormAI } from "./modal-get-noteAi";
 
 interface TNote {
   id: string;
@@ -35,6 +37,7 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
   const { mutate: deleteCustomerNote } = useDeleteCustomerNote(customer?.id);
 
   const [open, setOpen] = React.useState<boolean>(false);
+  const [OpenAiNote, setOpenAiNote] = React.useState<boolean>(false);
   const [noteContent, setNoteContent] = React.useState<string>("");
   const [selectedNoteId, setSelectedNoteId] = React.useState<string | null>(
     null
@@ -143,56 +146,70 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
   };
 
   return (
-    <div className="mt-4 flex flex-col h-[calc(100vh-420px)]">
-      <div className="flex justify-between items-center">
-        <h2 className="text-base font-semibold">โน้ต</h2>
-        <PlusIcon
-          onClick={() => handleOnOpenModal()}
-          className="cursor-pointer"
-        />
-      </div>
+    <div>
+      <div className="mt-4 flex flex-col h-[calc(100vh-420px)]">
+        <div className="flex justify-between items-center">
+          <h2 className="text-base font-semibold">โน้ต</h2>
 
-      <div className="mt-4 flex-1 overflow-auto space-y-3 pb-40">
-        {sortedNotes && sortedNotes.length > 0 ? (
-          sortedNotes.map((note: TNote) => (
-            <div
-              key={note.id}
-              className="border rounded-lg p-3 bg-background shadow-sm space-y-2"
-            >
-              <p className="whitespace-pre-line break-words text-ring">
-                {note.note}
-              </p>
-              <div className="flex items-center justify-between text-xs text-gray-500">
-                <span>
-                  {DateISOToDisplayDate(note.created_at || note.createdAt)}{" "}
-                  {note.user_name}
-                </span>
-                <div className="flex gap-2">
-                  <PencilIcon
-                    className="w-4 h-4 cursor-pointer hover:text-blue-500"
-                    onClick={() => handleOnOpenModal(note)}
-                  />
-                  <TrashIcon
-                    className="w-4 h-4 cursor-pointer hover:text-red-500"
-                    onClick={() => handleDeleteNote(note.id)}
-                  />
+          <div className="flex items-center gap-2">
+            <PlusIcon
+              onClick={() => handleOnOpenModal()}
+              className="cursor-pointer"
+            />
+            <div className="w-20">
+              <GlobalButton
+                label="สรุปโน้ต"
+                variant="outline"
+                className="w-full"
+                onClick={() => setOpenAiNote(true)}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 flex-1 overflow-auto space-y-3 pb-40">
+          {sortedNotes && sortedNotes.length > 0 ? (
+            sortedNotes.map((note: TNote) => (
+              <div
+                key={note.id}
+                className="border rounded-lg p-3 bg-background shadow-sm space-y-2"
+              >
+                <p className="whitespace-pre-line break-words text-popover-foreground">
+                  {note.note}
+                </p>
+                <div className="flex items-center justify-between text-xs text-gray-500">
+                  <span>
+                    {DateISOToDisplayDate(note.created_at || note.createdAt)}{" "}
+                    {note.user_name}
+                  </span>
+                  <div className="flex gap-2">
+                    <PencilIcon
+                      className="w-4 h-4 cursor-pointer hover:text-blue-500"
+                      onClick={() => handleOnOpenModal(note)}
+                    />
+                    <TrashIcon
+                      className="w-4 h-4 cursor-pointer hover:text-red-500"
+                      onClick={() => handleDeleteNote(note.id)}
+                    />
+                  </div>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="mt-5 text-center text-sm text-neutral-400">
+              กดปุ่ม + เพื่อเพิ่มโน๊ต หรือ จดบันทึกข้อมูลสำหรับลูกค้าท่านนี้
             </div>
-          ))
-        ) : (
-          <div className="mt-5 text-center text-sm text-neutral-400">
-            กดปุ่ม + เพื่อเพิ่มโน๊ต หรือ จดบันทึกข้อมูลสำหรับลูกค้าท่านนี้
-          </div>
-        )}
-      </div>
+          )}
+        </div>
 
-      <FormNoteModal
-        values={noteContent ? noteContent : ""}
-        open={open}
-        onClose={handleOnCloseModal}
-        onSubmit={handleSubmitFormModal}
-      />
+        <FormNoteModal
+          values={noteContent ? noteContent : ""}
+          open={open}
+          onClose={handleOnCloseModal}
+          onSubmit={handleSubmitFormModal}
+        />
+        <GetNoteFormAI open={OpenAiNote} setOpen={setOpenAiNote} />
+      </div>
     </div>
   );
 };

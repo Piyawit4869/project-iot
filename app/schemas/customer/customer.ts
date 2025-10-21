@@ -87,7 +87,7 @@ export interface CustomerTypeOption {
 export interface CustomerRelationshipFormProps {
   form: UseFormReturn<CustomerValues>;
   customer?: CustomerValues;
-  users: UsersFormValues[];
+  users?: UsersFormValues[];
   loading?: boolean;
   isEdit?: boolean;
   fetchCustomer?: (
