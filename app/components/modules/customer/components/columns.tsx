@@ -93,12 +93,13 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
 
     // Name (clickable)
     {
-      accessorKey: "profile.name",
-      id: "profile.name",
+      accessorKey: "name",
+      id: "name",
       header: "ชื่อ",
       enableSorting: true,
       cell: ({ row }) => {
-        const name = fullName(row.original);
+        // const name = fullName(row.original);
+        const name = row.original.name;
         return (
           <span className="text-blue-400 hover:text-blue-300 hover:underline">
             <Link to={`/customer/${row.original.id}`}>{name}</Link>

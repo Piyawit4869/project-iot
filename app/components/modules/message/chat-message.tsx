@@ -3,18 +3,14 @@
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import React, { useRef, useState } from "react";
 import dayjs from "dayjs";
-import * as Icons from "lucide-react";
 
-import { GlobalImage } from "~/components/shared/global-image";
 import FeatureCard from "~/components/shared/feature-card";
 import { MessagesSquare } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import ChatInput from "./chat-input";
 import { OrderViewModal } from "./orders-view-modal";
 import { AIMessageView } from "./ai-message-view-modal";
-import { flushSync } from "react-dom";
 import { CustomerChatSkeleton } from "./noData/customer-chat-skeleton";
-import { useRouteLoaderData } from "react-router";
 import { socketConfig } from "~/lib/sockets";
 import type { ChatRoomSchemaType } from "~/schemas/message/message";
 import { usePaginatedMessages } from "~/api/client/message/useMessage";
@@ -186,13 +182,12 @@ export default function ChatMessages({
 
   React.useEffect(() => {
     if (!isLoading) {
-      const socket = socketConfig(api);
-      const body = {
-        chatRoomId: selectedRoom?.id,
-        userId: selectedRoom.customerId,
-        branchId: selectedRoom?.branchId,
-      };
-
+      // const socket = socketConfig(api);
+      // const body = {
+      //   chatRoomId: selectedRoom?.id,
+      //   userId: selectedRoom.customerId,
+      //   branchId: selectedRoom?.branchId,
+      // };
       // socket.emit("mark-read", body); // manual read
       // socket.emit("recent-chat", body);
     }
@@ -382,17 +377,23 @@ export default function ChatMessages({
                           }
                         />
                       </div>
+                    ) : msg?.messageType === "file" ? (
+                      <>
+                        <span className="text-[16px] text-muted-foreground mt-1 ">
+                          ระบบยังไม่รองรับไฟล์เอกสาร
+                        </span>
+                      </>
                     ) : (
                       <>
                         {msg.message ===
                         "https://api.dicebear.com/9.x/initials/svg?seed=X&backgroundColor=ffd5dc&scale=100" ? (
-                          <img src={msg.message} width={100} height={100} />
+                          <img src={msg.message} width={250} height={250} />
                         ) : (
                           <div
                             onClick={() => setPreviewUrl(msg.message)}
                             className="cursor-pointer"
                           >
-                            <img src={msg.message} width={100} height={100} />
+                            <img src={msg.message} width={250} height={250} />
                           </div>
                         )}
                       </>

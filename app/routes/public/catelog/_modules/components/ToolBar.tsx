@@ -34,7 +34,7 @@ ToolbarProps) {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search products, SKU, or tags..."
+              placeholder="ค้นหาสินค้า , SKU, or แท็กสินค้า..."
               value={queryState.q || ""}
               onChange={(e) =>
                 onUpdateQuery({ q: e.target.value || undefined })
@@ -51,7 +51,7 @@ ToolbarProps) {
               <SheetTrigger asChild>
                 <Button variant="outline" size="sm" className="rounded-2xl">
                   <Filter className="h-4 w-4 mr-2" />
-                  Filters
+                  กรองข้อมูล
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-80 p-0">
@@ -76,10 +76,10 @@ ToolbarProps) {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="new">Newest First</SelectItem>
-              <SelectItem value="price_asc">Price: Low to High</SelectItem>
-              <SelectItem value="price_desc">Price: High to Low</SelectItem>
-              <SelectItem value="popular">Most Popular</SelectItem>
+              <SelectItem value="new">ใหม่ล่าสุด</SelectItem>
+              <SelectItem value="price_asc">ราคา: ต่ำ ไป สูง</SelectItem>
+              <SelectItem value="price_desc">ราคา: สูง ไป ต่ำ</SelectItem>
+              <SelectItem value="popular">ยอดนิยม</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -87,7 +87,7 @@ ToolbarProps) {
 
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          {totalProducts} {totalProducts === 1 ? "product" : "products"} found
+          {totalProducts ?? 0} {totalProducts === 1 ? "สินค้า" : "สินค้า"}
         </p>
       </div>
     </div>

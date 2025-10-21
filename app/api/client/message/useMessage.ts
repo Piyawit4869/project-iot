@@ -4,6 +4,7 @@ import {
   fetchAllMessageWithRoomId,
   fetchAllRoomChat,
   fetchAskQuestion,
+  fetchLineBundleConfig,
   fetchRoomChatAILoadMore,
   fetchRoomChatLoadMore,
   fetchSendMessage,
@@ -15,6 +16,15 @@ import type {
   AskQuestionValues,
   PushMessageValues,
 } from "~/schemas/message/message";
+
+//api/thirdparty/line/config/bundle/branch/
+export const useLineBundleConfig = (id: string, enabled: boolean) => {
+  return useQuery({
+    queryKey: ["line-bunddle-config"],
+    queryFn: () => fetchLineBundleConfig(id),
+    enabled,
+  });
+};
 
 export const useAskQuestion = () => {
   return useMutation({
