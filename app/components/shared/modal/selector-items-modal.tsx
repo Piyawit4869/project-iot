@@ -26,6 +26,8 @@ import { cn } from "~/lib/utils";
 import { Badge } from "~/components/ui/badge";
 import { usePaginate } from "~/api/client/product/useProductQuery";
 import type { Item } from "~/types/global";
+import { useDebounce } from "~/components/modules/order/components/order-function";
+import PlaceholderImage from "/assets/images/placeholder.webp";
 
 type VariantType =
   | "default"
@@ -54,17 +56,6 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
   onChange,
   multiple = true,
 }) => {
-  function useDebounce<T>(value: T, delay: number) {
-    const [debouncedValue, setDebouncedValue] = useState(value);
-
-    useEffect(() => {
-      const handler = setTimeout(() => setDebouncedValue(value), delay);
-      return () => clearTimeout(handler);
-    }, [value, delay]);
-
-    return debouncedValue;
-  }
-
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
@@ -167,7 +158,7 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                           />
 
                           <GlobalImage
-                            src={item.imageUrl || ""}
+                            src={item.imageUrl || PlaceholderImage}
                             alt={item.name}
                             className="w-[48px] h-[48px] md:w-[70px] md:h-[70px] rounded-lg object-cover border"
                           />
@@ -182,20 +173,20 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                               className="border-none"
                             >
                               <AccordionTrigger className="p-0 hover:no-underline ">
-                                <div className="flex flex-col text-left">
-                                  <span className="text-sm font-medium truncate max-w-[180px] md:max-w-[260px]">
+                                <div className="flex flex-col text-left gap-1">
+                                  <span className="text-base font-medium truncate max-w-[180px] md:max-w-[260px]">
                                     {item.name}
                                   </span>
-                                  <span className="text-xs text-muted-foreground truncate max-w-[220px]">
+                                  <span className="text-sm text-muted-foreground truncate max-w-[220px]">
                                     {item.sku}
                                   </span>
-                                  <span className="text-[11px] text-muted-foreground">
+                                  <span className="text-sm text-muted-foreground">
                                     คงเหลือ: {item.available} ชิ้น
                                   </span>
                                 </div>
                               </AccordionTrigger>
 
-                              <AccordionContent className="pt-2 space-y-1 text-xs text-muted-foreground">
+                              <AccordionContent className="pt-2 space-y-1 text-sm text-muted-foreground">
                                 <p>รหัสสินค้า: {item.sku}</p>
                                 <p className="leading-5">
                                   รายละเอียด:{" "}
@@ -203,10 +194,8 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                                     ? item.description
                                     : "สินค้านี้ยังไม่มีรายละเอียด"}
                                 </p>
-                                <p>สินค้าคงเหลือ: {item.available} ชิ้น</p>
-                                {/* <p>
-                                  พร้อมจำหน่าย: {item.availableForSale} ชิ้น
-                                </p> */}
+                                {/* <p>สินค้าคงเหลือ: {item.available} ชิ้น</p> */}
+                                <p>พร้อมจำหน่าย: {item.available} ชิ้น</p>
                                 <p>ภาษีมูลค่าเพิ่ม: {item.vatPrice} %</p>
                                 <p>ส่วนลด: {item.discountPrice} ฿</p>
                               </AccordionContent>

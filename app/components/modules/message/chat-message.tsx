@@ -21,6 +21,7 @@ import { usePaginatedMessages } from "~/api/client/message/useMessage";
 import { useChat, type Message } from "~/providers/chat/useChat";
 import StatusToolbar from "./status-toolbar";
 import ReactLinkify from "react-linkify";
+import { formatDateAndTime } from "~/components/shared/global-format";
 
 export function MessageText({ text }: { text: string }) {
   return (
@@ -101,11 +102,18 @@ export default function ChatMessages({
     }
   };
 
+  React.useLayoutEffect(() => {
+    const el = scrollAreaRef.current;
+    if (!el || !combinedMessages?.length) return;
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+    });
+  }, [!!combinedMessages?.length]);
+
   React.useEffect(() => {
     const scrollArea = scrollAreaRef.current;
-    if (!scrollArea) {
-      return;
-    }
+    if (!scrollArea) return;
+
     const handleScroll = () => {
       const { scrollHeight, scrollTop, clientHeight } = scrollArea;
       const isContentScrollable = scrollHeight > clientHeight;
@@ -114,8 +122,10 @@ export default function ChatMessages({
         scrollTop < scrollHeight - clientHeight - SCROLL_THRESHOLD;
       setButtonScrollToBottom(isContentScrollable && isNotAtBottom);
     };
+
     scrollArea.addEventListener("scroll", handleScroll);
     handleScroll();
+
     return () => {
       scrollArea.removeEventListener("scroll", handleScroll);
     };
@@ -128,57 +138,32 @@ export default function ChatMessages({
   }, [messagesData]);
 
   React.useEffect(() => {
-    if (!bottomRef.current) return;
-
-    if (!buttonScrollToBottom) {
-      bottomRef.current.scrollIntoView({ behavior: "smooth" });
-      setHasAutoScrolled(true);
-    }
-  }, [combinedMessages, buttonScrollToBottom]);
-
-  React.useEffect(() => {
     const el = scrollAreaRef.current;
-    if (!isScrollReady || !el) return;
+    if (!el) return;
 
-    const handleScroll = () => {
-      if (
-        el.scrollTop < 10 &&
-        hasNextPage &&
-        !isFetchingNextPage &&
-        hasScrolledOnce
-      ) {
+    const THRESHOLD = 5;
+
+    const onScroll = () => {
+      if (!hasNextPage || isFetchingNextPage) return;
+
+      if (el.scrollTop <= THRESHOLD) {
         const prevScrollHeight = el.scrollHeight;
-
         setShowTopLoading(true);
 
         fetchNextPage().finally(() => {
           setShowTopLoading(false);
-
-          flushSync(() => {
-            requestAnimationFrame(() => {
-              const newScrollHeight = el.scrollHeight;
-              const heightDiff = newScrollHeight - prevScrollHeight;
-              el.scrollTop = heightDiff;
-            });
+          requestAnimationFrame(() => {
+            const newScrollHeight = el.scrollHeight;
+            const heightDiff = newScrollHeight - prevScrollHeight;
+            el.scrollTop = heightDiff;
           });
         });
       }
-
-      if (!hasScrolledOnce && hasAutoScrolled) {
-        setHasScrolledOnce(true);
-      }
     };
 
-    el.addEventListener("scroll", handleScroll);
-    return () => el.removeEventListener("scroll", handleScroll);
-  }, [
-    isScrollReady,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-    hasScrolledOnce,
-    hasAutoScrolled,
-  ]);
+    el.addEventListener("scroll", onScroll);
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   React.useEffect(() => {
     const el = scrollAreaRef.current;
@@ -204,8 +189,8 @@ export default function ChatMessages({
         branchId: selectedRoom?.branchId,
       };
 
-      socket.emit("mark-read", body); // manual read
-      socket.emit("recent-chat", body);
+      // socket.emit("mark-read", body); // manual read
+      // socket.emit("recent-chat", body);
     }
   }, [isLoading, selectedRoom]);
 
@@ -331,78 +316,91 @@ export default function ChatMessages({
             </div>
           )}
 
-          {combinedMessages.map((msg, index) => {
-            const isBackoffice = msg.platform === "backoffice";
+          {combinedMessages &&
+            combinedMessages.length > 0 &&
+            combinedMessages.map((msg, index: number) => {
+              const isBackoffice = msg.platform === "backoffice";
 
-            const avatarFallback =
-              msg.imageUrl && !msg.imageUrl.includes("http")
-                ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                    msg.imageUrl
-                  )}`
-                : msg?.imageUrl;
+              const avatarFallback =
+                msg.imageUrl && !msg.imageUrl.includes("http")
+                  ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                      msg.imageUrl
+                    )}`
+                  : msg?.imageUrl;
 
-            const formattedTime = dayjs(
-              msg.createdAt ? msg.createdAt : msg.timestamp
-            ).format("DD MMM YYYY, HH:mm");
+              const formattedTime = formatDateAndTime(
+                msg.createdAt ? msg.createdAt : msg.timestamp
+              );
 
-            return (
-              <div
-                key={`${msg.lineSubId}+${index}+${msg.sender}`}
-                className={`flex max-w-[75%] flex-col gap-1 ${
-                  isBackoffice ? "ml-auto items-end" : "mr-auto items-start"
-                }`}
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <Avatar className="w-6 h-6">
-                    <img
-                      src={avatarFallback || "/avatar.png"}
-                      alt="avatar"
-                      className="rounded-full object-cover"
-                    />
-                    <AvatarFallback>
-                      {(msg.sender || msg.recipient || "U")[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-xs text-muted-foreground font-medium">
-                    {msg.sender || msg.recipient || "Anonymous"}
-                  </span>
-                </div>
-
-                {msg?.messageType === "text" || msg?.messageType === null ? (
+              return (
+                <div key={`${msg.lineSubId}+${index}+${msg.sender}`}>
+                  {msg && msg?.firstMessageToday && (
+                    <div className="flex items-center justify-center pt-6 ">
+                      <span className="text-sm text-[12px] text-muted-foreground ">
+                        {formattedTime}
+                      </span>
+                    </div>
+                  )}
                   <div
-                    className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
-                      isBackoffice
-                        ? "bg-blue-500 text-white"
-                        : "bg-muted text-primary"
+                    className={`flex max-w-[75%] pt-5 flex-col gap-1 ${
+                      isBackoffice ? "ml-auto items-end" : "mr-auto items-start"
                     }`}
                   >
-                    {/* {msg.message} */}
-                    <MessageText
-                      text={typeof msg.message === "string" ? msg.message : ""}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    {msg.message ===
-                    "https://api.dicebear.com/9.x/initials/svg?seed=X&backgroundColor=ffd5dc&scale=100" ? (
-                      <img src={msg.message} width={100} height={100} />
-                    ) : (
-                      <div
-                        onClick={() => setPreviewUrl(msg.message)}
-                        className="cursor-pointer"
-                      >
-                        <img src={msg.message} width={100} height={100} />
-                      </div>
-                    )}
-                  </>
-                )}
+                    <div className="flex items-center gap-2 mb-1">
+                      <Avatar className="w-6 h-6">
+                        <img
+                          src={avatarFallback || "/avatar.png"}
+                          alt="avatar"
+                          className="rounded-full object-cover"
+                        />
+                        <AvatarFallback>
+                          {(msg.sender || msg.recipient || "U")[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-xs text-muted-foreground font-medium">
+                        {msg.sender || msg.recipient || "Anonymous"}
+                      </span>
+                    </div>
 
-                <span className="text-[10px] text-muted-foreground mt-1">
-                  {formattedTime}
-                </span>
-              </div>
-            );
-          })}
+                    {msg?.messageType === "text" ||
+                    msg?.messageType === null ? (
+                      <div
+                        className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
+                          isBackoffice
+                            ? "bg-blue-500 text-white"
+                            : "bg-muted text-primary"
+                        }`}
+                      >
+                        {/* {msg.message} */}
+                        <MessageText
+                          text={
+                            typeof msg.message === "string" ? msg.message : ""
+                          }
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        {msg.message ===
+                        "https://api.dicebear.com/9.x/initials/svg?seed=X&backgroundColor=ffd5dc&scale=100" ? (
+                          <img src={msg.message} width={100} height={100} />
+                        ) : (
+                          <div
+                            onClick={() => setPreviewUrl(msg.message)}
+                            className="cursor-pointer"
+                          >
+                            <img src={msg.message} width={100} height={100} />
+                          </div>
+                        )}
+                      </>
+                    )}
+
+                    <span className="text-[10px] text-muted-foreground mt-1 ">
+                      {formattedTime}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
           <div ref={bottomRef} />
           {buttonScrollToBottom && (
             <button
@@ -445,26 +443,27 @@ export default function ChatMessages({
 
       {previewUrl && (
         <div
-          className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4 h-full"
+          className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4"
           role="dialog"
           aria-modal="true"
           onClick={() => setPreviewUrl("")}
         >
           <div
-            className="relative bg-transparent rounded-lg overflow-hidden w-full h-full"
+            className="relative bg-transparent rounded-lg overflow-hidden max-w-5xl max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              className="absolute top-10 right-8 bg-white/90 rounded-full p-1 border"
+            {/* <button
+              className="absolute top-4 right-4 bg-white/90 rounded-full p-2 border"
               onClick={() => setPreviewUrl("")}
               aria-label="ปิด"
             >
               <Icons.X className="w-5 h-5" />
-            </button>
-            <GlobalImage
+            </button> */}
+
+            <img
               src={previewUrl}
               alt="preview"
-              className="w-full h-full object-contain"
+              className="w-auto h-[90vh] object-contain rounded-lg"
               width={1200}
               height={800}
             />

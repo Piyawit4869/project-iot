@@ -143,8 +143,8 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
   };
 
   return (
-    <div>
-      <div className="flex justify-between">
+    <div className="mt-4 flex flex-col h-[calc(100vh-420px)]">
+      <div className="flex justify-between items-center">
         <h2 className="text-base font-semibold">โน้ต</h2>
         <PlusIcon
           onClick={() => handleOnOpenModal()}
@@ -152,14 +152,14 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
         />
       </div>
 
-      <div className="space-y-3 mt-4 max-h-[calc(100vh-420px)] overflow-auto">
-        {sortedNotes && sortedNotes.length ? (
+      <div className="mt-4 flex-1 overflow-auto space-y-3 pb-40">
+        {sortedNotes && sortedNotes.length > 0 ? (
           sortedNotes.map((note: TNote) => (
             <div
               key={note.id}
               className="border rounded-lg p-3 bg-background shadow-sm space-y-2"
             >
-              <p className="whitespace-pre-line break-words text-popover-foreground text-ring">
+              <p className="whitespace-pre-line break-words text-ring">
                 {note.note}
               </p>
               <div className="flex items-center justify-between text-xs text-gray-500">

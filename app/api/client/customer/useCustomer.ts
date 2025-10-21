@@ -46,6 +46,8 @@ export const useCustomerPaginate = ({
   name,
   fullname,
   customerPlatform,
+  priorityForm,
+  priorityTo,
   priority,
   tags,
   customerType,
@@ -59,11 +61,13 @@ export const useCustomerPaginate = ({
 }: {
   pageIndex: number;
   pageSize: number;
-  status: string;
-  limit: number;
+  status?: string;
+  limit?: number;
   name?: string;
   fullname?: string;
   customerPlatform?: string;
+  priorityForm?: number;
+  priorityTo?: number;
   priority?: number;
   tags?: string;
   customerType?: string;
@@ -73,7 +77,6 @@ export const useCustomerPaginate = ({
   createdFrom?: string;
   createdTo?: string;
   updatedFrom?: string;
-
   updatedTo?: string;
 }) => {
   return useQuery({
@@ -86,6 +89,8 @@ export const useCustomerPaginate = ({
       name,
       fullname,
       customerPlatform,
+      priorityForm,
+      priorityTo,
       priority,
       tags,
       customerType,
@@ -102,11 +107,12 @@ export const useCustomerPaginate = ({
         page: pageIndex,
         // itemsPerPage: pageSize,
         status: status,
-        limit: limit,
+        limit: limit || undefined,
         name,
         fullname,
         customerPlatform,
-        priority,
+        priorityForm,
+        priorityTo,
         tags,
         customerType,
         phone,

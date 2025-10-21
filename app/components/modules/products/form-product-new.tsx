@@ -110,6 +110,7 @@ export const FormProductNew: React.FC<FormProductProps> = ({
   const { data: categories } = useCategories();
 
   const { mutate } = useCreateCategory();
+  const [isEdit, setIsEdit] = React.useState(false);
 
   const [newCategory, setNewCategory] = useState("");
 
@@ -126,6 +127,11 @@ export const FormProductNew: React.FC<FormProductProps> = ({
   //   setOptionsState(options);
   //   setVariantsState(variants);
   // };
+
+  const handleCancel = () => {
+    if (categories) form.reset(form.getValues(), { keepDirty: false });
+    setIsEdit(false);
+  };
 
   const { watch, setValue } = form;
 
@@ -483,7 +489,6 @@ export const FormProductNew: React.FC<FormProductProps> = ({
 
             <Card className="p-4 space-y-3">
               <div>
-                {" "}
                 <h1 className="text-md font-semibold mb-8 mt-6">
                   การจัดระเบียบสินค้า
                 </h1>

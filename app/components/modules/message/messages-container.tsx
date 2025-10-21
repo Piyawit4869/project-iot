@@ -18,6 +18,14 @@ const MessagesContainer = ({ api }: { api: string }) => {
     if (realtimeChatRooms) setRealtimeChatRooms(null);
   }, [chatRooms, realtimeChatRooms, setCombinedRooms, setRealtimeChatRooms]);
 
+  React.useEffect(() => {
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   return (
     <ChatProvider>
       <CustomerProvider>

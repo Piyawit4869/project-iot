@@ -1113,7 +1113,7 @@ export default function ChatCustomerInfo({
                       onChange={(e) => setSearch(e.target.value)}
                     />
 
-                    <ScrollArea className="h-[calc(100vh-480px)] rounded-md border p-2 bg-white">
+                    <ScrollArea className="h-[calc(100vh-480px)] rounded-md border p-2 bg-white pb-[35px]">
                       <ul className="space-y-2">
                         {productsLoading ? (
                           <div className="space-y-2">
@@ -1134,10 +1134,15 @@ export default function ChatCustomerInfo({
                               {item?.id && (
                                 <div
                                   className="flex gap-2 cursor-pointer w-full"
-                                  onClick={() => toggleCartItem(item)}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    toggleCartItem(item);
+                                  }}
                                 >
                                   <Checkbox
                                     checked={isInCart(item.id)}
+                                    onClick={(e) => e.stopPropagation()}
                                     onCheckedChange={() => toggleCartItem(item)}
                                   />
 
