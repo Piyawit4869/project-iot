@@ -37,7 +37,7 @@ export function ProductCard({
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-            No Image
+            ไม่มีรูปภาพ
           </div>
         )}
 
@@ -107,7 +107,7 @@ export function ProductCard({
             disabled={isAddToCartDisabled}
             onClick={() => onAddToCart?.(product)}
           >
-            เพ่ิมเข้าตะกร้าสินค้า
+            เพิ่มเข้าตะกร้าสินค้า
           </Button>
         </div>
       </CardContent>
