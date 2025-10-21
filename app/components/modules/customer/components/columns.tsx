@@ -311,12 +311,12 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
 
         return id ? (
           <Link to={`/organization/user/${id}`}>
-            <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline">
+            <span className="text-muted-foreground hover:text-blue-400 hover:underline">
               {name}
             </span>
           </Link>
         ) : (
-          <span className="text-sm text-muted-foreground">{name}</span>
+          <span className=" text-muted-foreground text-center">{name}</span>
         );
       },
     },
