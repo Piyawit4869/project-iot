@@ -69,19 +69,19 @@ export function ViewCardGoods<T extends ZodTypeAny>({
               >
                 <div className="flex gap-4">
                   <GlobalImage
-                    src={item.imageUrl || PlaceholderImage}
+                    src={item?.imageUrl || PlaceholderImage}
                     alt="Product"
                     className="w-15 h-15 rounded-lg object-cover border"
                   />
                   <div className="flex flex-col gap-1.5">
                     <h2 className="font-bold text-lg">
-                      {item.name || "ยังไม่มีชื่อสินค้า"}
+                      {item?.name || "ยังไม่มีชื่อสินค้า"}
                     </h2>
                     <span className="text-sm text-gray-500">
-                      {item.sku || "ยังไม่มีรหัสสินค้า"}
+                      {item?.sku || "ยังไม่มีรหัสสินค้า"}
                     </span>
                     <span className="text-sm ">
-                      ต้นทุนต่อชิ้น : {formatNumber(item.costPrice || 0)}฿
+                      ต้นทุนต่อชิ้น : {formatNumber(item?.costPrice || 0)}฿
                     </span>
                     {/* <span className="text-sm ">
                       สินค้าคงเหลือ : {formatNumber(item.available || 0)} ชิ้น
@@ -91,12 +91,12 @@ export function ViewCardGoods<T extends ZodTypeAny>({
                       {formatNumber(item.availableForSale || 0)} ชิ้น
                     </span> */}
                     <span className="text-sm ">
-                      ส่วนลด : {formatNumber(item.discountPrice || 0)} ฿
+                      ส่วนลด : {formatNumber(item?.discountPrice || 0)} ฿
                     </span>
                     <span className="text-red-600 font-semibold">
                       ราคารวม :{" "}
                       {formatNumber(
-                        (quantity ?? 0) * item.salePrice - item.discountPrice
+                        (quantity ?? 0) * item?.salePrice - item?.discountPrice
                       )}{" "}
                       ฿
                     </span>
@@ -114,14 +114,14 @@ export function ViewCardGoods<T extends ZodTypeAny>({
                   <div className="flex flex-col items-center">
                     <span className="text-sm ">จำนวน</span>
                     <span className="text-md text-[#737373]">
-                      {item.quantity || 0}
+                      {item?.quantity || 0}
                     </span>
                   </div>
 
                   <div className="flex flex-col items-center">
                     <span className="text-sm ">ราคาขาย</span>
                     <span className="text-md text-[#737373]">
-                      {item.salePrice || 0}
+                      {item?.salePrice || 0}
                     </span>
                   </div>
                 </div>
