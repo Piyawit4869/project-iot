@@ -197,13 +197,13 @@ export function AiGetDataFromChat({
     },
   ];
 
-  React.useEffect(() => {
-    if (value) setState(value);
-  }, [value]);
+  // React.useEffect(() => {
+  //   if (value) setState(value);
+  // }, [value]);
 
-  React.useEffect(() => {
-    onChange?.(state);
-  }, [state, onChange]);
+  // React.useEffect(() => {
+  //   onChange?.(state);
+  // }, [state, onChange]);
 
   // const setChecked = (key: FieldKey, checked: boolean) => {
   //   setState((prev) => ({ ...prev, [key]: { ...prev[key], checked } }));
