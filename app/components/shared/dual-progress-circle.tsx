@@ -58,7 +58,7 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
 
   const handleLegendClick = (key: string) => {
     setActiveKeys((prev) =>
-      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+      prev?.includes(key) ? prev?.filter((k) => k !== key) : [...prev, key]
     );
   };
 
@@ -67,20 +67,24 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
   );
 
   let chartDataData = [
-    ...(chartData?.senderStats?.map((s, idx) => ({
-      name: s.sender,
-      process: s.messageCount,
-      fill: generateColor(idx),
-    })) ?? []),
-    ...(chartData?.aiStats?.map((s) => ({
-      name: s.sender,
-      process: s.messageCount,
-      fill: "#332956",
-    })) ?? []),
+    ...(chartData?.senderStats
+      ?.filter((s) => s.sender)
+      .map((s, idx) => ({
+        name: s.sender,
+        process: s.messageCount,
+        fill: generateColor(idx),
+      })) ?? []),
+    ...(chartData?.aiStats
+      ?.filter((s) => s.sender)
+      .map((s) => ({
+        name: s.sender,
+        process: s.messageCount,
+        fill: "#332956",
+      })) ?? []),
   ];
 
-  let salerGroup = chartDataData.filter((p) => !p.name.includes("Rome"));
-  let aiGroup = chartDataData.filter((p) => p.name.includes("Rome"));
+  let salerGroup = chartDataData?.filter((p) => !p?.name?.includes("Rome"));
+  let aiGroup = chartDataData?.filter((p) => p?.name?.includes("Rome"));
 
   const totalSaler = salerGroup.reduce((sum, item) => sum + item.process, 0);
 
@@ -108,6 +112,7 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
   }
 
   chartDataData = [...salerGroup, ...aiGroup];
+
   const activeIndexes = chartDataData
     .map((d, idx) => {
       if (viewFocusData) {

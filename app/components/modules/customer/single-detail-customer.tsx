@@ -33,6 +33,7 @@ import { RelationshipCard } from "./components/relationship";
 import { ViewCustomerActivityLog } from "./components/customer-activityLog";
 import { AIMessageView } from "../message/ai-message-view-modal";
 import { useOrderColumns } from "../order/components/columns";
+import { AiGetDataFromChat } from "./components/ai-getdata-from-chat";
 
 export default function SingDetailleCustomer() {
   const navigate = useNavigate();
@@ -44,14 +45,12 @@ export default function SingDetailleCustomer() {
   } = useCustomerViewModel();
 
   const { isLoading } = useGetAllUsers();
-  const { data: getData, isLoading: isLoadingAiNote } = useGetAiNote(id);
-
+  const { data: getData } = useGetAiNote(id);
+  const dataFromAI = getData?.customerData;
   const columns = useOrderColumns();
   const { mutate: update, isPending } = useUpdateCustomer(id);
   const [isEdit, setIsEdit] = React.useState(false);
   const [AIOpen, setAIOpen] = React.useState(false);
-
-  const dataFromAI = getData?.customerData;
 
   const data = customer?.profile;
   const otherName = data?.name;
@@ -60,8 +59,8 @@ export default function SingDetailleCustomer() {
     .filter(Boolean)
     .join(" ")
     .trim();
-  const phoneContactState = formUpdate.getFieldState("contacts.0.phone");
-  const nameContactState = formUpdate.getFieldState("contacts.0.name");
+  const phoneContactState = formUpdate.watch("contacts.0.phone");
+  const nameContactState = formUpdate.watch("contacts.0.name");
   const { isDirty } = formUpdate.formState;
 
   useEntityBreadcrumb({
@@ -236,7 +235,7 @@ export default function SingDetailleCustomer() {
                   <GlobalButton
                     key="sync-ai"
                     type="button"
-                    onClick={() => setAIOpen(true)}
+                    onClick={onSync}
                     // disabled={isLoading || dataFromAI === null}
                     variant="secondary"
                     className="flex-1  bg-[#2e498d] text-white hover:bg-[#142a60] hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
@@ -264,8 +263,8 @@ export default function SingDetailleCustomer() {
                     disabled={
                       isLoading ||
                       isPending ||
-                      phoneContactState.invalid ||
-                      nameContactState.invalid
+                      !phoneContactState?.trim() ||
+                      !nameContactState?.trim()
                     }
                     className="flex-1  flex items-center gap-1 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm dark:disabled:bg-transparent dark:disabled:text-white dark:disabled:border-white  dark:disabled:border-1"
                     icon={<Save />}
@@ -333,8 +332,8 @@ export default function SingDetailleCustomer() {
                     customer={customer}
                     loading={loadCustomer}
                     isEdit={isEdit}
-                    users={[]}
                   />
+                  <AiGetDataFromChat data={dataFromAI} />
                   <ViewCustomerActivityLog loading={loadCustomer} />
                 </div>
               </div>
