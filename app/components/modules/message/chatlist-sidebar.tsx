@@ -11,6 +11,7 @@ import { useRouteLoaderData } from "react-router";
 import { socketConfig } from "~/lib/sockets";
 import { Button } from "~/components/ui/button";
 import {
+  AudioLines,
   CheckCircle,
   ChevronDown,
   Clock,
@@ -39,6 +40,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "~/components/ui/command";
+import GlobalButton from "~/components/shared/global-button";
 
 interface Props {
   handleChangeSelectedRoom: (room: any) => void;
@@ -134,6 +136,18 @@ export default function ChatlistSidebar({
           <h2 className="text-lg font-semibold">แชท</h2>
         </div>
       </div>
+
+      {/* <GlobalButton // !! for tesing Audio form local path
+        key="save"
+        type="submit"
+        form="customer"
+        icon={<AudioLines />}
+        label={<span className="hidden sm:inline">ทดสอบเสียง</span>}
+        onClick={() => {
+          const audio = new Audio("/sounds/level-up-191997.mp3");
+          audio.play();
+        }}
+      /> */}
 
       <div ref={containerRef} className="relative">
         <Popover open={open} onOpenChange={setOpen}>
@@ -248,7 +262,7 @@ export default function ChatlistSidebar({
                 selectedRoom={currentRoomId}
                 resize={resize}
                 name={room?.name}
-                message={room?.latestMessage?.message ?? ""}
+                message={room?.latestMessage?.messageLabel ?? ""}
                 time={room?.latestMessage?.createdAt ?? ""}
                 image={room?.imageUrl || ""}
                 unread={room?.unreadMessageCount > 0}
@@ -340,7 +354,7 @@ export default function ChatlistSidebar({
                 selectedRoom={currentRoomId}
                 resize={resize}
                 name={room?.name}
-                message={room?.latestMessage?.message ?? ""}
+                message={room?.latestMessage?.messageLabel ?? ""}
                 time={room?.latestMessage?.createdAt ?? ""}
                 image={room?.imageUrl || ""}
                 unread={room?.unreadMessageCount > 0}
@@ -456,9 +470,9 @@ function ChatItem({
                 {message}
               </p>
 
-              {(roomDetail?.isDone || roomDetail?.isProcess) && (
+              {roomDetail && (
                 <div className="flex flex-col items-center  justify-end w-[90px]">
-                  {roomDetail?.done && (
+                  {roomDetail.done && (
                     <TagLabel
                       label="ดำเนินการแล้ว"
                       icon={<CheckCircle className="mr-1 h-[10px] w-[10px]" />}
@@ -466,7 +480,7 @@ function ChatItem({
                     />
                   )}
 
-                  {roomDetail?.isProcess && (
+                  {roomDetail.isProcess && (
                     <TagLabel
                       label="ต้องดำเนินการ"
                       icon={
