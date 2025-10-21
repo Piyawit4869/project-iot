@@ -235,8 +235,6 @@ export default function ChatMessages({
     return <CustomerChatSkeleton />;
   }
 
-  console.log({ combinedMessages });
-
   if (isNoMessageData) {
     return (
       <div className="flex flex-col h-[200px] w-full justify-center items-center gap-12">
