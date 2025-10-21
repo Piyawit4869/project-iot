@@ -35,6 +35,8 @@ import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
 import { currencyType, notationType } from "~/initData/order-initData";
 import type { OrderFormProps } from "~/schemas/order/type";
+import { useDebounce } from "../order-function";
+import { useCustomerPaginate } from "~/api/client/customer/useCustomer";
 
 // import { CustomerType } from "@/app/(backoffice)/[organization]/customer/_modules/types/customer";
 
@@ -44,12 +46,21 @@ export const OrderForm: React.FC<OrderFormProps> = ({
   Price,
   quantities,
   totalVat,
-  isLoading,
 }) => {
+  const customerPaginate = useCustomerPaginate;
   const [search, setSearch] = React.useState("");
 
+  const debouncedSearch = useDebounce(search, 500);
+  const { data, isLoading } = customerPaginate({
+    pageIndex: 1,
+    pageSize: 20,
+    name: debouncedSearch,
+  });
+
+  const customerData = data?.items;
+
   const customerDetail = (customerId: string) => {
-    const singleCustomer = customers?.find((c) => c.id === customerId);
+    const singleCustomer = customerData?.find((c: any) => c.id === customerId);
 
     if (!singleCustomer) return;
 
@@ -79,7 +90,9 @@ export const OrderForm: React.FC<OrderFormProps> = ({
           name="docName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ชื่อออเดอร์</FormLabel>
+              <RequiredLabel required>
+                ชื่อออเดอร์ <FormMessage />
+              </RequiredLabel>
               <FormControl>
                 <Input placeholder="กรอกชื่อออเดอร์" {...field} />
               </FormControl>
@@ -162,55 +175,43 @@ export const OrderForm: React.FC<OrderFormProps> = ({
           // name="orderDate"
           render={({ field }) => (
             <FormItem>
-              <RequiredLabel required>วันที่สั่งซื้อออเดอร์</RequiredLabel>
+              <RequiredLabel required>
+                วันที่สั่งซื้อออเดอร์ <FormMessage />
+              </RequiredLabel>
               <FormControl>
                 <DatePicker value={field.value} onChange={field.onChange} />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
           name="expireDate"
-          // name="orderDate"
           render={({ field }) => (
             <FormItem>
-              <RequiredLabel required>วันที่หมดอายุ</RequiredLabel>
+              <RequiredLabel required>
+                วันที่หมดอายุ <FormMessage />
+              </RequiredLabel>
               <FormControl>
                 <DatePicker value={field.value} onChange={field.onChange} />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
       </div>
 
       <Card className="w-full p-4.5">
-        <h1 className="font-semibold text-xl">ข้อมูลลูกค้า</h1>
+        <h3 className="font-semibold text-xl mb-3">การชำระเงิน</h3>
         <div className="grid grid-cols-1 gap-3 mt-3">
           <FormField
             control={form.control}
             name="customerId"
             render={({ field }) => {
-              const filteredCustomers = customers?.filter((item: any) => {
-                const fullName =
-                  [
-                    item.profile?.prefix,
-                    item.profile?.firstName,
-                    item.profile?.lastName,
-                  ]
-                    .filter(Boolean)
-                    .join(" ") ||
-                  item.profile?.name ||
-                  "";
-
-                return fullName.toLowerCase().includes(search.toLowerCase());
-              });
-
               return (
                 <FormItem>
-                  <FormLabel>เลือกข้อมูลลูกค้า</FormLabel>
+                  <RequiredLabel required>
+                    เลือกข้อมูลลูกค้า <FormMessage />
+                  </RequiredLabel>
                   <FormControl>
                     <Select
                       {...field}
@@ -242,7 +243,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
                         <div className="p-2">
                           <input
                             type="text"
-                            placeholder="ค้นหาลูกค้า..."
+                            placeholder="ค้นหาลูกค้าด้วยชื่อ"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             className="w-full px-2 py-2 border rounded"
@@ -250,8 +251,8 @@ export const OrderForm: React.FC<OrderFormProps> = ({
                           <Separator className="my-3" />
                         </div>
 
-                        {filteredCustomers && filteredCustomers.length > 0 ? (
-                          filteredCustomers.map((item: any) => {
+                        {customerData && customerData.length > 0 ? (
+                          customerData.map((item: any) => {
                             const fullName =
                               [
                                 item.profile?.prefix,
@@ -460,7 +461,10 @@ export const OrderForm: React.FC<OrderFormProps> = ({
           <FormItem className="col-span-2">
             <FormLabel>หมายเหตุ</FormLabel>
             <FormControl>
-              <Textarea placeholder="ระบุหมายเหตุ..." {...field} />
+              <Textarea
+                placeholder="ระบุหมายเหตุ..."
+                value={field.value || ""}
+              />
             </FormControl>
           </FormItem>
         )}

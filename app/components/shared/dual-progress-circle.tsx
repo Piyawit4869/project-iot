@@ -20,7 +20,7 @@ interface Data {
 }
 
 export interface RelationshipCircleProps {
-  chartData: Data;
+  chartData?: Data;
 }
 
 function generateColor(index: number): string {

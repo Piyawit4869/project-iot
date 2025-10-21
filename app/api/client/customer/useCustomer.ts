@@ -59,8 +59,8 @@ export const useCustomerPaginate = ({
 }: {
   pageIndex: number;
   pageSize: number;
-  status: string;
-  limit: number;
+  status?: string;
+  limit?: number;
   name?: string;
   fullname?: string;
   customerPlatform?: string;
@@ -102,7 +102,7 @@ export const useCustomerPaginate = ({
         page: pageIndex,
         // itemsPerPage: pageSize,
         status: status,
-        limit: limit,
+        limit: limit || undefined,
         name,
         fullname,
         customerPlatform,

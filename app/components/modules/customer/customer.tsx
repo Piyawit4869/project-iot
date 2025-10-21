@@ -22,7 +22,6 @@ export default function Customer() {
   const { data: categories, isLoading } = useAllCustomerSummary();
   const { isMobile } = useSidebar();
   const customerPaginate = useCustomerPaginate;
-
   const navigate = useNavigate();
   const location = useLocation();
   const [sp, setSearchParams] = useSearchParams();
