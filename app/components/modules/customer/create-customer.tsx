@@ -22,9 +22,16 @@ export default function CreateCustomer() {
     state: { formCreate, isCreating },
   } = useCustomerViewModel();
   const { mutate: creation, isPending } = useCreateCustomer();
-  const phoneContactState = formCreate.getFieldState("contacts.0.phone");
-  const nameContactState = formCreate.getFieldState("contacts.0.name");
+
   const { isDirty } = formCreate.formState;
+
+  const phoneContact = formCreate.watch("contacts.0.phone");
+  const nameContact = formCreate.watch("contacts.0.name");
+
+  const isDisabled =
+    !!isPending ||
+    ((!!phoneContact?.trim() || !!nameContact?.trim()) &&
+      (!phoneContact?.trim() || !nameContact?.trim()));
 
   const onCreate = (values: CustomerValues) => {
     const payload = Object.assign({}, values);
@@ -108,11 +115,7 @@ export default function CreateCustomer() {
                 }
                 type="submit"
                 loading={isCreating}
-                disabled={
-                  isPending ||
-                  phoneContactState.invalid ||
-                  nameContactState.invalid
-                }
+                disabled={isDisabled}
                 form="customer"
               />
             </>,

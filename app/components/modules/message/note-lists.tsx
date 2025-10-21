@@ -11,6 +11,8 @@ import {
   useUpdateCustomerNote,
 } from "~/api/client/customer/useCustomer";
 import { DateISOToDisplayDate } from "~/utils/date-format";
+import GlobalButton from "~/components/shared/global-button";
+import { GetNoteFormAI } from "./modal-get-noteAi";
 
 interface TNote {
   id: string;
@@ -35,6 +37,7 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
   const { mutate: deleteCustomerNote } = useDeleteCustomerNote(customer?.id);
 
   const [open, setOpen] = React.useState<boolean>(false);
+  const [OpenAiNote, setOpenAiNote] = React.useState<boolean>(false);
   const [noteContent, setNoteContent] = React.useState<string>("");
   const [selectedNoteId, setSelectedNoteId] = React.useState<string | null>(
     null
@@ -144,12 +147,23 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
 
   return (
     <div>
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center">
         <h2 className="text-base font-semibold">โน้ต</h2>
-        <PlusIcon
-          onClick={() => handleOnOpenModal()}
-          className="cursor-pointer"
-        />
+
+        <div className="flex items-center gap-2">
+          <PlusIcon
+            onClick={() => handleOnOpenModal()}
+            className="cursor-pointer"
+          />
+          <div className="w-20">
+            <GlobalButton
+              label="สรุปโน้ต"
+              variant="outline"
+              className="w-full"
+              onClick={() => setOpenAiNote(true)}
+            />
+          </div>
+        </div>
       </div>
 
       <div className="space-y-3 mt-4 max-h-[calc(100vh-420px)] overflow-auto">
@@ -159,7 +173,7 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
               key={note.id}
               className="border rounded-lg p-3 bg-background shadow-sm space-y-2"
             >
-              <p className="whitespace-pre-line break-words text-popover-foreground text-ring">
+              <p className="whitespace-pre-line break-words text-popover-foreground">
                 {note.note}
               </p>
               <div className="flex items-center justify-between text-xs text-gray-500">
@@ -193,6 +207,7 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
         onClose={handleOnCloseModal}
         onSubmit={handleSubmitFormModal}
       />
+      <GetNoteFormAI open={OpenAiNote} setOpen={setOpenAiNote} />
     </div>
   );
 };

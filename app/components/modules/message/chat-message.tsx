@@ -21,6 +21,7 @@ import { usePaginatedMessages } from "~/api/client/message/useMessage";
 import { useChat, type Message } from "~/providers/chat/useChat";
 import StatusToolbar from "./status-toolbar";
 import ReactLinkify from "react-linkify";
+import { useGetAiNote } from "~/api/client/customer/useCustomer";
 
 export function MessageText({ text }: { text: string }) {
   return (
@@ -70,6 +71,9 @@ export default function ChatMessages({
   const [buttonScrollToBottom, setButtonScrollToBottom] = React.useState(false);
 
   const { messages: socketMessages, addMessage } = useChat();
+
+  const { data: getData } = useGetAiNote(customer?.id);
+  const dataFromAI = getData?.customerData;
 
   const {
     data: messagesData,
@@ -440,7 +444,7 @@ export default function ChatMessages({
       <AIMessageView
         open={AIOpen}
         onOpenChange={setAIOpen}
-        customer={customer}
+        customer={dataFromAI}
       />
 
       {previewUrl && (
