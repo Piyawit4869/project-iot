@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { CheckCircle, MessagesSquare, Search } from "lucide-react";
+import { CheckCircle, MessagesSquare, Search, X } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import {
@@ -52,6 +52,17 @@ export default function StatusToolbar({ chatRoomDetail, className }: Props) {
     });
   };
 
+  const setClear = () => {
+    // onChange?.("clear");
+    markAsProcess(false);
+    markAsDone(false);
+
+    startTransition(() => {
+      setIsDone(false);
+      setIsProcess(false);
+    });
+  };
+
   return (
     <TooltipProvider delayDuration={150}>
       <div
@@ -97,6 +108,21 @@ export default function StatusToolbar({ chatRoomDetail, className }: Props) {
           </TooltipTrigger>
           <TooltipContent>กำหนดเป็น "ดำเนินการแล้ว"</TooltipContent>
         </Tooltip>
+        {(isProcess || isDone) && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn("h-9 px-3 rounded-md border-muted-foreground/30")}
+                onClick={setClear}
+              >
+                <X className="mr-2 h-[18px] w-[18px]" />
+                เคลียร์
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>ล้างค่าแท็ก</TooltipContent>
+          </Tooltip>
+        )}
         {/* <PopoverContent
             align="start"
             sideOffset={6}

@@ -102,15 +102,17 @@ export default function ChatlistSidebar({
       fetchNextPage();
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
   React.useEffect(() => {
+    console.log({ api });
     const socket = socketConfig(api);
 
     if (me?.branchId) {
+      console.log("me?.branchId", me?.branchId);
       socket.emit("rooms", `${me.branchId}`);
     }
 
     socket.on("rooms", (room: any) => {
+      console.log({ room });
       setAllRooms((prev) => mergeRoomImmutable(prev, room));
     });
 
@@ -251,6 +253,7 @@ export default function ChatlistSidebar({
                 image={room?.imageUrl || ""}
                 unread={room?.unreadMessageCount > 0}
                 countUnreadMessage={room?.unreadMessageCount || 0}
+                roomDetail={room}
                 currentCustomer={currentCustomer}
                 onChatClick={() => {
                   handleChangeSelectedRoom(room);
@@ -338,6 +341,7 @@ export default function ChatlistSidebar({
                 unread={room?.unreadMessageCount > 0}
                 countUnreadMessage={room?.unreadMessageCount || 0}
                 currentCustomer={currentCustomer}
+                roomDetail={room}
                 onChatClick={() => {
                   handleChangeSelectedRoom(room);
                   setSidebarOpen(false);
@@ -372,6 +376,7 @@ type ChatItemProps = {
   selectedRoom: string;
   roomId: string;
   currentCustomer: any;
+  roomDetail?: any;
 };
 
 function ChatItem({
@@ -384,6 +389,7 @@ function ChatItem({
   onChatClick,
   resize,
   roomId,
+  roomDetail,
 }: ChatItemProps) {
   const fallbackImage = `https://ui-avatars.com/api/?name=${encodeURIComponent(
     name
@@ -424,40 +430,50 @@ function ChatItem({
 
       {resize > 25 && (
         <div className="hidden ml-3 lg:flex flex-col min-w-0 flex-1">
-          <div className="flex justify-between items-center gap-2 min-w-0">
-            <div className="flex justify-between items-center gap-2 min-w-0">
+          <div className="flex flex-col justify-between items-start gap-2 min-w-0">
+            <div className="flex w-full justify-between items-center gap-2 min-w-0">
               <p className={cn("text-sm truncate max-w-[160px]")}>{name}</p>
-            </div>
 
-            <div className="flex flex-col justify-end">
               <span className="text-xs text-black-400 whitespace-nowrap shrink-0 text-end">
                 {DateTimeStampChatDisplay(time ?? "")}
               </span>
-
-              <div>
-                {/* <TagLabel
-                  label="ดำเนินการแล้ว"
-                  icon={<CheckCircle className="mr-1 h-[10px] w-[10px]" />}
-                  color="green"
-                /> */}
-                <TagLabel
-                  label="ต้องดำเนินการ"
-                  icon={<MessagesSquare className="mr-1 h-[10px] w-[10px]" />}
-                  color="orange"
-                  className="text-[10px]"
-                />
-              </div>
             </div>
-          </div>
-          <div className="flex flex-row justify-between">
-            <p
-              className={cn(
-                "text-sm truncate text-black-400  sm:max-w-[200px] lg:max-w-[250px] min-w-[170px] whitespace-nowrap overflow-hidden",
-                unread && "font-medium"
+
+            <div className="flex flex-row justify-between">
+              <p
+                className={cn(
+                  "text-sm truncate text-black-400  sm:max-w-[200px] lg:max-w-[250px] min-w-[170px] whitespace-nowrap overflow-hidden",
+                  unread && "font-medium",
+                  ((roomDetail && roomDetail.done) || roomDetail.isProcess) &&
+                    "truncate w-[80px]"
+                )}
+              >
+                {message}
+              </p>
+
+              {(roomDetail?.isDone || roomDetail?.isProcess) && (
+                <div className="flex flex-col items-center  justify-end w-[90px]">
+                  {roomDetail?.done && (
+                    <TagLabel
+                      label="ดำเนินการแล้ว"
+                      icon={<CheckCircle className="mr-1 h-[10px] w-[10px]" />}
+                      color="green"
+                    />
+                  )}
+
+                  {roomDetail?.isProcess && (
+                    <TagLabel
+                      label="ต้องดำเนินการ"
+                      icon={
+                        <MessagesSquare className="mr-1 h-[10px] w-[10px]" />
+                      }
+                      color="orange"
+                      className="text-[10px]"
+                    />
+                  )}
+                </div>
               )}
-            >
-              {message}
-            </p>
+            </div>
           </div>
         </div>
       )}
