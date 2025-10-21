@@ -128,7 +128,7 @@ export default function ChatMessages({
     return () => {
       scrollArea.removeEventListener("scroll", handleScroll);
     };
-  }, [combinedMessages]);
+  }, [bottomRef.current]);
 
   React.useEffect(() => {
     if (messagesData?.pages?.length === 1) {
@@ -323,7 +323,7 @@ export default function ChatMessages({
                 ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
                     msg.imageUrl
                   )}`
-                : customer?.profile?.imageUrl;
+                : msg?.imageUrl;
 
             const formattedTime = dayjs(
               msg.createdAt ? msg.createdAt : msg.timestamp
@@ -406,7 +406,7 @@ export default function ChatMessages({
             </button>
           )}
         </div>
-        <ChatInput selectedRoom={selectedRoom} />
+        <ChatInput selectedRoom={selectedRoom} customer={customer} />
       </div>
 
       {/* <ChecklistDialog
