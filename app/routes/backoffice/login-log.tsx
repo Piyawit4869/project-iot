@@ -74,7 +74,7 @@ const columns: ColumnDef<LogEntry>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: "วันที่สร้าง",
+    header: "วันที่เข้าสู่ระบบ",
     enableSorting: true,
     cell: (info) => (
       <span>{formatDateAndTime((info.getValue() as string) ?? "-")}</span>

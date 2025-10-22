@@ -107,7 +107,12 @@ export const FormProductNew: React.FC<FormProductProps> = ({
   // const handleConfirmOption = (data: any) => {
   // };
 
-  const { data: categories } = useCategories();
+  const { data } = useCategories();
+  const categories = Array.isArray(data?.res)
+    ? data.res
+    : Array.isArray(data)
+    ? data
+    : [];
 
   const { mutate } = useCreateCategory();
   const [isEdit, setIsEdit] = React.useState(false);
@@ -318,9 +323,15 @@ export const FormProductNew: React.FC<FormProductProps> = ({
                             <RequiredLabel required>ราคา</RequiredLabel>
                             <FormControl className="shadow-none">
                               <Input
-                                placeholder="ราคา"
                                 type="number"
-                                {...field}
+                                placeholder="ราคา"
+                                value={field.value ?? ""}
+                                onChange={(e) => {
+                                  const v = e.target.value;
+                                  field.onChange(
+                                    v === "" ? undefined : Number(v)
+                                  );
+                                }}
                               />
                             </FormControl>
                             <FormMessage />
@@ -499,7 +510,7 @@ export const FormProductNew: React.FC<FormProductProps> = ({
                     <FormItem className="flex-1">
                       <FormLabel>ประเภท</FormLabel>
                       <Select
-                        value={field.value || "material"}
+                        value={field.value || "non_material"}
                         onValueChange={field.onChange}
                       >
                         <FormControl className="w-full shadow-none">
@@ -508,7 +519,7 @@ export const FormProductNew: React.FC<FormProductProps> = ({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="w-full">
-                          {matTypeOptions.map((item) => (
+                          {matTypeOptions?.map((item) => (
                             <SelectItem key={item.value} value={item.value}>
                               {item.label}
                             </SelectItem>
