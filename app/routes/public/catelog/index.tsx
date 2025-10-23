@@ -154,7 +154,7 @@ export default function ShoppingPage() {
       <div className="container mx-auto px-4 py-6 lg:py-8">
         <div className="mb-8">
           <h1 className="text-3xl lg:text-4xl font-bold mb-2">
-            แคตตาลอคสิ้นค้า
+            แคตตาลอคสินค้า
           </h1>
           {/* <p className="text-muted-foreground">
             Discover our amazing collection of products
@@ -364,7 +364,7 @@ export default function ShoppingPage() {
                       selectedProduct.status === "discontinued"
                     }
                   >
-                    เพ่ิมเข้าตะกร้าสินค้า
+                    เพิ่มเข้าตะกร้าสินค้า
                   </Button>
                 </div>
               </div>

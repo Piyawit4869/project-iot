@@ -113,7 +113,7 @@ export default function ChatInput({
       message: messageText,
       messageType: "text",
       isAiReply: false,
-      recipient: customer?.fullName ?? "Unknown",
+      recipient: customer?.name ?? "Unknown",
       customerId: selectedRoom?.customerId ?? "",
       platform: "backoffice",
       messageLabel: MessageLabelType.SENDTEXT,
@@ -146,11 +146,11 @@ export default function ChatInput({
 
         send({
           chatRoomId: selectedRoom.id,
-          lineSubId: selectedRoom.customer?.lineSubId ?? "",
+          lineSubId: selectedRoom?.lineSubId ?? "",
           message: imageUrl,
           messageType: "image",
           isAiReply: false,
-          recipient: selectedRoom.customer?.fullName ?? "Unknown",
+          recipient: selectedRoom?.name ?? "Unknown",
           customerId: selectedRoom.customerId ?? "",
           platform: "line",
           messageLabel: MessageLabelType.SENDIMAGE,
