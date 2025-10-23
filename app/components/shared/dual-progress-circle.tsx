@@ -21,6 +21,7 @@ interface Data {
 
 export interface RelationshipCircleProps {
   chartData?: Data;
+  emptyMessage?: React.ReactNode;
 }
 
 function generateColor(index: number): string {
@@ -33,6 +34,7 @@ function generateColor(index: number): string {
 
 export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
   chartData,
+  emptyMessage = "ยังไม่มีการพูดคุยกับลูกค้า",
 }) => {
   const chartConfig = {
     AI: {
@@ -153,7 +155,7 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
               content={() => (
                 <div className="flex justify-center w-full">
                   <span className="text-base text-[#71717A]  dark:text-[#b4b4c5]">
-                    ยังไม่มีการพูดคุยกับลูกค้า
+                    {emptyMessage}
                   </span>
                 </div>
               )}

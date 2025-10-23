@@ -7,9 +7,6 @@ import {
   type InventoryCreateDTO,
 } from "~/schemas/product/detail/InventorySchema";
 
-/**
- * เพิ่ม id?: string เข้าไปในฟอร์ม เพื่อพก id ในโหมดแก้ไข
- */
 type InventoryForm = InventoryCreateDTO & { id?: string };
 
 export const useFormInventorySetup = (slug: string) => {
@@ -29,10 +26,12 @@ export const useFormInventorySetup = (slug: string) => {
     resolver: zodResolver(InventoryCreateSchema) as Resolver<InventoryForm>,
     defaultValues: {
       id: undefined,
-      active: true,
       name: "",
       description: "",
+      productcapacity: undefined,
+      active: true,
       capacity: "",
+      stockQty: undefined,
     },
   });
 
@@ -40,18 +39,32 @@ export const useFormInventorySetup = (slug: string) => {
     if (inventory) {
       form.reset({
         id: inventory.id ?? undefined,
-        active: inventory.active ?? true,
         name: inventory.name ?? "",
         description: inventory.description ?? "",
+        productcapacity:
+          typeof (inventory as any)?.productcapacity === "number"
+            ? (inventory as any).productcapacity
+            : (inventory as any)?.productcapacity
+            ? Number((inventory as any).productcapacity)
+            : undefined,
+        active: inventory.active ?? true,
         capacity: inventory.capacity ?? "",
+        stockQty:
+          typeof (inventory as any)?.stockQty === "number"
+            ? (inventory as any).stockQty
+            : (inventory as any)?.stockQty
+            ? Number((inventory as any).stockQty)
+            : undefined,
       });
     } else {
       form.reset({
         id: undefined,
-        active: true,
         name: "",
         description: "",
+        productcapacity: undefined,
+        active: true,
         capacity: "",
+        stockQty: undefined,
       });
     }
   }, [inventory, form]);

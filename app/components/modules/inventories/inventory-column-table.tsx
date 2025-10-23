@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Eye, PenLine, Trash } from "lucide-react";
+import { Eye, Trash } from "lucide-react";
 import GlobalButton from "~/components/shared/global-button";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
@@ -10,7 +10,7 @@ import { Link, useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
 import { useDeleteInventory } from "~/api/client/inventories/useInventoryQuery";
 import type { InventoryColumn } from "~/initData/inventory-initData";
-import { formatDateFull } from "~/components/shared/global-format";
+import { formatDateAndTime } from "~/components/shared/global-format";
 
 export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
   const navigate = useNavigate();
@@ -49,6 +49,23 @@ export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
   const columns = useMemo<ColumnDef<InventoryColumn>[]>(
     () => [
       {
+        accessorKey: "name",
+        header: "ชื่อคลังสินค้า",
+        cell: (info) => {
+          const id = info.row.original.id;
+          const name = info.getValue() as string;
+
+          return (
+            <span className="text-blue-400 hover:text-blue-300 hover:underline">
+              <Link to={`/inventory/${id}`}>
+                {/* <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline"> */}
+                {name}
+              </Link>
+            </span>
+          );
+        },
+      },
+      {
         accessorKey: "active",
         header: "เปิดใช้งาน",
         cell: (info) => {
@@ -72,23 +89,7 @@ export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
           );
         },
       },
-      {
-        accessorKey: "name",
-        header: "ชื่อคลังสินค้า",
-        cell: (info) => {
-          const id = info.row.original.id;
-          const name = info.getValue() as string;
 
-          return (
-            <span className="text-blue-400 hover:text-blue-300 hover:underline">
-              <Link to={`/inventory/${id}`}>
-                {/* <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline"> */}
-                {name}
-              </Link>
-            </span>
-          );
-        },
-      },
       {
         accessorKey: "productCount",
         header: "จำนวนสินค้า",
@@ -98,15 +99,15 @@ export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
           </span>
         ),
       },
-      {
-        accessorKey: "productCanSale",
-        header: "จำนวนสินค้าที่ขายได้",
-        cell: (info) => (
-          <span className="flex justify-center">
-            {(info.getValue() as string) || "-"}
-          </span>
-        ),
-      },
+      // {
+      //   accessorKey: "productCanSale",
+      //   header: "จำนวนสินค้าที่ขายได้",
+      //   cell: (info) => (
+      //     <span className="flex justify-center">
+      //       {(info.getValue() as string) || "-"}
+      //     </span>
+      //   ),
+      // },
       {
         accessorKey: "description",
         header: "คำอธิบาย",
@@ -122,7 +123,7 @@ export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
         header: "วันที่สร้าง",
         cell: (info) => {
           const value = info.getValue() as string;
-          return <span>{formatDateFull(value)}</span>;
+          return <span>{formatDateAndTime(value)}</span>;
         },
       },
       {
@@ -148,7 +149,7 @@ export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
         header: "วันที่แก้ไข",
         cell: (info) => {
           const value = info.getValue() as string;
-          return <span>{formatDateFull(value)}</span>;
+          return <span>{formatDateAndTime(value)}</span>;
         },
       },
       {

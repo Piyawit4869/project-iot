@@ -116,6 +116,20 @@ export const ProductsFormSchema = z.object({
 
   productOptions: z.array(ProductOptionSchema).default([]),
   productVariants: z.array(ProductVariantSchema).default([]),
+
+  totalStockValue: z.string().optional(),
+  totalItems: z.string().optional(),
+  inStockCount: z.string().optional(),
+  capacityUsage: z.string().optional(),
+  topSellingItems: z.string().optional(),
+  topQuantityItems: z.string().optional(),
+  lowStockItems: z.string().optional(),
+  restockSuggestions: z.string().optional(),
+  slowMovingItems: z.string().optional(),
+  topCategories: z.string().optional(),
+  monthlySalesValue: z.string().optional(),
+  salesTrendPercent: z.string().optional(),
+  fastestSoldItems: z.string().optional(),
 });
 
 const ReferenceItemSchema = z.object({

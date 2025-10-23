@@ -83,3 +83,25 @@ export const fetchInventorysSummary = async () => {
     return error;
   }
 };
+
+export const fetchInventoryAiById = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(`/crud/inventories/ai-collects/${id}`);
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchGetAnalyzeInventory = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(
+      `/crud/inventories/${id}/summary-chat-message
+       `
+    );
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
