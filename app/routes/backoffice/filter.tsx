@@ -21,7 +21,7 @@ export const ActivityFilterFields: FilterField[] = [
   },
   {
     id: "createdAt",
-    label: "From - To Date",
+    label: "วันที่เข้าสู่ระบบ",
     kind: "dateRange",
     showIn: "advanced",
   },

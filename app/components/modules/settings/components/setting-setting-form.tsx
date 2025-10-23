@@ -55,11 +55,11 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
               label="ธีม"
               type="select"
               checkFields={checkFields}
-              placeholder="Light"
+              placeholder="สว่าง"
               disable={isEditing}
               selectOptions={[
-                { label: "Light", value: "light" },
-                { label: "Dark", value: "dark" },
+                { label: "สว่าง", value: "light" },
+                { label: "มืด", value: "dark" },
               ]}
             />
             <GlobalFormField
@@ -84,11 +84,11 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
               label="ภาษาตั้งต้น"
               type="select"
               checkFields={checkFields}
-              placeholder="TH, EN, JP"
+              placeholder="ไทย, อังกฤษ"
               disable={isEditing}
               selectOptions={[
-                { label: "TH", value: "TH" },
-                { label: "EN", value: "EN" },
+                { label: "ไทย", value: "TH" },
+                { label: "อังกฤษ", value: "EN" },
                 // { label: "JP", value: "JP" },
               ]}
             />
