@@ -17,7 +17,10 @@ import {
 } from "react-router";
 import { useDeleteProduct } from "~/api/client/product/useProductQuery";
 import type { ProductColumn } from "~/schemas/order/type";
-import { formatDateFull } from "~/components/shared/global-format";
+import {
+  formatDateAndTime,
+  formatDateFull,
+} from "~/components/shared/global-format";
 
 export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
   const navigate = useNavigate();
@@ -65,7 +68,7 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
         const name = info.row.original?.name;
 
         return (
-          <div className="w-[150px] h-[150px] relative ">
+          <div className="w-[56px] h-[56px] relative ">
             <GlobalImage
               src={url || ""}
               alt={name}
@@ -84,6 +87,25 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
       },
     },
     {
+      accessorKey: "sku",
+      header: "รหัสสินค้า",
+      cell: (info) => {
+        const id = info.row.original.id;
+        const name = info.getValue() as string;
+
+        return (
+          <div className="w-[140px]  h-auto">
+            <span className=" text-blue-400 hover:text-blue-300 hover:underline text-wrap whitespace-pre-wrap break-words">
+              <Link to={`/products/${id}`}>
+                {/* <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline"> */}
+                {name}
+              </Link>
+            </span>
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: "name",
       header: "ชื่อสินค้า",
       enableResizing: true,
@@ -93,20 +115,18 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
         const name = info.getValue() as string;
 
         return (
-          <span className="text-blue-400 hover:text-blue-300 hover:underline">
-            <Link to={`/products/${id}`}>
-              {/* <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline"> */}
-              {name}
-            </Link>
-          </span>
+          <div className="w-[200px]  h-auto">
+            <span className=" text-blue-400 hover:text-blue-300 hover:underline text-wrap whitespace-pre-wrap break-words">
+              <Link to={`/products/${id}`}>
+                {/* <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline"> */}
+                {name}
+              </Link>
+            </span>
+          </div>
         );
       },
     },
-    {
-      accessorKey: "sku",
-      header: "รหัสสินค้า",
-      cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
-    },
+
     {
       accessorKey: "barcode",
       header: "บาร์โค้ด",
@@ -125,20 +145,61 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
       },
     },
     {
-      accessorKey: "description",
-      header: "คำอธิบาย",
-      cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
-    },
-    {
       accessorKey: "available",
       header: "จำนวนสินค้า",
-      cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
+      cell: (info) => (
+        <span className="flex justify-center">
+          {(info.getValue() as string) || "-"}
+        </span>
+      ),
     },
     // {
     //   accessorKey: "availableForSale",
     //   header: "สินค้าที่สามารถขายได้",
     //   cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
     // },
+
+    {
+      accessorKey: "salePrice",
+      header: "ราคาขาย",
+      cell: (info) => (
+        <span className="flex justify-center">
+          {(info.getValue() as string) || "-"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "vatPrice",
+      header: "ราคาพร้อมภาษี",
+      cell: (info) => (
+        <span className="flex justify-center">
+          {(info.getValue() as string) || "-"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "unit",
+      header: "หน่วย",
+      cell: (info) => (
+        <span className="flex justify-center">
+          {(info.getValue() as string) || "-"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "description",
+      header: "คำอธิบาย",
+      cell: (info) => (
+        <div className="flex text-left">
+          <span
+            title={info.getValue() as string}
+            className="w-[700px] h-auto line-clamp-2 whitespace-pre-wrap break-words"
+          >
+            {(info.getValue() as string) || "-"}
+          </span>
+        </div>
+      ),
+    },
     {
       accessorKey: "matType",
       header: "ประเภทวัสดุ",
@@ -155,27 +216,13 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
         );
       },
     },
-    {
-      accessorKey: "unit",
-      header: "หน่วย",
-      cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
-    },
-    {
-      accessorKey: "salePrice",
-      header: "ราคาขาย",
-      cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
-    },
-    {
-      accessorKey: "vatPrice",
-      header: "ราคาพร้อมภาษี",
-      cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
-    },
+
     {
       accessorKey: "createdAt",
       header: "วันที่สร้าง",
       cell: (info) => {
         const value = info.getValue() as string;
-        return <span>{formatDateFull(value)}</span>;
+        return <span>{formatDateAndTime(value)}</span>;
       },
     },
     {
@@ -188,7 +235,7 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
       header: "วันที่แก้ไข",
       cell: (info) => {
         const value = info.getValue() as string;
-        return <span>{formatDateFull(value)}</span>;
+        return <span>{formatDateAndTime(value)}</span>;
       },
     },
     {
@@ -213,7 +260,7 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
       id: "actions",
       header: "การดำเนินการ",
       cell: ({ row }) => (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-center">
           <Link to={`/products/${row.original.id}`}>
             <Button
               className="h-9 w-9 p-0 bg-[#737373] hover:bg-[#5E5E5E]"
@@ -224,7 +271,7 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
             </Button>
           </Link>
 
-          <div className="w-9">
+          {/* <div className="w-9">
             <GlobalButton
               label=""
               icon={<Trash className="w-4 h-4 text-white" />}
@@ -232,7 +279,7 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
               className="h-10 w-10 p-0 bg-[#FF7062] text-white hover:bg-[#E8594B] hover:text-white transition-colors"
               aria-label="ลบสินค้า"
             />
-          </div>
+          </div> */}
         </div>
       ),
     },

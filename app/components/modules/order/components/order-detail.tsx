@@ -47,7 +47,7 @@ export const OrderDetail: React.FC<OrderFormProps> = (props) => {
         <form id="orders" onSubmit={formUpdate.handleSubmit(onUpdate)}>
           <Card className="p-6 space-y-6">
             <Tabs defaultValue="details">
-              <TabsList>
+              <TabsList className="bg-[#f4f4f5] p-1">
                 <TabsTrigger value="details">รายละเอียดสินค้า</TabsTrigger>
                 <TabsTrigger value="credit">AI Insight</TabsTrigger>
               </TabsList>

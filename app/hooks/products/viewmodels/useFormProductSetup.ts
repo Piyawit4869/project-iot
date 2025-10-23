@@ -68,6 +68,12 @@ export const useFormProductSetup = (id: string) => {
     values: {
       unit: "kilogram",
       imageUrls: [],
+      discountPromotion: [
+        {
+          quantity: 0,
+          discount: 0,
+        },
+      ],
     } as unknown as ProductCreateDTO,
   });
 

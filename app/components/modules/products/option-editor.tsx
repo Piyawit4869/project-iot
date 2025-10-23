@@ -12,11 +12,19 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Card } from "~/components/ui/card";
 import { type UseFormReturn } from "react-hook-form";
-import { Form } from "~/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
 import { toast } from "sonner";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { cn } from "~/lib/utils";
 import type { ProductCreateDTO } from "~/schemas/product/product";
+import ImageUploadMulti from "~/components/shared/image-upload-multi";
+import { useState } from "react";
 
 // ---------- Types ----------
 export type ProductOption = {
@@ -260,6 +268,8 @@ export default function OptionEditorInline({
 
   const optionCountBadge = `${Math.min(options.length, 3)}/${3} ตัวเลือก`;
 
+  const [images, setImages] = useState<string[]>([]);
+
   // ---------- Render ----------
   return (
     <Form {...form}>
@@ -329,26 +339,37 @@ export default function OptionEditorInline({
                   <div className="md:col-span-2">
                     <Label className="mb-2 block text-xs">ค่าตัวเลือก</Label>
                     {opt.values.map((val, vIdx) => (
-                      <div key={vIdx} className="flex items-center gap-2 mb-2">
-                        <Input
-                          placeholder={optIdx === 0 ? "เช่น แดง" : "เช่น M"}
-                          value={val}
-                          onChange={(e) =>
-                            updateOptionValue(opt.id, vIdx, e.target.value)
-                          }
-                        />
-                        {opt.values.length > 1 && (
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            onClick={() => removeOptionValue(opt.id, vIdx)}
-                            className="text-red-500"
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        )}
+                      <div key={vIdx} className="flex flex-col gap-2 mb-2">
+                        <div className="flex flex-row gap-2 items-center">
+                          <Input
+                            placeholder={optIdx === 0 ? "เช่น แดง" : "เช่น M"}
+                            value={val}
+                            onChange={(e) =>
+                              updateOptionValue(opt.id, vIdx, e.target.value)
+                            }
+                          />
+                          {opt.values.length > 1 && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              onClick={() => removeOptionValue(opt.id, vIdx)}
+                              className="text-red-500"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+
+                        <div className="mb-4">
+                          <ImageUploadMulti
+                            value={images}
+                            onChange={(e) => setImages(e)}
+                            tileSize={100}
+                          />
+                        </div>
                       </div>
                     ))}
+
                     <Button
                       type="button"
                       variant="outline"

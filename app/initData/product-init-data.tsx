@@ -19,7 +19,7 @@ export type ProductFormValues = {
   description: string;
 
   // รูปภาพ
-  imageUrls: string[];
+  imageUrl: string[];
 
   // จัดหมวดหมู่
   productCategory: string; // "pen" | "fan" | "bag" | ...
@@ -53,11 +53,40 @@ export type ProductFormValues = {
   tags: string[];
 };
 
+export const unitOptions = [
+  { value: "kilogram", label: "กิโลกรัม" },
+  { value: "pound", label: "ปอนด์" },
+  { value: "gram", label: "กรัม" },
+  { value: "ounce", label: "ออนซ์" },
+];
+
+export const statusOptions = [
+  { value: "active", label: "สินค้าที่เปิดขาย" },
+  { value: "inactive", label: "สินค้าที่ไม่เปิดขาย" },
+  { value: "out_of_season", label: "สินค้าที่อยู่นอกฤดูกาล" },
+  { value: "discontinued", label: "สินค้าที่หยุดผลิตหรือขาย" },
+  { value: "coming_soon", label: "สินค้าที่จะวางจำหน่ายในอนาคต" },
+];
+
+export const matTypeOptions = [
+  { value: "material", label: "วัสดุ" },
+  { value: "non_material", label: "ไม่ใช่วัสดุ" },
+];
 export const ProductsFilterFields: FilterField[] = [
   { id: "name", label: "ชื่อสินค้า", kind: "text", showIn: "main" },
   { id: "sku", label: "รหัสสินค้า", kind: "text", showIn: "main" },
+  {
+    id: "active",
+    label: "การใช้งาน",
+    kind: "select",
+    showIn: "main",
+    options: [
+      { label: "ใช้งานอยู่", value: "active" },
+      { label: "ยกเลิกใช้งาน", value: "inactive" },
+    ],
+  },
   // { id: "barcode", label: "บาร์โค้ด", kind: "text", showIn: "main" },
-  { id: "available", label: "จำนวนสินค้า", kind: "number", showIn: "main" },
+  // { id: "available", label: "จำนวนสินค้า", kind: "number", showIn: "main" },
   // {
   //   id: "availableForSale",
   //   label: "สินค้าที่สามารถขายได้",
@@ -74,8 +103,8 @@ export const ProductsFilterFields: FilterField[] = [
       { label: "ไม่ใช่วัสดุ", value: "non_material" },
     ],
   },
-  { id: "salePrice", label: "ราคาขาย", kind: "number", showIn: "main" },
-  { id: "vatPrice", label: "ราคาพร้อมภาษี", kind: "number", showIn: "main" },
+  // { id: "salePrice", label: "ราคาขาย", kind: "number", showIn: "main" },
+  // { id: "vatPrice", label: "ราคาพร้อมภาษี", kind: "number", showIn: "main" },
   { id: "createdBy", label: "ผู้สร้าง", kind: "text", showIn: "advanced" },
   { id: "updatedBy", label: "ผู้ที่แก้ไข", kind: "text", showIn: "advanced" },
   {
@@ -177,7 +206,7 @@ export const mockProductDefaultValues: ProductFormValues = {
   description:
     "แก้วเก็บความเย็นสุญญากาศ 2 ชั้น ฝาปิดแน่น เก็บความเย็นได้นานถึง 12 ชั่วโมง เหมาะสำหรับพกพา",
 
-  imageUrls: [
+  imageUrl: [
     "https://picsum.photos/id/1011/600/600",
     "https://picsum.photos/id/1012/600/600",
     "https://picsum.photos/id/1013/600/600",

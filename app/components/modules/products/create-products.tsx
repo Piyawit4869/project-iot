@@ -60,6 +60,7 @@ export const CreateProducts = () => {
       ) : (
         <FormProductNew
           form={form}
+          isCreate={true}
           handleChangeInventory={handleChangeInventory}
           onSubmit={onSubmit.create}
           selectedInventoryIds={selectedInventoryIds}

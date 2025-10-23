@@ -4,6 +4,7 @@ import { AttributeSchema } from "./detail/AttributeSchema";
 
 import { CategorySchema } from "./detail/CategorySchema";
 import { SelectionSchema } from "./detail/SelectionSchema";
+import type { disconnect } from "process";
 
 const preprocessNumber = (min?: number, msg?: string) =>
   z.preprocess(
@@ -24,11 +25,16 @@ export const ProductOptionSchema = z.object({
   values: z.array(z.string()).default([]),
 });
 
+export const PromotionSchema = z.object({
+  quantity: z.number().optional().nullable(),
+  discount: z.number().optional().nullable(),
+});
+
 export const ProductVariantSchema = z.object({
   id: z.uuid().optional(),
   title: z.string().trim(),
   optionValues: z.array(z.string()).default([]),
-  // เก็บเป็น string ให้ตรงกับ UI ปัจจุบัน
+
   price: z.string().optional().default(""),
   sku: z.string().optional().default(""),
   stock: z.string().optional().default(""),
@@ -81,6 +87,7 @@ export const ProductsFormSchema = z.object({
     .optional()
     .nullable(),
 
+  thumbnailImage: z.string().optional(),
   imageUrl: z.string().optional(),
   imageUrls: z.array(z.string()).optional(),
   urlPath: z.string().optional(),
@@ -136,6 +143,21 @@ export const ProductCreateSchema = ProductsFormSchema.omit({
   // เผื่อ safety: ให้ schema Create ก็ยัง default เป็น []
   options: z.array(ProductOptionSchema).default([]),
   variants: z.array(ProductVariantSchema).default([]),
+  customPrice: z
+    .object({
+      price: z.number().optional(),
+      quantity: z.number().optional(),
+      costPrice: z.number().optional(),
+      vat: z.number().optional(),
+
+      profitAmount: preprocessNumber().optional(),
+      profitPercent: preprocessNumber(
+        0,
+        "เปอร์เซ็นต์กำไรต้องไม่ติดลบ"
+      ).optional(),
+    })
+    .optional(),
+  discountPromotion: z.array(PromotionSchema).default([]),
 });
 
 export const ProductUpdateSchema = ProductsFormSchema.omit({
