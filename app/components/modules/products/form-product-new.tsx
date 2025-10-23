@@ -125,7 +125,12 @@ export const FormProductNew: React.FC<FormProductProps> = ({
   // const handleConfirmOption = (data: any) => {
   // };
 
-  const { data: categories } = useCategories();
+  const { data } = useCategories();
+  const categories = Array.isArray(data?.res)
+    ? data.res
+    : Array.isArray(data)
+    ? data
+    : [];
 
   const { mutate } = useCreateCategory();
 
