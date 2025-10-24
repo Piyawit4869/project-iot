@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
 import { TabControl } from "~/components/shared/tab-control";
 import GlobalButton from "~/components/shared/global-button";
@@ -10,7 +10,6 @@ import { PlusCircleIcon, Trash2 } from "lucide-react";
 import { SelectorItemsModal } from "~/components/shared/modal/selector-items-modal";
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
 import { DataTable } from "~/components/shared/data-table";
-import { GlobalImage } from "~/components/shared/global-image";
 import { cn } from "~/lib/utils";
 import { useParams } from "react-router";
 import { Badge } from "~/components/ui/badge";
@@ -19,9 +18,17 @@ import { Card } from "~/components/ui/card";
 import { FormInventory } from "./form-inventory";
 import { useInventoryViewModel } from "~/hooks/inventories/viewmodels/useInventoryViewModel";
 import { useProductColumnTable } from "../products/product-column-table";
-import { useInventory } from "~/api/client/inventories/useInventoryQuery";
+import {
+  useGetAiInventory,
+  useInventory,
+} from "~/api/client/inventories/useInventoryQuery";
 import type { Product } from "~/schemas/product/product";
 import { useGetProducts } from "~/api/client/product/useProductQuery";
+import { InfoRow } from "~/components/shared/InfoRow";
+import { Switch } from "~/components/ui/switch";
+import { AiInventoryView } from "./no-data/ai-inventory-view-modal";
+import { GetNoteInventoryAI } from "./no-data/modal-get-noteAi";
+import InventoryViewPage from "./inventory-view";
 
 const InventoryDetailContainer = () => {
   const {
@@ -35,10 +42,15 @@ const InventoryDetailContainer = () => {
 
   const params = useParams<{ id: string }>();
   const { data } = useInventory(params.id ?? "");
+  const { data: getData } = useGetAiInventory(params?.id ?? "");
+  const dataFromAI = getData?.inventoryData;
 
   const { data: products = [] } = useGetProducts();
   const [selectItemIds, setSelectItemIds] = React.useState<string[]>([]);
   const [productSelected, setProductSelected] = React.useState<Product[]>([]);
+
+  const [isEdit, setIsEdit] = React.useState(false);
+  const [AIOpen, setAIOpen] = useState(false);
 
   const handleChangeItems = (ids: string[]) => {
     setSelectItemIds(ids);
@@ -69,8 +81,6 @@ const InventoryDetailContainer = () => {
     );
   };
 
-  // const products = inventory?.products?.length ? inventory.res : [];
-
   useEntityBreadcrumb({
     feature: "inventory",
     entity: inventory
@@ -85,114 +95,80 @@ const InventoryDetailContainer = () => {
 
   return (
     <div className="flex flex-col w-full space-y-8 p-8">
-      <TabControl
-        title={
-          loading.inventory ? (
-            <SkeletonLoading className="w-[200px]" />
-          ) : (
-            `แก้ไขคลังสินค้า ${inventory?.name}`
-          )
-        }
-        backpath="/inventory"
-        buttons={[
-          <GlobalButton
-            label="ลบคลังสินค้า"
-            variant="outline"
-            key={"delete button"}
-            loading={isSubmitting}
-            onClick={onSubmit.remove}
-          />,
-          <GlobalButton
-            label="บันทึก"
-            key={"create button"}
-            type="submit"
-            loading={isSubmitting}
-            form="inventory"
-          />,
-        ]}
-      />
-      <Card className="p-4">
-        {loading.inventory ? (
-          <IndexLayoutTableLoading />
-        ) : (
-          <FormInventory form={form} onSubmit={onSubmit.update} />
-        )}
-      </Card>
-
-      {loading.inventory ? (
-        <IndexLayoutTableLoading />
-      ) : (
-        <div>
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold">ข้อมูลคลังสินค้า</h2>
-
-            <div className="flex gap-2 mb-2">
-              <SelectorItemsModal
-                items={products.filter((item: { id: string }) => !!item.id)}
-                selected={selectItemIds}
-                onChange={handleChangeItems}
-                customButton={
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-[30px] w-[90px] p-2 gap-2 border-amber-500"
-                  >
-                    <PlusCircleIcon />
-                    <span className="text-[12px]">เพิ่มสินค้า</span>
-                  </Button>
-                }
-              />
-            </div>
-          </div>
-
-          {/* <div className="flex flex-col">
-            {productSelected.length > 0 ? (
-              productSelected.map((ps: any) => (
-                <div
-                  key={ps.id ?? "-"}
-                  className="flex flex-row items-center gap-2 mb-2"
-                >
-                  <GlobalImage
-                    src={ps.imageUrl ?? "-"}
-                    alt="product-image"
-                    className="rounded-xl w-[35px] h-[35px] object-cover object-center"
-                  />
-                  <div className="flex flex-col w-1/2 gap-1">
-                    <div>
-                      <span className="text-sm font-medium truncate">
-                        {ps.name ?? "-"}
-                      </span>
-                      <h2 className="text-sm font-light text-gray-400 truncate">
-                        {ps.description ?? "-"}
-                      </h2>
-                    </div>
-
-                    <div className="flex flex-row justify-between">
-                      <span className="font-semibold text-sm text-blue-600">
-                        {ps.salePrice ?? "-"} ฿
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-row items-center gap-1">
-                    {renderAvailabilityBadge(ps.status)}
-                    <button
-                      className="border-l-2"
-                      onClick={() => handleRemoveSelected(ps.id!)}
-                      aria-label="remove-selected-product"
-                    >
-                      <Trash2 size="18px" color="red" />
-                    </button>
-                  </div>
-                </div>
-              ))
+      {isEdit ? (
+        <TabControl
+          title={
+            loading.inventory ? (
+              <SkeletonLoading className="w-[200px]" />
             ) : (
-              <p className="text-center text-xs text-gray-400 mt-10"></p>
-            )}
-          </div> */}
+              `แก้ไขคลังสินค้า ${inventory?.name}`
+            )
+          }
+          backpath="/inventory"
+          buttons={[
+            <GlobalButton
+              key="cancel"
+              label="ยกเลิก"
+              variant="outline"
+              onClick={() => setIsEdit(false)}
+              className="mr-2"
+            />,
 
-          <DataTable data={data?.products ?? []} columns={columns} />
-        </div>
+            <GlobalButton
+              label="บันทึก"
+              key="create button"
+              type="submit"
+              loading={isSubmitting}
+              form="inventory"
+            />,
+          ]}
+        />
+      ) : (
+        <TabControl
+          title={
+            loading.inventory ? (
+              <SkeletonLoading className="w-[200px]" />
+            ) : (
+              `ข้อมูลคลังสินค้า ${inventory?.name}`
+            )
+          }
+          backpath="/inventory"
+          buttons={[
+            // <GlobalButton
+            //   key="ai-inventory"
+            //   type="button"
+            //   label="ข้อมูลคลังสินค้าผ่าน AI"
+            //   variant="secondary"
+            //   className="bg-muted-foreground text-background hover:bg-gray-200 w-full px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+            //   onClick={() => setAIOpen(true)}
+            // />,
+
+            // <GlobalButton
+            //   label="ลบคลังสินค้า"
+            //   variant="outline"
+            //   key="delete button"
+            //   loading={isSubmitting}
+            //   onClick={onSubmit.remove}
+            // />,
+            <GlobalButton
+              key="edit"
+              label="แก้ไข"
+              onClick={() => setIsEdit(true)}
+            />,
+          ]}
+        />
+      )}
+
+      {isEdit ? (
+        <Card className="p-4">
+          {loading.inventory ? (
+            <IndexLayoutTableLoading />
+          ) : (
+            <FormInventory form={form} onSubmit={onSubmit} />
+          )}
+        </Card>
+      ) : (
+        <InventoryViewPage />
       )}
     </div>
   );
