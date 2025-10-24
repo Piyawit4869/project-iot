@@ -9,7 +9,7 @@ import {
 } from "~/components/ui/form";
 
 import { type UseFormReturn } from "react-hook-form";
-import { Card } from "~/components/ui/card";
+import { Card, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 // import { CardSelectorItems } from "@/components/shared/card-selector-items";
 // import { Inventory } from "@/apis/data/inventory/InventorySchema";
@@ -28,15 +28,8 @@ import OptionEditor, {
 } from "./option-editor";
 import { RequiredLabel } from "~/components/shared/required-design";
 
-import { useNavigate } from "react-router";
-import { Switch } from "~/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
+import { useNavigate, useParams } from "react-router";
+
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
 import type { ProductCreateDTO } from "~/schemas/product/product";
@@ -50,6 +43,18 @@ import type {
   Category,
   CategoryCreateDTO,
 } from "~/schemas/product/detail/CategorySchema";
+import ImageUpload from "~/components/shared/image-upload";
+import { ViewCustomerActivityLog } from "../customer/components/customer-activityLog";
+
+import { FileText, Tags } from "lucide-react";
+import { TabDetail } from "./tabs-card/tab-detail";
+import { TabPrice } from "./tabs-card/tab-price";
+import { boolean } from "zod";
+import { useProduct } from "~/api/client/product/useProductQuery";
+import { cn } from "~/lib/utils";
+import { FormTextRow } from "~/components/shared/formTextRow";
+import { ProductOrgazine } from "./tabs-card/form-product-new";
+import { CustomTabs } from "~/components/shared/custom-tabs";
 
 const statusOptions = [
   { value: "active", label: "สินค้าที่เปิดขาย" },
@@ -74,7 +79,9 @@ const unitOptions = [
 interface FormProductProps {
   form: UseFormReturn<ProductCreateDTO>;
   // inventories: Inventory[];
+  isEdit?: boolean;
   categories: Category[];
+  isCreate?: boolean;
   // materials: Material[];
   // attributes: Attribute[];
   // attributesSelected: Attribute[];
@@ -100,9 +107,14 @@ interface FormProductProps {
 export const FormProductNew: React.FC<FormProductProps> = ({
   form,
   onSubmit,
+  isCreate,
+  isEdit,
 }) => {
   const navigate = useNavigate();
+  const params = useParams();
+  const id = (params?.id as string) ?? "";
   const [values, setValues] = useState<string[]>([]);
+  const { data: productData } = useProduct(params.id ?? "");
   // const [openOpt, setOpenOpt] = React.useState(false);
   // const handleConfirmOption = (data: any) => {
   // };
@@ -115,7 +127,6 @@ export const FormProductNew: React.FC<FormProductProps> = ({
     : [];
 
   const { mutate } = useCreateCategory();
-  const [isEdit, setIsEdit] = React.useState(false);
 
   const [newCategory, setNewCategory] = useState("");
 
@@ -132,29 +143,6 @@ export const FormProductNew: React.FC<FormProductProps> = ({
   //   setOptionsState(options);
   //   setVariantsState(variants);
   // };
-
-  const handleCancel = () => {
-    if (categories) form.reset(form.getValues(), { keepDirty: false });
-    setIsEdit(false);
-  };
-
-  const { watch, setValue } = form;
-
-  const salePrice = watch("salePrice");
-  const costPrice = watch("costPrice");
-  const quantity = watch("quantity");
-
-  useEffect(() => {
-    const priceValue = parseFloat(String(salePrice ?? "0"));
-    const discountPriceValue = parseFloat(String(costPrice ?? "0"));
-
-    const profitAmount = priceValue - discountPriceValue;
-    const profitPercent =
-      priceValue !== 0 ? (profitAmount / priceValue) * 100 : 0;
-
-    setValue("profitAmount", profitAmount);
-    setValue("profitPercent", profitPercent);
-  }, [salePrice, costPrice, quantity, setValue]);
 
   const [showOptionEditor, setShowOptionEditor] = useState(false);
 
@@ -178,442 +166,55 @@ export const FormProductNew: React.FC<FormProductProps> = ({
     <>
       <Form {...form}>
         <form id="products" onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-[70%_29%] gap-4">
-            <Card className="p-4 space-y-3">
-              <div className="flex-1 p-6 mb-4">
-                <h1 className="text-md font-semibold">สินค้า</h1>
-                <FormField
-                  control={form.control}
-                  name="active"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-end">
-                      <FormLabel>การใช้งาน</FormLabel>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="grid grid-cols-3 gap-3 mt-4">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <RequiredLabel required>ชื่อ</RequiredLabel>
-                        <FormControl className="w-full">
-                          <Input
-                            placeholder="ชื่อ"
-                            {...field}
-                            className="shadow-none"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="sku"
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <RequiredLabel required>รหัสสินค้า</RequiredLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="รหัสสินค้า"
-                            {...field}
-                            className="shadow-none"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="status"
-                    render={({ field }) => (
-                      <FormItem className="flex-1 mt-1">
-                        <FormLabel>สถานะ</FormLabel>
-                        <Select
-                          value={field.value || "active"}
-                          onValueChange={field.onChange}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-full shadow-none">
-                              <SelectValue placeholder="เลือกสถานะ" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="w-full">
-                            {statusOptions.map((item) => (
-                              <SelectItem key={item.value} value={item.value}>
-                                {item.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem className="mt-3">
-                      <FormLabel>คำอธิบาย</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="กรอกคำอธิบาย"
-                          {...field}
-                          className="shadow-none"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="imageUrls"
-                  render={({ field }) => {
-                    const maxCount = 3;
-                    const images = (field.value as string[] | undefined) ?? [];
-                    const safeOnChange = (next: string[]) => {
-                      field.onChange((next ?? []).slice(0, maxCount));
-                    };
-
-                    return (
-                      <FormItem className="mt-4">
-                        <FormLabel className="m-0">ภาพสินค้า</FormLabel>
-                        <FormControl className="w-full">
-                          <ImageUploadMulti
-                            value={images}
-                            onChange={safeOnChange}
-                            max={maxCount}
-                            tileSize={112}
-                          />
-                        </FormControl>
-
-                        <div className="text-xs text-muted-foreground mt-1">
-                          {`${images.length}/${maxCount} ตัวเลือก`}
-                        </div>
-
-                        <FormMessage />
-                      </FormItem>
-                    );
-                  }}
-                />
-
-                <div>
-                  <h1 className="text-md font-semibold mt-6">การกำหนดราคา</h1>
-                  <div className="flex flex-row gap-3 mt-6">
-                    <div className="w-2/5">
-                      <FormField
-                        control={form.control}
-                        name="salePrice"
-                        render={({ field }) => (
-                          <FormItem>
-                            <RequiredLabel required>ราคา</RequiredLabel>
-                            <FormControl className="shadow-none">
-                              <Input
-                                type="number"
-                                placeholder="ราคา"
-                                value={field.value ?? ""}
-                                onChange={(e) => {
-                                  const v = e.target.value;
-                                  field.onChange(
-                                    v === "" ? undefined : Number(v)
-                                  );
-                                }}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+          <div className="flex flex-row gap-4">
+            <Card className="p-4 space-y-3 w-[70%]">
+              <CustomTabs
+                defaultValue="details"
+                items={[
+                  {
+                    key: "details",
+                    label: "รายละเอียดสินค้า",
+                    icon: <FileText className="w-4 h-4" />,
+                    content: (
+                      <TabDetail
+                        form={form}
+                        isCreate={isCreate}
+                        isEdit={isEdit}
+                        productData={productData}
                       />
-                    </div>
-
-                    <div className="w-3/5">
-                      <FormField
-                        control={form.control}
-                        name="quantity"
-                        render={({ field }) => (
-                          <FormItem>
-                            <RequiredLabel required>
-                              ราคาเปรียบเทียบ
-                            </RequiredLabel>
-                            <FormControl className="shadow-none">
-                              <Input
-                                placeholder="ราคาเปรียบเทียบ"
-                                type="number"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                    ),
+                  },
+                  {
+                    key: "price",
+                    label: "รายละเอียดราคา",
+                    icon: <Tags className="w-4 h-4" />,
+                    content: (
+                      <TabPrice
+                        form={form}
+                        isCreate={isCreate}
+                        isEdit={isEdit}
+                        productData={productData}
                       />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-3 mt-4">
-                    <FormField
-                      control={form.control}
-                      name="costPrice"
-                      render={({ field }) => (
-                        <FormItem>
-                          <RequiredLabel required>
-                            ต้นทุนต่อรายการ
-                          </RequiredLabel>
-                          <FormControl className="shadow-none">
-                            <Input
-                              placeholder="ต้นทุน"
-                              type="number"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="profitAmount"
-                      render={({ field }) => (
-                        <FormItem className="mt-1">
-                          <FormLabel>กำไร</FormLabel>
-                          <FormControl className="shadow-none">
-                            <Input type="number" {...field} disabled />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="profitPercent"
-                      render={({ field }) => (
-                        <FormItem className="mt-1">
-                          <FormLabel>อัตรากำไร(%)</FormLabel>
-                          <FormControl className="shadow-none">
-                            <Input type="number" {...field} disabled />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <h1 className="text-md font-semibold mt-6">สินค้าคงคลัง</h1>
-                  <div className="flex flex-row gap-3 mt-6">
-                    <div className="w-[120px]">
-                      <FormField
-                        control={form.control}
-                        name="availableForSale"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>จำนวน</FormLabel>
-                            <FormControl className="shadow-none">
-                              <Input
-                                placeholder="จำนวน"
-                                type="number"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <h1 className="text-md font-semibold mt-6">การจัดส่ง</h1>
-                  <div className="flex flex-row gap-3 mt-6">
-                    <div className="max-w-[120px]">
-                      <FormField
-                        control={form.control}
-                        name="weight"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>น้ำหนัก</FormLabel>
-                            <FormControl className="shadow-none">
-                              <Input
-                                placeholder="น้ำหนัก"
-                                type="number"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    <div>
-                      <FormField
-                        control={form.control}
-                        name="unit"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>หน่วย</FormLabel>
-                            <Select
-                              value={field.value}
-                              onValueChange={field.onChange}
-                            >
-                              <FormControl>
-                                <SelectTrigger className="w-full shadow-none">
-                                  <SelectValue
-                                    placeholder=""
-                                    defaultValue="kilogram"
-                                  />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent className="w-full">
-                                {unitOptions.map((item) => (
-                                  <SelectItem
-                                    key={item.value}
-                                    value={item.value}
-                                  >
-                                    {item.label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
+                    ),
+                  },
+                ]}
+              />
             </Card>
 
-            <Card className="p-4 space-y-3">
-              <div>
-                <h1 className="text-md font-semibold mb-8 mt-6">
-                  การจัดระเบียบสินค้า
-                </h1>
-                <FormField
-                  control={form.control}
-                  name="matType"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>ประเภท</FormLabel>
-                      <Select
-                        value={field.value || "non_material"}
-                        onValueChange={field.onChange}
-                      >
-                        <FormControl className="w-full shadow-none">
-                          <SelectTrigger>
-                            <SelectValue placeholder="เลือกประเภท" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent className="w-full">
-                          {matTypeOptions?.map((item) => (
-                            <SelectItem key={item.value} value={item.value}>
-                              {item.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <h1 className="text-sm font-semibold mb-2 mt-6">แท็กสินค้า</h1>
-                <InputTags
-                  value={values}
-                  onChange={setValues}
-                  placeholder="กรอกแท็ก"
-                  className="max-w-[500px]"
-                />
-                <h3 className="text-xs text-gray-400 p-1">
-                  กด Enter หรือพิมพ์คั่นด้วย comma(,) เพื่อเพิ่มแท็ก
-                </h3>
-                <div className="flex flex-row gap-3 mt-6 w-[100%]">
-                  <FormField
-                    control={form.control}
-                    name="productCategory"
-                    render={({ field }) => (
-                      <FormItem className="flex-1 mt-[14px] relative">
-                        <FormLabel>หมวดหมู่</FormLabel>
-                        <Select
-                          value={field.value || ""}
-                          onValueChange={(val) => field.onChange(val)}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-full shadow-none">
-                              <SelectValue placeholder="เลือกหมวดหมู่" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="w-full">
-                            {categories?.map((item: Category) => (
-                              <SelectItem key={item.name} value={item.name}>
-                                {item.name}
-                              </SelectItem>
-                            ))}
+            <div className="flex flex-col gap-3 md:w-[30%]">
+              <ProductOrgazine
+                form={form}
+                isEdit={isEdit}
+                isCreate={isCreate}
+              />
 
-                            <div className="flex gap-2 mt-2 w-full">
-                              <input
-                                type="text"
-                                placeholder="เพิ่มหมวดหมู่ใหม่"
-                                value={newCategory}
-                                onChange={(e) => setNewCategory(e.target.value)}
-                                className="flex-1 p-2 border rounded-sm text-base"
-                              />
-                              <Button
-                                onClick={() => {
-                                  if (newCategory.trim() !== "") {
-                                    create({
-                                      name: newCategory,
-                                      active: true,
-                                      code: "",
-                                      description: "",
-                                    });
-                                    setNewCategory("");
-                                  }
-                                }}
-                                type="button"
-                                className="p-2 text-sm w-[80px] flex justify-center items-center"
-                              >
-                                เพิ่ม
-                              </Button>
-                            </div>
-                          </SelectContent>
-                        </Select>
-
-                        {/* ปุ่มลบค่า */}
-                        {/* {field.value && (
-                        <Button
-                          type="button"
-                          onClick={() => field.onChange("")}
-                          className="mt-2 absolute right-2 top-1/2 transform -translate-y-1/2 p-0 w-[20px] h-[20px] flex justify-center items-center bg-white rounded-full shadow-sm hover:bg-gray-200"
-                        >
-                          <span className="text-xl text-gray-600">×</span>
-                        </Button>
-                      )} */}
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-            </Card>
+              {!isEdit && <ViewCustomerActivityLog />}
+            </div>
           </div>
         </form>
       </Form>
-      <Card className="my-2 p-6">
-        <div>
+      {isEdit ? (
+        <Card className="my-2 p-6">
           <div className="flex gap-4 items-center">
             <h1 className="text-md font-semibold mt-6 mb-6">ตัวเลือกสินค้า</h1>
 
@@ -621,6 +222,7 @@ export const FormProductNew: React.FC<FormProductProps> = ({
               ตัวเลือก {optionsState.length} แบบ • รุ่นย่อย{" "}
               {variantsState.length} รายการ
             </div>
+
             <Button
               onClick={
                 showOptionEditor
@@ -647,8 +249,27 @@ export const FormProductNew: React.FC<FormProductProps> = ({
               }}
             />
           )}
-        </div>
-      </Card>
+        </Card>
+      ) : (
+        <Card className={cn("p-4 md:p-6 border-1 space-y-4")}>
+          <div className="flex items-center gap-2">
+            <h1 className="font-bold text-base">ตัวเลือกสินค้า</h1>
+            <div className="text-xs mt-1 text-muted-foreground">
+              ตัวเลือก 0 แบบ • รุ่นย่อย 0 รายการ
+            </div>
+          </div>
+
+          <Card className="p-4">
+            <div className="flex justify-between">
+              <h1 className="font-bold text-base">ตัวเลือกสินค้า</h1>
+              <div className="text-xs mt-1 text-muted-foreground">
+                0 /3 ตัวเลือก
+              </div>
+            </div>
+            <span className="text-gray-400">ไม่มีสินค้าเพิ่มเติม</span>
+          </Card>
+        </Card>
+      )}
     </>
   );
 };

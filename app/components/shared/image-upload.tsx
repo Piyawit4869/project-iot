@@ -22,8 +22,8 @@ type ImageUploadProps = {
 export default function ImageUpload({
   value,
   onChange,
-  width,
-  height,
+  width = 80,
+  height = 80,
   className,
   disabled = false,
   hideRemoveWhenDisabled = true,
@@ -85,9 +85,9 @@ export default function ImageUpload({
           <GlobalImage
             src={value}
             alt="Image"
-            className="rounded-xl border w-28 h-28"
-            width={width || 80}
-            height={height || 80}
+            className="rounded-xl border"
+            width={width}
+            height={height}
           />
           {canRemove && (
             <button

@@ -479,7 +479,7 @@ export const Createproduct = () => {
                   className="max-w-[500px]"
                 />
 
-                <h3 className="text-xs text-gray-400 p-1">
+                <h3 className="text-xs text-gray-400 p-1 flex pt-4">
                   กด Enter หรือพิมพ์คั่นด้วย comma(,) เพื่อเพิ่มแท็ก
                 </h3>
               </div>
