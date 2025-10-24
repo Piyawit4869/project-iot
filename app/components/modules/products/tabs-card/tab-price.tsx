@@ -64,6 +64,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
+import { ModalCalculate } from "../modal-calculate";
+import { formatForNumber } from "~/components/shared/global-format";
+import { Tooltip } from "~/components/ui/tooltip";
 
 const statusOptions = [
   { value: "active", label: "สินค้าที่เปิดขาย" },
@@ -86,10 +89,19 @@ export const TabPrice: React.FC<FormProductProps> = ({
   productData,
   isCreate,
 }) => {
-  // const [openOpt, setOpenOpt] = React.useState(false);
-  // const handleConfirmOption = (data: any) => {
-  // };
-
+  const [productQuantity, setProductQuantity] = useState<number>(0);
+  const [price, setPrice] = useState<number>(0);
+  const [discountRules, setDiscountRules] = useState<
+    { minQty: number; discount: number }[]
+  >([]);
+  const [discountPerItem, setDiscountPerItem] = useState<number>(0);
+  const [totalDiscount, setTotalDiscount] = useState<number>(0);
+  const [finalPricePerItem, setFinalPricePerItem] = useState<number>(0);
+  const [finalTotalPrice, setFinalTotalPrice] = useState<number>(0);
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "discountPromotion",
+  });
   const { watch, setValue } = form;
 
   const salePrice = watch("customPrice.price");
@@ -108,10 +120,14 @@ export const TabPrice: React.FC<FormProductProps> = ({
     setValue("customPrice.profitPercent", profitPercent);
   }, [salePrice, costPrice, quantity, setValue]);
 
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "discountPromotion",
-  });
+  useEffect(() => {
+    const fakeApi = [
+      { minQty: 100, discount: 10 },
+      { minQty: 200, discount: 20 },
+      { minQty: 500, discount: 50 },
+    ];
+    setDiscountRules(fakeApi);
+  }, []);
 
   return (
     <>
@@ -154,11 +170,13 @@ export const TabPrice: React.FC<FormProductProps> = ({
                 control={form.control}
                 name="customPrice.price"
                 label="ราคา"
+                type="number"
               />
               <FormTextRow
                 control={form.control}
                 name="customPrice.quantity"
                 label="ราคาเปรียบเทียบ"
+                type="number"
               />
             </>
           )}
@@ -226,16 +244,19 @@ export const TabPrice: React.FC<FormProductProps> = ({
                 control={form.control}
                 name="customPrice.costPrice"
                 label="ต้นทุนต่อรายการ"
+                type="number"
               />
               <FormTextRow
                 control={form.control}
                 name="customPrice.vat"
                 label="ภาษี"
+                type="number"
               />
               <FormTextRow
                 control={form.control}
                 name="customPrice.profitAmount"
                 label="กำไร"
+                type="number"
               />
               <FormTextRow
                 control={form.control}
@@ -308,10 +329,48 @@ export const TabPrice: React.FC<FormProductProps> = ({
                       />
 
                       <span className="mt-1 text-gray-500">
-                        {form.getValues(
-                          `discountPromotion.${index}.discount`
-                        ) ?? "ไม่มีส่วนลด"}
+                        {form.getValues(`discountPromotion.${index}.discount`)
+                          ? formatForNumber(
+                              form.getValues(
+                                `discountPromotion.${index}.discount`
+                              )
+                            )
+                          : "ไม่มีส่วนลด"}
                       </span>
+                      <Dialog
+                        onOpenChange={(open) => {
+                          if (!open) {
+                            setProductQuantity(0);
+                            setPrice(0);
+                            setDiscountPerItem(0);
+                            setTotalDiscount(0);
+                            setFinalPricePerItem(0);
+                            setFinalTotalPrice(0);
+                          }
+                        }}
+                      >
+                        <DialogTrigger asChild>
+                          <Button className="w-50" variant="secondary">
+                            <Calculator /> คำนวณส่วนลด
+                          </Button>
+                        </DialogTrigger>
+
+                        <ModalCalculate
+                          quantity={productQuantity}
+                          setQuantity={setProductQuantity}
+                          price={price}
+                          setPrice={setPrice}
+                          discountPerItem={discountPerItem}
+                          setDiscountPerItem={setDiscountPerItem}
+                          totalDiscount={totalDiscount}
+                          setTotalDiscount={setTotalDiscount}
+                          finalPricePerItem={finalPricePerItem}
+                          setFinalPricePerItem={setFinalPricePerItem}
+                          finalTotalPrice={finalTotalPrice}
+                          setFinalTotalPrice={setFinalTotalPrice}
+                          discountRules={discountRules}
+                        />
+                      </Dialog>
                     </>
                   )}
                 </div>
@@ -321,23 +380,6 @@ export const TabPrice: React.FC<FormProductProps> = ({
                   สินค้ารายการนี้ไม่มีส่วนลด
                 </span>
               )}
-
-          <Dialog>
-            <DialogTrigger>Open</DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Are you absolutely sure?</DialogTitle>
-                <DialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your account and remove your data from our servers.
-                </DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
-
-          <Button className="w-50" variant="secondary">
-            <Calculator /> คำนวณส่วนลด
-          </Button>
 
           {isEdit && (
             <Button

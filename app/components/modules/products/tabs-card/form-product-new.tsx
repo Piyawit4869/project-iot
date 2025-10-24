@@ -55,7 +55,7 @@ import { boolean } from "zod";
 import { useProduct } from "~/api/client/product/useProductQuery";
 import { cn } from "~/lib/utils";
 import { FormTextRow } from "~/components/shared/formTextRow";
-import { matTypeOptions } from "~/initData/product-init-data";
+import { matTypeOptions, statusOptions } from "~/initData/product-init-data";
 import type { ProductOption, ProductVariant } from "../option-editor";
 
 interface FormProductProps {
@@ -120,12 +120,77 @@ export const ProductOrgazine: React.FC<FormProductProps> = ({
               การจัดระเบียบสินค้า
             </h1>
 
+            <div className="grid grid-cols-1 gap-3 mt-4">
+              {isEdit ?? isCreate ? (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="sku"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <RequiredLabel required>รหัสสินค้า</RequiredLabel>
+                        <FormControl className="w-full">
+                          <Input
+                            placeholder="รหัสสินค้า"
+                            {...field}
+                            className="shadow-none"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem className="flex-1 mt-1">
+                        <FormLabel>สถานะ</FormLabel>
+                        <Select
+                          value={field.value || "active"}
+                          onValueChange={field.onChange}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full shadow-none">
+                              <SelectValue placeholder="เลือกสถานะ" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="w-full">
+                            {statusOptions.map((item) => (
+                              <SelectItem key={item.value} value={item.value}>
+                                {item.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              ) : (
+                <>
+                  <FormTextRow
+                    control={form.control}
+                    name="sku"
+                    label="รหัสสินค้า"
+                  />
+                  <div className="mt-3">
+                    <FormTextRow
+                      control={form.control}
+                      name="status"
+                      label="สถานะ"
+                    />
+                  </div>
+                </>
+              )}
+            </div>
             {isEdit ?? isCreate ? (
               <FormField
                 control={form.control}
                 name="matType"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
+                  <FormItem className="flex-1 mt-5">
                     <FormLabel>ประเภท</FormLabel>
                     <Select
                       value={field.value || "material"}
@@ -149,11 +214,13 @@ export const ProductOrgazine: React.FC<FormProductProps> = ({
                 )}
               />
             ) : (
-              <FormTextRow
-                control={form.control}
-                name="matType"
-                label="ประเภท"
-              />
+              <div className="mt-5">
+                <FormTextRow
+                  control={form.control}
+                  name="matType"
+                  label="ประเภท"
+                />
+              </div>
             )}
 
             {/* category */}
@@ -163,7 +230,7 @@ export const ProductOrgazine: React.FC<FormProductProps> = ({
                   control={form.control}
                   name="productCategory"
                   render={({ field }) => (
-                    <FormItem className="flex-1 mt-[14px] relative">
+                    <FormItem className="flex-1  relative">
                       <FormLabel>หมวดหมู่</FormLabel>
                       <Select
                         value={field.value || ""}

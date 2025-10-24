@@ -8,6 +8,8 @@ import { Card } from "~/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { CreditZone } from "./credit-zone";
 import { ViewOrderDetail } from "./view-order-detail";
+import { CustomTabs } from "~/components/shared/custom-tabs";
+import { BotMessageSquare, FileText } from "lucide-react";
 
 export const OrderDetail: React.FC<OrderFormProps> = (props) => {
   const {
@@ -46,21 +48,27 @@ export const OrderDetail: React.FC<OrderFormProps> = (props) => {
       <Form {...formUpdate}>
         <form id="orders" onSubmit={formUpdate.handleSubmit(onUpdate)}>
           <Card className="p-6 space-y-6">
-            <Tabs defaultValue="details">
-              <TabsList className="bg-[#f4f4f5] p-1">
-                <TabsTrigger value="details">รายละเอียดสินค้า</TabsTrigger>
-                <TabsTrigger value="credit">AI Insight</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="details">
-                <div className="p-2">
-                  <ViewOrderDetail order={order} />
-                </div>
-              </TabsContent>
-              <TabsContent value="credit">
-                <CreditZone />
-              </TabsContent>
-            </Tabs>
+            <CustomTabs
+              defaultValue="details"
+              items={[
+                {
+                  key: "details",
+                  label: "รายละเอียดสินค้า",
+                  icon: <FileText className="w-4 h-4" />,
+                  content: (
+                    <div className="p-2">
+                      <ViewOrderDetail order={order} />
+                    </div>
+                  ),
+                },
+                {
+                  key: "credit",
+                  label: "AI Insight",
+                  icon: <BotMessageSquare className="w-4 h-4" />,
+                  content: <CreditZone />,
+                },
+              ]}
+            />
           </Card>
         </form>
       </Form>

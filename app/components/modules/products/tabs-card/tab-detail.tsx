@@ -53,6 +53,7 @@ import { statusOptions, unitOptions } from "~/initData/product-init-data";
 import { FormTextRow } from "~/components/shared/formTextRow";
 import { GlobalImage } from "~/components/shared/global-image";
 import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
+import { Tooltip } from "~/components/ui/tooltip";
 
 interface FormProductProps {
   form: UseFormReturn<ProductCreateDTO>;
@@ -144,60 +145,10 @@ export const TabDetail: React.FC<FormProductProps> = ({
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="sku"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <RequiredLabel required>รหัสสินค้า</RequiredLabel>
-                    <FormControl className="w-full">
-                      <Input
-                        placeholder="รหัสสินค้า"
-                        {...field}
-                        className="shadow-none"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem className="flex-1 mt-1">
-                    <FormLabel>สถานะ</FormLabel>
-                    <Select
-                      value={field.value || "active"}
-                      onValueChange={field.onChange}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="w-full shadow-none">
-                          <SelectValue placeholder="เลือกสถานะ" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="w-full">
-                        {statusOptions.map((item) => (
-                          <SelectItem key={item.value} value={item.value}>
-                            {item.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </>
           ) : (
             <>
               <FormTextRow control={form.control} name="name" label="ชื่อ" />
-              <FormTextRow
-                control={form.control}
-                name="sku"
-                label="รหัสสินค้า"
-              />
-              <FormTextRow control={form.control} name="status" label="สถานะ" />
             </>
           )}
         </div>
@@ -351,11 +302,13 @@ export const TabDetail: React.FC<FormProductProps> = ({
                 control={form.control}
                 name="salePrice"
                 label="ราคา"
+                type="number"
               />
               <FormTextRow
                 control={form.control}
                 name="quantity"
                 label="ราคาเปรียบเทียบ"
+                type="number"
               />
             </>
           )}
@@ -411,11 +364,13 @@ export const TabDetail: React.FC<FormProductProps> = ({
                 control={form.control}
                 name="costPrice"
                 label="ต้นทุนต่อรายการ"
+                type="number"
               />
               <FormTextRow
                 control={form.control}
                 name="profitAmount"
                 label="กำไร"
+                type="number"
               />
               <FormTextRow
                 control={form.control}
