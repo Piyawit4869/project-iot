@@ -113,7 +113,7 @@ const InventoryCreateContainer = () => {
             <IndexLayoutTableLoading />
           ) : (
             <div>
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <h2 className="text-lg font-bold">ข้อมูลคลังสินค้า</h2>
 
                 <div className="flex gap-2">
@@ -133,7 +133,7 @@ const InventoryCreateContainer = () => {
                     }
                   />
                 </div>
-              </div>
+              </div> */}
 
               <div className="flex flex-col">
                 {productSelected && productSelected.length > 0 ? (
@@ -181,11 +181,11 @@ const InventoryCreateContainer = () => {
                 )}
               </div>
 
-              <div className="mt-6">
+              {/* <div className="mt-6">
                 <div className="w-full max-w-full xl:max-w-screen-xl 2xl:max-w-screen-2xl overflow-x-auto">
                   <DataTable data={data?.products ?? []} columns={columns} />
                 </div>
-              </div>
+              </div> */}
             </div>
           )}
         </Card>

@@ -95,7 +95,7 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full" disabled={isLoading}>
+        <Button className="w-full" disabled={isLoading}>
           {isLoading ? (
             <>
               <Hourglass />
