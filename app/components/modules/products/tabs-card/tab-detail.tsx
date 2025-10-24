@@ -67,10 +67,6 @@ export const TabDetail: React.FC<FormProductProps> = ({
   isCreate,
   productData,
 }) => {
-  // const [openOpt, setOpenOpt] = React.useState(false);
-  // const handleConfirmOption = (data: any) => {
-  // };
-
   const { watch, setValue } = form;
 
   const salePrice = watch("salePrice");
@@ -206,7 +202,7 @@ export const TabDetail: React.FC<FormProductProps> = ({
           )}
         </div>
 
-        {/* คำอธิบาย */}
+        {/* description */}
         <div className="grid grid-cols-1 gap-3 mt-6">
           {isEdit ?? isCreate ? (
             <FormField
@@ -236,7 +232,7 @@ export const TabDetail: React.FC<FormProductProps> = ({
           )}
         </div>
 
-        {/* ภาพสินค้า */}
+        {/* product image */}
         <div className="grid grid-cols-1 gap-3 mt-6">
           <span>ภาพสินค้า</span>
 
@@ -312,7 +308,7 @@ export const TabDetail: React.FC<FormProductProps> = ({
         </div>
       </div>
 
-      {/* การกำหนดราคา */}
+      {/* salePrice */}
       <div className="grid grid-cols-1 gap-3 p-3">
         <h1 className="text-md font-semibold mt-6">การกำหนดราคา</h1>
         <div className="flex flex-row gap-3 mt-6">
@@ -365,7 +361,7 @@ export const TabDetail: React.FC<FormProductProps> = ({
           )}
         </div>
 
-        {/* ต้นทุนและกำไร */}
+        {/* costPrice */}
         <div className="grid grid-cols-3 gap-3 mt-4">
           {isEdit ?? isCreate ? (
             <>
@@ -430,7 +426,7 @@ export const TabDetail: React.FC<FormProductProps> = ({
           )}
         </div>
 
-        {/* สินค้าคงคลัง */}
+        {/* availableForSale */}
         <div className="mt-6">
           <h1 className="text-md font-semibold">สินค้าคงคลัง</h1>
           {isEdit ?? isCreate ? (
@@ -456,7 +452,7 @@ export const TabDetail: React.FC<FormProductProps> = ({
           )}
         </div>
 
-        {/* การจัดส่ง */}
+        {/* delivery */}
         <div className="mt-6">
           <h1 className="text-md font-semibold">การจัดส่ง</h1>
           <div className="flex flex-row gap-3 mt-2">

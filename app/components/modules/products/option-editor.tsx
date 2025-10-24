@@ -338,37 +338,39 @@ export default function OptionEditorInline({
 
                   <div className="md:col-span-2">
                     <Label className="mb-2 block text-xs">ค่าตัวเลือก</Label>
-                    {opt.values.map((val, vIdx) => (
-                      <div key={vIdx} className="flex flex-col gap-2 mb-2">
-                        <div className="flex flex-row gap-2 items-center">
-                          <Input
-                            placeholder={optIdx === 0 ? "เช่น แดง" : "เช่น M"}
-                            value={val}
-                            onChange={(e) =>
-                              updateOptionValue(opt.id, vIdx, e.target.value)
-                            }
-                          />
-                          {opt.values.length > 1 && (
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              onClick={() => removeOptionValue(opt.id, vIdx)}
-                              className="text-red-500"
-                            >
-                              <X className="h-4 w-4" />
-                            </Button>
-                          )}
-                        </div>
+                    {opt.values.length > 0 &&
+                      opt.values.map((val, vIdx) => (
+                        <div key={vIdx} className="flex flex-col gap-2 mb-2">
+                          <div className="flex flex-row gap-2 items-center">
+                            <Input
+                              placeholder={optIdx === 0 ? "เช่น แดง" : "เช่น M"}
+                              value={val}
+                              onChange={(e) =>
+                                updateOptionValue(opt.id, vIdx, e.target.value)
+                              }
+                            />
 
-                        <div className="mb-4">
-                          <ImageUploadMulti
-                            value={images}
-                            onChange={(e) => setImages(e)}
-                            tileSize={100}
-                          />
+                            {opt.values.length > 1 && (
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                onClick={() => removeOptionValue(opt.id, vIdx)}
+                                className="text-red-500"
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
+
+                          <div className="mb-4">
+                            <ImageUploadMulti
+                              value={images}
+                              onChange={(e) => setImages(e)}
+                              tileSize={100}
+                            />
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
 
                     <Button
                       type="button"

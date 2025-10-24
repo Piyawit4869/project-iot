@@ -29,14 +29,7 @@ import OptionEditor, {
 import { RequiredLabel } from "~/components/shared/required-design";
 
 import { useNavigate, useParams } from "react-router";
-import { Switch } from "~/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
+
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
 import type { ProductCreateDTO } from "~/schemas/product/product";
@@ -52,7 +45,7 @@ import type {
 } from "~/schemas/product/detail/CategorySchema";
 import ImageUpload from "~/components/shared/image-upload";
 import { ViewCustomerActivityLog } from "../customer/components/customer-activityLog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+
 import { FileText, Tags } from "lucide-react";
 import { TabDetail } from "./tabs-card/tab-detail";
 import { TabPrice } from "./tabs-card/tab-price";
@@ -61,6 +54,7 @@ import { useProduct } from "~/api/client/product/useProductQuery";
 import { cn } from "~/lib/utils";
 import { FormTextRow } from "~/components/shared/formTextRow";
 import { ProductOrgazine } from "./tabs-card/form-product-new";
+import { CustomTabs } from "~/components/shared/custom-tabs";
 
 const statusOptions = [
   { value: "active", label: "สินค้าที่เปิดขาย" },
@@ -174,53 +168,37 @@ export const FormProductNew: React.FC<FormProductProps> = ({
         <form id="products" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex flex-row gap-4">
             <Card className="p-4 space-y-3 w-[70%]">
-              <Tabs defaultValue="details" className="w-full mt-2">
-                <TabsList className="bg-[#f4f4f5] dark:bg-[#1f1f23] p-1  dark:border-gray-700">
-                  <TabsTrigger
-                    value="details"
-                    className=" 
-                 data-[state=active]:bg-white data-[state=active]:text-black
-                 dark:data-[state=active]:bg-[#41414a] dark:data-[state=active]:text-white
-                 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#41414a]
-                 transition-colors"
-                  >
-                    <span>รายละเอียดสินค้า</span>
-                    <FileText className="w-4 h-4" />
-                  </TabsTrigger>
-
-                  <TabsTrigger
-                    value="price"
-                    className="   
-                 data-[state=active]:bg-white data-[state=active]:text-black
-                 dark:data-[state=active]:bg-[#41414a] dark:data-[state=active]:text-white
-                 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#41414a]
-                 transition-colors"
-                  >
-                    <span>รายละเอียดราคา</span>
-                    <Tags className="w-4 h-4" />
-                  </TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="details">
-                  <TabsContent value="details">
-                    <TabDetail
-                      form={form}
-                      isCreate={isCreate}
-                      isEdit={isEdit}
-                      productData={productData}
-                    />
-                  </TabsContent>
-                </TabsContent>
-
-                <TabsContent value="price">
-                  <TabPrice
-                    form={form}
-                    isCreate={isCreate}
-                    isEdit={isEdit}
-                    productData={productData}
-                  />
-                </TabsContent>
-              </Tabs>
+              <CustomTabs
+                defaultValue="details"
+                items={[
+                  {
+                    key: "details",
+                    label: "รายละเอียดสินค้า",
+                    icon: <FileText className="w-4 h-4" />,
+                    content: (
+                      <TabDetail
+                        form={form}
+                        isCreate={isCreate}
+                        isEdit={isEdit}
+                        productData={productData}
+                      />
+                    ),
+                  },
+                  {
+                    key: "price",
+                    label: "รายละเอียดราคา",
+                    icon: <Tags className="w-4 h-4" />,
+                    content: (
+                      <TabPrice
+                        form={form}
+                        isCreate={isCreate}
+                        isEdit={isEdit}
+                        productData={productData}
+                      />
+                    ),
+                  },
+                ]}
+              />
             </Card>
 
             <div className="flex flex-col gap-3 md:w-[30%]">

@@ -156,7 +156,7 @@ export const ProductOrgazine: React.FC<FormProductProps> = ({
               />
             )}
 
-            {/* หมวดหมู่ */}
+            {/* category */}
             <div className="flex flex-row gap-3 mt-4 w-full">
               {isEdit ?? isCreate ? (
                 <FormField
@@ -224,7 +224,7 @@ export const ProductOrgazine: React.FC<FormProductProps> = ({
               )}
             </div>
 
-            {/* แท็กสินค้า */}
+            {/* tags */}
             <h1 className="text-sm font-semibold mb-2 mt-6">แท็กสินค้า</h1>
             {isEdit ?? isCreate ? (
               <>

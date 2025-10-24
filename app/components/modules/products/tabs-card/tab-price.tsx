@@ -48,8 +48,22 @@ import type {
 } from "~/schemas/product/detail/CategorySchema";
 import ImageUpload from "~/components/shared/image-upload";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { CircleFadingPlus, FileText, Tags, Trash2 } from "lucide-react";
+import {
+  Calculator,
+  CircleFadingPlus,
+  FileText,
+  Tags,
+  Trash2,
+} from "lucide-react";
 import { FormTextRow } from "~/components/shared/formTextRow";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 
 const statusOptions = [
   { value: "active", label: "สินค้าที่เปิดขาย" },
@@ -307,6 +321,23 @@ export const TabPrice: React.FC<FormProductProps> = ({
                   สินค้ารายการนี้ไม่มีส่วนลด
                 </span>
               )}
+
+          <Dialog>
+            <DialogTrigger>Open</DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your account and remove your data from our servers.
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+
+          <Button className="w-50" variant="secondary">
+            <Calculator /> คำนวณส่วนลด
+          </Button>
 
           {isEdit && (
             <Button

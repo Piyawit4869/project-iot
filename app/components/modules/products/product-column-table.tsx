@@ -96,10 +96,7 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
         return (
           <div className="w-[140px]  h-auto">
             <span className=" text-blue-400 hover:text-blue-300 hover:underline text-wrap whitespace-pre-wrap break-words">
-              <Link to={`/products/${id}`}>
-                {/* <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline"> */}
-                {name}
-              </Link>
+              <Link to={`/products/${id}`}>{name}</Link>
             </span>
           </div>
         );
@@ -117,10 +114,7 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
         return (
           <div className="w-[200px]  h-auto">
             <span className=" text-blue-400 hover:text-blue-300 hover:underline text-wrap whitespace-pre-wrap break-words">
-              <Link to={`/products/${id}`}>
-                {/* <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline"> */}
-                {name}
-              </Link>
+              <Link to={`/products/${id}`}>{name}</Link>
             </span>
           </div>
         );

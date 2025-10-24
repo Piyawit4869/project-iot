@@ -212,7 +212,7 @@ export const Createproduct = () => {
                           <Textarea
                             placeholder="กรอกคำอธิบาย"
                             {...field}
-                            className="shadow-none  "
+                            className="shadow-none"
                           />
                         </FormControl>
                         <FormMessage />
