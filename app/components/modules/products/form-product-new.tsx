@@ -213,7 +213,7 @@ export const FormProductNew: React.FC<FormProductProps> = ({
           </div>
         </form>
       </Form>
-      {isEdit ? (
+      {isEdit || isCreate ? (
         <Card className="my-2 p-6">
           <div className="flex gap-4 items-center">
             <h1 className="text-md font-semibold mt-6 mb-6">ตัวเลือกสินค้า</h1>
@@ -228,6 +228,11 @@ export const FormProductNew: React.FC<FormProductProps> = ({
                 showOptionEditor
                   ? handleClearOptionEditor
                   : handleToggleOptionEditor
+              }
+              className={
+                showOptionEditor
+                  ? "bg-white border-1 text-black hover:bg-gray-100"
+                  : ""
               }
             >
               {showOptionEditor ? "ล้าง" : "เพิ่มตัวเลือก"}

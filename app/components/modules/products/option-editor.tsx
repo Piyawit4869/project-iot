@@ -10,7 +10,7 @@ import {
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Card } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { type UseFormReturn } from "react-hook-form";
 import {
   Form,
@@ -25,6 +25,7 @@ import { cn } from "~/lib/utils";
 import type { ProductCreateDTO } from "~/schemas/product/product";
 import ImageUploadMulti from "~/components/shared/image-upload-multi";
 import { useState } from "react";
+import { Separator } from "~/components/ui/separator";
 
 // ---------- Types ----------
 export type ProductOption = {
@@ -258,285 +259,319 @@ export default function OptionEditorInline({
     }
   };
 
-  // --- Derived flags ---
-  const canGenerate =
-    options.length > 0 &&
-    options.every((o) => (o.name ?? "").trim().length > 0) &&
-    options.every((o) =>
-      (o.values ?? []).some((v) => (v ?? "").trim().length > 0)
+  // // --- Derived flags ---
+  // const canGenerate =
+  //   options.length > 0 &&
+  //   options.every((o) => (o.name ?? "").trim().length > 0) &&
+  //   options.every((o) =>
+  //     (o.values ?? []).some((v) => (v ?? "").trim().length > 0)
+  //   );
+
+  const [productVariants, setProductVariants] = React.useState<ProductOption[]>(
+    initialOptions?.length
+      ? initialOptions
+      : [{ id: crypto.randomUUID(), name: "", values: [""] }]
+  );
+
+  const addProductVariant = () => {
+    setProductVariants((prev) => [
+      ...prev,
+      { id: crypto.randomUUID(), name: "", values: [""] },
+    ]);
+  };
+
+  const removeProductVariant = (id: string) => {
+    setProductVariants((prev) => prev.filter((p) => p.id !== id));
+  };
+
+  const updateProductVariant = (
+    id: string,
+    field: keyof Omit<(typeof productVariants)[number], "id">,
+    value: string
+  ) => {
+    setProductVariants((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, [field]: value } : p))
     );
+  };
 
-  const optionCountBadge = `${Math.min(options.length, 3)}/${3} ตัวเลือก`;
-
+  const selectionsCount = `${Math.min(options.length, 3)}/${3} ตัวเลือก`;
+  const attributesCount = `${Math.min(parentValues.length, 3)}/${2} ตัวเลือก`;
   const [images, setImages] = useState<string[]>([]);
 
   // ---------- Render ----------
   return (
     <Form {...form}>
-      <Card className={cn("p-4 md:p-6 border-1 space-y-4", className)}>
-        <div className="flex items-center justify-between">
-          <h1 className="font-bold text-base">ตัวเลือกสินค้า</h1>
-          <div className="flex items-center gap-2">
+      <div className="flex flex-row gap-4">
+        <Card className={cn("p-4 md:p-6 border-1 space-y-4 w-full", className)}>
+          <div className="flex items-center justify-between">
+            <h1 className="font-bold text-base">คุณสมบัติ</h1>
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={addOption}
+                disabled={options.length >= 3}
+                className="bg-none border-0 w-30 hover:bg-white shadow-none"
+                title={options.length >= 3 ? "เพิ่มได้สูงสุด 3 ตัวเลือก" : ""}
+              >
+                <span className="text-[#1F78FF] hover:underline">
+                  + เพิ่มตัวเลือก
+                </span>
+              </Button>
+              <span className="text-xs text-muted-foreground">
+                {selectionsCount}
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            {options.length === 0 ? (
+              <div className="rounded-xl text-sm text-muted-foreground">
+                ยังไม่มีตัวเลือก กรุณากดปุ่ม “เพิ่มตัวเลือก”
+              </div>
+            ) : (
+              options.map((opt, optIdx) => (
+                <Card
+                  key={opt.id}
+                  className="px-5 bg-[#F2F2F2] flex flex-col gap-4"
+                >
+                  <div className="text-sm flex justify-between items-center">
+                    <span>
+                      คุณสมบัติ : {opt.name}
+                      <span className="text-sm mt-2 flex justify-center text-muted-foreground">
+                        ค่าตัวเลือก {opt.values?.length || 0} รายการ
+                      </span>
+                    </span>
+
+                    {opt.id.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => removeOption(opt.id)}
+                        className="text-red-500 flex items-center gap-1"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        <span>ลบคุณสมบัติ</span>
+                      </Button>
+                    )}
+                  </div>
+                  <span className="text-sm  flex text-muted-foreground">
+                    ชื่อคุณสมบัติ
+                  </span>
+
+                  <Input
+                    key="selections"
+                    placeholder="เช่น สี / ขนาด / วัสดุ"
+                    value={opt.name}
+                    onChange={(e) => updateOptionName(opt.id, e.target.value)}
+                    className="bg-white flex-1"
+                  />
+                  <Separator />
+                  {opt.values.map((val, vIdx) => (
+                    <>
+                      <div key={vIdx} className="flex flex-col gap-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm">ชื่อตัวเลือก</span>
+                          {opt.values.length > 1 && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              onClick={() => removeOptionValue(opt.id, vIdx)}
+                              className="text-red-500"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+
+                        <div className="flex flex-row gap-2 items-center">
+                          <Input
+                            placeholder={optIdx === 0 ? "เช่น แดง" : "เช่น M"}
+                            value={val}
+                            onChange={(e) =>
+                              updateOptionValue(opt.id, vIdx, e.target.value)
+                            }
+                            className="bg-white flex-1"
+                          />
+                        </div>
+                        <div className="grid flex-col grid-cols-2 gap-4">
+                          <span className=" text-sm mt-2">ราคาเพิ่ม</span>
+                          <span className=" text-sm mt-2">จำนวน</span>
+                          <Input
+                            placeholder={optIdx === 0 ? "เช่น แดง" : "เช่น M"}
+                            value={val}
+                            onChange={(e) =>
+                              updateOptionValue(opt.id, vIdx, e.target.value)
+                            }
+                            className="bg-white flex-1"
+                          />
+
+                          <Input
+                            placeholder={optIdx === 0 ? "เช่น แดง" : "เช่น M"}
+                            value={val}
+                            onChange={(e) =>
+                              updateOptionValue(opt.id, vIdx, e.target.value)
+                            }
+                            className="bg-white flex-1"
+                          />
+                        </div>
+                      </div>
+                      <ImageUploadMulti
+                        value={images}
+                        onChange={(e) => setImages(e)}
+                        tileSize={100}
+                      />
+                    </>
+                  ))}
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => addOptionValue(opt.id)}
+                    className="mt-2 w-25"
+                  >
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    เพิ่มค่า
+                  </Button>
+                </Card>
+              ))
+            )}
+          </div>
+
+          {/* <div className="flex flex-wrap items-center gap-3">
             <Button
               type="button"
-              variant="outline"
-              onClick={addOption}
-              disabled={options.length >= 3}
-              title={options.length >= 3 ? "เพิ่มได้สูงสุด 3 ตัวเลือก" : ""}
+              onClick={generateVariants}
+              disabled={!canGenerate}
+              className="w-full md:w-auto"
             >
-              <PlusCircle className="mr-2 h-4 w-4" />
-              เพิ่มตัวเลือก
+              <RefreshCw className="mr-2 h-4 w-4" />
+              สร้างตัวเลือกย่อย
             </Button>
-            <span className="text-xs text-muted-foreground">
-              {optionCountBadge}
-            </span>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 gap-4">
-          {options.length === 0 ? (
-            <div className="rounded-xl text-sm text-muted-foreground">
-              ยังไม่มีตัวเลือก กรุณากดปุ่ม “เพิ่มตัวเลือก”
+          </div> */}
+        </Card>
+        <div className="w-[45%]">
+          <Card className="p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h1 className="font-bold text-base">ตัวเลือกสินค้า</h1>
+              <div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addProductVariant}
+                  className="bg-none border-0 w-30 hover:bg-white shadow-none"
+                >
+                  <span className="text-[#1F78FF] hover:underline">
+                    + เพิ่มสินค้า
+                  </span>
+                </Button>
+                <span className="text-xs text-muted-foreground">
+                  {attributesCount}
+                </span>
+              </div>
             </div>
-          ) : (
-            options.map((opt, optIdx) => (
-              <div key={opt.id} className="rounded-xl border p-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="min-w-0">
-                    <h4 className="font-semibold truncate">
-                      {opt.name?.trim()
-                        ? `ตัวเลือก: ${opt.name}`
-                        : `ตัวเลือก #${optIdx + 1}`}
-                    </h4>
-                    <div className="mt-1 text-xs text-muted-foreground">
-                      ค่าตัวเลือก {opt.values.filter((v) => v.trim()).length}{" "}
-                      รายการ
-                    </div>
-                  </div>
-                  {options.length > 1 && (
+
+            {productVariants.length === 0 ? (
+              <p className="text-sm mt-2 flex justify-center text-muted-foreground">
+                ยังไม่มีรายการสินค้า กรุณากด “เพิ่มสินค้า”
+              </p>
+            ) : (
+              productVariants.map((item, idx) => (
+                <div
+                  key={item.id}
+                  className="bg-[#F2F2F2] p-3 rounded-md   flex flex-col gap-3"
+                >
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-sm">
+                      ตัวเลือกสินค้า : {item.name}
+                    </span>
+
                     <Button
                       type="button"
                       variant="ghost"
-                      className="text-red-600"
-                      onClick={() => removeOption(opt.id)}
+                      onClick={() => removeProductVariant(item.id)}
+                      className="text-red-500"
                     >
-                      <Trash2 className="h-4 w-4 mr-1" />
-                      ลบตัวเลือกนี้
-                    </Button>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-start">
-                  <div>
-                    <Label className="mb-2 block text-xs">ชื่อตัวเลือก</Label>
-                    <Input
-                      placeholder="เช่น สี / ขนาด / วัสดุ"
-                      value={opt.name}
-                      onChange={(e) => updateOptionName(opt.id, e.target.value)}
-                    />
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <Label className="mb-2 block text-xs">ค่าตัวเลือก</Label>
-                    {opt.values.length > 0 &&
-                      opt.values.map((val, vIdx) => (
-                        <div key={vIdx} className="flex flex-col gap-2 mb-2">
-                          <div className="flex flex-row gap-2 items-center">
-                            <Input
-                              placeholder={optIdx === 0 ? "เช่น แดง" : "เช่น M"}
-                              value={val}
-                              onChange={(e) =>
-                                updateOptionValue(opt.id, vIdx, e.target.value)
-                              }
-                            />
-
-                            {opt.values.length > 1 && (
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                onClick={() => removeOptionValue(opt.id, vIdx)}
-                                className="text-red-500"
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            )}
-                          </div>
-
-                          <div className="mb-4">
-                            <ImageUploadMulti
-                              value={images}
-                              onChange={(e) => setImages(e)}
-                              tileSize={100}
-                            />
-                          </div>
-                        </div>
-                      ))}
-
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => addOptionValue(opt.id)}
-                      className="mt-1"
-                    >
-                      <PlusCircle className="mr-2 h-4 w-4" />
-                      เพิ่มค่า
+                      <X className="h-4 w-4" />
                     </Button>
                   </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+                  <span className="font-semibold text-sm">ชื่อตัวเลือก</span>
+                  <Input
+                    placeholder="ชื่อตัวเลือก เช่น สีแดง / ขนาด M"
+                    value={item.name}
+                    onChange={(e) =>
+                      updateProductVariant(item.id, "name", e.target.value)
+                    }
+                    className="bg-white"
+                  />
+                  <Separator />
 
-        {/* Actions: generate variants */}
-        <div className="flex flex-wrap items-center gap-3">
-          <Button
-            type="button"
-            onClick={generateVariants}
-            disabled={!canGenerate}
-            className="w-full md:w-auto"
-          >
-            <RefreshCw className="mr-2 h-4 w-4" />
-            สร้างตัวเลือกย่อย
-          </Button>
-        </div>
+                  {item.values.map((val, vIdx) => (
+                    <>
+                      <div className="grid grid-cols-1 md:grid-cols-1 gap-3">
+                        <span className=" text-sm mt-2">ค่าตัวเลือก</span>
 
-        {/* Variants grouped (หน้าการ์ดเดียว ไม่ใช้ Modal) */}
-        <div className="mt-4 space-y-3">
-          {parentValues.length === 0 ? (
-            <p className="text-xs text-muted-foreground">
-              โปรดเพิ่มค่าของตัวเลือกที่ 1 เพื่อแสดงหัวรายการ
-            </p>
-          ) : (
-            parentValues.map((pv) => {
-              const isOpen = openGroups[pv] ?? true;
-              const childCount = childCombos.length;
+                        <Input
+                          placeholder="ค่าตัวเลือก"
+                          // value={val.price}
+                          // onChange={(e) =>
+                          //   updateProductVariant(item.id, "price", e.target.value)
+                          // }
+                          className="bg-white"
+                        />
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <span className=" text-sm mt-2">ราคาเพิ่ม</span>
+                        <span className=" text-sm mt-2">จำนวน</span>
+                        <Input
+                          type="number"
+                          // value={item.sku}
+                          // onChange={(e) =>
+                          //   updateProductVariant(item.id, "sku", e.target.value)
+                          // }
+                          className="bg-white"
+                        />
+                        <Input
+                          type="number"
+                          placeholder="จำนวน"
+                          // value={item.stock}
+                          // onChange={(e) =>
+                          //   updateProductVariant(item.id, "stock", e.target.value)
+                          // }
+                          className="bg-white"
+                        />
+                      </div>
+                    </>
+                  ))}
 
-              // group sum
-              const groupTotal = variants.reduce((sum, v) => {
-                if (v.optionValues?.[0] === pv)
-                  return sum + (Number(v.stock) || 0);
-                return sum;
-              }, 0);
-
-              return (
-                <div key={pv} className="rounded-lg border">
-                  <button
+                  <Button
                     type="button"
-                    onClick={() => toggleGroup(pv)}
-                    className="w-full flex items-center justify-between p-3"
+                    variant="outline"
+                    onClick={() => addOptionValue(item.id)}
+                    className="mt-2 w-25"
                   >
-                    <div className="text-left">
-                      <div className="text-sm font-medium">{pv}</div>
-                      <div className="text-xs text-muted-foreground">
-                        ตัวเลือกสินค้า {childCount} รายการ
-                      </div>
-                    </div>
-                    <ChevronDown
-                      className={cn(
-                        "h-4 w-4 transition-transform",
-                        isOpen ? "rotate-180" : "rotate-0"
-                      )}
-                    />
-                  </button>
-
-                  {isOpen && (
-                    <div className="border-t">
-                      <div className="grid grid-cols-12 gap-2 p-3 text-xs font-medium bg-muted">
-                        <div className="col-span-5">ชื่อ</div>
-                        <div className="col-span-3">ราคา</div>
-                        <div className="col-span-2">SKU</div>
-                        <div className="col-span-2 flex items-center justify-between">
-                          <span>จำนวน</span>
-                          <span className="font-semibold">{groupTotal}</span>
-                        </div>
-                      </div>
-
-                      {childCombos.map((combo, idx) => {
-                        const fullValues = [pv, ...combo];
-                        const fullTitle = buildVariantTitle(fullValues);
-                        const childTitle = combo.length
-                          ? buildVariantTitle(combo)
-                          : pv;
-                        const matched = variants.find(
-                          (v) => v.title === fullTitle
-                        );
-
-                        return (
-                          <div
-                            key={`${pv}-${idx}-${childTitle}`}
-                            className="grid grid-cols-12 gap-2 p-3 border-t items-center"
-                          >
-                            <div className="col-span-5 text-sm">
-                              {childTitle}
-                            </div>
-
-                            <div className="col-span-3">
-                              <Input
-                                type="number"
-                                placeholder="ราคา"
-                                value={matched?.price ?? ""}
-                                onChange={(e) =>
-                                  upsertVariantField(
-                                    fullValues,
-                                    "price",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </div>
-
-                            <div className="col-span-2">
-                              <Input
-                                placeholder="SKU"
-                                value={matched?.sku ?? ""}
-                                onChange={(e) =>
-                                  upsertVariantField(
-                                    fullValues,
-                                    "sku",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </div>
-
-                            <div className="col-span-2">
-                              <Input
-                                type="number"
-                                placeholder="จำนวน"
-                                value={matched?.stock ?? ""}
-                                onChange={(e) =>
-                                  upsertVariantField(
-                                    fullValues,
-                                    "stock",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    เพิ่มค่า
+                  </Button>
                 </div>
-              );
-            })
-          )}
-        </div>
+              ))
+            )}
 
-        {/* Save (pattern เดียวกับ baseline) */}
-        <div className="mt-4 flex gap-3">
-          <Button
-            type="button"
-            onClick={handleSaveAll}
-            className="w-full md:w-auto"
-          >
-            <Save className="mr-2 h-4 w-4" />
-            บันทึกตัวเลือก
-          </Button>
+            {productVariants.length > 0 && (
+              <div className="mt-2 flex gap-3">
+                <Button
+                  type="button"
+                  onClick={() => console.log("save", productVariants)}
+                  className="w-full md:w-auto"
+                >
+                  <Save className="mr-2 h-4 w-4" />
+                  บันทึกสินค้า
+                </Button>
+              </div>
+            )}
+          </Card>
         </div>
-      </Card>
+      </div>
     </Form>
   );
 }
