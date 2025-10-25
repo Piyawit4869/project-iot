@@ -1,34 +1,23 @@
 "use client";
 
-import React, { useState } from "react";
-
+import React from "react";
 import { TabControl } from "~/components/shared/tab-control";
 import GlobalButton from "~/components/shared/global-button";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { IndexLayoutTableLoading } from "~/components/shared/index-table-loading";
-import { PlusCircleIcon, Trash2 } from "lucide-react";
-import { SelectorItemsModal } from "~/components/shared/modal/selector-items-modal";
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
-import { DataTable } from "~/components/shared/data-table";
-import { cn } from "~/lib/utils";
-import { useParams } from "react-router";
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
-import { FormInventory } from "./form-inventory";
 import { useInventoryViewModel } from "~/hooks/inventories/viewmodels/useInventoryViewModel";
-import { useProductColumnTable } from "../products/product-column-table";
-import {
-  useGetAiInventory,
-  useInventory,
-} from "~/api/client/inventories/useInventoryQuery";
-import type { Product } from "~/schemas/product/product";
+import InventoryViewPage from "./view/inventory-view";
+import { EditInventory } from "./data/form-data-Edit";
+import { DataTable } from "~/components/shared/data-table";
+import { useInventory } from "~/api/client/inventories/useInventoryQuery";
+import { useParams } from "react-router";
+import { useProductsColumnTable } from "./no-data/product-column-table";
+import { SelectorItemsModal } from "~/components/shared/modal/selector-items-modal";
 import { useGetProducts } from "~/api/client/product/useProductQuery";
-import { InfoRow } from "~/components/shared/InfoRow";
-import { Switch } from "~/components/ui/switch";
-import { AiInventoryView } from "./no-data/ai-inventory-view-modal";
-import { GetNoteInventoryAI } from "./no-data/modal-get-noteAi";
-import InventoryViewPage from "./inventory-view";
+import { Button } from "~/components/ui/button";
+import { PlusCircleIcon } from "lucide-react";
 
 const InventoryDetailContainer = () => {
   const {
@@ -38,47 +27,32 @@ const InventoryDetailContainer = () => {
     isSubmitting,
     actions: { onSubmit },
   } = useInventoryViewModel();
-  const columns = useProductColumnTable();
-
-  const params = useParams<{ id: string }>();
-  const { data } = useInventory(params.id ?? "");
-  const { data: getData } = useGetAiInventory(params?.id ?? "");
-  const dataFromAI = getData?.inventoryData;
-
-  const { data: products = [] } = useGetProducts();
-  const [selectItemIds, setSelectItemIds] = React.useState<string[]>([]);
-  const [productSelected, setProductSelected] = React.useState<Product[]>([]);
 
   const [isEdit, setIsEdit] = React.useState(false);
-  const [AIOpen, setAIOpen] = useState(false);
+  const params = useParams<{ id: string }>();
+  const id = params?.id ?? "";
+
+  const { data } = useInventory(id);
+  const { data: products = [] } = useGetProducts();
+  const columns = useProductsColumnTable();
+
+  const [inventoryProducts, setInventoryProducts] = React.useState<any[]>([]);
+  const [selectItemIds, setSelectItemIds] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    if (data?.products) {
+      setInventoryProducts(data.products);
+    }
+  }, [data?.products]);
 
   const handleChangeItems = (ids: string[]) => {
     setSelectItemIds(ids);
-    const byId = new Set(ids);
-    setProductSelected(products.filter((p: Product) => byId.has(p.id ?? "")));
-  };
-
-  const handleRemoveSelected = (id: string) => {
-    setProductSelected((prev) => prev.filter((p) => p.id !== id));
-    setSelectItemIds((prev) => prev.filter((x) => x !== id));
-  };
-
-  const renderAvailabilityBadge = (status?: string) => {
-    const isAvailable =
-      status === "available" || status === "in_stock" || status === "IN_STOCK";
-    return (
-      <Badge
-        variant="outline"
-        className={cn(
-          "px-2 py-0 text-[10px] rounded-full",
-          isAvailable
-            ? "bg-green-400 text-black font-bold pt-1"
-            : "bg-gray-500 text-white font-bold pt-1"
-        )}
-      >
-        {isAvailable ? "สั่งซื้อได้" : "สินค้าหมด"}
-      </Badge>
-    );
+    const added = products.filter((p: { id: string }) => ids.includes(p.id));
+    setInventoryProducts((prev) => {
+      const map = new Map(prev.map((p: any) => [p.id, p]));
+      for (const p of added) map.set(p.id, p);
+      return Array.from(map.values());
+    });
   };
 
   useEntityBreadcrumb({
@@ -92,6 +66,17 @@ const InventoryDetailContainer = () => {
       uuid: inventory?.id,
     },
   });
+
+  const handleSave = () => {
+    const base = form.getValues();
+    const payload = {
+      ...base,
+
+      id: base.id ?? id,
+      productIds: inventoryProducts.map((p: any) => p.id),
+    };
+    onSubmit.update(payload);
+  };
 
   return (
     <div className="flex flex-col w-full space-y-8 p-8">
@@ -113,13 +98,12 @@ const InventoryDetailContainer = () => {
               onClick={() => setIsEdit(false)}
               className="mr-2"
             />,
-
             <GlobalButton
               label="บันทึก"
-              key="create button"
-              type="submit"
+              key="save"
+              type="button"
               loading={isSubmitting}
-              form="inventory"
+              onClick={handleSave}
             />,
           ]}
         />
@@ -134,22 +118,6 @@ const InventoryDetailContainer = () => {
           }
           backpath="/inventory"
           buttons={[
-            // <GlobalButton
-            //   key="ai-inventory"
-            //   type="button"
-            //   label="ข้อมูลคลังสินค้าผ่าน AI"
-            //   variant="secondary"
-            //   className="bg-muted-foreground text-background hover:bg-gray-200 w-full px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-            //   onClick={() => setAIOpen(true)}
-            // />,
-
-            // <GlobalButton
-            //   label="ลบคลังสินค้า"
-            //   variant="outline"
-            //   key="delete button"
-            //   loading={isSubmitting}
-            //   onClick={onSubmit.remove}
-            // />,
             <GlobalButton
               key="edit"
               label="แก้ไข"
@@ -159,17 +127,48 @@ const InventoryDetailContainer = () => {
         />
       )}
 
-      {isEdit ? (
-        <Card className="p-4">
-          {loading.inventory ? (
+      <Card className="p-4">
+        {isEdit ? (
+          loading.inventory ? (
             <IndexLayoutTableLoading />
           ) : (
-            <FormInventory form={form} onSubmit={onSubmit} />
+            <EditInventory
+              form={form}
+              onSubmit={{ update: onSubmit.update, remove: onSubmit.remove }}
+            />
+          )
+        ) : (
+          <InventoryViewPage />
+        )}
+      </Card>
+      <Card className="p-4">
+        <div className="flex items-center mb-2">
+          <h2 className="text-lg font-bold mr-5">สินค้าในคลัง</h2>
+
+          {isEdit && (
+            <div className="flex gap-2">
+              <SelectorItemsModal
+                items={products.filter((item: { id: string }) => !!item.id)}
+                selected={selectItemIds}
+                onChange={handleChangeItems}
+                customButton={
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-[30px] w-[110px] p-2 gap-2 border-amber-500"
+                  >
+                    <PlusCircleIcon />
+                    <span className="text-[12px]">เพิ่มสินค้า</span>
+                  </Button>
+                }
+              />
+            </div>
           )}
-        </Card>
-      ) : (
-        <InventoryViewPage />
-      )}
+        </div>
+        <div>
+          <DataTable data={inventoryProducts} columns={columns} />
+        </div>
+      </Card>
     </div>
   );
 };

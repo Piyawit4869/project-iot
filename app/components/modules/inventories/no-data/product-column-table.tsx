@@ -99,7 +99,7 @@ export const useProductsColumnTable = (): ColumnDef<ProductColumn>[] => {
         const name = info.row.original?.name;
 
         return (
-          <div className="w-[150px] h-[150px] relative ">
+          <div className=" w-[60px] h-[60px] relative ">
             <GlobalImage
               src={url || ""}
               alt={name}

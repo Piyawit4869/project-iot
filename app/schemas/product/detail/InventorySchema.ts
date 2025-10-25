@@ -16,6 +16,13 @@ const InventoryCreateSchema = z.object({
   lowStockThreshold: z.number().optional(),
   capacityThreshold: z.number().optional(),
 
+  // เพิ่มมาใหม่
+  inventoryType: z.string().optional(),
+  contactName: z.string().optional(),
+  contactPhone: z.string().optional(),
+  contactEmail: z.string().optional(),
+  // -------------
+
   allowSell: z.boolean().optional(),
   allowBorrow: z.boolean().optional(),
   maxBorrowQty: z.number().optional(),
@@ -47,6 +54,24 @@ const InventoryCreateSchema = z.object({
       return undefined;
     }, z.number().nonnegative("ราคาส่วนลดต้องไม่ติดลบ"))
     .optional(),
+
+  targetQty: z
+    .preprocess((val) => {
+      if (val === "" || val === null || val === undefined) return undefined;
+      const num = Number(val);
+      return isNaN(num) ? undefined : num;
+    }, z.number().nonnegative("เป้าหมายต้องไม่ติดลบ"))
+    .optional(),
+
+  soldQtyThisPeriod: z
+    .preprocess((val) => {
+      if (val === "" || val === null || val === undefined) return undefined;
+      const num = Number(val);
+      return isNaN(num) ? undefined : num;
+    }, z.number().nonnegative("จำนวนสินค้าต้องไม่ติดลบ"))
+    .optional(),
+
+  productIds: z.array(z.string()).optional(),
 });
 
 export type InventoryCreateDTO = z.infer<typeof InventoryCreateSchema>;

@@ -23,7 +23,9 @@ export const useFormInventoryAction = (id: string) => {
       onConfirm: () => {
         const toastId = toast.loading("กำลังสร้างคลังสินค้า...");
 
-        mutate(values, {
+        const { id, ...payload } = values;
+
+        mutate(payload, {
           onSuccess: (data) => {
             toast.success("สร้างคลังสินค้าเรียบร้อยแล้ว!", { id: toastId });
             navigate(`/inventory/${data.id}`);
