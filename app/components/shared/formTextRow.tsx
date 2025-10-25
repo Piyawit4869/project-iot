@@ -21,6 +21,11 @@ import {
 import React from "react";
 import { copyTextToClipboard } from "~/lib/utils";
 import { Link } from "lucide-react";
+import {
+  matTypeOptions,
+  statusOptions,
+  unitOptions,
+} from "~/initData/product-init-data";
 type FormTextRowProps<T extends FieldValues> = {
   control: Control<T>;
   name: FieldPath<T>;
@@ -53,7 +58,10 @@ export function FormTextRow<T extends FieldValues>({
     ...organizationType,
     ...customerType,
     ...gender,
+    ...unitOptions,
+    ...statusOptions,
     ...prefix,
+    ...matTypeOptions,
   ];
 
   let displayValue: React.ReactNode;
@@ -71,6 +79,7 @@ export function FormTextRow<T extends FieldValues>({
     case "dateFull":
       displayValue = value ? formatDateFull(value as string | Date) : "-";
       break;
+
     default:
       displayValue =
         typeof value === "string"

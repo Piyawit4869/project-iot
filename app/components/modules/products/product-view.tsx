@@ -24,7 +24,7 @@ export interface ProductViewValues {
   sku?: string;
   status?: GlobalProductStatus | string;
   description?: string;
-  imageUrls?: string[];
+  imageUrl?: string[];
   salePrice?: number;
   compareAtPrice?: number;
   costPrice?: number;
@@ -99,7 +99,7 @@ export const Productview: React.FC<ProductProfileViewProps> = ({
   loading,
 }) => {
   const d = data ?? {};
-  const images = d.imageUrls ?? [];
+  const images = d.imageUrl ?? [];
 
   const derived = calcProfit(
     d.profitAmount != null ? d.salePrice : d.salePrice,

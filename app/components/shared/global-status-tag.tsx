@@ -184,7 +184,12 @@ const statusMap: Record<
     variant: "secondary",
     icon: <CalendarOff />,
   },
-  coming_soon: { label: "หยุดผลิตหรือขาย", variant: "normal", icon: <Clock /> },
+  // coming_soon: { label: "หยุดผลิตหรือขาย", variant: "normal", icon: <Clock /> },
+  coming_soon: {
+    label: "สินค้าที่จะวางจำหน่ายในอนาคต",
+    variant: "normal",
+    icon: <Clock />,
+  },
 };
 
 export function GlobalStatusBadge({ value }: Props) {
