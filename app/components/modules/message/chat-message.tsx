@@ -42,17 +42,15 @@ export function MessageText({ text }: { text: string }) {
 
 export default function ChatMessages({
   api,
-  autoScroll,
-  setAutoScroll,
-  selectedRoom,
   customer,
+  selectedRoom,
+  setAutoScroll,
 }: {
   api: string;
-  autoScroll: boolean;
-  setAutoScroll: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedRoom: ChatRoomSchemaType;
-  isCreateOrderOpen: boolean;
   customer: any;
+  autoScroll: boolean;
+  selectedRoom: ChatRoomSchemaType;
+  setAutoScroll: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -60,17 +58,9 @@ export default function ChatMessages({
   const [previewUrl, setPreviewUrl] = React.useState("");
 
   const [showTopLoading, setShowTopLoading] = useState(false);
-  const [hasScrolledOnce, setHasScrolledOnce] = useState(false);
-  const [hasAutoScrolled, setHasAutoScrolled] = useState(false);
-  const [isScrollReady, setIsScrollReady] = useState(false);
-  const [isCheckStatusOpen, setCheckStatusOpen] = useState(false);
-  const [AIOpen, setAIOpen] = useState(false);
   const [buttonScrollToBottom, setButtonScrollToBottom] = React.useState(false);
 
   const { messages: socketMessages, addMessage } = useChat();
-
-  const { data: getData } = useGetAiNote(customer?.id);
-  const dataFromAI = getData?.customerData;
 
   const {
     data: messagesData,
@@ -181,19 +171,6 @@ export default function ChatMessages({
   }, [combinedMessages]);
 
   React.useEffect(() => {
-    if (!isLoading) {
-      // const socket = socketConfig(api);
-      // const body = {
-      //   chatRoomId: selectedRoom?.id,
-      //   userId: selectedRoom.customerId,
-      //   branchId: selectedRoom?.branchId,
-      // };
-      // socket.emit("mark-read", body); // manual read
-      // socket.emit("recent-chat", body);
-    }
-  }, [isLoading, selectedRoom]);
-
-  React.useEffect(() => {
     const socket = socketConfig(api);
 
     if (selectedRoom?.id) {
@@ -201,23 +178,6 @@ export default function ChatMessages({
     }
 
     socket.on("chat", (msg: Message) => {
-      // const isCurrentRoom =
-      //   selectedRoom?.id && msg.chatRoomId === selectedRoom.id;
-
-      // if (isCurrentRoom) {
-      // const body = {
-      //   chatRoomId: selectedRoom.id,
-      //   userId: selectedRoom?.customer?.id,
-      //   branchId: selectedRoom.branchId,
-      // };
-      // socket.emit("mark-read", body);
-      // setAutoReadMsg(true);
-      // setRealtimeChatRooms((prev: any) => ({
-      //   ...prev,
-      //   unreadMessageCount: 0,
-      // }));
-      // }
-
       addMessage({
         ...msg,
         imageUrl:
@@ -229,6 +189,20 @@ export default function ChatMessages({
       socket.disconnect();
     };
   }, [selectedRoom]);
+
+  const messageLoadingStyle =
+    "absolute top-4 left-1/2 -translate-x-1/2 z-30 bg-white dark:bg-gray-800 text-xs text-muted-foreground text-center py-2 px-4 rounded-lg shadow-md w-fit";
+
+  const seemoreStyle = `
+                    sticky bottom-5 left-1/2 -translate-x-1/2 z-20
+                    bg-white dark:bg-gray-800
+                    text-xs text-muted-foreground text-center
+                    py-2 px-4
+                    rounded-full shadow-lg
+                    w-fit cursor-pointer
+                    hover:bg-gray-100 dark:hover:bg-gray-700
+                    transition-colors duration-200
+                `;
 
   if (isLoading && selectedRoom) {
     return <CustomerChatSkeleton />;
@@ -250,48 +224,12 @@ export default function ChatMessages({
       </div>
     );
   }
-  {
-    /* <Button
-            disabled={!isCreateOrderOpen}
-            type="button"
-            size={"sm"}
-            className="btn px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm"
-            onClick={() =>
-              //  router.push("/notation-view")
-              window.open("/notation-view", "_blank")
-            }
-          >
-            ออกใบเสนอราคา
-          </Button> */
-  }
+
   return (
     <div className="flex flex-col h-[calc(100vh-100px)] bg-white  dark:bg-background">
       <div className="flex items-center justify-between gap-4 p-2 border-b bg-white dark:bg-background">
         <div className="hidden xl:block">
           <StatusToolbar value={"done"} chatRoomDetail={selectedRoom} />
-        </div>
-
-        <div className="flex items-center gap-3">
-          <Button
-            type="button"
-            size={"sm"}
-            className=" bg-muted-foreground text-background hover:bg-gray-200 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-            onClick={() => {
-              setAIOpen(true);
-            }}
-          >
-            ข้อมูลลูกค้าผ่าน AI
-          </Button>
-          <Button
-            type="button"
-            size={"sm"}
-            className="px-3 py-1 bg-black hover:bg-gray-600 text-sm text-background dark:bg-primary"
-            onClick={() => {
-              setCheckStatusOpen(true);
-            }}
-          >
-            ดูออเดอร์
-          </Button>
         </div>
       </div>
 
@@ -301,18 +239,7 @@ export default function ChatMessages({
           className="flex h-full flex-col space-y-6 overflow-y-auto px-4 z-0 relative dark:bg-background"
         >
           {showTopLoading && (
-            <div
-              className="
-      absolute top-4 left-1/2 -translate-x-1/2 z-30
-      bg-white dark:bg-gray-800
-      text-xs text-muted-foreground text-center
-      py-2 px-4
-      rounded-lg shadow-md
-      w-fit
-    "
-            >
-              กำลังโหลดข้อความ...
-            </div>
+            <div className={messageLoadingStyle}>กำลังโหลดข้อความ...</div>
           )}
 
           {combinedMessages &&
@@ -370,7 +297,6 @@ export default function ChatMessages({
                             : "bg-muted text-primary"
                         }`}
                       >
-                        {/* {msg.message} */}
                         <MessageText
                           text={
                             typeof msg.message === "string" ? msg.message : ""
@@ -408,43 +334,13 @@ export default function ChatMessages({
             })}
           <div ref={bottomRef} />
           {buttonScrollToBottom && (
-            <button
-              onClick={scrollToBottom}
-              className="
-                    sticky bottom-5 left-1/2 -translate-x-1/2 z-20
-                    bg-white dark:bg-gray-800
-                    text-xs text-muted-foreground text-center
-                    py-2 px-4
-                    rounded-full shadow-lg
-                    w-fit cursor-pointer
-                    hover:bg-gray-100 dark:hover:bg-gray-700
-                    transition-colors duration-200
-                "
-            >
+            <button onClick={scrollToBottom} className={seemoreStyle}>
               ดูข้อความล่าสุด
             </button>
           )}
         </div>
         <ChatInput selectedRoom={selectedRoom} customer={customer} />
       </div>
-
-      {/* <ChecklistDialog
-        open={isCheckStatusOpen}
-        onOpenChange={setCheckStatusOpen}
-        checklist={checklistData}
-        data={customerData}
-      /> */}
-
-      <OrderViewModal
-        open={isCheckStatusOpen}
-        onOpenChange={setCheckStatusOpen}
-      />
-
-      <AIMessageView
-        open={AIOpen}
-        onOpenChange={setAIOpen}
-        customer={dataFromAI}
-      />
 
       {previewUrl && (
         <div
@@ -457,14 +353,6 @@ export default function ChatMessages({
             className="relative bg-transparent rounded-lg overflow-hidden max-w-5xl max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* <button
-              className="absolute top-4 right-4 bg-white/90 rounded-full p-2 border"
-              onClick={() => setPreviewUrl("")}
-              aria-label="ปิด"
-            >
-              <Icons.X className="w-5 h-5" />
-            </button> */}
-
             <img
               src={previewUrl}
               alt="preview"

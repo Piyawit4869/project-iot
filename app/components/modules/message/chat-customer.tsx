@@ -13,6 +13,8 @@ import {
   Settings,
   Eye,
   Check,
+  Brain,
+  ShoppingBag,
 } from "lucide-react";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -48,6 +50,7 @@ import { usePaginate } from "~/api/client/product/useProductQuery";
 import {
   useAiReplySettings,
   useConnectedChatRoomAssistant,
+  useGetAiNote,
 } from "~/api/client/customer/useCustomer";
 import {
   CustomerSupportFormSchema,
@@ -90,6 +93,9 @@ import {
 import { useDebounce } from "~/hooks/use-debounce";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { GlobalTagsBadge } from "~/components/shared/global-tags";
+import { OrderViewModal } from "./orders-view-modal";
+import { AIMessageView } from "./ai-message-view-modal";
+import { GlobalTooltip } from "~/components/shared/global-tooltip";
 
 interface UserProps {
   id: string;
@@ -136,6 +142,9 @@ export default function ChatCustomerInfo({
     pageSize: 20,
     name: debouncedSearch,
   });
+
+  const { data: getData } = useGetAiNote(currentCustomer?.id);
+  const dataFromAI = getData?.customerData;
 
   const { setProducts } = useOrder();
   const { addMessageAI } = useChat();
@@ -227,6 +236,11 @@ export default function ChatCustomerInfo({
   const [applied, setApplied] = React.useState<GlobalProductStatus[]>([
     GlobalProductStatus.ACTIVE,
   ]);
+
+  const [AIOpen, setAIOpen] = React.useState(false);
+  const [isCheckStatusOpen, setCheckStatusOpen] = React.useState(false);
+
+  const [openSelected, setOpenSelected] = React.useState(false);
 
   const dataInTaps = [
     { value: "note", label: "โน้ต", Icon: Notebook },
@@ -566,86 +580,119 @@ export default function ChatCustomerInfo({
   }, [currentCustomer]);
   const countFilterOption: number = selected.length;
 
+  const secondarySupports = React.useMemo(() => {
+    if (!currentCustomer?.supports) return [];
+    return currentCustomer.supports.filter((spl) => !spl.isMain);
+  }, [currentCustomer?.supports]);
+
+  const displayed = secondarySupports.slice(0, 3);
+  const extraCount = Math.max(secondarySupports.length - 3, 0);
+
   if (!customer || !currentCustomer) return <CustomerInfoSkeleton />;
+
+  const tags =
+    currentCustomer && currentCustomer.tags && currentCustomer.tags.length > 0
+      ? currentCustomer.tags
+      : [];
 
   return (
     <>
-      <aside className="flex flex-col w-full bg-white dark:bg-background justify-between xl:h-[calc(100vh-50px)] xl:px-1 border-l">
-        <div>
-          <div className="py-4 px-2 flex w-full mt-6 items-center justify-between gap-2 h-[60px] rounded-2xl bg-background">
-            <div>
-              <div className="flex gap-2">
-                <GlobalImage
-                  src={currentCustomer.profile?.imageUrl || ""}
-                  alt="Customer"
-                  className="w-[50px] h-[50px] rounded-full object-cover mt-1"
-                />
-                <div className="flex flex-col ml-1">
-                  {currentCustomer.profile?.name ? (
-                    <>
+      <aside className="flex flex-col w-full bg-white dark:bg-background xl:h-[calc(100vh-50px)] xl:px-1 border-l">
+        <div className="py-4 px-2 flex w-full mt-6 items-center justify-between gap-2 h-[60px] rounded-2xl bg-background">
+          <div>
+            <div className="flex gap-2">
+              <GlobalImage
+                src={currentCustomer.profile?.imageUrl || ""}
+                alt="Customer"
+                className="w-[50px] h-[50px] rounded-full object-cover mt-1"
+              />
+              <div className="flex flex-col ml-1">
+                {currentCustomer.profile?.name ? (
+                  <>
+                    <div className="flex flex-row gap-2 items-center">
                       <h2 className="font-semibold text-lg mr-auto">
                         {currentCustomer.profile.name}
                       </h2>
-                      <h2 className="font-semibold text-sm mr-auto">
-                        {currentCustomer.profile.lineName || "ไม่ทราบชื่อ"}
-                      </h2>
-                    </>
-                  ) : (
-                    <h2 className="font-semibold text-lg mr-auto">
-                      {currentCustomer.profile?.lineName || "ไม่ทราบชื่อ"}
+
+                      <UserPen
+                        size={18}
+                        color="#09a799"
+                        className="cursor-pointer"
+                        onClick={() => setAddCustomerDetail(true)}
+                      />
+                    </div>
+
+                    <h2 className="font-semibold text-sm mr-auto">
+                      {currentCustomer.profile.lineName || "ไม่ทราบชื่อ"}
                     </h2>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-row gap-2 mt-1">
-                <span
-                  className={`text-xs p-1 px-3 rounded-full ${
-                    STATUS_BG[currentCustomer.status] ??
-                    "bg-gray-400 text-white"
-                  }`}
-                >
-                  {statusCustomer}
-                </span>
-                <span
-                  className={`text-xs p-1 px-3 rounded-full ${
-                    TYPE_BG[currentCustomer.customerType] ??
-                    "bg-gray-400 text-white"
-                  }`}
-                >
-                  {typeCustomer}
-                </span>
+                  </>
+                ) : (
+                  <h2 className="font-semibold text-lg mr-auto">
+                    {currentCustomer.profile?.lineName || "ไม่ทราบชื่อ"}
+                  </h2>
+                )}
               </div>
             </div>
-
-            <UserPen
-              size={18}
-              color="#09a799"
-              className="cursor-pointer"
-              onClick={() => setAddCustomerDetail(true)}
-            />
+            <div className="flex flex-row gap-2 mt-1">
+              <span
+                className={`text-xs p-1 px-3 rounded-full ${
+                  STATUS_BG[currentCustomer.status] ?? "bg-gray-400 text-white"
+                }`}
+              >
+                {statusCustomer}
+              </span>
+              <span
+                className={`text-xs p-1 px-3 rounded-full ${
+                  TYPE_BG[currentCustomer.customerType] ??
+                  "bg-gray-400 text-white"
+                }`}
+              >
+                {typeCustomer}
+              </span>
+            </div>
           </div>
+          <div className="flex items-center gap-3">
+            <GlobalTooltip content={"กดเพื่อดูข้อมูลลูกค้าผ่าน AI"}>
+              <Brain
+                className="w-5 h-5 "
+                onClick={() => {
+                  setAIOpen(true);
+                }}
+              />
+            </GlobalTooltip>
+            <GlobalTooltip content={"กดเพื่อดูออเดอร์ของลูกค้า"}>
+              <ShoppingBag
+                className="w-5 h-5"
+                onClick={() => {
+                  setCheckStatusOpen(true);
+                }}
+              />
+            </GlobalTooltip>
+          </div>
+        </div>
 
-          <div className="py-4 px-2 mt-2">
+        {!!tags.length && (
+          <div className="pt-4 pb-0 px-2 mt-2">
+            <Separator className="mb-2" />
             <div className="gap-2 flex flex-row flex-wrap">
-              {currentCustomer &&
-                currentCustomer.tags &&
-                currentCustomer.tags.length > 0 &&
-                currentCustomer.tags.map((item: any) => {
-                  return (
-                    <GlobalTagsBadge
-                      key={item.id}
-                      value={item.name}
-                      fontSize={10}
-                      paddingX={1.5}
-                    />
-                  );
-                })}
+              {tags.map((item: any) => {
+                return (
+                  <GlobalTagsBadge
+                    key={item.id}
+                    value={item.name}
+                    fontSize={10}
+                    paddingX={1.5}
+                  />
+                );
+              })}
             </div>
           </div>
+        )}
 
-          <div className="px-4">
-            <div className="mt-4 space-y-1">
-              <>
+        <div className="px-4 mt-2">
+          <div className="mt-4 space-y-1">
+            <div className="flex flex-row">
+              <div>
                 <p className="font-semibold text-sm text-muted-foreground mb-1">
                   ผู้รับผิดชอบหลัก
                 </p>
@@ -667,7 +714,7 @@ export default function ChatCustomerInfo({
                                 <TooltipTrigger asChild>
                                   <button
                                     onClick={() =>
-                                      navigate(`/user/${spl.userId}`)
+                                      navigate(`/users/${spl.userId}`)
                                     }
                                   >
                                     <GlobalImage
@@ -679,6 +726,7 @@ export default function ChatCustomerInfo({
                                       className={`w-[35px] h-[35px] rounded-full object-cover border-2 ${
                                         userIndex === 0 && "border-amber-500"
                                       }`}
+                                      notShowPreview
                                     />
                                   </button>
                                 </TooltipTrigger>
@@ -777,122 +825,81 @@ export default function ChatCustomerInfo({
                     </Popover>
                   )}
                 </div>
-              </>
+              </div>
 
-              <>
+              <div className="mx-2 w-[0.8px] h-hull bg-gray-200" />
+              <div>
                 <p className="font-semibold text-sm text-muted-foreground mb-1">
                   ผู้รับผิดชอบรอง
                 </p>
                 <div className="flex flex-wrap gap-2 mb-2">
-                  {currentCustomer &&
+                  {/* {currentCustomer &&
                     currentCustomer.supports &&
-                    currentCustomer.supports.filter((spl) => !spl.isMain)
-                      .length > 0 &&
-                    currentCustomer.supports
-                      .filter((spl) => !spl.isMain)
-                      .map((user, i) => (
-                        <div
-                          className="relative inline-block"
-                          key={`secondary-spl-${
-                            user?.userId ?? `unknown-${i}`
-                          }`}
-                        >
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <button
-                                  onClick={() =>
-                                    navigate(
-                                      `/user/${user?.userId ?? "unknown"}`
-                                    )
-                                  }
-                                >
-                                  <GlobalImage
-                                    src={
-                                      user?.imageUrl ||
-                                      `https://api.dicebear.com/9.x/initials/svg?seed=${
-                                        user?.userId ?? "unknown"
-                                      }`
-                                    }
-                                    alt={`secondary-spl-${
+                    currentCustomer.supports.filter((spl) => !spl.isMain) */}
+                  {displayed.length > 0 &&
+                    // currentCustomer.supports
+                    //   .filter((spl) => !spl.isMain)
+
+                    displayed.map((user, i) => (
+                      <div
+                        className="relative inline-block"
+                        key={`secondary-spl-${user?.userId ?? `unknown-${i}`}`}
+                      >
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                onClick={() =>
+                                  navigate(
+                                    `/users/${user?.userId ?? "unknown"}`
+                                  )
+                                }
+                              >
+                                <GlobalImage
+                                  src={
+                                    user?.imageUrl ||
+                                    `https://api.dicebear.com/9.x/initials/svg?seed=${
                                       user?.userId ?? "unknown"
-                                    }`}
-                                    className={`w-[35px] h-[35px] rounded-full object-cover`}
-                                  />
-                                </button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                {user?.fullName ?? "-"}
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              DeleteSupport(user.id);
-                            }}
-                            className="absolute -top-1 -right-1 bg-white border border-gray-300 rounded-full p-1 shadow hover:bg-gray-100 transition"
-                          >
-                            <X className="w-2 h-2 text-gray-600" />
-                          </button>
-                        </div>
-                      ))}
-                  <div>
-                    {/* <Popover
-                      open={isPopoverOpen && !addingMainSupport}
-                      onOpenChange={setIsPopoverOpen}
-                    >
-                      <PopoverTrigger asChild>
+                                    }`
+                                  }
+                                  alt={`secondary-spl-${
+                                    user?.userId ?? "unknown"
+                                  }`}
+                                  className={`w-[35px] h-[35px] rounded-full object-cover`}
+                                  notShowPreview
+                                />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {user?.fullName ?? "-"}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+
                         <button
                           type="button"
-                          onClick={() => handleOpenPopover(false)}
-                          className="rounded-full object-cover"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            DeleteSupport(user.id);
+                          }}
+                          className="absolute -top-1 -right-1 bg-white border border-gray-300 rounded-full p-1 shadow hover:bg-gray-100 transition"
                         >
-                          <CirclePlus className="w-9 h-9 text-gray-300" />
+                          <X className="w-2 h-2 text-gray-600" />
                         </button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[200px] p-0">
-                        <div className="flex flex-col p-2 max-h-[200px] overflow-y-auto">
-                          {!isLoading &&
-                            allUser &&
-                            allUser.length > 0 &&
-                            allUser
-                              .filter(
-                                (user: UserProps) =>
-                                  !supportedUserIds.has(user.id)
-                              )
-                              ?.map((item: UserProps) => (
-                                <button
-                                  key={item.id}
-                                  onClick={() => handleUserButtonClick(item.id)}
-                                  className="flex items-center gap-2 p-2 hover:bg-muted rounded-md text-left w-full"
-                                  disabled={isCreatingSupport}
-                                >
-                                  <span className="text-sm font-medium">
-                                    asdsdad {item.userName}
-                                  </span>
-                                </button>
-                              ))}
-                          {isCreatingSupport && (
-                            <span className="flex items-center justify-center text-sm text-muted-foreground p-2">
-                              กำลังเพิ่มผู้รับผิดชอบ...
-                            </span>
-                          )}
-                          {allUser &&
-                            allUser.length > 0 &&
-                            allUser.filter(
-                              (user: UserProps) =>
-                                !supportedUserIds.has(user.id)
-                            ).length === 0 && (
-                              <span className="flex items-center justify-center text-sm text-muted-foreground p-2">
-                                ไม่มีผู้รับผิดชอบให้เลือก
-                              </span>
-                            )}
-                        </div>
-                      </PopoverContent>
-                    </Popover> */}
-
+                      </div>
+                    ))}
+                  {extraCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setOpenSelected(true)}
+                      className="w-9 h-9 rounded-full border border-gray-300 text-sm font-semibold text-gray-600 bg-white shadow inline-flex items-center justify-center hover:bg-gray-50"
+                      aria-label={`ดูรายชื่อผู้รับผิดชอบทั้งหมดอีก ${extraCount} คน`}
+                      title={`ดูรายชื่อทั้งหมด (+${extraCount})`}
+                    >
+                      +{extraCount}
+                    </button>
+                  )}
+                  <div>
                     <Popover
                       open={isPopoverOpen}
                       onOpenChange={setIsPopoverOpen}
@@ -969,309 +976,309 @@ export default function ChatCustomerInfo({
                     </Popover>
                   </div>
                 </div>
-              </>
+              </div>
+            </div>
 
-              {/* Note Section */}
-              <Tabs defaultValue="note" onValueChange={(v) => setActiveTab(v)}>
-                <ScrollArea className="h-[40px]">
-                  <TabsList className="w-full">
-                    {dataInTaps.map(({ value, label, Icon }) => (
-                      <TabsTrigger
-                        key={value}
-                        value={value}
-                        className={classForTaps}
-                        // className="px-3 py-2 hover:bg-popover hover:text-foreground dark:hover:bg-popover dark:hover:text-white"
-                      >
-                        <Icon className="w-3 h-3" />
-                        {label}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-                  <ScrollBar orientation="horizontal" className="h-1" />
-                </ScrollArea>
+            {/* Note Section */}
+            <Tabs defaultValue="note" onValueChange={(v) => setActiveTab(v)}>
+              <ScrollArea className="h-[40px]">
+                <TabsList className="w-full">
+                  {dataInTaps.map(({ value, label, Icon }) => (
+                    <TabsTrigger
+                      key={value}
+                      value={value}
+                      className={classForTaps}
+                    >
+                      <Icon className="w-3 h-3" />
+                      {label}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+                <ScrollBar orientation="horizontal" className="h-1" />
+              </ScrollArea>
 
-                <TabsContent value="note">
-                  <NoteLists
-                    customer={currentCustomer}
-                    refetchCustomer={refetchCustomer}
-                  />
-                </TabsContent>
+              <TabsContent value="note">
+                <NoteLists
+                  customer={currentCustomer}
+                  refetchCustomer={refetchCustomer}
+                />
+              </TabsContent>
 
-                <TabsContent value="product">
-                  <div className="flex flex-col justify-between w-full pt-1">
-                    <div className="flex flex-row items-center justify-between gap-12">
-                      <p className="text-sm font-semibold mb-2">
-                        สินค้าที่สนใจ
-                      </p>
+              <TabsContent value="product">
+                <div className="flex flex-col justify-between w-full pt-1">
+                  <div className="flex flex-row items-center justify-between gap-12">
+                    <p className="text-sm font-semibold mb-2">สินค้าที่สนใจ</p>
 
-                      <div className="flex gap-2">
-                        <Popover open={open} onOpenChange={setOpen}>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              className="h-[30px] w-[70px] px-2 gap-2"
-                            >
-                              <span className="text-[12px]">กรอง</span>
-                            </Button>
-                          </PopoverTrigger>
-
-                          <PopoverContent
-                            className="w-[280px] p-0"
-                            align="start"
+                    <div className="flex gap-2">
+                      <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-[30px] w-[70px] px-2 gap-2"
                           >
-                            <div className="flex items-center justify-between px-3 py-2">
-                              <span className="text-sm font-medium">
-                                สถานะสินค้า
-                              </span>
-                              {countFilterOption > 0 && (
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-7 px-2"
-                                  onClick={clearAllFilterStatus}
-                                >
-                                  <X className="h-3.5 w-3.5 mr-1" />
-                                  เคลียร์
-                                </Button>
-                              )}
-                            </div>
+                            <span className="text-[12px]">กรอง</span>
+                          </Button>
+                        </PopoverTrigger>
 
-                            <Separator />
-
-                            <Command>
-                              <CommandList>
-                                <CommandEmpty>ไม่พบรายการ</CommandEmpty>
-                                <CommandGroup>
-                                  {STATUS_OPTIONS.map((opt) => {
-                                    const active = selected.includes(opt.value);
-                                    return (
-                                      <CommandItem
-                                        key={opt.value}
-                                        onSelect={() =>
-                                          handleToggleFilterStatus(opt.value)
-                                        }
-                                        className="flex items-center justify-between"
-                                        aria-checked={active}
-                                        role="option"
-                                      >
-                                        <span>{opt.label}</span>
-                                        {active ? (
-                                          <Check className="h-4 w-4" />
-                                        ) : null}
-                                      </CommandItem>
-                                    );
-                                  })}
-                                </CommandGroup>
-                              </CommandList>
-                            </Command>
-
-                            <div className="p-3 flex items-center justify-end gap-2">
+                        <PopoverContent className="w-[280px] p-0" align="start">
+                          <div className="flex items-center justify-between px-3 py-2">
+                            <span className="text-sm font-medium">
+                              สถานะสินค้า
+                            </span>
+                            {countFilterOption > 0 && (
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => setOpen(false)}
+                                className="h-7 px-2"
+                                onClick={clearAllFilterStatus}
                               >
-                                ปิด
+                                <X className="h-3.5 w-3.5 mr-1" />
+                                เคลียร์
                               </Button>
-                              <Button
-                                size="sm"
-                                onClick={handleApplyFilterStatus}
-                              >
-                                ใช้ตัวกรอง
-                              </Button>
-                            </div>
-                          </PopoverContent>
-                        </Popover>
+                            )}
+                          </div>
 
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-[30px] w-[70px] p-2 px-3"
-                          onClick={createOrder}
-                          disabled={cartItems.length <= 0}
-                        >
-                          <span className="text-[12px]">ตะกร้า</span>
+                          <Separator />
 
-                          {cartItems.length > 0 && (
-                            <div className="text-amber-500">
-                              {cartItems.length}
-                            </div>
-                          )}
-                        </Button>
-                      </div>
+                          <Command>
+                            <CommandList>
+                              <CommandEmpty>ไม่พบรายการ</CommandEmpty>
+                              <CommandGroup>
+                                {STATUS_OPTIONS.map((opt) => {
+                                  const active = selected.includes(opt.value);
+                                  return (
+                                    <CommandItem
+                                      key={opt.value}
+                                      onSelect={() =>
+                                        handleToggleFilterStatus(opt.value)
+                                      }
+                                      className="flex items-center justify-between"
+                                      aria-checked={active}
+                                      role="option"
+                                    >
+                                      <span>{opt.label}</span>
+                                      {active ? (
+                                        <Check className="h-4 w-4" />
+                                      ) : null}
+                                    </CommandItem>
+                                  );
+                                })}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+
+                          <div className="p-3 flex items-center justify-end gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setOpen(false)}
+                            >
+                              ปิด
+                            </Button>
+                            <Button size="sm" onClick={handleApplyFilterStatus}>
+                              ใช้ตัวกรอง
+                            </Button>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-[30px] w-[70px] p-2 px-3"
+                        onClick={createOrder}
+                        disabled={cartItems.length <= 0}
+                      >
+                        <span className="text-[12px]">ตะกร้า</span>
+
+                        {cartItems.length > 0 && (
+                          <div className="text-amber-500">
+                            {cartItems.length}
+                          </div>
+                        )}
+                      </Button>
                     </div>
                   </div>
+                </div>
 
-                  <div className="space-y-3  pt-4">
-                    <p className="text-sm text-muted-foreground mb-2 font-semibold">
-                      รายการสินค้าในระบบ
-                    </p>
-                    <Input
-                      placeholder="ค้นหาด้วยชื่อ"
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                    />
+                <div className="space-y-3  pt-4">
+                  <p className="text-sm text-muted-foreground mb-2 font-semibold">
+                    รายการสินค้าในระบบ
+                  </p>
+                  <Input
+                    placeholder="ค้นหาด้วยชื่อ"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
 
-                    <ScrollArea className="h-[calc(100vh-480px)] rounded-md border p-2 bg-white pb-[35px]">
-                      <ul className="space-y-2">
-                        {productsLoading ? (
-                          <div className="space-y-2">
-                            {Array.from({ length: 5 }).map((_, index) => (
-                              <div key={index} className="flex flex-row gap-2">
-                                <SkeletonLoading height="h-15" width="w-1/4" />
-                                <SkeletonLoading height="h-15" />
-                              </div>
-                            ))}
-                          </div>
-                        ) : productsPaginate &&
-                          productsPaginate.items.length > 0 ? (
-                          productsPaginate.items.map((item: Product) => (
-                            <li
-                              key={item?.id}
-                              className="flex items-center justify-between gap-4 p-3 rounded-lg hover:bg-muted/60 transition-colors"
-                            >
-                              {item?.id && (
-                                <div
-                                  className="flex gap-2 cursor-pointer w-full"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    toggleCartItem(item);
-                                  }}
-                                >
-                                  <Checkbox
-                                    checked={isInCart(item.id)}
-                                    onClick={(e) => e.stopPropagation()}
-                                    onCheckedChange={() => toggleCartItem(item)}
-                                  />
+                  <ScrollArea className="h-[calc(100vh-480px)] rounded-md border p-2 bg-white pb-[35px]">
+                    <ul className="space-y-2">
+                      {productsLoading ? (
+                        <div className="space-y-2">
+                          {Array.from({ length: 5 }).map((_, index) => (
+                            <div key={index} className="flex flex-row gap-2">
+                              <SkeletonLoading height="h-15" width="w-1/4" />
+                              <SkeletonLoading height="h-15" />
+                            </div>
+                          ))}
+                        </div>
+                      ) : productsPaginate &&
+                        productsPaginate.items.length > 0 ? (
+                        productsPaginate.items.map((item: Product) => (
+                          <li
+                            key={item?.id}
+                            className="flex items-center justify-between gap-4 p-3 rounded-lg hover:bg-muted/60 transition-colors"
+                          >
+                            {item?.id && (
+                              <div
+                                className="flex gap-2 cursor-pointer w-full"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  toggleCartItem(item);
+                                }}
+                              >
+                                <Checkbox
+                                  checked={isInCart(item.id)}
+                                  onClick={(e) => e.stopPropagation()}
+                                  onCheckedChange={() => toggleCartItem(item)}
+                                />
 
-                                  <div className="flex items-center justify-between gap-2 w-full">
-                                    <div className="flex items-center gap-3">
-                                      <GlobalImage
-                                        src={item.imageUrl ?? ""}
-                                        alt={item.name ?? ""}
-                                        className="w-[50px] h-[50px] rounded-md object-cover border"
-                                      />
+                                <div className="flex items-center justify-between gap-2 w-full">
+                                  <div className="flex items-center gap-3">
+                                    <GlobalImage
+                                      src={item.imageUrl ?? ""}
+                                      alt={item.name ?? ""}
+                                      className="w-[50px] h-[50px] rounded-md object-cover border"
+                                    />
 
-                                      <Accordion
-                                        type="single"
-                                        collapsible
-                                        className="w-full"
+                                    <Accordion
+                                      type="single"
+                                      collapsible
+                                      className="w-full"
+                                    >
+                                      <AccordionItem
+                                        value={`item-${item.id}`}
+                                        className="border-none"
                                       >
                                         <AccordionItem
                                           value={`item-${item.id}`}
                                           className="border-none"
                                         >
-                                          <AccordionItem
-                                            value={`item-${item.id}`}
-                                            className="border-none"
-                                          >
-                                            <AccordionTrigger className="p-0 hover:no-underline [&>svg]:hidden">
-                                              <div className="flex flex-col items-start text-left">
-                                                <span className="text-sm font-medium truncate max-w-[150px]">
-                                                  {item.name}
-                                                </span>
-                                                <span className="text-xs text-muted-foreground">
-                                                  {item.sku}
-                                                </span>
-                                                <span className="text-xs text-muted-foreground">
-                                                  สินค้าคงเหลือ :{" "}
-                                                  {item.available} ชิ้น
-                                                </span>
-                                                <Badge
-                                                  variant="outline"
-                                                  className={cn(
-                                                    "mt-1 px-2 py-0.5 text-xs rounded-full border-none",
-                                                    item.status === "active"
-                                                      ? "bg-green-100 text-green-700"
-                                                      : "bg-gray-100 text-gray-500"
-                                                  )}
-                                                >
-                                                  {item.status === "active"
-                                                    ? "สั่งซื้อได้"
-                                                    : "สินค้าหมด"}
-                                                </Badge>
-                                              </div>
-                                            </AccordionTrigger>
-                                          </AccordionItem>
+                                          <AccordionTrigger className="p-0 hover:no-underline [&>svg]:hidden">
+                                            <div className="flex flex-col items-start text-left">
+                                              <span className="text-sm font-medium truncate max-w-[150px]">
+                                                {item.name}
+                                              </span>
+                                              <span className="text-xs text-muted-foreground">
+                                                {item.sku}
+                                              </span>
+                                              <span className="text-xs text-muted-foreground">
+                                                สินค้าคงเหลือ : {item.available}{" "}
+                                                ชิ้น
+                                              </span>
+                                              <Badge
+                                                variant="outline"
+                                                className={cn(
+                                                  "mt-1 px-2 py-0.5 text-xs rounded-full border-none",
+                                                  item.status === "active"
+                                                    ? "bg-green-100 text-green-700"
+                                                    : "bg-gray-100 text-gray-500"
+                                                )}
+                                              >
+                                                {item.status === "active"
+                                                  ? "สั่งซื้อได้"
+                                                  : "สินค้าหมด"}
+                                              </Badge>
+                                            </div>
+                                          </AccordionTrigger>
                                         </AccordionItem>
-                                      </Accordion>
-                                    </div>
+                                      </AccordionItem>
+                                    </Accordion>
+                                  </div>
 
-                                    <div className="flex flex-col items-end gap-1">
-                                      <span className="font-semibold text-sm text-blue-600">
-                                        {item.salePrice} ฿
-                                      </span>
+                                  <div className="flex flex-col items-end gap-1">
+                                    <span className="font-semibold text-sm text-blue-600">
+                                      {item.salePrice} ฿
+                                    </span>
 
-                                      <Button
-                                        variant="outline"
-                                        size="icon"
-                                        className="h-7 w-7"
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          e.stopPropagation();
-                                          handleOpenProductModalsWithItem(item);
-                                        }}
-                                      >
-                                        <Eye className="h-4 w-4" />
-                                      </Button>
-                                    </div>
+                                    <Button
+                                      variant="outline"
+                                      size="icon"
+                                      className="h-7 w-7"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        handleOpenProductModalsWithItem(item);
+                                      }}
+                                    >
+                                      <Eye className="h-4 w-4" />
+                                    </Button>
                                   </div>
                                 </div>
-                              )}
-                            </li>
-                          ))
-                        ) : (
-                          <p className="text-center text-sm text-muted-foreground py-4">
-                            ไม่พบสินค้าในรายการ
-                          </p>
-                        )}
-                      </ul>
-                    </ScrollArea>
+                              </div>
+                            )}
+                          </li>
+                        ))
+                      ) : (
+                        <p className="text-center text-sm text-muted-foreground py-4">
+                          ไม่พบสินค้าในรายการ
+                        </p>
+                      )}
+                    </ul>
+                  </ScrollArea>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="settingAI">
+                <div className="space-y-3 mt-4 max-h-[calc(100vh-420px)] overflow-auto">
+                  <div className="flex flex-row justify-between items-center w-full">
+                    <h3 className="text-sm font-semibold mt-1">พูดคุยกับ AI</h3>
+
+                    <Button
+                      type="button"
+                      size={"sm"}
+                      className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-sm text-black"
+                      onClick={() => {
+                        setOpenAiSetting(true);
+                      }}
+                    >
+                      <Settings />
+                    </Button>
                   </div>
-                </TabsContent>
 
-                <TabsContent value="settingAI">
-                  <div className="space-y-3 mt-4 max-h-[calc(100vh-420px)] overflow-auto">
-                    <div className="flex flex-row justify-between items-center w-full">
-                      <h3 className="text-sm font-semibold mt-1">
-                        พูดคุยกับ AI
-                      </h3>
-
-                      <Button
-                        type="button"
-                        size={"sm"}
-                        className="px-3 py-1  bg-gray-100 hover:bg-gray-200 text-sm text-black"
-                        onClick={() => {
-                          setOpenAiSetting(true);
-                        }}
-                      >
-                        <Settings />
-                      </Button>
-                    </div>
-
-                    {/* {isFirstTimeAI ? ( */}
-                    {isFirstTimeAI && !currentCustomer?.chatRoomAssistantId ? (
-                      <HeroSearch onInputChange={handleFirstTimeAISearch} />
-                    ) : (
-                      <ChatMessagesWithAI
-                        customerId={customer.id}
-                        chatRoomId={chatRoomAssistantId}
-                        autoScroll={autoScroll}
-                        setAutoScroll={setAutoScroll}
-                        searchPrompt={firstTimeMessage}
-                        // isAILoading={true}
-                        isAILoading={isPendingAI}
-                      />
-                    )}
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </div>
+                  {/* {isFirstTimeAI ? ( */}
+                  {isFirstTimeAI && !currentCustomer?.chatRoomAssistantId ? (
+                    <HeroSearch onInputChange={handleFirstTimeAISearch} />
+                  ) : (
+                    <ChatMessagesWithAI
+                      customerId={customer.id}
+                      chatRoomId={chatRoomAssistantId}
+                      autoScroll={autoScroll}
+                      setAutoScroll={setAutoScroll}
+                      searchPrompt={firstTimeMessage}
+                      isAILoading={isPendingAI}
+                    />
+                  )}
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </aside>
+
+      <OrderViewModal
+        open={isCheckStatusOpen}
+        onOpenChange={setCheckStatusOpen}
+      />
+
+      <AIMessageView
+        open={AIOpen}
+        onOpenChange={setAIOpen}
+        customer={dataFromAI}
+      />
+
       <AboutCustomer
         open={addCustomerDetail}
         onOpenChange={setAddCustomerDetail}
@@ -1591,6 +1598,68 @@ export default function ChatCustomerInfo({
               บันทึกลงตะกร้า
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={openSelected} onOpenChange={setOpenSelected}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>
+              ผู้รับผิดชอบรองทั้งหมด ({secondarySupports.length})
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-3">
+            {secondarySupports.length === 0 ? (
+              <div className="text-sm text-muted-foreground">
+                ยังไม่มีผู้รับผิดชอบรอง
+              </div>
+            ) : (
+              secondarySupports.map((item) => (
+                <div key={item.id} className="flex items-center gap-3">
+                  <GlobalImage
+                    src={
+                      item?.imageUrl ||
+                      `https://api.dicebear.com/9.x/initials/svg?seed=${
+                        item?.userId ?? "unknown"
+                      }`
+                    }
+                    alt={item?.fullName || item?.userId || ""}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium truncate">
+                      {item?.fullName ?? "-"}
+                    </div>
+                    <div className="text-xs text-muted-foreground truncate">
+                      {item?.email ?? item?.userName ?? "-"}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      className="text-sm underline underline-offset-2"
+                      onClick={() =>
+                        navigate(`/users/${item?.userId ?? "unknown"}`)
+                      }
+                    >
+                      ดูโปรไฟล์
+                    </button>
+
+                    <Separator orientation="vertical" className="h-4" />
+
+                    <button
+                      className="text-sm text-red-600 hover:text-red-700"
+                      onClick={() => DeleteSupport(item.id)}
+                    >
+                      ลบ
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </>

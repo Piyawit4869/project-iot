@@ -5,12 +5,10 @@ import { useChatRoom } from "~/providers/chat/useChatRoom";
 
 export const ChatlistContainer = ({
   chatRooms,
-  resize,
   api,
   handleChangeSelectedRoom,
 }: {
   chatRooms: any;
-  resize: number;
   api: string;
   handleChangeSelectedRoom: (room: any) => void;
 }) => {
@@ -31,7 +29,6 @@ export const ChatlistContainer = ({
     <div className="h-[calc(100vh-50px)]">
       <ChatlistSidebar
         api={api}
-        resize={resize}
         handleChangeSelectedRoom={handleChangeSelectedRoom}
         details={{
           rooms,

@@ -40,17 +40,15 @@ import {
   CommandList,
   CommandSeparator,
 } from "~/components/ui/command";
-import GlobalButton from "~/components/shared/global-button";
+import { useIsMobile } from "~/hooks/use-mobile";
 
 interface Props {
   handleChangeSelectedRoom: (room: any) => void;
   api: string;
-  resize: number;
   details: any;
 }
 export default function ChatlistSidebar({
   api,
-  resize,
   details,
   handleChangeSelectedRoom,
 }: Props) {
@@ -149,7 +147,7 @@ export default function ChatlistSidebar({
         }}
       /> */}
 
-      <div ref={containerRef} className="relative">
+      <div ref={containerRef} className="relative min-w-[308px]">
         <Popover open={open} onOpenChange={setOpen}>
           <div className="p-3">
             {inputOpen ? (
@@ -260,7 +258,6 @@ export default function ChatlistSidebar({
                 key={room?.id + i}
                 roomId={room?.id ?? ""}
                 selectedRoom={currentRoomId}
-                resize={resize}
                 name={room?.name}
                 message={room?.latestMessage?.messageLabel ?? ""}
                 time={room?.latestMessage?.createdAt ?? ""}
@@ -352,7 +349,6 @@ export default function ChatlistSidebar({
                 key={room?.id + i}
                 roomId={room?.id ?? ""}
                 selectedRoom={currentRoomId}
-                resize={resize}
                 name={room?.name}
                 message={room?.latestMessage?.messageLabel ?? ""}
                 time={room?.latestMessage?.createdAt ?? ""}
@@ -391,7 +387,6 @@ type ChatItemProps = {
   image?: string;
   countUnreadMessage: number;
   onChatClick?: () => void;
-  resize: number;
   selectedRoom: string;
   roomId: string;
   currentCustomer: any;
@@ -406,13 +401,15 @@ function ChatItem({
   image,
   countUnreadMessage = 0,
   onChatClick,
-  resize,
   roomId,
   roomDetail,
 }: ChatItemProps) {
   const fallbackImage = `https://ui-avatars.com/api/?name=${encodeURIComponent(
     name
   )}`;
+
+  const isMobile = useIsMobile();
+
   const { autoReadMsg } = useChatRoom();
   const { setCurrentRoomId, currentRoomId } = useChat();
 
@@ -421,9 +418,8 @@ function ChatItem({
       className={cn(
         "sm:justify-center",
         currentRoomId === roomId && "bg-gray-300 dark:bg-gray-700",
-        resize <= 25 && "justify-center",
+        // resize <= 25 && "justify-center",
         "flex items-center px-4 py-3 hover:bg-border cursor-pointer transition w-full"
-        // unread && "bg-gray-200"
       )}
       onClick={() => {
         setCurrentRoomId?.(roomId);
@@ -447,7 +443,7 @@ function ChatItem({
         )}
       </div>
 
-      {resize > 25 && (
+      {!isMobile && (
         <div className="hidden ml-3 lg:flex flex-col min-w-0 flex-1">
           <div className="flex flex-col justify-between items-start gap-2 min-w-0">
             <div className="flex w-full justify-between items-center gap-2 min-w-0">
@@ -458,13 +454,13 @@ function ChatItem({
               </span>
             </div>
 
-            <div className="flex flex-row justify-between">
+            <div className="flex w-full flex-row justify-between">
               <p
                 className={cn(
-                  "text-sm truncate text-black-400  sm:max-w-[200px] lg:max-w-[250px] min-w-[170px] whitespace-nowrap overflow-hidden",
+                  "text-sm truncate text-black-400  w-full whitespace-nowrap overflow-hidden",
                   unread && "font-medium",
                   ((roomDetail && roomDetail.done) || roomDetail.isProcess) &&
-                    "truncate w-[80px]"
+                    "truncate w-[100px]"
                 )}
               >
                 {message}
