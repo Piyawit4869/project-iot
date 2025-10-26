@@ -14,18 +14,9 @@ import { Input } from "~/components/ui/input";
 import { RequiredLabel } from "~/components/shared/required-design";
 import { Switch } from "~/components/ui/switch";
 import type { InventoryCreateDTO } from "~/schemas/product/detail/InventorySchema";
-import { DataTable } from "~/components/shared/data-table";
-import {
-  useGetAnalyzeInventory,
-  useInventory,
-} from "~/api/client/inventories/useInventoryQuery";
+import { useGetAnalyzeInventory } from "~/api/client/inventories/useInventoryQuery";
 import { useParams } from "react-router";
-import { useProductColumnTable } from "../products/product-column-table";
-import { SelectorItemsModal } from "~/components/shared/modal/selector-items-modal";
-import { useGetProducts } from "~/api/client/product/useProductQuery";
-import type { Product } from "~/schemas/product/product";
-import { Button } from "~/components/ui/button";
-import { NotebookText, PlusCircleIcon } from "lucide-react";
+import { NotebookText } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -33,59 +24,46 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { RelationshipCard } from "../customer/components/relationship";
 import { DualProgressCircle } from "~/components/shared/dual-progress-circle";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Separator } from "~/components/ui/separator";
-import { useProductsColumnTable } from "./no-data/product-column-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import GlobalButton from "~/components/shared/global-button";
-import { GetNoteInventoryAI } from "./no-data/modal-get-noteAi";
 import { Card } from "~/components/ui/card";
 
-const companyList = [
-  { value: "aeroventis", label: "Aeroventis Dynamics Co., Ltd." },
-  { value: "neurovista", label: "NeuroVista Labs Co., Ltd." },
-  { value: "quantara", label: "Quantara Systems Co., Ltd." },
-  { value: "lumetra", label: "Lumetra Innovations Co., Ltd." },
-];
-const branchList = [
-  { value: "bangkok", label: "Bangkok Head Office" },
-  { value: "chiangmai", label: "Chiang Mai Branch" },
-  { value: "rayong", label: "Rayong Industrial Branch" },
-  { value: "phuket", label: "Phuket Sales Branch" },
-];
+import { GetNoteInventoryAI } from "../no-data/modal-get-noteAi";
+import { branchList, companyList, inventoryTypeList } from "../indata/inData";
+import { Progress } from "~/components/ui/progress";
 
 interface FormInventoryProps {
   form: UseFormReturn<InventoryCreateDTO>;
   onSubmit: {
-    update: (values: InventoryCreateDTO) => void | Promise<void>;
-    remove: () => void | Promise<void>;
+    update: (values: InventoryCreateDTO) => void;
+    remove: () => void;
   };
 }
 
-export const FormInventory: React.FC<FormInventoryProps> = (props) => {
+export const EditInventory: React.FC<FormInventoryProps> = (props) => {
   const { form, onSubmit } = props;
   const params = useParams<{ id: string }>();
   const id = params?.id as string;
-  const { data, isLoading } = useInventory(params.id ?? "");
-  const columns = useProductsColumnTable();
   const { data: analyzeInventory, isLoading: loadAnalyzeInventory } =
     useGetAnalyzeInventory(id);
-
   const [OpenAiNote, setOpenAiNote] = React.useState<boolean>(false);
 
-  const [isEdit, setIsEdit] = React.useState(false);
-  const { data: products = [] } = useGetProducts();
-  const [selectItemIds, setSelectItemIds] = React.useState<string[]>([]);
-  const [productSelected, setProductSelected] = React.useState<Product[]>([]);
+  const [progress, setProgress] = React.useState(13);
+  React.useEffect(() => {
+    const timer = setTimeout(() => setProgress(0), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const handleChangeItems = (ids: string[]) => {
-    setSelectItemIds(ids);
-    const byId = new Set(ids);
-    setProductSelected(products.filter((p: Product) => byId.has(p.id ?? "")));
-  };
+  const currentQty = analyzeInventory?.soldQtyThisMonth ?? 0;
+  const targetQty = analyzeInventory?.monthlyTarget ?? 0;
+  const percent =
+    targetQty > 0
+      ? Math.min(Math.round((currentQty / targetQty) * 100), 100)
+      : Math.round(progress);
 
   return (
     <>
@@ -93,13 +71,13 @@ export const FormInventory: React.FC<FormInventoryProps> = (props) => {
         <TabsList className="flex border-gray-200 pb-0 h-max px-5 gap-6 bg-card">
           <TabsTrigger
             value="details"
-            className="flex items-center gap-2 px-0 py-3 text-gray-600 rounded-none border-b-2 border-2 shadow-none data-[state=active]:shadow-none data-[state=active]:border-b-primary"
+            className="text-lg flex items-center gap-2 px-0 py-3 rounded-none border-b-2 border-2 shadow-none data-[state=active]:shadow-none data-[state=active]:border-b-primary"
           >
             รายละเอียดคลังสินค้า
           </TabsTrigger>
           <TabsTrigger
             value="Settings"
-            className="flex items-center gap-2 px-0 py-3 text-gray-600 rounded-none border-b-2 border-2 shadow-none data-[state=active]:shadow-none data-[state=active]:border-b-primary"
+            className="text-lg  flex items-center gap-2 px-0 py-3  rounded-none border-b-2 border-2 shadow-none data-[state=active]:shadow-none data-[state=active]:border-b-primary"
           >
             พื้นที่อันตราย
           </TabsTrigger>
@@ -116,27 +94,60 @@ export const FormInventory: React.FC<FormInventoryProps> = (props) => {
                 <div className="md:w-[50%] w-full border rounded-lg shadow-sm p-6">
                   <h1 className="font-bold text-lg mb-4">ข้อมูลคลังสินค้า</h1>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
                     <FormField
                       control={form.control}
-                      name="name"
+                      name="active"
                       render={({ field }) => (
-                        <FormItem>
-                          <RequiredLabel required>ชื่อ</RequiredLabel>
+                        <FormItem className="mt-4">
+                          <FormLabel>สถานะการใช้งาน</FormLabel>
                           <FormControl>
-                            <Input placeholder="ชื่อคลังสินค้า" {...field} />
+                            <div className="flex items-center flex-row gap-2 mt-1">
+                              <label
+                                htmlFor="switch-status"
+                                className="text-sm text-gray-700 select-none"
+                              >
+                                ปิด
+                              </label>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                id="switch-status"
+                              />
+                              <label
+                                htmlFor="switch-status"
+                                className="text-sm text-gray-700 select-none"
+                              >
+                                เปิด
+                              </label>
+                            </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+                  </div>
 
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <RequiredLabel required>ชื่อคลังสินค้า</RequiredLabel>
+                          <FormControl>
+                            <Input placeholder="เช่น คลังสินค้า A" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     <FormField
                       control={form.control}
                       name="capacity"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>ความจุของสินค้า (ชิ้น)</FormLabel>
+                          <FormLabel>ความจุของคลังสินค้า</FormLabel>
                           <FormControl>
                             <Input
                               type="number"
@@ -148,20 +159,35 @@ export const FormInventory: React.FC<FormInventoryProps> = (props) => {
                         </FormItem>
                       )}
                     />
-                  </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     <FormField
                       control={form.control}
-                      name="description"
+                      name="inventoryType"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>รายละเอียด</FormLabel>
-                          <FormControl>
-                            <Textarea
-                              placeholder="รายละเอียดคลังสินค้า / เงื่อนไขการจัดเก็บ"
-                              {...field}
-                            />
+                          <FormLabel>ประเภทคลังสินค้า</FormLabel>
+                          <FormControl className="w-full">
+                            <Select
+                              value={field.value}
+                              onValueChange={(v) => field.onChange(v)}
+                            >
+                              <SelectTrigger
+                                className="w-full"
+                                // disabled
+                              >
+                                <SelectValue placeholder="เช่น หลัก / ย่อย / ฝาก / จำหน่าย" />
+                              </SelectTrigger>
+                              <SelectContent className="w-full">
+                                {inventoryTypeList.map((item) => (
+                                  <SelectItem
+                                    key={item.value}
+                                    value={item.value}
+                                  >
+                                    {item.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -170,13 +196,14 @@ export const FormInventory: React.FC<FormInventoryProps> = (props) => {
 
                     <FormField
                       control={form.control}
-                      name="address"
+                      name="description"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>ที่อยู่คลังสินค้า</FormLabel>
+                          <FormLabel>รายละเอียด</FormLabel>
                           <FormControl>
                             <Textarea
-                              placeholder="ที่อยู่คลังสินค้า / พิกัด หรือรายละเอียดเพิ่มเติม"
+                              className="mt-3"
+                              placeholder="รายละเอียดคลังสินค้า / เงื่อนไขการจัดเก็บ"
                               {...field}
                             />
                           </FormControl>
@@ -198,7 +225,10 @@ export const FormInventory: React.FC<FormInventoryProps> = (props) => {
                               value={field.value}
                               onValueChange={(v) => field.onChange(v)}
                             >
-                              <SelectTrigger className="w-full" disabled>
+                              <SelectTrigger
+                                className="w-full"
+                                // disabled
+                              >
                                 <SelectValue placeholder="เลือกบริษัท" />
                               </SelectTrigger>
                               <SelectContent className="w-full">
@@ -229,7 +259,10 @@ export const FormInventory: React.FC<FormInventoryProps> = (props) => {
                               value={field.value}
                               onValueChange={(v) => field.onChange(v)}
                             >
-                              <SelectTrigger className="w-full" disabled>
+                              <SelectTrigger
+                                className="w-full"
+                                // disabled
+                              >
                                 <SelectValue placeholder="เลือกสาขาของบริษัท" />
                               </SelectTrigger>
                               <SelectContent className="w-full">
@@ -250,42 +283,74 @@ export const FormInventory: React.FC<FormInventoryProps> = (props) => {
                     />
                   </div>
 
-                  <FormField
-                    control={form.control}
-                    name="active"
-                    render={({ field }) => (
-                      <FormItem className="mt-4">
-                        <FormLabel>สถานะการใช้งาน</FormLabel>
-                        <FormControl>
-                          <div className="flex items-center flex-row gap-2 mt-1">
-                            <label
-                              htmlFor="switch-status"
-                              className="text-sm text-gray-700 select-none"
-                            >
-                              ปิด
-                            </label>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                              id="switch-status"
+                  <div className="mt-4 w-[100%]">
+                    <FormField
+                      control={form.control}
+                      name="address"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>ที่อยู่คลังสินค้า</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder="ที่อยู่คลังสินค้า / พิกัด หรือรายละเอียดเพิ่มเติม"
+                              {...field}
                             />
-                            <label
-                              htmlFor="switch-status"
-                              className="text-sm text-gray-700 select-none"
-                            >
-                              เปิด
-                            </label>
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <FormField
+                      control={form.control}
+                      name="contactName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>ผู้ดูแลคลัง</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="ชื่อผู้รับผิดชอบหลัก"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="contactPhone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>เบอร์ติดต่อ</FormLabel>
+                          <FormControl>
+                            <Input placeholder="เช่น 080 0000 000" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="contactEmail"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>อีเมลติดต่อ</FormLabel>
+                          <FormControl>
+                            <Input placeholder="เช่น DE1@ogga.com" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
                   <div className="w-full mt-5 space-y-5">
                     <div>
                       <h2 className="text-xl font-bold">
-                        สิทธิการอนุญาตสินค้า
+                        สิทธิ์การอนุญาตสินค้า
                       </h2>
                       <p className="text-sm text-muted-foreground mt-1">
                         ตั้งค่าสิทธิว่าจะสินค้าชิ้นนี้สามารถ ขาย, ให้ยืม หรือ
@@ -448,6 +513,28 @@ export const FormInventory: React.FC<FormInventoryProps> = (props) => {
                           />
                         </div>
 
+                        <div className="space-y-1">
+                          <div className="flex items-center justify-between">
+                            <h1 className="font-bold text-lg">ความคืบหน้า</h1>
+                            <span className="text-2xl font-bold">
+                              {percent}%
+                            </span>
+                          </div>
+
+                          <Progress
+                            value={percent}
+                            className="w-full h-3 rounded-full"
+                          />
+
+                          <div className="flex items-center justify-between mt-1 text-xs text-gray-500">
+                            <span>0</span>
+                            <span className="font-medium">
+                              {currentQty}/{targetQty} = ชิ้น
+                            </span>
+                            <span>{targetQty}</span>
+                          </div>
+                        </div>
+
                         <div className="rounded-lg border p-4 w-full space-y-4">
                           <div className="flex items-center justify-between">
                             <div className="flex flex-col">
@@ -566,47 +653,23 @@ export const FormInventory: React.FC<FormInventoryProps> = (props) => {
                   )}
                 </div>
               </div>
-
-              <div className="p-4">
-                <div className="flex items-center mb-2">
-                  <h2 className="text-lg font-bold mr-5">สินค้าในคลัง</h2>
-                  <div className="flex gap-2">
-                    <SelectorItemsModal
-                      items={products.filter(
-                        (item: { id: string }) => !!item.id
-                      )}
-                      selected={selectItemIds}
-                      onChange={handleChangeItems}
-                      customButton={
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-[30px] w-[110px] p-2 gap-2 border-amber-500"
-                        >
-                          <PlusCircleIcon />
-                          <span className="text-[12px]">เพิ่มสินค้า</span>
-                        </Button>
-                      }
-                    />
-                  </div>
-                </div>
-                <DataTable data={data?.products ?? []} columns={columns} />
-              </div>
             </form>
           </Form>
         </TabsContent>
         <TabsContent value="Settings">
           <Card className="p-4">
-            <span className="block font-bold my-4">Danger Zone</span>
+            <span className="block font-bold my-4">
+              พื้นที่อันตราย (Danger Zone)
+            </span>
 
-            <Card className="p-4 mb-4 border border-red-500 bg-red-100">
+            {/* <Card className="p-4 mb-4 border border-red-500 bg-red-100">
               <div className="flex items-center justify-between w-full">
                 <div className="flex flex-col">
                   <span className="font-semibold text-sm text-red-700">
-                    Deactivate Account
+                    ปิดการใช้งานคลังสินค้าชั่วคราว
                   </span>
                   <p className="text-xs text-red-600">
-                    Temporarily disable this user account
+                    ระงับการใช้งานคลังสินค้านี้ชั่วคราวโดยไม่ลบข้อมูล
                   </p>
                 </div>
                 <GlobalButton
@@ -617,20 +680,20 @@ export const FormInventory: React.FC<FormInventoryProps> = (props) => {
                   // onClick={() => handleDelete(params.id)}
                 />
               </div>
-            </Card>
+            </Card> */}
 
             <Card className="p-4 border border-red-500 bg-red-100">
               <div className="flex items-center justify-between w-full">
                 <div className="flex flex-col">
                   <span className="font-semibold text-sm text-red-700">
-                    Delete Account
+                    ลบคลังสินค้า
                   </span>
                   <p className="text-xs text-red-600">
-                    Permanently remove this user and all associated data
+                    ลบคลังสินค้าและข้อมูลทั้งหมดที่เกี่ยวข้องออกจากระบบอย่างถาวร
                   </p>
                 </div>
                 <GlobalButton
-                  label="Delete"
+                  label="ลบ"
                   variant="outline"
                   key="delete-btn"
                   className="max-w-[90px] px-3 py-1 text-xs rounded bg-red-600 text-white hover:bg-red-700"

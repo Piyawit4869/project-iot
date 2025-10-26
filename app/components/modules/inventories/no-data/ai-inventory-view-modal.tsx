@@ -9,7 +9,7 @@ import {
 import {
   AiInventoryFields,
   type AiInventoryFieldsState,
-} from "./AiCustomerFields";
+} from "./AiInventoryFields";
 
 type InventorySummaryData = {
   id?: string;

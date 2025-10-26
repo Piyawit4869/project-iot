@@ -18,7 +18,7 @@ import {
   useAllInventorysSummary,
   usePaginate,
 } from "~/api/client/inventories/useInventoryQuery";
-import { useInventoryColumnTable } from "./inventory-column-table";
+import { useInventoryColumnTable } from "./no-data/inventory-column-table";
 import {
   parseDateRangeParam,
   pickSearchParams,

@@ -11,13 +11,41 @@ type InventoryForm = InventoryCreateDTO & { id?: string };
 
 export const useFormInventorySetup = (slug: string) => {
   const fetch = useInventoryFetch(slug);
+
   const { inventory, isLoading } = fetch as {
     inventory?: {
       id?: string;
-      active?: boolean;
       name?: string;
+
+      hasCapacityLimit?: boolean;
+      enableLowStockAlert?: boolean;
+      lowStockThreshold?: number;
+      capacityThreshold?: number;
+
+      inventoryType?: string;
+      contactName?: string;
+      contactPhone?: string;
+      contactEmail?: string;
+
+      allowSell?: boolean;
+      allowBorrow?: boolean;
+      maxBorrowQty?: number;
+      allowRent?: boolean;
+      rentPrice?: number;
+
       description?: string;
+      address?: string;
+      company?: string;
+      branch?: string;
       capacity?: string;
+
+      productcapacity?: number;
+      stockQty?: number;
+      active?: boolean;
+      productIds?: string[];
+
+      targetQty?: number;
+      soldQtyThisPeriod?: number;
     };
     isLoading?: boolean;
   };
@@ -25,53 +53,118 @@ export const useFormInventorySetup = (slug: string) => {
   const form = useForm<InventoryForm>({
     resolver: zodResolver(InventoryCreateSchema) as Resolver<InventoryForm>,
     defaultValues: {
-      id: undefined,
+      id: "",
       name: "",
+
+      hasCapacityLimit: false,
+      enableLowStockAlert: false,
+      lowStockThreshold: 0,
+      capacityThreshold: 0,
+
+      // ✅ ใหม่
+      inventoryType: "",
+      contactName: "",
+      contactPhone: "",
+      contactEmail: "",
+
+      allowSell: false,
+      allowBorrow: false,
+      maxBorrowQty: 0,
+      allowRent: false,
+      rentPrice: 0,
+
       description: "",
-      productcapacity: undefined,
-      active: true,
+      address: "",
+      company: "",
+      branch: "",
       capacity: "",
-      stockQty: undefined,
+
+      productcapacity: 0,
+      stockQty: 0,
+      active: true,
+      productIds: [],
+
+      targetQty: 0,
+      soldQtyThisPeriod: 0,
     },
   });
 
   React.useEffect(() => {
     if (inventory) {
       form.reset({
-        id: inventory.id ?? undefined,
+        id: inventory.id ?? "",
         name: inventory.name ?? "",
+
+        hasCapacityLimit: inventory.hasCapacityLimit ?? false,
+        enableLowStockAlert: inventory.enableLowStockAlert ?? false,
+        lowStockThreshold: inventory.lowStockThreshold ?? 0,
+        capacityThreshold: inventory.capacityThreshold ?? 0,
+
+        inventoryType: inventory.inventoryType ?? "",
+        contactName: inventory.contactName ?? "",
+        contactPhone: inventory.contactPhone ?? "",
+        contactEmail: inventory.contactEmail ?? "",
+
+        allowSell: inventory.allowSell ?? false,
+        allowBorrow: inventory.allowBorrow ?? false,
+        maxBorrowQty: inventory.maxBorrowQty ?? 0,
+        allowRent: inventory.allowRent ?? false,
+        rentPrice: inventory.rentPrice ?? 0,
+
         description: inventory.description ?? "",
-        productcapacity:
-          typeof (inventory as any)?.productcapacity === "number"
-            ? (inventory as any).productcapacity
-            : (inventory as any)?.productcapacity
-            ? Number((inventory as any).productcapacity)
-            : undefined,
-        active: inventory.active ?? true,
+        address: inventory.address ?? "",
+        company: inventory.company ?? "",
+        branch: inventory.branch ?? "",
         capacity: inventory.capacity ?? "",
-        stockQty:
-          typeof (inventory as any)?.stockQty === "number"
-            ? (inventory as any).stockQty
-            : (inventory as any)?.stockQty
-            ? Number((inventory as any).stockQty)
-            : undefined,
+
+        productcapacity: inventory.productcapacity ?? 0,
+        stockQty: inventory.stockQty ?? 0,
+        active: inventory.active ?? true,
+        productIds: inventory.productIds ?? [],
+
+        targetQty: inventory.targetQty ?? 0,
+        soldQtyThisPeriod: inventory.soldQtyThisPeriod ?? 0,
       });
     } else {
       form.reset({
-        id: undefined,
+        id: "",
         name: "",
+
+        hasCapacityLimit: false,
+        enableLowStockAlert: false,
+        lowStockThreshold: 0,
+        capacityThreshold: 0,
+
+        inventoryType: "",
+        contactName: "",
+        contactPhone: "",
+        contactEmail: "",
+
+        allowSell: false,
+        allowBorrow: false,
+        maxBorrowQty: 0,
+        allowRent: false,
+        rentPrice: 0,
+
         description: "",
-        productcapacity: undefined,
-        active: true,
+        address: "",
+        company: "",
+        branch: "",
         capacity: "",
-        stockQty: undefined,
+
+        productcapacity: 0,
+        stockQty: 0,
+        active: true,
+        productIds: [],
+
+        targetQty: 0,
+        soldQtyThisPeriod: 0,
       });
     }
   }, [inventory, form]);
 
   const { isSubmitting, errors } = form.formState;
   const ready = !isLoading;
-
   const isEdit = Boolean(inventory?.id || form.getValues("id"));
 
   const buildPayload = (): InventoryCreateDTO & { id?: string } => {

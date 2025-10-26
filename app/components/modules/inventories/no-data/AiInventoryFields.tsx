@@ -198,7 +198,7 @@ export function AiInventoryFields({
         ))}
       </div>
 
-      <div className="flex justify-between items-center gap-2 mt-5 min-w-0">
+      {/* <div className="flex justify-between items-center gap-2 mt-5 min-w-0">
         <GlobalButton
           key="sync-ai"
           type="button"
@@ -221,7 +221,7 @@ export function AiInventoryFields({
             }
           />
         )}
-      </div>
+      </div> */}
     </div>
   );
 }
