@@ -1,10 +1,6 @@
 import * as React from "react";
 import { Button } from "~/components/ui/button";
-import {
-  ArrowRight,
-  //   Plus,
-  //  Mic, AudioWaveform
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Textarea } from "~/components/ui/textarea";
 
 interface HeroSearchProps {
@@ -24,8 +20,8 @@ export default function HeroSearch(props: HeroSearchProps) {
   };
 
   return (
-    <div className="w-fullflex items-center justify-center">
-      <div className="w-full max-h-[300px]  max-w-5xl mx-auto">
+    <div className="w-full flex items-center justify-center">
+      <div className="w-full h-full  max-w-5xl mx-auto">
         {/* Search Bar */}
         <div className="w-full max-w-3xl mt-2">
           {/* Composer Card */}
