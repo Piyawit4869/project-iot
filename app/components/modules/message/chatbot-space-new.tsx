@@ -91,7 +91,8 @@ export default function ChatbotSpaceNew({
             />
           )}
         </div>
-        {customerInfoOpen && (
+
+        {customerInfoOpen && !isMobile && (
           <div className="w-96">
             {selectedRoom && selectedRoom?.id && selectedRoom?.customerId ? (
               <ChatCustomerInfo

@@ -64,11 +64,7 @@ export const ChatMessageRender = ({
             </>
           )}
 
-          <Drawer
-            direction="right"
-            open={isMobile ? drawer || customerInfoOpen : drawer}
-            onClose={handleCloseDrawer}
-          >
+          <Drawer direction="right" onClose={handleCloseDrawer}>
             <DrawerTrigger asChild>
               <Button
                 variant="ghost"
