@@ -4,6 +4,7 @@ import {
   Building2,
   FileDown,
   FileUp,
+  SlidersVertical,
 } from "lucide-react";
 import React from "react";
 
@@ -98,7 +99,7 @@ export default function SettingLayout({
               </TabsTrigger>
             </Link>
 
-            {/* <Link href="/organization/setting-organization/permission">
+            {/* <Link to="/organization/setting-organization/permission">
               <TabsTrigger value="permission">
                 การจัดการบทบาท
                 <SlidersVertical className="w-4 h-4 mr-2" />

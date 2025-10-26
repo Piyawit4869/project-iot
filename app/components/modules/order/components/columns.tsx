@@ -4,7 +4,11 @@ import { Eye, Trash } from "lucide-react";
 import { Link } from "react-router";
 import { toast } from "sonner";
 import { useDeleteOrder } from "~/api/client/order/useGetOrder";
-import { formatDateTH, formatNumber } from "~/components/shared/global-format";
+import {
+  formatDateAndTime,
+  formatDateTH,
+  formatNumber,
+} from "~/components/shared/global-format";
 import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { Button } from "~/components/ui/button";
@@ -87,7 +91,7 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
       header: "วันที่ออกเอกสาร",
       cell: (info) => {
         const date = info.getValue() as string;
-        return <span>{formatDateTH(date)}</span>;
+        return <span>{formatDateAndTime(date)}</span>;
       },
     },
     {
@@ -140,12 +144,12 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
                 <Eye />
               </Button>
             </a>
-            <Button
+            {/* <Button
               className="text-sm bg-[#FF7062]"
               onClick={() => onDelete(row.original.id)}
             >
               <Trash />
-            </Button>
+            </Button> */}
           </>
         );
       },

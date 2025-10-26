@@ -222,7 +222,20 @@ export const useProductColumnTable = (): ColumnDef<ProductColumn>[] => {
     {
       accessorKey: "createdBy",
       header: "ผู้สร้าง",
-      cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
+      cell: (info) => {
+        const id = info.row.original.createdById;
+        const name = (info.getValue() as string) || "-";
+
+        return id ? (
+          <Link to={`/users/${id}`}>
+            <span className="text-muted-foreground hover:text-blue-400 hover:underline">
+              {name}
+            </span>
+          </Link>
+        ) : (
+          <span className="text-muted-foreground">{name}</span>
+        );
+      },
     },
     {
       accessorKey: "updatedAt",

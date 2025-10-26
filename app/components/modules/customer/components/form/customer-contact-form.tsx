@@ -45,11 +45,30 @@ export const FormCustomerContact: React.FC<CustomerFormCreateProps> = ({
       ) : (
         <div className="space-y-4 px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormTextRow
+            <FormField
+              control={form.control}
+              name="organizationDetails.businessName"
+              render={({ field }) => (
+                <FormItem>
+                  <RequiredLabel>ชื่อบริษัท</RequiredLabel>
+                  <FormControl className="w-full">
+                    <Input
+                      value={field.value || ""}
+                      placeholder="กรอกเบอร์โทรสำนักงาน/บริษัท"
+                      onChange={onlyNumber(field)}
+                      maxLength={10}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* <FormTextRow
               control={form.control}
               name="organizationDetails.businessName"
               label="ชื่อบริษัท"
-            />
+            /> */}
 
             <FormTextRow
               control={form.control}

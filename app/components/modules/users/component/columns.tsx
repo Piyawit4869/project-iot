@@ -12,7 +12,8 @@ import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import type { UserColumn } from "~/types/user/type-user";
 import { statusMap } from "~/types/user/init-data";
 import {
-  formatDateFull,
+  formatDateAndTime,
+  formatDateTH,
   formatPhoneNumber,
 } from "~/components/shared/global-format";
 
@@ -81,7 +82,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         minSize: 600,
 
         cell: (info) => (
-          <span className="text-sm text-muted-foreground">
+          <span className="text-muted-foreground">
             {(info.getValue() as string) || "-"}
           </span>
         ),
@@ -106,7 +107,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
 
           const current = statusMap[status] || {
             label: status || "-",
-            className: "text-xs",
+            // className: "text-xs",
             icon: null,
           };
 
@@ -160,7 +161,35 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         header: "วัน / เดือน / ปีเกิด",
         cell: (info) => {
           const value = info.row.original.profile?.birthDate as string;
-          return <span className="">{formatDateFull(value)}</span>;
+          return <span className="">{formatDateTH(value)}</span>;
+        },
+      },
+
+      {
+        accessorKey: "createdAt",
+        header: "วันที่สร้าง",
+        enableSorting: true,
+        cell: (info) => (
+          <span>{formatDateAndTime(info.getValue() as string)}</span>
+        ),
+      },
+
+      {
+        accessorKey: "createdBy",
+        header: "ผู้สร้าง",
+        cell: (info) => {
+          const id = info.row.original.createdById;
+          const name = (info.getValue() as string) || "-";
+
+          return id ? (
+            <Link to={`/users/${id}`}>
+              <span className="text-muted-foreground hover:text-blue-400 hover:underline">
+                {name}
+              </span>
+            </Link>
+          ) : (
+            <span className="text-muted-foreground">{name}</span>
+          );
         },
       },
       {
@@ -168,7 +197,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         header: "วันที่แก้ไข",
         cell: (info) => {
           const value = info.getValue() as string;
-          return <span className="">{formatDateFull(value)}</span>;
+          return <span className="">{formatDateAndTime(value)}</span>;
         },
       },
       {
@@ -206,7 +235,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
                 </Button>
               </Link>
 
-              <div className="w-9">
+              {/* <div className="w-9">
                 <GlobalButton
                   label=""
                   icon={<Trash className="w-4 h-4 text-white" />}
@@ -215,7 +244,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
                   aria-label="ลบ"
                   disabled
                 />
-              </div>
+              </div> */}
             </div>
           );
         },

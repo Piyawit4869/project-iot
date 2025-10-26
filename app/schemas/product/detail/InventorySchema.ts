@@ -16,12 +16,20 @@ const InventoryCreateSchema = z.object({
   lowStockThreshold: z.number().optional(),
   capacityThreshold: z.number().optional(),
 
-  // เพิ่มมาใหม่
-  inventoryType: z.string().optional(),
+  inventoryType: z
+    .enum([
+      "main_warehouse",
+      "sub_warehouse",
+      "deposit_warehouse",
+      "distribution_warehouse",
+      "borrow_warehouse",
+      "rent_warehouse",
+      "damaged_warehouse",
+    ])
+    .optional(),
   contactName: z.string().optional(),
   contactPhone: z.string().optional(),
   contactEmail: z.string().optional(),
-  // -------------
 
   allowSell: z.boolean().optional(),
   allowBorrow: z.boolean().optional(),
@@ -56,6 +64,14 @@ const InventoryCreateSchema = z.object({
     .optional(),
 
   targetQty: z
+    .preprocess((val) => {
+      if (val === "" || val === null || val === undefined) return undefined;
+      const num = Number(val);
+      return isNaN(num) ? undefined : num;
+    }, z.number().nonnegative("เป้าหมายต้องไม่ติดลบ"))
+    .optional(),
+
+  monthlyTarget: z
     .preprocess((val) => {
       if (val === "" || val === null || val === undefined) return undefined;
       const num = Number(val);

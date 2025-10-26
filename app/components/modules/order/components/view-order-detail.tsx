@@ -57,7 +57,7 @@ export const ViewOrderDetail = ({ order }: OrderFormEditProps) => {
           value={
             dataOrder?.notationType
               ? notationType.find(
-                  (item) => item.value === dataOrder.notationType
+                  (item) => item.value === dataOrder?.notationType
                 )?.label || "-"
               : "-"
           }
@@ -67,13 +67,13 @@ export const ViewOrderDetail = ({ order }: OrderFormEditProps) => {
         <InfoItem
           label="วันที่สั่งซื้อออเดอร์"
           value={
-            dataOrder?.startDate ? formatDateFull(dataOrder.startDate) : "-"
+            dataOrder?.startDate ? formatDateFull(dataOrder?.startDate) : "-"
           }
         />
         <InfoItem
           label="วันที่หมดอายุ"
           value={
-            dataOrder?.expireDate ? formatDateFull(dataOrder.expireDate) : "-"
+            dataOrder?.expireDate ? formatDateFull(dataOrder?.expireDate) : "-"
           }
         />
       </div>
@@ -87,21 +87,21 @@ export const ViewOrderDetail = ({ order }: OrderFormEditProps) => {
           <div className="flex flex-row gap-4">
             <GlobalImage
               src={
-                customerData.imageUrl ||
-                `https://api.dicebear.com/9.x/initials/svg?seed=${customerData.firstName}`
+                customerData?.imageUrl ||
+                `https://api.dicebear.com/9.x/initials/svg?seed=${customerData?.firstName}`
               }
               className="w-13 h-13 rounded-lg"
-              alt={`${customerData.prefix ?? ""} ${
-                customerData.firstName ?? ""
-              } ${customerData.lastName ?? ""}`}
+              alt={`${customerData?.prefix ?? ""} ${
+                customerData?.firstName ?? ""
+              } ${customerData?.lastName ?? ""}`}
             />
             <InfoItem
               label="ชื่อลูกค้า"
               value={
                 customerData
-                  ? `${customerData.prefix ?? ""} ${
-                      customerData.firstName ?? ""
-                    } ${customerData.lastName ?? ""}`.trim()
+                  ? `${customerData?.prefix ?? ""} ${
+                      customerData?.firstName ?? ""
+                    } ${customerData?.lastName ?? ""}`.trim()
                   : "-"
               }
             />

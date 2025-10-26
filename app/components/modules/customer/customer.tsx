@@ -113,7 +113,7 @@ export default function Customer() {
 
       <Tabs
         defaultValue="allCustomer"
-        className={cn("block", isMobile && "hidden")}
+        // className={cn("block", isMobile && "hidden")}
       >
         <TabsList>
           <TabsTrigger

@@ -230,10 +230,17 @@ export function AiGetDataFromChat({
         <div className="space-y-3  ">
           <div className="space-y-2">
             {infoItems.map((item, index) => (
-              <div key={index} className="flex flex-row flex-wrap gap-1 pb-1">
-                <span className="flex mr-2 w-4 h-4">{item.icon}</span>
-                <span className="font-bold">{item.label} :</span>
-                <span className="pl-4 text-[#71717A]">
+              <div
+                key={index}
+                className="flex items-center flex-wrap gap-2 py-1"
+              >
+                <span className="flex items-center justify-center w-5 h-5 text-muted-foreground">
+                  {item.icon}
+                </span>
+                <span className="text-md font-semibold text-foreground min-w-[120px]">
+                  {item.label}
+                </span>
+                <span className="text-md text-muted-foreground flex-1">
                   {item.value || "ยังไม่มีข้อมูล"}
                 </span>
               </div>

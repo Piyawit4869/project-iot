@@ -21,7 +21,9 @@ import {
 3. add data in tagsKey*/
 
 const badgeVariants = {
-  default: "border-transparent bg-black text-white",
+  default:
+    "border-[#90CAF9] bg-[#E3F2FD] text-[#1976D2] dark:bg-[#0D47A1] dark:text-[#BBDEFB]",
+
   vip: "border-transparent bg-[#FFDB00] text-black dark:text-[#b18b09] dark:bg-[#E0E0DB]",
   new: "border-[#51C0FF] bg-[#EDF9FF] text-[#3ea9e6] dark:text-[#558388] dark:bg-[#BDBBBB]",
   regular:
@@ -40,7 +42,7 @@ const badgeVariants = {
     "border-[#C54009] bg-[#FFF0F0] text-[#C54009]  dark:text-[#B33333] dark:bg-[#BDBBBB]",
 
   member:
-    "border-[#00BFA5] bg-[[#EDF9FF] text-[#00BFA5]  dark:text-[#167E64] dark:bg-[#BDBBBB]",
+    "border-[#00BFA5] bg-[#EDF9FF] text-[#00BFA5] dark:text-[#167E64] dark:bg-[#BDBBBB]",
   walkIn:
     "border-[#525252] bg-[#F6F6F6] text-[#525252] dark:text-[#000000] dark:bg-[#BDBBBB]",
 };
@@ -131,7 +133,7 @@ interface GlobalTagsBadgeProps {
 export function GlobalTagsBadge({
   value,
   onClick,
-  fontSize = 14,
+  fontSize = 12,
   paddingX = 3,
 }: GlobalTagsBadgeProps) {
   const status = tagsKey[value as TagsKey];
