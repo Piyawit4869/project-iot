@@ -13,6 +13,8 @@ import {
 import { DateISOToDisplayDate } from "~/utils/date-format";
 import GlobalButton from "~/components/shared/global-button";
 import { GetNoteFormAI } from "./modal-get-noteAi";
+import { GlobalTooltip } from "~/components/shared/global-tooltip";
+import { AiSparkleIcon } from "~/components/shared/icons/ai-sparkle-icon";
 
 interface TNote {
   id: string;
@@ -147,24 +149,27 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
 
   return (
     <div>
-      <div className="mt-4 flex flex-col h-[calc(100vh-420px)]">
+      <div className="mt-4 flex flex-col h-[calc(100vh-320px)]">
         <div className="flex justify-between items-center">
-          <h2 className="text-base font-semibold">โน้ต</h2>
+          <div className="flex flex-row gap-3">
+            <h2 className="text-base font-semibold">โน้ต</h2>
 
-          <div className="flex items-center gap-2">
+            <GlobalTooltip content="สรุปโน้ตด้วย AI จากข้อความที่บันทึกไว้">
+              <div
+                className="animate-[pulse_2s_ease-in-out_infinite]"
+                onClick={() => setOpenAiNote(true)}
+              >
+                <AiSparkleIcon />
+              </div>
+            </GlobalTooltip>
+          </div>
+
+          <GlobalTooltip content="เพิ่มโน้ตสำหรับบันทึกข้อความไว้">
             <PlusIcon
               onClick={() => handleOnOpenModal()}
               className="cursor-pointer"
             />
-            <div className="w-20">
-              <GlobalButton
-                label="สรุปโน้ต"
-                variant="outline"
-                className="w-full"
-                onClick={() => setOpenAiNote(true)}
-              />
-            </div>
-          </div>
+          </GlobalTooltip>
         </div>
 
         <div className="mt-4 flex-1 overflow-auto space-y-3 pb-40">
