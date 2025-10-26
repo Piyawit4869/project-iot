@@ -167,7 +167,7 @@ const InventoryViewPage = () => {
                         <span className="text-sm font-medium">
                           จำนวนสูงสุดที่ยืมได้ (ชิ้น)
                         </span>
-                        <div className="mt-1 rounded-md border bg-muted/30 px-3 py-2 text-sm text-slate-700">
+                        <div className="mt-1 bg-muted/30 px-3 py-2 text-sm text-slate-700">
                           {data?.maxBorrowQty ?? "0"}
                         </div>
                       </div>
@@ -183,7 +183,7 @@ const InventoryViewPage = () => {
                         <span className="text-sm font-medium">
                           ราคาค่าเช่า (บาท)
                         </span>
-                        <div className="mt-1 rounded-md border bg-muted/30 px-3 py-2 text-sm text-slate-700">
+                        <div className="mt-1 bg-muted/30 px-3 py-2 text-sm text-slate-700">
                           {data?.rentPrice ?? "0"}
                         </div>
                       </div>
@@ -234,7 +234,12 @@ const InventoryViewPage = () => {
                     </div>
 
                     <div className="space-y-1">
-                      <div className="flex items-center justify-between">
+                      <div className="w-full rounded-md bg-muted/60 px-4 py-2 text-sm font-medium">
+                        ขายแล้ว {currentQty}/{targetQty} ชิ้น ({percent}%)
+                        จากเป้าหมาย
+                      </div>
+
+                      <div className="flex items-center justify-between mt-2">
                         <h1 className="font-bold text-lg">ความคืบหน้า</h1>
                         <span className="text-2xl font-bold">{percent}%</span>
                       </div>
@@ -250,6 +255,18 @@ const InventoryViewPage = () => {
                           {currentQty}/{targetQty} = ชิ้น
                         </span>
                         <span>{targetQty}</span>
+                      </div>
+
+                      <div className="rounded-lg border p-4 w-full mt-4 space-y-3">
+                        <h2 className="font-bold">ตั้งค่าเป้าหมาย</h2>
+                        <div className="max-w-[320px]">
+                          <span className="text-sm font-medium">
+                            เป้าหมายใหม่ (ชิ้น)
+                          </span>
+                          <div className="mt-1 bg-muted/30 px-3 py-2 text-sm text-slate-700">
+                            {targetQty ?? 0}
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -276,7 +293,7 @@ const InventoryViewPage = () => {
                           <span className="text-sm font-medium">
                             เกณฑ์แจ้งเตือนความจุคลัง (ชิ้น)
                           </span>
-                          <div className="mt-1 rounded-md border bg-muted/30 px-3 py-2 text-sm text-slate-700">
+                          <div className="mt-1 bg-muted/30 px-3 py-2 text-sm text-slate-700">
                             {data?.capacityThreshold ?? "0"}
                           </div>
                         </div>
@@ -305,7 +322,7 @@ const InventoryViewPage = () => {
                           <span className="text-sm font-medium">
                             เกณฑ์แจ้งเตือนสินค้าคงเหลือต่ำ (ชิ้น)
                           </span>
-                          <div className="mt-1 rounded-md border bg-muted/30 px-3 py-2 text-sm text-slate-700">
+                          <div className="mt-1 bg-muted/30 px-3 py-2 text-sm text-slate-700">
                             {data?.lowStockThreshold ?? "0"}
                           </div>
                         </div>

@@ -1,10 +1,17 @@
 export const inventoryTypeList = [
-  { value: "main", label: "คลังหลัก (Main Warehouse)" },
-  { value: "sub", label: "คลังย่อย (Sub Warehouse)" },
-  { value: "deposit", label: "คลังฝาก (Deposit Warehouse)" },
-  { value: "distribution", label: "คลังจำหน่าย (Distribution Warehouse)" },
+  { value: "main_warehouse", label: "คลังหลัก (Main Warehouse)" },
+  { value: "sub_warehouse", label: "คลังย่อย (Sub Warehouse)" },
+  { value: "deposit_warehouse", label: "คลังฝาก (Deposit Warehouse)" },
+  {
+    value: "distribution_warehouse",
+    label: "คลังจำหน่าย (Distribution Warehouse)",
+  },
+  { value: "borrow_warehouse", label: "คลังยืม (Borrow Warehouse)" },
+  { value: "rent_warehouse", label: "คลังเช่า (Rent Warehouse)" },
+  { value: "damaged_warehouse", label: "คลังของเสียหาย (Damaged Warehouse)" },
 ];
 
+// mockdata
 export const companyList = [
   { value: "aeroventis", label: "Aeroventis Dynamics Co., Ltd." },
   { value: "neurovista", label: "NeuroVista Labs Co., Ltd." },

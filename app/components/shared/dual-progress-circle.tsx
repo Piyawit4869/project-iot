@@ -187,7 +187,7 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
                   y={y}
                   fill="currentColor"
                   className="text-black dark:text-white"
-                  fontSize={14}
+                  fontSize={12}
                   textAnchor={x > cx ? "start" : "end"}
                   dominantBaseline="central"
                 >
@@ -210,7 +210,7 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
               verticalAlign="bottom"
               content={() => {
                 const renderGroup = (title: string, items: any[]) => (
-                  <div className=" text-[16px]">
+                  <div className=" text-[14px]">
                     <strong>{title}</strong>
                     <div className="flex flex-wrap gap-x-5 gap-y-2">
                       {items.map((entry: any) => {

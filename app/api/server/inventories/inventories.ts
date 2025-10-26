@@ -95,8 +95,12 @@ export const fetchInventoryAiById = async (id: string) => {
 
 export const fetchGetAnalyzeInventory = async (id: string) => {
   try {
+    // const res = await ApiConfig.get(
+    //   `/crud/inventories/${id}/summary-chat-message
+    //    `
+    // );
     const res = await ApiConfig.get(
-      `/crud/inventories/${id}/summary-chat-message
+      `
        `
     );
 

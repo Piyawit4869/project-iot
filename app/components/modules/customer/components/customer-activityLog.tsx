@@ -44,7 +44,7 @@ export const ViewCustomerActivityLog: React.FC<CustomerFormCreateProps> = ({
       ) : (
         <>
           <div className="flex justify-center">
-            <div className="rounded-full w-15 text-sm p-1 mb-3 text-center   bg-neutral-50  text-neutral-600">
+            <div className="rounded-full w-15 text-md p-1 mb-3 text-center   bg-neutral-50  text-neutral-600">
               วันนี้
             </div>
           </div>

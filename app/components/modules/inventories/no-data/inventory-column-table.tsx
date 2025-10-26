@@ -112,7 +112,7 @@ export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
         accessorKey: "description",
         header: "คำอธิบาย",
         cell: (info) => (
-          <span className="line-clamp-2 text-sm text-gray-700">
+          <span className="line-clamp-2 ">
             {(info.getValue() as string) || "-"}
           </span>
         ),
@@ -185,7 +185,7 @@ export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
               </Button>
             </Link>
 
-            <div className="w-9">
+            {/* <div className="w-9">
               <GlobalButton
                 label=""
                 icon={<Trash className="w-4 h-4 text-white" />}
@@ -193,7 +193,7 @@ export const useInventoryColumnTable = (): ColumnDef<InventoryColumn>[] => {
                 className="h-10 w-10 p-0 bg-[#FF7062] text-white hover:bg-[#E8594B] hover:text-white transition-colors"
                 aria-label="ลบสินค้า"
               />
-            </div>
+            </div> */}
           </div>
         ),
       },

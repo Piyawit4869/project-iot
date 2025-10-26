@@ -39,13 +39,14 @@ export const useFormInventorySetup = (slug: string) => {
       branch?: string;
       capacity?: string;
 
-      productcapacity?: number;
-      stockQty?: number;
+      // productcapacity?: number;
+      // stockQty?: number;
       active?: boolean;
       productIds?: string[];
 
-      targetQty?: number;
-      soldQtyThisPeriod?: number;
+      // targetQty?: number;
+      // soldQtyThisPeriod?: number;
+      monthlyTarget?: number;
     };
     isLoading?: boolean;
   };
@@ -61,8 +62,7 @@ export const useFormInventorySetup = (slug: string) => {
       lowStockThreshold: 0,
       capacityThreshold: 0,
 
-      // ✅ ใหม่
-      inventoryType: "",
+      inventoryType: "main_warehouse",
       contactName: "",
       contactPhone: "",
       contactEmail: "",
@@ -79,13 +79,14 @@ export const useFormInventorySetup = (slug: string) => {
       branch: "",
       capacity: "",
 
-      productcapacity: 0,
-      stockQty: 0,
+      // productcapacity: 0,
+      // stockQty: 0,
       active: true,
       productIds: [],
 
-      targetQty: 0,
-      soldQtyThisPeriod: 0,
+      // targetQty: 0,
+      // soldQtyThisPeriod: 0,
+      monthlyTarget: 0,
     },
   });
 
@@ -100,7 +101,9 @@ export const useFormInventorySetup = (slug: string) => {
         lowStockThreshold: inventory.lowStockThreshold ?? 0,
         capacityThreshold: inventory.capacityThreshold ?? 0,
 
-        inventoryType: inventory.inventoryType ?? "",
+        inventoryType:
+          (inventory.inventoryType as InventoryForm["inventoryType"]) ??
+          "main_warehouse",
         contactName: inventory.contactName ?? "",
         contactPhone: inventory.contactPhone ?? "",
         contactEmail: inventory.contactEmail ?? "",
@@ -117,13 +120,14 @@ export const useFormInventorySetup = (slug: string) => {
         branch: inventory.branch ?? "",
         capacity: inventory.capacity ?? "",
 
-        productcapacity: inventory.productcapacity ?? 0,
-        stockQty: inventory.stockQty ?? 0,
+        // productcapacity: inventory.productcapacity ?? 0,
+        // stockQty: inventory.stockQty ?? 0,
         active: inventory.active ?? true,
         productIds: inventory.productIds ?? [],
 
-        targetQty: inventory.targetQty ?? 0,
-        soldQtyThisPeriod: inventory.soldQtyThisPeriod ?? 0,
+        // targetQty: inventory.targetQty ?? 0,
+        // soldQtyThisPeriod: inventory.soldQtyThisPeriod ?? 0,
+        monthlyTarget: inventory.monthlyTarget ?? 0,
       });
     } else {
       form.reset({
@@ -135,7 +139,7 @@ export const useFormInventorySetup = (slug: string) => {
         lowStockThreshold: 0,
         capacityThreshold: 0,
 
-        inventoryType: "",
+        inventoryType: "main_warehouse",
         contactName: "",
         contactPhone: "",
         contactEmail: "",
@@ -152,13 +156,14 @@ export const useFormInventorySetup = (slug: string) => {
         branch: "",
         capacity: "",
 
-        productcapacity: 0,
-        stockQty: 0,
+        // productcapacity: 0,
+        // stockQty: 0,
         active: true,
         productIds: [],
 
-        targetQty: 0,
-        soldQtyThisPeriod: 0,
+        // targetQty: 0,
+        // soldQtyThisPeriod: 0,
+        monthlyTarget: 0,
       });
     }
   }, [inventory, form]);

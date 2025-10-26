@@ -40,14 +40,14 @@ const InventoryCreateContainer = () => {
     });
   };
 
-  const handleCreate = async () => {
-    const base = form.getValues();
-    const payload = {
-      ...base,
-      productIds: inventoryProducts.map((p: any) => p.id),
-    };
-    await onSubmit.create(payload);
-  };
+  // const handleCreate = async () => {
+  //   const base = form.getValues();
+  //   const payload = {
+  //     ...base,
+  //     productIds: inventoryProducts.map((p: any) => p.id),
+  //   };
+  //   await onSubmit.create(payload);
+  // };
 
   return (
     <div className="flex flex-1 flex-col gap-4">
@@ -63,15 +63,16 @@ const InventoryCreateContainer = () => {
           backpath="/inventory"
           buttons={[
             <GlobalButton
-              key="create"
+              key="create button"
               label={
                 <>
                   <Save className="mr-2" /> สร้าง
                 </>
               }
-              type="button"
+              type="submit"
+              form="inventory"
               loading={isSubmitting}
-              onClick={handleCreate}
+              // onClick={handleCreate}
             />,
             // <GlobalButton
             //   label="ยกเลิก"
