@@ -177,13 +177,12 @@ export default function ChatlistSidebar({
                   </button>
                 </PopoverTrigger>
 
-                <input
-                  type="text"
-                  placeholder="ค้นหา"
-                  value={search}
-                  className="border  rounded-md px-3 py-1 text-sm bg-background w-1/2 transition-all duration-200 focus:outline-none focus:ring-0 focus:border-gray-300"
+                <div
+                  className="text-gray-400 border h-[30px] rounded-md px-3 py-1 text-sm bg-background w-1/2 transition-all duration-200 focus:outline-none focus:ring-0 focus:border-gray-300"
                   onClick={() => setInputOpen(true)}
-                />
+                >
+                  ค้นหา
+                </div>
               </div>
             )}
           </div>

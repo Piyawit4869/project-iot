@@ -50,6 +50,7 @@ export type OrderType = {
   customer: Customer;
   orderDetails?: {
     products: OrderItem[];
+    createdAt: string;
   };
 };
 
@@ -141,7 +142,7 @@ export const OrderFilterFields: FilterField[] = [
   { id: "docNo", label: "เลขที่", kind: "text", showIn: "main" },
   // { id: "docName", label: "ชื่อออเดอร์", kind: "text", showIn: "main" },
   // { id: "name", label: "ชื่อลูกค้า", kind: "text", showIn: "main" },
-  { id: "customer.name", label: "ชื่อลูกค้า", kind: "text", showIn: "main" },
+  { id: "name", label: "ชื่อลูกค้า", kind: "text", showIn: "main" },
   // { id: "profit", label: "กำไรโดยประมาณ", kind: "number", showIn: "main" },
   { id: "total", label: "ยอดรวม", kind: "number", showIn: "main" },
   {

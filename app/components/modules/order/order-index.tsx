@@ -1,5 +1,3 @@
-"use client";
-
 import { FileDown, FileUp, Plus } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { useAllOrderSummary } from "~/api/client/order/useGetOrder";
@@ -14,7 +12,6 @@ import { OrderFilterFields, TabIndexTableOrder } from "~/schemas/order/type";
 import { useOrderViewModel } from "./viewmodels/useOrderViewModel";
 import { useOrderColumns } from "./components/columns";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
-import React from "react";
 import { pickSearchParams } from "../customer/utils/search-params";
 
 export default function OrdersIndex() {

@@ -278,7 +278,7 @@ export const TabPrice: React.FC<FormProductProps> = ({
                   key={fieldItem.id}
                   className="flex flex-row gap-3 items-center"
                 >
-                  {isEdit ?? isCreate ? (
+                  {isEdit || isCreate ? (
                     <>
                       <FormField
                         control={form.control}
@@ -337,40 +337,6 @@ export const TabPrice: React.FC<FormProductProps> = ({
                             )
                           : "ไม่มีส่วนลด"}
                       </span>
-                      <Dialog
-                        onOpenChange={(open) => {
-                          if (!open) {
-                            setProductQuantity(0);
-                            setPrice(0);
-                            setDiscountPerItem(0);
-                            setTotalDiscount(0);
-                            setFinalPricePerItem(0);
-                            setFinalTotalPrice(0);
-                          }
-                        }}
-                      >
-                        <DialogTrigger asChild>
-                          <Button className="w-50" variant="secondary">
-                            <Calculator /> คำนวณส่วนลด
-                          </Button>
-                        </DialogTrigger>
-
-                        <ModalCalculate
-                          quantity={productQuantity}
-                          setQuantity={setProductQuantity}
-                          price={price}
-                          setPrice={setPrice}
-                          discountPerItem={discountPerItem}
-                          setDiscountPerItem={setDiscountPerItem}
-                          totalDiscount={totalDiscount}
-                          setTotalDiscount={setTotalDiscount}
-                          finalPricePerItem={finalPricePerItem}
-                          setFinalPricePerItem={setFinalPricePerItem}
-                          finalTotalPrice={finalTotalPrice}
-                          setFinalTotalPrice={setFinalTotalPrice}
-                          discountRules={discountRules}
-                        />
-                      </Dialog>
                     </>
                   )}
                 </div>
@@ -381,15 +347,52 @@ export const TabPrice: React.FC<FormProductProps> = ({
                 </span>
               )}
 
-          {isEdit && (
-            <Button
-              type="button"
-              className="w-50 bg-white hover:bg-gray-200 border text-black flex items-center justify-center gap-2"
-              onClick={() => append({ quantity: 0, discount: 0 })}
+          <div className="flex flex-row gap-2">
+            {isEdit && (
+              <Button
+                type="button"
+                className="w-50 bg-white hover:bg-gray-200 border text-black flex items-center justify-center gap-2"
+                onClick={() => append({ quantity: 0, discount: 0 })}
+              >
+                <CircleFadingPlus /> เพิ่มจำนวนส่วนลดสินค้า
+              </Button>
+            )}
+
+            <Dialog
+              onOpenChange={(open) => {
+                if (!open) {
+                  setProductQuantity(0);
+                  setPrice(0);
+                  setDiscountPerItem(0);
+                  setTotalDiscount(0);
+                  setFinalPricePerItem(0);
+                  setFinalTotalPrice(0);
+                }
+              }}
             >
-              <CircleFadingPlus /> เพิ่มจำนวนส่วนลดสินค้า
-            </Button>
-          )}
+              <DialogTrigger asChild>
+                <Button className="w-50" variant="secondary">
+                  <Calculator /> คำนวณส่วนลด
+                </Button>
+              </DialogTrigger>
+
+              <ModalCalculate
+                quantity={productQuantity}
+                setQuantity={setProductQuantity}
+                price={price}
+                setPrice={setPrice}
+                discountPerItem={discountPerItem}
+                setDiscountPerItem={setDiscountPerItem}
+                totalDiscount={totalDiscount}
+                setTotalDiscount={setTotalDiscount}
+                finalPricePerItem={finalPricePerItem}
+                setFinalPricePerItem={setFinalPricePerItem}
+                finalTotalPrice={finalTotalPrice}
+                setFinalTotalPrice={setFinalTotalPrice}
+                discountRules={discountRules}
+              />
+            </Dialog>
+          </div>
         </div>
       </div>
     </>

@@ -627,9 +627,18 @@ export default function ChatCustomerInfo({
                     </h2>
                   </>
                 ) : (
-                  <h2 className="font-semibold text-lg mr-auto">
-                    {currentCustomer.profile?.lineName || "ไม่ทราบชื่อ"}
-                  </h2>
+                  <div className="flex flex-row gap-2 items-center">
+                    <h2 className="font-semibold text-lg mr-auto">
+                      {currentCustomer.profile?.lineName || "ไม่ทราบชื่อ"}
+                    </h2>
+
+                    <UserPen
+                      size={18}
+                      color="#09a799"
+                      className="cursor-pointer"
+                      onClick={() => setAddCustomerDetail(true)}
+                    />
+                  </div>
                 )}
               </div>
             </div>

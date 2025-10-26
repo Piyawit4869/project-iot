@@ -303,6 +303,8 @@ export default function ChatMessages({
                           }
                         />
                       </div>
+                    ) : msg?.messageType === "sticker" ? (
+                      <img src={msg.message} width={150} height={150} />
                     ) : msg?.messageType === "file" ? (
                       <>
                         <span className="text-[16px] text-muted-foreground mt-1 ">
@@ -313,13 +315,13 @@ export default function ChatMessages({
                       <>
                         {msg.message ===
                         "https://api.dicebear.com/9.x/initials/svg?seed=X&backgroundColor=ffd5dc&scale=100" ? (
-                          <img src={msg.message} width={250} height={250} />
+                          <img src={msg.message} width={150} height={150} />
                         ) : (
                           <div
                             onClick={() => setPreviewUrl(msg.message)}
                             className="cursor-pointer"
                           >
-                            <img src={msg.message} width={250} height={250} />
+                            <img src={msg.message} width={150} height={150} />
                           </div>
                         )}
                       </>
