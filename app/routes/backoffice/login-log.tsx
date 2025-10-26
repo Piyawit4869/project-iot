@@ -5,13 +5,14 @@ import { formatDateAndTime } from "~/components/shared/global-format";
 import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import type { LogEntry } from "~/types/login-log";
 import { useLoginLogPaginate } from "~/api/client/login-log/useGetLoginLog";
-import { ActivityFilterFields } from "./filter";
+
 import { useMemo } from "react";
 import {
   parseDateRangeParam,
   pickSearchParams,
 } from "~/components/modules/customer/utils/search-params";
 import { useSearchParams } from "react-router";
+import { ActivityFilterFields } from "~/utils/filter/activity-filter";
 
 const columns: ColumnDef<LogEntry>[] = [
   {

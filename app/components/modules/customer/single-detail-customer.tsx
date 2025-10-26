@@ -232,7 +232,7 @@ export default function SingDetailleCustomer() {
             buttons={[
               isEdit ? (
                 <div className="w-full flex flex-row flex-wrap gap-2">
-                  <GlobalButton
+                  {/* <GlobalButton
                     key="sync-ai"
                     type="button"
                     onClick={onSync}
@@ -243,15 +243,15 @@ export default function SingDetailleCustomer() {
                     label={
                       <span className="hidden sm:inline">Sync ข้อมูล AI</span>
                     }
-                  />
+                  /> */}
 
                   <GlobalButton
                     key="cancel-btn"
                     type="button"
                     onClick={handleCancel}
-                    variant="secondary"
-                    className="flex-1 bg-[#EF4343] text-white hover:bg-[#d73232] flex items-center gap-1 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-                    icon={<X />}
+                    variant="outline"
+                    className="flex-1 flex items-center gap-1 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+                    // icon={<X />}
                     label={<span className="hidden sm:inline">ยกเลิก</span>}
                   />
 

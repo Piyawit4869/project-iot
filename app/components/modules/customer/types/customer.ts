@@ -17,6 +17,7 @@ export type CustomerType = {
   updatedAt?: string;
   branchId?: string;
   updatedById: string | null;
+  createdById: string | null;
   name: string | null;
 
   profile?: {

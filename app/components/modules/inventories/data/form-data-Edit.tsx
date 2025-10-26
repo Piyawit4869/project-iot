@@ -514,7 +514,12 @@ export const EditInventory: React.FC<FormInventoryProps> = (props) => {
                         </div>
 
                         <div className="space-y-1">
-                          <div className="flex items-center justify-between">
+                          <div className="w-full rounded-md bg-muted/60 px-4 py-2 text-sm font-medium">
+                            ขายแล้ว {currentQty}/{targetQty} ชิ้น ({percent}%)
+                            จากเป้าหมาย
+                          </div>
+
+                          <div className="flex items-center justify-between mt-2">
                             <h1 className="font-bold text-lg">ความคืบหน้า</h1>
                             <span className="text-2xl font-bold">
                               {percent}%
@@ -532,6 +537,36 @@ export const EditInventory: React.FC<FormInventoryProps> = (props) => {
                               {currentQty}/{targetQty} = ชิ้น
                             </span>
                             <span>{targetQty}</span>
+                          </div>
+
+                          <div className="rounded-lg border p-4 w-full mt-4 space-y-3">
+                            <h2 className="font-bold">ตั้งค่าเป้าหมาย</h2>
+
+                            <FormField
+                              control={form.control}
+                              name="monthlyTarget"
+                              render={({ field }) => (
+                                <FormItem className="max-w-[320px]">
+                                  <FormLabel>เป้าหมายใหม่ (ชิ้น)</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      type="number"
+                                      inputMode="numeric"
+                                      placeholder="เช่น 50"
+                                      value={field.value ?? ""}
+                                      onChange={(e) =>
+                                        field.onChange(
+                                          e.target.value === ""
+                                            ? null
+                                            : Number(e.target.value)
+                                        )
+                                      }
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
                           </div>
                         </div>
 
