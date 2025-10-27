@@ -27,6 +27,8 @@ import ImageUploadMulti from "~/components/shared/image-upload-multi";
 import { useState } from "react";
 import { Separator } from "~/components/ui/separator";
 
+export type OptionType = "variant" | "attribute";
+
 // ---------- Types ----------
 export type ProductOption = {
   id: string;
@@ -95,6 +97,13 @@ export default function OptionEditorInline({
   const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>(
     {}
   );
+
+  const [productVariants, setProductVariants] = React.useState<ProductOption[]>(
+    initialOptions?.length
+      ? initialOptions
+      : [{ id: crypto.randomUUID(), name: "", values: [""] }]
+  );
+
   const toggleGroup = (key: string) =>
     setOpenGroups((s) => ({ ...s, [key]: !s[key] }));
 
@@ -136,33 +145,73 @@ export default function OptionEditorInline({
       },
     });
   };
-  const updateOptionName = (id: string, name: string) => {
-    setOptions((prev) => prev.map((o) => (o.id === id ? { ...o, name } : o)));
+  const updateOptionName = (id: string, name: string, type?: OptionType) => {
+    if (type === "variant") {
+      setProductVariants((prev) =>
+        prev.map((o) => (o.id === id ? { ...o, name } : o))
+      );
+    } else {
+      setOptions((prev) => prev.map((o) => (o.id === id ? { ...o, name } : o)));
+    }
   };
-  const updateOptionValue = (optId: string, idx: number, val: string) => {
-    setOptions((prev) =>
-      prev.map((o) =>
-        o.id === optId
-          ? { ...o, values: o.values.map((v, i) => (i === idx ? val : v)) }
-          : o
-      )
-    );
+  const updateOptionValue = (
+    optId: string,
+    idx: number,
+    val: string,
+    type?: OptionType
+  ) => {
+    if (type === "variant") {
+      setProductVariants((prev) =>
+        prev.map((o) =>
+          o.id === optId
+            ? { ...o, values: o.values.map((v, i) => (i === idx ? val : v)) }
+            : o
+        )
+      );
+    } else {
+      setOptions((prev) =>
+        prev.map((o) =>
+          o.id === optId
+            ? { ...o, values: o.values.map((v, i) => (i === idx ? val : v)) }
+            : o
+        )
+      );
+    }
   };
-  const addOptionValue = (optId: string) => {
-    setOptions((prev) =>
-      prev.map((o) =>
-        o.id === optId ? { ...o, values: [...o.values, ""] } : o
-      )
-    );
+  const addOptionValue = (optId: string, type?: OptionType) => {
+    if (type === "variant") {
+      setProductVariants((prev) =>
+        prev.map((o) =>
+          o.id === optId ? { ...o, values: [...o.values, ""] } : o
+        )
+      );
+    } else {
+      setOptions((prev) =>
+        prev.map((o) =>
+          o.id === optId ? { ...o, values: [...o.values, ""] } : o
+        )
+      );
+    }
   };
-  const removeOptionValue = (optId: string, idx: number) => {
-    setOptions((prev) =>
-      prev.map((o) =>
-        o.id === optId
-          ? { ...o, values: o.values.filter((_, i) => i !== idx) }
-          : o
-      )
-    );
+
+  const removeOptionValue = (optId: string, idx: number, type?: OptionType) => {
+    if (type === "variant") {
+      setProductVariants((prev) =>
+        prev.map((o) =>
+          o.id === optId
+            ? { ...o, values: o.values.filter((_, i) => i !== idx) }
+            : o
+        )
+      );
+    } else {
+      setOptions((prev) =>
+        prev.map((o) =>
+          o.id === optId
+            ? { ...o, values: o.values.filter((_, i) => i !== idx) }
+            : o
+        )
+      );
+    }
   };
 
   // --- Generate Variants (คงค่าเดิมถ้ามี) ---
@@ -266,12 +315,6 @@ export default function OptionEditorInline({
   //   options.every((o) =>
   //     (o.values ?? []).some((v) => (v ?? "").trim().length > 0)
   //   );
-
-  const [productVariants, setProductVariants] = React.useState<ProductOption[]>(
-    initialOptions?.length
-      ? initialOptions
-      : [{ id: crypto.randomUUID(), name: "", values: [""] }]
-  );
 
   const addProductVariant = () => {
     setProductVariants((prev) => [
@@ -547,7 +590,7 @@ export default function OptionEditorInline({
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => addOptionValue(item.id)}
+                    onClick={() => addOptionValue(item.id, "variant")}
                     className="mt-2 w-25"
                   >
                     <PlusCircle className="mr-2 h-4 w-4" />

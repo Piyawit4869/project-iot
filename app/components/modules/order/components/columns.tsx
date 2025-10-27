@@ -51,7 +51,7 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
       },
     },
     {
-      accessorKey: "customer.name",
+      accessorKey: "name",
       header: "ชื่อลูกค้า",
       cell: ({ row }) => {
         const customer = row.original.customer ?? {};
@@ -74,8 +74,20 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
         );
       },
     },
+    // {
+    //   accessorKey: "docStatus",
+    //   header: "สถานะออเดอร์",
+    //   cell: (info) => {
+    //     const status = info.getValue() as string;
+    //     return (
+    //       <span className="flex justify-center">
+    //         <GlobalStatusBadge value={status} />
+    //       </span>
+    //     );
+    //   },
+    // },
     {
-      accessorKey: "docStatus",
+      accessorKey: "status",
       header: "สถานะออเดอร์",
       cell: (info) => {
         const status = info.getValue() as string;
@@ -89,6 +101,7 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
     {
       accessorKey: "orderDetails.createdAt",
       header: "วันที่ออกเอกสาร",
+      accessorFn: (row: OrderType) => row.orderDetails?.createdAt,
       cell: (info) => {
         const date = info.getValue() as string;
         return <span>{formatDateAndTime(date)}</span>;

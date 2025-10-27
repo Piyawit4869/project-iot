@@ -42,6 +42,9 @@ export const ChatMessageRender = ({
 }) => {
   const [autoScroll, setAutoScroll] = React.useState(true);
 
+  const displayName =
+    customerSingle?.profile?.name ?? customerSingle?.profile?.lineName;
+
   return (
     <div className="flex flex-col w-full h-full bg-white dark:bg-secondary">
       <div className="flex items-center border-b px-4 py-2 dark:bg-background">
@@ -58,9 +61,7 @@ export const ChatMessageRender = ({
             <SkeletonLoading className="w-[200px] h-[20px]" />
           ) : (
             <>
-              <h2 className="text-lg font-semibold">
-                {customerSingle?.profile?.name ?? ""}
-              </h2>
+              <h2 className="text-lg font-semibold">{displayName}</h2>
             </>
           )}
 
