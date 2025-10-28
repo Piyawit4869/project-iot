@@ -15,7 +15,7 @@ import { socketConfig } from "~/lib/sockets";
 import type { ChatRoomSchemaType } from "~/schemas/message/message";
 import { usePaginatedMessages } from "~/api/client/message/useMessage";
 import { useChat, type Message } from "~/providers/chat/useChat";
-import StatusToolbar from "./status-toolbar";
+import StatusToolbar, { calcOffsetFromBottom } from "./status-toolbar";
 import ReactLinkify from "react-linkify";
 import { useGetAiNote } from "~/api/client/customer/useCustomer";
 import { formatDateAndTime } from "~/components/shared/global-format";
@@ -62,6 +62,17 @@ export default function ChatMessages({
 
   const { messages: socketMessages, addMessage } = useChat();
   const [offset, setOffset] = React.useState<number>(0);
+
+  const messageRefs = useRef<{ [id: string]: HTMLDivElement | null }>({});
+
+  const [targetMessageId, setTargetMessageId] = useState<string | null>(null);
+  const [targetMessageOffset, setTargetMessageOffset] = useState<number | null>(
+    null
+  );
+
+  const [pendingScrollTarget, setPendingScrollTarget] = useState<string | null>(
+    null
+  );
 
   const {
     data: messagesData,
@@ -191,6 +202,56 @@ export default function ChatMessages({
     };
   }, [selectedRoom]);
 
+  const [hasScrolledToTarget, setHasScrolledToTarget] = useState(false);
+
+  const handleSearchClick = (messageId: string, messageOffset: number) => {
+    const total = messagesData?.pages?.[0]?.meta?.total ?? 0;
+
+    setTargetMessageId(messageId);
+    setTargetMessageOffset(messageOffset);
+    setHasScrolledToTarget(false);
+
+    const offset = Math.floor((messageOffset / total) * total);
+
+    setOffset(messageOffset - 1);
+  };
+
+  React.useEffect(() => {
+    if (!targetMessageId || hasScrolledToTarget) return;
+
+    const el = messageRefs.current[targetMessageId];
+
+    const container = scrollAreaRef.current;
+    if (!el || !container) return;
+
+    requestAnimationFrame(() => {
+      const elRect = el.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+
+      const elCenter = el.offsetTop + elRect.height / 2 - containerRect.top;
+
+      console.log("center", elCenter);
+
+      const scrollTop =
+        elCenter - container.clientHeight / 2 + container.scrollTop;
+
+      container.scrollTo({
+        top: scrollTop,
+        behavior: "smooth",
+      });
+
+      el.classList.add("shake");
+
+      const timer = setTimeout(() => {
+        el.classList.remove("shake");
+      }, 500);
+
+      setHasScrolledToTarget(true);
+
+      return () => clearTimeout(timer);
+    });
+  }, [targetMessageId, messagesData, hasScrolledToTarget]);
+
   const messageLoadingStyle =
     "absolute top-4 left-1/2 -translate-x-1/2 z-30 bg-white dark:bg-gray-800 text-xs text-muted-foreground text-center py-2 px-4 rounded-lg shadow-md w-fit";
 
@@ -230,7 +291,12 @@ export default function ChatMessages({
     <div className="flex flex-col h-[calc(100vh-100px)] bg-white  dark:bg-background">
       <div className="flex items-center justify-between gap-4 p-2 border-b bg-white dark:bg-background">
         <div className="hidden xl:block">
-          <StatusToolbar chatRoomDetail={selectedRoom} setOffset={setOffset} />
+          <StatusToolbar
+            chatRoomDetail={selectedRoom}
+            setOffset={setOffset}
+            total={messagesData?.pages[0]?.meta.total ?? 0}
+            onSearchClick={handleSearchClick}
+          />
         </div>
       </div>
 
@@ -248,6 +314,8 @@ export default function ChatMessages({
             combinedMessages.map((msg, index: number) => {
               const isBackoffice = msg.platform === "backoffice";
 
+              const isTarget = msg.id === targetMessageId;
+
               const avatarFallback =
                 msg.imageUrl && !msg.imageUrl.includes("http")
                   ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
@@ -260,7 +328,11 @@ export default function ChatMessages({
               );
 
               return (
-                <div key={`${msg.lineSubId}+${index}+${msg.sender}`}>
+                <div
+                  key={`${index}-${msg.id}`}
+                  ref={(el) => (messageRefs.current[msg.id] = el) as any}
+                  id={`msg-${msg.id}`}
+                >
                   {msg && msg?.firstMessageToday && (
                     <div className="flex items-center justify-center pt-6 ">
                       <span className="text-sm text-[12px] text-muted-foreground">
@@ -296,7 +368,7 @@ export default function ChatMessages({
                           isBackoffice
                             ? "bg-blue-500 text-white"
                             : "bg-muted text-primary"
-                        }`}
+                        } ${isTarget ? "shake" : ""}`}
                       >
                         <MessageText
                           text={
@@ -335,6 +407,7 @@ export default function ChatMessages({
                 </div>
               );
             })}
+
           <div ref={bottomRef} />
           {buttonScrollToBottom && (
             <button onClick={scrollToBottom} className={seemoreStyle}>

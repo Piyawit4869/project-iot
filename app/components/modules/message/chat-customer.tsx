@@ -96,6 +96,7 @@ import { GlobalTagsBadge } from "~/components/shared/global-tags";
 import { OrderViewModal } from "./orders-view-modal";
 import { AIMessageView } from "./ai-message-view-modal";
 import { GlobalTooltip } from "~/components/shared/global-tooltip";
+import { AIInsightExampleRender } from "./ai-insight-example-render";
 
 interface UserProps {
   id: string;
@@ -1241,7 +1242,7 @@ export default function ChatCustomerInfo({
               </TabsContent>
 
               <TabsContent value="settingAI">
-                <div className="space-y-3 mt-4 max-h-[calc(100vh-420px)] overflow-auto">
+                <div className="space-y-3 mt-4 h-1/2 overflow-auto">
                   <div className="flex flex-row justify-between items-center w-full">
                     <h3 className="text-sm font-semibold mt-1">พูดคุยกับ AI</h3>
 
@@ -1259,8 +1260,9 @@ export default function ChatCustomerInfo({
 
                   {/* {isFirstTimeAI ? ( */}
                   {isFirstTimeAI && !currentCustomer?.chatRoomAssistantId ? (
-                    <HeroSearch onInputChange={handleFirstTimeAISearch} />
+                    <AIInsightExampleRender />
                   ) : (
+                    // <HeroSearch onInputChange={handleFirstTimeAISearch} /> // !! old code for p'aon
                     <ChatMessagesWithAI
                       customerId={customer.id}
                       chatRoomId={chatRoomAssistantId}

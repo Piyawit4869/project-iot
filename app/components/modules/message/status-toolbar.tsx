@@ -33,6 +33,8 @@ type Props = {
   className?: string;
   // offset: number | null;
   setOffset: React.Dispatch<React.SetStateAction<number>>;
+  total: number;
+  onSearchClick?: (messageId: string, offset: number) => void;
 };
 
 function initials(text: string) {
@@ -77,6 +79,8 @@ export default function StatusToolbar({
   chatRoomDetail,
   className,
   setOffset,
+  total,
+  onSearchClick,
 }: // offset,
 
 Props) {
@@ -131,15 +135,15 @@ Props) {
     });
   };
 
-  const handleClick = (offset: number) => {
-    const span = offset < 10 ? 0 : offset;
+  const handleClick = (item: any) => {
+    if (onSearchClick) {
+      const { id, offset } = item;
 
-    const index = calcOffsetFromBottom({
-      total: 32,
-      targetTopIndex: offset,
-      limit: 10,
-    });
-    setOffset(index.offset);
+      onSearchClick(id, offset);
+    }
+    setOffset(item.offset);
+    // }
+    // setOpenNavigateMessage(false);
   };
 
   React.useEffect(() => {
@@ -279,7 +283,7 @@ Props) {
                     {/* <ListItem item={it} onClick={() => onSelect?.(it)} /> */}
 
                     <div
-                      onClick={() => handleClick(item.offset)}
+                      onClick={() => handleClick(item)}
                       className="cursor-pointer w-full text-left bg-background hover:bg-muted/50 transition-colors"
                     >
                       <div className="flex items-center gap-3 px-4 py-3">
