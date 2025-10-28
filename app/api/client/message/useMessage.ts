@@ -7,6 +7,7 @@ import {
   fetchLineBundleConfig,
   fetchRoomChatAILoadMore,
   fetchRoomChatLoadMore,
+  fetchSearchByKeyword,
   fetchSendMessage,
   markAsDone,
   markAsProcess,
@@ -68,18 +69,43 @@ export const useAllMessageWithRoomId = (id: string) => {
   });
 };
 
-export const usePaginatedMessages = (roomId: string) => {
+export const usePaginatedMessages = (roomId: string, jumpOffset?: number) => {
+  const windowSize = 10;
+  const startOffset =
+    jumpOffset != null
+      ? Math.max(0, jumpOffset - Math.floor(windowSize / 2))
+      : 0;
   return useInfiniteQuery({
-    queryKey: ["messages", roomId],
-    queryFn: async ({ pageParam }) => {
-      return fetchAllMessageWithRoomId(roomId, pageParam, 10);
+    queryKey: ["messages", roomId, jumpOffset],
+    // queryFn: async ({ pageParam }) => {
+    //   const offsetResult = offset ? offset : pageParam;
+
+    //   const limitResult = offset ? offset + 10 : 10;
+
+    //   return fetchAllMessageWithRoomId(roomId, offsetResult, limitResult);
+    // },
+
+    queryFn: async (p) => {
+      console.log({ p });
+      const offset =
+        typeof p.pageParam === "number" ? p.pageParam : startOffset;
+      const limit = windowSize;
+      return fetchAllMessageWithRoomId(roomId, startOffset, limit);
     },
-    initialPageParam: 0,
+    initialPageParam: startOffset ?? 0,
     getNextPageParam: (lastPage) => {
       const meta = lastPage?.meta;
       return meta?.hasMore ? meta.offset + meta.limit : undefined;
     },
     enabled: !!roomId,
+  });
+};
+
+export const useSearchByKeyWord = (id: string, keyword: string) => {
+  return useQuery({
+    queryKey: ["search-by-keyword", id, keyword],
+    queryFn: () => fetchSearchByKeyword(id, keyword),
+    enabled: !!id && !!keyword,
   });
 };
 

@@ -78,11 +78,19 @@ export const markAsDone = async (chatRoomId: string, done: boolean) => {
 
 export const fetchAllMessageWithRoomId = async (
   roomId: string,
-  offset = 0,
+  offset?: string | number | undefined | null,
   limit = 20
 ) => {
   const res = await ApiConfig.get(`/chats/${roomId}/messages`, {
     params: { offset, limit },
+  });
+
+  return res.data;
+};
+
+export const fetchSearchByKeyword = async (roomId: string, keyword: string) => {
+  const res = await ApiConfig.get(`/chats/${roomId}/search-by-keyword`, {
+    params: { keyword },
   });
   return res.data;
 };
