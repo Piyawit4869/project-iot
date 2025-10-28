@@ -69,6 +69,12 @@ export function formatPhoneNumber(phone?: string) {
   return phone;
 }
 
+export const formatDateHHMM = (date: string | Date | null): string => {
+  if (!date) return "";
+
+  return dayjs(date).format("DD MMM YYYY, HH:mm");
+};
+
 export const onlyNumber =
   (field: any) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const numericValue = e.target.value.replace(/\D/g, "");

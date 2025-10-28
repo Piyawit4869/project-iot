@@ -226,7 +226,7 @@ export default function ChatMessagesWithAI({
     },
   ];
   return (
-    <div className="flex flex-col h-[calc(100vh-400px)] border-1 rounded-sm bg-white dark:bg-background">
+    <div className="flex flex-col h-[calc(100vh-346px)] border-1 rounded-sm bg-white dark:bg-background">
       <div
         className="flex flex-1 flex-col"
         style={{
@@ -254,7 +254,8 @@ export default function ChatMessagesWithAI({
 
           {combinedMessages && combinedMessages.length
             ? combinedMessages.map((msg, index) => {
-                const isUser = msg.sender !== "ROME Ai";
+                const isUser = msg.sender !== "ROME AI";
+
                 const avatarFallback =
                   msg.imageUrl && !msg.imageUrl.includes("http")
                     ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
