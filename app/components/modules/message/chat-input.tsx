@@ -1,12 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Button } from "~/components/ui/button";
-import { FileImage, Send, Loader2, PlusCircle } from "lucide-react";
+import { FileImage, Send, Loader2, X } from "lucide-react";
 import React from "react";
 import { MessageLabelType } from "~/types/global";
 import { useIsMobile } from "~/hooks/use-mobile";
-
 import { useSendMessage } from "~/api/client/message/useMessage";
 import { useUpload } from "~/api/client/useGetUpload";
 import {
@@ -14,8 +13,9 @@ import {
   type CustomerMessage,
 } from "~/providers/customer-provider";
 import LineTemplatePickerModal from "./line-template-picker-modal";
-// import { socketConfig } from "@/libs/sockets";
-// import { env } from "@/constants/common";
+import { GlobalImage } from "~/components/shared/global-image";
+
+type PendingImage = { id: string; file: File; url: string; name: string };
 
 export default function ChatInput({
   selectedRoom,
@@ -24,208 +24,256 @@ export default function ChatInput({
   selectedRoom: any;
   customer: any;
 }) {
-  // const apiSocket = new URL(env.base_url ?? "http://localhost:3000").origin;
-
   const { messages, setMessages } = useCustomer();
   const isMobile = useIsMobile();
 
   const [input, setInput] = useState("");
+  const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { mutate: upload, isPending } = useUpload();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const { mutate: uploadMutate, isPending } = useUpload();
   const { mutate: send } = useSendMessage();
 
-  const handleInputChange = (e: any) => {
-    const value = e.target.value;
+  // --- auto-resize helper ---
+  const autoResize = () => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = "0px";
+    el.style.height = `${el.scrollHeight}px`;
+  };
 
-    setInput(e.target.value);
+  // resize เมื่อข้อความเปลี่ยน หรือมีการ mount ครั้งแรก
+  useEffect(() => {
+    autoResize();
+  }, [input]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setInput(value);
     setMessages((prev) => {
       const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
-
       if (roomIndex > -1) {
-        const updatedMessages = [...prev];
-        updatedMessages[roomIndex] = {
-          ...updatedMessages[roomIndex],
+        const updated = [...prev];
+        updated[roomIndex] = {
+          ...updated[roomIndex],
           lastestMessage: value,
         } as CustomerMessage;
-
-        return updatedMessages;
+        return updated;
       }
-
       return [...prev, { roomId: selectedRoom.id, lastestMessage: value }];
     });
   };
 
-  const sendText = async (e: React.FormEvent) => {
-    // const socket = socketConfig(apiSocket);
+  const uploadFile = (file: File) =>
+    new Promise<{ url: string }>((resolve, reject) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      uploadMutate(formData, { onSuccess: resolve, onError: reject });
+    });
 
-    const textarea = e.target as HTMLTextAreaElement;
-    textarea.style.height = "auto";
+  const sendText = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
     setMessages((prev) => {
       const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
-
       if (roomIndex > -1) {
-        const updatedMessages = [...prev];
-        updatedMessages[roomIndex] = {
-          ...updatedMessages[roomIndex],
+        const updated = [...prev];
+        updated[roomIndex] = {
+          ...updated[roomIndex],
           lastestMessage: "",
         } as CustomerMessage;
-
-        return updatedMessages;
+        return updated;
       }
-
       return prev;
     });
 
-    e.preventDefault();
-    if (!input.trim() || !selectedRoom?.id) return;
+    if (!selectedRoom?.id) return;
 
-    const messageText = input.trim();
+    // 1) ส่งรูปถ้ามี
+    if (pendingImages.length > 0) {
+      try {
+        for (const p of pendingImages) {
+          const result = await uploadFile(p.file);
+          if (!result?.url) continue;
+          send({
+            chatRoomId: selectedRoom.id,
+            lineSubId: customer?.lineSubId ?? "",
+            message: result.url,
+            messageType: "image",
+            isAiReply: false,
+            recipient: customer?.name ?? "Unknown",
+            customerId: selectedRoom?.customerId ?? "",
+            platform: "backoffice",
+            messageLabel: MessageLabelType.SENDIMAGE,
+          });
+        }
+      } catch (err) {
+        console.error("Upload image(s) failed", err);
+        return;
+      } finally {
+        pendingImages.forEach((p) => URL.revokeObjectURL(p.url));
+        setPendingImages([]);
+      }
+    }
+
+    // 2) ส่งข้อความล้วน
+    const plainText = input
+      .split("\n")
+      .filter((line) => !/^\[ภาพแนบ\s.+\]$/i.test(line.trim()))
+      .join("\n")
+      .trim();
+
+    if (plainText) {
+      send({
+        chatRoomId: selectedRoom.id,
+        lineSubId: customer?.lineSubId ?? "",
+        message: plainText,
+        messageType: "text",
+        isAiReply: false,
+        recipient: customer?.name ?? "Unknown",
+        customerId: selectedRoom?.customerId ?? "",
+        platform: "backoffice",
+        messageLabel: MessageLabelType.SENDTEXT,
+      });
+    }
+
+    // 3) เคลียร์ textarea แล้วรีไซซ์ใหม่
     setInput("");
-    // socket.emit("emit-chat", {
-    //   chatRoomId: selectedRoom.id,
-    //   message: messageText,
-    //   lineSubId: selectedRoom.customer?.lineSubId ?? "",
-    //   messageType: "text",
-    //   isAiReply: false,
-    //   recipient: selectedRoom.customer?.fullName ?? "Unknown",
-    //   customerId: selectedRoom.customerId ?? "",
-    //   platform: "backoffice",
-    //   messageLabel: MessageLabelType.SENDTEXT,
-    //   imageUrl: "", // เผื่อฝั่ง server ต้องการ
-    //   timestamp: new Date().toISOString(),
-    //   sender: "คุณ",
-    // });
-    // console.log({
-    //   chatRoomId: selectedRoom.id,
-    //   lineSubId: selectedRoom.customer?.lineSubId ?? "",
-    //   message: messageText,
-    //   messageType: "text",
-    //   isAiReply: false,
-    //   recipient: selectedRoom.customer?.fullName ?? "Unknown",
-    //   customerId: selectedRoom.customerId ?? "",
-    //   platform: "backoffice",
-    //   messageLabel: MessageLabelType.SENDTEXT,
-    // });
-    send({
-      chatRoomId: selectedRoom.id,
-      lineSubId: customer?.lineSubId ?? "",
-      message: messageText,
-      messageType: "text",
-      isAiReply: false,
-      recipient: customer?.name ?? "Unknown",
-      customerId: selectedRoom?.customerId ?? "",
-      platform: "backoffice",
-      messageLabel: MessageLabelType.SENDTEXT,
-    });
+    requestAnimationFrame(autoResize);
   };
+
+  // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   e.target.value = "";
+  //   if (!file) return;
+  //   if (file.size > 10 * 1024 * 1024) {
+  //     alert("ไฟล์ขนาดใหญ่เกินไป (เกิน 10MB)");
+  //     return;
+  //   }
+  //   const url = URL.createObjectURL(file);
+  //   const id = `${Date.now()}-${file.name}`;
+  //   setPendingImages((prev) => [...prev, { id, file, url, name: file.name }]);
+  //   // setInput((prev) =>
+  //   //   prev ? `${prev}\n[ภาพแนบ ${file.name}]` : `[ภาพแนบ ${file.name}]`
+  //   // );
+  // };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const selectedFiles = e.target.files ? Array.from(e.target.files) : [];
+    e.target.value = "";
 
-    if (file.size > 10 * 1024 * 1024) {
-      alert("ไฟล์ขนาดใหญ่เกินไป (เกิน 10MB)");
-      e.target.value = "";
-      return;
+    if (selectedFiles.length === 0) return;
+
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    const newImages: PendingImage[] = [];
+
+    for (const file of selectedFiles) {
+      if (file.size > maxSize) {
+        alert(`ไฟล์ ${file.name} ขนาดใหญ่เกินไป (เกิน 10MB)`);
+        continue;
+      }
+
+      const url = URL.createObjectURL(file);
+      const id = `${Date.now()}-${file.name}`;
+      newImages.push({ id, file, url, name: file.name });
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
-
-    upload(formData, {
-      onSuccess: (res) => {
-        if (!selectedRoom?.id) return;
-
-        const imageUrl = res.res.url;
-
-        if (!imageUrl) {
-          console.error("No image URL returned from upload");
-          return;
-        }
-
-        send({
-          chatRoomId: selectedRoom.id,
-          lineSubId: selectedRoom?.lineSubId ?? "",
-          message: imageUrl,
-          messageType: "image",
-          isAiReply: false,
-          recipient: selectedRoom?.name ?? "Unknown",
-          customerId: selectedRoom.customerId ?? "",
-          platform: "line",
-          messageLabel: MessageLabelType.SENDIMAGE,
-        });
-      },
-      onError: (error) => {
-        console.error("Upload failed", error);
-      },
-    });
-
-    e.target.value = "";
+    if (newImages.length > 0) {
+      setPendingImages((prev) => [...prev, ...newImages]);
+    }
   };
 
-  const handleOpenUtilModal = () => {};
+  const handleRemovePending = (id: string) => {
+    setPendingImages((prev) => {
+      const target = prev.find((p) => p.id === id);
+      if (target) URL.revokeObjectURL(target.url);
+      return prev.filter((p) => p.id !== id);
+    });
+    setInput((prev) =>
+      prev
+        .split("\n")
+        .filter((line) => !line.startsWith("[ภาพแนบ"))
+        .join("\n")
+    );
+  };
 
-  React.useEffect(() => {
-    const existingMesssge = messages.find((p) => p.roomId === selectedRoom.id);
-    if (existingMesssge) {
-      setInput(existingMesssge.lastestMessage);
-    } else {
-      setInput("");
-    }
-  }, [selectedRoom, messages]);
+  // useEffect(() => {
+  //   const existing = messages.find((p) => p.roomId === selectedRoom?.id);
+  //   setInput(existing ? existing.lastestMessage : "");
+  // }, [selectedRoom, messages]);
 
-  if (!selectedRoom?.id) {
-    return <div></div>;
-  }
+  if (!selectedRoom?.id) return <div />;
 
   return (
     <form
       onSubmit={sendText}
-      className="gap-2 border-t w-full dark:bg-background"
+      className="flex flex-col w-full gap-2 border-t p-2 dark:bg-background"
     >
+      {pendingImages.length > 0 && (
+        <div className="w-full h-full grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-2">
+          {pendingImages.map((p) => (
+            <div
+              key={p.id}
+              className="relative group border rounded-md overflow-hidden"
+            >
+              <GlobalImage
+                src={p.url}
+                alt={p.name}
+                className="w-full h-24 object-contain"
+              />
+              <button
+                type="button"
+                onClick={() => handleRemovePending(p.id)}
+                className="absolute top-1 right-1 inline-flex items-center justify-center w-6 h-6 rounded-full bg-black/60 text-white"
+                title="ลบรูปนี้ออก"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
       <textarea
+        ref={textareaRef}
         placeholder={
           isMobile
             ? "กดส่งข้อความเพื่อส่งข้อความ"
             : "Enter: ส่ง, Shift+Enter:ขึ้นบรรทัดใหม่"
         }
-        className="flex-1 max-h-[300px] w-full resize-none overflow-auto p-2 border-0 rounded-md outline-none "
+        className="w-full resize-none p-2 border-0 rounded-md outline-none min-h-[44px] max-h-[40vh] leading-6 overflow-auto"
         value={input}
         onChange={handleInputChange}
         disabled={isPending}
         rows={1}
-        onInput={(e) => {
-          const textarea = e.target as HTMLTextAreaElement;
-          textarea.style.height = "auto";
-          textarea.style.height = `${textarea.scrollHeight}px`;
-        }}
+        onInput={autoResize}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey && !isMobile) {
-            sendText(e as unknown as React.FormEvent); // Trigger your send function
-            const textarea = e.target as HTMLTextAreaElement;
-
-            textarea.style.height = `50px`;
+            e.preventDefault();
+            (e.currentTarget.form as HTMLFormElement)?.requestSubmit();
           }
         }}
       />
+
       <input
         type="file"
         accept="image/*"
         ref={fileInputRef}
         onChange={handleImageUpload}
         className="hidden"
+        multiple={true}
       />
 
-      <div className="flex justify-end p-4 gap-2">
+      <div className="flex justify-end gap-2 pt-1">
         <LineTemplatePickerModal />
-
         <Button
           variant="ghost"
           size="icon"
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={isPending}
+          title="แนบรูปภาพ"
         >
           {isPending ? (
             <Loader2 className="w-5 h-5 animate-spin" />
@@ -233,8 +281,7 @@ export default function ChatInput({
             <FileImage />
           )}
         </Button>
-
-        <Button size="icon" type="submit" disabled={isPending}>
+        <Button size="icon" type="submit" disabled={isPending} title="ส่ง">
           <Send className="w-4 h-4" />
         </Button>
       </div>

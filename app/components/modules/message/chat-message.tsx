@@ -61,6 +61,7 @@ export default function ChatMessages({
   const [buttonScrollToBottom, setButtonScrollToBottom] = React.useState(false);
 
   const { messages: socketMessages, addMessage } = useChat();
+  const [offset, setOffset] = React.useState<number>(0);
 
   const {
     data: messagesData,
@@ -68,7 +69,7 @@ export default function ChatMessages({
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = usePaginatedMessages(selectedRoom.id);
+  } = usePaginatedMessages(selectedRoom.id, offset);
 
   const paginatedMessages = messagesData?.pages.flatMap((page) => page) ?? [];
 
@@ -229,7 +230,7 @@ export default function ChatMessages({
     <div className="flex flex-col h-[calc(100vh-100px)] bg-white  dark:bg-background">
       <div className="flex items-center justify-between gap-4 p-2 border-b bg-white dark:bg-background">
         <div className="hidden xl:block">
-          <StatusToolbar value={"done"} chatRoomDetail={selectedRoom} />
+          <StatusToolbar chatRoomDetail={selectedRoom} setOffset={setOffset} />
         </div>
       </div>
 
@@ -262,7 +263,7 @@ export default function ChatMessages({
                 <div key={`${msg.lineSubId}+${index}+${msg.sender}`}>
                   {msg && msg?.firstMessageToday && (
                     <div className="flex items-center justify-center pt-6 ">
-                      <span className="text-sm text-[12px] text-muted-foreground ">
+                      <span className="text-sm text-[12px] text-muted-foreground">
                         {formattedTime}
                       </span>
                     </div>
