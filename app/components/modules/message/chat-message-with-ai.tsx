@@ -80,6 +80,8 @@ export default function ChatMessagesWithAI({
     }
   };
 
+  console.log("socketMessages", socketMessages);
+
   React.useEffect(() => {
     const scrollArea = scrollAreaRef.current;
     if (!scrollArea) {

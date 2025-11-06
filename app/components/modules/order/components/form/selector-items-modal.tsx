@@ -154,8 +154,7 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                   >
                     <div
                       className={cn(
-                        "flex items-center justify-between gap-4 rounded-xl p-3 hover:bg-muted/60 transition-colors",
-                        isOut && "opacity-70"
+                        "flex items-center justify-between gap-4 rounded-xl p-3 hover:bg-muted/60 transition-colors"
                       )}
                     >
                       <div className="flex items-center gap-3 md:gap-6">
@@ -183,7 +182,7 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                           className="group"
                           aria-label="ดูรูปตัวอย่าง"
                         >
-                          <GlobalImage
+                          <img
                             src={item.imageUrl || PlaceholderImage}
                             alt={item.name}
                             className="w-[48px] h-[48px] md:w-[70px] md:h-[70px] rounded-lg object-cover border"
@@ -297,12 +296,12 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
             >
               <Icons.X className="w-5 h-5" />
             </button>
-            <GlobalImage
+            <img
               src={previewUrl}
               alt="preview"
-              className="w-full h-full object-contain"
-              width={1600}
-              height={1000}
+              className="w-auto h-[90vh] object-contain rounded-lg"
+              width={1000}
+              height={600}
             />
           </div>
         </div>

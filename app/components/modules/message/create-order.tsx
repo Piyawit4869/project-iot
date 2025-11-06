@@ -196,13 +196,12 @@ export function CreateOrderDialog({
             </DialogHeader>
 
             <div className="flex gap-10 mt-3">
-              {/* Left Column */}
-              <div className="flex-1 flex flex-col gap-6 max-h-[70vh] overflow-y-auto border-r border-gray-200 dark:border-gray-700">
+              <div className="flex-1 flex flex-col gap-6 max-h-[70vh] overflow-y-auto border-r border-gray-200 dark:border-gray-700 pr-5">
                 <section className="mb-6">
                   <Label className="mb-4 block font-semibold">
                     เลือกสินค้าและจำนวน
                   </Label>
-                  {/* MultiSelect */}
+
                   <MultiSelectOnModal
                     options={productOptions}
                     placeholder={
@@ -236,7 +235,7 @@ export function CreateOrderDialog({
                   />
 
                   {/* List of product cards with quantity input */}
-                  <div className="mt-6 flex flex-col gap-4 h-[50vh] overflow-y-auto px-4">
+                  <div className="mt-6 flex flex-col gap-4 h-[50vh] overflow-y-auto">
                     {products.map((p, i) => {
                       const productDetails =
                         getProducts &&
@@ -254,7 +253,7 @@ export function CreateOrderDialog({
                       return (
                         <div
                           key={p.id}
-                          className="flex items-center gap-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                          className="flex items-center gap-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md  transition-shadow"
                         >
                           <GlobalImage
                             src={productDetails?.imageUrl || fallbackImage}

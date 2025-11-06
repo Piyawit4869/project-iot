@@ -31,7 +31,7 @@ export default function ChatbotSpaceNew({
     data: customerSingle,
     isLoading,
     refetch,
-  } = useCustomer(selectedRoom && selectedRoom.customerId);
+  } = useCustomer((selectedRoom && selectedRoom.customerId) ?? "");
 
   const [isCreateOrderOpen, setCreateOrderOpen] = React.useState(false);
   const [drawer, setDrawer] = React.useState(false);
