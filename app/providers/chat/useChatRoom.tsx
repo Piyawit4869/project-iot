@@ -108,7 +108,12 @@ export const mergeRoomImmutable = (
 
       const sorted = _.orderBy(
         next,
-        [(item: ChatRoom) => new Date(item.latestMessage?.createdAt as string)],
+        [
+          (item: ChatRoom) => {
+            if (!item.latestMessage) return new Date(0);
+            return new Date(item.latestMessage.createdAt as string);
+          },
+        ],
         ["desc"]
       );
       return sorted;
@@ -140,7 +145,12 @@ export const mergeRoomImmutable = (
 
     const sorted = _.orderBy(
       finalItems,
-      [(item: ChatRoom) => new Date(item.latestMessage?.createdAt as string)],
+      [
+        (item: ChatRoom) => {
+          if (!item.latestMessage) return new Date(0);
+          return new Date(item.latestMessage.createdAt as string);
+        },
+      ],
       ["desc"]
     );
     return sorted;
