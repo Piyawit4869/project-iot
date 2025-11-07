@@ -3,6 +3,7 @@ import {
   type InfiniteData,
   type InfiniteQueryObserverResult,
 } from "@tanstack/react-query";
+import _ from "lodash";
 
 import React from "react";
 import { useCustomer } from "~/api/client/customer/useCustomer";
@@ -99,12 +100,18 @@ export const mergeRoomImmutable = (
         updatedAt: pick(incoming.updatedAt, prev.updatedAt ?? null),
         customer: incoming.customer
           ? { ...(prev.customer ?? null), ...incoming.customer }
-          : prev.customer ?? null,
+          : (prev.customer ?? null),
       };
 
       const next = allRooms.slice();
       next[idx] = merged;
-      return next;
+
+      const sorted = _.orderBy(
+        next,
+        [(item: ChatRoom) => new Date(item.latestMessage?.createdAt as string)],
+        ["desc"]
+      );
+      return sorted;
     }
 
     const merged: ChatRoom = {
@@ -125,11 +132,18 @@ export const mergeRoomImmutable = (
       updatedAt: pick(incoming.updatedAt, prev.updatedAt ?? null),
       customer: incoming.customer
         ? { ...(prev.customer ?? null), ...incoming.customer }
-        : prev.customer ?? null,
+        : (prev.customer ?? null),
     };
 
     const without = allRooms.slice(0, idx).concat(allRooms.slice(idx + 1));
-    return [merged, ...without];
+    const finalItems = [merged, ...without];
+
+    const sorted = _.orderBy(
+      finalItems,
+      [(item: ChatRoom) => new Date(item.latestMessage?.createdAt as string)],
+      ["desc"]
+    );
+    return sorted;
   }
 
   const normalizedNew: ChatRoom = {
@@ -348,8 +362,7 @@ export const ChatRoomProvider = ({
         search,
         setSearch,
         filterRoom,
-      }}
-    >
+      }}>
       {children}
     </ChatRoomContext.Provider>
   );

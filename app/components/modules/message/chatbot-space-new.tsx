@@ -41,8 +41,8 @@ export default function ChatbotSpaceNew({
   const hasCustomerId = !selectedRoom
     ? true
     : selectedRoom?.customerId
-    ? true
-    : false;
+      ? true
+      : false;
 
   return (
     <div className="flex flex-row h-[calc(100vh-56px)]">
@@ -52,7 +52,9 @@ export default function ChatbotSpaceNew({
             <ChatlistContainer
               chatRooms={chatRooms}
               api={api}
-              handleChangeSelectedRoom={(room) => setSelectedRoom(room)}
+              handleChangeSelectedRoom={(room) => {
+                setSelectedRoom(room);
+              }}
             />
           </div>
         )}
