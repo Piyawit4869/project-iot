@@ -3,6 +3,7 @@ import {
   type InfiniteData,
   type InfiniteQueryObserverResult,
 } from "@tanstack/react-query";
+import _ from "lodash";
 
 import React from "react";
 import { useCustomer } from "~/api/client/customer/useCustomer";
@@ -74,15 +75,18 @@ export const mergeRoomImmutable = (
   incoming: IncomingRoomPayload
 ): ChatRoom[] => {
   const incomingId = incoming.chatRoomId ?? incoming.id;
-  if (!incomingId) return allRooms;
+  if (!incomingId) {
+    return sortingChatRoomByLatestTime(allRooms);
+  }
 
   const idx = allRooms.findIndex((r) => r.id === incomingId);
-
   const pick = <T,>(a: T | undefined, b: T): T => (a !== undefined ? a : b);
 
   if (idx >= 0) {
     const prev = allRooms[idx];
-    if (!prev) return allRooms;
+    if (!prev) {
+      return sortingChatRoomByLatestTime(allRooms);
+    }
 
     if (incoming.isUpdateRoomDetails) {
       const merged: ChatRoom = {
@@ -105,12 +109,13 @@ export const mergeRoomImmutable = (
         isProcess: pick(incoming.isProcess, prev.isProcess),
         customer: incoming.customer
           ? { ...(prev.customer ?? null), ...incoming.customer }
-          : prev.customer ?? null,
+          : (prev.customer ?? null),
       };
 
       const next = allRooms.slice();
       next[idx] = merged;
-      return next;
+
+      return sortingChatRoomByLatestTime(next);
     }
 
     const merged: ChatRoom = {
@@ -133,11 +138,14 @@ export const mergeRoomImmutable = (
       isProcess: pick(incoming.isProcess, prev.isProcess ?? null),
       customer: incoming.customer
         ? { ...(prev.customer ?? null), ...incoming.customer }
-        : prev.customer ?? null,
+        : (prev.customer ?? null),
     };
 
     const without = allRooms.slice(0, idx).concat(allRooms.slice(idx + 1));
-    return [merged, ...without];
+    const finalItems = [merged, ...without];
+    console.log("finalItems", finalItems);
+
+    return sortingChatRoomByLatestTime(finalItems);
   }
 
   const normalizedNew: ChatRoom = {
@@ -158,7 +166,8 @@ export const mergeRoomImmutable = (
     updatedAt: incoming.updatedAt ?? new Date().toISOString(),
   };
 
-  return [normalizedNew, ...allRooms];
+  const finalNormalizes = [normalizedNew, ...allRooms];
+  return sortingChatRoomByLatestTime(finalNormalizes);
 };
 
 export const mergeChat = (rooms: any[], incoming: any) => {
@@ -202,7 +211,10 @@ export const computeRooms = (
 ): any[] => {
   const paginated = chatRooms?.pages?.flatMap((p: any) => p) ?? [];
   const baseRooms: any[] = paginated.flatMap((p: any) => p?.items ?? []);
-  if (!realtimeChatRooms) return baseRooms.filter((r) => r?.id);
+  if (!realtimeChatRooms) {
+    const crs = baseRooms.filter((r) => r?.id);
+    return sortingChatRoomByLatestTime(crs);
+  }
 
   const merged = mergeChat([...baseRooms], realtimeChatRooms as any);
 
@@ -233,7 +245,8 @@ export const computeRooms = (
     }
   }
 
-  return result.filter((r) => r?.id);
+  const chatrooms = result.filter((r) => r?.id);
+  return sortingChatRoomByLatestTime(chatrooms);
 };
 
 type PaginatedChatRoomsPage = {
@@ -358,8 +371,7 @@ export const ChatRoomProvider = ({
         search,
         setSearch,
         filterRoom,
-      }}
-    >
+      }}>
       {children}
     </ChatRoomContext.Provider>
   );
@@ -371,4 +383,32 @@ export const useChatRoom = () => {
     throw new Error("useChatRoom must be used within a ChatRoomProvider");
   }
   return context;
+};
+
+const sortingChatRoomByLatestTime = (chatrooms: ChatRoom[]): ChatRoom[] => {
+  const updatedRooms = chatrooms.map((item) => {
+    if (item.latestMessage) {
+      if (
+        !item.latestMessage.createdAt ||
+        isNaN(Date.parse(item.latestMessage.createdAt))
+      ) {
+        item.latestMessage.createdAt = new Date().toISOString();
+      }
+    }
+    return item;
+  });
+
+  const sorted = _.orderBy(
+    updatedRooms,
+    [
+      (item: ChatRoom) => {
+        if (!item.latestMessage) return new Date(0);
+        return new Date(item.latestMessage.createdAt as string);
+      },
+    ],
+    ["desc"]
+  );
+
+  console.log("sorted", sorted);
+  return sorted;
 };
