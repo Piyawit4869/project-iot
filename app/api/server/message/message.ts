@@ -3,6 +3,7 @@ import { ApiConfig } from "~/api/config";
 import type {
   AskQuestionValues,
   PushMessageValues,
+  UpdateStatusProgressTagPayLoad,
 } from "~/schemas/message/message";
 
 export const fetchLineBundleConfig = async (branchId: string) => {
@@ -73,6 +74,22 @@ export const markAsDone = async (chatRoomId: string, done: boolean) => {
     return res.data;
   } catch (error) {
     return error;
+  }
+};
+
+export const fetchUpdateStatusProgressTag = async (
+  chatRoomId: string,
+  payload: UpdateStatusProgressTagPayLoad
+) => {
+  try {
+    const res = await ApiConfig.put(
+      `/crud/chats/rooms/${chatRoomId}/mark-process-tag`,
+      payload
+    );
+
+    return res.data;
+  } catch (error) {
+    throw error;
   }
 };
 

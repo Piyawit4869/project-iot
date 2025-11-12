@@ -72,3 +72,8 @@ export const chatMessageSchema = z.object({
 });
 
 export type ChatMessageSchemaType = z.infer<typeof chatMessageSchema>;
+
+export interface UpdateStatusProgressTagPayLoad {
+  isProcess: boolean;
+  done: boolean;
+}

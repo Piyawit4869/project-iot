@@ -27,6 +27,7 @@ import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
 import { Avatar } from "~/components/ui/avatar";
 import { Card } from "~/components/ui/card";
+import { AIInsightExampleRender } from "../ai-insight-example-render";
 
 export const MOCK_PRODUCTS = [
   {
@@ -101,9 +102,10 @@ export default function MenuWhenNoData({
   return (
     <div className="relative">
       <aside
-        className={`pt-2 flex flex-col w-full h-[calc(100vh-50px)] border-l border-r overflow-auto bg-white dark:bg-background px-4 justify-between ${
+        className={`pt-2 flex flex-col w-full border-l border-r overflow-auto bg-white dark:bg-background px-4 justify-between ${
           !hasCustomerId ? "opacity-50 pointer-events-none" : ""
         }`}
+        style={{ height: "calc(100vh - 50px)" }}
       >
         <div>
           <button className="flex w-full items-center justify-between gap-2 h-[60px] rounded-b-2xl px-2 py-4 bg-background sticky top-0 z-30 transition-colors">
@@ -367,68 +369,11 @@ export default function MenuWhenNoData({
                   <p className="text-gray-400 text-center py-5">
                     ตัวอย่างหน้าจอการพูดคุยกับแชท AI
                   </p>
-                  <div className="max-w-xl mx-auto bg-background rounded-xl shadow p-4 border">
-                    <h2 className="text-lg font-semibold mb-3">
-                      ตัวอย่างหน้าจอ
-                    </h2>
 
-                    <div className="flex items-start gap-2 mb-6">
-                      <Avatar className="bg-gradient-to-br from-purple-400 to-indigo-400 text-white flex items-center justify-center">
-                        AI
-                      </Avatar>
-                      <Card className="bg-muted px-3 py-2">
-                        <p className="text-sm">
-                          สวัสดีค่ะ ขอทราบชื่อคุณลูกค้าได้ไหมคะ 😊
-                        </p>
-                        {/* <span className="block text-xs text-muted-foreground mt-1">
-                          26 ก.ย. 2025, 00:55
-                        </span> */}
-                      </Card>
-                    </div>
-
-                    <div className="flex items-start gap-2 mb-6 justify-end">
-                      <Card className="bg-primary text-primary-foreground px-3 py-2 max-w-[80%]">
-                        <p className="text-sm">Kira</p>
-                        {/* <span className="block text-xs text-primary-foreground/70 mt-1 text-right">
-                          26 ก.ย. 2025, 00:55
-                        </span> */}
-                      </Card>
-                      <Avatar className="bg-black text-white flex items-center justify-center">
-                        U
-                      </Avatar>
-                    </div>
-
-                    <div className="flex items-start gap-2 mb-6">
-                      <Avatar className="bg-gradient-to-br from-purple-400 to-indigo-400 text-white flex items-center justify-center">
-                        AI
-                      </Avatar>
-                      <Card className="bg-muted px-3 py-2 ">
-                        <p className="text-sm">
-                          สวัสดีค่ะ ยินดีต้อนรับสู่ OGGa Idea น้อง OGGa AI ค่ะ
-                          ขอทราบชื่อคุณลูกค้าได้ไหมคะ 😊
-                        </p>
-                        {/* <span className="block text-xs text-muted-foreground mt-1">
-                          26 ก.ย. 2025, 00:57
-                        </span> */}
-                      </Card>
-                    </div>
-
-                    <div className="border-t pt-4 mt-6">
-                      <div className="flex items-center gap-2 text-muted-foreground opacity-60">
-                        {/* กล่องข้อความจำลอง */}
-                        <div className="border rounded-lg px-3 py-2 w-full bg-muted cursor-not-allowed">
-                          <span className="text-sm">
-                            สอบถามข้อมูลเกี่ยวกับลูกค้าคนนี้...
-                          </span>
-                        </div>
-
-                        {/* ปุ่มส่ง (จำลอง กดไม่ได้) */}
-                        <div className="p-2 rounded-full bg-muted cursor-not-allowed">
-                          <SendHorizonal className="h-4 w-4" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <AIInsightExampleRender
+                    customerName="EX"
+                    heightOffset={443}
+                  />
                 </TabsContent>
               </Tabs>
             </div>

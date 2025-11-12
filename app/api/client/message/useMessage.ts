@@ -9,6 +9,7 @@ import {
   fetchRoomChatLoadMore,
   fetchSearchByKeyword,
   fetchSendMessage,
+  fetchUpdateStatusProgressTag,
   markAsDone,
   markAsProcess,
 } from "~/api/server/message/message";
@@ -16,6 +17,7 @@ import {
 import type {
   AskQuestionValues,
   PushMessageValues,
+  UpdateStatusProgressTagPayLoad,
 } from "~/schemas/message/message";
 
 //api/thirdparty/line/config/bundle/branch/
@@ -42,6 +44,13 @@ export const useMarkAsProcess = (id: string) => {
 export const useMarkAsDone = (id: string) => {
   return useMutation({
     mutationFn: (done: boolean) => markAsDone(id, done),
+  });
+};
+
+export const useUpdateStatusProgressTag = (id: string) => {
+  return useMutation({
+    mutationFn: (payload: UpdateStatusProgressTagPayLoad) =>
+      fetchUpdateStatusProgressTag(id, payload),
   });
 };
 
