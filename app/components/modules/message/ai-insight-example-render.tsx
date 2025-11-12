@@ -6,11 +6,16 @@ import { GlobalImage } from "~/components/shared/global-image";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 
-interface AIInsightExampleRenderProps {}
+interface AIInsightExampleRenderProps {
+  customerName: string;
+  heightOffset?: number;
+}
 
 export const AIInsightExampleRender: React.FC<AIInsightExampleRenderProps> = (
   props
 ) => {
+  const { customerName, heightOffset = 346 } = props;
+
   const scrollAreaRef = React.useRef<HTMLDivElement | null>(null);
 
   const combinedMessages = [
@@ -18,13 +23,10 @@ export const AIInsightExampleRender: React.FC<AIInsightExampleRenderProps> = (
       firstMessageToday: false,
       chatRoomId: "f10574c5-fe1e-4216-85f3-d5400af2e4ad",
       chatRoomType: "assistant",
-      message:
-        "สวัสดีค่ะคุณ Phoom' 😊\n\nจากข้อมูลที่มีตอนนี้ คุณเป็นลูกค้าใหม่ของเราค่ะ ยังไม่มีข้อมูลเพิ่มเติมเกี่ยวกับสไตล์การคุยหรือความต้องการเฉพาะ แต่ยินดีมากที่ได้รู้จักนะคะ ถ้ามีข้อมูลเพิ่มเติมหรืออยากเล่าให้ฟังเพิ่มเติมเกี่ยวกับงานที่สนใจ แจ้งได้เลยนะคะ\n\nถ้าต้องการเริ่มต้นสั่งงานหรือสอบถามข้อมูลเพิ่มเติม น้องพร้อมช่วยเสมอค่ะ",
-      messageLabel:
-        "สวัสดีค่ะคุณ Phoom' 😊\n\nจากข้อมูลที่มีตอนนี้ คุณเป็นลูกค้าใหม่ของเราค่ะ ยังไม่มีข้อมูลเพิ่มเติมเกี่ยวกับสไตล์การคุยหรือความต้องการเฉพาะ แต่ยินดีมากที่ได้รู้จักนะคะ ถ้ามีข้อมูลเพิ่มเติมหรืออยากเล่าให้ฟังเพิ่มเติมเกี่ยวกับงานที่สนใจ แจ้งได้เลยนะคะ\n\nถ้าต้องการเริ่มต้นสั่งงานหรือสอบถามข้อมูลเพิ่มเติม น้องพร้อมช่วยเสมอค่ะ",
+      message: `สวัสดีค่ะคุณ ${customerName}' 😊\n\nจากข้อมูลที่มีตอนนี้ คุณเป็นลูกค้าใหม่ของเราค่ะ ยังไม่มีข้อมูลเพิ่มเติมเกี่ยวกับสไตล์การคุยหรือความต้องการเฉพาะ แต่ยินดีมากที่ได้รู้จักนะคะ ถ้ามีข้อมูลเพิ่มเติมหรืออยากเล่าให้ฟังเพิ่มเติมเกี่ยวกับงานที่สนใจ แจ้งได้เลยนะคะ\n\nถ้าต้องการเริ่มต้นสั่งงานหรือสอบถามข้อมูลเพิ่มเติม น้องพร้อมช่วยเสมอค่ะ`,
+      messageLabel: `สวัสดีค่ะคุณ ${customerName}' 😊\n\nจากข้อมูลที่มีตอนนี้ คุณเป็นลูกค้าใหม่ของเราค่ะ ยังไม่มีข้อมูลเพิ่มเติมเกี่ยวกับสไตล์การคุยหรือความต้องการเฉพาะ แต่ยินดีมากที่ได้รู้จักนะคะ ถ้ามีข้อมูลเพิ่มเติมหรืออยากเล่าให้ฟังเพิ่มเติมเกี่ยวกับงานที่สนใจ แจ้งได้เลยนะคะ\n\nถ้าต้องการเริ่มต้นสั่งงานหรือสอบถามข้อมูลเพิ่มเติม น้องพร้อมช่วยเสมอค่ะ`,
       messageType: "text",
-      originMessageFromAi:
-        'สวัสดีค่ะคุณ Phoom\' 😊\n\nจากข้อมูลที่มีตอนนี้ คุณเป็นลูกค้าใหม่ของเราค่ะ ยังไม่มีข้อมูลเพิ่มเติมเกี่ยวกับสไตล์การคุยหรือความต้องการเฉพาะ แต่ยินดีมากที่ได้รู้จักนะคะ ถ้ามีข้อมูลเพิ่มเติมหรืออยากเล่าให้ฟังเพิ่มเติมเกี่ยวกับงานที่สนใจ แจ้งได้เลยนะคะ\n\nถ้าต้องการเริ่มต้นสั่งงานหรือสอบถามข้อมูลเพิ่มเติม น้องพร้อมช่วยเสมอค่ะ\n\n<<DATA_UPDATE>>\n{\n  "customerName": "Phoom\'",\n  "customerStatus": "ใหม่"\n}\n<<END>>',
+      originMessageFromAi: `สวัสดีค่ะคุณ ${customerName}\' 😊\n\nจากข้อมูลที่มีตอนนี้ คุณเป็นลูกค้าใหม่ของเราค่ะ ยังไม่มีข้อมูลเพิ่มเติมเกี่ยวกับสไตล์การคุยหรือความต้องการเฉพาะ แต่ยินดีมากที่ได้รู้จักนะคะ ถ้ามีข้อมูลเพิ่มเติมหรืออยากเล่าให้ฟังเพิ่มเติมเกี่ยวกับงานที่สนใจ แจ้งได้เลยนะคะ\n\nถ้าต้องการเริ่มต้นสั่งงานหรือสอบถามข้อมูลเพิ่มเติม น้องพร้อมช่วยเสมอค่ะ\n\n<<DATA_UPDATE>>\n{\n  "customerName": "Phoom\'",\n  "customerStatus": "ใหม่"\n}\n<<END>>`,
       status: "active",
       sender: "ROME AI",
       recipient: "owner utotech",
@@ -43,7 +45,7 @@ export const AIInsightExampleRender: React.FC<AIInsightExampleRenderProps> = (
       firstMessageToday: true,
       chatRoomId: "f10574c5-fe1e-4216-85f3-d5400af2e4ad",
       chatRoomType: "assistant",
-      message: "ลูกค้าคนนี้เป็นคนยังไง",
+      message: "สวัสดีครับ",
       messageType: "text",
       status: "active",
       sender: "owner utotech",
@@ -64,12 +66,12 @@ export const AIInsightExampleRender: React.FC<AIInsightExampleRenderProps> = (
       chatRoomId: "f10574c5-fe1e-4216-85f3-d5400af2e4ad",
       chatRoomType: "assistant",
       message:
-        "สวัสดีค่ะคุณ Phoom' 😊\n\nตอนนี้น้องยังไม่มีข้อมูลพฤติกรรมหรือสไตล์การคุยของคุณมากนัก เพราะเพิ่งเริ่มคุยกันครั้งแรกค่ะ ถ้าคุณ Phoom' สะดวก ช่วยเล่าให้ฟังหน่อยได้ไหมคะ ว่าชอบแบบไหน หรือลักษณะการติดต่อที่ชอบเป็นแบบไหน จะได้ดูแลได้ตรงใจมากขึ้นค่ะ\n\nพร้อมช่วยเสมอนะคะ 😊",
+        "บทสนทนานี้คือข้อความตอบกลับตัวอย่างสำหรับการสนทนากับ  ROME AI Assistant นะคะ 😊",
       messageLabel:
-        "สวัสดีค่ะคุณ Phoom' 😊\n\nตอนนี้น้องยังไม่มีข้อมูลพฤติกรรมหรือสไตล์การคุยของคุณมากนัก เพราะเพิ่งเริ่มคุยกันครั้งแรกค่ะ ถ้าคุณ Phoom' สะดวก ช่วยเล่าให้ฟังหน่อยได้ไหมคะ ว่าชอบแบบไหน หรือลักษณะการติดต่อที่ชอบเป็นแบบไหน จะได้ดูแลได้ตรงใจมากขึ้นค่ะ\n\nพร้อมช่วยเสมอนะคะ 😊",
+        "บทสนทนานี้คือข้อความตอบกลับตัวอย่างสำหรับการสนทนากับ  ROME AI Assistant นะคะ 😊",
       messageType: "text",
       originMessageFromAi:
-        "สวัสดีค่ะคุณ Phoom' 😊\n\nตอนนี้น้องยังไม่มีข้อมูลพฤติกรรมหรือสไตล์การคุยของคุณมากนัก เพราะเพิ่งเริ่มคุยกันครั้งแรกค่ะ ถ้าคุณ Phoom' สะดวก ช่วยเล่าให้ฟังหน่อยได้ไหมคะ ว่าชอบแบบไหน หรือลักษณะการติดต่อที่ชอบเป็นแบบไหน จะได้ดูแลได้ตรงใจมากขึ้นค่ะ\n\nพร้อมช่วยเสมอนะคะ 😊\n\n<<DATA_UPDATE>>\n{}\n<<END>>",
+        "บทสนทนานี้คือข้อความตอบกลับตัวอย่างสำหรับการสนทนากับ  ROME AI Assistant นะคะ 😊",
       status: "active",
       sender: "ROME AI",
       recipient: "owner utotech",
@@ -117,7 +119,10 @@ export const AIInsightExampleRender: React.FC<AIInsightExampleRenderProps> = (
   }, [combinedMessages]);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-346px)] border-1 rounded-sm bg-white dark:bg-background">
+    <div
+      className="flex flex-col border rounded-sm bg-white dark:bg-background"
+      style={{ height: `calc(100vh - ${heightOffset}px)` }}
+    >
       <div
         className="flex flex-1 flex-col"
         style={{

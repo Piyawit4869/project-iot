@@ -45,6 +45,8 @@ export type ChatRoom = {
   users: RoomUser[];
   unreadMessageCount: number;
   latestMessage?: LatestMessage | null;
+  done: boolean;
+  isProcess: boolean;
   updatedAt?: string | null;
 };
 
@@ -63,6 +65,8 @@ type IncomingRoomPayload = {
   unreadMessageCount?: number;
   latestMessage?: LatestMessage;
   updatedAt?: string;
+  done: boolean;
+  isProcess: boolean;
   isUpdateRoomDetails?: boolean;
 };
 
@@ -101,6 +105,8 @@ export const mergeRoomImmutable = (
         ),
         latestMessage: pick(incoming.latestMessage, prev.latestMessage ?? null),
         updatedAt: pick(incoming.updatedAt, prev.updatedAt ?? null),
+        done: pick(incoming.done, prev.done),
+        isProcess: pick(incoming.isProcess, prev.isProcess),
         customer: incoming.customer
           ? { ...(prev.customer ?? null), ...incoming.customer }
           : (prev.customer ?? null),
@@ -128,6 +134,8 @@ export const mergeRoomImmutable = (
       ),
       latestMessage: pick(incoming.latestMessage, prev.latestMessage ?? null),
       updatedAt: pick(incoming.updatedAt, prev.updatedAt ?? null),
+      done: pick(incoming.done, prev.done ?? null),
+      isProcess: pick(incoming.isProcess, prev.isProcess ?? null),
       customer: incoming.customer
         ? { ...(prev.customer ?? null), ...incoming.customer }
         : (prev.customer ?? null),
@@ -153,6 +161,8 @@ export const mergeRoomImmutable = (
     users: incoming.users ?? [],
     unreadMessageCount: incoming.unreadMessageCount ?? 0,
     latestMessage: incoming.latestMessage ?? null,
+    done: incoming.done ?? false,
+    isProcess: incoming.isProcess ?? false,
     updatedAt: incoming.updatedAt ?? new Date().toISOString(),
   };
 
@@ -320,7 +330,7 @@ export const ChatRoomProvider = ({
   );
 
   const { data: customer, refetch: refetchCustomer } = useCustomer(
-    selectedRoom.customerId
+    selectedRoom.customerId ?? ""
   );
 
   const [sidebarOpen, setSidebarOpen] = React.useState(true);

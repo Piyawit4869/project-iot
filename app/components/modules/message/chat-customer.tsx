@@ -561,6 +561,8 @@ export default function ChatCustomerInfo({
 
     // ✅ Listen for new messages
     socket.on("chat", (msg: Message) => {
+      console.log("msg on socket", msg);
+
       addMessageAI({
         ...msg,
         imageUrl:
@@ -1259,8 +1261,12 @@ export default function ChatCustomerInfo({
                   </div>
 
                   {/* {isFirstTimeAI ? ( */}
-                  {isFirstTimeAI && !currentCustomer?.chatRoomAssistantId ? (
-                    <AIInsightExampleRender />
+                  {isFirstTimeAI &&
+                  currentCustomer &&
+                  !currentCustomer.chatRoomAssistantId ? (
+                    <AIInsightExampleRender
+                      customerName={currentCustomer.name}
+                    />
                   ) : (
                     // <HeroSearch onInputChange={handleFirstTimeAISearch} /> // !! old code for p'aon
                     <ChatMessagesWithAI

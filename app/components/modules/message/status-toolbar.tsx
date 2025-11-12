@@ -14,6 +14,7 @@ import {
   useMarkAsDone,
   useMarkAsProcess,
   useSearchByKeyWord,
+  useUpdateStatusProgressTag,
 } from "~/api/client/message/useMessage";
 import { useDebounce } from "~/hooks/use-debounce";
 import {
@@ -24,6 +25,7 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { formatDateAndTime } from "~/components/shared/global-format";
+import type { UpdateStatusProgressTagPayLoad } from "~/schemas/message/message";
 
 type Status = "todo" | "done";
 
@@ -91,6 +93,10 @@ Props) {
   const { mutate: markAsProcess } = useMarkAsProcess(chatRoomDetail?.id);
   const { mutate: markAsDone } = useMarkAsDone(chatRoomDetail?.id);
 
+  const { mutate: updateStatusProgressTag } = useUpdateStatusProgressTag(
+    chatRoomDetail?.id
+  );
+
   const [isDone, setIsDone] = React.useState(chatRoomDetail?.done);
   const [isProcess, setIsProcess] = React.useState(chatRoomDetail?.isProcess);
 
@@ -99,39 +105,95 @@ Props) {
     React.useState<boolean>(false);
   const debouncedSearch = useDebounce(search);
   const { data } = useSearchByKeyWord(chatRoomDetail?.id, debouncedSearch);
+
+  const [isSearchFull, setIsSearchFull] = React.useState<boolean>(false);
+
   const handleCloseSearch = React.useCallback(() => {
     setSearch("");
     setInputOpen(false);
   }, [setInputOpen, setSearch]);
 
-  const setTodo = async () => {
-    // onChange?.("todo");
-    markAsProcess(true);
-    markAsDone(false);
-    startTransition(() => {
-      setIsProcess(true);
-      setIsDone(false);
-    });
-  };
-  const setDone = () => {
-    // onChange?.("done");
-    markAsProcess(false);
-    markAsDone(true);
+  // const setTodo = async () => {
+  //   // onChange?.("todo");
+  //   markAsProcess(true);
+  //   markAsDone(false);
+  //   startTransition(() => {
+  //     setIsProcess(true);
+  //     setIsDone(false);
+  //   });
+  // };
+  // const setDone = () => {
+  //   // onChange?.("done");
+  //   markAsProcess(false);
+  //   markAsDone(true);
 
-    startTransition(() => {
-      setIsDone(true);
-      setIsProcess(false);
-    });
-  };
+  //   startTransition(() => {
+  //     setIsDone(true);
+  //     setIsProcess(false);
+  //   });
+  // };
 
-  const setClear = () => {
-    // onChange?.("clear");
-    markAsProcess(false);
-    markAsDone(false);
+  // const setClear = () => {
+  //   // onChange?.("clear");
+  //   markAsProcess(false);
+  //   markAsDone(false);
 
-    startTransition(() => {
-      setIsDone(false);
-      setIsProcess(false);
+  //   startTransition(() => {
+  //     setIsDone(false);
+  //     setIsProcess(false);
+  //   });
+  // };
+
+  const handleUpdateStatusProgressTag = async (status: string) => {
+    let body = {};
+
+    switch (status) {
+      case "isProgress":
+        body = {
+          isProcess: true,
+          done: false,
+        };
+        break;
+
+      case "isDone":
+        body = {
+          isProcess: false,
+          done: true,
+        };
+        break;
+
+      case "clear":
+        body = {
+          isProcess: false,
+          done: false,
+        };
+        break;
+      default:
+        return;
+    }
+
+    updateStatusProgressTag(body as UpdateStatusProgressTagPayLoad, {
+      onSuccess() {
+        if (status === "isProgress") {
+          startTransition(() => {
+            setIsProcess(true);
+            setIsDone(false);
+          });
+        } else if (status === "isDone") {
+          startTransition(() => {
+            setIsDone(true);
+            setIsProcess(false);
+          });
+        } else {
+          startTransition(() => {
+            setIsProcess(false);
+            setIsDone(false);
+          });
+        }
+      },
+      onError(error) {
+        console.log("error when onError", error);
+      },
     });
   };
 
@@ -147,203 +209,178 @@ Props) {
   };
 
   React.useEffect(() => {
-    console.log({ data });
     if (data && data?.totalMatches > 0) {
       setOpenNavigateMessage(true);
     }
   }, [data]);
 
   return (
-    // <TooltipProvider delayDuration={150}>
     <div
-      className={cn("flex items-center gap-3 bg-background/60 p-2", className)}
-    >
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="outline"
-            className={cn(
-              "h-9 px-3 rounded-md border-muted-foreground/30",
-              isProcess && "border-primary text-primary bg-gray-300"
-            )}
-            onClick={setTodo}
-          >
-            <MessagesSquare className="mr-2 h-[18px] w-[18px]" />
-            ต้องดำเนินการ
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>กำหนดเป็น "ต้องดำเนินการ"</TooltipContent>
-      </Tooltip>
-
-      {/* <Popover open={open} onOpenChange={setOpen}> */}
-
-      <Tooltip>
-        <TooltipTrigger asChild>
-          {/* <PopoverTrigger asChild> */}
-          <Button
-            variant="outline"
-            className={cn(
-              "h-9 px-3 rounded-md border-muted-foreground/30",
-              isDone && "border-primary text-primary bg-gray-300"
-            )}
-            onClick={setDone}
-          >
-            <CheckCircle className="mr-2 h-[18px] w-[18px]" />
-            ดำเนินการแล้ว
-          </Button>
-          {/* </PopoverTrigger> */}
-        </TooltipTrigger>
-        <TooltipContent>กำหนดเป็น "ดำเนินการแล้ว"</TooltipContent>
-      </Tooltip>
-      {(isProcess || isDone) && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              className={cn("h-9 px-3 rounded-md border-muted-foreground/30")}
-              onClick={setClear}
-            >
-              <X className="mr-2 h-[18px] w-[18px]" />
-              เคลียร์
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>ล้างค่าแท็ก</TooltipContent>
-        </Tooltip>
+      className={cn(
+        "flex items-center gap-3 p-2 bg-background/60 w-full",
+        className
       )}
-      {/* <PopoverContent
-            align="start"
-            sideOffset={6}
-            className="w-[260px] text-sm"
-          >
-            <div className="space-y-2">
-              <div className="font-medium">กำหนดสถานะเป็น “ดำเนินการแล้ว”</div>
-              <p className="text-muted-foreground">
-                บันทึกสถานะเรียบร้อย คุณต้องการแจ้งลูกค้าหรือไม่
-              </p>
-              <div className="flex items-center gap-2 pt-1">
-                <Button size="sm" onClick={() => setOpen(false)}>
-                  ปิด
+    >
+      {!isSearchFull ? (
+        <React.Fragment>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "h-9 px-3 rounded-md border-muted-foreground/30",
+                  isProcess && "border-primary text-primary bg-gray-300"
+                )}
+                onClick={() => handleUpdateStatusProgressTag("isProgress")}
+              >
+                <MessagesSquare className="mr-2 h-[18px] w-[18px]" />
+                ต้องดำเนินการ
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>กำหนดเป็น "ต้องดำเนินการ"</TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              {/* <PopoverTrigger asChild> */}
+              <Button
+                variant="outline"
+                className={cn(
+                  "h-9 px-3 rounded-md border-muted-foreground/30",
+                  isDone && "border-primary text-primary bg-gray-300"
+                )}
+                onClick={() => handleUpdateStatusProgressTag("isDone")}
+              >
+                <CheckCircle className="mr-2 h-[18px] w-[18px]" />
+                ดำเนินการแล้ว
+              </Button>
+              {/* </PopoverTrigger> */}
+            </TooltipTrigger>
+            <TooltipContent>กำหนดเป็น "ดำเนินการแล้ว"</TooltipContent>
+          </Tooltip>
+          {(isProcess || isDone) && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "h-9 px-3 rounded-md border-muted-foreground/30"
+                  )}
+                  onClick={() => handleUpdateStatusProgressTag("clear")}
+                >
+                  <X className="mr-2 h-[18px] w-[18px]" />
+                  เคลียร์
                 </Button>
-                <a
-                  href="#send-email"
-                  className="text-primary underline underline-offset-4"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    // TODO: ใส่ลอจิกส่งอีเมลของคุณที่นี่
-                    setOpen(false);
+              </TooltipTrigger>
+              <TooltipContent>ล้างค่าแท็ก</TooltipContent>
+            </Tooltip>
+          )}
+          <div
+            className="flex w-full items-center text-gray-400 border h-9 rounded-md px-3 py-1 text-sm bg-background cursor-pointer transition-all duration-200"
+            onClick={() => setIsSearchFull(true)}
+          >
+            ค้นหา
+          </div>
+        </React.Fragment>
+      ) : (
+        <div className="items-center w-full gap-3">
+          <Popover
+            open={openNavigateMessage}
+            onOpenChange={setOpenNavigateMessage}
+          >
+            <PopoverTrigger className="flex flex-row w-full">
+              <div className="flex flex-row w-full items-center gap-2">
+                <Input
+                  ref={inputRef}
+                  autoFocus
+                  placeholder="ค้นหา..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full h-9 px-3 text-sm rounded-md border focus:outline-none focus:ring-0 focus:border-gray-300"
+                />
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setSearch("");
+                    setIsSearchFull(false);
                   }}
                 >
-                  ส่งอีเมล
-                </a>
+                  <X size={16} />
+                </Button>
               </div>
-            </div>
-          </PopoverContent>
-        </Popover> */}
+            </PopoverTrigger>
+            {data && data?.totalMatches > 0 && (
+              <PopoverContent
+                align="start"
+                sideOffset={6}
+                className="w-[px] text-sm"
+              >
+                <div className="max-h-[30vh] overflow-y-auto">
+                  {data.matches === 0 ? (
+                    <EmptyState />
+                  ) : (
+                    data.matches.map((item: any, idx: any) => (
+                      <React.Fragment key={item.id}>
+                        {/* <ListItem item={it} onClick={() => onSelect?.(it)} /> */}
 
-      {/* ช่องค้นหา (ตามสไตล์ภาพ) */}
-      {/* <div className="ml-1 flex items-center gap-2">
-          <div className="relative">
-            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="ค้นหา..." className="h-9 w-[220px] pl-8" />
-          </div>
-        </div> */}
-      <div
-        className="flex items-center text-gray-400 border h-9 w-[220px] rounded-md px-3 py-1 text-sm bg-background w-1/2 transition-all duration-200 focus:outline-none focus:ring-0 focus:border-gray-300"
-        onClick={() => setInputOpen(true)}
-      >
-        ค้นหา
-      </div>
-      <Popover open={openNavigateMessage} onOpenChange={setOpenNavigateMessage}>
-        <PopoverTrigger>
-          <div className="flex items-center gap-2">
-            <input
-              ref={inputRef}
-              autoFocus
-              type="text"
-              placeholder="ค้นหา"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              // onChange={handleChangeSearchMessageNavigate}
-              className="border border-gray-300 rounded-md px-3 py-1 text-sm bg-white w-full transition-all duration-200 focus:outline-none focus:ring-0 focus:border-gray-300"
-            />
-          </div>
-        </PopoverTrigger>
-        {data && data?.totalMatches > 0 && (
-          <PopoverContent
-            align="start"
-            sideOffset={6}
-            className="w-[px] text-sm"
-          >
-            <div className="max-h-[30vh] overflow-y-auto">
-              {data.matches === 0 ? (
-                <EmptyState />
-              ) : (
-                data.matches.map((item: any, idx: any) => (
-                  <React.Fragment key={item.id}>
-                    {/* <ListItem item={it} onClick={() => onSelect?.(it)} /> */}
-
-                    <div
-                      onClick={() => handleClick(item)}
-                      className="cursor-pointer w-full text-left bg-background hover:bg-muted/50 transition-colors"
-                    >
-                      <div className="flex items-center gap-3 px-4 py-3">
-                        <Avatar className="h-10 w-10 shrink-0">
-                          {item.imageUrl ? (
-                            <AvatarImage src={item.imageUrl} alt={item.id} />
-                          ) : (
-                            <AvatarFallback>
-                              {item.avatarText?.slice(0, 2) ??
-                                initials(item?.title)}
-                            </AvatarFallback>
-                          )}
-                        </Avatar>
-
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-3">
-                            <div className="flex items-center gap-2 min-w-0">
-                              {item.unread && (
-                                <span className="inline-block h-2 w-2 rounded-full bg-primary shrink-0" />
+                        <div
+                          onClick={() => handleClick(item)}
+                          className="cursor-pointer w-full text-left bg-background hover:bg-muted/50 transition-colors"
+                        >
+                          <div className="flex items-center gap-3 px-4 py-3">
+                            <Avatar className="h-10 w-10 shrink-0">
+                              {item.imageUrl ? (
+                                <AvatarImage
+                                  src={item.imageUrl}
+                                  alt={item.id}
+                                />
+                              ) : (
+                                <AvatarFallback>
+                                  {item.avatarText?.slice(0, 2) ??
+                                    initials(item?.title)}
+                                </AvatarFallback>
                               )}
-                              <span
-                                className={
-                                  "truncate text-base " +
-                                  (item.unread
-                                    ? "font-semibold"
-                                    : "font-medium")
-                                }
-                                title={item.sender}
-                              >
-                                {item.sender}
-                              </span>
-                            </div>
-                            <span className="text-xs text-muted-foreground shrink-0">
-                              {formatDateAndTime(item.createdAt)}
-                            </span>
-                          </div>
+                            </Avatar>
 
-                          <p className="truncate max-w-[340px] text-sm text-muted-foreground mt-1 line-clamp-1">
-                            {item.message}
-                          </p>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="flex items-center gap-2 min-w-0">
+                                  {item.unread && (
+                                    <span className="inline-block h-2 w-2 rounded-full bg-primary shrink-0" />
+                                  )}
+                                  <span
+                                    className={
+                                      "truncate text-base " +
+                                      (item.unread
+                                        ? "font-semibold"
+                                        : "font-medium")
+                                    }
+                                    title={item.sender}
+                                  >
+                                    {item.sender}
+                                  </span>
+                                </div>
+                                <span className="text-xs text-muted-foreground shrink-0">
+                                  {formatDateAndTime(item.createdAt)}
+                                </span>
+                              </div>
+
+                              <p className="truncate max-w-[340px] text-sm text-muted-foreground mt-1 line-clamp-1">
+                                {item.message}
+                              </p>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    {idx !== data.matches.length - 1 && <Separator />}
-                  </React.Fragment>
-                ))
-              )}
-            </div>
-          </PopoverContent>
-        )}
-      </Popover>
-      <div className="flex items-center gap-2">
-        <button
-          onClick={handleCloseSearch}
-          className="px-2 py-1 bg-gray-200 rounded-md text-sm hover:bg-gray-300 transition-colors"
-        >
-          ✕
-        </button>
-      </div>
+                        {idx !== data.matches.length - 1 && <Separator />}
+                      </React.Fragment>
+                    ))
+                  )}
+                </div>
+              </PopoverContent>
+            )}
+          </Popover>
+        </div>
+      )}
     </div>
-    // </TooltipProvider>
   );
 }

@@ -230,8 +230,6 @@ export default function ChatMessages({
 
       const elCenter = el.offsetTop + elRect.height / 2 - containerRect.top;
 
-      console.log("center", elCenter);
-
       const scrollTop =
         elCenter - container.clientHeight / 2 + container.scrollTop;
 
@@ -289,7 +287,7 @@ export default function ChatMessages({
 
   return (
     <div className="flex flex-col h-[calc(100vh-100px)] bg-white  dark:bg-background">
-      <div className="flex items-center justify-between gap-4 p-2 border-b bg-white dark:bg-background">
+      <div className="items-center justify-between gap-4 p-2 border-b bg-white dark:bg-background">
         <div className="hidden xl:block">
           <StatusToolbar
             chatRoomDetail={selectedRoom}

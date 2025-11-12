@@ -118,27 +118,45 @@ export const OpenAiContainerSettingsChatBot: React.FC<
       });
     }
   }, [data, form]);
-
   React.useEffect(() => {
     const socket = socketConfig(api);
 
-    // ✅ Join chat room (detail)
-    if (data?.id) {
-      socket.emit("chatAI", `${data.id}`);
-    }
+    console.log("🔌 Connecting socket...");
 
-    // ✅ Listen for new messages
-    socket.on("chatAI", (msg: Message) => {
-      addMessage({
-        ...msg,
-      });
+    socket.on("connect", () => {
+      console.log("✅ Socket connected:", socket.id);
     });
 
-    // ❌ Don't forget to clean up!
+    socket.on("disconnect", (reason) => {
+      console.log("❌ Socket disconnected:", reason);
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("⚠️ Socket connection error:", error.message);
+    });
+
+    if (data?.id) {
+      console.log("data", data);
+
+      console.log("📨 Joining chat room:", {
+        room: `assistant:${data.id}`,
+      });
+      socket.emit("chat", {
+        room: "assistant:f10574c5-fe1e-4216-85f3-d5400af2e4ad",
+      });
+    }
+
+    socket.on("chatAI", (msg: Message) => {
+      console.log("💬 Received message:", msg);
+
+      addMessage({ ...msg });
+    });
+
     return () => {
+      console.log("🔌 Disconnecting socket...");
       socket.disconnect();
     };
-  }, [user_data]);
+  }, [data]);
 
   return (
     <div>
@@ -179,7 +197,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
                   <HeroSearch onInputChange={handleFirstTimeAISearch} />
                 ) : ( */}
                 <ChatBotChatMessagesAndConfig
-                  chatRoomId={data?.chatRoomId}
+                  chatRoomId={"f10574c5-fe1e-4216-85f3-d5400af2e4ad"}
                   searchPrompt={firstTimeMessage}
                   data={data}
                   autoScroll={autoScroll}

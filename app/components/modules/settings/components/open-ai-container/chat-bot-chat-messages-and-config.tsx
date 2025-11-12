@@ -8,6 +8,7 @@ import { X } from "lucide-react";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { ChatInputOpenAiConfig } from "./chat-input-open-ai-config";
 import { useChat } from "~/providers/chat/useChat";
+import { formatDateHHMM } from "~/components/shared/global-format";
 
 interface ChatBotChatMessagesAndConfigProps {
   chatRoomId: string;
@@ -223,7 +224,7 @@ export const ChatBotChatMessagesAndConfig: React.FC<
           )}
 
           {combinedMessages.map((msg, index) => {
-            const isUser = msg.sender !== "ROME Ai";
+            const isUser = msg.sender !== "ROME AI";
 
             const avatarFallback =
               msg.imageUrl && !msg.imageUrl.includes("http")
@@ -232,9 +233,9 @@ export const ChatBotChatMessagesAndConfig: React.FC<
                   )}`
                 : msg.imageUrl;
 
-            const formattedTime = dayjs(
+            const formattedTime = formatDateHHMM(
               msg.createdAt ? msg.createdAt : msg.timestamp
-            ).format("DD MMM YYYY, HH:mm");
+            );
 
             return (
               <div
