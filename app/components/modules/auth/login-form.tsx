@@ -165,6 +165,13 @@ export default function LoginForm() {
                 </FormItem>
               )}
             />
+
+            <div className="mt-1 flex flex-row justify-end  gap-2 text-gray-500">
+                  <a href="" className="hover:underline">
+                    ลืมรหัสผ่าน
+                  </a>
+            </div>
+            
             <span className="w-full flex justify-center text-red-600">
               {action?.error}
             </span>
