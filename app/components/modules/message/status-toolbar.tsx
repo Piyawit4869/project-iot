@@ -247,7 +247,9 @@ Props) {
             <Input placeholder="ค้นหา..." className="h-9 w-[220px] pl-8" />
           </div>
         </div> */}
-      <div
+
+      {/* TOFIX SEARCH BOX */}
+      {/* <div
         className="flex items-center text-gray-400 border h-9 w-[220px] rounded-md px-3 py-1 text-sm bg-background w-1/2 transition-all duration-200 focus:outline-none focus:ring-0 focus:border-gray-300"
         onClick={() => setInputOpen(true)}
       >
@@ -263,7 +265,6 @@ Props) {
               placeholder="ค้นหา"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              // onChange={handleChangeSearchMessageNavigate}
               className="border border-gray-300 rounded-md px-3 py-1 text-sm bg-white w-full transition-all duration-200 focus:outline-none focus:ring-0 focus:border-gray-300"
             />
           </div>
@@ -280,7 +281,6 @@ Props) {
               ) : (
                 data.matches.map((item: any, idx: any) => (
                   <React.Fragment key={item.id}>
-                    {/* <ListItem item={it} onClick={() => onSelect?.(it)} /> */}
 
                     <div
                       onClick={() => handleClick(item)}
@@ -342,7 +342,7 @@ Props) {
         >
           ✕
         </button>
-      </div>
+      </div> */}
     </div>
     // </TooltipProvider>
   );
