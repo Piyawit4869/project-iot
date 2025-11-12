@@ -16,7 +16,7 @@ import GlobalButton from "~/components/shared/global-button";
 import BgLogin from "/assets/images/bg-login.png";
 import LogoImage from "/assets/images/rome.png";
 import LogoUtotechImage from "/assets/images/logo.webp";
-import { useActionData, useNavigation, useSubmit } from "react-router";
+import { Link, useActionData, useNavigation, useSubmit } from "react-router";
 import { loginFormSchema, type LoginFormValues } from "~/schemas/login";
 
 export default function LoginForm() {
@@ -167,11 +167,11 @@ export default function LoginForm() {
             />
 
             <div className="mt-1 flex flex-row justify-end  gap-2 text-gray-500">
-                  <a href="" className="hover:underline">
-                    ลืมรหัสผ่าน
-                  </a>
+              <Link to="/forgot-password" key="hover:underline">
+                ลืมรหัสผ่าน
+              </Link>
             </div>
-            
+
             <span className="w-full flex justify-center text-red-600">
               {action?.error}
             </span>

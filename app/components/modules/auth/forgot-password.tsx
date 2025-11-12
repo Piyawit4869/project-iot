@@ -19,20 +19,11 @@ import LogoUtotechImage from "/assets/images/logo.webp";
 import { useActionData, useNavigation, useSubmit } from "react-router";
 import { loginFormSchema, type LoginFormValues } from "~/schemas/login";
 
-export default function LoginForm() {
-  const { state } = useNavigation();
-
-  const action = useActionData();
-
-  const submit = useSubmit();
-
-  const [showPassword, setShowPassword] = React.useState(false);
-
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginFormSchema),
+export default function ForgotPassword() {
+  const form = useForm<any>({
     defaultValues: {
-      user: "",
-      password: "",
+      // user: "",
+      // password: "",
     },
   });
 
@@ -40,12 +31,13 @@ export default function LoginForm() {
   const isProcessing = isSubmitting;
 
   const onSubmit = async (values: LoginFormValues) => {
-    const payload = {
-      user: values.user,
-      password: values.password,
-    };
+    console.log("forgot password values:", values);
+    // const payload = {
+    //   user: values.user,
+    //   password: values.password,
+    // };
 
-    submit(payload, { method: "POST" });
+    // submit(payload, { method: "POST" });
   };
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
@@ -93,61 +85,65 @@ export default function LoginForm() {
         </div>
       </div>
       <div className="w-full flex flex-col items-center justify-top px-6 py-12 lg:w-1/4">
-          <div className="w-full flex flex-col items-start justify-top">
-            <a href="/" className="flex items-start gap-2 text-gray-700 hover:text-black">
-                  <Icons.ArrowLeft className="w-5 h-5" />
-            </a>
+        <div className="w-full flex flex-col items-start justify-top">
+          <a
+            href="/"
+            className="flex items-start gap-2 text-gray-700 hover:text-black"
+          >
+            <Icons.ArrowLeft className="w-5 h-5" />
+          </a>
+        </div>
+        <div className="mb-4 flex flex-col items-center space-y-2 py-1 pt-1">
+          <img
+            src={LogoImage}
+            alt="logo"
+            width={120}
+            height={120}
+            className="w-full h-[200px] object-contain"
+          />
+          {/* <h1 className="text-2xl font-bold text-foreground">ROME</h1> */}
+
+          <div className="flex flex-col items-center ">
+            <p className="text-2xl font-bold mb-2">ROME</p>
+            <p className="text-2xl font-bold mb-2">ลืมรหัสผ่าน</p>
+            <p className="text-sm  max-w-xl text-center">
+              ผู้ใช้กรอกหมายเลขโทรศัพท์หรืออีเมลที่เคยลงทะเบียนไว้
+            </p>
           </div>
-          <div className="mb-4 flex flex-col items-center space-y-2 py-1 pt-1">
-            <img
-              src={LogoImage}
-              alt="logo"
-              width={120}
-              height={120}
-              className="w-full h-[200px] object-contain"
+        </div>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-3 w-full max-w-sm"
+          >
+            <FormField
+              control={form.control}
+              name="emailOrPhone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="กรุณากรอกเบอร์โทรศัพท์หรืออีเมล"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {/* <h1 className="text-2xl font-bold text-foreground">ROME</h1> */}
-
-            <div className="flex flex-col items-center ">
-              <p className="text-2xl font-bold mb-2">ROME</p>
-              <p className="text-2xl font-bold mb-2">ลืมรหัสผ่าน</p>
-              <p className="text-sm  max-w-xl text-center">
-                ผู้ใช้กรอกหมายเลขโทรศัพท์หรืออีเมลที่เคยลงทะเบียนไว้
-              </p>
-            </div>
-          </div>
-
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-3 w-full max-w-sm"
-            >
-              <FormField
-                control={form.control}
-                name="user"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input {...field} placeholder="กรุณากรอกเบอร์โทรศัพท์หรืออีเมล" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <span className="w-full flex justify-center text-red-600">
-              </span>
-              <GlobalButton             
-                label={
-                  <span className="flex items-center justify-center gap-2 -translate-x-1">
-                    <Icons.Send className="w-5 h-5" />
-                    ส่งรหัสยืนยัน
-                  </span>
-                }           
-                type="submit"
-              />
-            </form>
-          </Form>
-
+            {/* <span className="w-full flex justify-center text-red-600"></span> */}
+            <GlobalButton
+              label={
+                <span className="flex items-center justify-center gap-2 -translate-x-1">
+                  <Icons.Send className="w-5 h-5" />
+                  ส่งรหัสยืนยัน
+                </span>
+              }
+              type="submit"
+            />
+          </form>
+        </Form>
       </div>
     </div>
   );
