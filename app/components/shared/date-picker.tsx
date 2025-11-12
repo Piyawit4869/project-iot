@@ -38,7 +38,7 @@ export function DatePicker({
       <Button
         type="button"
         variant="outline"
-        className="w-full pl-3 text-left font-normal"
+        className="w-full text-left font-normal"
         onClick={() => setShow((prev) => !prev)}
       >
         {selectedDate ? (
