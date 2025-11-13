@@ -44,9 +44,7 @@ export default function ChatInputAIAssistant({
   const { selectedRoom } = useChatRoom();
   const { mutate: upload, isPending } = useUpload();
   const { mutateAsync: connectedChatRoomAIAssistant, isPending: isPendingAI } =
-    useConnectedChatRoomAssistant(customerId, chatRoomId);
-
-  console.log("selectedRoom", selectedRoom);
+    useConnectedChatRoomAssistant();
 
   const handleInputChange = (e: any) => {
     const value = e.target.value;
@@ -99,7 +97,8 @@ export default function ChatInputAIAssistant({
     connectedChatRoomAIAssistant({
       message: messageText,
       messageType: "text",
-      chatRoomId: customerId,
+      chatRoomId,
+      customerId,
     });
   };
 

@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { ChatInputOpenAiConfig } from "./chat-input-open-ai-config";
 import { useChat } from "~/providers/chat/useChat";
 import { formatDateHHMM } from "~/components/shared/global-format";
+import { StreamingText } from "~/components/modules/message/streaming-text";
 
 interface ChatBotChatMessagesAndConfigProps {
   chatRoomId: string;
@@ -269,7 +270,11 @@ export const ChatBotChatMessagesAndConfig: React.FC<
                         : "bg-muted text-primary"
                     }`}
                   >
-                    {msg.message}
+                    {index === combinedMessages.length - 1 && !msg.isUser ? (
+                      <StreamingText text={msg.message} speed={40} />
+                    ) : (
+                      msg.message
+                    )}
                   </div>
                 ) : (
                   <div
@@ -307,13 +312,6 @@ export const ChatBotChatMessagesAndConfig: React.FC<
         </div>
         <ChatInputOpenAiConfig chatRoomId={chatRoomId} isAILoading={false} />
       </div>
-
-      {/* <ChecklistDialog
-        open={isCheckStatusOpen}
-        onOpenChange={setCheckStatusOpen}
-        checklist={checklistData}
-        data={customerData}
-      /> */}
 
       {previewUrl && (
         <div

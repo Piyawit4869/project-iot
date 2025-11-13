@@ -1,16 +1,10 @@
-"use client";
-
 import React, { useRef, useState } from "react";
+
 import dayjs from "dayjs";
 import * as Icons from "lucide-react";
 
 import { GlobalImage } from "~/components/shared/global-image";
-// import FeatureCard from "@/components/shared/feature-card";
-// import { MessagesSquare } from "lucide-react";
-// import { Button } from "@/components/ui";
-// import ChatInput from "./chat-input";
-// import { OrderViewModal } from "./orders-view-modal";
-// import { AIMessageView } from "./ai-message-view-modal";
+
 import { flushSync } from "react-dom";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { CustomerChatSkeleton } from "./noData/customer-chat-skeleton";
@@ -18,6 +12,7 @@ import ChatInputAIAssistant from "./chat-input-ai-assistant";
 import { useRouteLoaderData } from "react-router";
 import { usePaginatedChatRoomAI } from "~/api/client/message/useMessage";
 import { useChat } from "~/providers/chat/useChat";
+import { StreamingText } from "./streaming-text";
 
 export default function ChatMessagesWithAI({
   customerId,
@@ -79,8 +74,6 @@ export default function ChatMessagesWithAI({
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
-
-  console.log("socketMessages", socketMessages);
 
   React.useEffect(() => {
     const scrollArea = scrollAreaRef.current;
@@ -188,23 +181,6 @@ export default function ChatMessagesWithAI({
     return <CustomerChatSkeleton />;
   }
 
-  // if (isNoMessageData) {
-  //   return (
-  //     <div className="flex flex-col h-[200px] w-full justify-center items-center gap-12">
-  //       <h2 className="text-center text-2xl">
-  //         ยินดีต้อนรับสู่แชท Feature ที่ผนวกร่วมกับ Rome AI
-  //       </h2>
-  //       <div className="w-[300px]">
-  //         <FeatureCard
-  //           icon={<MessagesSquare className="w-8 h-8 text-blue-500" />}
-  //           title="แชท sale AI & Support"
-  //           description="ช่องทางแชทระหว่างฝ่ายขายและลูกค้า พร้อมผนวก AI ช่วยตอบคำถามและสนับสนุนการสนทนาอย่างรวดเร็วและแม่นยำ"
-  //         />
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
   const messagesLoading = [
     {
       id: 1,
@@ -228,7 +204,7 @@ export default function ChatMessagesWithAI({
     },
   ];
   return (
-    <div className="flex flex-col h-[calc(100vh-346px)] border-1 rounded-sm bg-white dark:bg-background">
+    <div className="flex flex-col h-[calc(100vh-500px)] border-1 rounded-sm bg-white dark:bg-background">
       <div
         className="flex flex-1 flex-col"
         style={{
@@ -306,7 +282,12 @@ export default function ChatMessagesWithAI({
                             : "bg-muted text-primary"
                         }`}
                       >
-                        {msg.message}
+                        {index === combinedMessages.length - 1 &&
+                        !msg.isUser ? (
+                          <StreamingText text={msg.message} speed={40} />
+                        ) : (
+                          msg.message
+                        )}
                       </div>
                     ) : (
                       <div
@@ -403,13 +384,6 @@ export default function ChatMessagesWithAI({
           chatRoomId={chatRoomId}
         />
       </div>
-
-      {/* <ChecklistDialog
-        open={isCheckStatusOpen}
-        onOpenChange={setCheckStatusOpen}
-        checklist={checklistData}
-        data={customerData}
-      /> */}
 
       {previewUrl && (
         <div

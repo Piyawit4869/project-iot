@@ -1,23 +1,18 @@
-"use client";
-
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import React, { useRef, useState } from "react";
 import dayjs from "dayjs";
 
 import FeatureCard from "~/components/shared/feature-card";
 import { MessagesSquare } from "lucide-react";
-import { Button } from "~/components/ui/button";
 import ChatInput from "./chat-input";
-import { OrderViewModal } from "./orders-view-modal";
-import { AIMessageView } from "./ai-message-view-modal";
+
 import { CustomerChatSkeleton } from "./noData/customer-chat-skeleton";
 import { socketConfig } from "~/lib/sockets";
 import type { ChatRoomSchemaType } from "~/schemas/message/message";
 import { usePaginatedMessages } from "~/api/client/message/useMessage";
 import { useChat, type Message } from "~/providers/chat/useChat";
-import StatusToolbar, { calcOffsetFromBottom } from "./status-toolbar";
+import StatusToolbar from "./status-toolbar";
 import ReactLinkify from "react-linkify";
-import { useGetAiNote } from "~/api/client/customer/useCustomer";
 import { formatDateAndTime } from "~/components/shared/global-format";
 
 export function MessageText({ text }: { text: string }) {
@@ -92,8 +87,26 @@ export default function ChatMessages({
           dayjs(a.createdAt ?? a.timestamp).valueOf() -
           dayjs(b.createdAt ?? b.timestamp).valueOf()
       )
-      .filter((c) => c.chatRoomId === selectedRoom?.id);
-    return messages;
+      .filter((c) => c.chatRoomId === selectedRoom?.id)
+      .map((message) => {
+        return {
+          ...message,
+          read: message?.platform !== "backoffice" && true,
+        };
+      });
+
+    const isLast = messages.length - 1;
+    const isLastNotBackoffice = messages[isLast]?.platform !== "backoffice";
+
+    let result = messages;
+
+    if (isLastNotBackoffice) {
+      result = messages.map((message) => {
+        return { ...message, read: true };
+      });
+    }
+
+    return result;
   }, [paginatedMessages, socketMessages]);
 
   const isNoMessageData = !messagesData || messagesData.pages.length === 0;
@@ -399,7 +412,7 @@ export default function ChatMessages({
                     )}
 
                     <span className="text-[10px] text-muted-foreground mt-1 ">
-                      {formattedTime}
+                      {msg.read && <span>อ่านแล้ว,</span>} {formattedTime}
                     </span>
                   </div>
                 </div>
