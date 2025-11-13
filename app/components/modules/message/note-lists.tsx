@@ -154,6 +154,7 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
           <div className="flex flex-row gap-3">
             <h2 className="text-base font-semibold">โน้ต</h2>
 
+
             <GlobalTooltip content="สรุปโน้ตด้วย AI จากข้อความที่บันทึกไว้">
               <div
                 className="animate-[pulse_2s_ease-in-out_infinite]"

@@ -1,105 +1,228 @@
-import SectionWithImage from "~/components/modules/auth/SectionWithImage";
+import * as Icons from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "~/components/ui/input";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "~/components/ui/form";
+
+import React from "react";
+import GlobalButton from "~/components/shared/global-button";
+import BgLogin from "/assets/images/bg-login.png";
 import LogoImage from "/assets/images/rome.png";
-import PolicyImage1 from "/assets/images/pana.png";
-import PolicyImage2 from "/assets/images/Illustration.png";
-import PolicyImage3 from "/assets/images/Art.png";
-import PolicyImage4 from "/assets/images/rafiki.png";
+import LogoUtotechImage from "/assets/images/logo.webp";
+import { Link, useActionData, useNavigation, useSubmit } from "react-router";
+import { loginFormSchema, type LoginFormValues } from "~/schemas/login";
+import WebSitePolicyDialog from "~/components/modules/auth/web-policy";
+import { useState } from "react";
+import SavePolicyDialog from "~/components/modules/auth/save-policy";
+
 
 
 export default function LoginForm() {
-  return (
-      <div className="flex-col items-center ">
-        <header className="w-full bg-white shadow-sm border-b border-gray-200">
-          <div className="mx-auto flex items-center justify-between px-6">
-            <div className="flex items-center space-x-2">
-            <img
-            src={LogoImage}
-            alt="logo"
-            width={60}
-            height={60}
-            className="w-full h-[60px] object-contain"
-          />            
-          </div>
+  const { state } = useNavigation();
 
-            <div className="flex space-x-2">
-              <button className="rounded-md bg-black text-white font-medium px-3 py-1.5 hover:bg-gray-800 transition">
-                นโยบายเว็บไซต์
-              </button>
-              <button className="rounded-md border border-gray-300 bg-gray-200 text-black-700 font-medium px-3 py-1.5 hover:text-white hover:bg-gray-900 hover:shadow-md hover:scale-105 transition">
-                นโยบายการรักษาความมั่นคงปลอดภัย
-              </button>
+  const action = useActionData();
+
+  const submit = useSubmit();
+
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [openWeb, setWebPoOpen] = React.useState<boolean>(false);
+  const [openSave, setSavePoOpen] = React.useState<boolean>(false);
+
+
+
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: {
+      user: "",
+      password: "",
+    },
+  });
+
+  const { isSubmitting, errors } = form.formState;
+  const isProcessing = isSubmitting;
+
+  const onSubmit = async (values: LoginFormValues) => {
+    const payload = {
+      user: values.user,
+      password: values.password,
+    };
+
+    submit(payload, { method: "POST" });
+  };
+  return (
+    <div className="min-h-screen flex flex-col lg:flex-row">
+      <div className="hidden lg:block relative w-3/4 h-screen">
+        <img
+          src={BgLogin}
+          alt="Login Image"
+          className="w-full h-full object-cover"
+        />
+        <div>
+          <div className="absolute inset-0 flex items-center flex-col text-white bg-black/30">
+            {/* <div className="absolute top-[10%] flex flex-col items-center">
+              <p className="text-4xl font-bold mb-2">ROME</p>
+              <p className="text-lg max-w-xl text-center">
+                ปลดล็อกพลังแห่งระบบอัตโนมัติและเพิ่มประสิทธิภาพการทำงาน
+                จัดการการเข้างาน บันทึกข้อมูล และจัดการ Work flow
+                ของคุณได้อย่างง่ายดาย
+              </p>
+            </div> */}
+
+            {/* <div className="absolute flex bottom-[10%] items-center flex-col text-white bg-black/30"> */}
+            <div className="absolute bottom-5 left-5 flex flex-col items-center">
+              <p className="text-md font-bold mb-2">
+                © 2025 Copyrights All Rights Reserved powered by Utotech
+                Co.,Ltd.
+              </p>
+            </div>
+
+            <div className="absolute bottom-3 right-5 flex flex-col items-center">
+              <a
+                href="https://utotech.co.th/home"
+                target="_blank"
+                className="text-lg font-bold mb-2"
+              >
+                {/* https://utotech.co.th */}
+                <img
+                  src={LogoUtotechImage}
+                  alt="logo"
+                  width={60}
+                  height={60}
+                  className="w-full h-[60px] object-cover"
+                />
+              </a>
             </div>
           </div>
-        </header>
-        <div className="rounded-md mt-8 px-20 ">
-          <h1 className="text-6xl font-bold text-center text-gray-900">
-            นโยบายเว็บไซต์ (Website Policy)
-          </h1>
-          <div>
-            <SectionWithImage
-            title="1. วัตถุประสงค์ของเว็บไซต์"
-            content={`เว็บไซต์นี้จัดทำขึ้นเพื่อให้บริการข้อมูล ข่าวสาร กิจกรรม ผลงาน และภารกิจของหน่วยงานแก่ประชาชนทั่วไป โดยมีวัตถุประสงค์เพื่อเผยแพร่ข้อมูลข่าวสารของหน่วยงานให้ประชาชนได้รับทราบอย่างถูกต้อง รวดเร็ว และโปร่งใส รวมถึงสนับสนุนให้ประชาชนเข้าถึงข้อมูลและบริการของภาครัฐได้สะดวกมากยิ่งขึ้น
-              เว็บไซต์นี้ยังเป็นช่องทางสื่อสารระหว่างหน่วยงานกับประชาชน เพื่อรับฟังความคิดเห็นหรือข้อเสนอแนะที่เป็นประโยชน์ต่อการพัฒนาองค์กร โดยมุ่งหวังให้เว็บไซต์นี้เป็นศูนย์กลางข้อมูลออนไลน์ของหน่วยงานและเป็นสื่อกลางในการให้บริการข้อมูลสาธารณะอย่างมีประสิทธิภาพและปลอดภัย`}
-            image={PolicyImage1}
-            position="right"  
-            />
+        </div>
+      </div>
 
-            <SectionWithImage
-            title="2. การใช้ข้อมูลในเว็บไซต์"
-            content={`เนื้อหาทั้งหมดในเว็บไซต์นี้ เช่น ข้อความ บทความ ข่าวสาร ภาพถ่าย วิดีโอ เสียง โลโก้ ไฟล์กราฟิก และเอกสารทุกชนิด ถือเป็นทรัพย์สินทางปัญญาของหน่วยงาน การนำข้อมูลไปใช้ต้องอยู่ภายใต้เงื่อนไขดังนี้:
-            • สามารถใช้ข้อมูลเพื่อประโยชน์ส่วนบุคคลหรือสาธารณะได้ โดยต้องอ้างอิงแหล่งที่มาชัดเจน
-            • ห้ามนำข้อมูลไปใช้เพื่อวัตถุประสงค์ทางการค้า หรือในลักษณะที่อาจก่อให้เกิดความเสียหายต่อหน่วยงานหรือบุคคลอื่น
-            • ห้ามทำซ้ำ ดัดแปลง แก้ไข หรือเผยแพร่ข้อมูลในเชิงพาณิชย์โดยไม่ได้รับอนุญาตเป็นลายลักษณ์อักษรจากหน่วยงาน
-            หากตรวจพบการละเมิดลิขสิทธิ์หรือการนำข้อมูลไปใช้ในทางที่ไม่เหมาะสม หน่วยงานสงวนสิทธิ์ในการดำเนินการทางกฎหมายตามพระราชบัญญัติลิขสิทธิ์และกฎหมายอื่นที่เกี่ยวข้อง`}
-            />
+      <div className="w-full flex flex-col items-center justify-center px-6 py-12 lg:w-1/4">
+        <div className="mb-8 flex flex-col items-center space-y-2 py-10 pt-6">
+          <img
+            src={LogoImage}
+            alt="logo"
+            width={120}
+            height={120}
+            className="w-full h-[200px] object-contain"
+          />
+          {/* <h1 className="text-2xl font-bold text-foreground">ROME</h1> */}
 
-            <SectionWithImage
-            title="3. ความถูกต้องของข้อมูล"
-            content={`หน่วยงานมุ่งมั่นในการจัดเตรียมข้อมูลให้ถูกต้อง ครบถ้วน และเป็นปัจจุบัน อย่างไรก็ตามข้อมูลบางส่วนอาจมีการเปลี่ยนแปลงตามช่วงเวลา หน่วยงานไม่สามารถรับรองความถูกต้องหรือความครบถ้วนได้ทุกประการในขณะเข้าชม
-
-            หน่วยงานขอสงวนสิทธิ์ในการปรับปรุง แก้ไข หรือยกเลิกข้อมูลโดยไม่ต้องแจ้งให้ทราบล่วงหน้า และไม่รับผิดชอบต่อผลที่เกิดจากการใช้ข้อมูลจากเว็บไซต์นี้โดยตรงหรือโดยอ้อม ผู้ใช้งานควรตรวจสอบข้อมูลจากแหล่งทางการก่อนนำไปใช้อ้างอิงหรือเผยแพร่ต่อ`}
-            image={PolicyImage2}
-            position="left"  
-            />
-
-            <SectionWithImage
-            title="4. ลิงก์ไปยังเว็บไซต์ภายนอก"
-            content={`เว็บไซต์นี้อาจมีลิงก์เชื่อมโยงไปยังเว็บไซต์ของหน่วยงานอื่นหรือเว็บไซต์ภายนอก เพื่ออำนวยความสะดวกแก่ผู้ใช้งาน อย่างไรก็ตาม หน่วยงานไม่มีอำนาจควบคุมหรือรับรองความถูกต้องของข้อมูลในเว็บไซต์ภายนอกเหล่านั้น\n
-            การเชื่อมโยงดังกล่าวไม่ถือเป็นการรับรองหรือสนับสนุนเนื้อหาของเว็บไซต์ภายนอกในทางใด และหน่วยงานไม่รับผิดชอบต่อความเสียหายใด ๆ ที่เกิดจากการเข้าชมหรือใช้งานเว็บไซต์ภายนอกนั้น`}
-            image={PolicyImage3}
-            position="right"  
-            />
-
-            <SectionWithImage
-            title="5. ลิงก์ไปยังเว็บไซต์ภายนอก"
-            content={`หน่วยงานไม่รับผิดชอบต่อความเสียหายหรือความสูญเสียใด ๆ ที่เกิดขึ้นจากการใช้งานเว็บไซต์นี้ ไม่ว่าจะเป็นทางตรง ทางอ้อม หรือโดยผลสืบเนื่อง รวมถึง:
-            • ความเสียหายต่อข้อมูลหรืออุปกรณ์ของผู้ใช้
-            • ความล่าช้า ข้อผิดพลาด หรือการขาดการเชื่อมต่อของระบบที่เกิดจากเหตุทางเทคนิค
-            • การโจมตีทางไซเบอร์ ไวรัส มัลแวร์ หรือภัยคุกคามอื่น ๆ ที่อาจเกิดขึ้นจากการดาวน์โหลดข้อมูล
-            ผู้ใช้ควรมีมาตรการป้องกันข้อมูลของตนเอง เช่น ใช้ซอฟต์แวร์ป้องกันไวรัสและอัปเดตระบบอย่างสม่ำเสมอ เพื่อป้องกันความเสียหายจากการใช้งานเว็บไซต์`}
-            />
-
-            <SectionWithImage
-            title="6. การปรับปรุงนโยบายเว็บไซต์"
-            content={`หน่วยงานขอสงวนสิทธิ์ในการปรับปรุงหรือแก้ไขนโยบายเว็บไซต์นี้ได้ทุกเมื่อ โดยจะประกาศแจ้งให้ทราบผ่านหน้าเว็บไซต์เมื่อมีการเปลี่ยนแปลงที่สำคัญ ผู้ใช้ควรตรวจสอบนโยบายนี้เป็นระยะ เพื่อให้ทราบข้อกำหนดล่าสุดก่อนเข้าใช้งาน\n
-            นโยบายนี้มีผลบังคับใช้ตั้งแต่วันที่ประกาศและถือเป็นแนวทางปฏิบัติสำหรับการใช้งานเว็บไซต์ของหน่วยงานโดยรวม`}
-            image={PolicyImage4}
-            position="left"  
-            />
-            
-          </div>
-          <div className="text-center pt-10">
-            <button className="rounded-md bg-black text-white font-medium px-4 py-2 hover:bg-gray-800 transition">
-              กลับไปหน้าเว็บไซต์
-            </button>
-            <p className="text-gray-500 text-sm mt-4">
-              ปรับปรุงล่าสุด: 12 พฤศจิกายน 2568
+          <div className="flex flex-col items-center">
+            <p className="text-2xl font-bold mb-2">ROME</p>
+            <p className="text-sm text-gray-500 max-w-xl text-center">
+              ปลดล็อกพลังแห่งระบบอัตโนมัติและเพิ่มประสิทธิภาพการทำงาน
+              จัดการการเข้างาน บันทึกข้อมูล และจัดการ Work flow
+              ของคุณได้อย่างง่ายดาย
             </p>
           </div>
         </div>
-          
-        
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6 w-full max-w-sm"
+          >
+            <div className="flex justify-center">
+              <h2 className="text-xl font-semibold text-foreground">
+                เข้าสู่ระบบ
+              </h2>
+            </div>
+
+            <FormField
+              control={form.control}
+              name="user"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>ชื่อผู้ใช้งาน / อีเมล</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="กรอกชื่อผู้ใช้งาน/อีเมล" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>รหัสผ่าน</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        {...field}
+                        placeholder="กรอกรหัสผ่าน"
+                      />
+                      <div
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                      >
+                        {showPassword ? <Icons.Eye /> : <Icons.EyeOff />}
+                      </div>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="mt-1 flex flex-row justify-end  gap-2 text-gray-500">
+              <Link to="/forgot-password" key="hover:underline">
+                ลืมรหัสผ่าน
+              </Link>
+            </div>
+
+            <span className="w-full flex justify-center text-red-600">
+              {action?.error}
+            </span>
+            <GlobalButton
+              label="เข้าสู่ระบบ"
+              type="submit"
+              loading={
+                isProcessing || state === "submitting" || state === "loading"
+              }
+            />
+
+            {errors?.root?.serverError?.type === "401" && (
+              <p className="text-red-600 text-center">
+                ชื่อผู้ใช้งาน / อีเมล หรือ รหัสผ่านไม่ถูกต้อง
+              </p>
+            )}
+          </form>
+        </Form>
+
+        <div className="mt-10 flex flex-row gap-2">
+              <div
+                key="hover:underline"
+                className="cursor-pointer"
+                onClick={() => setWebPoOpen(true)}
+              >
+                นโยบายเว็บไซต์
+              </div>
+              <WebSitePolicyDialog openWeb={openWeb} setOpen={setWebPoOpen} />
+          |
+              <div
+                key="hover:underline"
+                className="cursor-pointer"
+                onClick={() => setSavePoOpen(true)}
+              >
+                นโยบายการรักษาความมั่นคงปลอดภัย
+              </div>
+              <SavePolicyDialog openSave={openSave} setOpen={setSavePoOpen} />
+             
+
+              
+        </div>
       </div>
+    </div>
   );
 }
-
