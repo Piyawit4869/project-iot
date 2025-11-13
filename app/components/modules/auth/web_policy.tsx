@@ -25,7 +25,7 @@ export default function LoginForm() {
               <button className="rounded-md bg-black text-white font-medium px-3 py-1.5 hover:bg-gray-800 transition">
                 นโยบายเว็บไซต์
               </button>
-              <button className="rounded-md border border-gray-300 bg-gray-200 text-black-700 font-medium px-3 py-1.5 hover:text-white hover:bg-gray-900 hover:shadow-md hover:scale-105 transition">
+              <button className="rounded-md border border-gray-300 bg-gray-200 text-black-700 font-medium px-3 py-1.5 hover:bg-gray-700 transition">
                 นโยบายการรักษาความมั่นคงปลอดภัย
               </button>
             </div>
