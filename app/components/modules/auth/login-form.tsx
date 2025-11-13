@@ -18,6 +18,11 @@ import LogoImage from "/assets/images/rome.png";
 import LogoUtotechImage from "/assets/images/logo.webp";
 import { Link, useActionData, useNavigation, useSubmit } from "react-router";
 import { loginFormSchema, type LoginFormValues } from "~/schemas/login";
+import WebSitePolicyDialog from "~/components/modules/auth/web-policy";
+import { useState } from "react";
+import SavePolicyDialog from "~/components/modules/auth/save-policy";
+
+
 
 export default function LoginForm() {
   const { state } = useNavigation();
@@ -27,6 +32,10 @@ export default function LoginForm() {
   const submit = useSubmit();
 
   const [showPassword, setShowPassword] = React.useState(false);
+  const [openWeb, setWebPoOpen] = React.useState<boolean>(false);
+  const [openSave, setSavePoOpen] = React.useState<boolean>(false);
+
+
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -192,13 +201,26 @@ export default function LoginForm() {
         </Form>
 
         <div className="mt-10 flex flex-row gap-2">
-          <a href="" className="hover:underline">
-            นโยบายเว็บไซต์
-          </a>
+              <div
+                key="hover:underline"
+                className="cursor-pointer"
+                onClick={() => setWebPoOpen(true)}
+              >
+                นโยบายเว็บไซต์
+              </div>
+              <WebSitePolicyDialog openWeb={openWeb} setOpen={setWebPoOpen} />
           |
-          <a href="" className="hover:underline">
-            นโยบายการรักษาความมั่นคงปลอดภัย
-          </a>
+              <div
+                key="hover:underline"
+                className="cursor-pointer"
+                onClick={() => setSavePoOpen(true)}
+              >
+                นโยบายการรักษาความมั่นคงปลอดภัย
+              </div>
+              <SavePolicyDialog openSave={openSave} setOpen={setSavePoOpen} />
+             
+
+              
         </div>
       </div>
     </div>
