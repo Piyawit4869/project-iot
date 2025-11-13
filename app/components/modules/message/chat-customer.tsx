@@ -1032,23 +1032,25 @@ export default function ChatCustomerInfo({
             {/* TAG UI START */}
             <div className="px-1">
               <Separator className="mt-2 mb-2" />
-              <h2>แท็กลูกค้า</h2>
 
               {tags && tags.length ? (
-                <div className="pb-0 mt-2 px-2">
-                  <div className="gap-2 flex flex-row flex-wrap">
-                    {tags.map((item: any) => {
-                      return (
-                        <GlobalTagsBadge
-                          key={item.id}
-                          value={item.name}
-                          fontSize={10}
-                          paddingX={1.5}
-                        />
-                      );
-                    })}
+                <>
+                  <h2>แท็กลูกค้า</h2>
+                  <div className="pb-0 mt-2 px-2">
+                    <div className="gap-2 flex flex-row flex-wrap">
+                      {tags.map((item: any) => {
+                        return (
+                          <GlobalTagsBadge
+                            key={item.id}
+                            value={item.name}
+                            fontSize={10}
+                            paddingX={1.5}
+                          />
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
+                </>
               ) : (
                 <div className="px-2">
                   <h2>แท็กลูกค้า</h2>
