@@ -143,7 +143,6 @@ export const mergeRoomImmutable = (
 
     const without = allRooms.slice(0, idx).concat(allRooms.slice(idx + 1));
     const finalItems = [merged, ...without];
-    console.log("finalItems", finalItems);
 
     return sortingChatRoomByLatestTime(finalItems);
   }
@@ -371,7 +370,8 @@ export const ChatRoomProvider = ({
         search,
         setSearch,
         filterRoom,
-      }}>
+      }}
+    >
       {children}
     </ChatRoomContext.Provider>
   );
@@ -409,6 +409,5 @@ const sortingChatRoomByLatestTime = (chatrooms: ChatRoom[]): ChatRoom[] => {
     ["desc"]
   );
 
-  console.log("sorted", sorted);
   return sorted;
 };

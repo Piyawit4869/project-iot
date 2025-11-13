@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button } from "~/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Send } from "lucide-react";
 import { Textarea } from "~/components/ui/textarea";
 
 interface HeroSearchProps {
@@ -25,7 +25,7 @@ export default function HeroSearch(props: HeroSearchProps) {
         {/* Search Bar */}
         <div className="w-full max-w-3xl mt-2">
           {/* Composer Card */}
-          <div className="flex flex-col rounded-[28px] border-1 border-neutral-300 ring-1 ring-white/10 overflow-hidden">
+          <div className="flex flex-col rounded-[12px] border-1 border-neutral-300 ring-1 ring-white/10 overflow-hidden">
             {/* Floating send button */}
 
             {/* Textarea */}
@@ -39,46 +39,10 @@ export default function HeroSearch(props: HeroSearchProps) {
               />
             </div>
             <div className="flex self-end mr-2 mb-2">
-              <Button
-                type="button"
-                onClick={onSend}
-                className="h-8 w-8 rounded-full bg-sky-500 hover:bg-sky-600 text-white"
-                aria-label="ส่ง"
-              >
-                <ArrowRight className="h-5 w-5" />
+              <Button size="icon" type="submit" onClick={onSend}>
+                <Send className="w-4 h-4" />
               </Button>
             </div>
-
-            {/* Toolbar */}
-            {/* <div className="absolute left-4 bottom-3 flex items-center gap-4 text-neutral-300">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-9 w-9 rounded-full hover:bg-white/10"
-                  aria-label="แนบไฟล์"
-                >
-                  <LinkIcon className="h-5 w-5" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-9 w-9 rounded-full hover:bg-white/10"
-                  aria-label="คำสั่งช่วยเหลือ"
-                >
-                  <Sparkles className="h-5 w-5" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-9 w-9 rounded-full hover:bg-white/10"
-                  aria-label="ช่วยเหลือ"
-                >
-                  <CircleHelp className="h-5 w-5" />
-                </Button>
-              </div> */}
           </div>
         </div>
 

@@ -15,6 +15,7 @@ import {
   Check,
   Brain,
   ShoppingBag,
+  PlusIcon,
 } from "lucide-react";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -51,6 +52,9 @@ import {
   useAiReplySettings,
   useConnectedChatRoomAssistant,
   useGetAiNote,
+  useGetAllTags,
+  useGetSummaryAINote,
+  useUpdateCustomerTags,
 } from "~/api/client/customer/useCustomer";
 import {
   CustomerSupportFormSchema,
@@ -97,6 +101,9 @@ import { OrderViewModal } from "./orders-view-modal";
 import { AIMessageView } from "./ai-message-view-modal";
 import { GlobalTooltip } from "~/components/shared/global-tooltip";
 import { AIInsightExampleRender } from "./ai-insight-example-render";
+import { ChatCustomerTags } from "./chat-customer-tags";
+import { DEFAULT_TAGS } from "~/utils/tagUtils";
+import type { CustomerUpdateTags } from "~/schemas/customer/customer";
 
 interface UserProps {
   id: string;
@@ -134,7 +141,13 @@ export default function ChatCustomerInfo({
   currentCustomer: Customer;
   api: string;
 }) {
+  const { data: allTags } = useGetAllTags();
+
   const [search, setSearch] = React.useState<string>("");
+  const [showTagManager, setShowTagManager] = React.useState(false);
+  const [selectedTags, setSelectedTags] = React.useState<
+    { id: string; name: string }[]
+  >([]);
 
   const debouncedSearch = useDebounce(search);
 
@@ -145,6 +158,8 @@ export default function ChatCustomerInfo({
   });
 
   const { data: getData } = useGetAiNote(currentCustomer?.id);
+  const { mutate: updateTags } = useUpdateCustomerTags(currentCustomer?.id);
+
   const dataFromAI = getData?.customerData;
 
   const { setProducts } = useOrder();
@@ -182,7 +197,7 @@ export default function ChatCustomerInfo({
     React.useState<string>("");
 
   const { mutateAsync: connectedChatRoomAI, isPending: isPendingAI } =
-    useConnectedChatRoomAssistant(customer?.id, chatRoomAssistantId);
+    useConnectedChatRoomAssistant();
 
   const navigate = useNavigate();
 
@@ -376,15 +391,43 @@ export default function ChatCustomerInfo({
     });
   };
 
-  // const handleOpenPopover = (isMain: boolean) => {
-  //   setAddingMainSupport(isMain);
-  //   setIsPopoverOpen(true);
-  //   form.reset({
-  //     userId: "",
-  //     isMain: isMain,
-  //     customerId: currentCustomer.id,
-  //   });
-  // };
+  const handleSubmit = () => {
+    GlobalModal.info({
+      title: "เพิ่มแท็กของลูกค้า",
+      description: "คุณต้องการเพิ่มแท็กของลูกค้า ใช่หรือไม่?",
+      confirmText: "ยืนยัน",
+      cancelText: "ยกเลิก",
+      onConfirm: () => {
+        const toastId = toast.loading("กำลังเพิ่มผู้แท็กของลูกค้า...");
+
+        const result = selectedTags.map((tag) => {
+          return {
+            id: tag.id,
+            name: tag.name,
+            active: true,
+          };
+        });
+
+        updateTags(
+          { tags: result },
+          {
+            onSuccess: () => {
+              toast.success("เพิ่มผู้แท็กของลูกค้าเรียบร้อยแล้ว!", {
+                id: toastId,
+              });
+              refetchCustomer();
+            },
+            onError: () => {
+              toast.error("ไม่สามารถเพิ่มผู้แท็กของลูกค้า", { id: toastId });
+              refetchCustomer();
+            },
+          }
+        );
+
+        setShowTagManager(false);
+      },
+    });
+  };
 
   const handleUserButtonClick = (selectedUserId: string, isMain: boolean) => {
     CreateSupport({
@@ -580,7 +623,12 @@ export default function ChatCustomerInfo({
     if (currentCustomer) {
       setChatRoomAssistantId(currentCustomer?.chatRoomAssistantId || "");
     }
+
+    if (currentCustomer && currentCustomer?.tags) {
+      setSelectedTags(currentCustomer?.tags as []);
+    }
   }, [currentCustomer]);
+
   const countFilterOption: number = selected.length;
 
   const secondarySupports = React.useMemo(() => {
@@ -597,6 +645,18 @@ export default function ChatCustomerInfo({
     currentCustomer && currentCustomer.tags && currentCustomer.tags.length > 0
       ? currentCustomer.tags
       : [];
+
+  const availableTags =
+    allTags && allTags.length
+      ? allTags
+          .filter((a: any, index: number) => index < 20)
+          .map((b: any) => {
+            return { name: b.name, id: b.id };
+          })
+      : [];
+
+  const isLineNameSameAsCustomerName =
+    currentCustomer?.profile?.name === currentCustomer?.profile?.lineName;
 
   return (
     <>
@@ -625,9 +685,11 @@ export default function ChatCustomerInfo({
                       />
                     </div>
 
-                    <h2 className="font-semibold text-sm mr-auto">
-                      {currentCustomer.profile.lineName || "ไม่ทราบชื่อ"}
-                    </h2>
+                    {!isLineNameSameAsCustomerName && (
+                      <h2 className="font-semibold text-sm mr-auto">
+                        {currentCustomer.profile.lineName || "ไม่ทราบชื่อ"}
+                      </h2>
+                    )}
                   </>
                 ) : (
                   <div className="flex flex-row gap-2 items-center">
@@ -682,24 +744,6 @@ export default function ChatCustomerInfo({
             </GlobalTooltip>
           </div>
         </div>
-
-        {!!tags.length && (
-          <div className="pt-4 pb-0 px-2 mt-2">
-            <Separator className="mb-2" />
-            <div className="gap-2 flex flex-row flex-wrap">
-              {tags.map((item: any) => {
-                return (
-                  <GlobalTagsBadge
-                    key={item.id}
-                    value={item.name}
-                    fontSize={10}
-                    paddingX={1.5}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        )}
 
         <div className="px-4 mt-2">
           <div className="mt-4 space-y-1">
@@ -845,13 +889,7 @@ export default function ChatCustomerInfo({
                   ผู้รับผิดชอบรอง
                 </p>
                 <div className="flex flex-wrap gap-2 mb-2">
-                  {/* {currentCustomer &&
-                    currentCustomer.supports &&
-                    currentCustomer.supports.filter((spl) => !spl.isMain) */}
                   {displayed.length > 0 &&
-                    // currentCustomer.supports
-                    //   .filter((spl) => !spl.isMain)
-
                     displayed.map((user, i) => (
                       <div
                         className="relative inline-block"
@@ -991,7 +1029,49 @@ export default function ChatCustomerInfo({
               </div>
             </div>
 
-            {/* Note Section */}
+            {/* TAG UI START */}
+            <div className="px-1">
+              <Separator className="mt-2 mb-2" />
+              <h2>แท็กลูกค้า</h2>
+
+              {tags && tags.length ? (
+                <div className="pb-0 mt-2 px-2">
+                  <div className="gap-2 flex flex-row flex-wrap">
+                    {tags.map((item: any) => {
+                      return (
+                        <GlobalTagsBadge
+                          key={item.id}
+                          value={item.name}
+                          fontSize={10}
+                          paddingX={1.5}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
+                <div className="px-2">
+                  <h2>แท็กลูกค้า</h2>
+                  <div className="flex justify-center p-4">
+                    <span className="text-sm transition-colors break-words text-slate-400 italic">
+                      ยังไม่มีข้อมูล
+                    </span>
+                  </div>
+                </div>
+              )}
+              <GlobalButton
+                className="mt-4"
+                key="sync-ai"
+                type="button"
+                onClick={() => setShowTagManager(true)}
+                variant="secondary"
+                icon={<PlusIcon />}
+                label={<span className="hidden sm:inline">แก้ไขแท็ก</span>}
+              />
+              <Separator className="mt-2 mb-2" />
+            </div>
+            {/* TAG UI END*/}
+
             <Tabs defaultValue="note" onValueChange={(v) => setActiveTab(v)}>
               <ScrollArea className="h-[40px]">
                 <TabsList className="w-full">
@@ -1244,7 +1324,7 @@ export default function ChatCustomerInfo({
               </TabsContent>
 
               <TabsContent value="settingAI">
-                <div className="space-y-3 mt-4 h-1/2 overflow-auto">
+                <div className="space-y-3 h-[calc(100vh-450px)] overflow-auto">
                   <div className="flex flex-row justify-between items-center w-full">
                     <h3 className="text-sm font-semibold mt-1">พูดคุยกับ AI</h3>
 
@@ -1260,15 +1340,9 @@ export default function ChatCustomerInfo({
                     </Button>
                   </div>
 
-                  {/* {isFirstTimeAI ? ( */}
-                  {isFirstTimeAI &&
-                  currentCustomer &&
-                  !currentCustomer.chatRoomAssistantId ? (
-                    <AIInsightExampleRender
-                      customerName={currentCustomer.name}
-                    />
+                  {isFirstTimeAI && !chatRoomAssistantId ? (
+                    <HeroSearch onInputChange={handleFirstTimeAISearch} />
                   ) : (
-                    // <HeroSearch onInputChange={handleFirstTimeAISearch} /> // !! old code for p'aon
                     <ChatMessagesWithAI
                       customerId={customer.id}
                       chatRoomId={chatRoomAssistantId}
@@ -1285,6 +1359,36 @@ export default function ChatCustomerInfo({
         </div>
       </aside>
 
+      {/* {isFirstTimeAI ? ( */}
+      {/* {isFirstTimeAI &&
+                  currentCustomer &&
+                  !currentCustomer.chatRoomAssistantId ? (
+                    <AIInsightExampleRender
+                      customerName={currentCustomer.name}
+                    />
+                  ) : (
+                    // <HeroSearch onInputChange={handleFirstTimeAISearch} /> // !! old code for p'aon
+                    <ChatMessagesWithAI
+                      customerId={customer.id}
+                      chatRoomId={chatRoomAssistantId}
+                      autoScroll={autoScroll}
+                      setAutoScroll={setAutoScroll}
+                      searchPrompt={firstTimeMessage}
+                      isAILoading={isPendingAI}
+                    />
+                  )} */}
+
+      {showTagManager && (
+        <ChatCustomerTags
+          title="แก้ไขแท็ก"
+          selectedTags={selectedTags}
+          availableTags={availableTags}
+          onTagsChange={setSelectedTags}
+          onClose={() => setShowTagManager(false)}
+          handleSubmit={handleSubmit}
+        />
+      )}
+
       <OrderViewModal
         open={isCheckStatusOpen}
         onOpenChange={setCheckStatusOpen}
@@ -1294,6 +1398,7 @@ export default function ChatCustomerInfo({
         open={AIOpen}
         onOpenChange={setAIOpen}
         customer={dataFromAI}
+        noSyncBtn={true}
       />
 
       <AboutCustomer
@@ -1314,93 +1419,6 @@ export default function ChatCustomerInfo({
           customerOrders?.find((co) => co.id === viewOrderDetail)
         }
       />
-
-      {/* <Dialog open={openAiSetting} onOpenChange={setOpenAiSetting}>
-        <DialogContent className="sm:max-w-lg w-full max-h-[70vh] overflow-auto p-6 rounded-lg">
-          <DialogHeader>
-            <DialogTitle>การตั้งค่า AI</DialogTitle>
-          </DialogHeader>
-
-          <div className="flex flex-col space-y-2 mt-4 max-h-[50vh] overflow-y-auto">
-            <div className="flex items-center justify-between mt-4 mb-3">
-              <Label htmlFor="ai-enabled" className="text-sm">
-                เปิดใช้งานตลอดเวลา
-              </Label>
-              <Switch
-                id="ai-enabled"
-                checked={aiEnabled}
-                onCheckedChange={setAiEnabled}
-              />
-            </div>
-
-            <div className="flex items-center justify-between mt-4 mb-3">
-              <Label htmlFor="ai-enabled-condition" className="text-sm">
-                ใช้งาน AI ตามเงื่อนไข
-              </Label>
-              <Switch
-                id="ai-enabled-condition"
-                checked={aiEnabledWithCondition}
-                onCheckedChange={(state) => {
-                  setAiEnabledWithCondition(state);
-
-                  if (state === true) {
-                    setAiEnabled(false);
-                  }
-                }}
-              />
-            </div>
-
-            <div
-              className={cn(
-                "mt-4 space-y-4 transition-all",
-                !aiEnabledWithCondition && "opacity-50 pointer-events-none"
-              )}
-            >
-              <div className="flex flex-col gap-2">
-                <Label className="text-sm">ช่วงเวลาที่ให้ AI ตอบ</Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="time"
-                    value={aiStartTime || ""}
-                    onChange={(e) => setAiStartTime(e.target.value)}
-                    className="w-[120px]"
-                    disabled={!aiEnabledWithCondition}
-                  />
-                  <span className="text-sm">ถึง</span>
-                  <Input
-                    type="time"
-                    value={aiEndTime || ""}
-                    onChange={(e) => setAiEndTime(e.target.value)}
-                    className="w-[120px]"
-                    disabled={!aiEnabledWithCondition}
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <Label className="text-sm">
-                  หากไม่มีการตอบกลับจากเซลภายใน (ชั่วโมง)
-                </Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="time"
-                    value={aiWaitTime || ""}
-                    onChange={(e) => setAiWaitTime(e.target.value)}
-                    className="w-[120px]"
-                    disabled={!aiEnabledWithCondition}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <GlobalButton
-              label="บันทึกการตั้งค่า AI"
-              className="mt-8 mb-8"
-              onClick={handleChangeAIConfig}
-            />
-          </div>
-        </DialogContent>
-      </Dialog> */}
 
       <Dialog open={openAiSetting} onOpenChange={setOpenAiSetting}>
         <DialogContent className="sm:max-w-lg w-full max-h-[70vh] overflow-auto p-6 rounded-lg">

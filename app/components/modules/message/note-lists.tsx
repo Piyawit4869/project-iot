@@ -213,7 +213,11 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
           onClose={handleOnCloseModal}
           onSubmit={handleSubmitFormModal}
         />
-        <GetNoteFormAI open={OpenAiNote} setOpen={setOpenAiNote} />
+        <GetNoteFormAI
+          customerId={customer.id}
+          open={OpenAiNote}
+          setOpen={setOpenAiNote}
+        />
       </div>
     </div>
   );

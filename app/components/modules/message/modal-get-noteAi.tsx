@@ -1,34 +1,9 @@
-// AiCustomerFields.tsx
 import * as React from "react";
 
-import { formatDateAndTime } from "~/components/shared/global-format";
-import type { CustomerRequestResponse } from "../customer/types/customer";
-import GlobalButton from "~/components/shared/global-button";
-import {
-  CalendarDays,
-  FileText,
-  icons,
-  Link,
-  Mail,
-  MessageSquare,
-  Navigation,
-  Package,
-  Phone,
-  ShieldCheck,
-  Smile,
-  Ticket,
-  User,
-  UserCheck,
-} from "lucide-react";
-import { useNavigate } from "react-router";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "~/components/ui/dialog";
 import { Card } from "~/components/ui/card";
+import { useGetSummaryAINote } from "~/api/client/customer/useCustomer";
+import { StreamingText } from "./streaming-text";
 
 type FieldKey =
   | "customerStatus"
@@ -47,29 +22,41 @@ export type AiFieldsState = Record<
 >;
 
 type Props = {
-  data?: any;
+  customerId?: any;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function GetNoteFormAI({ data, open, setOpen }: Props) {
+export function GetNoteFormAI({ customerId, open, setOpen }: Props) {
+  //TODO
+  // const { data } = useGetSummaryAINote(customerId);
+  // console.log({ customerId, data });
+
+  const data = "";
+
   return (
-    <>
-      {/* Dialog */}
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="sm:max-w-lg w-full  max-h-[95vh] min-w-[35%] overflow-auto  rounded-lg">
+        <DialogTitle>สรุปโน้ตจาก AI</DialogTitle>
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-lg w-full  max-h-[95vh] min-w-[35%] overflow-auto  rounded-lg">
-          <DialogTitle>สรุปโน้ตจาก AI</DialogTitle>
-
-          <Card className="w-full h-full min-h-[20vh] flex items-center justify-center">
-            <div className="flex flex-row flex-wrap justify-center">
-              <span className="pl-4 text-[#71717A] text-center">
-                ฟีเจอร์นี้อยู่ระหว่างการพัฒนา โปรดรอการอัปเดตเร็ว ๆ นี้
-              </span>
-            </div>
-          </Card>
-        </DialogContent>
-      </Dialog>
-    </>
+        <Card className="w-full h-full min-h-[20vh] flex items-center justify-center">
+          <div className="flex flex-row flex-wrap justify-center">
+            <StreamingText
+              text={
+                data
+                  ? data
+                  : " ฟีเจอร์นี้อยู่ระหว่างการพัฒนา โปรดรอการอัปเดตเร็ว ๆ นี้"
+              }
+              speed={40}
+            />
+            {/* ) : (
+                <span className="pl-4 text-[#71717A] text-center">
+                  ฟีเจอร์นี้อยู่ระหว่างการพัฒนา โปรดรอการอัปเดตเร็ว ๆ นี้
+                </span>
+              )} */}
+          </div>
+        </Card>
+      </DialogContent>
+    </Dialog>
   );
 }
