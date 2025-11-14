@@ -12,6 +12,7 @@ import {
 export default [
   // Public
   route("login", "routes/login.tsx"),
+  route("/forgot-password", "routes/forgot.tsx"),
   route("/logout", "routes/logout.tsx"),
 
   // route("public", "routes/public.tsx", [index("routes/backoffice/home.tsx")]),
