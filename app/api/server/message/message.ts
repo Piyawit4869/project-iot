@@ -105,6 +105,19 @@ export const fetchAllMessageWithRoomId = async (
   return res.data;
 };
 
+export const fetchAllMessageCursorWithRoomId = async (
+  roomId: string,
+  currentId?: string | null,
+  limit = 20,
+  direction = "before"
+) => {
+  const res = await ApiConfig.get(`/chats/${roomId}/messages/cursor`, {
+    params: { currentId, limit, direction },
+  });
+
+  return res.data;
+};
+
 export const fetchSearchByKeyword = async (roomId: string, keyword: string) => {
   const res = await ApiConfig.get(`/chats/${roomId}/search-by-keyword`, {
     params: { keyword },

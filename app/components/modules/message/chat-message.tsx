@@ -9,7 +9,7 @@ import ChatInput from "./chat-input";
 import { CustomerChatSkeleton } from "./noData/customer-chat-skeleton";
 import { socketConfig } from "~/lib/sockets";
 import type { ChatRoomSchemaType } from "~/schemas/message/message";
-import { usePaginatedMessages } from "~/api/client/message/useMessage";
+import { usePaginatedMessagesCursor } from "~/api/client/message/useMessage";
 import { useChat, type Message } from "~/providers/chat/useChat";
 import StatusToolbar from "./status-toolbar";
 import ReactLinkify from "react-linkify";
@@ -56,15 +56,14 @@ export default function ChatMessages({
   const [buttonScrollToBottom, setButtonScrollToBottom] = React.useState(false);
 
   const { messages: socketMessages, addMessage } = useChat();
-  const [offset, setOffset] = React.useState<number>(0);
+  const [cursor, setCursor] = React.useState<string>("");
 
   const messageRefs = useRef<{ [id: string]: HTMLDivElement | null }>({});
 
-  const [targetMessageId, setTargetMessageId] = useState<string | null>(null);
+  const [targetMessageId, setTargetMessageId] = useState<string>("");
   const [targetMessageOffset, setTargetMessageOffset] = useState<number | null>(
     null
   );
-
   const [pendingScrollTarget, setPendingScrollTarget] = useState<string | null>(
     null
   );
@@ -75,7 +74,7 @@ export default function ChatMessages({
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = usePaginatedMessages(selectedRoom.id, offset);
+  } = usePaginatedMessagesCursor(selectedRoom.id, targetMessageId);
 
   const paginatedMessages = messagesData?.pages.flatMap((page) => page) ?? [];
 
@@ -203,6 +202,8 @@ export default function ChatMessages({
     }
 
     socket.on("chat", (msg: Message) => {
+      console.log("chat", msg);
+
       addMessage({
         ...msg,
         imageUrl:
@@ -218,15 +219,11 @@ export default function ChatMessages({
   const [hasScrolledToTarget, setHasScrolledToTarget] = useState(false);
 
   const handleSearchClick = (messageId: string, messageOffset: number) => {
-    const total = messagesData?.pages?.[0]?.meta?.total ?? 0;
+    // const total = messagesData?.pages?.[0]?.meta?.total ?? 0;
 
     setTargetMessageId(messageId);
     setTargetMessageOffset(messageOffset);
     setHasScrolledToTarget(false);
-
-    const offset = Math.floor((messageOffset / total) * total);
-
-    setOffset(messageOffset - 1);
   };
 
   React.useEffect(() => {
@@ -304,8 +301,8 @@ export default function ChatMessages({
         <div className="hidden xl:block">
           <StatusToolbar
             chatRoomDetail={selectedRoom}
-            setOffset={setOffset}
-            total={messagesData?.pages[0]?.meta.total ?? 0}
+            setCursor={setCursor}
+            total={messagesData?.pages[0]?.meta?.total ?? 0}
             onSearchClick={handleSearchClick}
           />
         </div>

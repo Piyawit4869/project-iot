@@ -68,6 +68,7 @@ type IncomingRoomPayload = {
   done: boolean;
   isProcess: boolean;
   isUpdateRoomDetails?: boolean;
+  isAiReply?: boolean;
 };
 
 export const mergeRoomImmutable = (
@@ -76,6 +77,10 @@ export const mergeRoomImmutable = (
 ): ChatRoom[] => {
   const incomingId = incoming.chatRoomId ?? incoming.id;
   if (!incomingId) {
+    return sortingChatRoomByLatestTime(allRooms);
+  }
+  //Check new room not update when message is incomming wrong body
+  if (incoming.hasOwnProperty("isAiReply")) {
     return sortingChatRoomByLatestTime(allRooms);
   }
 

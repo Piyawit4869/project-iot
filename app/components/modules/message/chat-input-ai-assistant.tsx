@@ -26,14 +26,18 @@ import {
 import { useUpload } from "~/api/client/upload";
 
 export default function ChatInputAIAssistant({
+  isPendingAI,
   customerId,
   chatRoomId,
   isAILoading,
+  connectedChatRoomAIAssistant,
 }: {
+  isPendingAI: boolean;
   customerId: string;
   chatRoomId: string;
   isAILoading: boolean;
   firstTimeMessage?: string;
+  connectedChatRoomAIAssistant: (values: any) => void;
 }) {
   const { messagesAITest, setMessagesAITest } = useCustomer();
 
@@ -43,50 +47,48 @@ export default function ChatInputAIAssistant({
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const { selectedRoom } = useChatRoom();
   const { mutate: upload, isPending } = useUpload();
-  const { mutateAsync: connectedChatRoomAIAssistant, isPending: isPendingAI } =
-    useConnectedChatRoomAssistant();
 
   const handleInputChange = (e: any) => {
     const value = e.target.value;
 
-    setInput(e.target.value);
-    setMessagesAITest((prev) => {
-      const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
+    setInput(value);
+    // setMessagesAITest((prev) => {
+    //   const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
 
-      if (roomIndex > -1) {
-        const updatedMessages = [...prev];
-        updatedMessages[roomIndex] = {
-          ...updatedMessages[roomIndex],
-          lastestMessage: value,
-        } as CustomerMessage;
+    //   if (roomIndex > -1) {
+    //     const updatedMessages = [...prev];
+    //     updatedMessages[roomIndex] = {
+    //       ...updatedMessages[roomIndex],
+    //       lastestMessage: value,
+    //     } as CustomerMessage;
 
-        return updatedMessages;
-      }
+    //     return updatedMessages;
+    //   }
 
-      return [...prev, { roomId: selectedRoom.id, lastestMessage: value }];
-    });
+    //   return [...prev, { roomId: selectedRoom.id, lastestMessage: value }];
+    // });
   };
 
   const sendText = async (e: React.FormEvent) => {
     const textarea = e.target as HTMLTextAreaElement;
     textarea.style.height = "auto";
 
-    setMessagesAITest((prev) => {
-      const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
+    // setMessagesAITest((prev) => {
+    //   const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
 
-      if (roomIndex > -1) {
-        const updatedMessages = [...prev];
+    //   if (roomIndex > -1) {
+    //     const updatedMessages = [...prev];
 
-        updatedMessages[roomIndex] = {
-          ...updatedMessages[roomIndex],
-          lastestMessage: "",
-        } as CustomerMessage;
+    //     updatedMessages[roomIndex] = {
+    //       ...updatedMessages[roomIndex],
+    //       lastestMessage: "",
+    //     } as CustomerMessage;
 
-        return updatedMessages;
-      }
+    //     return updatedMessages;
+    //   }
 
-      return prev;
-    });
+    //   return prev;
+    // });
 
     e.preventDefault();
     if (!input.trim() || !customerId) return;
