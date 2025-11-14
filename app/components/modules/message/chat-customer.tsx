@@ -163,7 +163,6 @@ export default function ChatCustomerInfo({
   const dataFromAI = getData?.customerData;
 
   const { setProducts } = useOrder();
-  const { addMessageAI } = useChat();
 
   const classForTaps = `
      group relative inline-flex items-center gap-2
@@ -595,31 +594,6 @@ export default function ChatCustomerInfo({
   }, [data, currentCustomer]);
 
   React.useEffect(() => {
-    const socket = socketConfig(api);
-
-    // ✅ Join chat room (detail)
-    if (chatRoomAssistantId) {
-      socket.emit("chat", { chatRoomId: `${chatRoomAssistantId}` });
-    }
-
-    // ✅ Listen for new messages
-    socket.on("chat", (msg: Message) => {
-      console.log("msg on socket", msg);
-
-      addMessageAI({
-        ...msg,
-        imageUrl:
-          msg.imageUrl || `https://ui-avatars.com/api/?name=${msg.sender}`,
-      });
-    });
-
-    // ❌ Don't forget to clean up!
-    return () => {
-      socket.disconnect();
-    };
-  }, [chatRoomAssistantId]);
-
-  React.useEffect(() => {
     if (currentCustomer) {
       setChatRoomAssistantId(currentCustomer?.chatRoomAssistantId || "");
     }
@@ -660,7 +634,7 @@ export default function ChatCustomerInfo({
 
   return (
     <>
-      <aside className="flex flex-col w-full bg-white dark:bg-background xl:h-[calc(100vh-50px)] xl:px-1 border-l">
+      <aside className="flex flex-col w-full bg-white dark:bg-background xl:h-[calc(100vh-50px)] xl:px-1 border-l overflow-y-auto">
         <div className="py-4 px-2 flex w-full mt-6 items-center justify-between gap-2 h-[60px] rounded-2xl bg-background">
           <div>
             <div className="flex gap-2">
@@ -1196,7 +1170,7 @@ export default function ChatCustomerInfo({
                   </div>
                 </div>
 
-                <div className="space-y-3  pt-4">
+                <div className="space-y-3">
                   <p className="text-sm text-muted-foreground mb-2 font-semibold">
                     รายการสินค้าในระบบ
                   </p>
@@ -1206,7 +1180,7 @@ export default function ChatCustomerInfo({
                     onChange={(e) => setSearch(e.target.value)}
                   />
 
-                  <ScrollArea className="h-[calc(100vh-480px)] rounded-md border p-2 bg-white pb-[35px]">
+                  <ScrollArea className="h-[calc(100vh-560px)] rounded-md border p-2 bg-white pb-[35px]">
                     <ul className="space-y-2">
                       {productsLoading ? (
                         <div className="space-y-2">

@@ -34,7 +34,7 @@ type Props = {
   onChange?: (next: Status) => void;
   className?: string;
   // offset: number | null;
-  setOffset: React.Dispatch<React.SetStateAction<number>>;
+  setCursor: React.Dispatch<React.SetStateAction<string>>;
   total: number;
   onSearchClick?: (messageId: string, offset: number) => void;
 };
@@ -80,7 +80,7 @@ export function calcOffsetFromBottom(params: CalcParams) {
 export default function StatusToolbar({
   chatRoomDetail,
   className,
-  setOffset,
+  setCursor,
   total,
   onSearchClick,
 }: // offset,
@@ -89,9 +89,6 @@ Props) {
   const [search, setSearch] = React.useState<string>("");
 
   const inputRef = React.useRef<HTMLInputElement>(null);
-
-  const { mutate: markAsProcess } = useMarkAsProcess(chatRoomDetail?.id);
-  const { mutate: markAsDone } = useMarkAsDone(chatRoomDetail?.id);
 
   const { mutate: updateStatusProgressTag } = useUpdateStatusProgressTag(
     chatRoomDetail?.id
@@ -203,7 +200,7 @@ Props) {
 
       onSearchClick(id, offset);
     }
-    setOffset(item.offset);
+    setCursor(item.offset);
     // }
     // setOpenNavigateMessage(false);
   };

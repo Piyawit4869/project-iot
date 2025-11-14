@@ -74,7 +74,7 @@ export default function ChatlistSidebar({
 
   const [allRooms, setAllRooms] = React.useState<ChatRoom[]>([]);
 
-  const { currentRoomId } = useChat();
+  const { currentRoomId, addMessageAI } = useChat();
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
   const handleScroll = () => {
@@ -112,7 +112,18 @@ export default function ChatlistSidebar({
     }
 
     socket.on("rooms", (room: any) => {
+      console.log("rooms", room);
+
       setAllRooms((prev) => mergeRoomImmutable(prev, room));
+
+      if (room.chatRoomType === "assistant") {
+        addMessageAI({
+          ...room,
+          imageUrl:
+            room.imageUrl || `https://ui-avatars.com/api/?name=${room.sender}`,
+          read: true,
+        });
+      }
     });
 
     return () => {
@@ -162,7 +173,8 @@ export default function ChatlistSidebar({
                 />
                 <button
                   onClick={handleCloseSearch}
-                  className="px-2 py-1 bg-gray-200 rounded-md text-sm hover:bg-gray-300 transition-colors">
+                  className="px-2 py-1 bg-gray-200 rounded-md text-sm hover:bg-gray-300 transition-colors"
+                >
                   ✕
                 </button>
               </div>
@@ -177,7 +189,8 @@ export default function ChatlistSidebar({
 
                 <div
                   className="text-gray-400 border h-[30px] rounded-md px-3 py-1 text-sm bg-background w-1/2 transition-all duration-200 focus:outline-none focus:ring-0 focus:border-gray-300"
-                  onClick={() => setInputOpen(true)}>
+                  onClick={() => setInputOpen(true)}
+                >
                   ค้นหา
                 </div>
               </div>
@@ -188,7 +201,8 @@ export default function ChatlistSidebar({
 
           <PopoverContent
             align="start"
-            className="p-0 w-64 max-h-none overflow-visible">
+            className="p-0 w-64 max-h-none overflow-visible"
+          >
             <Command className="max-h-none overflow-visible">
               <CommandList className="max-h-none overflow-visible">
                 <CommandGroup heading="">
@@ -248,26 +262,28 @@ export default function ChatlistSidebar({
           (search !== "" ? (
             filterRoom &&
             filterRoom.length > 0 &&
-            filterRoom.map((room: any, i: number) => (
-              <ChatItem
-                key={room?.id + i}
-                roomId={room?.id ?? ""}
-                selectedRoom={currentRoomId}
-                name={room?.name}
-                message={room?.latestMessage?.messageLabel ?? ""}
-                time={room?.latestMessage?.createdAt ?? ""}
-                image={room?.imageUrl || ""}
-                unread={room?.unreadMessageCount > 0}
-                countUnreadMessage={room?.unreadMessageCount || 0}
-                roomDetail={room}
-                currentCustomer={currentCustomer}
-                onChatClick={() => {
-                  handleChangeSelectedRoom(room);
-                  setSidebarOpen(false);
-                  setOnSelectRoom(true);
-                }}
-              />
-            ))
+            filterRoom.map((room: any, i: number) => {
+              return (
+                <ChatItem
+                  key={room?.id + i}
+                  roomId={room?.id ?? ""}
+                  selectedRoom={currentRoomId}
+                  name={room?.name}
+                  message={room?.latestMessage?.message ?? ""}
+                  time={room?.latestMessage?.createdAt ?? ""}
+                  image={room?.imageUrl || ""}
+                  unread={room?.unreadMessageCount > 0}
+                  countUnreadMessage={room?.unreadMessageCount || 0}
+                  roomDetail={room}
+                  currentCustomer={currentCustomer}
+                  onChatClick={() => {
+                    handleChangeSelectedRoom(room);
+                    setSidebarOpen(false);
+                    setOnSelectRoom(true);
+                  }}
+                />
+              );
+            })
           ) : (
             <React.Fragment>
               <div className="flex flex-col gap-3 w-full mt-2 px-3 pb-2">
@@ -312,7 +328,8 @@ export default function ChatlistSidebar({
                   className="text-sm font-semibold hover:text-gray-700"
                   onClick={() =>
                     console.log("ปิดใช้งานการบันทึกอัตโนมัติ clicked")
-                  }>
+                  }
+                >
                   <p className="text-xs font-semibold">
                     ปิดใช้งานการบันทึกอัตโนมัติ
                   </p>
@@ -320,7 +337,8 @@ export default function ChatlistSidebar({
                 <p className="text-xs font-semibold">|</p>
                 <button
                   className="text-sm font-semibold hover:text-gray-700"
-                  onClick={() => console.log("ลบทั้งหมด clicked")}>
+                  onClick={() => console.log("ลบทั้งหมด clicked")}
+                >
                   <p className="text-xs font-semibold">ลบทั้งหมด</p>
                 </button>
               </div>
@@ -332,7 +350,8 @@ export default function ChatlistSidebar({
         <div
           className="flex-1 overflow-y-auto"
           ref={scrollRef}
-          onScroll={handleScroll}>
+          onScroll={handleScroll}
+        >
           {isLoading ? (
             <LoadingSkeleton />
           ) : allRooms.length > 0 ? (
@@ -342,7 +361,7 @@ export default function ChatlistSidebar({
                 roomId={room?.id ?? ""}
                 selectedRoom={currentRoomId}
                 name={room?.name}
-                message={room?.latestMessage?.messageLabel ?? ""}
+                message={room?.latestMessage?.message ?? ""}
                 time={room?.latestMessage?.createdAt ?? ""}
                 image={room?.imageUrl || ""}
                 unread={room?.unreadMessageCount > 0}
@@ -416,7 +435,8 @@ function ChatItem({
       onClick={() => {
         setCurrentRoomId?.(roomId);
         onChatClick?.();
-      }}>
+      }}
+    >
       <div className="relative w-12 h-12 shrink-0">
         <GlobalImage
           src={!image || image === "" ? fallbackImage : image}
@@ -427,7 +447,8 @@ function ChatItem({
         {!autoReadMsg && countUnreadMessage > 0 && (
           <span
             className="absolute top-0 right-0 inline-grid place-items-center min-w-5 h-5 px-1 rounded-full bg-red-500 text-white text-xs font-medium"
-            aria-hidden>
+            aria-hidden
+          >
             {countUnreadMessage}
           </span>
         )}
@@ -451,7 +472,8 @@ function ChatItem({
                   unread && "font-medium",
                   ((roomDetail && roomDetail.done) || roomDetail.isProcess) &&
                     "truncate w-[100px]"
-                )}>
+                )}
+              >
                 {message}
               </p>
 
