@@ -172,6 +172,22 @@ export const fetchRoomChatAILoadMore = async (
   }
 };
 
+export const fetchRoomChatAIConfigLoadMore = async (
+  chatRoomId: string,
+  offset = 0,
+  limit = 10
+) => {
+  try {
+    const res = await ApiConfig.get(`/chats/${chatRoomId}/messages`, {
+      params: { offset, limit, type: "config" },
+    });
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const fetchSendMessage = async (payload: PushMessageValues) => {
   try {
     const res = await ApiConfig.post(`/chats/push-message`, payload);

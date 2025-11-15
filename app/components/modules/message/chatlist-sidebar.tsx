@@ -121,7 +121,7 @@ export default function ChatlistSidebar({
           ...room,
           imageUrl:
             room.imageUrl || `https://ui-avatars.com/api/?name=${room.sender}`,
-          read: true,
+          streaming: true,
         });
       }
     });

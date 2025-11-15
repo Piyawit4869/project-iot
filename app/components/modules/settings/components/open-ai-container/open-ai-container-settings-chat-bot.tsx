@@ -36,15 +36,15 @@ export const OpenAiContainerSettingsChatBot: React.FC<
   // const id = (params?.id as string) ?? "";
 
   const id = "2f733c74-7d49-475c-a832-1c01b888576b";
-
+  const chatRoomId = "f10574c5-fe1e-4216-85f3-d5400af2e4ad";
   const { mutate: UpdateConnectionAi } = useUpdateConnectionAi(String(id));
   const { refetch: refetchChatAI } = useGetConnectionAi(String(id));
 
   const { data } = useGetConnectionAi(id ?? "");
 
-  const { addMessage } = useChat();
+  const { addMessageAI } = useChat();
 
-  const { user_data } = useRouteLoaderData("root");
+  const { user } = useRouteLoaderData("root");
 
   const [autoScroll, setAutoScroll] = React.useState<boolean>(true);
 
@@ -118,42 +118,69 @@ export const OpenAiContainerSettingsChatBot: React.FC<
       });
     }
   }, [data, form]);
+
+  // React.useEffect(() => {
+  //   const socket = socketConfig(api);
+
+  //   console.log("🔌 Connecting socket...");
+
+  //   socket.on("connect", () => {
+  //     console.log("✅ Socket connected:", socket.id);
+  //   });
+
+  //   socket.on("disconnect", (reason) => {
+  //     console.log("❌ Socket disconnected:", reason);
+  //   });
+
+  //   socket.on("connect_error", (error) => {
+  //     console.error("⚠️ Socket connection error:", error.message);
+  //   });
+
+  //   if (data?.id) {
+  //     console.log("data", data);
+
+  //     console.log("📨 Joining chat room:", {
+  //       room: `assistant:${data.id}`,
+  //     });
+  //     socket.emit("chat", {
+  //       room: "assistant:f10574c5-fe1e-4216-85f3-d5400af2e4ad",
+  //     });
+  //   }
+
+  //   socket.on("chatAI", (msg: Message) => {
+  //     console.log("💬 Received message:", msg);
+
+  //     addMessage({ ...msg });
+  //   });
+
+  //   return () => {
+  //     console.log("🔌 Disconnecting socket...");
+  //     socket.disconnect();
+  //   };
+  // }, [data]);
+
   React.useEffect(() => {
     const socket = socketConfig(api);
 
-    console.log("🔌 Connecting socket...");
-
-    socket.on("connect", () => {
-      console.log("✅ Socket connected:", socket.id);
-    });
-
-    socket.on("disconnect", (reason) => {
-      console.log("❌ Socket disconnected:", reason);
-    });
-
-    socket.on("connect_error", (error) => {
-      console.error("⚠️ Socket connection error:", error.message);
-    });
-
-    if (data?.id) {
-      console.log("data", data);
-
-      console.log("📨 Joining chat room:", {
-        room: `assistant:${data.id}`,
-      });
-      socket.emit("chat", {
-        room: "assistant:f10574c5-fe1e-4216-85f3-d5400af2e4ad",
-      });
+    if (user?.branchId) {
+      console.log("me?.branchId", user?.branchId);
+      socket.emit("rooms", `${user.branchId}`);
     }
 
-    socket.on("chatAI", (msg: Message) => {
-      console.log("💬 Received message:", msg);
+    socket.on("rooms", (room: any) => {
+      console.log("rooms", room);
 
-      addMessage({ ...msg });
+      if (room.chatRoomType === "config") {
+        addMessageAI({
+          ...room,
+          imageUrl:
+            room.imageUrl || `https://ui-avatars.com/api/?name=${room.sender}`,
+          streaming: true,
+        });
+      }
     });
 
     return () => {
-      console.log("🔌 Disconnecting socket...");
       socket.disconnect();
     };
   }, [data]);
@@ -197,7 +224,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
                   <HeroSearch onInputChange={handleFirstTimeAISearch} />
                 ) : ( */}
                 <ChatBotChatMessagesAndConfig
-                  chatRoomId={"f10574c5-fe1e-4216-85f3-d5400af2e4ad"}
+                  chatRoomId={chatRoomId}
                   searchPrompt={firstTimeMessage}
                   data={data}
                   autoScroll={autoScroll}
