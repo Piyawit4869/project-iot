@@ -85,13 +85,13 @@ export const RelationshipCard: React.FC<CustomerRelationshipFormProps> = ({
         form={form}
         className="min-h-50 h-auto"
       />
-      <AICard
+      {/* <AICard
         loading={loading ?? false}
         isEdit={isEdit ?? false}
         className="min-h-50"
         customers={customerAISetting}
         refetchCustomer={fetchCustomercAISetting}
-      />
+      /> */}
     </div>
   );
 };

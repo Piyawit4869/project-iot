@@ -133,11 +133,11 @@ export const useSearchByKeyWord = (id: string, keyword: string) => {
   });
 };
 
-export const usePaginatedChatRooms = (name = "") => {
+export const usePaginatedChatRooms = (name = "", topic = "") => {
   return useInfiniteQuery({
-    queryKey: ["roomChat", name],
+    queryKey: ["roomChat", name, topic],
     queryFn: async ({ pageParam }) => {
-      return fetchRoomChatLoadMore(pageParam, 20, name);
+      return fetchRoomChatLoadMore(pageParam, 20, name, topic);
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {

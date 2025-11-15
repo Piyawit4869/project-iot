@@ -287,8 +287,12 @@ type ChatRoomContextType = {
   rooms: any;
   setRooms: React.Dispatch<React.SetStateAction<any>>;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
+
+  select: string;
+  setSelect: React.Dispatch<React.SetStateAction<string>>;
   search: string;
   filterRoom: any;
+  meta: any;
 };
 
 const ChatRoomContext = React.createContext<ChatRoomContextType | undefined>(
@@ -315,8 +319,10 @@ export const ChatRoomProvider = ({
   };
 
   const [search, setSearch] = React.useState<string>("");
+  const [select, setSelect] = React.useState<string>("all");
 
   const debouncedSearch = useDebounce(search);
+  const debouncedSearchSelectKey = useDebounce(select);
 
   const {
     data: chatRooms,
@@ -324,7 +330,10 @@ export const ChatRoomProvider = ({
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = usePaginatedChatRooms(debouncedSearch);
+  } = usePaginatedChatRooms(
+    debouncedSearch,
+    debouncedSearchSelectKey === "all" ? "" : debouncedSearchSelectKey
+  );
   const [realtimeChatRooms, setRealtimeChatRooms] = React.useState<any>();
   const [selectedRoom, setSelectedRoom] =
     React.useState<ChatRoomSchemaType>(initialState);
@@ -343,11 +352,10 @@ export const ChatRoomProvider = ({
   const [autoReadMsg, setAutoReadMsg] = React.useState<boolean>(false);
 
   const filterRoom = React.useMemo(() => {
-    if (search === "" || !chatRooms) return [];
+    if ((select === "" && search === "") || !chatRooms) return [];
 
     return computeRooms(chatRooms, realtimeChatRooms);
   }, [chatRooms, realtimeChatRooms]);
-
   return (
     <ChatRoomContext.Provider
       value={{
@@ -374,7 +382,12 @@ export const ChatRoomProvider = ({
         setRooms,
         search,
         setSearch,
+        select,
+        setSelect,
         filterRoom,
+        meta: {
+          statusSummary: chatRooms && chatRooms.pages?.[0]?.statusSummary,
+        },
       }}
     >
       {children}
