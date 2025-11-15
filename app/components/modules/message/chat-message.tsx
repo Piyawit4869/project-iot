@@ -69,6 +69,12 @@ export function MessageText({ text }: { text: string }) {
   );
 }
 
+const formatTime = (sec: number) => {
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+};
+
 export default function ChatMessages({
   api,
   customer,
@@ -81,8 +87,24 @@ export default function ChatMessages({
   selectedRoom: ChatRoomSchemaType;
   setAutoScroll: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = React.useState(false);
+  const [currentTime, setCurrentTime] = React.useState(0);
+  const [duration, setDuration] = React.useState(0);
+
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+
+  const togglePlay = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (playing) {
+      audio.pause();
+      setPlaying(false);
+    } else {
+      audio.play();
+      setPlaying(true);
+    }
+  };
 
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -153,17 +175,17 @@ export default function ChatMessages({
     }
   };
 
-  const togglePlay = () => {
-    if (!audioRef.current) return;
+  // const togglePlay = () => {
+  //   if (!audioRef.current) return;
 
-    if (playing) {
-      audioRef.current.pause();
-      setPlaying(false);
-    } else {
-      audioRef.current.play();
-      setPlaying(true);
-    }
-  };
+  //   if (playing) {
+  //     audioRef.current.pause();
+  //     setPlaying(false);
+  //   } else {
+  //     audioRef.current.play();
+  //     setPlaying(true);
+  //   }
+  // };
 
   function renderMessageContent(
     msg: any,
@@ -292,6 +314,28 @@ export default function ChatMessages({
     }
 
     // AUDIO
+    // if (type === "audio") {
+    //   return (
+    //     <div
+    //       className="flex items-center gap-3 bg-muted px-3 py-2 rounded-xl cursor-pointer"
+    //       onClick={togglePlay}
+    //     >
+    //       <AudioLines className="w-6 h-6 text-primary" />
+
+    //       <span className="font-medium text-sm">
+    //         {playing ? <PauseIcon size={14} /> : <PlayIcon size={14} />}
+    //       </span>
+
+    //       <audio
+    //         ref={audioRef}
+    //         src={message}
+    //         onEnded={() => setPlaying(false)}
+    //         preload="auto"
+    //       />
+    //     </div>
+    //   );
+    // }
+
     if (type === "audio") {
       return (
         <div
@@ -304,11 +348,29 @@ export default function ChatMessages({
             {playing ? <PauseIcon size={14} /> : <PlayIcon size={14} />}
           </span>
 
+          {/* เวลา (เล่นไป / ทั้งหมด) */}
+          <span className="text-xs font-medium ml-2">
+            {formatTime(currentTime)} / {formatTime(duration)}
+          </span>
+
           <audio
             ref={audioRef}
             src={message}
-            onEnded={() => setPlaying(false)}
             preload="auto"
+            onLoadedMetadata={() => {
+              const audio = audioRef.current;
+              if (!audio) return;
+              setDuration(audio.duration);
+            }}
+            onTimeUpdate={() => {
+              const audio = audioRef.current;
+              if (!audio) return;
+              setCurrentTime(audio.currentTime);
+            }}
+            onEnded={() => {
+              setPlaying(false);
+              setCurrentTime(0);
+            }}
           />
         </div>
       );
