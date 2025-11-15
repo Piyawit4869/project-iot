@@ -5,7 +5,7 @@ import GlobalButton from "~/components/shared/global-button";
 import { useMemo } from "react";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { Button } from "~/components/ui/button";
 
 import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
@@ -13,6 +13,8 @@ import type { UserColumn } from "~/types/user/type-user";
 import { statusMap } from "~/types/user/init-data";
 
 export const LineMassageColumns = (): ColumnDef<UserColumn>[] => {
+  const [sp] = useSearchParams();
+
   const columns = useMemo<ColumnDef<UserColumn>[]>(
     () => [
       {
@@ -45,10 +47,16 @@ export const LineMassageColumns = (): ColumnDef<UserColumn>[] => {
         id: "actions",
         header: "การดำเนินการ",
         cell: (info) => {
-          const id = info.row.original.id;
+          const subId = info.row.original.id;
+          const id = sp.get("id") ?? "";
+
+          const tabFromUrl = sp.get("tab") ?? "config-line";
+
           return (
             <div className="flex items-center gap-2">
-              <Link to={`/users/${id}`}>
+              <Link
+                to={`/setting-organization/third-party/line?tab=massage-line&id=${id}&tab=${tabFromUrl}&view=edit&subId=${subId}`}
+              >
                 <Button
                   className="h-9 w-9 p-0 bg-[#737373] hover:bg-[#5E5E5E]"
                   aria-label="แก้ไข"

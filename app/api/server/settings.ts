@@ -220,7 +220,7 @@ export const fetchLineMassagePaginate = async (params: {
     p.page = params.page;
     p.limit = params.limit;
 
-    const res = await ApiConfig.get(`/thirdparty/line/content-reply/paginate`, {
+    const res = await ApiConfig.get(`/thirdparty/line/contents/paginate`, {
       params: p,
     });
 

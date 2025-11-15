@@ -1,15 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface StreamingTextProps {
   text: string;
   speed?: number;
+  onDone?: () => void;
 }
 
-export function StreamingText({ text, speed = 50 }: StreamingTextProps) {
+export function StreamingText({
+  text,
+  speed = 50,
+  onDone,
+}: StreamingTextProps) {
   const [displayedText, setDisplayedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const prevTextRef = useRef(text);
+
   useEffect(() => {
+    if (prevTextRef.current !== text) {
+      prevTextRef.current = text;
+      setDisplayedText("");
+      setCurrentIndex(0);
+    }
+  }, [text]);
+
+  useEffect(() => {
+    if (!text) return;
+
     if (currentIndex < text.length) {
       const timer = setTimeout(() => {
         setDisplayedText((prev) => prev + text[currentIndex]);
@@ -17,18 +34,14 @@ export function StreamingText({ text, speed = 50 }: StreamingTextProps) {
       }, speed);
 
       return () => clearTimeout(timer);
+    } else {
+      onDone?.();
     }
-  }, [currentIndex, text, speed]);
+  }, [currentIndex, text, speed, onDone]);
 
   return (
     <p className="leading-relaxed whitespace-pre-wrap text-md">
       {displayedText}
-      {/* {currentIndex < text.length && (
-        <span
-          className="inline-block w-1 h-5 ml-1 animate-pulse"
-          style={{ backgroundColor: "#FCAE2F" }} // เคอร์เซอร์เหลือง
-        ></span>
-      )} */}
     </p>
   );
 }

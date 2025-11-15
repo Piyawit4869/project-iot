@@ -57,8 +57,6 @@ export const ChatBotChatMessagesAndConfig: React.FC<
     // refetch,
   } = usePaginatedChatRoomAI(chatRoomId || "");
 
-  console.log({ messagesData });
-
   const { mutateAsync: connectedChatRoomAI, isPending: isPendingAI } =
     useConnectedChatRoomAIConfig(chatRoomId);
 

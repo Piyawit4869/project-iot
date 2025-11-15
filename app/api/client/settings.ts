@@ -28,7 +28,14 @@ import type {
   OrganizationFormValues,
   PushMessageValues,
   SettingSchemaValues,
+  TeamMessageCreateDTO,
 } from "~/schemas/settings";
+import {
+  createReplyMessage,
+  getReplyMessage,
+  markFavoriteReplyMessage,
+  updateReplyMessage,
+} from "../server/message/line";
 
 export const useGetOrganizations = () =>
   useQuery({
@@ -182,7 +189,7 @@ export const useLineMassagePaginate = ({
   limit,
 }: {
   pageIndex: number;
-  pageSize: number;
+  pageSize?: number;
   limit: number;
 }) => {
   return useQuery({
@@ -194,5 +201,31 @@ export const useLineMassagePaginate = ({
         limit: limit,
       }),
     enabled: !!pageIndex && !!pageSize,
+  });
+};
+
+export const useLineCreateReplyMessage = () => {
+  return useMutation({
+    mutationFn: (payload: TeamMessageCreateDTO) => createReplyMessage(payload),
+  });
+};
+
+export const useLineUpdateReplyMessage = (id: string) => {
+  return useMutation({
+    mutationFn: (payload: TeamMessageCreateDTO) =>
+      updateReplyMessage(id, payload),
+  });
+};
+
+export const useLineGetReplyMessage = (id: string) => {
+  return useQuery({
+    queryKey: ["line-reply"],
+    queryFn: async () => getReplyMessage(id),
+  });
+};
+
+export const useLineMarkFavoriteRplyMessage = () => {
+  return useMutation({
+    mutationFn: async (id: string) => markFavoriteReplyMessage(id),
   });
 };

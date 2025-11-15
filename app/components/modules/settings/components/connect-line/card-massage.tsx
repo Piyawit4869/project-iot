@@ -74,8 +74,6 @@ export default function MessageCardForm() {
         ...categoryPayload,
       };
 
-      console.log("payload", payload);
-
       // await ApiConfig.post("/thirdparty/line/content-reply", payload);
 
       toast.success("บันทึกการ์ดสำเร็จ", {

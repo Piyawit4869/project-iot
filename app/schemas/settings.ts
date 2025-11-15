@@ -103,7 +103,7 @@ export const ConnectLineSchema = z.object({
     .min(1, "กรุณากรอก Channel Secret")
     .max(200, "Channel Secret ยาวเกินไป")
     .optional(),
-  accessToken: z
+  channelAccessToken: z
     .string()
     .min(1, "กรุณากรอก Channel access token")
     .max(500, "Token ยาวเกินไป")
@@ -115,7 +115,7 @@ export type ConnectLineValues = z.infer<typeof ConnectLineSchema>;
 export const ReplySchema = z.object({
   name: z.string().min(1, "กรุณากรอกชื่อ").max(30),
   description: z.string().optional(),
-  text: z.string().min(1, "กรุณากรอกข้อความ").max(1000),
+  content: z.string().min(1, "กรุณากรอกข้อความ").max(1000),
 });
 export type ReplyValues = z.infer<typeof ReplySchema>;
 
@@ -199,7 +199,7 @@ export const chatRoomSchema = z.object({
       .optional()
   ),
   latestMessage: z.object({
-    id: z.string().uuid(),
+    id: z.string(),
     message: z.string(),
     createdAt: z.string().datetime(),
   }),
@@ -214,9 +214,60 @@ export const pushMessageSchema = z.object({
   messageType: z.string(),
   isAiReply: z.boolean(),
   recipient: z.string().optional(),
-  customerId: z.string().uuid().optional(),
+  customerId: z.string().optional(),
   platform: z.string(),
   messageLabel: z.string(),
 });
 
 export type PushMessageValues = z.infer<typeof pushMessageSchema>;
+
+// message item
+const MessageItemSchema = z.object({
+  type: z.enum(["text"]), // ถ้ามี media อื่นในอนาคต สามารถเพิ่มได้
+  text: z.string(),
+});
+
+// content
+const ContentSchema = z.object({
+  messages: z.array(MessageItemSchema),
+});
+
+// full schema (ใช้ตอน fetch จาก DB)
+const TeamMessageSchema = z.object({
+  id: z.string(),
+  active: z.boolean().default(true),
+  name: z.string(),
+  description: z.string().nullable().optional(),
+  isFavorite: z.boolean().default(false),
+  type: z.enum(["text"]), // ถ้ารองรับหลายชนิด เพิ่มที่นี่
+  content: ContentSchema,
+});
+
+// create schema (ตอนสร้างใหม่)
+const TeamMessageCreateSchema = z.object({
+  active: z.boolean().default(true),
+  name: z.string(),
+  description: z.string().nullable().optional(),
+  isFavorite: z.boolean().default(false),
+  type: z
+    .enum(["card", "reply", "quick_reply", "location", "flex", "bubble"])
+    .default("reply"),
+  // content: ContentSchema,
+  content: z.string(),
+});
+
+// list schema
+const TeamMessageListSchema = z.array(TeamMessageSchema);
+
+// types
+export type TeamMessage = z.infer<typeof TeamMessageSchema>;
+export type TeamMessageCreateDTO = z.infer<typeof TeamMessageCreateSchema>;
+export type TeamMessageList = TeamMessage[];
+
+export {
+  TeamMessageSchema,
+  TeamMessageCreateSchema,
+  TeamMessageListSchema,
+  ContentSchema,
+  MessageItemSchema,
+};

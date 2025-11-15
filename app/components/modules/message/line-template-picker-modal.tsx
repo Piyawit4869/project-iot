@@ -33,6 +33,12 @@ import {
   PlusCircle,
 } from "lucide-react";
 import { cn } from "~/lib/utils";
+import {
+  useLineMarkFavoriteRplyMessage,
+  useLineMassagePaginate,
+} from "~/api/client/settings";
+import { Link } from "react-router";
+import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 
 // -----------------------------
 // Types
@@ -344,7 +350,7 @@ function ProfileCardCarousel({ items }: { items: ProfileCardData[] }) {
   );
 }
 
-function PreviewPane({ item }: { item?: TemplateItem }) {
+function PreviewPane({ item }: { item?: any }) {
   const fallback = (
     <div className="h-full w-full grid place-items-center text-muted-foreground">
       เลือกรายการทางซ้ายเพื่อดูตัวอย่าง
@@ -405,7 +411,9 @@ function PreviewPane({ item }: { item?: TemplateItem }) {
       </div>
       <div className="p-4 h-full max-h-[600px] rounded-b-xl bg-[linear-gradient(180deg,#cfe3ff_0%,#d7e9ff_35%,#e7f0ff_100%)]">
         <div className="mt-2">
-          <ChatBubble text={item.subtitle ?? "ตัวอย่างข้อความ"} />
+          <ChatBubble
+            text={item?.content?.messages?.[0]?.text ?? "ตัวอย่างข้อความ"}
+          />
         </div>
       </div>
     </div>
@@ -416,22 +424,51 @@ function PreviewPane({ item }: { item?: TemplateItem }) {
 // Main Component
 // -----------------------------
 
-export default function LineTemplatePickerModal() {
+export default function LineTemplatePickerModal({
+  handleSelectChange,
+}: {
+  handleSelectChange: React.Dispatch<React.SetStateAction<any>>;
+}) {
+  const { data, refetch, isLoading } = useLineMassagePaginate({
+    pageIndex: 1,
+    limit: 100,
+  });
+
+  const { mutate } = useLineMarkFavoriteRplyMessage();
+
   const [open, setOpen] = React.useState<boolean>(false);
   const [query, setQuery] = React.useState<string>("");
   const [category, setCategory] = React.useState<CategoryKey | "all">("all");
   const [sortBy, setSortBy] = React.useState<"newest" | "oldest">("newest");
-  const [items, setItems] = React.useState<TemplateItem[]>(MOCK_ITEMS);
-  const [selectedId, setSelectedId] = React.useState<string | undefined>(
-    items[0]?.id
+  const [items, setItems] = React.useState<any[]>(
+    data && data?.items && data?.items?.length ? data?.items : []
   );
+  const [selectedId, setSelectedId] = React.useState<string | undefined>();
+
+  const toggleStar = (id: string) => {
+    setItems((prev) =>
+      prev.map((it) =>
+        it.id === id ? { ...it, isFavorite: !it.isFavorite } : it
+      )
+    );
+
+    mutate(id);
+    refetch();
+  };
+
+  React.useEffect(() => {
+    if (data && data.items && data.items?.length) {
+      setSelectedId(data?.items?.length ? data?.items[0]?.id : "");
+      setItems(data?.items);
+    }
+  }, [data]);
 
   const selected = items.find((i) => i.id === selectedId);
 
   const filtered = items
-    .filter((i) => (category === "all" ? true : i.category === category))
+    .filter((i) => (category === "all" ? true : i.type === category))
     .filter((i) =>
-      [i.title, i.subtitle].some((t) =>
+      [i.name, i.content?.messages?.[0]?.text].some((t) =>
         t?.toLowerCase().includes(query.toLowerCase())
       )
     )
@@ -441,12 +478,6 @@ export default function LineTemplatePickerModal() {
         : +new Date(a.createdAt) - +new Date(b.createdAt)
     );
 
-  const toggleStar = (id: string) => {
-    setItems((prev) =>
-      prev.map((it) => (it.id === id ? { ...it, starred: !it.starred } : it))
-    );
-  };
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -454,7 +485,7 @@ export default function LineTemplatePickerModal() {
           <PlusCircle className="w-4 h-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="min-w-[65%] h-[95%] p-0 gap-0 overflow-auto">
+      <DialogContent className="min-w-[65%] h-[85%] p-0 gap-0 overflow-auto">
         <DialogHeader className="px-6 pt-5 pb-3">
           <DialogTitle>เลือกคอนเทนต์</DialogTitle>
         </DialogHeader>
@@ -521,57 +552,72 @@ export default function LineTemplatePickerModal() {
 
             <Card className="mt-3">
               <ScrollArea className="h-[520px]">
-                <ul>
-                  {filtered.map((it) => (
-                    <li key={it.id}>
-                      <button
-                        className={cn(
-                          "w-full text-left px-4 py-3 hover:bg-muted/60 grid grid-cols-[1fr_auto] gap-2",
-                          selectedId === it.id && "bg-muted"
-                        )}
-                        onClick={() => setSelectedId(it.id)}
-                      >
-                        <div>
-                          <div className="flex items-center gap-2 font-medium">
-                            {it.icon}
-                            <span className="line-clamp-1">{it.title}</span>
-                          </div>
-                          {it.subtitle && (
-                            <p className="text-xs text-muted-foreground line-clamp-1 mt-1">
-                              {it.subtitle}
-                            </p>
-                          )}
-                        </div>
-                        <div className="flex items-start">
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-8 w-8"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleStar(it.id);
-                            }}
-                            aria-label={it.starred ? "Unstar" : "Star"}
-                          >
-                            {it.starred ? (
-                              <Star className="size-4 fill-current" />
-                            ) : (
-                              <StarOff className="size-4" />
-                            )}
-                          </Button>
-                        </div>
-                      </button>
-                      <Separator />
-                    </li>
-                  ))}
-                </ul>
+                {isLoading ? (
+                  <ul className="flex flex-col gap-3 px-4">
+                    <SkeletonLoading className="w-full h-15" />
+                    <SkeletonLoading className="w-full h-15" />
+                    <SkeletonLoading className="w-full h-15" />
+                    <SkeletonLoading className="w-full h-15" />
+                  </ul>
+                ) : (
+                  <ul>
+                    {filtered && filtered.length > 0
+                      ? filtered.map((it) => (
+                          <li key={it.id}>
+                            <button
+                              className={cn(
+                                "w-full text-left px-4 py-3 hover:bg-muted/60 grid grid-cols-[1fr_auto] gap-2",
+                                selectedId === it.id && "bg-muted"
+                              )}
+                              onClick={() => setSelectedId(it.id)}
+                            >
+                              <div>
+                                <div className="flex items-center gap-2 font-medium">
+                                  {it.icon}
+                                  <span className="line-clamp-1">
+                                    {it.name}
+                                  </span>
+                                </div>
+                                {it.description && (
+                                  <p className="text-xs text-muted-foreground line-clamp-1 mt-1">
+                                    {it.description}
+                                  </p>
+                                )}
+                              </div>
+                              <div className="flex items-start">
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-8 w-8"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleStar(it.id);
+                                  }}
+                                  aria-label={it.isFavorite ? "Unstar" : "Star"}
+                                >
+                                  {it.isFavorite ? (
+                                    <Star className="size-4 fill-current" />
+                                  ) : (
+                                    <StarOff className="size-4" />
+                                  )}
+                                </Button>
+                              </div>
+                            </button>
+                            <Separator />
+                          </li>
+                        ))
+                      : null}
+                  </ul>
+                )}
               </ScrollArea>
             </Card>
 
             <div className="mt-3">
-              <Button variant="secondary" className="w-full">
-                สร้างข้อความตอบกลับ
-              </Button>
+              <Link to="/setting-organization/third-party/line?tab=massage-line&view=create">
+                <Button variant="secondary" className="w-full">
+                  สร้างข้อความตอบกลับ
+                </Button>
+              </Link>
             </div>
           </div>
 
@@ -585,7 +631,14 @@ export default function LineTemplatePickerModal() {
           <Button variant="secondary" onClick={() => setOpen(false)}>
             ยกเลิก
           </Button>
-          <Button onClick={() => setOpen(false)}>เลือก</Button>
+          <Button
+            onClick={() => {
+              setOpen(false);
+              handleSelectChange(selected?.content?.messages?.[0]?.text);
+            }}
+          >
+            เลือก
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

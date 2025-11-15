@@ -44,9 +44,7 @@ import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import { CustomerInfoSkeleton } from "./noData/customer-info-skeleton";
 import { useNavigate } from "react-router";
 import { GlobalProductStatus } from "~/types/order";
-import { socketConfig } from "~/lib/sockets";
 import type { Product } from "~/schemas/product/product";
-import { useChat, type Message } from "~/providers/chat/useChat";
 import { usePaginate } from "~/api/client/product/useProductQuery";
 import {
   useAiReplySettings,
@@ -100,10 +98,7 @@ import { GlobalTagsBadge } from "~/components/shared/global-tags";
 import { OrderViewModal } from "./orders-view-modal";
 import { AIMessageView } from "./ai-message-view-modal";
 import { GlobalTooltip } from "~/components/shared/global-tooltip";
-import { AIInsightExampleRender } from "./ai-insight-example-render";
 import { ChatCustomerTags } from "./chat-customer-tags";
-import { DEFAULT_TAGS } from "~/utils/tagUtils";
-import type { CustomerUpdateTags } from "~/schemas/customer/customer";
 
 interface UserProps {
   id: string;
@@ -125,6 +120,7 @@ const STATUS_OPTIONS: { value: GlobalProductStatus; label: string }[] = [
 ];
 
 export default function ChatCustomerInfo({
+  selectedRoom,
   refetchCustomer,
   modelCustomerDetails,
   setCreateOrderOpen,
@@ -133,6 +129,7 @@ export default function ChatCustomerInfo({
   currentCustomer,
   api,
 }: {
+  selectedRoom: any;
   refetchCustomer: any;
   modelCustomerDetails?: boolean;
   setCreateOrderOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -141,6 +138,8 @@ export default function ChatCustomerInfo({
   currentCustomer: Customer;
   api: string;
 }) {
+  const participants = selectedRoom && selectedRoom?.participants;
+
   const { data: allTags } = useGetAllTags();
 
   const [search, setSearch] = React.useState<string>("");
@@ -188,9 +187,11 @@ export default function ChatCustomerInfo({
   const customerAI = currentCustomer?.aiReplySettings?.[0];
 
   const { data: allUser, isLoading } = useGetAllUsers();
+
   const { mutate: create, isPending: isCreatingSupport } =
-    useCreateCustomerSupoort();
-  const { mutate: DaleteCustomerSupport } = useDeleteCustomerSupport();
+    useCreateCustomerSupoort(selectedRoom?.id ?? "");
+  const { mutate: DeleteCustomerSupport } = useDeleteCustomerSupport();
+
   const { data, refetch } = useGetAllOrders();
   const [chatRoomAssistantId, setChatRoomAssistantId] =
     React.useState<string>("");
@@ -345,20 +346,30 @@ export default function ChatCustomerInfo({
       cancelText: "ยกเลิก",
       onConfirm: () => {
         const toastId = toast.loading("กำลังลบผู้รับผิดชอบ...");
-        DaleteCustomerSupport(id, {
-          onSuccess: () => {
-            toast.success("ลบผู้รับผิดชอบเรียบร้อยแล้ว!", {
-              id: toastId,
-            });
-            refetchCustomer();
+
+        create(
+          {
+            userId: id,
+            customerId: currentCustomer.id,
           },
-          onError: () => {
-            toast.error("ไม่สามารถลบผู้รับผิดชอบ กรุณาลองใหม่อีกครั้งภายหลัง", {
-              id: toastId,
-            });
-            refetchCustomer();
-          },
-        });
+          {
+            onSuccess: () => {
+              toast.success("ลบผู้รับผิดชอบเรียบร้อยแล้ว!", {
+                id: toastId,
+              });
+              refetchCustomer();
+            },
+            onError: () => {
+              toast.error(
+                "ไม่สามารถลบผู้รับผิดชอบ กรุณาลองใหม่อีกครั้งภายหลัง",
+                {
+                  id: toastId,
+                }
+              );
+              refetchCustomer();
+            },
+          }
+        );
       },
     });
   };
@@ -536,10 +547,8 @@ export default function ChatCustomerInfo({
   }, [modelCustomerDetails]);
 
   const supportedUserIds = new Set(
-    currentCustomer &&
-    currentCustomer.supports &&
-    currentCustomer.supports.length
-      ? currentCustomer.supports.map((support) => support.userId)
+    participants && participants.length
+      ? participants.map((support: any) => support.userId)
       : []
   );
 
@@ -606,9 +615,11 @@ export default function ChatCustomerInfo({
   const countFilterOption: number = selected.length;
 
   const secondarySupports = React.useMemo(() => {
-    if (!currentCustomer?.supports) return [];
-    return currentCustomer.supports.filter((spl) => !spl.isMain);
-  }, [currentCustomer?.supports]);
+    if (!participants.length) return [];
+    return participants.filter(
+      (spl: any) => !spl.isMain && spl.participantType !== "customer"
+    );
+  }, [participants]);
 
   const displayed = secondarySupports.slice(0, 3);
   const extraCount = Math.max(secondarySupports.length - 3, 0);
@@ -727,14 +738,13 @@ export default function ChatCustomerInfo({
                   ผู้รับผิดชอบหลัก
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {currentCustomer &&
-                  currentCustomer.supports &&
-                  currentCustomer.supports.filter((spl) => spl.isMain)
-                    .length ? (
+                  {participants &&
+                  participants.length &&
+                  participants.filter((spl: any) => spl.isMain).length ? (
                     <div className="flex flex-wrap gap-2 mb-1">
-                      {currentCustomer.supports
-                        .filter((spl) => spl.isMain)
-                        .map((spl, userIndex) => (
+                      {participants
+                        .filter((spl: any) => spl.isMain)
+                        .map((spl: any, userIndex: number) => (
                           <div
                             className="relative inline-block"
                             key={`main-spl-${spl.id}`}
@@ -864,7 +874,7 @@ export default function ChatCustomerInfo({
                 </p>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {displayed.length > 0 &&
-                    displayed.map((user, i) => (
+                    displayed.map((user: any, i: any) => (
                       <div
                         className="relative inline-block"
                         key={`secondary-spl-${user?.userId ?? `unknown-${i}`}`}
@@ -1067,6 +1077,7 @@ export default function ChatCustomerInfo({
 
               <TabsContent value="note">
                 <NoteLists
+                  selectedRoom={selectedRoom}
                   customer={currentCustomer}
                   refetchCustomer={refetchCustomer}
                 />
@@ -1320,7 +1331,7 @@ export default function ChatCustomerInfo({
                     <HeroSearch onInputChange={handleFirstTimeAISearch} />
                   ) : (
                     <ChatMessagesWithAI
-                      customerId={customer.id}
+                      customerId={customer?.id}
                       chatRoomId={chatRoomAssistantId}
                       autoScroll={autoScroll}
                       setAutoScroll={setAutoScroll}
@@ -1626,7 +1637,7 @@ export default function ChatCustomerInfo({
                 ยังไม่มีผู้รับผิดชอบรอง
               </div>
             ) : (
-              secondarySupports.map((item) => (
+              secondarySupports.map((item: any) => (
                 <div key={item.id} className="flex items-center gap-3">
                   <GlobalImage
                     src={

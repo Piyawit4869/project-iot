@@ -14,9 +14,10 @@ export const pushMessageSchema = z.object({
   messageType: z.string(),
   isAiReply: z.boolean(),
   recipient: z.string().optional(),
-  customerId: z.string().uuid().optional(),
+  customerId: z.string().optional(),
   platform: z.string(),
   messageLabel: z.string(),
+  thumbnailUrl: z.string().optional(),
 });
 
 export type PushMessageValues = z.infer<typeof pushMessageSchema>;
