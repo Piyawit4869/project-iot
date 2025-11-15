@@ -93,12 +93,21 @@ export default [
           "third-party",
           "routes/backoffice/settings/third-party/third-party.tsx"
         ),
+        // route(
+        //   "third-party/line/:id",
+        //   "routes/backoffice/settings/third-party/third-party-line.tsx"
+        // ),
+        // route(
+        //   "third-party/ai/:id",
+        //   "routes/backoffice/settings/third-party/third-party-open-ai.tsx"
+        // ),
+
         route(
-          "third-party/line/:id",
+          "third-party/line",
           "routes/backoffice/settings/third-party/third-party-line.tsx"
         ),
         route(
-          "third-party/ai/:id",
+          "third-party/ai",
           "routes/backoffice/settings/third-party/third-party-open-ai.tsx"
         ),
       ]),
@@ -106,6 +115,8 @@ export default [
 
     route("login-log", "routes/backoffice/login-log.tsx"),
   ]),
+  //line - ai
+
   // ]),
 
   // ]),

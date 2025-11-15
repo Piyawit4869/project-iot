@@ -1,29 +1,14 @@
-"use client";
-
-import {
-  // useRef,
-  useState,
-} from "react";
-import { Button } from "~/components/ui/button";
-import {
-  FileImage,
-  Loader2,
-  // FileImage, Loader2,
-  Send,
-} from "lucide-react";
-// import { useSendMessage } from "@/actions/chat/client/useMessage";
 import React from "react";
-// import { useUpload } from "@/actions/upload/client/useGetUpload";
-// import { MessageLabelType } from "@/types/global";
-import { useIsMobile } from "~/hooks/use-mobile";
+
+import { useState } from "react";
+import { FileImage, Loader2, Send } from "lucide-react";
 
 import { useChatRoom } from "~/providers/chat/useChatRoom";
-import { useConnectedChatRoomAssistant } from "~/api/client/customer/useCustomer";
-import {
-  useCustomer,
-  type CustomerMessage,
-} from "~/providers/customer-provider";
+import { useCustomer } from "~/providers/customer-provider";
 import { useUpload } from "~/api/client/upload";
+import { Button } from "~/components/ui/button";
+
+import { useIsMobile } from "~/hooks/use-mobile";
 
 export default function ChatInputAIAssistant({
   isPendingAI,

@@ -11,6 +11,7 @@ import {
   fetchGetConnectionLine,
   fetchGetOrganizations,
   fetchLineMassagePaginate,
+  fetchRoomChatAIConfigLoadMore,
   fetchRoomChatAILoadMore,
   fetchRoomChatLoadMore,
   fetchSendMessage,
@@ -129,6 +130,22 @@ export const usePaginatedChatRoomAI = (chatRoomId: string) => {
     queryKey: ["roomChat-ai", chatRoomId],
     queryFn: async ({ pageParam }) =>
       fetchRoomChatAILoadMore(chatRoomId, pageParam, 10),
+
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      const meta = lastPage?.meta;
+
+      return meta?.hasMore ? meta.offset + meta.limit : undefined;
+    },
+    enabled: !!chatRoomId,
+  });
+};
+
+export const usePaginatedChatRoomAIConfig = (chatRoomId: string) => {
+  return useInfiniteQuery({
+    queryKey: ["room-chat-ai-config", chatRoomId],
+    queryFn: async ({ pageParam }) =>
+      fetchRoomChatAIConfigLoadMore(chatRoomId, pageParam, 10),
 
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {

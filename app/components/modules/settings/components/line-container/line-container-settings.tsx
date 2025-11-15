@@ -35,7 +35,9 @@ export const LineContainerSettings: React.FC = () => {
   const [sp] = useSearchParams();
   const navigate = useNavigate();
   const params = useParams();
-  const id = (params?.id as string) ?? "";
+
+  // const id = (params?.id as string) ?? "";
+  const id = sp.get("id") ?? "";
 
   const { mutate: UpdateConnectionLine } = useUpdateConnectionLine(id);
   const { data } = useGetConnectionLine(id ?? "");

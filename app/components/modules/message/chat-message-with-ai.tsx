@@ -15,6 +15,7 @@ import { useChat } from "~/providers/chat/useChat";
 import { StreamingText } from "./streaming-text";
 import { useConnectedChatRoomAssistant } from "~/api/client/customer/useCustomer";
 import LoadingAnimation from "./loading-animation";
+import { usePaginatedChatRoomAIConfig } from "~/api/client/settings";
 
 export default function ChatMessagesWithAI({
   customerId,
@@ -54,7 +55,7 @@ export default function ChatMessagesWithAI({
     isFetchingNextPage,
     isLoading,
     // refetch,
-  } = usePaginatedChatRoomAI(chatRoomId || "");
+  } = usePaginatedChatRoomAIConfig(chatRoomId || "");
 
   const { mutateAsync: connectedChatRoomAIAssistant, isPending: isPendingAI } =
     useConnectedChatRoomAssistant();
@@ -287,7 +288,8 @@ export default function ChatMessagesWithAI({
                             : "bg-muted text-primary"
                         }`}
                       >
-                        {index === combinedMessages.length - 1 && msg.read ? (
+                        {index === combinedMessages.length - 1 &&
+                        msg.streaming ? (
                           <StreamingText text={msg.message} speed={40} />
                         ) : (
                           msg.message

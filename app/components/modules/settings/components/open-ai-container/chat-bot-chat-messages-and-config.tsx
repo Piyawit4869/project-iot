@@ -10,6 +10,8 @@ import { ChatInputOpenAiConfig } from "./chat-input-open-ai-config";
 import { useChat } from "~/providers/chat/useChat";
 import { formatDateHHMM } from "~/components/shared/global-format";
 import { StreamingText } from "~/components/modules/message/streaming-text";
+import LoadingAnimation from "~/components/modules/message/loading-animation";
+import { useConnectedChatRoomAIConfig } from "~/api/client/customer/useCustomer";
 
 interface ChatBotChatMessagesAndConfigProps {
   chatRoomId: string;
@@ -44,7 +46,7 @@ export const ChatBotChatMessagesAndConfig: React.FC<
   // const [isCheckStatusOpen, setCheckStatusOpen] = useState(false);
   // const [AIOpen, setAIOpen] = useState(false);
   const [buttonScrollToBottom, setButtonScrollToBottom] = React.useState(false);
-  const { messages: socketMessages } = useChat();
+  const { messagesAI: socketMessages } = useChat();
 
   const {
     data: messagesData,
@@ -54,6 +56,11 @@ export const ChatBotChatMessagesAndConfig: React.FC<
     isLoading,
     // refetch,
   } = usePaginatedChatRoomAI(chatRoomId || "");
+
+  console.log({ messagesData });
+
+  const { mutateAsync: connectedChatRoomAI, isPending: isPendingAI } =
+    useConnectedChatRoomAIConfig(chatRoomId);
 
   const paginatedMessages = messagesData?.pages.flatMap((page) => page) ?? [];
 
@@ -270,7 +277,7 @@ export const ChatBotChatMessagesAndConfig: React.FC<
                         : "bg-muted text-primary"
                     }`}
                   >
-                    {index === combinedMessages.length - 1 && !msg.isUser ? (
+                    {index === combinedMessages.length - 1 && msg.streaming ? (
                       <StreamingText text={msg.message} speed={40} />
                     ) : (
                       msg.message
@@ -291,6 +298,31 @@ export const ChatBotChatMessagesAndConfig: React.FC<
               </div>
             );
           })}
+          {isPendingAI && (
+            <div
+              className={`mt-4 flex max-w-[75%] flex-col gap-1  "mr-auto items-start"`}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <Avatar className="w-6 h-6">
+                  <img
+                    src={"https://api.dicebear.com/9.x/glass/svg?seed=rome"}
+                    alt="avatar"
+                    className="rounded-full object-cover"
+                  />
+                  <AvatarFallback>{"U"[0]}</AvatarFallback>
+                </Avatar>
+
+                <span className="text-xs text-muted-foreground font-medium">
+                  ROME AI
+                </span>
+              </div>
+              <div
+                className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap bg-muted text-primary"`}
+              >
+                <LoadingAnimation />
+              </div>
+            </div>
+          )}
           <div ref={bottomRef} />
           {buttonScrollToBottom && (
             <button
@@ -310,7 +342,12 @@ export const ChatBotChatMessagesAndConfig: React.FC<
             </button>
           )}
         </div>
-        <ChatInputOpenAiConfig chatRoomId={chatRoomId} isAILoading={false} />
+        <ChatInputOpenAiConfig
+          chatRoomId={chatRoomId}
+          isAILoading={false}
+          isPendingAI={isPendingAI}
+          connectedChatRoomAI={connectedChatRoomAI}
+        />
       </div>
 
       {previewUrl && (
