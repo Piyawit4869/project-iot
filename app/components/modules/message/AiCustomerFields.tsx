@@ -160,7 +160,7 @@ export function AiCustomerFields({
             key="navigate-customer-details"
             type="button"
             onClick={() => {
-              navigate(`/customer/${data.id}`);
+              navigate(`/customer/${data.customerId}`);
             }}
             variant="secondary"
             className="flex-1  bg-[#34cf16] text-white hover:bg-[#142a60] hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
