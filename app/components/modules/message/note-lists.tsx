@@ -27,12 +27,13 @@ interface TNote {
 }
 
 interface NoteListProps {
+  selectedRoom: any;
   customer: any;
   refetchCustomer: () => void;
 }
 
 export const NoteLists: React.FC<NoteListProps> = (props) => {
-  const { customer, refetchCustomer } = props;
+  const { selectedRoom, customer, refetchCustomer } = props;
 
   const { mutate: createCustomerNote } = useCreateCustomerNote(customer?.id);
   const { mutate: updateCustomerNote } = useUpdateCustomerNote(customer?.id);
@@ -213,6 +214,7 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
         onSubmit={handleSubmitFormModal}
       />
       <GetNoteFormAI
+        chatRoomId={selectedRoom?.id}
         customerId={customer.id}
         open={OpenAiNote}
         setOpen={setOpenAiNote}

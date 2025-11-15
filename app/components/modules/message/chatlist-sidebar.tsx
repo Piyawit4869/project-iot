@@ -9,21 +9,15 @@ import {
 } from "~/providers/chat/useChatRoom";
 import { useRouteLoaderData } from "react-router";
 import { socketConfig } from "~/lib/sockets";
-import { Button } from "~/components/ui/button";
 import {
-  AudioLines,
   CheckCircle,
-  ChevronDown,
   Clock,
   FileUp,
   Inbox,
-  Mail,
   Menu,
   MessagesSquare,
   OctagonAlert,
-  Search,
   User,
-  X,
 } from "lucide-react";
 import { TagLabel } from "~/components/shared/tag-label";
 import { DateTimeStampChatDisplay } from "~/utils/date-format";
@@ -114,6 +108,9 @@ export default function ChatlistSidebar({
     socket.on("rooms", (room: any) => {
       console.log("rooms", room);
 
+      const audio = new Audio("/sounds/level-up.mp3");
+      audio.play();
+
       setAllRooms((prev) => mergeRoomImmutable(prev, room));
 
       if (room.chatRoomType === "assistant") {
@@ -173,7 +170,7 @@ export default function ChatlistSidebar({
                 />
                 <button
                   onClick={handleCloseSearch}
-                  className="px-2 py-1 bg-gray-200 rounded-md text-sm hover:bg-gray-300 transition-colors"
+                  className="px-2 py-1 bg-gray-200 rounded-md text-sm hover:bg-gray-300 transition-colors cursor-pointer"
                 >
                   ✕
                 </button>
@@ -181,7 +178,7 @@ export default function ChatlistSidebar({
             ) : (
               <div className="flex items-center justify-between gap-4 transition-all duration-200">
                 <PopoverTrigger asChild>
-                  <button className="flex items-center gap-1">
+                  <button className="flex items-center gap-1 cursor-pointer">
                     <Menu className="w-4 h-4" />
                     <p className="text-sm font-semibold">ทั้งหมด</p>
                   </button>
@@ -206,7 +203,7 @@ export default function ChatlistSidebar({
             <Command className="max-h-none overflow-visible">
               <CommandList className="max-h-none overflow-visible">
                 <CommandGroup heading="">
-                  <CommandItem className="flex justify-between items-center">
+                  <CommandItem className="flex justify-between items-center cursor-pointer">
                     <div className="flex items-center gap-2">
                       <Inbox className="w-4 h-4 text-gray-500" /> ทั้งหมด
                     </div>
@@ -215,15 +212,15 @@ export default function ChatlistSidebar({
                     </span>
                   </CommandItem>
                   <CommandSeparator />
-                  <CommandItem className="flex justify-between items-center">
+                  {/* <CommandItem className="flex justify-between items-center cursor-pointer">
                     <div className="flex items-center gap-2">
                       <Mail className="w-4 h-4 text-gray-500" /> อินบ็อกซ์
                     </div>
                     <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
                       3
                     </span>
-                  </CommandItem>
-                  <CommandItem className="flex justify-between items-center">
+                  </CommandItem> */}
+                  <CommandItem className="flex justify-between items-center cursor-pointer">
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4 text-gray-500" /> ยังไม่อ่าน
                     </div>
@@ -231,25 +228,26 @@ export default function ChatlistSidebar({
                       3
                     </span>
                   </CommandItem>
-                  <CommandItem className="flex items-center gap-2">
+                  <CommandItem className="flex items-center gap-2 cursor-pointer">
                     <CheckCircle className="w-4 h-4 text-gray-500" /> ดำเนินการ
                   </CommandItem>
-                  <CommandItem className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-gray-500" /> เสร็จสิ้น
+                  <CommandItem className="flex items-center gap-2 cursor-pointer">
+                    <CheckCircle className="w-4 h-4 text-gray-500" />{" "}
+                    ดำเนินการแล้ว
                   </CommandItem>
                 </CommandGroup>
                 <CommandSeparator />
 
                 <CommandGroup>
-                  <CommandItem className="flex items-center gap-2">
+                  <CommandItem className="flex items-center gap-2 cursor-pointer">
                     <FileUp className="w-4 h-4 text-gray-500" /> นำออกข้อมูล
                   </CommandItem>
                   <CommandSeparator />
-                  <CommandItem className="flex items-center gap-2">
+                  <CommandItem className="flex items-center gap-2 cursor-pointer">
                     <User className="w-4 h-4 text-gray-500" /> รับผิดชอบ
                   </CommandItem>
                   <CommandSeparator />
-                  <CommandItem className="flex items-center gap-2">
+                  <CommandItem className="flex items-center gap-2 cursor-pointer">
                     <OctagonAlert className="w-4 h-4 text-gray-500" /> สแปม
                   </CommandItem>
                 </CommandGroup>

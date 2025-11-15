@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const CustomerSupportFormSchema = z.object({
-  isMain: z.boolean(),
+  isMain: z.boolean().optional(),
   userId: z.string(),
   customerId: z.string(),
 });

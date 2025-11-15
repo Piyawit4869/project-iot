@@ -53,14 +53,10 @@ export const useCustomerSetup = () => {
       status: "newly_registered",
       customerType: "ordinary_person",
       customerPlatform: "backoffice",
-      // email: "",
       lineSubId: null,
       customerCode: null,
       refCode: null,
       branchId: null,
-      // progressPercentage: 0,
-      // aiReplyResponseDuration: {},
-      // isAiReply: false,
       consentPii: false,
       priority: 0,
       remark: null,
@@ -271,8 +267,8 @@ export const useCustomerSetup = () => {
         tags: Array.isArray(customer?.tags)
           ? customer?.tags
           : customer?.tags
-          ? Object.values(customer?.tags)
-          : [],
+            ? Object.values(customer?.tags)
+            : [],
       });
     }
   }, [customer]);

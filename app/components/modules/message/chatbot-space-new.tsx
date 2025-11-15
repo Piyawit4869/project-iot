@@ -98,6 +98,7 @@ export default function ChatbotSpaceNew({
           <div className="w-96">
             {selectedRoom && selectedRoom?.id && selectedRoom?.customerId ? (
               <ChatCustomerInfo
+                selectedRoom={selectedRoom}
                 refetchCustomer={refetch}
                 setCreateOrderOpen={setCreateOrderOpen}
                 setAddCustomerDetail={setAddCustomerDetail}

@@ -83,9 +83,9 @@ export const fetchCustomerNoteAiById = async (id: string) => {
   }
 };
 
-export const fetchCustomerSummaryNoteAiById = async (id: string) => {
+export const fetchCustomerSummaryNoteAiById = async (customerId: string) => {
   try {
-    const res = await ApiConfig.get(`/crud/customers/ai-note/${id}`);
+    const res = await ApiConfig.get(`/chats/summary/note/${customerId}`);
     return res.data;
   } catch (error) {
     throw error;

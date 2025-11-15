@@ -1,8 +1,6 @@
-"use client";
-
 import { useRef, useState, useEffect } from "react";
 import { Button } from "~/components/ui/button";
-import { FileImage, Send, Loader2, X } from "lucide-react";
+import { Send, Loader2, X, Paperclip } from "lucide-react";
 import React from "react";
 import { MessageLabelType } from "~/types/global";
 import { useIsMobile } from "~/hooks/use-mobile";
@@ -15,7 +13,89 @@ import {
 import LineTemplatePickerModal from "./line-template-picker-modal";
 import { GlobalImage } from "~/components/shared/global-image";
 
-type PendingImage = { id: string; file: File; url: string; name: string };
+const getLabelFromType = (type: string): MessageLabelType => {
+  switch (type) {
+    case "text":
+      return MessageLabelType.SENDTEXT;
+    case "image":
+      return MessageLabelType.SENDIMAGE;
+    case "sticker":
+      return MessageLabelType.SENDSTICKER;
+    case "audio":
+      return MessageLabelType.SENDAUDIO;
+    case "video":
+      return MessageLabelType.SENDVIDEO;
+    case "file":
+      return MessageLabelType.SENDFILE;
+    default:
+      return MessageLabelType.SENDTEXT;
+  }
+};
+
+const extractThumbnail = (file: File): Promise<Blob> => {
+  return new Promise((resolve, reject) => {
+    const video = document.createElement("video");
+    video.preload = "metadata";
+    video.muted = true;
+    video.crossOrigin = "anonymous";
+
+    const objectUrl = URL.createObjectURL(file);
+    video.src = objectUrl;
+
+    // 1) เมื่อ metadata พร้อม → กำหนดเวลา frame
+    video.onloadedmetadata = () => {
+      if (video.duration < 0.1) {
+        video.currentTime = 0; // บางไฟล์สั้นมาก
+      } else {
+        video.currentTime = Math.min(0.1, video.duration / 2);
+      }
+    };
+
+    // 2) เมื่อ seeked เสร็จ → frame พร้อมแล้ว
+    video.onseeked = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return reject("Canvas ctx error");
+
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob(
+        (blob) => {
+          URL.revokeObjectURL(objectUrl);
+
+          if (!blob) return reject("Thumbnail creation failed");
+
+          resolve(blob);
+
+          // auto download
+          // const downloadUrl = URL.createObjectURL(blob);
+          // const a = document.createElement("a");
+          // a.href = downloadUrl;
+          // a.download = `${file.name}-thumbnail.jpg`;
+          // document.body.appendChild(a);
+          // a.click();
+          // document.body.removeChild(a);
+          // setTimeout(() => URL.revokeObjectURL(downloadUrl), 300);
+        },
+        "image/jpeg",
+        0.8
+      );
+    };
+
+    video.onerror = (err) => reject(err);
+  });
+};
+
+type PendingImage = {
+  id: string;
+  file: File;
+  url: string;
+  name: string;
+  type: "image" | "video" | "audio" | "file";
+};
 
 export default function ChatInput({
   selectedRoom,
@@ -35,7 +115,7 @@ export default function ChatInput({
   const { mutate: uploadMutate, isPending } = useUpload();
   const { mutate: send } = useSendMessage();
 
-  // --- auto-resize helper ---
+  // Resize textarea
   const autoResize = () => {
     const el = textareaRef.current;
     if (!el) return;
@@ -43,10 +123,18 @@ export default function ChatInput({
     el.style.height = `${el.scrollHeight}px`;
   };
 
-  // resize เมื่อข้อความเปลี่ยน หรือมีการ mount ครั้งแรก
   useEffect(() => {
     autoResize();
   }, [input]);
+
+  // Detect file type
+  const getFileType = (file: File): PendingImage["type"] => {
+    const mime = file.type;
+    if (mime.startsWith("image/")) return "image";
+    if (mime.startsWith("video/")) return "video";
+    if (mime.startsWith("audio/")) return "audio";
+    return "file";
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -72,9 +160,43 @@ export default function ChatInput({
       uploadMutate(formData, { onSuccess: resolve, onError: reject });
     });
 
+  // ---- SEND STICKER ----
+  // const sendSticker = (packageId: string, stickerId: string) => {
+  //   send({
+  //     chatRoomId: selectedRoom.id,
+  //     lineSubId: customer?.lineSubId ?? "",
+  //     messageType: "sticker",
+  //     packageId,
+  //     stickerId,
+  //     message: "",
+  //     isAiReply: false,
+  //     recipient: customer?.name ?? "Unknown",
+  //     customerId: selectedRoom?.customerId ?? "",
+  //     platform: "backoffice",
+  //   });
+  // };
+
+  // // ---- SEND LOCATION ----
+  // const sendLocation = (lat: number, lng: number, address: string) => {
+  //   const payload = JSON.stringify({ lat, lng, address });
+
+  //   send({
+  //     chatRoomId: selectedRoom.id,
+  //     lineSubId: customer?.lineSubId ?? "",
+  //     messageType: "location",
+  //     message: payload,
+  //     isAiReply: false,
+  //     recipient: customer?.name ?? "Unknown",
+  //     customerId: selectedRoom?.customerId ?? "",
+  //     platform: "backoffice",
+  //   });
+  // };
+
+  // ---- MAIN SUBMIT ----
   const sendText = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // clear preview in sidebar
     setMessages((prev) => {
       const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
       if (roomIndex > -1) {
@@ -90,17 +212,25 @@ export default function ChatInput({
 
     if (!selectedRoom?.id) return;
 
-    // 1) ส่งรูปถ้ามี
+    // ---- 1) ส่งไฟล์ทุกประเภท ----
     if (pendingImages.length > 0) {
       try {
         for (const p of pendingImages) {
           const result = await uploadFile(p.file);
           if (!result?.url) continue;
+
+          let messageType: string = p.type; // image, video, audio
+          let message = result.url;
+
+          if (p.type === "file") {
+            messageType = "text"; // FILE ต้องส่งเป็น text แต่ message เป็น URL
+          }
+
           send({
             chatRoomId: selectedRoom.id,
             lineSubId: customer?.lineSubId ?? "",
-            message: result.url,
-            messageType: "image",
+            message,
+            messageType,
             isAiReply: false,
             recipient: customer?.name ?? "Unknown",
             customerId: selectedRoom?.customerId ?? "",
@@ -109,7 +239,7 @@ export default function ChatInput({
           });
         }
       } catch (err) {
-        console.error("Upload image(s) failed", err);
+        console.error("Upload file(s) failed", err);
         return;
       } finally {
         pendingImages.forEach((p) => URL.revokeObjectURL(p.url));
@@ -117,13 +247,8 @@ export default function ChatInput({
       }
     }
 
-    // 2) ส่งข้อความล้วน
-    const plainText = input
-      .split("\n")
-      .filter((line) => !/^\[ภาพแนบ\s.+\]$/i.test(line.trim()))
-      .join("\n")
-      .trim();
-
+    // ---- 2) ส่งข้อความล้วน ----
+    const plainText = input.trim();
     if (plainText) {
       send({
         chatRoomId: selectedRoom.id,
@@ -138,49 +263,93 @@ export default function ChatInput({
       });
     }
 
-    // 3) เคลียร์ textarea แล้วรีไซซ์ใหม่
     setInput("");
     requestAnimationFrame(autoResize);
   };
 
-  // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   e.target.value = "";
-  //   if (!file) return;
-  //   if (file.size > 10 * 1024 * 1024) {
-  //     alert("ไฟล์ขนาดใหญ่เกินไป (เกิน 10MB)");
-  //     return;
-  //   }
-  //   const url = URL.createObjectURL(file);
-  //   const id = `${Date.now()}-${file.name}`;
-  //   setPendingImages((prev) => [...prev, { id, file, url, name: file.name }]);
-  //   // setInput((prev) =>
-  //   //   prev ? `${prev}\n[ภาพแนบ ${file.name}]` : `[ภาพแนบ ${file.name}]`
-  //   // );
-  // };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // ---- FILE PICKER HANDLER ----
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files ? Array.from(e.target.files) : [];
     e.target.value = "";
 
     if (selectedFiles.length === 0) return;
 
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    const newImages: PendingImage[] = [];
+    const maxSize = 20 * 1024 * 1024; // 20MB
 
     for (const file of selectedFiles) {
       if (file.size > maxSize) {
-        alert(`ไฟล์ ${file.name} ขนาดใหญ่เกินไป (เกิน 10MB)`);
+        alert(`ไฟล์ ${file.name} ขนาดใหญ่เกินไป (เกิน 20MB)`);
         continue;
       }
 
-      const url = URL.createObjectURL(file);
-      const id = `${Date.now()}-${file.name}`;
-      newImages.push({ id, file, url, name: file.name });
-    }
+      const mime = file.type;
 
-    if (newImages.length > 0) {
-      setPendingImages((prev) => [...prev, ...newImages]);
+      // -------------------------
+      // IMAGE → stack normally
+      // -------------------------
+      if (mime.startsWith("image/")) {
+        const url = URL.createObjectURL(file);
+        const id = `${Date.now()}-${file.name}`;
+
+        setPendingImages((prev) => [
+          ...prev,
+          { id, file, url, name: file.name, type: "image" },
+        ]);
+        continue;
+      }
+
+      // -------------------------
+      // OTHER FILES → upload then send
+      // -------------------------
+      try {
+        const result = await uploadFile(file);
+        if (!result?.url) continue;
+
+        let messageType = "file";
+
+        if (mime.startsWith("video/")) messageType = "video";
+        else if (mime.startsWith("audio/")) messageType = "audio";
+
+        let thumbnailUrl = "";
+
+        // --------------------------
+        // VIDEO → generate thumbnail
+        // --------------------------
+        if (messageType === "video") {
+          try {
+            const thumbnailBlob = await extractThumbnail(file);
+
+            const formThumb = new FormData();
+            formThumb.append("file", thumbnailBlob, "thumbnail.jpg");
+
+            const thumbUpload = await new Promise<{ url: string }>(
+              (resolve, reject) =>
+                uploadMutate(formThumb, { onSuccess: resolve, onError: reject })
+            );
+
+            thumbnailUrl = thumbUpload?.url ?? "";
+          } catch (err) {
+            console.error("Thumbnail error:", err);
+          }
+        }
+        // --------------------------
+        // SEND MESSAGE
+        // --------------------------
+        send({
+          chatRoomId: selectedRoom.id,
+          lineSubId: customer?.lineSubId ?? "",
+          message: result.url,
+          messageType,
+          thumbnailUrl, // <-- ADD HERE
+          isAiReply: false,
+          recipient: customer?.name ?? "Unknown",
+          customerId: selectedRoom?.customerId ?? "",
+          platform: "backoffice",
+          messageLabel: getLabelFromType(messageType),
+        });
+      } catch (err) {
+        console.error("Upload file failed:", err);
+      }
     }
   };
 
@@ -190,18 +359,7 @@ export default function ChatInput({
       if (target) URL.revokeObjectURL(target.url);
       return prev.filter((p) => p.id !== id);
     });
-    setInput((prev) =>
-      prev
-        .split("\n")
-        .filter((line) => !line.startsWith("[ภาพแนบ"))
-        .join("\n")
-    );
   };
-
-  // useEffect(() => {
-  //   const existing = messages.find((p) => p.roomId === selectedRoom?.id);
-  //   setInput(existing ? existing.lastestMessage : "");
-  // }, [selectedRoom, messages]);
 
   if (!selectedRoom?.id) return <div />;
 
@@ -210,13 +368,11 @@ export default function ChatInput({
       onSubmit={sendText}
       className="flex flex-col w-full gap-2 border-t p-2 dark:bg-background"
     >
+      {/* Preview */}
       {pendingImages.length > 0 && (
-        <div className="w-full h-full grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-2">
+        <div className="w-full grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-2">
           {pendingImages.map((p) => (
-            <div
-              key={p.id}
-              className="relative group border rounded-md overflow-hidden"
-            >
+            <div key={p.id} className="relative group border rounded-md p-1">
               <GlobalImage
                 src={p.url}
                 alt={p.name}
@@ -226,9 +382,8 @@ export default function ChatInput({
                 type="button"
                 onClick={() => handleRemovePending(p.id)}
                 className="absolute top-1 right-1 inline-flex items-center justify-center w-6 h-6 rounded-full bg-black/60 text-white"
-                title="ลบรูปนี้ออก"
               >
-                <X className="w-3 h-3" />
+                <X className="w-4 h-4" />
               </button>
             </div>
           ))}
@@ -239,8 +394,8 @@ export default function ChatInput({
         ref={textareaRef}
         placeholder={
           isMobile
-            ? "กดส่งข้อความเพื่อส่งข้อความ"
-            : "Enter: ส่ง, Shift+Enter:ขึ้นบรรทัดใหม่"
+            ? "พิมพ์ข้อความเพื่อส่ง"
+            : "Enter = ส่งข้อความ / Shift+Enter = ขึ้นบรรทัดใหม่"
         }
         className="w-full resize-none p-2 border-0 rounded-md outline-none min-h-[44px] max-h-[40vh] leading-6 overflow-auto"
         value={input}
@@ -258,29 +413,30 @@ export default function ChatInput({
 
       <input
         type="file"
-        accept="image/*"
         ref={fileInputRef}
-        onChange={handleImageUpload}
+        onChange={handleFileUpload}
         className="hidden"
-        multiple={true}
+        multiple
       />
 
       <div className="flex justify-end gap-2 pt-1">
-        <LineTemplatePickerModal />
+        <LineTemplatePickerModal handleSelectChange={setInput} />
+
         <Button
           variant="ghost"
           size="icon"
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={isPending}
-          title="แนบรูปภาพ"
+          title="แนบไฟล์"
         >
           {isPending ? (
             <Loader2 className="w-5 h-5 animate-spin" />
           ) : (
-            <FileImage />
+            <Paperclip />
           )}
         </Button>
+
         <Button size="icon" type="submit" disabled={isPending} title="ส่ง">
           <Send className="w-4 h-4" />
         </Button>
