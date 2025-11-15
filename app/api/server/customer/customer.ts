@@ -372,3 +372,13 @@ export const getAllTags = async () => {
     throw error;
   }
 };
+
+export const getChatRoomPartipants = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(`/crud/chats/rooms/participants/${id}`);
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};

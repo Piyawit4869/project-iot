@@ -12,8 +12,9 @@ export const useCreateCustomerSupoort = (id: string) => {
   });
 };
 
-export const useDeleteCustomerSupport = () => {
+export const useDeleteCustomerSupport = (id: string) => {
   return useMutation({
-    mutationFn: (id: string) => fetchDeleteCustomerSupport(id),
+    mutationFn: (values: CustomerSupportFormValues) =>
+      fetchDeleteCustomerSupport(id, values),
   });
 };

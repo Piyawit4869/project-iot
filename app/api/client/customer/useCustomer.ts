@@ -27,6 +27,7 @@ import {
   fetchCustomerSummaryNoteAiById,
   createTag,
   getAllTags,
+  getChatRoomPartipants,
 } from "../../server/customer/customer";
 import type {
   ContactValues,
@@ -324,5 +325,13 @@ export const useGetAllTags = () => {
   return useQuery({
     queryKey: ["customer-tags"],
     queryFn: () => getAllTags(),
+  });
+};
+
+export const useChatRoomParticipants = (id: string) => {
+  return useQuery({
+    queryKey: ["room-participant", id],
+    queryFn: () => getChatRoomPartipants(id),
+    enabled: !!id,
   });
 };

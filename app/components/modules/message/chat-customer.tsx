@@ -48,6 +48,7 @@ import type { Product } from "~/schemas/product/product";
 import { usePaginate } from "~/api/client/product/useProductQuery";
 import {
   useAiReplySettings,
+  useChatRoomParticipants,
   useConnectedChatRoomAssistant,
   useGetAiNote,
   useGetAllTags,
@@ -138,9 +139,11 @@ export default function ChatCustomerInfo({
   currentCustomer: Customer;
   api: string;
 }) {
-  const participants = selectedRoom && selectedRoom?.participants;
-
   const { data: allTags } = useGetAllTags();
+
+  const { data: participantData, refetch: refetchParicipant } =
+    useChatRoomParticipants(selectedRoom?.id);
+  let participants = participantData && participantData?.items;
 
   const [search, setSearch] = React.useState<string>("");
   const [showTagManager, setShowTagManager] = React.useState(false);
@@ -190,7 +193,9 @@ export default function ChatCustomerInfo({
 
   const { mutate: create, isPending: isCreatingSupport } =
     useCreateCustomerSupoort(selectedRoom?.id ?? "");
-  const { mutate: DeleteCustomerSupport } = useDeleteCustomerSupport();
+  const { mutate: DeleteCustomerSupport } = useDeleteCustomerSupport(
+    selectedRoom?.id ?? ""
+  );
 
   const { data, refetch } = useGetAllOrders();
   const [chatRoomAssistantId, setChatRoomAssistantId] =
@@ -347,7 +352,7 @@ export default function ChatCustomerInfo({
       onConfirm: () => {
         const toastId = toast.loading("กำลังลบผู้รับผิดชอบ...");
 
-        create(
+        DeleteCustomerSupport(
           {
             userId: id,
             customerId: currentCustomer.id,
@@ -357,7 +362,7 @@ export default function ChatCustomerInfo({
               toast.success("ลบผู้รับผิดชอบเรียบร้อยแล้ว!", {
                 id: toastId,
               });
-              refetchCustomer();
+              refetchParicipant();
             },
             onError: () => {
               toast.error(
@@ -366,7 +371,7 @@ export default function ChatCustomerInfo({
                   id: toastId,
                 }
               );
-              refetchCustomer();
+              refetchParicipant();
             },
           }
         );
@@ -387,14 +392,14 @@ export default function ChatCustomerInfo({
             toast.success("เพิ่มผู้รับผิดชอบเรียบร้อยแล้ว!", {
               id: toastId,
             });
-            refetchCustomer();
+            refetchParicipant();
           },
           onError: () => {
             toast.error(
               "ไม่สามารถเพิ่มผู้รับผิดชอบ เนื่องจากมีผู้ใช้นี้อยู่แล้ว",
               { id: toastId }
             );
-            refetchCustomer();
+            refetchParicipant();
           },
         });
       },
@@ -547,7 +552,7 @@ export default function ChatCustomerInfo({
   }, [modelCustomerDetails]);
 
   const supportedUserIds = new Set(
-    participants && participants.length
+    participants && participants?.length
       ? participants.map((support: any) => support.userId)
       : []
   );
@@ -615,7 +620,7 @@ export default function ChatCustomerInfo({
   const countFilterOption: number = selected.length;
 
   const secondarySupports = React.useMemo(() => {
-    if (!participants.length) return [];
+    if (!participants?.length) return [];
     return participants.filter(
       (spl: any) => !spl.isMain && spl.participantType !== "customer"
     );
@@ -747,22 +752,22 @@ export default function ChatCustomerInfo({
                         .map((spl: any, userIndex: number) => (
                           <div
                             className="relative inline-block"
-                            key={`main-spl-${spl.id}`}
+                            key={`main-spl-${spl.participantId}`}
                           >
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <button
                                     onClick={() =>
-                                      navigate(`/users/${spl.userId}`)
+                                      navigate(`/users/${spl.participantId}`)
                                     }
                                   >
                                     <GlobalImage
                                       src={
                                         spl.imageUrl ||
-                                        `https://api.dicebear.com/9.x/initials/svg?seed=${spl.userId}`
+                                        `https://api.dicebear.com/9.x/initials/svg?seed=${spl.participantId}`
                                       }
-                                      alt={`main-spl-${spl.userId}`}
+                                      alt={`main-spl-${spl.participantId}`}
                                       className={`w-[35px] h-[35px] rounded-full object-cover border-2 ${
                                         userIndex === 0 && "border-amber-500"
                                       }`}
@@ -771,7 +776,7 @@ export default function ChatCustomerInfo({
                                   </button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                  {spl?.fullName ?? "-"}
+                                  {spl?.displayName ?? "-"}
                                 </TooltipContent>
                               </Tooltip>
                             </TooltipProvider>
@@ -779,7 +784,7 @@ export default function ChatCustomerInfo({
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                DeleteSupport(spl.id);
+                                DeleteSupport(spl.participantId);
                               }}
                               className="absolute -top-1 -right-1 bg-white border border-gray-300 rounded-full p-1 shadow hover:bg-gray-100 transition"
                             >
@@ -877,7 +882,7 @@ export default function ChatCustomerInfo({
                     displayed.map((user: any, i: any) => (
                       <div
                         className="relative inline-block"
-                        key={`secondary-spl-${user?.userId ?? `unknown-${i}`}`}
+                        key={`secondary-spl-${user?.participantId ?? `unknown-${i}`}`}
                       >
                         <TooltipProvider>
                           <Tooltip>
@@ -885,7 +890,7 @@ export default function ChatCustomerInfo({
                               <button
                                 onClick={() =>
                                   navigate(
-                                    `/users/${user?.userId ?? "unknown"}`
+                                    `/users/${user?.participantId ?? "unknown"}`
                                   )
                                 }
                               >
@@ -893,19 +898,17 @@ export default function ChatCustomerInfo({
                                   src={
                                     user?.imageUrl ||
                                     `https://api.dicebear.com/9.x/initials/svg?seed=${
-                                      user?.userId ?? "unknown"
+                                      user?.id ?? "unknown"
                                     }`
                                   }
-                                  alt={`secondary-spl-${
-                                    user?.userId ?? "unknown"
-                                  }`}
+                                  alt={`secondary-spl-${user?.participantId ?? "unknown"}`}
                                   className={`w-[35px] h-[35px] rounded-full object-cover`}
                                   notShowPreview
                                 />
                               </button>
                             </TooltipTrigger>
                             <TooltipContent>
-                              {user?.fullName ?? "-"}
+                              {user?.displayName ?? "-"}
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
@@ -914,7 +917,7 @@ export default function ChatCustomerInfo({
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            DeleteSupport(user.id);
+                            DeleteSupport(user.participantId);
                           }}
                           className="absolute -top-1 -right-1 bg-white border border-gray-300 rounded-full p-1 shadow hover:bg-gray-100 transition"
                         >
@@ -942,10 +945,10 @@ export default function ChatCustomerInfo({
                         <button
                           type="button"
                           onClick={() => setIsPopoverOpen(true)}
-                          className="rounded-full object-cover"
+                          className="rounded-full object-cover cursor-pointer"
                           disabled={isCreatingSupport}
                         >
-                          <CirclePlus className="w-9 h-9 text-gray-300" />
+                          <CirclePlus className="w-9 h-9 text-gray-300 cursor-pointer" />
                         </button>
                       </PopoverTrigger>
 

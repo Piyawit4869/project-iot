@@ -1,4 +1,6 @@
 import React from "react";
+import { useRouteLoaderData } from "react-router";
+
 import { GlobalImage } from "~/components/shared/global-image";
 import { cn } from "~/lib/utils";
 import { useChat } from "~/providers/chat/useChat";
@@ -7,7 +9,6 @@ import {
   useChatRoom,
   type ChatRoom,
 } from "~/providers/chat/useChatRoom";
-import { useRouteLoaderData } from "react-router";
 import { socketConfig } from "~/lib/sockets";
 import {
   CheckCircle,
@@ -16,8 +17,6 @@ import {
   Inbox,
   Menu,
   MessagesSquare,
-  OctagonAlert,
-  User,
 } from "lucide-react";
 import { TagLabel } from "~/components/shared/tag-label";
 import { DateTimeStampChatDisplay } from "~/utils/date-format";
@@ -64,7 +63,8 @@ export default function ChatlistSidebar({
     currentCustomer,
   } = details;
 
-  const { search, setSearch, filterRoom } = useChatRoom();
+  const { search, setSearch, select, setSelect, filterRoom, meta } =
+    useChatRoom();
 
   const [allRooms, setAllRooms] = React.useState<ChatRoom[]>([]);
 
@@ -84,6 +84,10 @@ export default function ChatlistSidebar({
     setSearch("");
     setInputOpen(false);
   }, [setInputOpen, setSearch]);
+
+  const handleClickMenu = (action: string) => {
+    setSelect(action);
+  };
 
   React.useEffect(() => {
     const el = scrollRef.current;
@@ -203,12 +207,20 @@ export default function ChatlistSidebar({
             <Command className="max-h-none overflow-visible">
               <CommandList className="max-h-none overflow-visible">
                 <CommandGroup heading="">
-                  <CommandItem className="flex justify-between items-center cursor-pointer">
+                  <CommandItem
+                    className={`
+    flex justify-between items-center cursor-pointer 
+    ${select === "all" ? "bg-orange-50 font-semibold" : ""}
+  `}
+                    onSelect={() => handleClickMenu("all")}
+                  >
                     <div className="flex items-center gap-2">
                       <Inbox className="w-4 h-4 text-gray-500" /> ทั้งหมด
                     </div>
                     <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
-                      3
+                      {meta?.statusSummary?.totalUnread +
+                        meta?.statusSummary?.totalProcess +
+                        meta?.statusSummary?.totalDone}
                     </span>
                   </CommandItem>
                   <CommandSeparator />
@@ -220,20 +232,50 @@ export default function ChatlistSidebar({
                       3
                     </span>
                   </CommandItem> */}
-                  <CommandItem className="flex justify-between items-center cursor-pointer">
+                  <CommandItem
+                    className={`
+    flex justify-between items-center cursor-pointer 
+    ${select === "unread" ? "bg-orange-50 font-semibold" : ""}
+  `}
+                    onSelect={() => handleClickMenu("unread")}
+                  >
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4 text-gray-500" /> ยังไม่อ่าน
                     </div>
                     <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
-                      3
+                      {meta?.statusSummary?.totalUnread}
                     </span>
                   </CommandItem>
-                  <CommandItem className="flex items-center gap-2 cursor-pointer">
-                    <CheckCircle className="w-4 h-4 text-gray-500" /> ดำเนินการ
+                  <CommandItem
+                    className={`
+    flex justify-between items-center cursor-pointer 
+    ${select === "isProcess" ? "bg-orange-50 font-semibold" : ""}
+  `}
+                    onSelect={() => handleClickMenu("isProcess")}
+                  >
+                    <div className="flex items-center gap-2">
+                      <MessagesSquare className="w-4 h-4 text-gray-500" />
+                      ต้องดำเนินการ
+                    </div>
+                    <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
+                      {meta?.statusSummary?.totalProcess}
+                    </span>
                   </CommandItem>
-                  <CommandItem className="flex items-center gap-2 cursor-pointer">
-                    <CheckCircle className="w-4 h-4 text-gray-500" />{" "}
-                    ดำเนินการแล้ว
+
+                  <CommandItem
+                    className={`
+    flex justify-between items-center cursor-pointer 
+    ${select === "done" ? "bg-orange-50 font-semibold" : ""}
+  `}
+                    onSelect={() => handleClickMenu("done")}
+                  >
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-gray-500" />{" "}
+                      ดำเนินการแล้ว
+                    </div>
+                    <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
+                      {meta?.statusSummary?.totalDone}
+                    </span>
                   </CommandItem>
                 </CommandGroup>
                 <CommandSeparator />
@@ -243,13 +285,13 @@ export default function ChatlistSidebar({
                     <FileUp className="w-4 h-4 text-gray-500" /> นำออกข้อมูล
                   </CommandItem>
                   <CommandSeparator />
-                  <CommandItem className="flex items-center gap-2 cursor-pointer">
+                  {/* <CommandItem className="flex items-center gap-2 cursor-pointer">
                     <User className="w-4 h-4 text-gray-500" /> รับผิดชอบ
                   </CommandItem>
-                  <CommandSeparator />
-                  <CommandItem className="flex items-center gap-2 cursor-pointer">
+                  <CommandSeparator /> */}
+                  {/* <CommandItem className="flex items-center gap-2 cursor-pointer">
                     <OctagonAlert className="w-4 h-4 text-gray-500" /> สแปม
-                  </CommandItem>
+                  </CommandItem> */}
                 </CommandGroup>
               </CommandList>
             </Command>
@@ -352,8 +394,8 @@ export default function ChatlistSidebar({
         >
           {isLoading ? (
             <LoadingSkeleton />
-          ) : allRooms.length > 0 ? (
-            allRooms.map((room: any, i: number) => (
+          ) : filterRoom.length > 0 ? (
+            filterRoom.map((room: any, i: number) => (
               <ChatItem
                 key={room?.id + i}
                 roomId={room?.id ?? ""}
