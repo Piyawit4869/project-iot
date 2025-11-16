@@ -4,7 +4,11 @@ import React from "react";
 import { Check, ChevronDown, ChevronUp, Search } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { GlobalImage } from "~/components/shared/global-image";
-import { Accordion, AccordionItem, AccordionTrigger } from "~/components/ui/accordion";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
 import { Badge } from "~/components/ui/badge";
 
 type Option = { value: string; label: string };
@@ -28,8 +32,6 @@ export function MultiSelectOnModalProduct({
   const [search, setSearch] = React.useState("");
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const scrollPositionRef = React.useRef<number>(0);
-
-  console.log("options", options);
 
   const toggleValue = (value: string | undefined) => {
     if (!value) return;
@@ -85,9 +87,9 @@ export function MultiSelectOnModalProduct({
       >
         {selected.length > 0
           ? options
-            .filter((o) => selected.includes(o.value))
-            .map((o) => o.label)
-            .join(", ")
+              .filter((o) => selected.includes(o.value))
+              .map((o) => o.label)
+              .join(", ")
           : placeholder}
 
         {open ? (
@@ -211,8 +213,7 @@ export function MultiSelectOnModalProduct({
                                       {/* {item.sku} */}
                                     </span>
                                     <span className="text-xs text-muted-foreground">
-                                      สินค้าคงเหลือ :
-                                      ชิ้น
+                                      สินค้าคงเหลือ : ชิ้น
                                     </span>
                                   </div>
                                 </AccordionTrigger>
@@ -225,7 +226,6 @@ export function MultiSelectOnModalProduct({
                           <span className="font-semibold text-sm text-blue-600">
                             {/* {option.salePrice} ฿ */}
                           </span>
-
                         </div>
                       </div>
                     </div>
