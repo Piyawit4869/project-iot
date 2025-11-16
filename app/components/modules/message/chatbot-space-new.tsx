@@ -26,6 +26,7 @@ export default function ChatbotSpaceNew({
   const { customerInfoOpen, setCustomerInfoOpen } = useChatRoom();
   const [selectedRoom, setSelectedRoom] = React.useState<any>();
   const [showChatList, setShowChatList] = React.useState(true);
+  
 
   const {
     data: customerSingle,
@@ -124,7 +125,7 @@ export default function ChatbotSpaceNew({
         <CreateOrderDialog
           open={isCreateOrderOpen}
           onOpenChange={setCreateOrderOpen}
-          customerId={selectedRoom?.customer?.id}
+          customerId={selectedRoom?.customerId}
         />
       </OrderProvider>
     </div>
