@@ -72,7 +72,7 @@ export default function ChatlistSidebar({
   const [allRooms, setAllRooms] = React.useState<ChatRoom[]>([]);
 
   const RECENT_KEY = "recent-searches";
-  const LIMIT = 5; // จำนวนที่ต้องการเก็บ
+  const LIMIT = 5;
 
   const { currentRoomId, addMessageAI, removeMessage } = useChat();
   const scrollRef = React.useRef<HTMLDivElement>(null);

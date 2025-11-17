@@ -53,7 +53,7 @@ export const ChatMessageRender = ({
   const [autoScroll, setAutoScroll] = React.useState(true);
   const [showAllParticipants, setShowAllParticipants] = React.useState(false);
 
-  const LIMIT = 5; // จำนวนที่ต้องการเก็บ
+  const LIMIT = 5;
 
   const participants = selectedRoom.participants ?? [];
   const firstSeven = participants.slice(0, LIMIT);
