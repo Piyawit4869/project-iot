@@ -183,6 +183,10 @@ export default function ChatCustomerInfo({
      after:absolute after:bottom-[-1px] after:left-1/2 after:-translate-x-1/2
      after:h-0.5 after:w-25 after:rounded-full after:bg-[#19142A]
      data-[state=inactive]:after:hidden
+
+    data-[state=active]:drak:text-white
+    dark:after:bg-[#FFFFFF]
+      
    `;
 
   const customer = currentCustomer;
@@ -1070,7 +1074,7 @@ export default function ChatCustomerInfo({
 
             <Tabs defaultValue="note" onValueChange={(v) => setActiveTab(v)}>
               <ScrollArea className="h-[40px]">
-                <TabsList className="w-full">
+                <TabsList className="w-full ">
                   {dataInTaps.map(({ value, label, Icon }) => (
                     <TabsTrigger
                       key={value}
@@ -1201,7 +1205,7 @@ export default function ChatCustomerInfo({
                     onChange={(e) => setSearch(e.target.value)}
                   />
 
-                  <ScrollArea className="h-[calc(100vh-560px)] rounded-md border p-2 bg-white pb-[35px]">
+                  <ScrollArea className="h-[calc(100vh-560px)] rounded-md border p-2 bg-white dark:bg-black/30 pb-[35px]">
                     <ul className="space-y-2">
                       {productsLoading ? (
                         <div className="space-y-2">

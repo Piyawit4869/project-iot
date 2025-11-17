@@ -11,12 +11,17 @@ import {
 import React from "react";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
+import ChatInput from "../chat-input";
+import { useIsMobile } from "~/hooks/use-mobile";
+import StatusToolbar from "../status-toolbar";
 
 export default function NoChatDetail() {
+  const isMobile = useIsMobile();
   return (
     <>
       <div className="flex flex-col h-full bg-white dark:bg-background ">
-        <div className="flex items-center justify-end gap-4 p-4 border-b bg-white dark:bg-border sticky top-0 z-10 mb-5 dark:bg-background">
+        <div className="flex items-center justify-end gap-4  border-b bg-white dark:bg-border sticky top-0 z-10 mb-5 dark:bg-background">
+          <StatusToolbar isDisable chatRoomDetail={undefined} total={0} />
           <div className="flex items-center gap-3">
             {/* Buttons */}
             {/* <Button
@@ -120,8 +125,16 @@ export default function NoChatDetail() {
             </span> */}
           </div>
         </div>
-        <form className="flex items-center gap-2 p-4 border-t w-full">
-          <Input placeholder="Aa" className="flex-1" disabled={true} />
+        <div className="flex items-center gap-2 px-4 pt-3 border-t w-full">
+          <div className="w-full">
+            {" "}
+            <span className="  text-gray-500/50">
+              {isMobile
+                ? "พิมพ์ข้อความเพื่อส่ง"
+                : "Enter = ส่งข้อความ / Shift+Enter = ขึ้นบรรทัดใหม่"}
+            </span>
+          </div>
+          <ChatInput selectedRoom={undefined} customer={undefined} />
 
           <input
             type="file"
@@ -137,7 +150,7 @@ export default function NoChatDetail() {
           <Button size="icon" type="submit" disabled={true}>
             <Send className="w-4 h-4" />
           </Button>
-        </form>
+        </div>
       </div>
     </>
   );
