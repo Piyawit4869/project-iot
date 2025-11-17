@@ -4,7 +4,7 @@ import ReactSignatureCanvas from "react-signature-canvas";
 import Image from "next/image";
 import { Button } from "@/components/ui";
 
-import logo from "@/public/images/rome.png";
+import logo from "@/public/images/rome.svg";
 import {
   useExportPdf,
   useUpdateSignature,
