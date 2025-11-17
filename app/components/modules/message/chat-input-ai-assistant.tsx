@@ -24,13 +24,10 @@ export default function ChatInputAIAssistant({
   firstTimeMessage?: string;
   connectedChatRoomAIAssistant: (values: any) => void;
 }) {
-  const { messagesAITest, setMessagesAITest } = useCustomer();
-
   const isMobile = useIsMobile();
 
   const [input, setInput] = useState("");
   const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const { selectedRoom } = useChatRoom();
   const { mutate: upload, isPending } = useUpload();
 
   const handleInputChange = (e: any) => {
@@ -142,15 +139,10 @@ export default function ChatInputAIAssistant({
   // }
 
   return (
-    <form onSubmit={sendText} className="gap-2 border-t w-full">
+    <form onSubmit={sendText} className="gap-2 border-t w-full h-[100px]">
       <textarea
-        // placeholder={
-        //   isMobile
-        //     ? "กดส่งข้อความเพื่อส่งข้อความ"
-        //     : "Enter: ส่ง, Shift+Enter:ขึ้นบรรทัดใหม่"
-        // }
         placeholder="สอบถาม AI ได้เลย"
-        className="flex-1 max-h-[300px] w-full resize-none overflow-auto p-2 border-0 rounded-md outline-none"
+        className="flex-1 max-h-[40px] w-full resize-none overflow-auto p-2 border-0 rounded-md outline-none"
         value={input}
         onChange={handleInputChange}
         disabled={isPending}
@@ -169,16 +161,16 @@ export default function ChatInputAIAssistant({
           }
         }}
       />
-      <input
+      {/* <input
         type="file"
         accept="image/*"
         ref={fileInputRef}
         onChange={handleImageUpload}
         className="hidden"
-      />
+      /> */}
 
-      <div className="flex justify-end p-4">
-        <Button
+      <div className="flex justify-end pt-4 pr-2 px-2">
+        {/* <Button
           variant="ghost"
           size="icon"
           type="button"
@@ -190,7 +182,7 @@ export default function ChatInputAIAssistant({
           ) : (
             <FileImage />
           )}
-        </Button>
+        </Button> */}
         <Button size="icon" type="submit" disabled={isPending}>
           {isPendingAI || isAILoading ? (
             <Loader2 className="w-4 h-4 animate-spin" />

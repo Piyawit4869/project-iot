@@ -611,15 +611,15 @@ export default function ChatMessages({
     });
   }, [targetMessageId, messagesData, hasScrolledToTarget]);
 
-  React.useEffect(() => {
-    setLoadingFirstTime(true);
+  // React.useEffect(() => {
+  //   setLoadingFirstTime(true);
 
-    const timer = setTimeout(() => {
-      setLoadingFirstTime(false);
-    }, 200); // หน่วงเบาๆ ให้โหลดดูนุ่มขึ้น
+  //   const timer = setTimeout(() => {
+  //     setLoadingFirstTime(false);
+  //   }, 200);
 
-    return () => clearTimeout(timer);
-  }, [selectedRoom?.id]);
+  //   return () => clearTimeout(timer);
+  // }, [selectedRoom?.id]);
 
   const lastMessage =
     combinedMessages &&
@@ -640,7 +640,7 @@ export default function ChatMessages({
                     transition-colors duration-200
                 `;
 
-  if (loadingFirstTime || (isLoading && selectedRoom)) {
+  if (isLoading && selectedRoom) {
     return <CustomerChatSkeleton />;
   }
 
@@ -717,7 +717,7 @@ export default function ChatMessages({
                     </div>
                   )}
                   <div
-                    className={`flex max-w-[75%] flex-col ${
+                    className={`flex flex-col ${msg.isLabel ? "" : "max-w-[75%]"} ${
                       msg.platform === "backoffice"
                         ? "items-end ml-auto"
                         : "items-start mr-auto"
