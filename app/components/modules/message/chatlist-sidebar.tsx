@@ -34,6 +34,7 @@ import {
   CommandSeparator,
 } from "~/components/ui/command";
 import { useIsMobile } from "~/hooks/use-mobile";
+import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 
 interface Props {
   handleChangeSelectedRoom: (room: any) => void;
@@ -70,6 +71,8 @@ export default function ChatlistSidebar({
 
   const { currentRoomId, addMessageAI } = useChat();
   const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  type StatusKey = "unread" | "done" | "isProcess" | "all";
 
   const handleScroll = () => {
     const el = scrollRef.current;
@@ -138,6 +141,15 @@ export default function ChatlistSidebar({
     }
   }, [chatRooms]);
 
+  const compareText: Record<StatusKey, string> = {
+    unread: "ยังไม่อ่าน",
+    done: "ดำเนินการแล้ว",
+    isProcess: "ต้องดำเนินการ",
+    all: "ทั้งหมด",
+  };
+
+  const resultStatus = compareText?.[select as StatusKey];
+
   return (
     <aside className="h-full border-r dark:bg-background flex flex-col border-l">
       <div className="p-3 border-b flex flex-col">
@@ -184,7 +196,7 @@ export default function ChatlistSidebar({
                 <PopoverTrigger asChild>
                   <button className="flex items-center gap-1 cursor-pointer">
                     <Menu className="w-4 h-4" />
-                    <p className="text-sm font-semibold">ทั้งหมด</p>
+                    <p className="text-sm font-semibold">{resultStatus}</p>
                   </button>
                 </PopoverTrigger>
 
@@ -218,9 +230,13 @@ export default function ChatlistSidebar({
                       <Inbox className="w-4 h-4 text-gray-500" /> ทั้งหมด
                     </div>
                     <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
-                      {meta?.statusSummary?.totalUnread +
+                      {isLoading ? (
+                        <SkeletonLoading />
+                      ) : (
+                        meta?.statusSummary?.totalUnread +
                         meta?.statusSummary?.totalProcess +
-                        meta?.statusSummary?.totalDone}
+                        meta?.statusSummary?.totalDone
+                      )}
                     </span>
                   </CommandItem>
                   <CommandSeparator />
@@ -243,7 +259,11 @@ export default function ChatlistSidebar({
                       <Clock className="w-4 h-4 text-gray-500" /> ยังไม่อ่าน
                     </div>
                     <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
-                      {meta?.statusSummary?.totalUnread}
+                      {isLoading ? (
+                        <SkeletonLoading />
+                      ) : (
+                        meta?.statusSummary?.totalUnread
+                      )}
                     </span>
                   </CommandItem>
                   <CommandItem
@@ -258,7 +278,11 @@ export default function ChatlistSidebar({
                       ต้องดำเนินการ
                     </div>
                     <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
-                      {meta?.statusSummary?.totalProcess}
+                      {isLoading ? (
+                        <SkeletonLoading />
+                      ) : (
+                        meta?.statusSummary?.totalProcess
+                      )}
                     </span>
                   </CommandItem>
 
@@ -274,7 +298,11 @@ export default function ChatlistSidebar({
                       ดำเนินการแล้ว
                     </div>
                     <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
-                      {meta?.statusSummary?.totalDone}
+                      {isLoading ? (
+                        <SkeletonLoading />
+                      ) : (
+                        meta?.statusSummary?.totalDone
+                      )}
                     </span>
                   </CommandItem>
                 </CommandGroup>
@@ -332,33 +360,6 @@ export default function ChatlistSidebar({
                 <div className="h-[100px] flex items-center justify-center">
                   <span className="text-sm">กรุณาค้นหาข้อมูล</span>
                 </div>
-
-                {/* {["ไอที", "ไอ", "ทีม"].map((item, i) => ( // !! for map data
-                  <div
-                    key={i}
-                    className="flex items-center justify-between cursor-pointer hover:bg-gray-100 rounded-md p-1"
-                    onClick={() => console.log("Click on item:", item)}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-300">
-                        <Search className="w-3 h-3 text-gray-600" />
-                      </div>
-                      <p className="text-sm font-semibold">{item}</p>
-                    </div>
-
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-7 px-2"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        console.log("Click delete on item:", item);
-                      }}
-                    >
-                      <X className="w-4 h-4 text-gray-500 hover:text-gray-700" />
-                    </Button>
-                  </div>
-                ))} */}
               </div>
 
               <Separator className="w-full m-0" />
@@ -394,8 +395,33 @@ export default function ChatlistSidebar({
         >
           {isLoading ? (
             <LoadingSkeleton />
-          ) : filterRoom.length > 0 ? (
-            filterRoom.map((room: any, i: number) => (
+          ) : select !== "all" ? (
+            filterRoom.length > 0 ? (
+              filterRoom.map((room: any, i: number) => (
+                <ChatItem
+                  key={room?.id + i}
+                  roomId={room?.id ?? ""}
+                  selectedRoom={currentRoomId}
+                  name={room?.name}
+                  message={room?.latestMessage?.message ?? ""}
+                  time={room?.latestMessage?.createdAt ?? ""}
+                  image={room?.imageUrl || ""}
+                  unread={room?.unreadMessageCount > 0}
+                  countUnreadMessage={room?.unreadMessageCount || 0}
+                  currentCustomer={currentCustomer}
+                  roomDetail={room}
+                  onChatClick={() => {
+                    handleChangeSelectedRoom(room);
+                    setSidebarOpen(false);
+                    setOnSelectRoom(true);
+                  }}
+                />
+              ))
+            ) : (
+              <EmptyChat />
+            )
+          ) : allRooms.length > 0 ? (
+            allRooms.map((room: any, i: number) => (
               <ChatItem
                 key={room?.id + i}
                 roomId={room?.id ?? ""}
