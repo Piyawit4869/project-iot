@@ -60,6 +60,12 @@ export const formatDateAndTime = (date?: string | Date | null): string => {
     .format("DD/MM/BBBB HH:mm น.");
 };
 
+export const formatShowTime = (date?: string | Date | null): string => {
+  if (!date) return "";
+
+  return dayjs(date).tz("Asia/Bangkok").locale("th").format("HH:mm น.");
+};
+
 export function formatPhoneNumber(phone?: string) {
   const digits = phone?.replace(/\D/g, "");
   if (digits?.length === 9 || digits?.length === 10) {

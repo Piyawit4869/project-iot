@@ -19,7 +19,10 @@ import { usePaginatedMessagesCursor } from "~/api/client/message/useMessage";
 import { useChat, type Message } from "~/providers/chat/useChat";
 import StatusToolbar from "./status-toolbar";
 import ReactLinkify from "react-linkify";
-import { formatDateAndTime } from "~/components/shared/global-format";
+import {
+  formatDateAndTime,
+  formatShowTime,
+} from "~/components/shared/global-format";
 
 import {
   FileText,
@@ -290,7 +293,7 @@ export default function ChatMessages({
     const isLabel = msg?.isLabel;
 
     if (isLabel) {
-      const formattedTime = formatDateAndTime(
+      const formattedTime = formatShowTime(
         msg.createdAt ? msg.createdAt : msg.timestamp
       );
       return (
