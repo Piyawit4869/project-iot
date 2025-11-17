@@ -8,7 +8,7 @@ import {
 } from "~/components/ui/sidebar";
 import { HeadSidebarLoading } from "./components/head-sidebar-loading";
 
-import RomeLogo from "/assets/images/rome.png";
+import RomeLogo from "/assets/images/rome.svg";
 import { Link } from "react-router";
 
 interface HeaderType {

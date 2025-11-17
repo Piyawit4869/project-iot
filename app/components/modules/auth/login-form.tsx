@@ -14,7 +14,7 @@ import {
 import React from "react";
 import GlobalButton from "~/components/shared/global-button";
 import BgLogin from "/assets/images/bg-login.png";
-import LogoImage from "/assets/images/rome.png";
+import LogoImage from "/assets/images/rome.svg";
 import LogoUtotechImage from "/assets/images/logo.webp";
 import { Link, useActionData, useNavigation, useSubmit } from "react-router";
 import { loginFormSchema, type LoginFormValues } from "~/schemas/login";
@@ -140,7 +140,9 @@ export default function LoginForm() {
               name="user"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>ชื่อผู้ใช้งาน / อีเมล</FormLabel>
+                  <FormLabel>
+                    <Icons.Mail className="w-5 h-5" />
+                    ชื่อผู้ใช้งาน / อีเมล</FormLabel>
                   <FormControl>
                     <Input {...field} placeholder="กรอกชื่อผู้ใช้งาน/อีเมล" />
                   </FormControl>
@@ -154,7 +156,9 @@ export default function LoginForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>รหัสผ่าน</FormLabel>
+                  <FormLabel>
+                    <Icons.UnlockIcon className="w-5 h-5" />                    
+                    รหัสผ่าน</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
@@ -175,7 +179,7 @@ export default function LoginForm() {
               )}
             />
 
-            <div className="mt-1 flex flex-row justify-end  gap-2 text-gray-500">
+            <div className="mt-1 flex flex-row justify-end  gap-2 text-gray-500 underline">
               <Link to="/forgot-password" key="hover:underline">
                 ลืมรหัสผ่าน
               </Link>
@@ -185,7 +189,12 @@ export default function LoginForm() {
               {action?.error}
             </span>
             <GlobalButton
-              label="เข้าสู่ระบบ"
+              label={
+                <span className="flex items-center justify-center gap-2 -translate-x-1">
+                  <Icons.LogIn className="w-5 h-5" />
+                  เข้าสู่ระบบ
+                </span>
+              }
               type="submit"
               loading={
                 isProcessing || state === "submitting" || state === "loading"

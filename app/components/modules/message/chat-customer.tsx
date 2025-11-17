@@ -754,46 +754,48 @@ export default function ChatCustomerInfo({
                     <div className="flex flex-wrap gap-2 mb-1">
                       {participants
                         .filter((spl: any) => spl.isMain)
-                        .map((spl: any, userIndex: number) => (
-                          <div
-                            className="relative inline-block"
-                            key={`main-spl-${spl.participantId}`}>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <button
-                                    onClick={() =>
-                                      navigate(`/users/${spl.participantId}`)
-                                    }>
-                                    <GlobalImage
-                                      src={
-                                        spl.imageUrl ||
-                                        `https://api.dicebear.com/9.x/initials/svg?seed=${spl.participantId}`
-                                      }
-                                      alt={`main-spl-${spl.participantId}`}
-                                      className={`w-[35px] h-[35px] rounded-full object-cover border-2 ${
-                                        userIndex === 0 && "border-amber-500"
-                                      }`}
-                                      notShowPreview
-                                    />
-                                  </button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  {spl?.displayName ?? "-"}
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                DeleteSupport(spl.participantId);
-                              }}
-                              className="absolute -top-1 -right-1 bg-white border border-gray-300 rounded-full p-1 shadow hover:bg-gray-100 transition">
-                              <X className="w-2 h-2 text-gray-600" />
-                            </button>
-                          </div>
-                        ))}
+                        .map((par: any, userIndex: number) => {
+                          return (
+                            <div
+                              className="relative inline-block"
+                              key={`main-spl-${par.participantId}`}>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button
+                                      onClick={() =>
+                                        navigate(`/users/${par.participantId}`)
+                                      }>
+                                      <GlobalImage
+                                        src={
+                                          par.imageUrl ||
+                                          `https://api.dicebear.com/9.x/initials/svg?seed=${par.participantId}`
+                                        }
+                                        alt={`main-spl-${par.participantId}`}
+                                        className={`w-[35px] h-[35px] rounded-full object-cover border-2 ${
+                                          userIndex === 0 && "border-amber-500"
+                                        }`}
+                                        notShowPreview
+                                      />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    {par?.displayName ?? "-"}
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  DeleteSupport(par.participantId);
+                                }}
+                                className="absolute -top-1 -right-1 bg-white border border-gray-300 rounded-full p-1 shadow hover:bg-gray-100 transition">
+                                <X className="w-2 h-2 text-gray-600" />
+                              </button>
+                            </div>
+                          );
+                        })}
                     </div>
                   ) : (
                     <Popover
@@ -803,7 +805,7 @@ export default function ChatCustomerInfo({
                         <button
                           type="button"
                           onClick={() => setIsPopoverOpenMain(true)}
-                          className="rounded-full object-cover"
+                          className="rounded-full object-cover cursor-pointer"
                           disabled={isCreatingSupport}>
                           <CirclePlus className="w-9 h-9 text-gray-300" />
                         </button>

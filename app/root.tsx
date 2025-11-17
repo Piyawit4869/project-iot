@@ -30,7 +30,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export const links: Route.LinksFunction = () => [
-  { rel: "icon", href: "/assets/images/rome.png" },
+  { rel: "icon", href: "/assets/images/rome.svg" },
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",

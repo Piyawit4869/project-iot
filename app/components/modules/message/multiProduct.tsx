@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Check, ChevronDown, ChevronUp, Search } from "lucide-react";
 import { cn } from "~/lib/utils";
@@ -9,7 +7,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
-import { Badge } from "~/components/ui/badge";
 
 type Option = { value: string; label: string };
 
