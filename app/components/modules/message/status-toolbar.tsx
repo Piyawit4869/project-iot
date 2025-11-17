@@ -105,42 +105,6 @@ export default function StatusToolbar({
 
   const [isSearchFull, setIsSearchFull] = React.useState<boolean>(false);
 
-  const handleCloseSearch = React.useCallback(() => {
-    setSearch("");
-    setInputOpen(false);
-  }, [setInputOpen, setSearch]);
-
-  // const setTodo = async () => {
-  //   // onChange?.("todo");
-  //   markAsProcess(true);
-  //   markAsDone(false);
-  //   startTransition(() => {
-  //     setIsProcess(true);
-  //     setIsDone(false);
-  //   });
-  // };
-  // const setDone = () => {
-  //   // onChange?.("done");
-  //   markAsProcess(false);
-  //   markAsDone(true);
-
-  //   startTransition(() => {
-  //     setIsDone(true);
-  //     setIsProcess(false);
-  //   });
-  // };
-
-  // const setClear = () => {
-  //   // onChange?.("clear");
-  //   markAsProcess(false);
-  //   markAsDone(false);
-
-  //   startTransition(() => {
-  //     setIsDone(false);
-  //     setIsProcess(false);
-  //   });
-  // };
-
   const handleUpdateStatusProgressTag = async (status: string) => {
     let body = {};
 

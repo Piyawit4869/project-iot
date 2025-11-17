@@ -299,7 +299,7 @@ export const ChatBotChatMessagesAndConfig: React.FC<
               </div>
             );
           })}
-          {true && (
+          {isPendingAI && (
             <div
               className={
                 "mt-4 flex max-w-[75%] flex-col gap-1 mr-auto items-start"

@@ -48,6 +48,8 @@ export default function ChatlistSidebar({
 }: Props) {
   const { me } = useRouteLoaderData("root");
 
+  const [recent, setRecent] = React.useState<string[]>([]);
+
   const [open, setOpen] = React.useState<boolean>(false);
   const [inputOpen, setInputOpen] = React.useState<boolean>(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -68,6 +70,9 @@ export default function ChatlistSidebar({
     useChatRoom();
 
   const [allRooms, setAllRooms] = React.useState<ChatRoom[]>([]);
+
+  const RECENT_KEY = "recent-searches";
+  const LIMIT = 5; // จำนวนที่ต้องการเก็บ
 
   const { currentRoomId, addMessageAI, removeMessage } = useChat();
   const scrollRef = React.useRef<HTMLDivElement>(null);
@@ -91,6 +96,49 @@ export default function ChatlistSidebar({
   const handleClickMenu = (action: string) => {
     setSelect(action);
   };
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearch(value);
+  };
+
+  const addRecentSearch = () => {
+    const existingRaw = localStorage.getItem(RECENT_KEY);
+    const existing = existingRaw ? JSON.parse(existingRaw) : [];
+
+    const filtered = existing.filter((item: string) => item !== search);
+
+    const updated = [search, ...filtered].slice(0, LIMIT);
+
+    setRecent(updated);
+
+    localStorage.setItem(RECENT_KEY, JSON.stringify(updated));
+  };
+
+  const removeRecentSearch = (item: string) => {
+    const raw = localStorage.getItem(RECENT_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+
+    const updated = list.filter((x: string) => x !== item);
+    localStorage.setItem(RECENT_KEY, JSON.stringify(updated));
+
+    setRecent(updated);
+  };
+
+  const clearRecent = () => {
+    localStorage.removeItem(RECENT_KEY);
+    setRecent([]);
+  };
+
+  const loadRecentSearch = () => {
+    const raw = localStorage.getItem(RECENT_KEY);
+    return raw ? JSON.parse(raw) : [];
+  };
+
+  React.useEffect(() => {
+    const recent = loadRecentSearch();
+    setRecent(recent);
+  }, []);
 
   React.useEffect(() => {
     const el = scrollRef.current;
@@ -178,7 +226,8 @@ export default function ChatlistSidebar({
                   type="text"
                   placeholder="ค้นหา"
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  // onChange={(e) => setSearch(e.target.value)}
+                  onChange={handleSearch}
                   className="border border-gray-300 rounded-md px-3 py-1 text-sm bg-white w-full transition-all duration-200 focus:outline-none focus:ring-0 focus:border-gray-300"
                 />
                 <button
@@ -346,6 +395,7 @@ export default function ChatlistSidebar({
                     setSidebarOpen(false);
                     setOnSelectRoom(true);
                     removeMessage();
+                    addRecentSearch();
                   }}
                 />
               );
@@ -355,15 +405,73 @@ export default function ChatlistSidebar({
               <div className="flex flex-col gap-3 w-full mt-2 px-3 pb-2">
                 <p className="text-sm font-semibold">การค้นหาล่าสุด</p>
 
-                <div className="h-[100px] flex items-center justify-center">
-                  <span className="text-sm">กรุณาค้นหาข้อมูล</span>
+                <div className="space-y-2">
+                  {recent && recent.length > 0 ? (
+                    recent.map((item) => (
+                      <div
+                        key={item}
+                        className="flex items-center justify-between group cursor-pointer"
+                      >
+                        <div
+                          className="flex items-center gap-3 w-full hover:text-blue-500"
+                          onClick={() => setSearch(item)}
+                        >
+                          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4 text-gray-500"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.35 4.35a7.5 7.5 0 0012.3 12.3z"
+                              />
+                            </svg>
+                          </div>
+
+                          <span className="text-[15px]">{item}</span>
+                        </div>
+
+                        <button
+                          className="p-2 text-gray-400 hover:text-gray-600 cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeRecentSearch(item);
+                          }}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            className="w-4 h-4"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="h-[100px] flex items-center justify-center">
+                      <span className="text-sm">กรุณาค้นหาข้อมูล</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
               <Separator className="w-full m-0" />
 
-              <div className="flex gap-3 mt-2 px-3">
-                <button
+              <div className="flex justify-end gap-3 mt-2 px-3">
+                {/* <button
                   className="text-sm font-semibold hover:text-gray-700"
                   onClick={() =>
                     console.log("ปิดใช้งานการบันทึกอัตโนมัติ clicked")
@@ -372,11 +480,12 @@ export default function ChatlistSidebar({
                   <p className="text-xs font-semibold">
                     ปิดใช้งานการบันทึกอัตโนมัติ
                   </p>
-                </button>
-                <p className="text-xs font-semibold">|</p>
+                </button> */}
+                {/* <p className="text-xs font-semibold">|</p> */}
                 <button
-                  className="text-sm font-semibold hover:text-gray-700"
-                  onClick={() => console.log("ลบทั้งหมด clicked")}
+                  className="text-sm font-semibold hover:text-gray-700 cursor-pointer"
+                  // onClick={() => console.log("ลบทั้งหมด clicked")}
+                  onClick={clearRecent}
                 >
                   <p className="text-xs font-semibold">ลบทั้งหมด</p>
                 </button>

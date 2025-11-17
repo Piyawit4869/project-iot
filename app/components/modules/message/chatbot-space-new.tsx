@@ -38,6 +38,8 @@ export default function ChatbotSpaceNew({
   const [addCustomerDetail, setAddCustomerDetail] =
     React.useState<boolean>(false);
 
+  const isLineGroup = selectedRoom?.kind === "group";
+
   const hasCustomerId = !selectedRoom
     ? true
     : selectedRoom?.customerId
@@ -83,6 +85,7 @@ export default function ChatbotSpaceNew({
                 setCustomerInfoOpen(false);
               }}
               handleOpenDrawer={() => setDrawer(true)}
+              isLineGroup={isLineGroup}
             />
           ) : (
             <ChatMessageNoData
@@ -94,7 +97,7 @@ export default function ChatbotSpaceNew({
           )}
         </div>
 
-        {customerInfoOpen && !isMobile && (
+        {customerInfoOpen && !isMobile && !isLineGroup && (
           <div className="w-96">
             {selectedRoom && selectedRoom?.id && selectedRoom?.customerId ? (
               <ChatCustomerInfo
