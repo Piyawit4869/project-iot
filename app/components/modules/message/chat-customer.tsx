@@ -535,8 +535,6 @@ export default function ChatCustomerInfo({
     }
   };
 
-  console.log("cartItems", cartItems);
-
   const handleOpenProductModalsWithItem = (item: Product) => {
     setSelectProductItem(item);
     setOpenProductModal(true);
@@ -708,14 +706,16 @@ export default function ChatCustomerInfo({
               <span
                 className={`text-xs p-1 px-3 rounded-full ${
                   STATUS_BG[currentCustomer.status] ?? "bg-gray-400 text-white"
-                }`}>
+                }`}
+              >
                 {statusCustomer}
               </span>
               <span
                 className={`text-xs p-1 px-3 rounded-full ${
                   TYPE_BG[currentCustomer.customerType] ??
                   "bg-gray-400 text-white"
-                }`}>
+                }`}
+              >
                 {typeCustomer}
               </span>
             </div>
@@ -758,14 +758,16 @@ export default function ChatCustomerInfo({
                           return (
                             <div
                               className="relative inline-block"
-                              key={`main-spl-${par.participantId}`}>
+                              key={`main-spl-${par.participantId}`}
+                            >
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
                                     <button
                                       onClick={() =>
                                         navigate(`/users/${par.participantId}`)
-                                      }>
+                                      }
+                                    >
                                       <GlobalImage
                                         src={
                                           par.imageUrl ||
@@ -790,7 +792,8 @@ export default function ChatCustomerInfo({
                                   e.stopPropagation();
                                   DeleteSupport(par.participantId);
                                 }}
-                                className="absolute -top-1 -right-1 bg-white border border-gray-300 rounded-full p-1 shadow hover:bg-gray-100 transition">
+                                className="absolute -top-1 -right-1 bg-white border border-gray-300 rounded-full p-1 shadow hover:bg-gray-100 transition"
+                              >
                                 <X className="w-2 h-2 text-gray-600" />
                               </button>
                             </div>
@@ -800,13 +803,15 @@ export default function ChatCustomerInfo({
                   ) : (
                     <Popover
                       open={isPopoverOpenMain}
-                      onOpenChange={setIsPopoverOpenMain}>
+                      onOpenChange={setIsPopoverOpenMain}
+                    >
                       <PopoverTrigger asChild>
                         <button
                           type="button"
                           onClick={() => setIsPopoverOpenMain(true)}
                           className="rounded-full object-cover cursor-pointer"
-                          disabled={isCreatingSupport}>
+                          disabled={isCreatingSupport}
+                        >
                           <CirclePlus className="w-9 h-9 text-gray-300" />
                         </button>
                       </PopoverTrigger>
@@ -836,7 +841,8 @@ export default function ChatCustomerInfo({
                                       onSelect={() => {
                                         handleUserButtonClick(item.id, true);
                                       }}
-                                      className="flex items-center gap-2 py-1.5">
+                                      className="flex items-center gap-2 py-1.5"
+                                    >
                                       <GlobalImage
                                         src={
                                           item.profile?.imageUrl ||
@@ -883,7 +889,8 @@ export default function ChatCustomerInfo({
                     displayed.map((user: any, i: any) => (
                       <div
                         className="relative inline-block"
-                        key={`secondary-spl-${user?.participantId ?? `unknown-${i}`}`}>
+                        key={`secondary-spl-${user?.participantId ?? `unknown-${i}`}`}
+                      >
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
@@ -892,7 +899,8 @@ export default function ChatCustomerInfo({
                                   navigate(
                                     `/users/${user?.participantId ?? "unknown"}`
                                   )
-                                }>
+                                }
+                              >
                                 <GlobalImage
                                   src={
                                     user?.imageUrl ||
@@ -918,7 +926,8 @@ export default function ChatCustomerInfo({
                             e.stopPropagation();
                             DeleteSupport(user.participantId);
                           }}
-                          className="absolute -top-1 -right-1 bg-white border border-gray-300 rounded-full p-1 shadow hover:bg-gray-100 transition">
+                          className="absolute -top-1 -right-1 bg-white border border-gray-300 rounded-full p-1 shadow hover:bg-gray-100 transition"
+                        >
                           <X className="w-2 h-2 text-gray-600" />
                         </button>
                       </div>
@@ -929,20 +938,23 @@ export default function ChatCustomerInfo({
                       onClick={() => setOpenSelected(true)}
                       className="w-9 h-9 rounded-full border border-gray-300 text-sm font-semibold text-gray-600 bg-white shadow inline-flex items-center justify-center hover:bg-gray-50"
                       aria-label={`ดูรายชื่อผู้รับผิดชอบทั้งหมดอีก ${extraCount} คน`}
-                      title={`ดูรายชื่อทั้งหมด (+${extraCount})`}>
+                      title={`ดูรายชื่อทั้งหมด (+${extraCount})`}
+                    >
                       +{extraCount}
                     </button>
                   )}
                   <div>
                     <Popover
                       open={isPopoverOpen}
-                      onOpenChange={setIsPopoverOpen}>
+                      onOpenChange={setIsPopoverOpen}
+                    >
                       <PopoverTrigger asChild>
                         <button
                           type="button"
                           onClick={() => setIsPopoverOpen(true)}
                           className="rounded-full object-cover cursor-pointer"
-                          disabled={isCreatingSupport}>
+                          disabled={isCreatingSupport}
+                        >
                           <CirclePlus className="w-9 h-9 text-gray-300 cursor-pointer" />
                         </button>
                       </PopoverTrigger>
@@ -972,7 +984,8 @@ export default function ChatCustomerInfo({
                                       onSelect={() => {
                                         handleUserButtonClick(item.id, false);
                                       }}
-                                      className="flex items-center gap-2 py-1.5">
+                                      className="flex items-center gap-2 py-1.5"
+                                    >
                                       <GlobalImage
                                         src={
                                           item.profile?.imageUrl ||
@@ -1062,7 +1075,8 @@ export default function ChatCustomerInfo({
                     <TabsTrigger
                       key={value}
                       value={value}
-                      className={classForTaps}>
+                      className={classForTaps}
+                    >
                       <Icon className="w-3 h-3" />
                       {label}
                     </TabsTrigger>
@@ -1090,7 +1104,8 @@ export default function ChatCustomerInfo({
                           <Button
                             variant="outline"
                             size="icon"
-                            className="h-[30px] w-[70px] px-2 gap-2">
+                            className="h-[30px] w-[70px] px-2 gap-2"
+                          >
                             <span className="text-[12px]">กรอง</span>
                           </Button>
                         </PopoverTrigger>
@@ -1105,7 +1120,8 @@ export default function ChatCustomerInfo({
                                 variant="ghost"
                                 size="sm"
                                 className="h-7 px-2"
-                                onClick={clearAllFilterStatus}>
+                                onClick={clearAllFilterStatus}
+                              >
                                 <X className="h-3.5 w-3.5 mr-1" />
                                 เคลียร์
                               </Button>
@@ -1128,7 +1144,8 @@ export default function ChatCustomerInfo({
                                       }
                                       className="flex items-center justify-between"
                                       aria-checked={active}
-                                      role="option">
+                                      role="option"
+                                    >
                                       <span>{opt.label}</span>
                                       {active ? (
                                         <Check className="h-4 w-4" />
@@ -1144,7 +1161,8 @@ export default function ChatCustomerInfo({
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => setOpen(false)}>
+                              onClick={() => setOpen(false)}
+                            >
                               ปิด
                             </Button>
                             <Button size="sm" onClick={handleApplyFilterStatus}>
@@ -1159,7 +1177,8 @@ export default function ChatCustomerInfo({
                         size="icon"
                         className="h-[30px] w-[70px] p-2 px-3"
                         onClick={createOrder}
-                        disabled={cartItems.length <= 0}>
+                        disabled={cartItems.length <= 0}
+                      >
                         <span className="text-[12px]">ตะกร้า</span>
 
                         {cartItems.length > 0 && (
@@ -1198,7 +1217,8 @@ export default function ChatCustomerInfo({
                         productsPaginate.items.map((item: Product) => (
                           <li
                             key={item?.id}
-                            className="flex items-center justify-between gap-4 p-3 rounded-lg hover:bg-muted/60 transition-colors">
+                            className="flex items-center justify-between gap-4 p-3 rounded-lg hover:bg-muted/60 transition-colors"
+                          >
                             {item?.id && (
                               <div
                                 className="flex gap-2 cursor-pointer w-full"
@@ -1207,7 +1227,8 @@ export default function ChatCustomerInfo({
                                   e.stopPropagation();
                                   handleOpenProductModalsWithItem(item);
                                   // toggleCartItem(item);
-                                }}>
+                                }}
+                              >
                                 {/* <Checkbox
                                   checked={isInCart(item.id)}
                                   onClick={(e) => e.stopPropagation()}
@@ -1224,13 +1245,16 @@ export default function ChatCustomerInfo({
                                     <Accordion
                                       type="single"
                                       collapsible
-                                      className="w-full">
+                                      className="w-full"
+                                    >
                                       <AccordionItem
                                         value={`item-${item.id}`}
-                                        className="border-none">
+                                        className="border-none"
+                                      >
                                         <AccordionItem
                                           value={`item-${item.id}`}
-                                          className="border-none">
+                                          className="border-none"
+                                        >
                                           <AccordionTrigger className="p-0 hover:no-underline [&>svg]:hidden">
                                             <div className="flex flex-col items-start text-left">
                                               <span className="text-sm font-medium truncate max-w-[150px]">
@@ -1250,7 +1274,8 @@ export default function ChatCustomerInfo({
                                                   item.status === "active"
                                                     ? "bg-green-100 text-green-700"
                                                     : "bg-gray-100 text-gray-500"
-                                                )}>
+                                                )}
+                                              >
                                                 {item.status === "active"
                                                   ? "สั่งซื้อได้"
                                                   : "สินค้าหมด"}
@@ -1275,7 +1300,8 @@ export default function ChatCustomerInfo({
                                         e.preventDefault();
                                         e.stopPropagation();
                                         handleOpenProductModalsWithItem(item);
-                                      }}>
+                                      }}
+                                    >
                                       <Eye className="h-4 w-4" />
                                     </Button>
                                   </div>
@@ -1305,7 +1331,8 @@ export default function ChatCustomerInfo({
                       className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-sm text-black"
                       onClick={() => {
                         setOpenAiSetting(true);
-                      }}>
+                      }}
+                    >
                       <Settings />
                     </Button>
                   </div>
@@ -1433,7 +1460,8 @@ export default function ChatCustomerInfo({
               className={cn(
                 "mt-4 space-y-4 transition-all",
                 !aiEnabledWithCondition && "opacity-50 pointer-events-none"
-              )}>
+              )}
+            >
               <div className="flex flex-col gap-2">
                 <Label className="text-sm">ช่วงเวลาที่ให้ AI ตอบ</Label>
                 <div className="flex items-center gap-2">
@@ -1589,14 +1617,16 @@ export default function ChatCustomerInfo({
           <DialogFooter className="mt-6 gap-2">
             <Button
               variant="secondary"
-              onClick={() => setOpenProductModal(false)}>
+              onClick={() => setOpenProductModal(false)}
+            >
               ปิด
             </Button>
             <Button
               onClick={() => {
                 toggleCartItem(selectProductItem as Product);
                 setOpenProductModal(false);
-              }}>
+              }}
+            >
               บันทึกลงตะกร้า
             </Button>
           </DialogFooter>
@@ -1644,7 +1674,8 @@ export default function ChatCustomerInfo({
                       className="text-sm underline underline-offset-2"
                       onClick={() =>
                         navigate(`/users/${item?.userId ?? "unknown"}`)
-                      }>
+                      }
+                    >
                       ดูโปรไฟล์
                     </button>
 
@@ -1652,7 +1683,8 @@ export default function ChatCustomerInfo({
 
                     <button
                       className="text-sm text-red-600 hover:text-red-700"
-                      onClick={() => DeleteSupport(item.id)}>
+                      onClick={() => DeleteSupport(item.id)}
+                    >
                       ลบ
                     </button>
                   </div>

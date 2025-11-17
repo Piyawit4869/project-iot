@@ -104,6 +104,16 @@ import type { UsersFormValues } from "~/schemas/users/user";
 
 type JwtPayload = { exp?: number; [k: string]: unknown };
 
+function decodeJwt(token: string): { exp?: number } | null {
+  try {
+    const payload = token.split(".")[1];
+    const json = Buffer.from(payload, "base64").toString("utf8");
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
+}
+
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: "__session_rome_platform",
@@ -197,7 +207,20 @@ export async function createUserSession({
   session.set(ACCESS_TOKEN_KEY, accessToken);
   session.set(REFRESH_TOKEN_KEY, refreshToken);
 
-  const maxAge = decodeJwtExp(refreshToken);
+  let maxAge: number | undefined;
+
+  if (accessToken) {
+    const decoded = decodeJwt(accessToken);
+
+    if (decoded?.exp) {
+      const now = Math.floor(Date.now() / 1000);
+      const remaining = decoded.exp - now;
+
+      maxAge = remaining > 0 ? remaining : 60 * 60 * 24 * 7;
+    } else {
+      maxAge = 60 * 60 * 24 * 7; // default 7 days
+    }
+  }
 
   return redirect(redirectUrl || "/", {
     headers: {

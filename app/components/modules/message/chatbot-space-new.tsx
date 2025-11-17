@@ -26,7 +26,6 @@ export default function ChatbotSpaceNew({
   const { customerInfoOpen, setCustomerInfoOpen } = useChatRoom();
   const [selectedRoom, setSelectedRoom] = React.useState<any>();
   const [showChatList, setShowChatList] = React.useState(true);
-  
 
   const {
     data: customerSingle,
@@ -61,7 +60,7 @@ export default function ChatbotSpaceNew({
         )}
 
         <div className={cn("flex-1 flex flex-col")}>
-          {selectedRoom && selectedRoom.id && selectedRoom ? (
+          {selectedRoom && selectedRoom?.id ? (
             <ChatMessageRender
               api={api}
               selectedRoom={selectedRoom}

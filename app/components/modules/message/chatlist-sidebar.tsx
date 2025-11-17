@@ -113,10 +113,12 @@ export default function ChatlistSidebar({
     }
 
     socket.on("rooms", (room: any) => {
-      console.log("rooms", room);
+      console.log("rooms in", room);
 
-      const audio = new Audio("/sounds/level-up.mp3");
-      audio.play();
+      if (room && room?.latestMessage) {
+        const audio = new Audio("/sounds/level-up.mp3");
+        audio.play();
+      }
 
       setAllRooms((prev) => mergeRoomImmutable(prev, room));
 
