@@ -28,6 +28,10 @@ import {
   FileArchive,
   File,
 } from "lucide-react";
+import LoadingAnimation from "./loading-animation";
+
+import _ from "lodash";
+import { v4 as uuidv4 } from "uuid";
 
 export function getFileIcon(filename: string) {
   const ext = filename.split(".").pop()?.toLowerCase() || "";
@@ -92,6 +96,7 @@ export default function ChatMessages({
   const [currentTime, setCurrentTime] = React.useState(0);
   const [duration, setDuration] = React.useState(0);
 
+  const [currentMsgAI, setCurrentMsgAI] = React.useState<any>({});
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
 
   const togglePlay = () => {
@@ -128,6 +133,8 @@ export default function ChatMessages({
     null
   );
 
+  const [hasScrolledToTarget, setHasScrolledToTarget] = useState(false);
+
   const {
     data: messagesData,
     fetchNextPage,
@@ -138,6 +145,36 @@ export default function ChatMessages({
 
   const paginatedMessages = messagesData?.pages.flatMap((page) => page) ?? [];
 
+  // const combinedMessages = React.useMemo(() => {
+  //   const paginated = paginatedMessages.flatMap((m) => m.items || []);
+  //   const messages = [...paginated, ...socketMessages.flatMap((m) => m || [])]
+  //     .sort(
+  //       (a, b) =>
+  //         dayjs(a.createdAt ?? a.timestamp).valueOf() -
+  //         dayjs(b.createdAt ?? b.timestamp).valueOf()
+  //     )
+  //     .filter((c) => c.chatRoomId === selectedRoom?.id)
+  //     .map((message) => {
+  //       return {
+  //         ...message,
+  //         read: message?.platform !== "backoffice" && true,
+  //       };
+  //     });
+
+  //   const isLast = messages.length - 1;
+  //   const isLastNotBackoffice = messages[isLast]?.platform !== "backoffice";
+
+  //   let result = messages;
+
+  //   if (isLastNotBackoffice) {
+  //     result = messages.map((message) => {
+  //       return { ...message, read: true };
+  //     });
+  //   }
+
+  //   return result;
+  // }, [paginatedMessages, socketMessages]);
+
   const combinedMessages = React.useMemo(() => {
     const paginated = paginatedMessages.flatMap((m) => m.items || []);
     const messages = [...paginated, ...socketMessages.flatMap((m) => m || [])]
@@ -147,26 +184,92 @@ export default function ChatMessages({
           dayjs(b.createdAt ?? b.timestamp).valueOf()
       )
       .filter((c) => c.chatRoomId === selectedRoom?.id)
-      .map((message) => {
-        return {
-          ...message,
-          read: message?.platform !== "backoffice" && true,
-        };
-      });
+      .map((message) => ({
+        ...message,
+        read: message?.platform !== "backoffice" && true,
+      }));
 
-    const isLast = messages.length - 1;
-    const isLastNotBackoffice = messages[isLast]?.platform !== "backoffice";
+    // ------------------------------------------------
+    // GROUPING LOGIC
+    // ------------------------------------------------
 
-    let result = messages;
+    let groupId = 0;
 
-    if (isLastNotBackoffice) {
-      result = messages.map((message) => {
-        return { ...message, read: true };
-      });
+    const result = messages.map((msg, index) => {
+      const prev = messages[index - 1];
+      const next = messages[index + 1];
+
+      // check previous
+      const samePrev =
+        prev &&
+        prev.sender === msg.sender &&
+        prev.platform === msg.platform &&
+        Math.abs(
+          dayjs(msg.createdAt ?? msg.timestamp).diff(
+            dayjs(prev.createdAt ?? prev.timestamp)
+          )
+        ) <
+          60 * 1000;
+
+      if (!samePrev) {
+        groupId += 1; // new group
+      }
+
+      // check next
+      const sameNext =
+        next &&
+        next.sender === msg.sender &&
+        next.platform === msg.platform &&
+        Math.abs(
+          dayjs(next.createdAt ?? next.timestamp).diff(
+            dayjs(msg.createdAt ?? msg.timestamp)
+          )
+        ) <
+          60 * 1000;
+
+      return {
+        ...msg,
+        groupId,
+        isFirstInGroup: !samePrev,
+        isLastInGroup: !sameNext,
+        showAvatar: !samePrev,
+        showTime: !sameNext,
+      };
+    });
+
+    // auto read last message
+    const isLast = result.length - 1;
+    const isLastNotBackoffice = result[isLast]?.platform !== "backoffice";
+
+    // find last message
+    const lastIndex = result.length - 1;
+    const lastMsg = result[lastIndex];
+
+    const isLastAIProcessing =
+      lastMsg?.messageLabel === "ROME AI กำลังประมวลผล";
+
+    // ถ้าข้อความสุดท้าย "ไม่ใช่" AI → ให้โชว์ avatar
+    if (!isLastAIProcessing) {
+      result[lastIndex] = {
+        ...lastMsg,
+        showAvatar: true,
+        isFirstInGroup: true,
+      };
     }
 
+    // ถ้าเป็น AI processing → ให้ซ่อน avatar
+    if (isLastAIProcessing) {
+      result[lastIndex] = {
+        ...lastMsg,
+        showAvatar: false,
+      };
+    }
+
+    if (isLastNotBackoffice) {
+      return result.map((m) => ({ ...m, read: true }));
+    }
     return result;
-  }, [paginatedMessages, socketMessages]);
+  }, [paginatedMessages, socketMessages, selectedRoom?.id]);
 
   const isNoMessageData = !messagesData || messagesData.pages.length === 0;
 
@@ -183,6 +286,27 @@ export default function ChatMessages({
   ) {
     const message = msg?.message ?? "";
     const type = msg?.messageType;
+
+    const isLabel = msg?.isLabel;
+
+    if (isLabel) {
+      const formattedTime = formatDateAndTime(
+        msg.createdAt ? msg.createdAt : msg.timestamp
+      );
+      return (
+        <div
+          className={`flex w-full justify-center align-center whitespace-pre-wrap`}
+        >
+          <div className="flex flex-col items-center bg-muted text-primary rounded-full px-5 py-1 text-sm">
+            <span className="text-[12px] text-muted-foreground mt-1 ">
+              {formattedTime}
+            </span>
+
+            <span className="text-[12px] text-bold">{message}</span>
+          </div>
+        </div>
+      );
+    }
 
     // TEXT
     if (type === "text" || type === null) {
@@ -436,6 +560,7 @@ export default function ChatMessages({
 
       addMessage({
         ...msg,
+        id: uuidv4(),
         imageUrl:
           msg.imageUrl || `https://ui-avatars.com/api/?name=${msg.sender}`,
       });
@@ -445,8 +570,6 @@ export default function ChatMessages({
       socket.disconnect();
     };
   }, [selectedRoom]);
-
-  const [hasScrolledToTarget, setHasScrolledToTarget] = useState(false);
 
   const handleSearchClick = (messageId: string, messageOffset: number) => {
     setTargetMessageId(messageId);
@@ -489,10 +612,19 @@ export default function ChatMessages({
   }, [targetMessageId, messagesData, hasScrolledToTarget]);
 
   React.useEffect(() => {
-    setTimeout(() => {
+    setLoadingFirstTime(true);
+
+    const timer = setTimeout(() => {
       setLoadingFirstTime(false);
-    }, 1000);
-  }, []);
+    }, 200); // หน่วงเบาๆ ให้โหลดดูนุ่มขึ้น
+
+    return () => clearTimeout(timer);
+  }, [selectedRoom?.id]);
+
+  const lastMessage =
+    combinedMessages &&
+    combinedMessages.length &&
+    combinedMessages[combinedMessages.length - 1];
 
   const messageLoadingStyle =
     "absolute top-4 left-1/2 -translate-x-1/2 z-30 bg-white dark:bg-gray-800 text-xs text-muted-foreground text-center py-2 px-4 rounded-lg shadow-md w-fit";
@@ -508,7 +640,7 @@ export default function ChatMessages({
                     transition-colors duration-200
                 `;
 
-  if ((isLoading && selectedRoom) || loadingFirstTime) {
+  if (loadingFirstTime || (isLoading && selectedRoom)) {
     return <CustomerChatSkeleton />;
   }
 
@@ -545,7 +677,7 @@ export default function ChatMessages({
       <div className="flex flex-1 flex-col max-h-[calc(100vh-175px)]">
         <div
           ref={scrollAreaRef}
-          className="flex h-full flex-col space-y-6 overflow-y-auto px-4 z-0 relative dark:bg-background"
+          className="flex h-full flex-col space-y-4 overflow-y-auto px-4 z-0 relative dark:bg-background"
         >
           {showTopLoading && (
             <div className={messageLoadingStyle}>กำลังโหลดข้อความ...</div>
@@ -553,8 +685,10 @@ export default function ChatMessages({
 
           {combinedMessages &&
             combinedMessages.length > 0 &&
-            combinedMessages.map((msg, index: number) => {
+            _.uniqBy(combinedMessages, "id").map((msg: any, index: number) => {
               const isBackoffice = msg.platform === "backoffice";
+
+              if (msg.messageLabel === "ROME AI กำลังประมวลผล") return null;
 
               const isTarget = msg.id === targetMessageId;
 
@@ -576,42 +710,70 @@ export default function ChatMessages({
                   id={`msg-${msg.id}`}
                 >
                   {msg && msg?.firstMessageToday && (
-                    <div className="flex items-center justify-center pt-6 ">
+                    <div className="flex items-center justify-center pt-6">
                       <span className="text-sm text-[12px] text-muted-foreground">
                         {formattedTime}
                       </span>
                     </div>
                   )}
                   <div
-                    className={`flex max-w-[75%] pt-5 flex-col gap-1 ${
-                      isBackoffice ? "ml-auto items-end" : "mr-auto items-start"
-                    }`}
+                    className={`flex max-w-[75%] flex-col ${
+                      msg.platform === "backoffice"
+                        ? "items-end ml-auto"
+                        : "items-start mr-auto"
+                    } ${msg.isFirstInGroup ? "pt-5" : "pt-0"}`}
                   >
-                    <div className="flex items-center gap-2 mb-1">
-                      <Avatar className="w-6 h-6">
-                        <img
-                          src={avatarFallback || "/avatar.png"}
-                          alt="avatar"
-                          className="rounded-full object-cover"
-                        />
-                        <AvatarFallback>
-                          {(msg.sender || msg.recipient || "U")[0]}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="text-xs text-muted-foreground font-medium">
-                        {msg.sender || msg.recipient || "Anonymous"}
-                      </span>
-                    </div>
-
+                    {msg.showAvatar && !msg.isLabel && (
+                      <div className="flex items-center gap-2 mb-1">
+                        <Avatar className="w-6 h-6">
+                          <img
+                            src={avatarFallback || "/avatar.png"}
+                            alt="avatar"
+                            className="rounded-full object-cover"
+                          />
+                          <AvatarFallback>
+                            {(msg.sender || msg.recipient || "U")[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-xs text-muted-foreground font-medium">
+                          {msg.sender || msg.recipient || "Anonymous"}
+                        </span>
+                      </div>
+                    )}
                     {renderMessageContent(msg, isBackoffice, setPreviewUrl)}
-
-                    <span className="text-[10px] text-muted-foreground mt-1 ">
-                      {msg.read && <span>อ่านแล้ว,</span>} {formattedTime}
-                    </span>
+                    {msg.showTime && !msg.isLabel && (
+                      <span className="text-[10px] text-muted-foreground mt-1 ">
+                        {msg.read && <span>อ่านแล้ว,</span>} {formattedTime}
+                      </span>
+                    )}
                   </div>
                 </div>
               );
             })}
+
+          {lastMessage.messageLabel === "ROME AI กำลังประมวลผล" && (
+            <div className="w-full mt-4 flex justify-end flex-col gap-1 mr-auto items-end">
+              <div className="flex items-center gap-2 mb-1">
+                <Avatar className="w-6 h-6">
+                  <img
+                    src={"https://api.dicebear.com/9.x/glass/svg?seed=rome"}
+                    alt="avatar"
+                    className="rounded-full object-cover"
+                  />
+                  <AvatarFallback>{"U"[0]}</AvatarFallback>
+                </Avatar>
+
+                <span className="text-xs text-muted-foreground font-medium">
+                  ROME AI Assistant
+                </span>
+              </div>
+              <div
+                className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap bg-muted text-primary"`}
+              >
+                <LoadingAnimation />
+              </div>
+            </div>
+          )}
 
           <div ref={bottomRef} />
           {buttonScrollToBottom && (
@@ -620,6 +782,7 @@ export default function ChatMessages({
             </button>
           )}
         </div>
+
         <ChatInput selectedRoom={selectedRoom} customer={customer} />
       </div>
 
