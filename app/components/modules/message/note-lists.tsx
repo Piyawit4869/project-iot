@@ -20,7 +20,7 @@ interface TNote {
   id: string;
   note: string;
   user_id: string;
-  user_name: string;
+  userName: string;
   created_at: string;
   createdAt: string;
   updated_at: string;
@@ -185,7 +185,9 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
               <div className="flex items-center justify-between text-xs text-gray-500">
                 <span>
                   {DateISOToDisplayDate(note.created_at || note.createdAt)}{" "}
-                  {note.user_name}
+                  <span className="text-strong text-black">
+                    ({note.userName})
+                  </span>
                 </span>
                 <div className="flex gap-2">
                   <PencilIcon

@@ -59,6 +59,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
   const removeMessage = () => {
     setMessages([]);
+    setMessagesAI([]);
   };
 
   return (
