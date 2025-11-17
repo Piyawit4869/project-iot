@@ -6,7 +6,7 @@ import { Eye, PenLine, Trash } from "lucide-react";
 import { toast } from "sonner";
 
 // import rome from "@/public/images/rome.png";
-import rome from "/assets/images/rome.png";
+import rome from "/assets/images/rome.svg";
 
 import lineLogo from "/assets/images/logoChannel/LINE_logo.webp";
 import facebookLogo from "/assets/images/logoChannel/Facebook_Logo.png";

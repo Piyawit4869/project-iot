@@ -1,14 +1,12 @@
-// SavePolicyDialog.tsx
 import * as React from "react";
 
 import SectionWithImage from "~/components/modules/auth/SectionWithImage";
-import LogoImage from "/assets/images/rome.png";
+import LogoImage from "/assets/images/rome.svg";
 import PolicyImage1 from "/assets/images/pana.png";
 import PolicyImage2 from "/assets/images/Illustration.png";
 import PolicyImage3 from "/assets/images/Art.png";
 import PolicyImage4 from "/assets/images/rafiki.png";
 
-import { Link } from "react-router";
 
 import {
   Dialog,
@@ -28,15 +26,12 @@ export default function SavePolicyDialog({ openSave, setOpen }: Props) {
   return (
     <Dialog open={openSave} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-4xl w-full max-h-[96vh] overflow-auto rounded-lg p-6">
-
-        {/* Header */}
         <DialogHeader>
           <DialogTitle className="text-3xl font-bold text-center">
             นโยบายการรักษาความมั่นคงปลอดภัยเว็บไซต์ (Security Policy)
           </DialogTitle>
         </DialogHeader>
 
-        {/* Logo */}
         <div className="flex justify-center pt-2 pb-6">
           <img
             src={LogoImage}
@@ -45,7 +40,6 @@ export default function SavePolicyDialog({ openSave, setOpen }: Props) {
           />
         </div>
 
-        {/* Body */}
         <div className="space-y-20 px-2">
 
           <SectionWithImage
@@ -111,13 +105,7 @@ export default function SavePolicyDialog({ openSave, setOpen }: Props) {
           />
         </div>
 
-        {/* Footer */}
         <div className="text-center py-6">
-          {/* <Link to="/login">
-            <button className="rounded-md bg-black text-white font-medium px-4 py-2 hover:bg-gray-800 transition">
-              กลับไปหน้าเว็บไซต์
-            </button>
-          </Link> */}
           <p className="text-gray-500 text-sm mt-4">
             ปรับปรุงล่าสุด: 14 พฤศจิกายน 2568
           </p>
