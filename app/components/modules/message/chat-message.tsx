@@ -168,8 +168,6 @@ export default function ChatMessages({
     return result;
   }, [paginatedMessages, socketMessages]);
 
-  console.log({ combinedMessages });
-
   const isNoMessageData = !messagesData || messagesData.pages.length === 0;
 
   const scrollToBottom = () => {
