@@ -90,7 +90,7 @@ export const TabDetail: React.FC<FormProductProps> = ({
       <div className="p-3">
         <CardTitle className="text-base font-bold">สินค้า</CardTitle>
 
-        {isEdit ?? isCreate ? (
+        {isEdit || isCreate ? (
           <FormField
             control={form.control}
             name="active"
@@ -126,7 +126,7 @@ export const TabDetail: React.FC<FormProductProps> = ({
         ) : null}
 
         <div className="grid grid-cols-3 gap-3 mt-4">
-          {isEdit ?? isCreate ? (
+          {isEdit || isCreate ? (
             <>
               <FormField
                 control={form.control}
@@ -155,7 +155,7 @@ export const TabDetail: React.FC<FormProductProps> = ({
 
         {/* description */}
         <div className="grid grid-cols-1 gap-3 mt-6">
-          {isEdit ?? isCreate ? (
+          {isEdit || isCreate ? (
             <FormField
               control={form.control}
               name="description"
@@ -187,11 +187,11 @@ export const TabDetail: React.FC<FormProductProps> = ({
         <div className="grid grid-cols-1 gap-3 mt-6">
           <span>ภาพสินค้า</span>
 
-          {isEdit ?? isCreate ? (
+          {isEdit || isCreate ? (
             <>
               <FormField
                 control={form.control}
-                name="thumbnailImage"
+                name="imageUrl"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel className="mt-2">ภาพหลัก</FormLabel>
@@ -263,7 +263,7 @@ export const TabDetail: React.FC<FormProductProps> = ({
       <div className="grid grid-cols-1 gap-3 p-3">
         <h1 className="text-md font-semibold mt-6">การกำหนดราคา</h1>
         <div className="flex flex-row gap-3 mt-6">
-          {isEdit ?? isCreate ? (
+          {isEdit || isCreate ? (
             <>
               <FormField
                 control={form.control}
@@ -316,7 +316,7 @@ export const TabDetail: React.FC<FormProductProps> = ({
 
         {/* costPrice */}
         <div className="grid grid-cols-3 gap-3 mt-4">
-          {isEdit ?? isCreate ? (
+          {isEdit || isCreate ? (
             <>
               <FormField
                 control={form.control}
@@ -384,7 +384,7 @@ export const TabDetail: React.FC<FormProductProps> = ({
         {/* availableForSale */}
         <div className="mt-6">
           <h1 className="text-md font-semibold">สินค้าคงคลัง</h1>
-          {isEdit ?? isCreate ? (
+          {isEdit || isCreate ? (
             <FormField
               control={form.control}
               name="availableForSale"
@@ -411,7 +411,7 @@ export const TabDetail: React.FC<FormProductProps> = ({
         <div className="mt-6">
           <h1 className="text-md font-semibold">การจัดส่ง</h1>
           <div className="flex flex-row gap-3 mt-2">
-            {isEdit ?? isCreate ? (
+            {isEdit || isCreate ? (
               <>
                 <FormField
                   control={form.control}

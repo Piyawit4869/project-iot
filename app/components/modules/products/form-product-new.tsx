@@ -123,8 +123,8 @@ export const FormProductNew: React.FC<FormProductProps> = ({
   const categories = Array.isArray(data?.res)
     ? data.res
     : Array.isArray(data)
-    ? data
-    : [];
+      ? data
+      : [];
 
   const { mutate } = useCreateCategory();
 
