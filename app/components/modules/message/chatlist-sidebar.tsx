@@ -115,11 +115,6 @@ export default function ChatlistSidebar({
     socket.on("rooms", (room: any) => {
       console.log("rooms in", room);
 
-      if (room && room?.latestMessage) {
-        const audio = new Audio("/sounds/level-up.mp3");
-        audio.play();
-      }
-
       setAllRooms((prev) => mergeRoomImmutable(prev, room));
 
       if (room.chatRoomType === "assistant") {

@@ -429,6 +429,11 @@ export default function ChatMessages({
     socket.on("chat", (msg: Message) => {
       console.log("chat", msg);
 
+      if (msg && msg?.platform === "line") {
+        const audio = new Audio("/sounds/level-up.mp3");
+        audio.play();
+      }
+
       addMessage({
         ...msg,
         imageUrl:
