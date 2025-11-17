@@ -366,9 +366,7 @@ export default function ChatMessagesWithAI({
               })}
 
           {isPendingAI && (
-            <div
-              className={`mt-4 flex max-w-[75%] flex-col gap-1  "mr-auto items-start"`}
-            >
+            <div className="mt-4 flex max-w-[50%] flex-col gap-1 mr-auto items-start">
               <div className="flex items-center gap-2 mb-1">
                 <Avatar className="w-6 h-6">
                   <img

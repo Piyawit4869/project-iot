@@ -1237,6 +1237,7 @@ export default function ChatCustomerInfo({
                                 <div className="flex items-center justify-between gap-2 w-full">
                                   <div className="flex items-center gap-3">
                                     <GlobalImage
+                                      notShowPreview={true}
                                       src={item.imageUrl ?? ""}
                                       alt={item.name ?? ""}
                                       className="w-[50px] h-[50px] rounded-md object-cover border"
@@ -1540,6 +1541,7 @@ export default function ChatCustomerInfo({
             <div className="flex items-start">
               <div className="size-[160px] rounded-lg border bg-muted/40 overflow-hidden">
                 <GlobalImage
+                  notShowPreview={true}
                   src={selectProductItem?.imageUrl || ""}
                   alt={selectProductItem?.name || "product-image"}
                   className="w-full h-full object-cover"
