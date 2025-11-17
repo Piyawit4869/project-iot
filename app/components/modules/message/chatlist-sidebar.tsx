@@ -69,7 +69,7 @@ export default function ChatlistSidebar({
 
   const [allRooms, setAllRooms] = React.useState<ChatRoom[]>([]);
 
-  const { currentRoomId, addMessageAI } = useChat();
+  const { currentRoomId, addMessageAI, removeMessage } = useChat();
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
   type StatusKey = "unread" | "done" | "isProcess" | "all";
@@ -345,6 +345,7 @@ export default function ChatlistSidebar({
                     handleChangeSelectedRoom(room);
                     setSidebarOpen(false);
                     setOnSelectRoom(true);
+                    removeMessage();
                   }}
                 />
               );
@@ -411,6 +412,7 @@ export default function ChatlistSidebar({
                     handleChangeSelectedRoom(room);
                     setSidebarOpen(false);
                     setOnSelectRoom(true);
+                    removeMessage();
                   }}
                 />
               ))
@@ -424,7 +426,7 @@ export default function ChatlistSidebar({
                 roomId={room?.id ?? ""}
                 selectedRoom={currentRoomId}
                 name={room?.name}
-                message={room?.latestMessage?.message ?? ""}
+                message={room?.latestMessage?.messageLabel ?? ""}
                 time={room?.latestMessage?.createdAt ?? ""}
                 image={room?.imageUrl || ""}
                 unread={room?.unreadMessageCount > 0}
@@ -435,6 +437,7 @@ export default function ChatlistSidebar({
                   handleChangeSelectedRoom(room);
                   setSidebarOpen(false);
                   setOnSelectRoom(true);
+                  removeMessage();
                 }}
               />
             ))
@@ -443,7 +446,27 @@ export default function ChatlistSidebar({
           )}
 
           {hasNextPage && (
-            <div className="p-4 text-center text-gray-400">
+            <div className="p-4 flex items-center justify-center gap-2">
+              <svg
+                className="animate-spin h-5 w-5 text-gray-400"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                />
+              </svg>
               กำลังโหลดเพิ่มเติม...
             </div>
           )}

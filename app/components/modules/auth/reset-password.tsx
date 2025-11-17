@@ -15,39 +15,33 @@ import GlobalButton from "~/components/shared/global-button";
 import BgLogin from "/assets/images/bg-login.png";
 import LogoImage from "/assets/images/rome.svg";
 import LogoUtotechImage from "/assets/images/logo.webp";
-import { useActionData, useNavigate, useNavigation, useSubmit } from "react-router";
-import { loginFormSchema, type LoginFormValues } from "~/schemas/login";
+import { useNavigate } from "react-router";
+import { type LoginFormValues } from "~/schemas/login";
 import { GlobalModal } from "~/components/shared/modal/modal";
-
 
 export default function ResetPassword() {
   const form = useForm<any>({
-    defaultValues: {
-
-    },
+    defaultValues: {},
   });
-  const { isSubmitting, errors } = form.formState;
-  const isProcessing = isSubmitting;
+
   const [showPassword, setShowPassword] = React.useState(false);
   const onSubmit = async (values: LoginFormValues) => {
     console.log("forgot password values:", values);
-
   };
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   function confirmPassword() {
     GlobalModal.info({
       title: "ยืนยันการเปลี่ยนรหัสผ่าน",
-      description:
-        "คุณแน่ใจหรือไม่ว่าต้องการเปลี่ยนรหัสผ่านนี้?",
+      description: "คุณแน่ใจหรือไม่ว่าต้องการเปลี่ยนรหัสผ่านนี้?",
       confirmText: "ยืนยัน",
       cancelText: "ยกเลิก",
-      
-        onConfirm: () => {
-          navigate("/");
-        },
-  });
-}
+
+      onConfirm: () => {
+        navigate("/");
+      },
+    });
+  }
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
       <div className="hidden lg:block relative w-3/4 h-screen">
@@ -105,12 +99,12 @@ export default function ResetPassword() {
             <p className="text-2xl font-bold mb-2">ตั้งรหัสผ่านใหม่</p>
           </div>
         </div>
-        
+
         <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-3 w-full max-w-sm"
-            >
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-3 w-full max-w-sm"
+          >
             <FormField
               control={form.control}
               name="password"
@@ -137,7 +131,6 @@ export default function ResetPassword() {
               )}
             />
 
-
             <FormField
               control={form.control}
               name="password"
@@ -163,20 +156,18 @@ export default function ResetPassword() {
                 </FormItem>
               )}
             />
-                
-                <GlobalButton
-                    type="submit"
-                    onClick={confirmPassword}
-                    label={
-                        <span className="flex items-center justify-center gap-2">
-                            ยืนยันการเปลี่ยนรหัสผ่าน
-                        </span>
-                    }
-                />
-            </form>
-            </Form>
 
-        
+            <GlobalButton
+              type="submit"
+              onClick={confirmPassword}
+              label={
+                <span className="flex items-center justify-center gap-2">
+                  ยืนยันการเปลี่ยนรหัสผ่าน
+                </span>
+              }
+            />
+          </form>
+        </Form>
       </div>
     </div>
   );

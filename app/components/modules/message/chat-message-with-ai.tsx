@@ -209,17 +209,23 @@ export default function ChatMessagesWithAI({
       name: "ROME AI Assistant",
     },
   ];
+
+  const lastMessage =
+    messagesLoading &&
+    messagesLoading.length &&
+    messagesLoading[messagesLoading.length - 1];
+
   return (
-    <div className="flex flex-col h-[calc(100vh-500px)] border-1 rounded-sm bg-white dark:bg-background">
+    <div className="flex flex-col h-[calc(100vh-500px)] border-1 rounded-sm bg-white dark:bg-background overflow-hidden">
       <div
         className="flex flex-1 flex-col"
         style={{
-          height: 350,
+          height: 300,
         }}
       >
         <div
           ref={scrollAreaRef}
-          className="flex h-full flex-col space-y-6 overflow-y-auto px-4 z-0 relative  "
+          className="flex h-full flex-col space-y-6 overflow-y-auto px-4 z-0 relative"
         >
           {showTopLoading && (
             <div
@@ -289,7 +295,8 @@ export default function ChatMessagesWithAI({
                         }`}
                       >
                         {index === combinedMessages.length - 1 &&
-                        msg.streaming ? (
+                        msg.streaming &&
+                        !isAILoading ? (
                           <StreamingText text={msg.message} speed={40} />
                         ) : (
                           msg.message
@@ -351,7 +358,11 @@ export default function ChatMessagesWithAI({
                             : "bg-muted text-primary"
                         }`}
                       >
-                        {msg.message}
+                        {msg.message === "AI กำลังตอบ..." ? (
+                          <LoadingAnimation />
+                        ) : (
+                          msg.message
+                        )}
                       </div>
                     ) : (
                       <div
