@@ -87,6 +87,7 @@ export default function ChatMessages({
   selectedRoom: ChatRoomSchemaType;
   setAutoScroll: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const [loadingFirstTime, setLoadingFirstTime] = React.useState(true);
   const [playing, setPlaying] = React.useState(false);
   const [currentTime, setCurrentTime] = React.useState(0);
   const [duration, setDuration] = React.useState(0);
@@ -167,6 +168,8 @@ export default function ChatMessages({
     return result;
   }, [paginatedMessages, socketMessages]);
 
+  console.log({ combinedMessages });
+
   const isNoMessageData = !messagesData || messagesData.pages.length === 0;
 
   const scrollToBottom = () => {
@@ -174,18 +177,6 @@ export default function ChatMessages({
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
-
-  // const togglePlay = () => {
-  //   if (!audioRef.current) return;
-
-  //   if (playing) {
-  //     audioRef.current.pause();
-  //     setPlaying(false);
-  //   } else {
-  //     audioRef.current.play();
-  //     setPlaying(true);
-  //   }
-  // };
 
   function renderMessageContent(
     msg: any,
@@ -233,15 +224,6 @@ export default function ChatMessages({
         </div>
       );
     }
-
-    // IMAGE / VIDEO / AUDIO (preview)
-    // if (type === "image" || type === "video" || type === "audio") {
-    //   return (
-    //     <div onClick={() => setPreviewUrl(message)} className="cursor-pointer">
-    //       <img src={message} width={150} height={150} className="rounded-md" />
-    //     </div>
-    //   );
-    // }
 
     if (type === "image") {
       return (
@@ -312,29 +294,6 @@ export default function ChatMessages({
         </div>
       );
     }
-
-    // AUDIO
-    // if (type === "audio") {
-    //   return (
-    //     <div
-    //       className="flex items-center gap-3 bg-muted px-3 py-2 rounded-xl cursor-pointer"
-    //       onClick={togglePlay}
-    //     >
-    //       <AudioLines className="w-6 h-6 text-primary" />
-
-    //       <span className="font-medium text-sm">
-    //         {playing ? <PauseIcon size={14} /> : <PlayIcon size={14} />}
-    //       </span>
-
-    //       <audio
-    //         ref={audioRef}
-    //         src={message}
-    //         onEnded={() => setPlaying(false)}
-    //         preload="auto"
-    //       />
-    //     </div>
-    //   );
-    // }
 
     if (type === "audio") {
       return (
@@ -487,8 +446,6 @@ export default function ChatMessages({
   const [hasScrolledToTarget, setHasScrolledToTarget] = useState(false);
 
   const handleSearchClick = (messageId: string, messageOffset: number) => {
-    // const total = messagesData?.pages?.[0]?.meta?.total ?? 0;
-
     setTargetMessageId(messageId);
     setTargetMessageOffset(messageOffset);
     setHasScrolledToTarget(false);
@@ -528,6 +485,12 @@ export default function ChatMessages({
     });
   }, [targetMessageId, messagesData, hasScrolledToTarget]);
 
+  React.useEffect(() => {
+    setTimeout(() => {
+      setLoadingFirstTime(false);
+    }, 1000);
+  }, []);
+
   const messageLoadingStyle =
     "absolute top-4 left-1/2 -translate-x-1/2 z-30 bg-white dark:bg-gray-800 text-xs text-muted-foreground text-center py-2 px-4 rounded-lg shadow-md w-fit";
 
@@ -542,7 +505,7 @@ export default function ChatMessages({
                     transition-colors duration-200
                 `;
 
-  if (isLoading && selectedRoom) {
+  if ((isLoading && selectedRoom) || loadingFirstTime) {
     return <CustomerChatSkeleton />;
   }
 
@@ -636,45 +599,6 @@ export default function ChatMessages({
                         {msg.sender || msg.recipient || "Anonymous"}
                       </span>
                     </div>
-
-                    {/* {msg?.messageType === "text" ||
-                    msg?.messageType === null ? (
-                      <div
-                        className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
-                          isBackoffice
-                            ? "bg-blue-500 text-white"
-                            : "bg-muted text-primary"
-                        } ${isTarget ? "shake" : ""}`}
-                      >
-                        <MessageText
-                          text={
-                            typeof msg.message === "string" ? msg.message : ""
-                          }
-                        />
-                      </div>
-                    ) : msg?.messageType === "sticker" ? (
-                      <img src={msg.message} width={150} height={150} />
-                    ) : msg?.messageType === "file" ? (
-                      <>
-                        <span className="text-[16px] text-muted-foreground mt-1 ">
-                          ระบบยังไม่รองรับไฟล์เอกสาร
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        {msg.message ===
-                        "https://api.dicebear.com/9.x/initials/svg?seed=X&backgroundColor=ffd5dc&scale=100" ? (
-                          <img src={msg.message} width={150} height={150} />
-                        ) : (
-                          <div
-                            onClick={() => setPreviewUrl(msg.message)}
-                            className="cursor-pointer"
-                          >
-                            <img src={msg.message} width={150} height={150} />
-                          </div>
-                        )}
-                      </>
-                    )} */}
 
                     {renderMessageContent(msg, isBackoffice, setPreviewUrl)}
 
