@@ -139,10 +139,10 @@ export default function ChatInputAIAssistant({
   // }
 
   return (
-    <form onSubmit={sendText} className="gap-2 border-t w-full h-[100px]">
+    <form onSubmit={sendText} className="gap-2 border-t w-full ">
       <textarea
         placeholder="สอบถาม AI ได้เลย"
-        className="flex-1 max-h-[40px] w-full resize-none overflow-auto p-2 border-0 rounded-md outline-none"
+        className="flex-1  w-full resize-none overflow-auto p-2 border-0 rounded-md outline-none"
         value={input}
         onChange={handleInputChange}
         disabled={isPending}

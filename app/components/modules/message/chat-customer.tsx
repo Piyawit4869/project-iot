@@ -120,6 +120,34 @@ const STATUS_OPTIONS: { value: GlobalProductStatus; label: string }[] = [
   },
 ];
 
+export const classForTaps = `
+     group relative inline-flex items-center gap-2
+     rounded-md text-sm font-semibold
+     px-3 py-2 hover:bg-popover hover:text-foreground dark:hover:bg-popover dark:hover:text-white
+     w-25
+     text-gray-500 data-[state=active]:text-white
+     data-[state=active]:text-[#19142A]
+     data-[state=inactive]:hover:bg-gray-100
+      data-[state=active]:shadow-none
+     transition-colors
+
+     focus-visible:outline-none focus-visible:ring-0
+     disabled:opacity-50 disabled:pointer-events-none
+
+     after:absolute after:bottom-[-1px] after:left-1/2 after:-translate-x-1/2
+     after:h-0.5 after:w-25 after:rounded-full after:bg-[#19142A]
+     data-[state=inactive]:after:hidden
+
+    data-[state=active]:drak:text-white
+    dark:after:bg-[#FFFFFF]
+      
+   `;
+
+export const dataInTaps = [
+  { value: "note", label: "โน้ต", Icon: Notebook },
+  { value: "product", label: "สินค้า", Icon: Box },
+  { value: "settingAI", label: "AI Insight", Icon: Bot },
+];
 export default function ChatCustomerInfo({
   selectedRoom,
   refetchCustomer,
@@ -165,29 +193,6 @@ export default function ChatCustomerInfo({
   const dataFromAI = getData?.customerData;
 
   const { setProducts } = useOrder();
-
-  const classForTaps = `
-     group relative inline-flex items-center gap-2
-     rounded-md text-sm font-semibold
-     px-3 py-2 hover:bg-popover hover:text-foreground dark:hover:bg-popover dark:hover:text-white
-     w-25
-     text-gray-500 data-[state=active]:text-white
-     data-[state=active]:text-[#19142A]
-     data-[state=inactive]:hover:bg-gray-100
-      data-[state=active]:shadow-none
-     transition-colors
-
-     focus-visible:outline-none focus-visible:ring-0
-     disabled:opacity-50 disabled:pointer-events-none
-
-     after:absolute after:bottom-[-1px] after:left-1/2 after:-translate-x-1/2
-     after:h-0.5 after:w-25 after:rounded-full after:bg-[#19142A]
-     data-[state=inactive]:after:hidden
-
-    data-[state=active]:drak:text-white
-    dark:after:bg-[#FFFFFF]
-      
-   `;
 
   const customer = currentCustomer;
   const { mutate: update } = useAiReplySettings(customer?.id);
@@ -266,12 +271,6 @@ export default function ChatCustomerInfo({
   const [isCheckStatusOpen, setCheckStatusOpen] = React.useState(false);
 
   const [openSelected, setOpenSelected] = React.useState(false);
-
-  const dataInTaps = [
-    { value: "note", label: "โน้ต", Icon: Notebook },
-    { value: "product", label: "สินค้า", Icon: Box },
-    { value: "settingAI", label: "AI Insight", Icon: Bot },
-  ];
 
   const form = useForm<CustomerSupportFormValues>({
     resolver: zodResolver(CustomerSupportFormSchema),

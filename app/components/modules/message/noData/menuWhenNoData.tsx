@@ -37,6 +37,7 @@ import { Input } from "~/components/ui/input";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import HeroSearch from "../hero-search";
 import ChatInputAIAssistant from "../chat-input-ai-assistant";
+import { classForTaps, dataInTaps } from "../chat-customer";
 
 export const MOCK_PRODUCTS = [
   {
@@ -79,31 +80,6 @@ export default function MenuWhenNoData({
   hasCustomerId = true,
 }: MenuWhenNoDataProps) {
   const { me } = useRouteLoaderData("root");
-
-  const classForTaps = `
-     group relative inline-flex items-center gap-2
-     rounded-md text-sm font-semibold
-     px-3 py-2 hover:bg-popover hover:text-foreground dark:hover:bg-popover dark:hover:text-white
-     w-full
-     text-gray-500 data-[state=active]:text-white
-     data-[state=active]:text-[#19142A]
-     data-[state=inactive]:hover:bg-gray-100
-      data-[state=active]:shadow-none
-     transition-colors
-
-     focus-visible:outline-none focus-visible:ring-0
-     disabled:opacity-50 disabled:pointer-events-none
-
-     after:absolute after:bottom-[-1px] after:left-1/2 after:-translate-x-1/2
-     after:h-0.5 after:w-25 after:rounded-full after:bg-[#19142A]
-     data-[state=inactive]:after:hidden
-   `;
-
-  const dataInTaps = [
-    { value: "note", label: "โน้ต", Icon: Notebook },
-    { value: "product", label: "สินค้า", Icon: Box },
-    { value: "settingAI", label: "การตั้งค่า AI", Icon: Bot },
-  ];
 
   const organization = me?.organization;
   const logoUrl = organization?.logoUrl;
@@ -199,7 +175,7 @@ export default function MenuWhenNoData({
 
               <Tabs defaultValue="note">
                 <TabsList className="w-full">
-                  {dataInTaps.map(({ value, label, Icon }) => (
+                  {dataInTaps?.map(({ value, label, Icon }) => (
                     <TabsTrigger
                       key={value}
                       value={value}
@@ -276,27 +252,34 @@ export default function MenuWhenNoData({
                         <Settings />
                       </Button>
                     </div>
-                    <div className=" border px-2 rounded-md">
-                      <div className="min-h-[270px]"></div>
-                      <div className="gap-2 border-t w-full ">
-                        <textarea
-                          placeholder="สอบถาม AI ได้เลย"
-                          className="flex-1 max-h-[30px] w-full resize-none overflow-hidden p-2 border-0 rounded-md outline-none"
-                          disabled
-                        />
+                    <div className="flex flex-col h-[calc(100vh-467px)] border-1 rounded-sm bg-white dark:bg-background overflow-hidden">
+                      <div
+                        className="flex flex-1 flex-col"
+                        style={{
+                          height: 300,
+                        }}
+                      >
+                        <div className="flex h-full"></div>
+                        <div className=" border-t px-2">
+                          <textarea
+                            placeholder="สอบถาม AI ได้เลย"
+                            className="max-h-[3.7vh] w-full resize-none overflow-hidden p-2   rounded-md outline-none"
+                            disabled
+                          />
 
-                        <div className="flex justify-end p-4">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            type="button"
-                            disabled={true}
-                          >
-                            <FileImage />
-                          </Button>
-                          <Button size="icon" type="submit" disabled={true}>
-                            <Send className="w-4 h-4" />
-                          </Button>
+                          <div className="flex justify-end p-4">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              type="button"
+                              disabled={true}
+                            >
+                              <FileImage />
+                            </Button>
+                            <Button size="icon" type="submit" disabled={true}>
+                              <Send className="w-4 h-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
