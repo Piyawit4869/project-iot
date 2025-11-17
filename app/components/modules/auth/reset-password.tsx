@@ -21,7 +21,8 @@ import { loginFormSchema, type LoginFormValues } from "~/schemas/login";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { useModalStore } from "~/components/shared/modal/modal-controller";
 
-export default function ForgotPassword() {
+
+export default function ResetPassword() {
   const form = useForm<any>({
     defaultValues: {
       // user: "",
@@ -30,7 +31,7 @@ export default function ForgotPassword() {
   });
   const { isSubmitting, errors } = form.formState;
   const isProcessing = isSubmitting;
-
+  const [showPassword, setShowPassword] = React.useState(false);
   const onSubmit = async (values: LoginFormValues) => {
     console.log("forgot password values:", values);
     // const payload = {
@@ -40,21 +41,21 @@ export default function ForgotPassword() {
 
     // submit(payload, { method: "POST" });
   };
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  function handleSendOTP() {
+  function confirmPassword() {
     GlobalModal.info({
-      title: "ระบบจะส่งรหัสยืนยัน (OTP) ไปยังเบอร์/อีเมลนี้ \nคุณต้องการดำเนินการต่อหรือไม่?",
+      title: "ยืนยันการเปลี่ยนรหัสผ่าน",
       description:
-        "ให้ผู้ใช้ตรวจสอบว่ากรอกข้อมูลติดต่อถูกต้องก่อนระบบส่ง OTP จริง",
-      confirmText: "ส่งรหัส",
+        "คุณแน่ใจหรือไม่ว่าต้องการเปลี่ยนรหัสผ่านนี้?",
+      confirmText: "ยืนยัน",
       cancelText: "ยกเลิก",
       
         onConfirm: () => {
-          navigate("/verify-otp");
+          navigate("/");
         },
-    });
-  }
+  });
+}
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
       <div className="hidden lg:block relative w-3/4 h-screen">
@@ -72,7 +73,7 @@ export default function ForgotPassword() {
                 จัดการการเข้างาน บันทึกข้อมูล และจัดการ Work flow
                 ของคุณได้อย่างง่ายดาย
               </p>
-            </div> */}
+            </div> 
 
             {/* <div className="absolute flex bottom-[10%] items-center flex-col text-white bg-black/30"> */}
             <div className="absolute bottom-5 left-5 flex flex-col items-center">
@@ -103,7 +104,7 @@ export default function ForgotPassword() {
       <div className="w-full flex flex-col items-center justify-top px-6 py-12 lg:w-1/4">
         <div className="w-full flex flex-col items-start justify-top">
           <a
-            href="/"
+            href="/verify-otp"
             className="flex items-start gap-2 text-gray-700 hover:text-black"
           >
             <Icons.ArrowLeft className="w-5 h-5" />
@@ -121,49 +122,80 @@ export default function ForgotPassword() {
 
           <div className="flex flex-col items-center ">
             <p className="text-2xl font-bold mb-2">ROME</p>
-            <p className="text-2xl font-bold mb-2">ลืมรหัสผ่าน</p>
-            <p className="text-sm  max-w-xl text-center">
-              ผู้ใช้กรอกหมายเลขโทรศัพท์หรืออีเมลที่เคยลงทะเบียนไว้
-            </p>
+            <p className="text-2xl font-bold mb-2">ตั้งรหัสผ่านใหม่</p>
           </div>
         </div>
-
+        
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-3 w-full max-w-sm"
-          >
+            <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-3 w-full max-w-sm"
+            >
             <FormField
               control={form.control}
-              name="emailOrPhone"
+              name="password"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>รหัสผ่านใหม่</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="กรุณากรอกเบอร์โทรศัพท์หรืออีเมล"
-                    />
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        {...field}
+                        placeholder="กรอกรหัสผ่าน"
+                      />
+                      <div
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                      >
+                        {showPassword ? <Icons.Eye /> : <Icons.EyeOff />}
+                      </div>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            {/* <span className="w-full flex justify-center text-red-600"></span> */}
-            <GlobalButton 
-              
-              onClick={handleSendOTP}
-              label={
-                <span className="flex items-center justify-center gap-2 -translate-x-1">
-                  <Icons.Send className="w-5 h-5" />
-                  ส่งรหัสยืนยัน
-                </span>
-              }
-              
-              type="submit"
+
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>ยืนยันรหัสผ่าน</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        {...field}
+                        placeholder="ยืนยันรหัสผ่านใหม่"
+                      />
+                      <div
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                      >
+                        {showPassword ? <Icons.Eye /> : <Icons.EyeOff />}
+                      </div>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-               
-          </form>
-        </Form>
+                
+                <GlobalButton
+                    type="submit"
+                    onClick={confirmPassword}
+                    label={
+                        <span className="flex items-center justify-center gap-2">
+                            ยืนยันการเปลี่ยนรหัสผ่าน
+                        </span>
+                    }
+                />
+            </form>
+            </Form>
+
         
       </div>
     </div>

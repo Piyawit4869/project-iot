@@ -21,7 +21,7 @@ import { loginFormSchema, type LoginFormValues } from "~/schemas/login";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { useModalStore } from "~/components/shared/modal/modal-controller";
 
-export default function ForgotPassword() {
+export default function VerifyOtp() {
   const form = useForm<any>({
     defaultValues: {
       // user: "",
@@ -30,6 +30,7 @@ export default function ForgotPassword() {
   });
   const { isSubmitting, errors } = form.formState;
   const isProcessing = isSubmitting;
+  const navigate = useNavigate();
 
   const onSubmit = async (values: LoginFormValues) => {
     console.log("forgot password values:", values);
@@ -40,8 +41,6 @@ export default function ForgotPassword() {
 
     // submit(payload, { method: "POST" });
   };
-  const navigate = useNavigate();
-
   function handleSendOTP() {
     GlobalModal.info({
       title: "ระบบจะส่งรหัสยืนยัน (OTP) ไปยังเบอร์/อีเมลนี้ \nคุณต้องการดำเนินการต่อหรือไม่?",
@@ -50,11 +49,12 @@ export default function ForgotPassword() {
       confirmText: "ส่งรหัส",
       cancelText: "ยกเลิก",
       
-        onConfirm: () => {
-          navigate("/verify-otp");
-        },
-    });
-  }
+      onConfirm: async () => {
+        console.log("Sending OTP...");
+        await new Promise((r) => setTimeout(r, 1000));
+    },
+  });
+}
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
       <div className="hidden lg:block relative w-3/4 h-screen">
@@ -103,7 +103,7 @@ export default function ForgotPassword() {
       <div className="w-full flex flex-col items-center justify-top px-6 py-12 lg:w-1/4">
         <div className="w-full flex flex-col items-start justify-top">
           <a
-            href="/"
+            href="/forgot-password"
             className="flex items-start gap-2 text-gray-700 hover:text-black"
           >
             <Icons.ArrowLeft className="w-5 h-5" />
@@ -121,49 +121,74 @@ export default function ForgotPassword() {
 
           <div className="flex flex-col items-center ">
             <p className="text-2xl font-bold mb-2">ROME</p>
-            <p className="text-2xl font-bold mb-2">ลืมรหัสผ่าน</p>
+            <p className="text-2xl font-bold mb-2">ยืนยันตัวตนของคุณ</p>
             <p className="text-sm  max-w-xl text-center">
-              ผู้ใช้กรอกหมายเลขโทรศัพท์หรืออีเมลที่เคยลงทะเบียนไว้
+              เราได้ส่งรหัส 6 หลักไปที่ xxx-xxx-1234
             </p>
           </div>
         </div>
-
+        
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-3 w-full max-w-sm"
-          >
-            <FormField
-              control={form.control}
-              name="emailOrPhone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="กรุณากรอกเบอร์โทรศัพท์หรืออีเมล"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* <span className="w-full flex justify-center text-red-600"></span> */}
-            <GlobalButton 
-              
-              onClick={handleSendOTP}
-              label={
-                <span className="flex items-center justify-center gap-2 -translate-x-1">
-                  <Icons.Send className="w-5 h-5" />
-                  ส่งรหัสยืนยัน
-                </span>
-              }
-              
-              type="submit"
-            />
-               
-          </form>
-        </Form>
+            <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-3 w-full max-w-sm"
+            >
+
+                <FormField
+                control={form.control}
+                name="emailOrPhone"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormControl>
+                          <div className="flex justify-center gap-3">
+                            {Array.from({ length: 6 }).map((_, index) => (
+                              <input
+                                key={index}
+                                maxLength={1}
+                                className="
+                                  w-12 h-12 
+                                  border border-gray-300 
+                                  rounded-lg 
+                                  text-center 
+                                  text-lg font-semibold 
+                                  text-gray-800
+                                  focus:outline-none
+                                  focus:border-purple-500
+                                  caret-purple-500
+                                "
+                              />
+                            ))}
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+                />
+                
+                <p className="text-center text-gray-600">
+                Countdown Timer: “เหลือเวลา{" "}
+                <span className="font-bold">04:59</span>”
+                </p>
+                <GlobalButton
+                type="submit"
+                onClick={() => navigate("/reset-password")}
+
+                label={
+                    <span className="flex items-center justify-center gap-2">
+                    <Icons.Check className="w-5 h-5" />
+                        ยืนยัน
+                    </span>
+                }
+                />
+                <button
+                type="button"
+                className="w-full text-end text-sm text-gray-500 underline"
+                >
+                ส่งรหัสอีกครั้ง
+                </button>
+            </form>
+            </Form>
+
         
       </div>
     </div>

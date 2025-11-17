@@ -2,7 +2,7 @@
 import * as React from "react";
 
 import SectionWithImage from "~/components/modules/auth/SectionWithImage";
-import LogoImage from "/assets/images/rome.png";
+import LogoImage from "/assets/images/rome.svg";
 import PolicyImage1 from "/assets/images/pana.png";
 import PolicyImage2 from "/assets/images/Illustration.png";
 import PolicyImage3 from "/assets/images/Art.png";
