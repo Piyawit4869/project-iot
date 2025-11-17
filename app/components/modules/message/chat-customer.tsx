@@ -459,7 +459,7 @@ export default function ChatCustomerInfo({
         id: product.id,
         name: product.name,
         price: product.price,
-        quantity: 1,
+        quantity: product.quantity,
         status: product.status,
         publishStatus: product.publishStatus,
         active: true,
@@ -524,8 +524,13 @@ export default function ChatCustomerInfo({
 
   const toggleCartItem = (item: Product) => {
     if (isInCart(`${item.id}`)) {
-      setCartItems((prev) => prev.filter((i: Product) => i?.id !== item.id));
+      const idx = cartItems.findIndex((prd: Product) => prd.id === item.id);
+      const updatedProducts = cartItems.map((p, index) =>
+        index === idx ? { ...p, quantity: p.quantity + 1 } : p
+      );
+      setCartItems(updatedProducts);
     } else {
+      item.quantity = 1;
       setCartItems((prev: Product[]) => [...prev, item]);
     }
   };
@@ -749,49 +754,51 @@ export default function ChatCustomerInfo({
                     <div className="flex flex-wrap gap-2 mb-1">
                       {participants
                         .filter((spl: any) => spl.isMain)
-                        .map((spl: any, userIndex: number) => (
-                          <div
-                            className="relative inline-block"
-                            key={`main-spl-${spl.participantId}`}
-                          >
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <button
-                                    onClick={() =>
-                                      navigate(`/users/${spl.participantId}`)
-                                    }
-                                  >
-                                    <GlobalImage
-                                      src={
-                                        spl.imageUrl ||
-                                        `https://api.dicebear.com/9.x/initials/svg?seed=${spl.participantId}`
-                                      }
-                                      alt={`main-spl-${spl.participantId}`}
-                                      className={`w-[35px] h-[35px] rounded-full object-cover border-2 ${
-                                        userIndex === 0 && "border-amber-500"
-                                      }`}
-                                      notShowPreview
-                                    />
-                                  </button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  {spl?.displayName ?? "-"}
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                DeleteSupport(spl.participantId);
-                              }}
-                              className="absolute -top-1 -right-1 bg-white border border-gray-300 rounded-full p-1 shadow hover:bg-gray-100 transition"
+                        .map((par: any, userIndex: number) => {
+                          return (
+                            <div
+                              className="relative inline-block"
+                              key={`main-spl-${par.participantId}`}
                             >
-                              <X className="w-2 h-2 text-gray-600" />
-                            </button>
-                          </div>
-                        ))}
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button
+                                      onClick={() =>
+                                        navigate(`/users/${par.participantId}`)
+                                      }
+                                    >
+                                      <GlobalImage
+                                        src={
+                                          par.imageUrl ||
+                                          `https://api.dicebear.com/9.x/initials/svg?seed=${par.participantId}`
+                                        }
+                                        alt={`main-spl-${par.participantId}`}
+                                        className={`w-[35px] h-[35px] rounded-full object-cover border-2 ${
+                                          userIndex === 0 && "border-amber-500"
+                                        }`}
+                                        notShowPreview
+                                      />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    {par?.displayName ?? "-"}
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  DeleteSupport(par.participantId);
+                                }}
+                                className="absolute -top-1 -right-1 bg-white border border-gray-300 rounded-full p-1 shadow hover:bg-gray-100 transition"
+                              >
+                                <X className="w-2 h-2 text-gray-600" />
+                              </button>
+                            </div>
+                          );
+                        })}
                     </div>
                   ) : (
                     <Popover
@@ -802,7 +809,7 @@ export default function ChatCustomerInfo({
                         <button
                           type="button"
                           onClick={() => setIsPopoverOpenMain(true)}
-                          className="rounded-full object-cover"
+                          className="rounded-full object-cover cursor-pointer"
                           disabled={isCreatingSupport}
                         >
                           <CirclePlus className="w-9 h-9 text-gray-300" />
@@ -1218,15 +1225,15 @@ export default function ChatCustomerInfo({
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
-                                  toggleCartItem(item);
+                                  handleOpenProductModalsWithItem(item);
+                                  // toggleCartItem(item);
                                 }}
                               >
-                                <Checkbox
+                                {/* <Checkbox
                                   checked={isInCart(item.id)}
                                   onClick={(e) => e.stopPropagation()}
                                   onCheckedChange={() => toggleCartItem(item)}
-                                />
-
+                                /> */}
                                 <div className="flex items-center justify-between gap-2 w-full">
                                   <div className="flex items-center gap-3">
                                     <GlobalImage

@@ -87,6 +87,7 @@ export const ChatMessageRender = ({
                     addCustomerDetail={addCustomerDetail}
                     modelCustomerDetails={addCustomerDetail}
                     currentCustomer={customerSingle}
+                    selectedRoom={selectedRoom}
                   />
                 ) : (
                   <MenuWhenNoData
@@ -94,8 +95,8 @@ export const ChatMessageRender = ({
                       !selectedRoom
                         ? true
                         : selectedRoom?.customerId
-                        ? true
-                        : false
+                          ? true
+                          : false
                     }
                   />
                 )}

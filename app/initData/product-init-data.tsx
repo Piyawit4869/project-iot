@@ -23,7 +23,7 @@ export type ProductFormValues = {
 
   // จัดหมวดหมู่
   productCategory: string; // "pen" | "fan" | "bag" | ...
-
+  categoryId: string;
   // การกำหนดราคา
   price: number; // ราคา (ขาย)
   quantity: number; // ราคาเปรียบเทียบ (จาก UI เดิมใช้คำนี้)
@@ -213,6 +213,7 @@ export const mockProductDefaultValues: ProductFormValues = {
   ],
 
   productCategory: "tumbler",
+  categoryId: "123",
 
   price: 390, // ราคาขาย
   quantity: 420, // ราคาเปรียบเทียบ (เช่น ราคาเดิม)

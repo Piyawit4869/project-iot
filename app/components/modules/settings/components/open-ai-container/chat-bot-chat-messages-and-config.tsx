@@ -1,6 +1,9 @@
 import dayjs from "dayjs";
 import React from "react";
-import { usePaginatedChatRoomAI } from "~/api/client/settings";
+import {
+  usePaginatedChatRoomAI,
+  usePaginatedChatRoomAIConfig,
+} from "~/api/client/settings";
 import type { ChatRoomSchemaType, ConnectAiValues } from "~/schemas/settings";
 import { flushSync } from "react-dom";
 import { GlobalImage } from "~/components/shared/global-image";
@@ -55,7 +58,7 @@ export const ChatBotChatMessagesAndConfig: React.FC<
     isFetchingNextPage,
     isLoading,
     // refetch,
-  } = usePaginatedChatRoomAI(chatRoomId || "");
+  } = usePaginatedChatRoomAIConfig(chatRoomId || "");
 
   const { mutateAsync: connectedChatRoomAI, isPending: isPendingAI } =
     useConnectedChatRoomAIConfig(chatRoomId);
@@ -296,9 +299,11 @@ export const ChatBotChatMessagesAndConfig: React.FC<
               </div>
             );
           })}
-          {isPendingAI && (
+          {true && (
             <div
-              className={`mt-4 flex max-w-[75%] flex-col gap-1  "mr-auto items-start"`}
+              className={
+                "mt-4 flex max-w-[75%] flex-col gap-1 mr-auto items-start"
+              }
             >
               <div className="flex items-center gap-2 mb-1">
                 <Avatar className="w-6 h-6">

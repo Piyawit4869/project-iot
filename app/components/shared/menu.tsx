@@ -1,8 +1,8 @@
-"use client";
-
 import * as React from "react";
-// import { signOut } from "next-auth/react";
 import * as Icons from "lucide-react";
+import { useNavigate, useRouteLoaderData } from "react-router";
+import { User, Mail, IdCard, Shield } from "lucide-react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,8 +15,6 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { SkeletonLoading } from "./skeleton-loading";
 import { GlobalImage } from "./global-image";
-import { useNavigate, useRouteLoaderData } from "react-router";
-import { User, Mail, IdCard, Shield } from "lucide-react";
 
 type ItemMenuType = {
   key: string;
@@ -66,7 +64,7 @@ export function Menu() {
 
   const displayFullname = hasFullName
     ? `${firstName ?? ""} ${lastName ?? ""}`.trim()
-    : userName ?? "";
+    : (userName ?? "");
 
   // const [language, setLanguage] = React.useState<"en" | "th">("th");
 
