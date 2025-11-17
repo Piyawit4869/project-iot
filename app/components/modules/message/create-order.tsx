@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { v4 as uuidv4 } from "uuid";
-import { Form } from "~/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import type { CreateCRUDOrderInput, ProductType } from "~/schemas/order/order";
 import { useOrder } from "~/hooks/order/order";
@@ -26,6 +26,10 @@ import {
 import { useChatRoom } from "~/providers/chat/useChatRoom";
 import { useGetProducts } from "~/api/client/product/useProductQuery";
 import { MultiSelectOnModal } from "./multi-select-products";
+import { DatePicker } from "~/components/shared/date-picker";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
+import { currencyType } from "~/initData/order-initData";
+import { MultiSelectOnModalProduct } from "./multiProduct";
 
 type ProductOption = {
   id: string;
@@ -70,6 +74,10 @@ export function CreateOrderDialog({
       name: p.name,
       label: p.name,
       value: p.id,
+      imageUrl: p.imageUrl,
+      quantity: p.quantity,
+      sku: p.sku,
+      price: p.price,
     }));
   }, [getProducts]);
 
@@ -172,6 +180,27 @@ export function CreateOrderDialog({
     });
   };
 
+  const updateQuantity = (index: number, newQty: number) => {
+    const qty = Math.max(1, newQty);
+    const currentProducts = formOrder.getValues("orderDetail.products");
+
+    const updatedProducts = currentProducts.map((product, idx) => {
+      if (idx === index) {
+        return { ...product, quantity: qty };
+      }
+      return product;
+    });
+
+    setProducts(updatedProducts);
+    formOrder.setValue("orderDetail.products", updatedProducts);
+  };
+
+  const handleRemove = (index: number) => {
+    const updated = products.filter((_, i) => i !== index);
+    setProducts(updated);
+    formOrder.setValue("orderDetail.products", updated);
+  };
+
   React.useEffect(() => {
     if (currentCustomer?.branchId && currentCustomer?.id) {
       formOrder.setValue("branchId", currentCustomer.branchId);
@@ -188,21 +217,21 @@ export function CreateOrderDialog({
         <Dialog open={open} onOpenChange={onOpenChange}>
           <DialogContent
             style={{ width: "100%", maxWidth: "1200px", maxHeight: "90vh" }}
-            className="max-w-6xl w-full overflow-y-auto p-8"
+            className="max-w-6xl w-full overflow-y-auto p-8 bg-[#F8F8F8]"
             onPointerDown={(e) => e.stopPropagation()}
           >
             <DialogHeader>
-              <DialogTitle>สร้างคำสั่งซื้อ</DialogTitle>
+              <DialogTitle>ตะกร้าสินค้า {products.length} รายการ</DialogTitle>
             </DialogHeader>
 
-            <div className="flex gap-10 mt-3">
-              <div className="flex-1 flex flex-col gap-6 max-h-[70vh] overflow-y-auto border-r border-gray-200 dark:border-gray-700 pr-5">
+            <div className="flex gap-4 mt-3">
+              <div className="flex-1 flex flex-col gap-6 max-h-[70vh] overflow-y-auto dark:border-gray-700 pr-5 p-4 bg-white rounded-lg shadow-sm">
                 <section className="mb-6">
                   <Label className="mb-4 block font-semibold">
-                    เลือกสินค้าและจำนวน
+                    เลือกรายการสินค้าเพิ่มเติม
                   </Label>
 
-                  <MultiSelectOnModal
+                  <MultiSelectOnModalProduct
                     options={productOptions}
                     placeholder={
                       isLoading ? "กำลังโหลดสินค้า..." : "เลือกสินค้า"
@@ -234,147 +263,372 @@ export function CreateOrderDialog({
                     }}
                   />
 
-                  {/* List of product cards with quantity input */}
-                  <div className="mt-6 flex flex-col gap-4 h-[50vh] overflow-y-auto">
-                    {products.map((p, i) => {
-                      const productDetails =
-                        getProducts &&
-                        getProducts.length &&
-                        getProducts?.find(
-                          (prod: ProductType) => prod.id === p?.id
-                        );
-                      const fallbackImage =
-                        "https://ui-avatars.com/api/?name=" +
-                        encodeURIComponent(productDetails?.name ?? "image");
+                  <div className="mt-6">
+                    <div className="grid grid-cols-[1fr_150px_100px_120px] items-center px-6 py-3 border-b border-gray-200">
+                      <span className="text-sm font-semibold text-gray-700">รายละเอียดสินค้า</span>
+                      <span className="text-sm font-semibold text-gray-700 text-center">จำนวน</span>
+                      <span className="text-sm font-semibold text-gray-700 text-center">ราคา</span>
+                      <span className="text-sm font-semibold text-gray-700 text-center">ราคารวม</span>
+                    </div>
 
-                      const price = productDetails?.price ?? 0;
-                      const totalPrice = price * (p.quantity ?? 1);
+                    {/* List of product cards with quantity input */}
+                    <div className="mt-6 flex flex-col gap-4 h-[50vh] overflow-y-auto">
+                      {products.map((p, i) => {
+                        const productDetails =
+                          getProducts &&
+                          getProducts.length &&
+                          getProducts?.find(
+                            (prod: ProductType) => prod.id === p?.id
+                          );
+                        const fallbackImage =
+                          "https://ui-avatars.com/api/?name=" +
+                          encodeURIComponent(productDetails?.name ?? "image");
 
-                      return (
-                        <div
-                          key={p.id}
-                          className="flex items-center gap-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md  transition-shadow"
-                        >
-                          <GlobalImage
-                            src={productDetails?.imageUrl || fallbackImage}
-                            alt={productDetails?.name || "Unknown Product"}
-                            className="w-20 h-20 rounded-md object-cover flex-shrink-0"
-                          />
+                        const price = productDetails?.price ?? 0;
+                        const totalPrice = price * (p.quantity ?? 1);
 
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">
-                              {productDetails?.name || "Unknown Product"}
-                            </h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                              ราคาต่อชิ้น: {price.toLocaleString()} ฿
-                            </p>
-                            <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 mt-1">
-                              ราคารวม: {totalPrice.toLocaleString()} ฿
-                            </p>
-                          </div>
+                        return (
+                          // <div
+                          //   key={p.id}
+                          //   className="flex items-center gap-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md  transition-shadow"
+                          // >
+                          //   <GlobalImage
+                          //     src={productDetails?.imageUrl || fallbackImage}
+                          //     alt={productDetails?.name || "Unknown Product"}
+                          //     className="w-20 h-20 rounded-md object-cover flex-shrink-0"
+                          //   />
 
-                          <div className="flex flex-col items-center">
-                            <Label
-                              htmlFor={`quantity-${p.id}`}
-                              className="mb-1 text-sm"
+                          //   <div className="flex-1 min-w-0">
+                          //     <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">
+                          //       {productDetails?.name || "Unknown Product"}
+                          //     </h3>
+                          //     <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          //       ราคาต่อชิ้น: {price.toLocaleString()} ฿
+                          //     </p>
+                          //     <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 mt-1">
+                          //       ราคารวม: {totalPrice.toLocaleString()} ฿
+                          //     </p>
+                          //   </div>
+
+                          //   <div className="flex flex-col items-center">
+                          //     <Label
+                          //       htmlFor={`quantity-${p.id}`}
+                          //       className="mb-1 text-sm"
+                          //     >
+                          //       จำนวน
+                          //     </Label>
+                          //     <Input
+                          //       id={`quantity-${p.id}`}
+                          //       type="number"
+                          //       min={1}
+                          //       className="w-20 text-center rounded border border-gray-300 dark:border-gray-600 px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          //       value={p.quantity}
+                          //       onChange={(e) => {
+                          //         const qty = Math.max(1, Number(e.target.value));
+                          //         const currentProducts = formOrder.getValues(
+                          //           "orderDetail.products"
+                          //         );
+                          //         const updatedProducts = currentProducts.map(
+                          //           (product, idx) => {
+                          //             if (idx === i) {
+                          //               const updatedProduct = {
+                          //                 ...product,
+                          //                 quantity: qty,
+                          //               };
+
+                          //               return updatedProduct;
+                          //             }
+                          //             return product;
+                          //           }
+                          //         );
+
+                          //         setProducts(updatedProducts);
+                          //         formOrder.setValue(
+                          //           "orderDetail.products",
+                          //           updatedProducts
+                          //         );
+                          //       }}
+                          //     />
+                          //   </div>
+                          // </div>
+                          <div>
+                            <div
+                              key={p.id}
+                              className="grid grid-cols-[1fr_150px_100px_120px] items-center px-6 py-4"
                             >
-                              จำนวน
-                            </Label>
-                            <Input
-                              id={`quantity-${p.id}`}
-                              type="number"
-                              min={1}
-                              className="w-20 text-center rounded border border-gray-300 dark:border-gray-600 px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              value={p.quantity}
-                              onChange={(e) => {
-                                const qty = Math.max(1, Number(e.target.value));
-                                const currentProducts = formOrder.getValues(
-                                  "orderDetail.products"
-                                );
-                                const updatedProducts = currentProducts.map(
-                                  (product, idx) => {
-                                    if (idx === i) {
-                                      const updatedProduct = {
-                                        ...product,
-                                        quantity: qty,
-                                      };
 
-                                      return updatedProduct;
-                                    }
-                                    return product;
-                                  }
-                                );
+                              <div className="flex items-center gap-4">
+                                <img
+                                  src={productDetails?.imageUrl || fallbackImage}
+                                  alt={productDetails?.name || "Unknown Product"}
+                                  className="w-16 h-16 rounded-md object-cover border border-gray-200"
+                                />
+                                <div className="flex flex-col">
+                                  <h3 className="text-sm font-semibold text-gray-900">
+                                    {productDetails?.name || "Unknown Product"}
+                                  </h3>
+                                  <p className="text-xs text-gray-500">{productDetails?.sku}</p>
+                                  <div className="mt-1">
+                                    <Select>
+                                      <SelectTrigger className="">
+                                        <SelectValue placeholder="ดำ, S" />
+                                      </SelectTrigger>
 
-                                setProducts(updatedProducts);
-                                formOrder.setValue(
-                                  "orderDetail.products",
-                                  updatedProducts
-                                );
-                              }}
-                            />
+                                      <SelectContent>
+                                        <SelectItem key="test" value="test">
+                                          ดำ, S
+                                        </SelectItem>
+                                        <SelectItem key="test2" value="test2">
+                                          ขาว, M
+                                        </SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex items-center justify-center gap-2">
+                                <button
+                                  onClick={() => updateQuantity(i, (p.quantity ?? 1) - 1)}
+                                  className="w-7 h-7 flex items-center justify-center rounded-md bg-gray-200 hover:bg-gray-300"
+                                >
+                                  –
+                                </button>
+                                <span className="w-6 text-center text-sm">{p.quantity}</span>
+                                <button
+                                  onClick={() => updateQuantity(i, (p.quantity ?? 1) + 1)}
+                                  className="w-7 h-7 flex items-center justify-center rounded-md bg-gray-200 hover:bg-gray-300"
+                                >
+                                  +
+                                </button>
+                              </div>
+                              <div className="text-sm text-center text-gray-800">{price} ฿</div>
+                              <div className="flex flex-col items-center justify-end gap-3">
+                                <span className="text-sm font-semibold text-gray-900">{totalPrice} ฿</span>
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-end">
+                              <button
+                                onClick={() => handleRemove(i)}
+                                className="flex text-red-500 text-sm hover:text-red-600"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="w-4 h-4 mr-1"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22m-5-4H6a2 2 0 00-2 2v2h16V5a2 2 0 00-2-2z"
+                                  />
+                                </svg>
+                                ลบ
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
+                  </div>
+                </section>
+                <hr className="border-t-1 border-gray-300" />
+                <section>
+                  <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg shadow-inner">
+                    <h4 className="text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">
+                      สรุปราคาสินค้า
+                    </h4>
+                    <div className="flex justify-between mb-2">
+                      <span>ราคารวมสินค้า:</span>
+                      <span>
+                        {products
+                          .reduce((sum, p) => {
+                            const prod =
+                              getProducts &&
+                              getProducts.length &&
+                              getProducts?.find(
+                                (prod: ProductType) => prod.id === p.id
+                              );
+                            const price = prod?.price ?? 0;
+                            return sum + price * (p.quantity ?? 1);
+                          }, 0)
+                          .toLocaleString()}{" "}
+                        ฿
+                      </span>
+                    </div>
+                    <div className="flex justify-between mb-2">
+                      <span>ส่วนลด:</span>
+                      <span>{order.discount ?? 0} %</span>
+                    </div>
+                    <div className="flex justify-between font-bold text-green-700 dark:text-green-400 text-lg">
+                      <span>ราคาสุทธิ:</span>
+                      <span>
+                        {(
+                          products.reduce((sum, p) => {
+                            const prod =
+                              getProducts &&
+                              getProducts.length &&
+                              getProducts?.find(
+                                (prod: ProductType) => prod.id === p.id
+                              );
+                            const price = prod?.price ?? 0;
+                            return sum + price * (p.quantity ?? 1);
+                          }, 0) *
+                          (1 - (order.discount ?? 0) / 100)
+                        ).toLocaleString()}{" "}
+                        ฿
+                      </span>
+                    </div>
                   </div>
                 </section>
               </div>
 
               {/* Right Column */}
-              <div className="flex flex-col">
+              <div className="flex flex-col bg-white rounded-lg p-4 shadow-sm">
                 <div className="flex-1 flex flex-col gap-6 max-h-[70vh] overflow-y-auto">
                   <section>
                     {loadCustomer ? (
                       <div>Loading ...</div>
                     ) : (
                       <div>
-                        <div className="flex justify-between space-x-4">
+                        <Label className="text-lg mb-2 block font-font-bol pr-14">
+                          รายการคำสั่งซื้อ (Purchase Order)
+                        </Label>
+                        <div className="space-x-4">
                           <div>
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                              {customer?.name ?? ""}
-                            </h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-100">
-                              ประเภท:{" "}
-                              <span className="font-medium capitalize">
-                                {customer?.customerType?.replace("_", " ") ??
-                                  ""}
-                              </span>
-                            </p>
-                            <p className="text-sm text-gray-500 dark:text-gray-100">
-                              สถานะ:{" "}
-                              <span
-                                className={`font-medium ${
-                                  customer?.status === "active"
-                                    ? "text-green-600"
-                                    : "text-red-600"
-                                } capitalize`}
-                              >
-                                {customer?.status ?? ""}
-                              </span>
-                            </p>
-                          </div>
-                          <div className="border-gray-200">
-                            <div className="grid grid-cols-1 sm:grid-cols-2  gap-y-4 gap-x-6">
-                              <div>
-                                <Label>เลขประจำตัวผู้เสียภาษี:</Label>
-                                <p className="text-gray-800 text-sm dark:text-gray-100">
-                                  {customer?.organizationDetails?.taxId ||
-                                    "N/A"}
-                                </p>
+                            <div>
+                              <span className="text-sm">เลขที่ใบสั่งซื้อ</span>
+                              <p className="text-gray-800 text-xl dark:text-gray-100 mt-1 mb-1">
+                                {customer?.code ||
+                                  "N/A"}
+                              </p>
+                            </div>
+                            <div className="mt-4">
+                              <span className="text-sm">ลูกค้า</span>
+                              <p className="text-gray-800 text-sm dark:text-gray-100">
+                                {customer?.name ||
+                                  "N/A"}
+                              </p>
+                            </div>
+                            <div className="mt-2">
+                              <span className="text-sm">วันที่ยืนยันคำสั่งซื้อ</span>
+                              <p className="text-gray-800 text-sm dark:text-gray-100">
+                                {customer?.jj ||
+                                  "N/A"}
+                              </p>
+                            </div>
+                            <div className="mt-3">
+                              <FormField
+                                control={formOrder.control}
+                                name="startDate"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>กำหนดรับสินค้า</FormLabel>
+                                    <FormControl>
+                                      <DatePicker
+                                        value={field.value || ""}
+                                        onChange={field.onChange}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                            <div className="mt-3">
+                              <span className="text-sm">วันที่รับสินค้าจริง</span>
+                              <p className="text-gray-800 text-sm dark:text-gray-100">
+                                {customer?.name ||
+                                  "N/A"}
+                              </p>
+                            </div>
+                            <div className="mt-3 mb-4">
+                              <FormField
+                                control={formOrder.control}
+                                name="docNo"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>สกุลเงิน</FormLabel>
+                                    <Select
+                                      value={field.value}
+                                      onValueChange={field.onChange}
+                                      defaultValue="THB"
+                                    >
+                                      <FormControl>
+                                        <SelectTrigger className="w-full ">
+                                          <SelectValue placeholder="เลือกสกุลเงิน" />
+                                        </SelectTrigger>
+                                      </FormControl>
+                                      <SelectContent>
+                                        {currencyType?.map((item) => (
+                                          <SelectItem key={item.value} value={item.value}>
+                                            {item.icon} {item.label}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                            <hr className="border-t-2 border-gray-300 mb-4" />
+                            <div>
+                              <Label className="text-lg mb-2 block font-font-bol">
+                                ข้อมูลเพิ่มเติม (Other Information)
+                              </Label>
+                              <div className="mt-3 mb-4">
+                                <FormField
+                                  control={formOrder.control}
+                                  name="docNo"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>ผู้ขาย</FormLabel>
+                                      <Select
+                                        value={field.value}
+                                        onValueChange={field.onChange}
+                                      >
+                                        <FormControl>
+                                          <SelectTrigger className="w-full ">
+                                            <SelectValue placeholder="เลือกผู้ขาย" />
+                                          </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                          <SelectItem key="test" value="test">
+                                            test
+                                          </SelectItem>
+                                        </SelectContent>
+                                      </Select>
+                                    </FormItem>
+                                  )}
+                                />
                               </div>
-                              <div>
-                                <Label>หมายเลขโทรศัพท์:</Label>
-                                <p className="text-gray-800 text-sm dark:text-gray-100">
-                                  {customer?.organizationDetails
-                                    ?.businessPhone || "N/A"}
-                                </p>
-                              </div>
-                              <div>
-                                <Label>อีเมล:</Label>
-                                <p className="text-gray-800 text-sm dark:text-gray-100">
-                                  {customer?.organizationDetails
-                                    ?.businessEmail || "N/A"}
-                                </p>
+                              <div className="mt-3 mb-4">
+                                <FormField
+                                  control={formOrder.control}
+                                  name="docNo"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>บริษัท (Company)</FormLabel>
+                                      <Select
+                                        value={field.value}
+                                        onValueChange={field.onChange}
+                                      >
+                                        <FormControl>
+                                          <SelectTrigger className="w-full ">
+                                            <SelectValue placeholder="เลือกบริษัท" />
+                                          </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                          <SelectItem key="test" value="test">
+                                            test
+                                          </SelectItem>
+                                        </SelectContent>
+                                      </Select>
+                                    </FormItem>
+                                  )}
+                                />
                               </div>
                             </div>
                           </div>
@@ -421,76 +675,28 @@ export function CreateOrderDialog({
                       placeholder="ระบุเปอร์เซ็นต์ส่วนลด"
                     />
                   </section> */}
-                  <section>
-                    <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg shadow-inner">
-                      <h4 className="text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">
-                        สรุปราคาสินค้า
-                      </h4>
-                      <div className="flex justify-between mb-2">
-                        <span>ราคารวมสินค้า:</span>
-                        <span>
-                          {products
-                            .reduce((sum, p) => {
-                              const prod =
-                                getProducts &&
-                                getProducts.length &&
-                                getProducts?.find(
-                                  (prod: ProductType) => prod.id === p.id
-                                );
-                              const price = prod?.price ?? 0;
-                              return sum + price * (p.quantity ?? 1);
-                            }, 0)
-                            .toLocaleString()}{" "}
-                          ฿
-                        </span>
-                      </div>
-                      <div className="flex justify-between mb-2">
-                        <span>ส่วนลด:</span>
-                        <span>{order.discount ?? 0} %</span>
-                      </div>
-                      <div className="flex justify-between font-bold text-green-700 dark:text-green-400 text-lg">
-                        <span>ราคาสุทธิ:</span>
-                        <span>
-                          {(
-                            products.reduce((sum, p) => {
-                              const prod =
-                                getProducts &&
-                                getProducts.length &&
-                                getProducts?.find(
-                                  (prod: ProductType) => prod.id === p.id
-                                );
-                              const price = prod?.price ?? 0;
-                              return sum + price * (p.quantity ?? 1);
-                            }, 0) *
-                            (1 - (order.discount ?? 0) / 100)
-                          ).toLocaleString()}{" "}
-                          ฿
-                        </span>
-                      </div>
-                    </div>
-                  </section>
-                </div>
 
-                <div className="flex justify-end mt-3 gap-3">
-                  <Button
-                    variant="outline"
-                    onClick={() => onOpenChange(false)}
-                    type="button"
-                  >
-                    ยกเลิก
-                  </Button>
-
-                  <Button
-                    form="create-order"
-                    className="bg-green-600 hover:bg-green-700 text-white"
-                    // type="submit"
-
-                    onClick={onCreate}
-                  >
-                    สร้างคำสั่งซื้อ
-                  </Button>
                 </div>
               </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                type="button"
+              >
+                ยกเลิก
+              </Button>
+
+              <Button
+                form="create-order"
+                className="text-white"
+                // type="submit"
+
+                onClick={onCreate}
+              >
+                สร้างคำสั่งซื้อ
+              </Button>
             </div>
 
             {/* <DialogFooter className="mt-6 flex justify-end gap-2">

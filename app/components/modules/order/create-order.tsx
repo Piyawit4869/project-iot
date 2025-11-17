@@ -120,8 +120,6 @@ export default function CreateOrder() {
       orderDetail: { products: productsPayload },
     };
 
-    console.log({ payload });
-
     GlobalModal.info({
       title: "สร้างออเดอร์",
       description: "คุณต้องการสร้างออเดอร์นี้ใช่หรือไม่",

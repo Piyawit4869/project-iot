@@ -26,6 +26,7 @@ export default function ChatbotSpaceNew({
   const { customerInfoOpen, setCustomerInfoOpen } = useChatRoom();
   const [selectedRoom, setSelectedRoom] = React.useState<any>();
   const [showChatList, setShowChatList] = React.useState(true);
+  
 
   const {
     data: customerSingle,
@@ -98,6 +99,7 @@ export default function ChatbotSpaceNew({
           <div className="w-96">
             {selectedRoom && selectedRoom?.id && selectedRoom?.customerId ? (
               <ChatCustomerInfo
+                selectedRoom={selectedRoom}
                 refetchCustomer={refetch}
                 setCreateOrderOpen={setCreateOrderOpen}
                 setAddCustomerDetail={setAddCustomerDetail}
@@ -123,7 +125,7 @@ export default function ChatbotSpaceNew({
         <CreateOrderDialog
           open={isCreateOrderOpen}
           onOpenChange={setCreateOrderOpen}
-          customerId={selectedRoom?.customer?.id}
+          customerId={selectedRoom?.customerId}
         />
       </OrderProvider>
     </div>

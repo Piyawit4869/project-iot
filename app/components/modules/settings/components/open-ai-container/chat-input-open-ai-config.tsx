@@ -1,6 +1,5 @@
 import { Loader2, Send } from "lucide-react";
 import React from "react";
-import { useConnectedChatRoomAIConfig } from "~/api/client/customer/useCustomer";
 import { useSendMessage } from "~/api/client/settings";
 import { useUpload } from "~/api/client/useGetUpload";
 import { Button } from "~/components/ui/button";
@@ -12,14 +11,16 @@ import { MessageLabelType } from "~/types/global";
 interface ChatInputOpenAiConfigProps {
   chatRoomId: string;
   isAILoading: boolean;
+  isPendingAI: boolean;
+  connectedChatRoomAI: (values: any) => void;
 }
 
 export const ChatInputOpenAiConfig: React.FC<ChatInputOpenAiConfigProps> = (
   props
 ) => {
-  const { chatRoomId, isAILoading } = props;
+  const { chatRoomId, isAILoading, isPendingAI, connectedChatRoomAI } = props;
 
-  const { messagesAI, setMessagesAI } = useMessage();
+  const { messagesAI } = useMessage();
 
   const isMobile = useIsMobile();
 
@@ -28,28 +29,26 @@ export const ChatInputOpenAiConfig: React.FC<ChatInputOpenAiConfigProps> = (
   const { selectedRoom, customer } = useChatRoom();
   const { mutate: upload, isPending } = useUpload();
   const { mutate: send } = useSendMessage();
-  const { mutateAsync: connectedChatRoomAI, isPending: isPendingAI } =
-    useConnectedChatRoomAIConfig(chatRoomId);
 
   const handleInputChange = (e: any) => {
     const value = e.target.value;
 
     setInput(e.target.value);
-    setMessagesAI((prev) => {
-      const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
+    // setMessagesAI((prev) => {
+    //   const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
 
-      if (roomIndex > -1) {
-        const updatedMessages = [...prev];
-        updatedMessages[roomIndex] = {
-          ...updatedMessages[roomIndex],
-          lastestMessage: value,
-        } as Message;
+    //   if (roomIndex > -1) {
+    //     const updatedMessages = [...prev];
+    //     updatedMessages[roomIndex] = {
+    //       ...updatedMessages[roomIndex],
+    //       lastestMessage: value,
+    //     } as Message;
 
-        return updatedMessages;
-      }
+    //     return updatedMessages;
+    //   }
 
-      return [...prev, { roomId: selectedRoom.id, lastestMessage: value }];
-    });
+    //   return [...prev, { roomId: selectedRoom.id, lastestMessage: value }];
+    // });
   };
 
   const sendText = async (e: React.FormEvent) => {
@@ -58,24 +57,24 @@ export const ChatInputOpenAiConfig: React.FC<ChatInputOpenAiConfigProps> = (
     const textarea = e.target as HTMLTextAreaElement;
     textarea.style.height = "auto";
 
-    setMessagesAI((prev) => {
-      const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
+    // setMessagesAI((prev) => {
+    //   const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
 
-      if (roomIndex > -1) {
-        const updatedMessages = [...prev];
-        updatedMessages[roomIndex] = {
-          ...updatedMessages[roomIndex],
-          lastestMessage: "",
-        } as Message;
+    //   if (roomIndex > -1) {
+    //     const updatedMessages = [...prev];
+    //     updatedMessages[roomIndex] = {
+    //       ...updatedMessages[roomIndex],
+    //       lastestMessage: "",
+    //     } as Message;
 
-        return updatedMessages;
-      }
+    //     return updatedMessages;
+    //   }
 
-      return prev;
-    });
+    //   return prev;
+    // });
 
     e.preventDefault();
-    if (!input.trim() || !customer?.id) return;
+    if (!input.trim() || !chatRoomId) return;
 
     const messageText = input.trim();
     setInput("");
@@ -83,7 +82,7 @@ export const ChatInputOpenAiConfig: React.FC<ChatInputOpenAiConfigProps> = (
     connectedChatRoomAI({
       message: messageText,
       messageType: "text",
-      customerId: customer?.id,
+      chatRoomId: chatRoomId,
     });
   };
 
@@ -150,7 +149,7 @@ export const ChatInputOpenAiConfig: React.FC<ChatInputOpenAiConfigProps> = (
         //     ? "กดส่งข้อความเพื่อส่งข้อความ"
         //     : "Enter: ส่ง, Shift+Enter:ขึ้นบรรทัดใหม่"
         // }
-        placeholder="สอบถามข้อมูลเกี่ยวกับลูกค้าคนนี้..."
+        placeholder="ทดสอบการพูดคุย..."
         className="flex-1 max-h-[300px] w-full resize-none overflow-auto p-2 border-0 rounded-md outline-none"
         value={input}
         onChange={handleInputChange}

@@ -1,6 +1,7 @@
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
 import {
+  fetchAllMessageCursorWithRoomId,
   fetchAllMessageWithRoomId,
   fetchAllRoomChat,
   fetchAskQuestion,
@@ -96,37 +97,33 @@ export const usePaginatedMessages = (roomId: string, jumpOffset = 0) => {
   });
 };
 
-// export const usePaginatedMessages = (roomId: string, jumpOffset?: number) => { // !! old function p'aon
-//   const windowSize = 10;
-//   const startOffset =
-//     jumpOffset != null
-//       ? Math.max(0, jumpOffset - Math.floor(windowSize / 2))
-//       : 0;
-//   return useInfiniteQuery({
-//     queryKey: ["messages", roomId, jumpOffset],
-//     // queryFn: async ({ pageParam }) => {
-//     //   const offsetResult = offset ? offset : pageParam;
+export const usePaginatedMessagesCursor = (
+  roomId: string,
+  currentId = "",
+  direction?: string
+) => {
+  const limit = 10;
 
-//     //   const limitResult = offset ? offset + 10 : 10;
+  return useInfiniteQuery({
+    queryKey: ["messages-cursor", roomId, currentId],
+    queryFn: async ({ pageParam = currentId }) => {
+      return fetchAllMessageCursorWithRoomId(
+        roomId,
+        pageParam,
+        limit,
+        currentId ? "none" : "before"
+      );
+    },
+    initialPageParam: currentId ?? "",
+    getNextPageParam: (lastPage) => {
+      const meta = lastPage?.meta;
 
-//     //   return fetchAllMessageWithRoomId(roomId, offsetResult, limitResult);
-//     // },
-
-//     queryFn: async (p) => {
-//       console.log({ p });
-//       const offset =
-//         typeof p.pageParam === "number" ? p.pageParam : startOffset;
-//       const limit = windowSize;
-//       return fetchAllMessageWithRoomId(roomId, startOffset, limit);
-//     },
-//     initialPageParam: startOffset ?? 0,
-//     getNextPageParam: (lastPage) => {
-//       const meta = lastPage?.meta;
-//       return meta?.hasMore ? meta.offset + meta.limit : undefined;
-//     },
-//     enabled: !!roomId,
-//   });
-// };
+      if (!meta?.before) return undefined;
+      return meta.before;
+    },
+    enabled: !!roomId,
+  });
+};
 
 export const useSearchByKeyWord = (id: string, keyword: string) => {
   return useQuery({
@@ -136,11 +133,11 @@ export const useSearchByKeyWord = (id: string, keyword: string) => {
   });
 };
 
-export const usePaginatedChatRooms = (name = "") => {
+export const usePaginatedChatRooms = (name = "", topic = "") => {
   return useInfiniteQuery({
-    queryKey: ["roomChat", name],
+    queryKey: ["roomChat", name, topic],
     queryFn: async ({ pageParam }) => {
-      return fetchRoomChatLoadMore(pageParam, 20, name);
+      return fetchRoomChatLoadMore(pageParam, 20, name, topic);
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {

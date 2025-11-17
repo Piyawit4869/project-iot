@@ -24,12 +24,17 @@ import {
   fetchUpdateCustomerNote,
   fetchUpdateCustomerTags,
   fetchGetAnalyzeCustomer,
+  fetchCustomerSummaryNoteAiById,
+  createTag,
+  getAllTags,
+  getChatRoomPartipants,
 } from "../../server/customer/customer";
 import type {
   ContactValues,
   CustomerValues,
 } from "~/schemas/customer/customer-form";
 import type {
+  CustomerCreateTag,
   CustomerDeleteValueNote,
   CustomerUpdateChatDetails,
   CustomerUpdateChatDetailsAndTags,
@@ -127,17 +132,9 @@ export const useCustomerPaginate = ({
   });
 };
 
-export const useConnectedChatRoomAssistant = (
-  customerId: string,
-  chatRoomId: string
-) => {
+export const useConnectedChatRoomAssistant = () => {
   return useMutation({
-    mutationFn: (values: any) =>
-      connectedChatRoomAssistant({
-        ...values,
-        customerId: customerId,
-        chatRoomId: chatRoomId,
-      }),
+    mutationFn: (values: any) => connectedChatRoomAssistant(values),
   });
 };
 
@@ -152,6 +149,13 @@ export const useGetAiNote = (id: string) =>
   useQuery({
     queryKey: ["customer-ai-note", id],
     queryFn: () => fetchCustomerNoteAiById(id),
+    enabled: !!id,
+  });
+
+export const useGetSummaryAINote = (id: string) =>
+  useQuery({
+    queryKey: ["customer-ai-summary-note", id],
+    queryFn: () => fetchCustomerSummaryNoteAiById(id),
     enabled: !!id,
   });
 
@@ -308,5 +312,26 @@ export const useUpdateCustomerChatDetailsAndTags = (id: string) => {
   return useMutation({
     mutationFn: (values: CustomerUpdateChatDetailsAndTags) =>
       fetchUpdateCustomerChatDetailsAndTags(id, values),
+  });
+};
+
+export const useCreateTag = () => {
+  return useMutation({
+    mutationFn: (values: CustomerCreateTag) => createTag(values),
+  });
+};
+
+export const useGetAllTags = () => {
+  return useQuery({
+    queryKey: ["customer-tags"],
+    queryFn: () => getAllTags(),
+  });
+};
+
+export const useChatRoomParticipants = (id: string) => {
+  return useQuery({
+    queryKey: ["room-participant", id],
+    queryFn: () => getChatRoomPartipants(id),
+    enabled: !!id,
   });
 };

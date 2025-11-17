@@ -18,7 +18,11 @@ import { Textarea } from "~/components/ui/textarea";
 import { ReplySchema, type ReplyValues } from "~/schemas/settings";
 import { toast } from "sonner";
 import { GlobalModal } from "~/components/shared/modal/modal";
-import { useLineCreateReplyMessage } from "~/api/client/settings";
+import {
+  useLineCreateReplyMessage,
+  useLineGetReplyMessage,
+  useLineUpdateReplyMessage,
+} from "~/api/client/settings";
 
 type Props = {
   mode: "create" | "edit";
@@ -27,13 +31,15 @@ type Props = {
   onCancel?: () => void;
 };
 
-export default function ReplyMessageForm({
+export default function EditReplyMessageForm({
   mode,
   replyId,
   onSaved,
   onCancel,
 }: Props) {
-  const { mutate } = useLineCreateReplyMessage();
+  const { mutate } = useLineUpdateReplyMessage(replyId ?? "");
+
+  const { data } = useLineGetReplyMessage(replyId ?? "");
 
   const form = useForm<ReplyValues>({
     resolver: zodResolver(ReplySchema),
@@ -44,13 +50,15 @@ export default function ReplyMessageForm({
     },
   });
 
-  // โหลดข้อมูลเดิมเมื่อแก้ไข
-  // React.useEffect(() => {
-  //   if (mode === "edit" && replyId) {
-  // TODO: ดึงข้อมูลด้วย replyId แล้ว form.reset(...)
-  // ตัวอย่าง: form.reset({ title: data.title, message: data.message });
-  //   }
-  // }, [mode, replyId, form]);
+  React.useEffect(() => {
+    if (mode === "edit" && replyId && data) {
+      form.reset({
+        name: data?.name,
+        description: data?.description,
+        content: data?.content?.messages?.[0]?.text,
+      });
+    }
+  }, [mode, replyId, form, data]);
 
   const name = form.watch("name")?.length ?? 0;
   const description = form.watch("description")?.length ?? 0;
@@ -127,7 +135,7 @@ export default function ReplyMessageForm({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            id="create-form"
+            id="update-form"
             className="space-y-6"
           >
             <FormField
@@ -195,7 +203,7 @@ export default function ReplyMessageForm({
               <Button type="button" variant="ghost" onClick={onCancel}>
                 ยกเลิก
               </Button>
-              <Button type="submit" form="create-form">
+              <Button type="submit" form="update-form">
                 บันทึก
               </Button>
             </div>

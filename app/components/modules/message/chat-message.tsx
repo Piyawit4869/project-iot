@@ -1,24 +1,53 @@
-"use client";
-
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import React, { useRef, useState } from "react";
 import dayjs from "dayjs";
 
 import FeatureCard from "~/components/shared/feature-card";
-import { MessagesSquare } from "lucide-react";
-import { Button } from "~/components/ui/button";
+import {
+  AudioLines,
+  MessagesSquare,
+  PauseIcon,
+  Play,
+  PlayIcon,
+} from "lucide-react";
 import ChatInput from "./chat-input";
-import { OrderViewModal } from "./orders-view-modal";
-import { AIMessageView } from "./ai-message-view-modal";
+
 import { CustomerChatSkeleton } from "./noData/customer-chat-skeleton";
 import { socketConfig } from "~/lib/sockets";
 import type { ChatRoomSchemaType } from "~/schemas/message/message";
-import { usePaginatedMessages } from "~/api/client/message/useMessage";
+import { usePaginatedMessagesCursor } from "~/api/client/message/useMessage";
 import { useChat, type Message } from "~/providers/chat/useChat";
-import StatusToolbar, { calcOffsetFromBottom } from "./status-toolbar";
+import StatusToolbar from "./status-toolbar";
 import ReactLinkify from "react-linkify";
-import { useGetAiNote } from "~/api/client/customer/useCustomer";
 import { formatDateAndTime } from "~/components/shared/global-format";
+
+import {
+  FileText,
+  FileType,
+  FileSpreadsheet,
+  FileArchive,
+  File,
+} from "lucide-react";
+
+export function getFileIcon(filename: string) {
+  const ext = filename.split(".").pop()?.toLowerCase() || "";
+
+  switch (ext) {
+    case "pdf":
+      return <FileText className="w-8 h-8 text-red-500" />;
+    case "doc":
+    case "docx":
+      return <FileType className="w-8 h-8 text-blue-500" />;
+    case "xls":
+    case "xlsx":
+      return <FileSpreadsheet className="w-8 h-8 text-green-500" />;
+    case "zip":
+    case "rar":
+      return <FileArchive className="w-8 h-8 text-yellow-500" />;
+    default:
+      return <File className="w-8 h-8 text-muted-foreground" />;
+  }
+}
 
 export function MessageText({ text }: { text: string }) {
   return (
@@ -40,6 +69,12 @@ export function MessageText({ text }: { text: string }) {
   );
 }
 
+const formatTime = (sec: number) => {
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+};
+
 export default function ChatMessages({
   api,
   customer,
@@ -52,6 +87,25 @@ export default function ChatMessages({
   selectedRoom: ChatRoomSchemaType;
   setAutoScroll: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const [playing, setPlaying] = React.useState(false);
+  const [currentTime, setCurrentTime] = React.useState(0);
+  const [duration, setDuration] = React.useState(0);
+
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+
+  const togglePlay = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (playing) {
+      audio.pause();
+      setPlaying(false);
+    } else {
+      audio.play();
+      setPlaying(true);
+    }
+  };
+
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const newestSeenId = React.useRef<string | null>(null);
@@ -61,15 +115,14 @@ export default function ChatMessages({
   const [buttonScrollToBottom, setButtonScrollToBottom] = React.useState(false);
 
   const { messages: socketMessages, addMessage } = useChat();
-  const [offset, setOffset] = React.useState<number>(0);
+  const [cursor, setCursor] = React.useState<string>("");
 
   const messageRefs = useRef<{ [id: string]: HTMLDivElement | null }>({});
 
-  const [targetMessageId, setTargetMessageId] = useState<string | null>(null);
+  const [targetMessageId, setTargetMessageId] = useState<string>("");
   const [targetMessageOffset, setTargetMessageOffset] = useState<number | null>(
     null
   );
-
   const [pendingScrollTarget, setPendingScrollTarget] = useState<string | null>(
     null
   );
@@ -80,7 +133,7 @@ export default function ChatMessages({
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = usePaginatedMessages(selectedRoom.id, offset);
+  } = usePaginatedMessagesCursor(selectedRoom.id, targetMessageId);
 
   const paginatedMessages = messagesData?.pages.flatMap((page) => page) ?? [];
 
@@ -92,8 +145,26 @@ export default function ChatMessages({
           dayjs(a.createdAt ?? a.timestamp).valueOf() -
           dayjs(b.createdAt ?? b.timestamp).valueOf()
       )
-      .filter((c) => c.chatRoomId === selectedRoom?.id);
-    return messages;
+      .filter((c) => c.chatRoomId === selectedRoom?.id)
+      .map((message) => {
+        return {
+          ...message,
+          read: message?.platform !== "backoffice" && true,
+        };
+      });
+
+    const isLast = messages.length - 1;
+    const isLastNotBackoffice = messages[isLast]?.platform !== "backoffice";
+
+    let result = messages;
+
+    if (isLastNotBackoffice) {
+      result = messages.map((message) => {
+        return { ...message, read: true };
+      });
+    }
+
+    return result;
   }, [paginatedMessages, socketMessages]);
 
   const isNoMessageData = !messagesData || messagesData.pages.length === 0;
@@ -103,6 +174,215 @@ export default function ChatMessages({
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  // const togglePlay = () => {
+  //   if (!audioRef.current) return;
+
+  //   if (playing) {
+  //     audioRef.current.pause();
+  //     setPlaying(false);
+  //   } else {
+  //     audioRef.current.play();
+  //     setPlaying(true);
+  //   }
+  // };
+
+  function renderMessageContent(
+    msg: any,
+    isBackoffice: boolean,
+    setPreviewUrl: any
+  ) {
+    const message = msg?.message ?? "";
+    const type = msg?.messageType;
+
+    // TEXT
+    if (type === "text" || type === null) {
+      return (
+        <div
+          className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
+            isBackoffice ? "bg-blue-500 text-white" : "bg-muted text-primary"
+          }`}
+        >
+          <MessageText text={String(message)} />
+        </div>
+      );
+    }
+
+    // STICKER
+    if (type === "sticker") {
+      return <img src={message} width={150} height={150} />;
+    }
+
+    // FILE (PDF / DOC / ZIP ecc.)
+    if (type === "file") {
+      const filename = message.split("/").pop() ?? "ไฟล์แนบ";
+
+      return (
+        <div
+          className="flex items-center gap-3 bg-muted p-3 rounded-xl cursor-pointer hover:bg-muted/70"
+          onClick={() => window.open(message, "_blank")}
+        >
+          {getFileIcon(filename)}
+
+          <div className="flex flex-col">
+            <span className="text-sm font-medium">{filename}</span>
+            <span className="text-xs text-muted-foreground">
+              แตะเพื่อเปิดไฟล์
+            </span>
+          </div>
+        </div>
+      );
+    }
+
+    // IMAGE / VIDEO / AUDIO (preview)
+    // if (type === "image" || type === "video" || type === "audio") {
+    //   return (
+    //     <div onClick={() => setPreviewUrl(message)} className="cursor-pointer">
+    //       <img src={message} width={150} height={150} className="rounded-md" />
+    //     </div>
+    //   );
+    // }
+
+    if (type === "image") {
+      return (
+        <div onClick={() => setPreviewUrl(message)} className="cursor-pointer">
+          <img
+            src={message}
+            width={180}
+            height={180}
+            className="rounded-md object-cover"
+          />
+        </div>
+      );
+    }
+
+    // VIDEO
+    if (type === "video") {
+      return (
+        <div
+          className="relative cursor-pointer"
+          onClick={() => {
+            const videoEl = document.createElement("video");
+            videoEl.src = message;
+            videoEl.autoplay = true;
+            videoEl.controls = true;
+            videoEl.style.width = "100%";
+            videoEl.style.height = "100%";
+
+            // เปิด fullscreen
+            videoEl.onloadedmetadata = async () => {
+              document.body.appendChild(videoEl);
+
+              try {
+                if (videoEl.requestFullscreen) {
+                  await videoEl.requestFullscreen();
+                }
+
+                await videoEl.play();
+              } catch (err) {
+                console.error("Fullscreen error:", err);
+                videoEl.play();
+              }
+
+              // เมื่อออก fullscreen ให้ลบ element
+              videoEl.onfullscreenchange = () => {
+                if (!document.fullscreenElement) {
+                  videoEl.pause();
+                  videoEl.remove();
+                }
+              };
+            };
+          }}
+        >
+          {/* Thumbnail */}
+          <video
+            src={message}
+            width={200}
+            height={200}
+            className="rounded-lg"
+            muted
+          />
+
+          {/* Play Button Overlay */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="bg-black/60 rounded-full p-3">
+              <Play className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // AUDIO
+    // if (type === "audio") {
+    //   return (
+    //     <div
+    //       className="flex items-center gap-3 bg-muted px-3 py-2 rounded-xl cursor-pointer"
+    //       onClick={togglePlay}
+    //     >
+    //       <AudioLines className="w-6 h-6 text-primary" />
+
+    //       <span className="font-medium text-sm">
+    //         {playing ? <PauseIcon size={14} /> : <PlayIcon size={14} />}
+    //       </span>
+
+    //       <audio
+    //         ref={audioRef}
+    //         src={message}
+    //         onEnded={() => setPlaying(false)}
+    //         preload="auto"
+    //       />
+    //     </div>
+    //   );
+    // }
+
+    if (type === "audio") {
+      return (
+        <div
+          className="flex items-center gap-3 bg-muted px-3 py-2 rounded-xl cursor-pointer"
+          onClick={togglePlay}
+        >
+          <AudioLines className="w-6 h-6 text-primary" />
+
+          <span className="font-medium text-sm">
+            {playing ? <PauseIcon size={14} /> : <PlayIcon size={14} />}
+          </span>
+
+          {/* เวลา (เล่นไป / ทั้งหมด) */}
+          <span className="text-xs font-medium ml-2">
+            {formatTime(currentTime)} / {formatTime(duration)}
+          </span>
+
+          <audio
+            ref={audioRef}
+            src={message}
+            preload="auto"
+            onLoadedMetadata={() => {
+              const audio = audioRef.current;
+              if (!audio) return;
+              setDuration(audio.duration);
+            }}
+            onTimeUpdate={() => {
+              const audio = audioRef.current;
+              if (!audio) return;
+              setCurrentTime(audio.currentTime);
+            }}
+            onEnded={() => {
+              setPlaying(false);
+              setCurrentTime(0);
+            }}
+          />
+        </div>
+      );
+    }
+
+    // FALLBACK (เช่น dicebear)
+    return (
+      <span className="text-[16px] text-muted-foreground mt-1 ">
+        ระบบยังไม่รองรับการส่งแบบ Location
+      </span>
+    );
+  }
 
   React.useLayoutEffect(() => {
     const el = scrollAreaRef.current;
@@ -190,6 +470,8 @@ export default function ChatMessages({
     }
 
     socket.on("chat", (msg: Message) => {
+      console.log("chat", msg);
+
       addMessage({
         ...msg,
         imageUrl:
@@ -205,15 +487,11 @@ export default function ChatMessages({
   const [hasScrolledToTarget, setHasScrolledToTarget] = useState(false);
 
   const handleSearchClick = (messageId: string, messageOffset: number) => {
-    const total = messagesData?.pages?.[0]?.meta?.total ?? 0;
+    // const total = messagesData?.pages?.[0]?.meta?.total ?? 0;
 
     setTargetMessageId(messageId);
     setTargetMessageOffset(messageOffset);
     setHasScrolledToTarget(false);
-
-    const offset = Math.floor((messageOffset / total) * total);
-
-    setOffset(messageOffset - 1);
   };
 
   React.useEffect(() => {
@@ -291,8 +569,8 @@ export default function ChatMessages({
         <div className="hidden xl:block">
           <StatusToolbar
             chatRoomDetail={selectedRoom}
-            setOffset={setOffset}
-            total={messagesData?.pages[0]?.meta.total ?? 0}
+            setCursor={setCursor}
+            total={messagesData?.pages[0]?.meta?.total ?? 0}
             onSearchClick={handleSearchClick}
           />
         </div>
@@ -359,7 +637,7 @@ export default function ChatMessages({
                       </span>
                     </div>
 
-                    {msg?.messageType === "text" ||
+                    {/* {msg?.messageType === "text" ||
                     msg?.messageType === null ? (
                       <div
                         className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
@@ -396,10 +674,12 @@ export default function ChatMessages({
                           </div>
                         )}
                       </>
-                    )}
+                    )} */}
+
+                    {renderMessageContent(msg, isBackoffice, setPreviewUrl)}
 
                     <span className="text-[10px] text-muted-foreground mt-1 ">
-                      {formattedTime}
+                      {msg.read && <span>อ่านแล้ว,</span>} {formattedTime}
                     </span>
                   </div>
                 </div>

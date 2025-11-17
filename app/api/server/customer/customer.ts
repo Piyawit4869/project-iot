@@ -9,6 +9,7 @@ import type {
   CustomerUpdateChatDetailsAndTags,
   CustomerUpdateTags,
   CustomerUpdateValueNote,
+  CustomerCreateTag,
 } from "~/schemas/customer/customer";
 import type {
   ContactValues,
@@ -79,6 +80,15 @@ export const fetchCustomerNoteAiById = async (id: string) => {
     return res.data;
   } catch (error) {
     return error;
+  }
+};
+
+export const fetchCustomerSummaryNoteAiById = async (customerId: string) => {
+  try {
+    const res = await ApiConfig.get(`/chats/summary/note/${customerId}`);
+    return res.data;
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -333,12 +343,42 @@ export const fetchUpdateCustomerChatDetailsAndTags = async (
       id,
       chatDetails
     );
-    const resTags = await fetchUpdateCustomerTags(id, tags);
+    // const resTags = await fetchUpdateCustomerTags(id, tags);
     return {
       chatDetails: resChatDetails.data,
-      tags: resTags.data,
+      // tags: [],
     };
   } catch (error) {
     return error;
+  }
+};
+
+export const createTag = async (payload: CustomerCreateTag) => {
+  try {
+    const res = await ApiConfig.post(`/crud/tags/create`, payload);
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAllTags = async () => {
+  try {
+    const res = await ApiConfig.get(`/crud/tags`);
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getChatRoomPartipants = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(`/crud/chats/rooms/participants/${id}`);
+
+    return res.data;
+  } catch (error) {
+    throw error;
   }
 };

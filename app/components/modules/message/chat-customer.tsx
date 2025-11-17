@@ -15,6 +15,7 @@ import {
   Check,
   Brain,
   ShoppingBag,
+  PlusIcon,
 } from "lucide-react";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -43,14 +44,16 @@ import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import { CustomerInfoSkeleton } from "./noData/customer-info-skeleton";
 import { useNavigate } from "react-router";
 import { GlobalProductStatus } from "~/types/order";
-import { socketConfig } from "~/lib/sockets";
 import type { Product } from "~/schemas/product/product";
-import { useChat, type Message } from "~/providers/chat/useChat";
 import { usePaginate } from "~/api/client/product/useProductQuery";
 import {
   useAiReplySettings,
+  useChatRoomParticipants,
   useConnectedChatRoomAssistant,
   useGetAiNote,
+  useGetAllTags,
+  useGetSummaryAINote,
+  useUpdateCustomerTags,
 } from "~/api/client/customer/useCustomer";
 import {
   CustomerSupportFormSchema,
@@ -96,7 +99,7 @@ import { GlobalTagsBadge } from "~/components/shared/global-tags";
 import { OrderViewModal } from "./orders-view-modal";
 import { AIMessageView } from "./ai-message-view-modal";
 import { GlobalTooltip } from "~/components/shared/global-tooltip";
-import { AIInsightExampleRender } from "./ai-insight-example-render";
+import { ChatCustomerTags } from "./chat-customer-tags";
 
 interface UserProps {
   id: string;
@@ -118,6 +121,7 @@ const STATUS_OPTIONS: { value: GlobalProductStatus; label: string }[] = [
 ];
 
 export default function ChatCustomerInfo({
+  selectedRoom,
   refetchCustomer,
   modelCustomerDetails,
   setCreateOrderOpen,
@@ -126,6 +130,7 @@ export default function ChatCustomerInfo({
   currentCustomer,
   api,
 }: {
+  selectedRoom: any;
   refetchCustomer: any;
   modelCustomerDetails?: boolean;
   setCreateOrderOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -134,7 +139,17 @@ export default function ChatCustomerInfo({
   currentCustomer: Customer;
   api: string;
 }) {
+  const { data: allTags } = useGetAllTags();
+
+  const { data: participantData, refetch: refetchParicipant } =
+    useChatRoomParticipants(selectedRoom?.id);
+  let participants = participantData && participantData?.items;
+
   const [search, setSearch] = React.useState<string>("");
+  const [showTagManager, setShowTagManager] = React.useState(false);
+  const [selectedTags, setSelectedTags] = React.useState<
+    { id: string; name: string }[]
+  >([]);
 
   const debouncedSearch = useDebounce(search);
 
@@ -145,10 +160,11 @@ export default function ChatCustomerInfo({
   });
 
   const { data: getData } = useGetAiNote(currentCustomer?.id);
+  const { mutate: updateTags } = useUpdateCustomerTags(currentCustomer?.id);
+
   const dataFromAI = getData?.customerData;
 
   const { setProducts } = useOrder();
-  const { addMessageAI } = useChat();
 
   const classForTaps = `
      group relative inline-flex items-center gap-2
@@ -174,15 +190,19 @@ export default function ChatCustomerInfo({
   const customerAI = currentCustomer?.aiReplySettings?.[0];
 
   const { data: allUser, isLoading } = useGetAllUsers();
+
   const { mutate: create, isPending: isCreatingSupport } =
-    useCreateCustomerSupoort();
-  const { mutate: DaleteCustomerSupport } = useDeleteCustomerSupport();
+    useCreateCustomerSupoort(selectedRoom?.id ?? "");
+  const { mutate: DeleteCustomerSupport } = useDeleteCustomerSupport(
+    selectedRoom?.id ?? ""
+  );
+
   const { data, refetch } = useGetAllOrders();
   const [chatRoomAssistantId, setChatRoomAssistantId] =
     React.useState<string>("");
 
   const { mutateAsync: connectedChatRoomAI, isPending: isPendingAI } =
-    useConnectedChatRoomAssistant(customer?.id, chatRoomAssistantId);
+    useConnectedChatRoomAssistant();
 
   const navigate = useNavigate();
 
@@ -331,20 +351,30 @@ export default function ChatCustomerInfo({
       cancelText: "ยกเลิก",
       onConfirm: () => {
         const toastId = toast.loading("กำลังลบผู้รับผิดชอบ...");
-        DaleteCustomerSupport(id, {
-          onSuccess: () => {
-            toast.success("ลบผู้รับผิดชอบเรียบร้อยแล้ว!", {
-              id: toastId,
-            });
-            refetchCustomer();
+
+        DeleteCustomerSupport(
+          {
+            userId: id,
+            customerId: currentCustomer.id,
           },
-          onError: () => {
-            toast.error("ไม่สามารถลบผู้รับผิดชอบ กรุณาลองใหม่อีกครั้งภายหลัง", {
-              id: toastId,
-            });
-            refetchCustomer();
-          },
-        });
+          {
+            onSuccess: () => {
+              toast.success("ลบผู้รับผิดชอบเรียบร้อยแล้ว!", {
+                id: toastId,
+              });
+              refetchParicipant();
+            },
+            onError: () => {
+              toast.error(
+                "ไม่สามารถลบผู้รับผิดชอบ กรุณาลองใหม่อีกครั้งภายหลัง",
+                {
+                  id: toastId,
+                }
+              );
+              refetchParicipant();
+            },
+          }
+        );
       },
     });
   };
@@ -362,29 +392,57 @@ export default function ChatCustomerInfo({
             toast.success("เพิ่มผู้รับผิดชอบเรียบร้อยแล้ว!", {
               id: toastId,
             });
-            refetchCustomer();
+            refetchParicipant();
           },
           onError: () => {
             toast.error(
               "ไม่สามารถเพิ่มผู้รับผิดชอบ เนื่องจากมีผู้ใช้นี้อยู่แล้ว",
               { id: toastId }
             );
-            refetchCustomer();
+            refetchParicipant();
           },
         });
       },
     });
   };
 
-  // const handleOpenPopover = (isMain: boolean) => {
-  //   setAddingMainSupport(isMain);
-  //   setIsPopoverOpen(true);
-  //   form.reset({
-  //     userId: "",
-  //     isMain: isMain,
-  //     customerId: currentCustomer.id,
-  //   });
-  // };
+  const handleSubmit = () => {
+    GlobalModal.info({
+      title: "เพิ่มแท็กของลูกค้า",
+      description: "คุณต้องการเพิ่มแท็กของลูกค้า ใช่หรือไม่?",
+      confirmText: "ยืนยัน",
+      cancelText: "ยกเลิก",
+      onConfirm: () => {
+        const toastId = toast.loading("กำลังเพิ่มผู้แท็กของลูกค้า...");
+
+        const result = selectedTags.map((tag) => {
+          return {
+            id: tag.id,
+            name: tag.name,
+            active: true,
+          };
+        });
+
+        updateTags(
+          { tags: result },
+          {
+            onSuccess: () => {
+              toast.success("เพิ่มผู้แท็กของลูกค้าเรียบร้อยแล้ว!", {
+                id: toastId,
+              });
+              refetchCustomer();
+            },
+            onError: () => {
+              toast.error("ไม่สามารถเพิ่มผู้แท็กของลูกค้า", { id: toastId });
+              refetchCustomer();
+            },
+          }
+        );
+
+        setShowTagManager(false);
+      },
+    });
+  };
 
   const handleUserButtonClick = (selectedUserId: string, isMain: boolean) => {
     CreateSupport({
@@ -494,10 +552,8 @@ export default function ChatCustomerInfo({
   }, [modelCustomerDetails]);
 
   const supportedUserIds = new Set(
-    currentCustomer &&
-    currentCustomer.supports &&
-    currentCustomer.supports.length
-      ? currentCustomer.supports.map((support) => support.userId)
+    participants && participants?.length
+      ? participants.map((support: any) => support.userId)
       : []
   );
 
@@ -552,41 +608,23 @@ export default function ChatCustomerInfo({
   }, [data, currentCustomer]);
 
   React.useEffect(() => {
-    const socket = socketConfig(api);
-
-    // ✅ Join chat room (detail)
-    if (chatRoomAssistantId) {
-      socket.emit("chat", { chatRoomId: `${chatRoomAssistantId}` });
-    }
-
-    // ✅ Listen for new messages
-    socket.on("chat", (msg: Message) => {
-      console.log("msg on socket", msg);
-
-      addMessageAI({
-        ...msg,
-        imageUrl:
-          msg.imageUrl || `https://ui-avatars.com/api/?name=${msg.sender}`,
-      });
-    });
-
-    // ❌ Don't forget to clean up!
-    return () => {
-      socket.disconnect();
-    };
-  }, [chatRoomAssistantId]);
-
-  React.useEffect(() => {
     if (currentCustomer) {
       setChatRoomAssistantId(currentCustomer?.chatRoomAssistantId || "");
     }
+
+    if (currentCustomer && currentCustomer?.tags) {
+      setSelectedTags(currentCustomer?.tags as []);
+    }
   }, [currentCustomer]);
+
   const countFilterOption: number = selected.length;
 
   const secondarySupports = React.useMemo(() => {
-    if (!currentCustomer?.supports) return [];
-    return currentCustomer.supports.filter((spl) => !spl.isMain);
-  }, [currentCustomer?.supports]);
+    if (!participants?.length) return [];
+    return participants.filter(
+      (spl: any) => !spl.isMain && spl.participantType !== "customer"
+    );
+  }, [participants]);
 
   const displayed = secondarySupports.slice(0, 3);
   const extraCount = Math.max(secondarySupports.length - 3, 0);
@@ -598,9 +636,21 @@ export default function ChatCustomerInfo({
       ? currentCustomer.tags
       : [];
 
+  const availableTags =
+    allTags && allTags.length
+      ? allTags
+          .filter((a: any, index: number) => index < 20)
+          .map((b: any) => {
+            return { name: b.name, id: b.id };
+          })
+      : [];
+
+  const isLineNameSameAsCustomerName =
+    currentCustomer?.profile?.name === currentCustomer?.profile?.lineName;
+
   return (
     <>
-      <aside className="flex flex-col w-full bg-white dark:bg-background xl:h-[calc(100vh-50px)] xl:px-1 border-l">
+      <aside className="flex flex-col w-full bg-white dark:bg-background xl:h-[calc(100vh-50px)] xl:px-1 border-l overflow-y-auto">
         <div className="py-4 px-2 flex w-full mt-6 items-center justify-between gap-2 h-[60px] rounded-2xl bg-background">
           <div>
             <div className="flex gap-2">
@@ -625,9 +675,11 @@ export default function ChatCustomerInfo({
                       />
                     </div>
 
-                    <h2 className="font-semibold text-sm mr-auto">
-                      {currentCustomer.profile.lineName || "ไม่ทราบชื่อ"}
-                    </h2>
+                    {!isLineNameSameAsCustomerName && (
+                      <h2 className="font-semibold text-sm mr-auto">
+                        {currentCustomer.profile.lineName || "ไม่ทราบชื่อ"}
+                      </h2>
+                    )}
                   </>
                 ) : (
                   <div className="flex flex-row gap-2 items-center">
@@ -683,24 +735,6 @@ export default function ChatCustomerInfo({
           </div>
         </div>
 
-        {!!tags.length && (
-          <div className="pt-4 pb-0 px-2 mt-2">
-            <Separator className="mb-2" />
-            <div className="gap-2 flex flex-row flex-wrap">
-              {tags.map((item: any) => {
-                return (
-                  <GlobalTagsBadge
-                    key={item.id}
-                    value={item.name}
-                    fontSize={10}
-                    paddingX={1.5}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        )}
-
         <div className="px-4 mt-2">
           <div className="mt-4 space-y-1">
             <div className="flex flex-row">
@@ -709,32 +743,31 @@ export default function ChatCustomerInfo({
                   ผู้รับผิดชอบหลัก
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {currentCustomer &&
-                  currentCustomer.supports &&
-                  currentCustomer.supports.filter((spl) => spl.isMain)
-                    .length ? (
+                  {participants &&
+                  participants.length &&
+                  participants.filter((spl: any) => spl.isMain).length ? (
                     <div className="flex flex-wrap gap-2 mb-1">
-                      {currentCustomer.supports
-                        .filter((spl) => spl.isMain)
-                        .map((spl, userIndex) => (
+                      {participants
+                        .filter((spl: any) => spl.isMain)
+                        .map((spl: any, userIndex: number) => (
                           <div
                             className="relative inline-block"
-                            key={`main-spl-${spl.id}`}
+                            key={`main-spl-${spl.participantId}`}
                           >
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <button
                                     onClick={() =>
-                                      navigate(`/users/${spl.userId}`)
+                                      navigate(`/users/${spl.participantId}`)
                                     }
                                   >
                                     <GlobalImage
                                       src={
                                         spl.imageUrl ||
-                                        `https://api.dicebear.com/9.x/initials/svg?seed=${spl.userId}`
+                                        `https://api.dicebear.com/9.x/initials/svg?seed=${spl.participantId}`
                                       }
-                                      alt={`main-spl-${spl.userId}`}
+                                      alt={`main-spl-${spl.participantId}`}
                                       className={`w-[35px] h-[35px] rounded-full object-cover border-2 ${
                                         userIndex === 0 && "border-amber-500"
                                       }`}
@@ -743,7 +776,7 @@ export default function ChatCustomerInfo({
                                   </button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                  {spl?.fullName ?? "-"}
+                                  {spl?.displayName ?? "-"}
                                 </TooltipContent>
                               </Tooltip>
                             </TooltipProvider>
@@ -751,7 +784,7 @@ export default function ChatCustomerInfo({
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                DeleteSupport(spl.id);
+                                DeleteSupport(spl.participantId);
                               }}
                               className="absolute -top-1 -right-1 bg-white border border-gray-300 rounded-full p-1 shadow hover:bg-gray-100 transition"
                             >
@@ -845,17 +878,11 @@ export default function ChatCustomerInfo({
                   ผู้รับผิดชอบรอง
                 </p>
                 <div className="flex flex-wrap gap-2 mb-2">
-                  {/* {currentCustomer &&
-                    currentCustomer.supports &&
-                    currentCustomer.supports.filter((spl) => !spl.isMain) */}
                   {displayed.length > 0 &&
-                    // currentCustomer.supports
-                    //   .filter((spl) => !spl.isMain)
-
-                    displayed.map((user, i) => (
+                    displayed.map((user: any, i: any) => (
                       <div
                         className="relative inline-block"
-                        key={`secondary-spl-${user?.userId ?? `unknown-${i}`}`}
+                        key={`secondary-spl-${user?.participantId ?? `unknown-${i}`}`}
                       >
                         <TooltipProvider>
                           <Tooltip>
@@ -863,7 +890,7 @@ export default function ChatCustomerInfo({
                               <button
                                 onClick={() =>
                                   navigate(
-                                    `/users/${user?.userId ?? "unknown"}`
+                                    `/users/${user?.participantId ?? "unknown"}`
                                   )
                                 }
                               >
@@ -871,19 +898,17 @@ export default function ChatCustomerInfo({
                                   src={
                                     user?.imageUrl ||
                                     `https://api.dicebear.com/9.x/initials/svg?seed=${
-                                      user?.userId ?? "unknown"
+                                      user?.id ?? "unknown"
                                     }`
                                   }
-                                  alt={`secondary-spl-${
-                                    user?.userId ?? "unknown"
-                                  }`}
+                                  alt={`secondary-spl-${user?.participantId ?? "unknown"}`}
                                   className={`w-[35px] h-[35px] rounded-full object-cover`}
                                   notShowPreview
                                 />
                               </button>
                             </TooltipTrigger>
                             <TooltipContent>
-                              {user?.fullName ?? "-"}
+                              {user?.displayName ?? "-"}
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
@@ -892,7 +917,7 @@ export default function ChatCustomerInfo({
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            DeleteSupport(user.id);
+                            DeleteSupport(user.participantId);
                           }}
                           className="absolute -top-1 -right-1 bg-white border border-gray-300 rounded-full p-1 shadow hover:bg-gray-100 transition"
                         >
@@ -920,10 +945,10 @@ export default function ChatCustomerInfo({
                         <button
                           type="button"
                           onClick={() => setIsPopoverOpen(true)}
-                          className="rounded-full object-cover"
+                          className="rounded-full object-cover cursor-pointer"
                           disabled={isCreatingSupport}
                         >
-                          <CirclePlus className="w-9 h-9 text-gray-300" />
+                          <CirclePlus className="w-9 h-9 text-gray-300 cursor-pointer" />
                         </button>
                       </PopoverTrigger>
 
@@ -991,7 +1016,51 @@ export default function ChatCustomerInfo({
               </div>
             </div>
 
-            {/* Note Section */}
+            {/* TAG UI START */}
+            <div className="px-1">
+              <Separator className="mt-2 mb-2" />
+
+              {tags && tags.length ? (
+                <>
+                  <h2>แท็กลูกค้า</h2>
+                  <div className="pb-0 mt-2 px-2">
+                    <div className="gap-2 flex flex-row flex-wrap">
+                      {tags.map((item: any) => {
+                        return (
+                          <GlobalTagsBadge
+                            key={item.id}
+                            value={item.name}
+                            fontSize={10}
+                            paddingX={1.5}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="px-2">
+                  <h2>แท็กลูกค้า</h2>
+                  <div className="flex justify-center p-4">
+                    <span className="text-sm transition-colors break-words text-slate-400 italic">
+                      ยังไม่มีข้อมูล
+                    </span>
+                  </div>
+                </div>
+              )}
+              <GlobalButton
+                className="mt-4"
+                key="sync-ai"
+                type="button"
+                onClick={() => setShowTagManager(true)}
+                variant="secondary"
+                icon={<PlusIcon />}
+                label={<span className="hidden sm:inline">แก้ไขแท็ก</span>}
+              />
+              <Separator className="mt-2 mb-2" />
+            </div>
+            {/* TAG UI END*/}
+
             <Tabs defaultValue="note" onValueChange={(v) => setActiveTab(v)}>
               <ScrollArea className="h-[40px]">
                 <TabsList className="w-full">
@@ -1011,6 +1080,7 @@ export default function ChatCustomerInfo({
 
               <TabsContent value="note">
                 <NoteLists
+                  selectedRoom={selectedRoom}
                   customer={currentCustomer}
                   refetchCustomer={refetchCustomer}
                 />
@@ -1114,7 +1184,7 @@ export default function ChatCustomerInfo({
                   </div>
                 </div>
 
-                <div className="space-y-3  pt-4">
+                <div className="space-y-3">
                   <p className="text-sm text-muted-foreground mb-2 font-semibold">
                     รายการสินค้าในระบบ
                   </p>
@@ -1124,7 +1194,7 @@ export default function ChatCustomerInfo({
                     onChange={(e) => setSearch(e.target.value)}
                   />
 
-                  <ScrollArea className="h-[calc(100vh-480px)] rounded-md border p-2 bg-white pb-[35px]">
+                  <ScrollArea className="h-[calc(100vh-560px)] rounded-md border p-2 bg-white pb-[35px]">
                     <ul className="space-y-2">
                       {productsLoading ? (
                         <div className="space-y-2">
@@ -1244,7 +1314,7 @@ export default function ChatCustomerInfo({
               </TabsContent>
 
               <TabsContent value="settingAI">
-                <div className="space-y-3 mt-4 h-1/2 overflow-auto">
+                <div className="space-y-3 h-[calc(100vh-450px)] overflow-auto">
                   <div className="flex flex-row justify-between items-center w-full">
                     <h3 className="text-sm font-semibold mt-1">พูดคุยกับ AI</h3>
 
@@ -1260,8 +1330,27 @@ export default function ChatCustomerInfo({
                     </Button>
                   </div>
 
-                  {/* {isFirstTimeAI ? ( */}
-                  {isFirstTimeAI &&
+                  {isFirstTimeAI && !chatRoomAssistantId ? (
+                    <HeroSearch onInputChange={handleFirstTimeAISearch} />
+                  ) : (
+                    <ChatMessagesWithAI
+                      customerId={customer?.id}
+                      chatRoomId={chatRoomAssistantId}
+                      autoScroll={autoScroll}
+                      setAutoScroll={setAutoScroll}
+                      searchPrompt={firstTimeMessage}
+                      isAILoading={isPendingAI}
+                    />
+                  )}
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </div>
+      </aside>
+
+      {/* {isFirstTimeAI ? ( */}
+      {/* {isFirstTimeAI &&
                   currentCustomer &&
                   !currentCustomer.chatRoomAssistantId ? (
                     <AIInsightExampleRender
@@ -1277,13 +1366,18 @@ export default function ChatCustomerInfo({
                       searchPrompt={firstTimeMessage}
                       isAILoading={isPendingAI}
                     />
-                  )}
-                </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-        </div>
-      </aside>
+                  )} */}
+
+      {showTagManager && (
+        <ChatCustomerTags
+          title="แก้ไขแท็ก"
+          selectedTags={selectedTags}
+          availableTags={availableTags}
+          onTagsChange={setSelectedTags}
+          onClose={() => setShowTagManager(false)}
+          handleSubmit={handleSubmit}
+        />
+      )}
 
       <OrderViewModal
         open={isCheckStatusOpen}
@@ -1294,6 +1388,7 @@ export default function ChatCustomerInfo({
         open={AIOpen}
         onOpenChange={setAIOpen}
         customer={dataFromAI}
+        noSyncBtn={true}
       />
 
       <AboutCustomer
@@ -1314,93 +1409,6 @@ export default function ChatCustomerInfo({
           customerOrders?.find((co) => co.id === viewOrderDetail)
         }
       />
-
-      {/* <Dialog open={openAiSetting} onOpenChange={setOpenAiSetting}>
-        <DialogContent className="sm:max-w-lg w-full max-h-[70vh] overflow-auto p-6 rounded-lg">
-          <DialogHeader>
-            <DialogTitle>การตั้งค่า AI</DialogTitle>
-          </DialogHeader>
-
-          <div className="flex flex-col space-y-2 mt-4 max-h-[50vh] overflow-y-auto">
-            <div className="flex items-center justify-between mt-4 mb-3">
-              <Label htmlFor="ai-enabled" className="text-sm">
-                เปิดใช้งานตลอดเวลา
-              </Label>
-              <Switch
-                id="ai-enabled"
-                checked={aiEnabled}
-                onCheckedChange={setAiEnabled}
-              />
-            </div>
-
-            <div className="flex items-center justify-between mt-4 mb-3">
-              <Label htmlFor="ai-enabled-condition" className="text-sm">
-                ใช้งาน AI ตามเงื่อนไข
-              </Label>
-              <Switch
-                id="ai-enabled-condition"
-                checked={aiEnabledWithCondition}
-                onCheckedChange={(state) => {
-                  setAiEnabledWithCondition(state);
-
-                  if (state === true) {
-                    setAiEnabled(false);
-                  }
-                }}
-              />
-            </div>
-
-            <div
-              className={cn(
-                "mt-4 space-y-4 transition-all",
-                !aiEnabledWithCondition && "opacity-50 pointer-events-none"
-              )}
-            >
-              <div className="flex flex-col gap-2">
-                <Label className="text-sm">ช่วงเวลาที่ให้ AI ตอบ</Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="time"
-                    value={aiStartTime || ""}
-                    onChange={(e) => setAiStartTime(e.target.value)}
-                    className="w-[120px]"
-                    disabled={!aiEnabledWithCondition}
-                  />
-                  <span className="text-sm">ถึง</span>
-                  <Input
-                    type="time"
-                    value={aiEndTime || ""}
-                    onChange={(e) => setAiEndTime(e.target.value)}
-                    className="w-[120px]"
-                    disabled={!aiEnabledWithCondition}
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <Label className="text-sm">
-                  หากไม่มีการตอบกลับจากเซลภายใน (ชั่วโมง)
-                </Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="time"
-                    value={aiWaitTime || ""}
-                    onChange={(e) => setAiWaitTime(e.target.value)}
-                    className="w-[120px]"
-                    disabled={!aiEnabledWithCondition}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <GlobalButton
-              label="บันทึกการตั้งค่า AI"
-              className="mt-8 mb-8"
-              onClick={handleChangeAIConfig}
-            />
-          </div>
-        </DialogContent>
-      </Dialog> */}
 
       <Dialog open={openAiSetting} onOpenChange={setOpenAiSetting}>
         <DialogContent className="sm:max-w-lg w-full max-h-[70vh] overflow-auto p-6 rounded-lg">
@@ -1632,7 +1640,7 @@ export default function ChatCustomerInfo({
                 ยังไม่มีผู้รับผิดชอบรอง
               </div>
             ) : (
-              secondarySupports.map((item) => (
+              secondarySupports.map((item: any) => (
                 <div key={item.id} className="flex items-center gap-3">
                   <GlobalImage
                     src={

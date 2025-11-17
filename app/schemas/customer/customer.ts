@@ -147,3 +147,14 @@ export type CustomerUpdateChatDetailsAndTags = {
   chatDetails: CustomerUpdateChatDetails;
   tags: CustomerUpdateTags;
 };
+
+export type CustomerCreateTag = {
+  active?: boolean;
+  name?: string;
+  code?: string;
+  color?: string;
+  description?: string;
+  priority?: number;
+  ordering?: number;
+  note?: string;
+};

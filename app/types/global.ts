@@ -18,9 +18,13 @@ export type Item =
   | null;
 
 export enum MessageLabelType {
-  SENDTEXT = "ส่งข้อความ", //"send-text",
+  SENDTEXT = "ส่งข้อความ",
   SENDIMAGE = "ส่งรูปภาพ",
   SENDSTICKER = "ส่งสติ้กเกอร์",
+  SENDAUDIO = "ส่งเสียง",
+  SENDVIDEO = "ส่งวิดีโอ",
+  SENDFILE = "ส่งไฟล์",
+  SENDLOCATION = "ส่งตำแหน่งที่อยู่",
 }
 
 //line message type

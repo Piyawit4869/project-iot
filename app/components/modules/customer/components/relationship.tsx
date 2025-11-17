@@ -1,18 +1,16 @@
-//TODO: FIX BUILD
-
 import React from "react";
 
 import { useCustomerViewModel } from "../viewmodels/useCustomerViewModel";
 import type { CustomerRelationshipFormProps } from "~/schemas/customer/customer";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
-import { DualProgressCircle } from "~/components/shared/dual-progress-circle";
 import { NotesCard } from "./cardZone/NoteCard";
 import { RemarkCard } from "./cardZone/RemarkCard";
 import { TagsCard } from "./cardZone/TagsCard";
 import { AICard } from "./cardZone/AiCard";
 import { useGetAnalyzeCustomer } from "~/api/client/customer/useCustomer";
 import { useParams } from "react-router";
+import { PieChart } from "~/components/shared/charts/pie-chart";
 
 export const RelationshipCard: React.FC<CustomerRelationshipFormProps> = ({
   form,
@@ -60,7 +58,7 @@ export const RelationshipCard: React.FC<CustomerRelationshipFormProps> = ({
             </>
           ) : (
             <div className="flex justify-center">
-              <DualProgressCircle chartData={analyzeCustomer} />
+              <PieChart initData={analyzeCustomer} />
             </div>
           )}
         </CardContent>
@@ -87,13 +85,13 @@ export const RelationshipCard: React.FC<CustomerRelationshipFormProps> = ({
         form={form}
         className="min-h-50 h-auto"
       />
-      <AICard
+      {/* <AICard
         loading={loading ?? false}
         isEdit={isEdit ?? false}
         className="min-h-50"
         customers={customerAISetting}
         refetchCustomer={fetchCustomercAISetting}
-      />
+      /> */}
     </div>
   );
 };

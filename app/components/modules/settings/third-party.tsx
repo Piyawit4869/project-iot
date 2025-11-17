@@ -158,10 +158,16 @@ export const ThirdParty: React.FC<ThirdPartyProps> = (props) => {
       const isLine = task.platform === "line";
 
       if (task?.isConnected) {
+        // navigate(
+        //   isLine
+        //     ? `/setting-organization/third-party/line/${task.refId}`
+        //     : `/setting-organization/third-party/ai/${task.refId}`
+        // );
+
         navigate(
           isLine
-            ? `/setting-organization/third-party/line/${task.refId}`
-            : `/setting-organization/third-party/ai/${task.refId}`
+            ? `/setting-organization/third-party/line?id=${task.refId}`
+            : `/setting-organization/third-party/ai?id=${task.refId}`
         );
       } else {
         if (isLine) {

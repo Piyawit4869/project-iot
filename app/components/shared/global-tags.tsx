@@ -144,8 +144,23 @@ export function GlobalTagsBadge({
     : badgeVariants.default;
 
   return (
+    // <Badge
+    //   className={`inline-flex items-center justify-center rounded-xl border py-1 px-${paddingX} text-[${fontSize}px] font-medium w-fit whitespace-nowrap shrink-0 gap-1 transition-colors dark:bg-gray-700 ${colorTag}`}
+    // >
+    //   {icon} {label}
+    //   {onClick && (
+    //     <span
+    //       className="cursor-pointer hover:text-red-500 ml-1"
+    //       onClick={onClick}
+    //     >
+    //       <X size={14} />
+    //     </span>
+    //   )}
+    // </Badge>
     <Badge
-      className={`inline-flex items-center justify-center rounded-xl border py-1 px-${paddingX} text-[${fontSize}px] font-medium w-fit whitespace-nowrap shrink-0 gap-1 transition-colors dark:bg-gray-700 ${colorTag}`}
+      className={`inline-flex items-center justify-start rounded-xl border py-1 px-${paddingX} 
+    text-[${fontSize}px] font-medium w-fit gap-1 transition-colors dark:bg-gray-700 
+    ${colorTag} whitespace-normal break-words`}
     >
       {icon} {label}
       {onClick && (

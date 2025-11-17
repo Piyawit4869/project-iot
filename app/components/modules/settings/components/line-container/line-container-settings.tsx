@@ -1,5 +1,3 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, Save, ShieldCheck, User2 } from "lucide-react";
 import React from "react";
@@ -30,12 +28,15 @@ import {
 } from "~/api/client/settings";
 import { useSearchParams, useNavigate, useParams } from "react-router";
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
+import EditReplyMessageForm from "../connect-line/edit-reply-message-form";
 
 export const LineContainerSettings: React.FC = () => {
   const [sp] = useSearchParams();
   const navigate = useNavigate();
   const params = useParams();
-  const id = (params?.id as string) ?? "";
+
+  // const id = (params?.id as string) ?? "";
+  const id = sp.get("id") ?? "";
 
   const { mutate: UpdateConnectionLine } = useUpdateConnectionLine(id);
   const { data } = useGetConnectionLine(id ?? "");
@@ -59,7 +60,7 @@ export const LineContainerSettings: React.FC = () => {
       name: "",
       channelId: "",
       channelSecret: "",
-      accessToken: "",
+      channelAccessToken: "",
     },
   });
 
@@ -109,7 +110,7 @@ export const LineContainerSettings: React.FC = () => {
         name: data?.name ?? "",
         channelId: data?.channelId ?? "",
         channelSecret: data?.channelSecret ?? "",
-        accessToken: data?.accessToken ?? "",
+        channelAccessToken: data?.channelAccessToken ?? "",
       });
     }
   }, [data, form]);
@@ -156,16 +157,16 @@ export const LineContainerSettings: React.FC = () => {
         buttons={headerButtons}
       />
 
-      <Form {...form}>
-        <form id="config-line" onSubmit={form.handleSubmit(handleOnSubmit)}>
-          <Tabs value={tab} onValueChange={handleChangeTab} className="mt-4">
-            <TabsList className="mb-4">
-              <TabsTrigger value="config-line">ข้อมูล</TabsTrigger>
-              <TabsTrigger value="massage-line">ข้อความตอบกลับ</TabsTrigger>
-              <TabsTrigger value="config-card">การ์ดเมสเสจ</TabsTrigger>
-            </TabsList>
+      <Tabs value={tab} onValueChange={handleChangeTab} className="mt-4">
+        <TabsList className="mb-4">
+          <TabsTrigger value="config-line">ข้อมูล</TabsTrigger>
+          <TabsTrigger value="massage-line">ข้อความตอบกลับ</TabsTrigger>
+          <TabsTrigger value="config-card">การ์ดเมสเสจ</TabsTrigger>
+        </TabsList>
 
-            <TabsContent value="config-line">
+        <TabsContent value="config-line">
+          <Form {...form}>
+            <form id="config-line" onSubmit={form.handleSubmit(handleOnSubmit)}>
               <div className="flex w-full flex-col space-y-6 bg-[var(--background)] text-[var(--foreground)]">
                 <div className="rounded-xl border border-[var(--border)] bg-[var(--card)]">
                   <div className="flex flex-col items-center justify-center py-10">
@@ -246,7 +247,7 @@ export const LineContainerSettings: React.FC = () => {
                         />
 
                         <FormField
-                          name="accessToken"
+                          name="channelAccessToken"
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>
@@ -268,37 +269,37 @@ export const LineContainerSettings: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </TabsContent>
+            </form>
+          </Form>
+        </TabsContent>
 
-            <TabsContent value="massage-line">
-              {viewFromUrl === "list" && (
-                <TableMassage onCreate={goCreate} onEdit={goEdit} />
-              )}
+        <TabsContent value="massage-line">
+          {viewFromUrl === "list" && (
+            <TableMassage onCreate={goCreate} onEdit={goEdit} />
+          )}
 
-              {viewFromUrl === "create" && (
-                <ReplyMessageForm
-                  mode="create"
-                  onCancel={goList}
-                  onSaved={goList}
-                />
-              )}
+          {viewFromUrl === "create" && (
+            <ReplyMessageForm
+              mode="create"
+              onCancel={goList}
+              onSaved={goList}
+            />
+          )}
 
-              {viewFromUrl === "edit" && (
-                <ReplyMessageForm
-                  mode="edit"
-                  replyId={sp.get("replyId") ?? ""}
-                  onCancel={goList}
-                  onSaved={goList}
-                />
-              )}
-            </TabsContent>
+          {viewFromUrl === "edit" && (
+            <EditReplyMessageForm
+              mode="edit"
+              replyId={sp.get("subId") ?? ""}
+              onCancel={goList}
+              onSaved={goList}
+            />
+          )}
+        </TabsContent>
 
-            <TabsContent value="config-card">
-              <MessageCardForm />
-            </TabsContent>
-          </Tabs>
-        </form>
-      </Form>
+        <TabsContent value="config-card">
+          <MessageCardForm />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

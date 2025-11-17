@@ -1,4 +1,6 @@
 import React from "react";
+import { useRouteLoaderData } from "react-router";
+
 import { GlobalImage } from "~/components/shared/global-image";
 import { cn } from "~/lib/utils";
 import { useChat } from "~/providers/chat/useChat";
@@ -7,23 +9,14 @@ import {
   useChatRoom,
   type ChatRoom,
 } from "~/providers/chat/useChatRoom";
-import { useRouteLoaderData } from "react-router";
 import { socketConfig } from "~/lib/sockets";
-import { Button } from "~/components/ui/button";
 import {
-  AudioLines,
   CheckCircle,
-  ChevronDown,
   Clock,
   FileUp,
   Inbox,
-  Mail,
   Menu,
   MessagesSquare,
-  OctagonAlert,
-  Search,
-  User,
-  X,
 } from "lucide-react";
 import { TagLabel } from "~/components/shared/tag-label";
 import { DateTimeStampChatDisplay } from "~/utils/date-format";
@@ -70,11 +63,12 @@ export default function ChatlistSidebar({
     currentCustomer,
   } = details;
 
-  const { search, setSearch, filterRoom } = useChatRoom();
+  const { search, setSearch, select, setSelect, filterRoom, meta } =
+    useChatRoom();
 
   const [allRooms, setAllRooms] = React.useState<ChatRoom[]>([]);
 
-  const { currentRoomId } = useChat();
+  const { currentRoomId, addMessageAI } = useChat();
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
   const handleScroll = () => {
@@ -90,6 +84,10 @@ export default function ChatlistSidebar({
     setSearch("");
     setInputOpen(false);
   }, [setInputOpen, setSearch]);
+
+  const handleClickMenu = (action: string) => {
+    setSelect(action);
+  };
 
   React.useEffect(() => {
     const el = scrollRef.current;
@@ -112,7 +110,21 @@ export default function ChatlistSidebar({
     }
 
     socket.on("rooms", (room: any) => {
+      console.log("rooms", room);
+
+      const audio = new Audio("/sounds/level-up.mp3");
+      audio.play();
+
       setAllRooms((prev) => mergeRoomImmutable(prev, room));
+
+      if (room.chatRoomType === "assistant") {
+        addMessageAI({
+          ...room,
+          imageUrl:
+            room.imageUrl || `https://ui-avatars.com/api/?name=${room.sender}`,
+          streaming: true,
+        });
+      }
     });
 
     return () => {
@@ -162,14 +174,15 @@ export default function ChatlistSidebar({
                 />
                 <button
                   onClick={handleCloseSearch}
-                  className="px-2 py-1 bg-gray-200 rounded-md text-sm hover:bg-gray-300 transition-colors">
+                  className="px-2 py-1 bg-gray-200 rounded-md text-sm hover:bg-gray-300 transition-colors cursor-pointer"
+                >
                   ✕
                 </button>
               </div>
             ) : (
               <div className="flex items-center justify-between gap-4 transition-all duration-200">
                 <PopoverTrigger asChild>
-                  <button className="flex items-center gap-1">
+                  <button className="flex items-center gap-1 cursor-pointer">
                     <Menu className="w-4 h-4" />
                     <p className="text-sm font-semibold">ทั้งหมด</p>
                   </button>
@@ -177,7 +190,8 @@ export default function ChatlistSidebar({
 
                 <div
                   className="text-gray-400 border h-[30px] rounded-md px-3 py-1 text-sm bg-background w-1/2 transition-all duration-200 focus:outline-none focus:ring-0 focus:border-gray-300"
-                  onClick={() => setInputOpen(true)}>
+                  onClick={() => setInputOpen(true)}
+                >
                   ค้นหา
                 </div>
               </div>
@@ -188,56 +202,96 @@ export default function ChatlistSidebar({
 
           <PopoverContent
             align="start"
-            className="p-0 w-64 max-h-none overflow-visible">
+            className="p-0 w-64 max-h-none overflow-visible"
+          >
             <Command className="max-h-none overflow-visible">
               <CommandList className="max-h-none overflow-visible">
                 <CommandGroup heading="">
-                  <CommandItem className="flex justify-between items-center">
+                  <CommandItem
+                    className={`
+    flex justify-between items-center cursor-pointer 
+    ${select === "all" ? "bg-orange-50 font-semibold" : ""}
+  `}
+                    onSelect={() => handleClickMenu("all")}
+                  >
                     <div className="flex items-center gap-2">
                       <Inbox className="w-4 h-4 text-gray-500" /> ทั้งหมด
                     </div>
                     <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
-                      3
+                      {meta?.statusSummary?.totalUnread +
+                        meta?.statusSummary?.totalProcess +
+                        meta?.statusSummary?.totalDone}
                     </span>
                   </CommandItem>
                   <CommandSeparator />
-                  <CommandItem className="flex justify-between items-center">
+                  {/* <CommandItem className="flex justify-between items-center cursor-pointer">
                     <div className="flex items-center gap-2">
                       <Mail className="w-4 h-4 text-gray-500" /> อินบ็อกซ์
                     </div>
                     <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
                       3
                     </span>
-                  </CommandItem>
-                  <CommandItem className="flex justify-between items-center">
+                  </CommandItem> */}
+                  <CommandItem
+                    className={`
+    flex justify-between items-center cursor-pointer 
+    ${select === "unread" ? "bg-orange-50 font-semibold" : ""}
+  `}
+                    onSelect={() => handleClickMenu("unread")}
+                  >
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4 text-gray-500" /> ยังไม่อ่าน
                     </div>
                     <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
-                      3
+                      {meta?.statusSummary?.totalUnread}
                     </span>
                   </CommandItem>
-                  <CommandItem className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-gray-500" /> ดำเนินการ
+                  <CommandItem
+                    className={`
+    flex justify-between items-center cursor-pointer 
+    ${select === "isProcess" ? "bg-orange-50 font-semibold" : ""}
+  `}
+                    onSelect={() => handleClickMenu("isProcess")}
+                  >
+                    <div className="flex items-center gap-2">
+                      <MessagesSquare className="w-4 h-4 text-gray-500" />
+                      ต้องดำเนินการ
+                    </div>
+                    <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
+                      {meta?.statusSummary?.totalProcess}
+                    </span>
                   </CommandItem>
-                  <CommandItem className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-gray-500" /> เสร็จสิ้น
+
+                  <CommandItem
+                    className={`
+    flex justify-between items-center cursor-pointer 
+    ${select === "done" ? "bg-orange-50 font-semibold" : ""}
+  `}
+                    onSelect={() => handleClickMenu("done")}
+                  >
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-gray-500" />{" "}
+                      ดำเนินการแล้ว
+                    </div>
+                    <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
+                      {meta?.statusSummary?.totalDone}
+                    </span>
                   </CommandItem>
                 </CommandGroup>
                 <CommandSeparator />
 
                 <CommandGroup>
-                  <CommandItem className="flex items-center gap-2">
+                  <CommandItem className="flex items-center gap-2 cursor-pointer">
                     <FileUp className="w-4 h-4 text-gray-500" /> นำออกข้อมูล
                   </CommandItem>
                   <CommandSeparator />
-                  <CommandItem className="flex items-center gap-2">
+                  {/* <CommandItem className="flex items-center gap-2 cursor-pointer">
                     <User className="w-4 h-4 text-gray-500" /> รับผิดชอบ
                   </CommandItem>
-                  <CommandSeparator />
-                  <CommandItem className="flex items-center gap-2">
+                  <CommandSeparator /> */}
+                  {/* <CommandItem className="flex items-center gap-2 cursor-pointer">
                     <OctagonAlert className="w-4 h-4 text-gray-500" /> สแปม
-                  </CommandItem>
+                  </CommandItem> */}
                 </CommandGroup>
               </CommandList>
             </Command>
@@ -248,26 +302,28 @@ export default function ChatlistSidebar({
           (search !== "" ? (
             filterRoom &&
             filterRoom.length > 0 &&
-            filterRoom.map((room: any, i: number) => (
-              <ChatItem
-                key={room?.id + i}
-                roomId={room?.id ?? ""}
-                selectedRoom={currentRoomId}
-                name={room?.name}
-                message={room?.latestMessage?.messageLabel ?? ""}
-                time={room?.latestMessage?.createdAt ?? ""}
-                image={room?.imageUrl || ""}
-                unread={room?.unreadMessageCount > 0}
-                countUnreadMessage={room?.unreadMessageCount || 0}
-                roomDetail={room}
-                currentCustomer={currentCustomer}
-                onChatClick={() => {
-                  handleChangeSelectedRoom(room);
-                  setSidebarOpen(false);
-                  setOnSelectRoom(true);
-                }}
-              />
-            ))
+            filterRoom.map((room: any, i: number) => {
+              return (
+                <ChatItem
+                  key={room?.id + i}
+                  roomId={room?.id ?? ""}
+                  selectedRoom={currentRoomId}
+                  name={room?.name}
+                  message={room?.latestMessage?.message ?? ""}
+                  time={room?.latestMessage?.createdAt ?? ""}
+                  image={room?.imageUrl || ""}
+                  unread={room?.unreadMessageCount > 0}
+                  countUnreadMessage={room?.unreadMessageCount || 0}
+                  roomDetail={room}
+                  currentCustomer={currentCustomer}
+                  onChatClick={() => {
+                    handleChangeSelectedRoom(room);
+                    setSidebarOpen(false);
+                    setOnSelectRoom(true);
+                  }}
+                />
+              );
+            })
           ) : (
             <React.Fragment>
               <div className="flex flex-col gap-3 w-full mt-2 px-3 pb-2">
@@ -312,7 +368,8 @@ export default function ChatlistSidebar({
                   className="text-sm font-semibold hover:text-gray-700"
                   onClick={() =>
                     console.log("ปิดใช้งานการบันทึกอัตโนมัติ clicked")
-                  }>
+                  }
+                >
                   <p className="text-xs font-semibold">
                     ปิดใช้งานการบันทึกอัตโนมัติ
                   </p>
@@ -320,7 +377,8 @@ export default function ChatlistSidebar({
                 <p className="text-xs font-semibold">|</p>
                 <button
                   className="text-sm font-semibold hover:text-gray-700"
-                  onClick={() => console.log("ลบทั้งหมด clicked")}>
+                  onClick={() => console.log("ลบทั้งหมด clicked")}
+                >
                   <p className="text-xs font-semibold">ลบทั้งหมด</p>
                 </button>
               </div>
@@ -332,17 +390,18 @@ export default function ChatlistSidebar({
         <div
           className="flex-1 overflow-y-auto"
           ref={scrollRef}
-          onScroll={handleScroll}>
+          onScroll={handleScroll}
+        >
           {isLoading ? (
             <LoadingSkeleton />
-          ) : allRooms.length > 0 ? (
-            allRooms.map((room: any, i: number) => (
+          ) : filterRoom.length > 0 ? (
+            filterRoom.map((room: any, i: number) => (
               <ChatItem
                 key={room?.id + i}
                 roomId={room?.id ?? ""}
                 selectedRoom={currentRoomId}
                 name={room?.name}
-                message={room?.latestMessage?.messageLabel ?? ""}
+                message={room?.latestMessage?.message ?? ""}
                 time={room?.latestMessage?.createdAt ?? ""}
                 image={room?.imageUrl || ""}
                 unread={room?.unreadMessageCount > 0}
@@ -416,7 +475,8 @@ function ChatItem({
       onClick={() => {
         setCurrentRoomId?.(roomId);
         onChatClick?.();
-      }}>
+      }}
+    >
       <div className="relative w-12 h-12 shrink-0">
         <GlobalImage
           src={!image || image === "" ? fallbackImage : image}
@@ -427,7 +487,8 @@ function ChatItem({
         {!autoReadMsg && countUnreadMessage > 0 && (
           <span
             className="absolute top-0 right-0 inline-grid place-items-center min-w-5 h-5 px-1 rounded-full bg-red-500 text-white text-xs font-medium"
-            aria-hidden>
+            aria-hidden
+          >
             {countUnreadMessage}
           </span>
         )}
@@ -451,7 +512,8 @@ function ChatItem({
                   unread && "font-medium",
                   ((roomDetail && roomDetail.done) || roomDetail.isProcess) &&
                     "truncate w-[100px]"
-                )}>
+                )}
+              >
                 {message}
               </p>
 

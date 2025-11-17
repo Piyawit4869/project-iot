@@ -4,11 +4,12 @@ import { ApiConfig } from "~/api/config";
 import type { CustomerSupportFormValues } from "~/schemas/customer/support/support";
 
 export const fetchCreateCustomerSupport = async (
+  chatRoomId: string,
   payload: CustomerSupportFormValues
 ) => {
   try {
     const res = await ApiConfig.post(
-      `/crud/customers/supports/create`,
+      `/chats/add/participant/${chatRoomId}`,
       payload
     );
     return res.data;
@@ -17,9 +18,15 @@ export const fetchCreateCustomerSupport = async (
   }
 };
 
-export const fetchDeleteCustomerSupport = async (id: string) => {
+export const fetchDeleteCustomerSupport = async (
+  chatRoomId: string,
+  payload: CustomerSupportFormValues
+) => {
   try {
-    const res = await ApiConfig.delete(`/crud/customers/supports/delete/${id}`);
+    const res = await ApiConfig.post(
+      `/chats/remove/participant/${chatRoomId}`,
+      payload
+    );
     return res.data;
   } catch (error) {
     throw error;

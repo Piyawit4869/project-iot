@@ -63,26 +63,26 @@ export type CustomerType = {
 };
 
 export const customerNoteSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string(),
   note: z.string(),
-  created_at: z.string().datetime(),
-  updated_at: z.string().datetime(),
+  created_at: z.string(),
+  updated_at: z.string(),
   user_name: z.string(),
 });
 
 export const customerRequestResponseSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string().optional(),
 
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
-  deletedAt: z.string().datetime().nullable(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
+  deletedAt: z.string().nullable().optional(),
 
-  createdBy: z.string().nullable(),
-  createdById: z.string().uuid().nullable(),
-  updatedBy: z.string().nullable(),
-  updatedById: z.string().uuid().nullable(),
-  deletedBy: z.string().nullable(),
-  deletedById: z.string().uuid().nullable(),
+  createdBy: z.string().nullable().optional(),
+  createdById: z.string().nullable().optional(),
+  updatedBy: z.string().nullable().optional(),
+  updatedById: z.string().nullable().optional(),
+  deletedBy: z.string().nullable().optional(),
+  deletedById: z.string().nullable().optional(),
 
   customerStatus: z
     .enum([
@@ -92,24 +92,34 @@ export const customerRequestResponseSchema = z.object({
       "at_risk",
       "churned",
     ])
-    .nullable(),
-  activityType: z.string().nullable(),
-  customerName: z.string().nullable(),
-  consentPii: z.boolean().nullable(),
-  taxId: z.string().nullable(),
-  contactNumber: z.string().nullable(),
-  email: z.email().nullable(),
-  inspector: z.string().nullable(),
+    .nullable()
+    .optional(),
+  activityType: z.string().nullable().optional(),
+  customerName: z.string().nullable().optional(),
+  consentPii: z.boolean().nullable().optional(),
+  taxId: z.string().nullable().optional(),
+  contactNumber: z.string().nullable().optional(),
+  email: z.string().nullable().optional(),
+  inspector: z.string().nullable().optional(),
 
-  eventKeyDate: z.string().datetime().nullable(),
-  eventSetupDate: z.string().datetime().nullable(),
+  eventKeyDate: z.string().nullable().optional(),
+  eventSetupDate: z.string().nullable().optional(),
 
-  notes: z.array(customerNoteSchema),
-  personality: z.string().nullable(),
-  summary: z.string(),
+  notes: z.array(customerNoteSchema).optional(),
+  personality: z.string().nullable().optional(),
+  summary: z.string().optional(),
 
-  customerId: z.string().uuid(),
-  branchId: z.string().uuid(),
+  customerId: z.string().optional(),
+  branchId: z.string().optional(),
+
+  // ✅ ฟิลด์ใหม่จาก infoItems
+  contactName: z.string().nullable().optional(),
+  companyName: z.string().nullable().optional(),
+  brandNameEn: z.string().nullable().optional(),
+  orderQuantity: z.string().nullable().optional(),
+  budgetRange: z.string().nullable().optional(),
+  etdDate: z.string().nullable().optional(),
+  contactPhone: z.string().nullable().optional(),
 });
 
 export type CustomerRequestResponse = z.infer<
