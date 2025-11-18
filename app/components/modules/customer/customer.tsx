@@ -119,7 +119,6 @@ export default function Customer() {
         ]}
       />
 
-
       <Tabs
         value={customerTypeTab}
         onValueChange={(val) => setCustomerTypeTab(val)} 
