@@ -1,8 +1,5 @@
 "use client";
 
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Mail,
   Phone,
@@ -11,7 +8,10 @@ import {
   Landmark,
   Trash2,
 } from "lucide-react";
-import { UserProfileCardProps } from "../constants/type";
+import type { UserProfileCardProps } from "../type";
+import { Card, CardContent } from "~/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
 
 export default function UserProfileCard({
   data,

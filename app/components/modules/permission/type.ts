@@ -1,9 +1,9 @@
-import {
+import type { ReactNode } from "react";
+import type { UseFormReturn } from "react-hook-form";
+import type {
   PermissionControlValues,
   PermissionValuesData,
-} from "@/schemas/permission-control/PermissionControl";
-import { ReactNode } from "react";
-import { UseFormReturn } from "react-hook-form";
+} from "~/schemas/permission-control/PermissionControl";
 
 export interface PermissionControlFormValues {
   name: string;

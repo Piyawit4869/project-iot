@@ -1,20 +1,19 @@
-import {
-  Input,
-  FormField,
-  FormItem,
-  FormControl,
-  FormMessage,
-  Switch,
-  Checkbox,
-} from "@/components/ui";
-
 import React, { useState } from "react";
+import type { PermissionControlFormCreateProps } from "../type";
 import {
   PermissionAction,
   PermissionActionLabel,
   permissions,
-} from "../constants/iniData";
-import { PermissionControlFormCreateProps } from "../constants/type";
+} from "../iniData";
+import { Input } from "~/components/ui/input";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "~/components/ui/form";
+import { Switch } from "~/components/ui/switch";
+import { Checkbox } from "~/components/ui/checkbox";
 // import { useGetAllUsers } from "@/actions/permission-control/client/useGetPermissionControl";
 // import { StarRating } from "@/components/shared/StarRating";
 

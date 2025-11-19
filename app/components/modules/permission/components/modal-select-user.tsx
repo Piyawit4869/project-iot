@@ -6,14 +6,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import Image from "next/image";
-import { useState } from "react";
-import { ModalUserProps } from "../constants/type";
+} from "~/components/ui/dialog";
+import type { ModalUserProps } from "../type";
+import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
+import { ScrollArea } from "~/components/ui/scroll-area";
+import { Checkbox } from "~/components/ui/checkbox";
+import React from "react";
 
 export default function ModalUser({
   users = [],
@@ -23,8 +22,8 @@ export default function ModalUser({
   onSave,
   triggerElement,
 }: ModalUserProps) {
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
+  const [open, setOpen] = React.useState(false);
+  const [search, setSearch] = React.useState("");
 
   const userList = Array.isArray(users) ? users : [];
   const filteredUsers = userList.filter((u) =>
@@ -44,7 +43,8 @@ export default function ModalUser({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {triggerElement ?? <Button variant="outline">เลือกสมาชิก</Button>}
+        {/* {triggerElement ?? <Button variant="outline">เลือกสมาชิก</Button>} */}
+        เลือกสมาชิก
       </DialogTrigger>
 
       <DialogContent className="max-w-md p-6">
@@ -115,7 +115,7 @@ export default function ModalUser({
                     }`}
                   >
                     <td className="p-2">
-                      <Image
+                      <img
                         src={user.avatarUrl || "/default-avatar.png"}
                         alt={`${user.firstName} ${user.lastName}`}
                         width={32}

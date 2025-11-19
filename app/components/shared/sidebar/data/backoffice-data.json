@@ -58,6 +58,13 @@
       "isActive": false
     },
     {
+      "name": "ตำแหน่ง",
+      "key": "role",
+      "path": "/roles",
+      "icon": "Users",
+      "isActive": false
+    },
+    {
       "name": "การตั้งค่า",
       "key": "setting-organization",
       "icon": "Settings",

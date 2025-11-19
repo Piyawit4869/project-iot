@@ -1,31 +1,26 @@
 "use client";
 
 import React, { useState } from "react";
+import { ChevronRight, ChevronDown } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import {
+  PermissionControlFormSchema,
+  type PermissionControlValues,
+} from "~/schemas/permission-control/PermissionControl";
+import { TabControl } from "~/components/shared/tab-control";
+import GlobalButton from "~/components/shared/global-button";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-  Switch,
-} from "@/components/ui";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ChevronRight, ChevronDown } from "lucide-react";
-import {
-  PermissionControlFormSchema,
-  PermissionControlValues,
-} from "@/schemas/permission-control/PermissionControl";
-import { useUpdatePermissionControl } from "@/actions/permission-control/client/useGetPermissionControl";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import { actions, permissions } from "../_module/constants/iniData";
-import { Tabcontrol } from "@/components/shared/topsection";
-import GlobalButton from "@/components/shared/global-button";
-import { GlobalModal } from "@/components/shared/modal/modal";
-import { useParams, useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { useForm } from "react-hook-form";
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { Checkbox } from "~/components/ui/checkbox";
+import { Switch } from "~/components/ui/switch";
 
 export default function Page() {
   const [formData, setFormData] = useState<
@@ -36,11 +31,11 @@ export default function Page() {
   );
   const [allSelected, setAllSelected] = useState(false);
 
-  const params = useParams<{ id: string }>();
-  const router = useRouter();
+  // const params = useParams<{ id: string }>();
+  // const router = useRouter();
 
   const form = useForm<PermissionControlValues>({
-    resolver: zodResolver(PermissionControlFormSchema),
+    resolver: zodResolver(PermissionControlFormSchema as any),
     mode: "onSubmit",
     values: {
       id: "",
@@ -61,25 +56,25 @@ export default function Page() {
     form.clearErrors();
   }, [form]);
 
-  const handleToggleSelectAll = () => {
-    setAllSelected((prev) => {
-      const next = !prev;
-      setFormData(() => {
-        const updated: Record<string, Record<string, boolean>> = {};
-        const setMenu = (name: string) => {
-          const perms: Record<string, boolean> = {};
-          actions.forEach((ac) => (perms[ac] = next));
-          updated[name] = perms;
-        };
-        permissions.forEach((m) => {
-          setMenu(m.name);
-          m.children?.forEach(setMenu);
-        });
-        return updated;
-      });
-      return next;
-    });
-  };
+  // const handleToggleSelectAll = () => {
+  //   setAllSelected((prev) => {
+  //     const next = !prev;
+  //     setFormData(() => {
+  //       const updated: Record<string, Record<string, boolean>> = {};
+  //       const setMenu = (name: string) => {
+  //         const perms: Record<string, boolean> = {};
+  //         actions.forEach((ac) => (perms[ac] = next));
+  //         updated[name] = perms;
+  //       };
+  //       permissions.forEach((m) => {
+  //         setMenu(m.name);
+  //         m.children?.forEach(setMenu);
+  //       });
+  //       return updated;
+  //     });
+  //     return next;
+  //   });
+  // };
 
   const handleCheck = (menu: string, action: string, checked: boolean) => {
     setFormData((prev) => ({
@@ -89,36 +84,36 @@ export default function Page() {
   };
 
   const { isSubmitting } = form.formState;
-  const { mutate } = useUpdatePermissionControl(params.id ?? "");
+  // const { mutate } = useUpdatePermissionControl(params.id ?? "");
 
-  const onSubmit = (values: PermissionControlValues) => {
-    GlobalModal.info({
-      title: "สร้างสิทธิ์การเข้าถึง",
-      description: "คุณต้องการสร้างสิทธิ์การเข้าถึงนี้ใช่หรือไม่",
-      confirmText: "ยืนยัน",
-      cancelText: "ยกเลิก",
-      onConfirm: () => {
-        const toastId = toast.loading("กำลังสร้างสิทธิ์การเข้าถึง...");
-        mutate(values, {
-          onSuccess: (data) => {
-            toast.success("สร้างสิทธิ์การเข้าถึงเรียบร้อยแล้ว!", {
-              id: toastId,
-            });
-            router.push(`/organization/permission-control/${data.data.id}`);
-          },
-          onError: () => {
-            toast.error("เกิดข้อผิดพลาดขณะสร้างสิทธิ์การเข้าถึง", {
-              id: toastId,
-            });
-          },
-        });
-      },
-    });
-  };
+  // const onSubmit = (values: PermissionControlValues) => {
+  //   GlobalModal.info({
+  //     title: "สร้างสิทธิ์การเข้าถึง",
+  //     description: "คุณต้องการสร้างสิทธิ์การเข้าถึงนี้ใช่หรือไม่",
+  //     confirmText: "ยืนยัน",
+  //     cancelText: "ยกเลิก",
+  //     onConfirm: () => {
+  //       const toastId = toast.loading("กำลังสร้างสิทธิ์การเข้าถึง...");
+  //       mutate(values, {
+  //         onSuccess: (data) => {
+  //           toast.success("สร้างสิทธิ์การเข้าถึงเรียบร้อยแล้ว!", {
+  //             id: toastId,
+  //           });
+  //           router.push(`/organization/permission-control/${data.data.id}`);
+  //         },
+  //         onError: () => {
+  //           toast.error("เกิดข้อผิดพลาดขณะสร้างสิทธิ์การเข้าถึง", {
+  //             id: toastId,
+  //           });
+  //         },
+  //       });
+  //     },
+  //   });
+  // };
 
   return (
     <div className="flex-1 flex-col space-y-3 p-8 md:flex sm:flex">
-      <Tabcontrol
+      <TabControl
         title="สร้างสิทธิ์การเข้าถึง"
         backpath="/organization/permission-control"
         buttons={[
@@ -133,7 +128,8 @@ export default function Page() {
       />
 
       <Form {...form}>
-        <form id="permission" onSubmit={form.handleSubmit(onSubmit)}>
+        {/* <form id="permission" onSubmit={form.handleSubmit(onSubmit)}> */}
+        <form id="permission">
           <div className="text-lg font-semibold">เพิ่มสิทธิ์การใช้งาน</div>
           <div className="space-y-4">
             <div className="space-y-4 px-4 py-3 bg-background rounded-t-md border-b">
@@ -186,18 +182,18 @@ export default function Page() {
                       <th className="px-4 py-3 text-center w-12">
                         <Checkbox
                           checked={allSelected}
-                          onCheckedChange={handleToggleSelectAll}
+                          // onCheckedChange={handleToggleSelectAll}
                         />
                       </th>
                       <th className="px-4 py-3 text-left">สิทธิ์การเข้าถึง</th>
-                      {actions.map((ac) => (
+                      {/* {actions.map((ac) => (
                         <th key={ac} className="px-4 py-3 text-center">
                           {ac}
                         </th>
-                      ))}
+                      ))} */}
                     </tr>
                   </thead>
-                  <tbody>
+                  {/* <tbody>
                     {permissions.map((menu) => {
                       const expandable = !!menu.children;
                       const expanded = expandedMenus[menu.name];
@@ -294,7 +290,7 @@ export default function Page() {
                         </React.Fragment>
                       );
                     })}
-                  </tbody>
+                  </tbody> */}
                 </table>
               </div>
             </div>

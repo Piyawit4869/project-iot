@@ -14,9 +14,9 @@ export default [
   route("login", "routes/login.tsx"),
   route("/forgot-password", "routes/forgot.tsx"),
   route("/logout", "routes/logout.tsx"),
-  route("/verify-otp", "routes/verify.tsx"),  
+  route("/verify-otp", "routes/verify.tsx"),
   route("/reset-password", "routes/reset-pass.tsx"),
-  
+
   // route("public", "routes/public.tsx", [index("routes/backoffice/home.tsx")]),
 
   layout("routes/public-layout.tsx", [
@@ -40,6 +40,14 @@ export default [
       index("routes/backoffice/users/index.tsx"),
       route("create", "routes/backoffice/users/create.tsx"),
       route("/:id", "routes/backoffice/users/single.tsx"),
+      // route("/:id", "routes/backoffice/users/edit.tsx"),
+    ]),
+
+    // Role
+    ...prefix("roles", [
+      index("routes/backoffice/roles/index.tsx"),
+      route("create", "routes/backoffice/roles/create.tsx"),
+      // route("/:id", "routes/backoffice/roles/single.tsx"),
       // route("/:id", "routes/backoffice/users/edit.tsx"),
     ]),
 

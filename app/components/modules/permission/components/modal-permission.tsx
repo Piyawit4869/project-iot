@@ -1,26 +1,22 @@
 "use client";
 
 import React, { useState } from "react";
+import type { ModelPermissionControlProps } from "../type";
+import { actions, permissions } from "../iniData";
+import type { PermissionControlValues } from "~/schemas/permission-control/PermissionControl";
+import { FormProvider } from "react-hook-form";
+import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
+import { ChevronDown, ChevronRight, Pencil } from "lucide-react";
+import { FormControl, FormField, FormItem } from "~/components/ui/form";
 import {
-  FormControl,
-  FormField,
-  FormItem,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Pencil, ChevronRight, ChevronDown } from "lucide-react";
-import { FormProvider } from "react-hook-form";
-import { PermissionControlValues } from "@/schemas/permission-control/PermissionControl";
-import { useCreatePermissionControl } from "@/actions/permission-control/client/useGetPermissionControl";
-import { actions, permissions } from "../constants/iniData";
-import { ModelPermissionControlProps } from "../constants/type";
-import { useGetAllEmployeeRole } from "@/actions/employee-role/client/useGetEmployeeRole";
+} from "~/components/ui/select";
+import { Checkbox } from "~/components/ui/checkbox";
 
 export default function ModelPermissionControl({
   form,
@@ -40,9 +36,9 @@ export default function ModelPermissionControl({
   const [allSelected, setAllSelected] = React.useState(false);
   const [description, setDescription] = React.useState("");
 
-  const { mutate: createPerm } = useCreatePermissionControl();
+  // const { mutate: createPerm } = useCreatePermissionControl();
 
-  const {} = useGetAllEmployeeRole();
+  // const {} = useGetAllEmployeeRole();
 
   const [roleSearchTerm, setRoleSearchTerm] = useState("");
 
@@ -83,11 +79,11 @@ export default function ModelPermissionControl({
     setEditing(false);
   };
 
-  const handleSubmitPermissions = (values: PermissionControlValues) => {
-    createPerm({ ...values, description });
-    onSaveName(roleName.trim() || "New Role");
-    onClose();
-  };
+  // const handleSubmitPermissions = (values: PermissionControlValues) => {
+  //   createPerm({ ...values, description });
+  //   onSaveName(roleName.trim() || "New Role");
+  //   onClose();
+  // };
 
   return (
     <FormProvider {...form}>
@@ -306,7 +302,7 @@ export default function ModelPermissionControl({
             onClick={form.handleSubmit((values) => {
               const trimmed = roleName.trim();
               if (trimmed) onSaveName(trimmed);
-              handleSubmitPermissions(values);
+              // handleSubmitPermissions(values);
             })}
             className="h-8 px-4"
           >
