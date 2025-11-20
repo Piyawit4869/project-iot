@@ -27,6 +27,7 @@ import { PlaceCardEditor } from "./place-card-editor";
 import { PersonCardEditor } from "./person-card-editor";
 import { ImageCardEditor } from "./image-card-editor";
 import { buildProductCardBody, buildPlaceCardBody } from "./utils";
+import { buildPersonCardBody } from "./utils/person-card-content";
 
 export default function MessageCardForm() {
   const form = useForm<MessageCardFormValues>({
@@ -75,6 +76,8 @@ export default function MessageCardForm() {
         ...categoryPayload,
       };
 
+      console.log(payload);
+
       switch (values.category) {
         case "product":
           payload = buildProductCardBody(payload);
@@ -82,12 +85,30 @@ export default function MessageCardForm() {
         case "place":
           payload = buildPlaceCardBody(payload);
           break;
-
+        case "person":
+          payload = buildPersonCardBody(payload);
+          break;
         default:
           break;
       }
 
-      await ApiConfig.post("/thirdparty/line/contents/created", payload);
+      const finalPayload = {
+        ...payload,
+        meta: {
+          name: values.name.trim(),
+          category: values.category,
+          ...categoryPayload,
+        },
+      };
+
+      console.log("final payload", payload);
+
+      const { data } = await ApiConfig.post(
+        "/thirdparty/line/contents/created",
+        finalPayload
+      );
+      console.log("response", data);
+
       toast.success("บันทึกการ์ดสำเร็จ", {
         id: toastId,
         duration: 2000,
