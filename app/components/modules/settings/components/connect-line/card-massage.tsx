@@ -26,6 +26,7 @@ import { ProductCardEditor } from "./product-card-editor";
 import { PlaceCardEditor } from "./place-card-editor";
 import { PersonCardEditor } from "./person-card-editor";
 import { ImageCardEditor } from "./image-card-editor";
+import { buildProductCardBody } from "./utils";
 
 export default function MessageCardForm() {
   const form = useForm<MessageCardFormValues>({
@@ -68,14 +69,22 @@ export default function MessageCardForm() {
     }
 
     try {
-      const payload = {
+      let payload = {
         name: values.name.trim(),
         category: values.category,
         ...categoryPayload,
       };
 
-      // await ApiConfig.post("/thirdparty/line/content-reply", payload);
+      switch (values.category) {
+        case "product":
+          payload = buildProductCardBody(payload);
+          break;
 
+        default:
+          break;
+      }
+
+      await ApiConfig.post("/thirdparty/line/contents/created", payload);
       toast.success("บันทึกการ์ดสำเร็จ", {
         id: toastId,
         duration: 2000,
@@ -306,8 +315,7 @@ export default function MessageCardForm() {
                         <Button
                           type="button"
                           variant="outline"
-                          onClick={() => setCategoryDialogOpen(true)}
-                        >
+                          onClick={() => setCategoryDialogOpen(true)}>
                           {selectedCategory?.label || "เลือก"}
                         </Button>
                       </>
