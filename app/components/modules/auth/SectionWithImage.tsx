@@ -6,7 +6,6 @@ interface SectionWithImageProps {
   image?: string | React.ReactNode;
   position?: "left" | "right";
   className?: string;
- 
 }
 
 export default function SectionWithImage({
@@ -20,26 +19,23 @@ export default function SectionWithImage({
 
   return (
     <section
-      className={`flex flex-col lg:flex-row items-center mt-16 gap-10 ${
-        isleft ? "" : "lg:flex-row-reverse"
-      }`}
+      className={`
+        flex flex-col lg:flex-row items-center mt-16 gap-10
+        text-gray-900 dark:text-sidebar-foreground
+        ${isleft ? "" : "lg:flex-row-reverse"}
+      `}
     >
       {hasImage && (
         <div
-          className={`
-            flex-1 flex
-            ${isleft ? "justify-start" : "justify-end"}
-          `}
+          className={`flex-1 flex ${
+            isleft ? "justify-start" : "justify-end"
+          }`}
         >
           {typeof image === "string" ? (
             <img
               src={image}
               alt=""
-              className="
-                w-64 lg:w-100 
-                object-contain 
-                lg:mx-6
-              "
+              className="w-40 lg:w-70 object-contain lg:mx-6"
             />
           ) : (
             image
@@ -49,17 +45,25 @@ export default function SectionWithImage({
 
       <div
         className={`
-          flex-1 space-y-4 
-          max-w-[70%]       
-          ${!hasImage ? (isleft ? "lg:text-left" : "lg:text-left  lg:pl-[21.5%] ") : ""}
+          flex-1 space-y-4 max-w-[80%]
+          ${
+            !hasImage
+              ? isleft
+                ? "lg:text-left"
+                : "lg:text-left lg:pl-[21.5%]"
+              : ""
+          }
         `}
       >
-        <h2 className="text-3xl font-semibold text-gray-900">{title}</h2>
+        <h2 className="text-3xl font-semibold text-gray-900 dark:text-sidebar-foreground">
+          {title}
+        </h2>
 
-        <div className="text-gray-600 leading-relaxed space-y-2 whitespace-pre-line">
+        <div className="text-gray-600 dark:text-muted-foreground leading-relaxed space-y-2 whitespace-pre-line">
           {content}
         </div>
       </div>
     </section>
   );
+
 }
