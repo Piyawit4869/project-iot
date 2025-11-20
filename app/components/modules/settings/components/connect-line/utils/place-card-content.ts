@@ -1,16 +1,20 @@
 type LineFlex = any;
 
-function buildCurrencyText(currency: string, price: string): string {
-  switch (currency) {
-    case "THB":
-      return `฿${price}`;
+function buildIcon(extraInfoType: string): string {
+  switch (extraInfoType) {
+    case "time":
+      return "https://storage.googleapis.com/utotech-storage/clock-3-067aaa34a0134526a2972a4e3c7d9f6d/446673.svg";
+    case "phone":
+      return "https://storage.googleapis.com/utotech-storage/phone-call-070bc4ba12d04109a055dce66c5b0d3d/743366.svg";
+    case "custom":
+      return "https://storage.googleapis.com/utotech-storage/info-7605446042864dcda26816d0361e4563/279241.svg";
     default:
-      return `${currency} ${price}`;
+      return "";
   }
 }
 
-export function buildProductCardBody(input: any): LineFlex {
-  const p = input.product;
+export function buildPlaceCardBody(input: any): LineFlex {
+  const p = input.place;
   const heroContents: any[] = [
     {
       type: "image",
@@ -70,9 +74,6 @@ export function buildProductCardBody(input: any): LineFlex {
     });
   }
 
-  const priceText =
-    p.priceEnabled && p.price ? buildCurrencyText(p.currency, p.price) : "";
-
   const card: LineFlex = {
     active: true,
     name: input.name,
@@ -101,27 +102,44 @@ export function buildProductCardBody(input: any): LineFlex {
                 size: "xl",
                 align: "start",
               },
-              ...(p.description
-                ? [
-                    {
-                      type: "text",
-                      text: p.description,
-                      size: "sm",
-                      color: "#aaaaaa",
-                    },
-                  ]
-                : []),
-              ...(priceText
-                ? [
-                    {
-                      type: "text",
-                      text: priceText,
-                      weight: "bold",
-                      size: "sm",
-                      align: "end",
-                    },
-                  ]
-                : []),
+              {
+                type: "box",
+                layout: "baseline",
+                spacing: "sm",
+                contents: [
+                  {
+                    type: "icon",
+                    url: "https://storage.googleapis.com/utotech-storage/map-pin-29bd8410a8a04546a61c7cec4ea25b59/516231.svg",
+                    size: "sm",
+                  },
+                  {
+                    type: "text",
+                    text: p.addressText,
+                    size: "sm",
+                    color: "#aaaaaa",
+                    wrap: true,
+                  },
+                ],
+              },
+              {
+                type: "box",
+                layout: "baseline",
+                spacing: "sm",
+                contents: [
+                  {
+                    type: "icon",
+                    url: buildIcon(p.extraInfoType),
+                    size: "sm",
+                  },
+                  {
+                    type: "text",
+                    text: p.extraInfoValue,
+                    size: "sm",
+                    color: "#aaaaaa",
+                    wrap: true,
+                  },
+                ],
+              },
             ],
           },
           footer: {

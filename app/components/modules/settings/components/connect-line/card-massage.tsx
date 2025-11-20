@@ -26,7 +26,7 @@ import { ProductCardEditor } from "./product-card-editor";
 import { PlaceCardEditor } from "./place-card-editor";
 import { PersonCardEditor } from "./person-card-editor";
 import { ImageCardEditor } from "./image-card-editor";
-import { buildProductCardBody } from "./utils";
+import { buildProductCardBody, buildPlaceCardBody } from "./utils";
 
 export default function MessageCardForm() {
   const form = useForm<MessageCardFormValues>({
@@ -78,6 +78,9 @@ export default function MessageCardForm() {
       switch (values.category) {
         case "product":
           payload = buildProductCardBody(payload);
+          break;
+        case "place":
+          payload = buildPlaceCardBody(payload);
           break;
 
         default:
@@ -315,7 +318,8 @@ export default function MessageCardForm() {
                         <Button
                           type="button"
                           variant="outline"
-                          onClick={() => setCategoryDialogOpen(true)}>
+                          onClick={() => setCategoryDialogOpen(true)}
+                        >
                           {selectedCategory?.label || "เลือก"}
                         </Button>
                       </>
