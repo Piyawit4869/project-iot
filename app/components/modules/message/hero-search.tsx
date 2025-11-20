@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button } from "~/components/ui/button";
-import { ArrowRight, Send } from "lucide-react";
+import { ArrowRight, FileImage, Loader2, Send } from "lucide-react";
 import { Textarea } from "~/components/ui/textarea";
 
 interface HeroSearchProps {
@@ -11,6 +11,8 @@ interface HeroSearchProps {
 export default function HeroSearch(props: HeroSearchProps) {
   const { onInputChange } = props;
 
+  const scrollAreaRef = React.useRef<HTMLDivElement | null>(null);
+
   const [query, setQuery] = React.useState("");
 
   const onSend = () => {
@@ -20,36 +22,59 @@ export default function HeroSearch(props: HeroSearchProps) {
   };
 
   return (
-    <div className="w-full flex items-center justify-center">
-      <div className="w-full h-full  max-w-5xl mx-auto">
-        {/* Search Bar */}
-        <div className="w-full max-w-3xl mt-2">
-          {/* Composer Card */}
-          <div className="flex flex-col rounded-[12px] border-1 border-neutral-300 ring-1 ring-white/10 overflow-hidden">
-            {/* Floating send button */}
-
-            {/* Textarea */}
-            <div className="px-2 pb-8">
-              {/* extra bottom padding for toolbar */}
-              <Textarea
+    <div className="flex flex-col h-[calc(100vh-495px)] border-1 rounded-sm bg-white dark:bg-background">
+      <div
+        className="flex flex-1 flex-col"
+        style={{
+          height: 400,
+        }}
+      >
+        <div
+          ref={scrollAreaRef}
+          className="flex h-full flex-col space-y-6 overflow-y-auto px-2 z-0 relative  "
+        >
+          <div className="h-[calc(100vh-625px)]"></div>
+          <div>
+            <form
+              onSubmit={onSend}
+              className="flex flex-col justify-between gap-2 border-t w-full h-[100px]"
+            >
+              <textarea
+                placeholder="สอบถาม AI ได้เลย"
+                className="flex-1 w-full resize-none overflow-auto p-2 border-0 rounded-md outline-none"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="พิมพ์ข้อความของคุณที่นี่..."
-                className="h-[160px] resize-y bg-transparent mt-4 border-0 text-base leading-relaxed placeholder:text-neutral-400 focus-visible:ring-0 focus-visible:ring-offset-0"
-              />
-            </div>
-            <div className="flex self-end mr-2 mb-2">
-              <Button size="icon" type="submit" onClick={onSend}>
-                <Send className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
+                rows={1}
+                onInput={(e) => {
+                  const textarea = e.target as HTMLTextAreaElement;
+                  textarea.style.height = "auto";
+                  textarea.style.height = `${textarea.scrollHeight}px`;
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    onSend();
+                    const textarea = e.target as HTMLTextAreaElement;
 
-        {/* Helper text / example prompts */}
-        <div className="mt-5 text-center text-sm text-neutral-400">
-          ตัวอย่าง: “ช่วยสร้างประโยคการเปิดการขายให้หน่อย?”,
-          “สินค้าที่เหลือในสต๊อกตอนนี้?”,
+                    textarea.style.height = `50px`;
+                  }
+                }}
+              />
+
+              <div className="flex justify-end">
+                <Button
+                  size="icon"
+                  type="submit"
+                  // disabled={isPending}
+                >
+                  {/* {isPendingAI || isAILoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : ( */}
+                  <Send className="w-4 h-4" />
+                  {/* )} */}
+                </Button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

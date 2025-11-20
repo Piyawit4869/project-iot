@@ -3,6 +3,9 @@ import {
   Send,
   FileImage,
   MessagesSquare,
+  X,
+  Paperclip,
+  PlusCircle,
   // Users,
   // FileText,
   // ListChecks,
@@ -11,12 +14,18 @@ import {
 import React from "react";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
+import ChatInput from "../chat-input";
+import { useIsMobile } from "~/hooks/use-mobile";
+import StatusToolbar from "../status-toolbar";
+import LineTemplatePickerModal from "../line-template-picker-modal";
 
 export default function NoChatDetail() {
+  const isMobile = useIsMobile();
   return (
     <>
       <div className="flex flex-col h-full bg-white dark:bg-background ">
-        <div className="flex items-center justify-end gap-4 p-4 border-b bg-white dark:bg-border sticky top-0 z-10 mb-5 dark:bg-background">
+        <div className="flex items-center justify-end gap-4  border-b bg-white dark:bg-border sticky top-0 z-10 mb-5 dark:bg-background">
+          <StatusToolbar isDisable chatRoomDetail={undefined} total={0} />
           <div className="flex items-center gap-3">
             {/* Buttons */}
             {/* <Button
@@ -120,24 +129,31 @@ export default function NoChatDetail() {
             </span> */}
           </div>
         </div>
-        <form className="flex items-center gap-2 p-4 border-t w-full">
-          <Input placeholder="Aa" className="flex-1" disabled={true} />
+        <div className="flex items-center gap-2 px-4 pt-3 border-t w-full  ">
+          {/* Preview */}
 
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            disabled={true}
+          <textarea
+            disabled
+            placeholder={
+              isMobile
+                ? "พิมพ์ข้อความเพื่อส่ง"
+                : "Enter = ส่งข้อความ / Shift+Enter = ขึ้นบรรทัดใหม่"
+            }
+            className="w-full resize-none p-2 border-0 rounded-md outline-none h-[18vh] leading-6 overflow-auto"
           />
 
-          <Button variant="ghost" size="icon" type="button" disabled={true}>
-            <FileImage />
-          </Button>
+          <input type="file" disabled className="hidden" multiple />
 
-          <Button size="icon" type="submit" disabled={true}>
-            <Send className="w-4 h-4" />
-          </Button>
-        </form>
+          <div className="flex pb-4 items-center gap-5.5">
+            <PlusCircle className="w-4 h-4 text-muted-foreground" />
+
+            <Paperclip className="w-4 h-4  text-muted-foreground" />
+
+            <Button size="icon" type="submit" disabled title="ส่ง">
+              <Send className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
       </div>
     </>
   );

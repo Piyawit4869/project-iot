@@ -26,14 +26,14 @@ export const ChatMessageNoData = ({
             <h2 className="text-lg font-semibold">Rome Chat AI</h2>
           </div>
 
-          <Button
+          {/* <Button
             variant="ghost"
             size="icon"
             onClick={handleShowCustomerInfoOpen}
             className="hidden md:flex"
           >
             <Settings2 className="h-4 w-4" />
-          </Button>
+          </Button> */}
         </div>
         <NoChatDetail />
       </div>

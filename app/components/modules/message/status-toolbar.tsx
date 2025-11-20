@@ -33,8 +33,9 @@ type Props = {
   chatRoomDetail: any;
   onChange?: (next: Status) => void;
   className?: string;
+  isDisable?: boolean;
   // offset: number | null;
-  setCursor: React.Dispatch<React.SetStateAction<string>>;
+  setCursor?: React.Dispatch<React.SetStateAction<string>>;
   total: number;
   onSearchClick?: (messageId: string, offset: number) => void;
 };
@@ -82,10 +83,9 @@ export default function StatusToolbar({
   className,
   setCursor,
   total,
+  isDisable,
   onSearchClick,
-}: // offset,
-
-Props) {
+}: Props) {
   const [search, setSearch] = React.useState<string>("");
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -104,42 +104,6 @@ Props) {
   const { data } = useSearchByKeyWord(chatRoomDetail?.id, debouncedSearch);
 
   const [isSearchFull, setIsSearchFull] = React.useState<boolean>(false);
-
-  const handleCloseSearch = React.useCallback(() => {
-    setSearch("");
-    setInputOpen(false);
-  }, [setInputOpen, setSearch]);
-
-  // const setTodo = async () => {
-  //   // onChange?.("todo");
-  //   markAsProcess(true);
-  //   markAsDone(false);
-  //   startTransition(() => {
-  //     setIsProcess(true);
-  //     setIsDone(false);
-  //   });
-  // };
-  // const setDone = () => {
-  //   // onChange?.("done");
-  //   markAsProcess(false);
-  //   markAsDone(true);
-
-  //   startTransition(() => {
-  //     setIsDone(true);
-  //     setIsProcess(false);
-  //   });
-  // };
-
-  // const setClear = () => {
-  //   // onChange?.("clear");
-  //   markAsProcess(false);
-  //   markAsDone(false);
-
-  //   startTransition(() => {
-  //     setIsDone(false);
-  //     setIsProcess(false);
-  //   });
-  // };
 
   const handleUpdateStatusProgressTag = async (status: string) => {
     let body = {};
@@ -200,7 +164,7 @@ Props) {
 
       onSearchClick(id, offset);
     }
-    setCursor(item.offset);
+    setCursor?.(item.offset);
     // }
     // setOpenNavigateMessage(false);
   };
@@ -228,6 +192,7 @@ Props) {
                   "h-9 px-3 rounded-md border-muted-foreground/30",
                   isProcess && "border-primary text-primary bg-gray-300"
                 )}
+                disabled={isDisable}
                 onClick={() => handleUpdateStatusProgressTag("isProgress")}
               >
                 <MessagesSquare className="mr-2 h-[18px] w-[18px]" />
@@ -247,6 +212,7 @@ Props) {
                   isDone && "border-primary text-primary bg-gray-300"
                 )}
                 onClick={() => handleUpdateStatusProgressTag("isDone")}
+                disabled={isDisable}
               >
                 <CheckCircle className="mr-2 h-[18px] w-[18px]" />
                 ดำเนินการแล้ว
@@ -273,8 +239,13 @@ Props) {
             </Tooltip>
           )}
           <div
-            className="flex w-full items-center text-gray-400 border h-9 rounded-md px-3 py-1 text-sm bg-background cursor-pointer transition-all duration-200"
-            onClick={() => setIsSearchFull(true)}
+            className={cn(
+              "flex w-full items-center text-gray-400 border h-9 rounded-md px-3 py-1 text-sm bg-background cursor-pointer transition-all duration-200",
+              isDisable && "cursor-default opacity-50 pointer-events-none"
+            )}
+            onClick={() => {
+              if (!isDisable) setIsSearchFull(true);
+            }}
           >
             ค้นหา
           </div>

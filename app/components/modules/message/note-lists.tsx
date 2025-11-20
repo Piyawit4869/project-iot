@@ -20,16 +20,17 @@ interface TNote {
   id: string;
   note: string;
   user_id: string;
-  user_name: string;
+  userName: string;
   created_at: string;
   createdAt: string;
   updated_at: string;
 }
 
 interface NoteListProps {
-  selectedRoom: any;
-  customer: any;
-  refetchCustomer: () => void;
+  selectedRoom?: any;
+  customer?: any;
+  refetchCustomer?: () => void;
+  disable?: boolean;
 }
 
 export const NoteLists: React.FC<NoteListProps> = (props) => {
@@ -84,7 +85,7 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
             toast.success("แก้ไขโน้ตเรียบร้อยแล้ว!", {
               id: toastId,
             });
-            refetchCustomer();
+            refetchCustomer?.();
           },
           onError: () => {
             toast.error("แก้ไขโน้ตไม่สำเร็จ กรุณาลองใหม่อีกครั้งภายหลัง", {
@@ -101,7 +102,7 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
             toast.success("สร้างโน้ตใหม่เรียบร้อยแล้ว", {
               id: toastId,
             });
-            refetchCustomer();
+            refetchCustomer?.();
           },
           onError: () => {
             toast.error("แก้ไขโน้ตไม่สำเร็จ กรุณาลองใหม่อีกครั้งภายหลัง", {
@@ -131,7 +132,7 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
               toast.success("ลบโน้ตที่เลือกเรียบร้อยแล้ว", {
                 id: toastId,
               });
-              refetchCustomer();
+              refetchCustomer?.();
             },
             onError: () => {
               toast.error(
@@ -156,8 +157,14 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
 
           <GlobalTooltip content="สรุปโน้ตด้วย AI จากข้อความที่บันทึกไว้">
             <div
-              className="animate-[pulse_2s_ease-in-out_infinite]"
-              onClick={() => setOpenAiNote(true)}
+              className={`${
+                !props.disable
+                  ? "animate-[pulse_2s_ease-in-out_infinite] cursor-pointer"
+                  : "cursor-default animate-none text-gray-400 "
+              }`}
+              onClick={() => {
+                if (!props.disable) setOpenAiNote(true);
+              }}
             >
               <AiSparkleIcon />
             </div>
@@ -166,8 +173,14 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
 
         <GlobalTooltip content="เพิ่มโน้ตสำหรับบันทึกข้อความไว้">
           <PlusIcon
-            onClick={() => handleOnOpenModal()}
-            className="cursor-pointer"
+            onClick={() => {
+              if (!props.disable) handleOnOpenModal();
+            }}
+            className={`${
+              props.disable
+                ? "cursor-default text-gray-400 pointer-events-none"
+                : "cursor-pointer hover:text-blue-500"
+            }`}
           />
         </GlobalTooltip>
       </div>
@@ -185,7 +198,9 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
               <div className="flex items-center justify-between text-xs text-gray-500">
                 <span>
                   {DateISOToDisplayDate(note.created_at || note.createdAt)}{" "}
-                  {note.user_name}
+                  <span className="text-strong text-black">
+                    ({note.userName})
+                  </span>
                 </span>
                 <div className="flex gap-2">
                   <PencilIcon
@@ -215,7 +230,7 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
       />
       <GetNoteFormAI
         chatRoomId={selectedRoom?.id}
-        customerId={customer.id}
+        customerId={customer?.id}
         open={OpenAiNote}
         setOpen={setOpenAiNote}
       />
