@@ -10,6 +10,7 @@ import {
   fetchGetConnectionAi,
   fetchGetConnectionLine,
   fetchGetOrganizations,
+  fetchLineCardContentPaginate,
   fetchLineMassagePaginate,
   fetchRoomChatAIConfigLoadMore,
   fetchRoomChatAILoadMore,
@@ -20,6 +21,7 @@ import {
   fetchUpdateOrganization,
   fetchUpdateSetting,
   fetchUpdateSettingAddress,
+  getCardContent,
 } from "../server/settings";
 import type {
   AddressSchemaValues,
@@ -204,6 +206,33 @@ export const useLineMassagePaginate = ({
   });
 };
 
+export const useLineCardContentPaginate = ({
+  pageIndex,
+  pageSize = 10,
+  limit,
+  filter,
+}: {
+  pageIndex: number;
+  pageSize?: number;
+  limit: number;
+  filter?: { category?: string };
+}) => {
+  if (filter?.category === "all") {
+    filter.category = "";
+  }
+  return useQuery({
+    queryKey: ["customer-paginate", pageIndex, pageSize, limit, filter],
+    queryFn: () =>
+      fetchLineCardContentPaginate({
+        page: pageIndex,
+        itemsPerPage: pageSize,
+        limit,
+        filter: { category: filter?.category || "" },
+      }),
+    enabled: pageIndex !== undefined,
+  });
+};
+
 export const useLineCreateReplyMessage = () => {
   return useMutation({
     mutationFn: (payload: TeamMessageCreateDTO) => createReplyMessage(payload),
@@ -227,5 +256,12 @@ export const useLineGetReplyMessage = (id: string) => {
 export const useLineMarkFavoriteRplyMessage = () => {
   return useMutation({
     mutationFn: async (id: string) => markFavoriteReplyMessage(id),
+  });
+};
+
+export const useLineGetCardContent = (id: string) => {
+  return useQuery({
+    queryKey: ["line-card-content"],
+    queryFn: async () => getCardContent(id),
   });
 };

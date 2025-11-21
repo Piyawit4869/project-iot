@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -26,30 +26,25 @@ import { ProductCardEditor } from "./product-card-editor";
 import { PlaceCardEditor } from "./place-card-editor";
 import { PersonCardEditor } from "./person-card-editor";
 import { ImageCardEditor } from "./image-card-editor";
-import {
-  buildProductCardBody,
-  buildPlaceCardBody,
-  buildImageCardBody,
-} from "./utils";
+import { buildProductCardBody, buildPlaceCardBody } from "./utils";
 import { buildPersonCardBody } from "./utils/person-card-content";
+import { useLineGetCardContent } from "~/api/client/settings";
 
 type Props = {
+  id: string;
   onSaved?: () => void;
   onCancel?: () => void;
 };
 
-export default function MessageCardForm({ onSaved, onCancel }: Props) {
+export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
+  const { data } = useLineGetCardContent(id);
   const form = useForm<MessageCardFormValues>({
     defaultValues: MESSAGE_CARD_DEFAULT_VALUES,
     mode: "onChange",
   });
   const [isCategoryDialogOpen, setCategoryDialogOpen] = useState(false);
   const selectedCategoryId = form.watch("category");
-  const nameValue = form.watch("name");
-  const productValues = form.watch("product");
-  const placeValues = form.watch("place");
-  const personValues = form.watch("person");
-  const imageValues = form.watch("image");
+
   const selectedCategory = CARD_CATEGORY_OPTIONS.find(
     (option) => option.id === selectedCategoryId
   );
@@ -95,9 +90,6 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
         case "person":
           payload = buildPersonCardBody(payload);
           break;
-        case "image":
-          payload = buildImageCardBody(payload);
-          break;
         default:
           break;
       }
@@ -111,11 +103,11 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
         },
       };
 
-      const { data } = await ApiConfig.post(
-        "/thirdparty/line/contents/created",
+      const { data } = await ApiConfig.put(
+        `/thirdparty/line/contents/${id}/edit`,
         finalPayload
       );
-      toast.success("บันทึกการ์ดเมสเสจสำเร็จ", {
+      toast.success("บันทึกการ์ดสำเร็จ", {
         id: toastId,
         duration: 2000,
         position: "bottom-right",
@@ -126,7 +118,7 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
     } catch (error) {
       const message =
         (error as { response?: { data?: { message?: string } } })?.response
-          ?.data?.message || "เกิดข้อผิดพลาดขณะบันทึกการ์ดเมสเสจ";
+          ?.data?.message || "เกิดข้อผิดพลาดขณะบันทึกการ์ด";
       toast.error(message, {
         id: toastId,
         duration: 2500,
@@ -135,161 +127,46 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
     }
   };
 
-  const isFieldFilled = (value?: string) =>
-    Boolean(value && value.toString().trim().length > 0);
+  const handleSetDefaultFormValue = () => {
+    const formValue = {
+      name: data?.name,
+      category: data?.meta?.category,
+      product: {},
+      place: {},
+      person: {},
+      image: {},
+    };
 
-  const isProductCardValid = useMemo(() => {
-    if (selectedCategoryId !== "product") return false;
-    if (!productValues) return false;
-    if (!productValues.imageUrl) return false;
-    if (!isFieldFilled(productValues.title)) return false;
-    if (!isFieldFilled(productValues.subtitle)) return false;
-    if (!isFieldFilled(productValues.description)) return false;
-
-    if (productValues.tagEnabled && !isFieldFilled(productValues.tagText)) {
-      return false;
-    }
-
-    if (productValues.priceEnabled && !isFieldFilled(productValues.price)) {
-      return false;
-    }
-
-    if (
-      productValues.ctaPrimaryEnabled &&
-      !isFieldFilled(productValues.ctaPrimaryText)
-    ) {
-      return false;
-    }
-
-    if (
-      productValues.ctaSecondaryEnabled &&
-      !isFieldFilled(productValues.ctaSecondaryText)
-    ) {
-      return false;
-    }
-
-    return true;
-  }, [productValues, selectedCategoryId]);
-
-  const isPlaceCardValid = useMemo(() => {
-    if (selectedCategoryId !== "place") return false;
-    if (!placeValues) return false;
-    if (!placeValues.imageUrl) return false;
-    if (!isFieldFilled(placeValues.title)) return false;
-
-    if (placeValues.tagEnabled && !isFieldFilled(placeValues.tagText)) {
-      return false;
-    }
-
-    if (placeValues.addressEnabled && !isFieldFilled(placeValues.addressText)) {
-      return false;
-    }
-
-    if (
-      placeValues.extraInfoEnabled &&
-      !isFieldFilled(placeValues.extraInfoValue)
-    ) {
-      return false;
-    }
-
-    if (
-      placeValues.ctaPrimaryEnabled &&
-      (!isFieldFilled(placeValues.ctaPrimaryText) ||
-        !isFieldFilled(placeValues.ctaPrimaryType))
-    ) {
-      return false;
-    }
-
-    if (
-      placeValues.ctaSecondaryEnabled &&
-      (!isFieldFilled(placeValues.ctaSecondaryText) ||
-        !isFieldFilled(placeValues.ctaSecondaryType))
-    ) {
-      return false;
-    }
-
-    return true;
-  }, [placeValues, selectedCategoryId]);
-
-  const isPersonCardValid = useMemo(() => {
-    if (selectedCategoryId !== "person") return false;
-    if (!personValues) return false;
-    if (!personValues.imageUrl) return false;
-    if (!isFieldFilled(personValues.name)) return false;
-
-    const invalidTag =
-      personValues.tags?.some(
-        (tag) => tag.enabled && !isFieldFilled(tag.text)
-      ) ?? false;
-
-    if (invalidTag) return false;
-
-    if (
-      personValues.descriptionEnabled &&
-      !isFieldFilled(personValues.description)
-    ) {
-      return false;
-    }
-
-    const invalidAction =
-      personValues.actions?.some(
-        (action) =>
-          action.enabled &&
-          (!isFieldFilled(action.text) || !isFieldFilled(action.type))
-      ) ?? false;
-
-    if (invalidAction) return false;
-
-    return true;
-  }, [personValues, selectedCategoryId]);
-
-  const isImageCardValid = useMemo(() => {
-    if (selectedCategoryId !== "image") return false;
-    if (!imageValues) return false;
-    if (!imageValues.imageUrl) return false;
-
-    if (imageValues.tagEnabled && !isFieldFilled(imageValues.tagText)) {
-      return false;
-    }
-
-    if (
-      imageValues.actionEnabled &&
-      (!isFieldFilled(imageValues.actionText) ||
-        !isFieldFilled(imageValues.actionType))
-    ) {
-      return false;
-    }
-
-    return true;
-  }, [imageValues, selectedCategoryId]);
-
-  const categoryIsReady = useMemo(() => {
-    if (!selectedCategoryId) return false;
-    switch (selectedCategoryId) {
+    switch (data?.meta?.category) {
       case "product":
-        return isProductCardValid;
+        formValue.product = data?.meta?.product;
+        break;
       case "place":
-        return isPlaceCardValid;
+        formValue.place = data?.meta?.place;
+        break;
       case "person":
-        return isPersonCardValid;
+        formValue.person = data?.meta?.person;
+        break;
       case "image":
-        return isImageCardValid;
+        formValue.image = data?.meta?.image;
+        break;
       default:
-        return false;
+        break;
     }
-  }, [
-    isImageCardValid,
-    isPersonCardValid,
-    isPlaceCardValid,
-    isProductCardValid,
-    selectedCategoryId,
-  ]);
+    form.reset(formValue);
+  };
+
+  useEffect(() => {
+    if (data) {
+      handleSetDefaultFormValue();
+    }
+  }, [data]);
 
   return (
     <Form {...form}>
       <form className="space-y-8">
         <div className="flex w-full flex-col  space-y-6">
-          <h1 className="text-2xl font-bold">การ์ดเมสเสจ</h1>
+          <h1 className="text-2xl font-bold">แก้ไขการ์ดเมสเสจ</h1>
           <p className="text-muted-foreground text-sm mt-1">
             ข้อความในรูปแบบการ์ดที่รวมเนื้อหาต่างๆ เอาไว้ในที่เดียว
             โดยระบบจะแสดงผลแบบภาพสไลด์ที่ผู้คนสามารถเปิดการ์ดไปด้านข้างเพื่อดูเนื้อหาการ์ดอื่นได้
