@@ -29,6 +29,8 @@ import {
 import { useSearchParams, useNavigate, useParams } from "react-router";
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
 import EditReplyMessageForm from "../connect-line/edit-reply-message-form";
+import TableCardMassage from "../connect-line/table-card-massage";
+import EditMessageCardForm from "../connect-line/edit-card-massage";
 
 export const LineContainerSettings: React.FC = () => {
   const [sp] = useSearchParams();
@@ -115,10 +117,10 @@ export const LineContainerSettings: React.FC = () => {
     }
   }, [data, form]);
 
-  const goList = () =>
-    setSearch({ tab: "massage-line", view: "list", replyId: null });
-  const goCreate = () =>
-    setSearch({ tab: "massage-line", view: "create", replyId: null });
+  const goList = (tab: string) =>
+    setSearch({ tab: tab, view: "list", replyId: null });
+  const goCreate = (tab: string) =>
+    setSearch({ tab: tab, view: "create", replyId: null });
   const goEdit = (replyId: string) =>
     setSearch({ tab: "massage-line", view: "edit", replyId });
 
@@ -139,8 +141,7 @@ export const LineContainerSettings: React.FC = () => {
             key="save-btn"
             type="submit"
             form="config-line"
-            className="w-full"
-          >
+            className="w-full">
             <>
               <Save /> สร้าง
             </>
@@ -275,14 +276,17 @@ export const LineContainerSettings: React.FC = () => {
 
         <TabsContent value="massage-line">
           {viewFromUrl === "list" && (
-            <TableMassage onCreate={goCreate} onEdit={goEdit} />
+            <TableMassage
+              onCreate={() => goCreate("massage-line")}
+              onEdit={goEdit}
+            />
           )}
 
           {viewFromUrl === "create" && (
             <ReplyMessageForm
               mode="create"
-              onCancel={goList}
-              onSaved={goList}
+              onCancel={() => goList("massage-line")}
+              onSaved={() => goList("massage-line")}
             />
           )}
 
@@ -290,14 +294,29 @@ export const LineContainerSettings: React.FC = () => {
             <EditReplyMessageForm
               mode="edit"
               replyId={sp.get("subId") ?? ""}
-              onCancel={goList}
-              onSaved={goList}
+              onCancel={() => goList("massage-line")}
+              onSaved={() => goList("massage-line")}
             />
           )}
         </TabsContent>
 
         <TabsContent value="config-card">
-          <MessageCardForm />
+          {viewFromUrl === "list" && (
+            <TableCardMassage onCreate={() => goCreate("config-card")} />
+          )}
+          {viewFromUrl === "create" && (
+            <MessageCardForm
+              onCancel={() => goList("config-card")}
+              onSaved={() => goList("config-card")}
+            />
+          )}
+          {viewFromUrl === "edit" && (
+            <EditMessageCardForm
+              id={sp.get("subId") || ""}
+              onCancel={() => goList("config-card")}
+              onSaved={() => goList("config-card")}
+            />
+          )}
         </TabsContent>
       </Tabs>
     </div>

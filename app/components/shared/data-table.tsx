@@ -243,21 +243,20 @@ export function DataTable<TData, TValue>({
                         style={{
                           width: header.getSize(),
                           position: "relative",
-                        }}
-                      >
+                        }}>
                         {header.isPlaceholder
                           ? null
                           : header.column.id === "actions" ||
-                            header.column.id === "imageUrl" ||
-                            header.column.id === "profile.imageUrl"
-                          ? flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )
-                          : flexRender(
-                              <SortableHeader column={header.column} />,
-                              header.getContext()
-                            )}
+                              header.column.id === "imageUrl" ||
+                              header.column.id === "profile.imageUrl"
+                            ? flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )
+                            : flexRender(
+                                <SortableHeader column={header.column} />,
+                                header.getContext()
+                              )}
 
                         <ColumnResizer header={header} />
                       </TableHead>
@@ -271,14 +270,12 @@ export function DataTable<TData, TValue>({
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
+                    data-state={row.getIsSelected() && "selected"}>
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
                         style={{ width: cell.column.getSize() }}
-                        className="text-sm sm:text-base text-muted-foreground max-w-[300px] truncate"
-                      >
+                        className="text-sm sm:text-base text-muted-foreground max-w-[300px] truncate">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -291,8 +288,7 @@ export function DataTable<TData, TValue>({
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
+                    className="h-24 text-center">
                     <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
                       <FileSearch className="w-8 h-8" />
                       <span>ไม่พบข้อมูล</span>
