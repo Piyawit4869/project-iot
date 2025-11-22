@@ -269,10 +269,9 @@ export const useAllCustomerSummary = (customerType?: string) => {
   return useQuery({
     queryKey: ["contacts", customerType],
     queryFn: () => fetchCustomerSummary(customerType),
-    enabled: true,
+    enabled: !!customerType,
   });
 };
-
 
 export const useCreateCustomerNote = (id: string) => {
   return useMutation({
