@@ -30,6 +30,7 @@ type NotificationItem = {
   time: string;
 };
 
+
 export function Menu() {
   const { me } = useRouteLoaderData("root");
   const navigate = useNavigate();
@@ -185,6 +186,7 @@ export function Menu() {
     }
     return elements;
   }
+  
 
   return (
     <div className="justify-between items-center flex gap-1 pr-3">
