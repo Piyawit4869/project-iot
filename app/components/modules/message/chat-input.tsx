@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { Button } from "~/components/ui/button";
-import { Send, Loader2, X, Paperclip } from "lucide-react";
+import { Send, Loader2, X, Paperclip, Smile } from "lucide-react";
 import React from "react";
 import { MessageLabelType } from "~/types/global";
 import { useIsMobile } from "~/hooks/use-mobile";
@@ -12,6 +12,7 @@ import {
 } from "~/providers/customer-provider";
 import LineTemplatePickerModal from "./line-template-picker-modal";
 import { GlobalImage } from "~/components/shared/global-image";
+import { StickerSelectorBar } from "./line-sticke";
 
 const getLabelFromType = (type: string): MessageLabelType => {
   switch (type) {
@@ -108,6 +109,7 @@ export default function ChatInput({
   const isMobile = useIsMobile();
 
   const [input, setInput] = useState("");
+  const [showStickerSelector, setShowStickerSelector] = useState(false)
   const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -367,7 +369,12 @@ export default function ChatInput({
     <form
       onSubmit={sendText}
       className="flex flex-col w-full gap-2 border-t p-2 dark:bg-background"
-    >
+    > 
+      {showStickerSelector && (
+        <div className="w-full">
+          <StickerSelectorBar />
+        </div>
+      )}
       {/* Preview */}
       {pendingImages.length > 0 && (
         <div className="w-full grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-2">
@@ -420,6 +427,15 @@ export default function ChatInput({
       />
 
       <div className="flex justify-end gap-2 pt-1">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          type="button"
+          title="อีโมจิ"
+          onClick={() => setShowStickerSelector(isOpen => !isOpen)}
+        >
+          <Smile className="w-4 h-4" />
+        </Button>
         <LineTemplatePickerModal handleSelectChange={setInput} />
 
         <Button

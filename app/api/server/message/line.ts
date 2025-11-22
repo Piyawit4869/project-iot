@@ -80,3 +80,9 @@ export const markFavoriteReplyMessage = async (id: string) => {
     return error;
   }
 };
+
+// FIXME: wait for full api with sticker list.
+export const getAllLineSticker = async () => {
+    const res = await ApiConfig.get(`/chat-stickers`);
+    return res.data;
+}
