@@ -280,6 +280,8 @@ export default function StatusToolbar({
                 align="start"
                 sideOffset={6}
                 className="w-[px] text-sm"
+                autoFocus={false}
+                onOpenAutoFocus={(e) => e.preventDefault()}
               >
                 <div className="max-h-[30vh] overflow-y-auto">
                   {data.matches === 0 ? (

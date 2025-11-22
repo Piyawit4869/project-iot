@@ -77,6 +77,9 @@ export const ChatMessages = ({
     isLoading,
   } = usePaginatedMessagesCursor(selectedRoom.id, targetMessageId, direction);
 
+  const meta = messagesData?.pages?.[0]?.meta;
+  console.log({ meta });
+
   const paginatedMessages = messagesData?.pages.flatMap((page) => page) ?? [];
 
   const combinedMessages = React.useMemo(() => {
@@ -190,84 +193,8 @@ export const ChatMessages = ({
     setHasInitialScroll(false);
   };
 
-  React.useLayoutEffect(() => {
-    const el = scrollAreaRef.current;
-    if (!el || !combinedMessages?.length) return;
-    requestAnimationFrame(() => {
-      el.scrollTop = el.scrollHeight;
-
-      setHasInitialScroll(true);
-    });
-  }, [!!combinedMessages?.length]);
-
   React.useEffect(() => {
-    const scrollArea = scrollAreaRef.current;
-    if (!scrollArea) return;
-
-    const handleScroll = () => {
-      const { scrollHeight, scrollTop, clientHeight } = scrollArea;
-      const isContentScrollable = scrollHeight > clientHeight;
-      const SCROLL_THRESHOLD = 50;
-      const isNotAtBottom =
-        scrollTop < scrollHeight - clientHeight - SCROLL_THRESHOLD;
-      setButtonScrollToBottom(isContentScrollable && isNotAtBottom);
-    };
-
-    scrollArea.addEventListener("scroll", handleScroll);
-    handleScroll();
-
-    return () => {
-      scrollArea.removeEventListener("scroll", handleScroll);
-    };
-  }, [bottomRef.current]);
-
-  React.useEffect(() => {
-    if (messagesData?.pages?.length === 1) {
-      setAutoScroll(true);
-    }
-  }, [messagesData]);
-
-  React.useEffect(() => {
-    const el = scrollAreaRef.current;
-    if (!el) return;
-
-    const THRESHOLD = 5;
-
-    const onScroll = () => {
-      if (!hasNextPage || isFetchingNextPage) return;
-
-      if (el.scrollTop <= THRESHOLD) {
-        const prevScrollHeight = el.scrollHeight;
-        setShowTopLoading(true);
-        setDirection("before");
-
-        fetchNextPage().finally(() => {
-          setShowTopLoading(false);
-          requestAnimationFrame(() => {
-            const newScrollHeight = el.scrollHeight;
-            const heightDiff = newScrollHeight - prevScrollHeight;
-            el.scrollTop = heightDiff;
-          });
-        });
-      }
-
-      if (targetMessageId) {
-        const isBottom =
-          el.scrollTop + el.clientHeight >= el.scrollHeight - THRESHOLD;
-        if (isBottom && hasInitialScroll) {
-          console.log("bottom reached");
-
-          setDirection("after");
-          fetchNextPage();
-        }
-      }
-    };
-
-    el.addEventListener("scroll", onScroll);
-    return () => el.removeEventListener("scroll", onScroll);
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  React.useEffect(() => {
+    //new message and auto scroll
     const el = scrollAreaRef.current;
     const messages = combinedMessages;
     if (!el || messages?.length === 0) return;
@@ -282,7 +209,25 @@ export const ChatMessages = ({
     }
   }, [combinedMessages]);
 
+  // React.useEffect(() => {
+  //   if (messagesData?.pages?.length === 1) {
+  //     setAutoScroll(true);
+  //   }
+  // }, [messagesData]);
+
+  // React.useLayoutEffect(() => {
+  //   const el = scrollAreaRef.current;
+  //   if (!el || !combinedMessages?.length) return;
+  //   requestAnimationFrame(() => {
+  //     el.scrollTop = el.scrollHeight;
+
+  //     setHasInitialScroll(true);
+  //   });
+  // }, [!!combinedMessages?.length]);
+
   React.useEffect(() => {
+    // weิb socket
+
     const socket = socketConfig(api);
 
     if (selectedRoom?.id) {
@@ -311,6 +256,79 @@ export const ChatMessages = ({
   }, [selectedRoom]);
 
   React.useEffect(() => {
+    // show button to scroll down
+    const scrollArea = scrollAreaRef.current;
+    if (!scrollArea) return;
+
+    const handleScroll = () => {
+      const { scrollHeight, scrollTop, clientHeight } = scrollArea;
+      const isContentScrollable = scrollHeight > clientHeight;
+      const SCROLL_THRESHOLD = 50;
+      const isNotAtBottom =
+        scrollTop < scrollHeight - clientHeight - SCROLL_THRESHOLD;
+      setButtonScrollToBottom(isContentScrollable && isNotAtBottom);
+    };
+
+    scrollArea.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => {
+      scrollArea.removeEventListener("scroll", handleScroll);
+    };
+  }, [bottomRef.current]);
+
+  React.useEffect(() => {
+    // scroll top and down to load
+
+    const el = scrollAreaRef.current;
+    if (!el) return;
+
+    const THRESHOLD = 5;
+
+    const onScroll = () => {
+      if (!hasNextPage || isFetchingNextPage) return;
+
+      if (el.scrollTop <= THRESHOLD && meta.before) {
+        const prevScrollHeight = el.scrollHeight;
+        setShowTopLoading(true);
+        setDirection("before");
+
+        fetchNextPage().finally(() => {
+          setShowTopLoading(false);
+          requestAnimationFrame(() => {
+            const newScrollHeight = el.scrollHeight;
+            const heightDiff = newScrollHeight - prevScrollHeight;
+            el.scrollTop = heightDiff;
+          });
+        });
+      }
+
+      // if (targetMessageId) {
+      const isBottom =
+        el.scrollTop + el.clientHeight >= el.scrollHeight - THRESHOLD;
+
+      console.log({ isBottom });
+      console.log("meta.after", meta.after);
+      if (
+        isBottom &&
+        meta.after
+
+        // && hasInitialScroll
+      ) {
+        console.log("bottom reached");
+
+        setDirection("after");
+        fetchNextPage();
+      }
+      // }
+    };
+
+    el.addEventListener("scroll", onScroll);
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  React.useEffect(() => {
+    // search and shakex
     if (!targetMessageId || hasScrolledToTarget) return;
 
     const el = messageRefs.current[targetMessageId];
@@ -345,6 +363,8 @@ export const ChatMessages = ({
   }, [targetMessageId, messagesData, hasScrolledToTarget]);
 
   React.useEffect(() => {
+    //clear target on new select room
+
     if (selectedRoom) {
       setTargetMessageId("");
     }

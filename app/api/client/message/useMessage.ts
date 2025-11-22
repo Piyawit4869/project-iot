@@ -121,7 +121,7 @@ export const usePaginatedMessagesCursor = (
     getNextPageParam: (lastPage) => {
       const meta = lastPage?.meta;
 
-      if (!meta?.before) return undefined;
+      // if (!meta?.before) return undefined;
       return direction === "after" ? meta.after : meta.before;
     },
     enabled: !!roomId,
