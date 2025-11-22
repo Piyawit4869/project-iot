@@ -34,6 +34,7 @@ import type {
 } from "~/schemas/settings";
 import {
   createReplyMessage,
+  getAllLineSticker,
   getReplyMessage,
   markFavoriteReplyMessage,
   updateReplyMessage,
@@ -263,5 +264,12 @@ export const useLineGetCardContent = (id: string) => {
   return useQuery({
     queryKey: ["line-card-content"],
     queryFn: async () => getCardContent(id),
+  });
+};
+
+export const useLineGetSticker = () => {
+  return useQuery({
+    queryKey: ["line-sticker"],
+    queryFn: async () => getAllLineSticker(),
   });
 };
