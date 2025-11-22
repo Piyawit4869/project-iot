@@ -43,7 +43,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
   // Get Ai Chatroom id.
   const { data } = useGetConnectionAi(id ?? "");
   const chatRoomId = data?.chatRoomId;
-  
+
   const { addMessageAI } = useChat();
 
   const [autoScroll, setAutoScroll] = React.useState<boolean>(true);

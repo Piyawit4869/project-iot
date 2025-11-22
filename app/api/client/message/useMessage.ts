@@ -100,18 +100,21 @@ export const usePaginatedMessages = (roomId: string, jumpOffset = 0) => {
 export const usePaginatedMessagesCursor = (
   roomId: string,
   currentId = "",
-  direction?: string
+  direction?: string //"none" : "before" : "after"
 ) => {
-  const limit = 10;
+  const limit = 20;
 
   return useInfiniteQuery({
     queryKey: ["messages-cursor", roomId, currentId],
     queryFn: async ({ pageParam = currentId }) => {
+      console.log({ currentId, pageParam });
+
       return fetchAllMessageCursorWithRoomId(
         roomId,
         pageParam,
         limit,
-        currentId ? "none" : "before"
+        // currentId ? "none" : "before"
+        direction ? direction : "none"
       );
     },
     initialPageParam: currentId ?? "",
@@ -119,7 +122,7 @@ export const usePaginatedMessagesCursor = (
       const meta = lastPage?.meta;
 
       if (!meta?.before) return undefined;
-      return meta.before;
+      return direction === "after" ? meta.after : meta.before;
     },
     enabled: !!roomId,
   });
