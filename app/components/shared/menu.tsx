@@ -22,6 +22,13 @@ type ItemMenuType = {
   path: string;
   icon: Icons.LucideIcon;
 };
+type NotificationItem = {
+  band: string;
+  noti: string;
+  name: string;
+  email: string;
+  time: string;
+};
 
 export function Menu() {
   const { me } = useRouteLoaderData("root");
@@ -79,6 +86,105 @@ export function Menu() {
       icon: Icons.Settings,
     },
   ];
+  const Badge = {
+    Chat: "แชท",
+    Customer: "ลูกค้า",
+    Order: "ออเดอร์",
+    Inventory: "คลังสินค้า",
+    Product: "สินค้า",
+    Employee: "พนักงาน",
+    Setting: "การตั้งค่า",
+  } as const;
+  const notification = [
+  
+    {
+      band: Badge.Chat,
+      noti: "New project created",
+      name: "John Doe",
+      email: "john@example.com",
+      time: "2 นาทีที่แล้ว",
+    },
+    {
+      band: Badge.Customer,
+      noti: "Team member added to your workspace",
+      name: "sarah Smith",
+      email: "sarah@example.com",
+      time: "151 นาทีที่แล้ว",
+    },
+    {
+      band: Badge.Order,
+      noti: "Team member added to your workspace",
+      name: "sarah Smith",
+      email: "sarah@example.com",
+      time: "151 นาทีที่แล้ว",
+    },
+    {
+      band: Badge.Inventory,
+      noti: "Team member added to your workspace",
+      name: "sarah Smith",
+      email: "sarah@example.com",
+      time: "151 นาทีที่แล้ว",
+    },
+    {
+      band: Badge.Product,
+      noti: "Team member added to your workspace",
+      name: "sarah Smith",
+      email: "sarah@example.com",
+      time: "151 นาทีที่แล้ว",
+    },
+    {
+      band: Badge.Employee,
+      noti: "Team member added to your workspace",
+      name: "sarah Smith",
+      email: "sarah@example.com",
+      time: "151 นาทีที่แล้ว",
+    },
+    {
+      band: Badge.Setting,
+      noti: "Team member added to your workspace",
+      name: "sarah Smith",
+      email: "sarah@example.com",
+      time: "151 นาทีที่แล้ว",
+    },  
+    {
+      band: Badge.Chat,
+      noti: "Team member added to your workspace",
+      name: "sarah Smith",
+      email: "sarah@example.com",
+      time: "151 นาทีที่แล้ว",
+    },
+    {
+      band: Badge.Order,
+      noti: "Team member added to your workspace",
+      name: "sarah Smith",
+      email: "sarah@example.com",
+      time: "151 นาทีที่แล้ว",
+    },                       
+  ];
+  function renderNotification(notification: NotificationItem[]) {
+    const elements = [];
+
+    for (let i = 0; i < notification.length; i++) {
+      const item = notification[i];
+      elements.push(
+        <div key={i} className="space-y-2">
+          <div className="flex flex-row justify-between">
+            <div className="inline-flex items-center bg-blue-100 text-blue-600 px-3 py-1 rounded-full">
+              <span className="text-sm font-medium">{item.band}</span>
+              <span className="w-2 h-2 bg-blue-500 rounded-full ml-2"></span>
+            </div>
+            <p>{item.time}</p>
+          </div>
+          <h6 className="font-medium leading-none">{item.noti}</h6>
+          <p className="text-sm text-muted-foreground">
+            {item.name}<br />
+            {item.email}
+          </p>
+        </div>
+      );
+    }
+    return elements;
+  }
 
   return (
     <div className="justify-between items-center flex gap-1 pr-3">
@@ -104,22 +210,21 @@ export function Menu() {
             การแจ้งเตือน
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <div className="grid gap-4 mt-4">
-            <div className="space-y-2">
-              <h6 className="font-medium leading-none">ไม่มีการแจ้งเตือน</h6>
-            </div>
-            {/* <div className="space-y-2">
-              <h6 className="font-medium leading-none">การจัดการงาน</h6>
-              <p className="text-sm text-muted-foreground">
-                เจมส์ เข้างาน 10:00
-              </p>
-              <DropdownMenuSeparator />
-              <h6 className="font-medium leading-none mt-2">ผู้ช่วยส่วนตัว</h6>
-              <p className="text-sm text-muted-foreground">
-                สวัสดี วันนี้มีอะไรให้ช่วยไหม
-              </p>
-            </div> */}
+          <DropdownMenuLabel className="text-base flex ">
+            <button className="flex  text-blue-600">
+            <Icons.Check className="items-center hover:text-accent1  " />
+            ทำเครื่องหมายทั้งหมดว่าอ่านแล้ว
+            </button>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <div className="grid gap-4 mt-4 overflow-y-auto max-h-128 pr-2 bg-blue-1">
+            {renderNotification(notification)}            
           </div>
+        <DropdownMenuSeparator />
+          <DropdownMenuLabel className="text-base flex justify-center item-aligmen-center">
+            <button className="flex justify-center text-blue-600">ดูการแจ้งเตือนทั้งหมด</button>
+          </DropdownMenuLabel>
+          
         </PopoverContent>
       </Popover>
 
@@ -216,5 +321,6 @@ export function Menu() {
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
+    
   );
 }
