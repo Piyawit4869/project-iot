@@ -3,12 +3,27 @@ import { AppSidebar } from "~/components/shared/sidebar";
 import { SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";
 import data from "~/components/shared/sidebar/data/backoffice-data.json";
 import { Outlet, redirect } from "react-router";
-import { getAccessToken } from "~/services/session.server";
+import {
+  destroySession,
+  getAccessToken,
+  getUserSession,
+  isTokenExpired,
+} from "~/services/session.server";
 import type { Route } from "./backoffice/settings/+types/setting-layout";
 import { HeaderBreadcrumb } from "~/components/shared/header-breadcrumb";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const token = await getAccessToken(request);
+  const session = await getUserSession(request);
+
+  const isExpired = isTokenExpired(token);
+
+  if (token && isExpired) {
+    return redirect("/", {
+      headers: { "Set-Cookie": await destroySession(session) },
+    });
+  }
+
   if (!token) {
     return redirect("/login");
   }

@@ -265,11 +265,11 @@ export const useDeleteContact = () => {
   });
 };
 
-export const useAllCustomerSummary = (id?: string) => {
+export const useAllCustomerSummary = (customerType?: string) => {
   return useQuery({
-    queryKey: ["contacts"],
-    queryFn: () => fetchCustomerSummary(),
-    enabled: !id,
+    queryKey: ["contacts", customerType],
+    queryFn: () => fetchCustomerSummary(customerType),
+    enabled: !!customerType,
   });
 };
 

@@ -139,14 +139,17 @@ export const fetchDeleteCustomer = async (id: string) => {
   }
 };
 
-export const fetchCustomerSummary = async () => {
+export const fetchCustomerSummary = async (customerType?: string) => {
   try {
-    const res = await ApiConfig.get(`/crud/customers/status-summary`);
+    const res = await ApiConfig.get(`/crud/customers/status-summary`, {
+      params:  {customerType} ,
+    });
     return res.data;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
+
 
 export const fetchAllContact = async () => {
   try {

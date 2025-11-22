@@ -159,14 +159,15 @@ export const ChatMessageRender = ({
         </div>
       </div>
 
-      <ChatMessages
-        api={api}
-        selectedRoom={selectedRoom}
-        autoScroll={autoScroll}
-        setAutoScroll={setAutoScroll}
-        customer={customerSingle}
-      />
-
+      {selectedRoom?.id && (
+        <ChatMessages
+          api={api}
+          selectedRoom={selectedRoom}
+          autoScroll={autoScroll}
+          setAutoScroll={setAutoScroll}
+          customer={customerSingle}
+        />
+      )}
       <Dialog open={showAllParticipants} onOpenChange={setShowAllParticipants}>
         <DialogContent className="max-w-md">
           <DialogHeader>
