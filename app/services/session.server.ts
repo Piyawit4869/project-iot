@@ -114,6 +114,16 @@ function decodeJwt(token: string): { exp?: number } | null {
   }
 }
 
+export function isTokenExpired(token: string, marginSeconds = 0): boolean {
+  if (!token) return true;
+
+  const decoded = decodeJwt(token);
+  if (!decoded?.exp) return true;
+
+  const now = Math.floor(Date.now() / 1000);
+  return decoded.exp <= now + marginSeconds;
+}
+
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: "__session_rome_platform",
@@ -132,7 +142,7 @@ const ACCESS_TOKEN_KEY = "accessToken";
 const REFRESH_TOKEN_KEY = "refreshToken";
 
 // ---------- Utils ----------
-const getUserSession = async (request: Request) =>
+export const getUserSession = async (request: Request) =>
   sessionStorage.getSession(request.headers.get("Cookie"));
 
 function decodeJwtExp(token?: string): number | undefined {
@@ -169,9 +179,7 @@ export async function getUser(
   return session.get(USER_SESSION_KEY);
 }
 
-export async function getAccessToken(
-  request: Request
-): Promise<string | undefined> {
+export async function getAccessToken(request: Request): Promise<any> {
   const session = await getUserSession(request);
   return session.get(ACCESS_TOKEN_KEY);
 }

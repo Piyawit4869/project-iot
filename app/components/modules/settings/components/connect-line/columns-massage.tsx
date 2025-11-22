@@ -1,5 +1,3 @@
-import { GlobalImage } from "~/components/shared/global-image";
-
 import { PenLine, Trash } from "lucide-react";
 import GlobalButton from "~/components/shared/global-button";
 import { useMemo } from "react";
@@ -8,11 +6,13 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Link, useSearchParams } from "react-router";
 import { Button } from "~/components/ui/button";
 
-import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import type { UserColumn } from "~/types/user/type-user";
-import { statusMap } from "~/types/user/init-data";
 
-export const LineMassageColumns = (): ColumnDef<UserColumn>[] => {
+type OnDeleteFn = (id: string) => void;
+
+export const LineMassageColumns = (
+  onDelete: OnDeleteFn
+): ColumnDef<UserColumn>[] => {
   const [sp] = useSearchParams();
 
   const columns = useMemo<ColumnDef<UserColumn>[]>(
@@ -55,13 +55,11 @@ export const LineMassageColumns = (): ColumnDef<UserColumn>[] => {
           return (
             <div className="flex items-center gap-2">
               <Link
-                to={`/setting-organization/third-party/line?tab=massage-line&id=${id}&tab=${tabFromUrl}&view=edit&subId=${subId}`}
-              >
+                to={`/setting-organization/third-party/line?id=${id}&tab=${tabFromUrl}&view=edit&subId=${subId}`}>
                 <Button
                   className="h-9 w-9 p-0 bg-[#737373] hover:bg-[#5E5E5E]"
                   aria-label="แก้ไข"
-                  title="แก้ไข"
-                >
+                  title="แก้ไข">
                   <PenLine className="w-4 h-4 text-white" />
                 </Button>
               </Link>
@@ -70,10 +68,9 @@ export const LineMassageColumns = (): ColumnDef<UserColumn>[] => {
                 <GlobalButton
                   label=""
                   icon={<Trash className="w-4 h-4 text-white" />}
-                  onClick={() => {}}
+                  onClick={() => onDelete(subId)}
                   className="h-10 w-10 p-0 bg-[#FF7062] text-white hover:bg-[#E8594B] hover:text-white transition-colors"
                   aria-label="ลบ"
-                  disabled
                 />
               </div>
             </div>
@@ -81,7 +78,7 @@ export const LineMassageColumns = (): ColumnDef<UserColumn>[] => {
         },
       },
     ],
-    []
+    [sp, onDelete]
   );
 
   return columns;

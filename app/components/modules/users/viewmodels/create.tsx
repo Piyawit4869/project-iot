@@ -21,6 +21,7 @@ import { UserStudy } from "../components/formStudy";
 import { UserSocalmedias } from "../components/formSocalmedia";
 import { UserDocuments } from "../components/formDocuments";
 import { Save } from "lucide-react";
+import { PermissionControl } from "../../permission/components/tabal-permission";
 
 export default function CreateUsers() {
   const navigate = useNavigate();
@@ -157,6 +158,12 @@ export default function CreateUsers() {
               <Card className="p-2">
                 <UserDocuments form={form} />
               </Card>
+
+              <Card className="p-2">
+                <PermissionControl />
+              </Card>
+
+              <Card className="p-2">{/* <<OrgEmployeeTree /> /> */}</Card>
             </div>
           </div>
         </form>

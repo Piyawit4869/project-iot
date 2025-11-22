@@ -81,7 +81,6 @@ export function calcOffsetFromBottom(params: CalcParams) {
 export default function StatusToolbar({
   chatRoomDetail,
   className,
-  setCursor,
   total,
   isDisable,
   onSearchClick,
@@ -164,7 +163,6 @@ export default function StatusToolbar({
 
       onSearchClick(id, offset);
     }
-    setCursor?.(item.offset);
     // }
     // setOpenNavigateMessage(false);
   };

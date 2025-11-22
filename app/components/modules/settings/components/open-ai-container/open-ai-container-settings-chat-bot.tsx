@@ -32,18 +32,17 @@ export const OpenAiContainerSettingsChatBot: React.FC<
 > = (props) => {
   const { api } = props;
 
-  const params = useParams();
-  // const id = (params?.id as string) ?? "";
+  // Get openAI config id from params.
+  const [sp] = useSearchParams("");
+  const id = sp.get("id") ?? "";
 
-  const id = "2f733c74-7d49-475c-a832-1c01b888576b";
   const { mutate: UpdateConnectionAi } = useUpdateConnectionAi(String(id));
   const { refetch: refetchChatAI } = useGetConnectionAi(String(id));
   const { user } = useRouteLoaderData("root");
 
-  // const { data } = useGetConnectionAi(id ?? "");
+  // Get Ai Chatroom id.
   const { data } = useGetConnectionAi(id ?? "");
-  const chatRoomId = "f10574c5-fe1e-4216-85f3-d5400af2e4ad";
-  // const chatRoomId = data?.id;
+  const chatRoomId = data?.chatRoomId;
 
   const { addMessageAI } = useChat();
 
