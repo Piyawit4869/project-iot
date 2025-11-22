@@ -161,7 +161,7 @@ export default function ChatlistSidebar({
     }
 
     socket.on("rooms", (room: any) => {
-      console.log("rooms in", room);
+      // console.log("rooms in", room);
 
       setAllRooms((prev) => mergeRoomImmutable(prev, room));
 

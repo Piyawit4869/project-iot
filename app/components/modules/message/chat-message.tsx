@@ -1,88 +1,25 @@
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import React, { useRef, useState } from "react";
 import dayjs from "dayjs";
-
-import FeatureCard from "~/components/shared/feature-card";
-import {
-  AudioLines,
-  MessagesSquare,
-  PauseIcon,
-  Play,
-  PlayIcon,
-} from "lucide-react";
-import ChatInput from "./chat-input";
-
-import { CustomerChatSkeleton } from "./noData/customer-chat-skeleton";
-import { socketConfig } from "~/lib/sockets";
-import type { ChatRoomSchemaType } from "~/schemas/message/message";
-import { usePaginatedMessagesCursor } from "~/api/client/message/useMessage";
-import { useChat, type Message } from "~/providers/chat/useChat";
-import StatusToolbar from "./status-toolbar";
-import ReactLinkify from "react-linkify";
-import {
-  formatDateAndTime,
-  formatShowTime,
-} from "~/components/shared/global-format";
-
-import {
-  FileText,
-  FileType,
-  FileSpreadsheet,
-  FileArchive,
-  File,
-} from "lucide-react";
-import LoadingAnimation from "./loading-animation";
-
 import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
 
-export function getFileIcon(filename: string) {
-  const ext = filename.split(".").pop()?.toLowerCase() || "";
+import FeatureCard from "~/components/shared/feature-card";
+import { MessagesSquare } from "lucide-react";
+import ChatInput from "./chat-input";
 
-  switch (ext) {
-    case "pdf":
-      return <FileText className="w-8 h-8 text-red-500" />;
-    case "doc":
-    case "docx":
-      return <FileType className="w-8 h-8 text-blue-500" />;
-    case "xls":
-    case "xlsx":
-      return <FileSpreadsheet className="w-8 h-8 text-green-500" />;
-    case "zip":
-    case "rar":
-      return <FileArchive className="w-8 h-8 text-yellow-500" />;
-    default:
-      return <File className="w-8 h-8 text-muted-foreground" />;
-  }
-}
+import { socketConfig } from "~/lib/sockets";
+import StatusToolbar from "./status-toolbar";
+import { CustomerChatSkeleton } from "./noData/customer-chat-skeleton";
+import type { ChatRoomSchemaType } from "~/schemas/message/message";
+import { usePaginatedMessagesCursor } from "~/api/client/message/useMessage";
+import { useChat, type Message } from "~/providers/chat/useChat";
+import { formatDateAndTime } from "~/components/shared/global-format";
 
-export function MessageText({ text }: { text: string }) {
-  return (
-    <ReactLinkify
-      componentDecorator={(decoratedHref, decoratedText, key) => (
-        <a
-          href={decoratedHref}
-          key={key}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline"
-        >
-          {decoratedText}
-        </a>
-      )}
-    >
-      {text}
-    </ReactLinkify>
-  );
-}
+import LoadingAnimation from "./loading-animation";
+import { MessageRenderer } from "./render-message-content";
 
-const formatTime = (sec: number) => {
-  const m = Math.floor(sec / 60);
-  const s = Math.floor(sec % 60);
-  return `${m}:${s.toString().padStart(2, "0")}`;
-};
-
-export default function ChatMessages({
+export const ChatMessages = ({
   api,
   customer,
   selectedRoom,
@@ -93,13 +30,11 @@ export default function ChatMessages({
   autoScroll: boolean;
   selectedRoom: ChatRoomSchemaType;
   setAutoScroll: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
-  const [loadingFirstTime, setLoadingFirstTime] = React.useState(true);
+}) => {
   const [playing, setPlaying] = React.useState(false);
   const [currentTime, setCurrentTime] = React.useState(0);
   const [duration, setDuration] = React.useState(0);
 
-  const [currentMsgAI, setCurrentMsgAI] = React.useState<any>({});
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
 
   const togglePlay = () => {
@@ -118,23 +53,19 @@ export default function ChatMessages({
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const newestSeenId = React.useRef<string | null>(null);
+
   const [previewUrl, setPreviewUrl] = React.useState("");
 
   const [showTopLoading, setShowTopLoading] = useState(false);
   const [buttonScrollToBottom, setButtonScrollToBottom] = React.useState(false);
+  const [hasInitialScroll, setHasInitialScroll] = React.useState(false);
 
   const { messages: socketMessages, addMessage } = useChat();
-  const [cursor, setCursor] = React.useState<string>("");
 
   const messageRefs = useRef<{ [id: string]: HTMLDivElement | null }>({});
 
   const [targetMessageId, setTargetMessageId] = useState<string>("");
-  const [targetMessageOffset, setTargetMessageOffset] = useState<number | null>(
-    null
-  );
-  const [pendingScrollTarget, setPendingScrollTarget] = useState<string | null>(
-    null
-  );
+  const [direction, setDirection] = useState<string>("before");
 
   const [hasScrolledToTarget, setHasScrolledToTarget] = useState(false);
 
@@ -144,39 +75,9 @@ export default function ChatMessages({
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = usePaginatedMessagesCursor(selectedRoom.id, targetMessageId);
+  } = usePaginatedMessagesCursor(selectedRoom.id, targetMessageId, direction);
 
   const paginatedMessages = messagesData?.pages.flatMap((page) => page) ?? [];
-
-  // const combinedMessages = React.useMemo(() => {
-  //   const paginated = paginatedMessages.flatMap((m) => m.items || []);
-  //   const messages = [...paginated, ...socketMessages.flatMap((m) => m || [])]
-  //     .sort(
-  //       (a, b) =>
-  //         dayjs(a.createdAt ?? a.timestamp).valueOf() -
-  //         dayjs(b.createdAt ?? b.timestamp).valueOf()
-  //     )
-  //     .filter((c) => c.chatRoomId === selectedRoom?.id)
-  //     .map((message) => {
-  //       return {
-  //         ...message,
-  //         read: message?.platform !== "backoffice" && true,
-  //       };
-  //     });
-
-  //   const isLast = messages.length - 1;
-  //   const isLastNotBackoffice = messages[isLast]?.platform !== "backoffice";
-
-  //   let result = messages;
-
-  //   if (isLastNotBackoffice) {
-  //     result = messages.map((message) => {
-  //       return { ...message, read: true };
-  //     });
-  //   }
-
-  //   return result;
-  // }, [paginatedMessages, socketMessages]);
 
   const combinedMessages = React.useMemo(() => {
     const paginated = paginatedMessages.flatMap((m) => m.items || []);
@@ -282,197 +183,20 @@ export default function ChatMessages({
     }
   };
 
-  function renderMessageContent(
-    msg: any,
-    isBackoffice: boolean,
-    setPreviewUrl: any
-  ) {
-    const message = msg?.message ?? "";
-    const type = msg?.messageType;
-
-    const isLabel = msg?.isLabel;
-
-    if (isLabel) {
-      const formattedTime = formatShowTime(
-        msg.createdAt ? msg.createdAt : msg.timestamp
-      );
-      return (
-        <div
-          className={`flex w-full justify-center align-center whitespace-pre-wrap`}
-        >
-          <div className="flex flex-col items-center bg-muted text-primary rounded-full px-5 py-1 text-sm">
-            <span className="text-[12px] text-muted-foreground mt-1 ">
-              {formattedTime}
-            </span>
-
-            <span className="text-[12px] text-bold">{message}</span>
-          </div>
-        </div>
-      );
-    }
-
-    // TEXT
-    if (type === "text" || type === null) {
-      return (
-        <div
-          className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
-            isBackoffice ? "bg-blue-500 text-white" : "bg-muted text-primary"
-          }`}
-        >
-          <MessageText text={String(message)} />
-        </div>
-      );
-    }
-
-    // STICKER
-    if (type === "sticker") {
-      return <img src={message} width={150} height={150} />;
-    }
-
-    // FILE (PDF / DOC / ZIP ecc.)
-    if (type === "file") {
-      const filename = message.split("/").pop() ?? "ไฟล์แนบ";
-
-      return (
-        <div
-          className="flex items-center gap-3 bg-muted p-3 rounded-xl cursor-pointer hover:bg-muted/70"
-          onClick={() => window.open(message, "_blank")}
-        >
-          {getFileIcon(filename)}
-
-          <div className="flex flex-col">
-            <span className="text-sm font-medium">{filename}</span>
-            <span className="text-xs text-muted-foreground">
-              แตะเพื่อเปิดไฟล์
-            </span>
-          </div>
-        </div>
-      );
-    }
-
-    if (type === "image") {
-      return (
-        <div onClick={() => setPreviewUrl(message)} className="cursor-pointer">
-          <img
-            src={message}
-            width={180}
-            height={180}
-            className="rounded-md object-cover"
-          />
-        </div>
-      );
-    }
-
-    // VIDEO
-    if (type === "video") {
-      return (
-        <div
-          className="relative cursor-pointer"
-          onClick={() => {
-            const videoEl = document.createElement("video");
-            videoEl.src = message;
-            videoEl.autoplay = true;
-            videoEl.controls = true;
-            videoEl.style.width = "100%";
-            videoEl.style.height = "100%";
-
-            // เปิด fullscreen
-            videoEl.onloadedmetadata = async () => {
-              document.body.appendChild(videoEl);
-
-              try {
-                if (videoEl.requestFullscreen) {
-                  await videoEl.requestFullscreen();
-                }
-
-                await videoEl.play();
-              } catch (err) {
-                console.error("Fullscreen error:", err);
-                videoEl.play();
-              }
-
-              // เมื่อออก fullscreen ให้ลบ element
-              videoEl.onfullscreenchange = () => {
-                if (!document.fullscreenElement) {
-                  videoEl.pause();
-                  videoEl.remove();
-                }
-              };
-            };
-          }}
-        >
-          {/* Thumbnail */}
-          <video
-            src={message}
-            width={200}
-            height={200}
-            className="rounded-lg"
-            muted
-          />
-
-          {/* Play Button Overlay */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-black/60 rounded-full p-3">
-              <Play className="w-6 h-6 text-white" />
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    if (type === "audio") {
-      return (
-        <div
-          className="flex items-center gap-3 bg-muted px-3 py-2 rounded-xl cursor-pointer"
-          onClick={togglePlay}
-        >
-          <AudioLines className="w-6 h-6 text-primary" />
-
-          <span className="font-medium text-sm">
-            {playing ? <PauseIcon size={14} /> : <PlayIcon size={14} />}
-          </span>
-
-          {/* เวลา (เล่นไป / ทั้งหมด) */}
-          <span className="text-xs font-medium ml-2">
-            {formatTime(currentTime)} / {formatTime(duration)}
-          </span>
-
-          <audio
-            ref={audioRef}
-            src={message}
-            preload="auto"
-            onLoadedMetadata={() => {
-              const audio = audioRef.current;
-              if (!audio) return;
-              setDuration(audio.duration);
-            }}
-            onTimeUpdate={() => {
-              const audio = audioRef.current;
-              if (!audio) return;
-              setCurrentTime(audio.currentTime);
-            }}
-            onEnded={() => {
-              setPlaying(false);
-              setCurrentTime(0);
-            }}
-          />
-        </div>
-      );
-    }
-
-    // FALLBACK (เช่น dicebear)
-    return (
-      <span className="text-[16px] text-muted-foreground mt-1 ">
-        ระบบยังไม่รองรับการส่งแบบ Location
-      </span>
-    );
-  }
+  const handleSearchClick = (messageId: string) => {
+    setTargetMessageId(messageId);
+    setDirection("none");
+    setHasScrolledToTarget(false);
+    setHasInitialScroll(false);
+  };
 
   React.useLayoutEffect(() => {
     const el = scrollAreaRef.current;
     if (!el || !combinedMessages?.length) return;
     requestAnimationFrame(() => {
       el.scrollTop = el.scrollHeight;
+
+      setHasInitialScroll(true);
     });
   }, [!!combinedMessages?.length]);
 
@@ -515,6 +239,7 @@ export default function ChatMessages({
       if (el.scrollTop <= THRESHOLD) {
         const prevScrollHeight = el.scrollHeight;
         setShowTopLoading(true);
+        setDirection("before");
 
         fetchNextPage().finally(() => {
           setShowTopLoading(false);
@@ -524,6 +249,17 @@ export default function ChatMessages({
             el.scrollTop = heightDiff;
           });
         });
+      }
+
+      if (targetMessageId) {
+        const isBottom =
+          el.scrollTop + el.clientHeight >= el.scrollHeight - THRESHOLD;
+        if (isBottom && hasInitialScroll) {
+          console.log("bottom reached");
+
+          setDirection("after");
+          fetchNextPage();
+        }
       }
     };
 
@@ -574,12 +310,6 @@ export default function ChatMessages({
     };
   }, [selectedRoom]);
 
-  const handleSearchClick = (messageId: string, messageOffset: number) => {
-    setTargetMessageId(messageId);
-    setTargetMessageOffset(messageOffset);
-    setHasScrolledToTarget(false);
-  };
-
   React.useEffect(() => {
     if (!targetMessageId || hasScrolledToTarget) return;
 
@@ -614,34 +344,16 @@ export default function ChatMessages({
     });
   }, [targetMessageId, messagesData, hasScrolledToTarget]);
 
-  // React.useEffect(() => {
-  //   setLoadingFirstTime(true);
-
-  //   const timer = setTimeout(() => {
-  //     setLoadingFirstTime(false);
-  //   }, 200);
-
-  //   return () => clearTimeout(timer);
-  // }, [selectedRoom?.id]);
+  React.useEffect(() => {
+    if (selectedRoom) {
+      setTargetMessageId("");
+    }
+  }, [selectedRoom]);
 
   const lastMessage =
     combinedMessages &&
     combinedMessages.length &&
     combinedMessages[combinedMessages.length - 1];
-
-  const messageLoadingStyle =
-    "absolute top-4 left-1/2 -translate-x-1/2 z-30 bg-white dark:bg-gray-800 text-xs text-muted-foreground text-center py-2 px-4 rounded-lg shadow-md w-fit";
-
-  const seemoreStyle = `
-                    sticky bottom-5 left-1/2 -translate-x-1/2 z-20
-                    bg-white dark:bg-gray-800
-                    text-xs text-muted-foreground text-center
-                    py-2 px-4
-                    rounded-full shadow-lg
-                    w-fit cursor-pointer
-                    hover:bg-gray-100 dark:hover:bg-gray-700
-                    transition-colors duration-200
-                `;
 
   if (isLoading && selectedRoom) {
     return <CustomerChatSkeleton />;
@@ -670,7 +382,6 @@ export default function ChatMessages({
         <div className="hidden xl:block">
           <StatusToolbar
             chatRoomDetail={selectedRoom}
-            setCursor={setCursor}
             total={messagesData?.pages[0]?.meta?.total ?? 0}
             onSearchClick={handleSearchClick}
           />
@@ -743,7 +454,20 @@ export default function ChatMessages({
                         </span>
                       </div>
                     )}
-                    {renderMessageContent(msg, isBackoffice, setPreviewUrl)}
+                    <MessageRenderer
+                      msg={msg}
+                      isBackoffice={isBackoffice}
+                      setPreviewUrl={setPreviewUrl}
+                      playing={playing}
+                      setPlaying={setPlaying}
+                      currentTime={currentTime}
+                      setCurrentTime={setCurrentTime}
+                      duration={duration}
+                      setDuration={setDuration}
+                      audioRef={audioRef}
+                      togglePlay={togglePlay}
+                    />
+
                     {msg.showTime && !msg.isLabel && (
                       <span className="text-[10px] text-muted-foreground mt-1 ">
                         {msg.read && <span>อ่านแล้ว,</span>} {formattedTime}
@@ -812,4 +536,20 @@ export default function ChatMessages({
       )}
     </div>
   );
-}
+};
+
+const messageLoadingStyle =
+  "absolute top-4 left-1/2 -translate-x-1/2 z-30 bg-white dark:bg-gray-800 text-xs text-muted-foreground text-center py-2 px-4 rounded-lg shadow-md w-fit";
+
+const seemoreStyle = `
+                    sticky bottom-5 left-1/2 -translate-x-1/2 z-20
+                    bg-white dark:bg-gray-800
+                    text-xs text-muted-foreground text-center
+                    py-2 px-4
+                    rounded-full shadow-lg
+                    w-fit cursor-pointer
+                    hover:bg-gray-100 dark:hover:bg-gray-700
+                    transition-colors duration-200
+                `;
+
+export default ChatMessages;

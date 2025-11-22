@@ -41,7 +41,7 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
   const { mutate: deleteCustomerNote } = useDeleteCustomerNote(customer?.id);
 
   const [open, setOpen] = React.useState<boolean>(false);
-  const [OpenAiNote, setOpenAiNote] = React.useState<boolean>(false);
+  const [openAiNote, setOpenAiNote] = React.useState<boolean>(false);
   const [noteContent, setNoteContent] = React.useState<string>("");
   const [selectedNoteId, setSelectedNoteId] = React.useState<string | null>(
     null
@@ -228,12 +228,14 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
         onClose={handleOnCloseModal}
         onSubmit={handleSubmitFormModal}
       />
-      <GetNoteFormAI
-        chatRoomId={selectedRoom?.id}
-        customerId={customer?.id}
-        open={OpenAiNote}
-        setOpen={setOpenAiNote}
-      />
+      {openAiNote && (
+        <GetNoteFormAI
+          chatRoomId={selectedRoom?.id}
+          customerId={customer?.id}
+          open={openAiNote}
+          setOpen={setOpenAiNote}
+        />
+      )}
     </div>
   );
 };

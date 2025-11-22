@@ -99,7 +99,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
           const id = info.row.original.id;
           return (
             <div className="flex items-center gap-2">
-              <Link to={`/users/${id}`}>
+              <Link to={`/roles/${id}`}>
                 <Button
                   className="h-9 w-9 p-0 bg-[#737373] hover:bg-[#5E5E5E]"
                   aria-label="แก้ไข"

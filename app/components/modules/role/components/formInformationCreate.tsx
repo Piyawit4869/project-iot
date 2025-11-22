@@ -1,46 +1,12 @@
-import { Check, X } from "lucide-react";
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React from "react";
 import type { UseFormReturn } from "react-hook-form";
-import { DatePicker } from "~/components/shared/date-picker";
+
 import { GlobalFormField } from "~/components/shared/global-form";
-import { GlobalImage } from "~/components/shared/global-image";
-import ImageUpload from "~/components/shared/image-upload";
-import { RequiredLabel } from "~/components/shared/required-design";
+
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
-import { Button } from "~/components/ui/button";
 import { CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Checkbox } from "~/components/ui/checkbox";
-import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "~/components/ui/command";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
-import { Switch } from "~/components/ui/switch";
+
 import { RolesFormSchema, type RolesFormValues } from "~/schemas/roles/roles";
-import { UsersFormSchema, type UsersFormValues } from "~/schemas/users/user";
 import { getRequiredPaths } from "~/utils/form-adapter";
 
 export interface RolesFormProps {
