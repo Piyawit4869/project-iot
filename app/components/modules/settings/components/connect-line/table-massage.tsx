@@ -15,6 +15,9 @@ import { DataTable } from "~/components/shared/data-table";
 import { useLineMassagePaginate } from "~/api/client/settings";
 import { LineMassageColumns } from "./columns-massage";
 import { Link } from "react-router";
+import { toast } from "sonner";
+import { ApiConfig } from "~/api/config";
+import { useQueryClient } from "@tanstack/react-query";
 
 type MassageFilter = "all" | "starred" | "draft" | "published";
 
@@ -35,13 +38,38 @@ export default function TableMassage({
 }: TableMassageProps) {
   const [q, setQ] = React.useState("");
   const [filter, setFilter] = React.useState<MassageFilter>(defaultFilter);
+  const queryClient = useQueryClient();
+
+  const handleDelete = async (id: string) => {
+    const toastId = toast.loading("กำลังดำเนินการ...");
+    try {
+      await ApiConfig.delete(`/thirdparty/line/contents/${id}`);
+      toast.success("ลบการ์ดเมสเสจสำเร็จ", {
+        id: toastId,
+        duration: 2000,
+        position: "bottom-right",
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["customer-paginate"],
+      });
+    } catch (error) {
+      const message =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "เกิดข้อผิดพลาดขณะลบการ์ดเมสเสจ";
+      toast.error(message, {
+        id: toastId,
+        duration: 2500,
+        position: "bottom-right",
+      });
+    }
+  };
 
   React.useEffect(() => {
     onFilterChange?.(filter);
   }, [filter]);
 
   const Paginate = useLineMassagePaginate;
-  const columns = LineMassageColumns();
+  const columns = LineMassageColumns(handleDelete);
 
   return (
     <div className="flex w-full flex-col gap-6">
