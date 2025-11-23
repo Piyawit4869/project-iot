@@ -198,17 +198,8 @@ export default function Page() {
             type="submit"
             loading={isSubmitting}
             form="permission"
-            // onClick={() => {
-            //   const result = getSelectedPermissions();
-            //   console.log(result);
-            // }}
           />,
-          <GlobalButton
-            key="delete"
-            label="ลบ"
-            variant="outline"
-            // onClick={() => handleDelete(params.id)}
-          />,
+          <GlobalButton key="delete" label="ลบ" variant="outline" />,
         ]}
       />
 

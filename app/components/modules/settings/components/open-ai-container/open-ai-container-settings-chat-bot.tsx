@@ -123,7 +123,6 @@ export const OpenAiContainerSettingsChatBot: React.FC<
     const socket = socketConfig(api);
 
     if (user?.branchId) {
-      console.log("me?.branchId", user?.branchId);
       socket.emit("rooms", `${user.branchId}`);
     }
 

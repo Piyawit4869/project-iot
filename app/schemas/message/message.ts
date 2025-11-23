@@ -18,6 +18,9 @@ export const pushMessageSchema = z.object({
   platform: z.string(),
   messageLabel: z.string(),
   thumbnailUrl: z.string().optional(),
+  quoteToken: z.string().optional(),
+  packageId: z.string().optional(),
+  stickerId: z.string().optional(),
 });
 
 export type PushMessageValues = z.infer<typeof pushMessageSchema>;

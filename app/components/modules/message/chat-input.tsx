@@ -12,7 +12,8 @@ import {
 } from "~/providers/customer-provider";
 import LineTemplatePickerModal from "./line-template-picker-modal";
 import { GlobalImage } from "~/components/shared/global-image";
-import { StickerSelectorBar } from "./line-sticke";
+import { StickerSelectorBar } from "./line-sticker";
+import { ReplyContentBar } from "./reply-content-bar";
 
 const getLabelFromType = (type: string): MessageLabelType => {
   switch (type) {
@@ -101,15 +102,19 @@ type PendingImage = {
 export default function ChatInput({
   selectedRoom,
   customer,
+  replyRefMessage,
+  setReplyRefMessage,
 }: {
   selectedRoom: any;
   customer: any;
+  replyRefMessage: any;
+  setReplyRefMessage: React.Dispatch<React.SetStateAction<any>>;
 }) {
-  const { messages, setMessages } = useCustomer();
+  const { setMessages } = useCustomer();
   const isMobile = useIsMobile();
 
   const [input, setInput] = useState("");
-  const [showStickerSelector, setShowStickerSelector] = useState(false)
+  const [showStickerSelector, setShowStickerSelector] = useState(false);
   const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -162,38 +167,6 @@ export default function ChatInput({
       uploadMutate(formData, { onSuccess: resolve, onError: reject });
     });
 
-  // ---- SEND STICKER ----
-  // const sendSticker = (packageId: string, stickerId: string) => {
-  //   send({
-  //     chatRoomId: selectedRoom.id,
-  //     lineSubId: customer?.lineSubId ?? "",
-  //     messageType: "sticker",
-  //     packageId,
-  //     stickerId,
-  //     message: "",
-  //     isAiReply: false,
-  //     recipient: customer?.name ?? "Unknown",
-  //     customerId: selectedRoom?.customerId ?? "",
-  //     platform: "backoffice",
-  //   });
-  // };
-
-  // // ---- SEND LOCATION ----
-  // const sendLocation = (lat: number, lng: number, address: string) => {
-  //   const payload = JSON.stringify({ lat, lng, address });
-
-  //   send({
-  //     chatRoomId: selectedRoom.id,
-  //     lineSubId: customer?.lineSubId ?? "",
-  //     messageType: "location",
-  //     message: payload,
-  //     isAiReply: false,
-  //     recipient: customer?.name ?? "Unknown",
-  //     customerId: selectedRoom?.customerId ?? "",
-  //     platform: "backoffice",
-  //   });
-  // };
-
   // ---- MAIN SUBMIT ----
   const sendText = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -238,6 +211,7 @@ export default function ChatInput({
             customerId: selectedRoom?.customerId ?? "",
             platform: "backoffice",
             messageLabel: MessageLabelType.SENDIMAGE,
+            quoteToken: replyRefMessage?.quoteToken || "",
           });
         }
       } catch (err) {
@@ -262,6 +236,7 @@ export default function ChatInput({
         customerId: selectedRoom?.customerId ?? "",
         platform: "backoffice",
         messageLabel: MessageLabelType.SENDTEXT,
+        quoteToken: replyRefMessage?.quoteToken || "",
       });
     }
 
@@ -348,6 +323,7 @@ export default function ChatInput({
           customerId: selectedRoom?.customerId ?? "",
           platform: "backoffice",
           messageLabel: getLabelFromType(messageType),
+          quoteToken: replyRefMessage?.quoteToken || "",
         });
       } catch (err) {
         console.error("Upload file failed:", err);
@@ -369,10 +345,25 @@ export default function ChatInput({
     <form
       onSubmit={sendText}
       className="flex flex-col w-full gap-2 border-t p-2 dark:bg-background"
-    > 
+    >
       {showStickerSelector && (
         <div className="w-full">
-          <StickerSelectorBar />
+          <StickerSelectorBar
+            selectedRoom={selectedRoom}
+            customer={customer}
+            replyRefMessage={replyRefMessage}
+          />
+        </div>
+      )}
+
+      {replyRefMessage?.id && (
+        <div className="w-full">
+          <ReplyContentBar
+            selectedRoom={selectedRoom}
+            customer={customer}
+            replyRefMessage={replyRefMessage}
+            setReplyRefMessage={setReplyRefMessage}
+          />
         </div>
       )}
       {/* Preview */}
@@ -427,12 +418,12 @@ export default function ChatInput({
       />
 
       <div className="flex justify-end gap-2 pt-1">
-        <Button 
-          variant="ghost" 
-          size="icon" 
+        <Button
+          variant="ghost"
+          size="icon"
           type="button"
           title="อีโมจิ"
-          onClick={() => setShowStickerSelector(isOpen => !isOpen)}
+          onClick={() => setShowStickerSelector((isOpen) => !isOpen)}
         >
           <Smile className="w-4 h-4" />
         </Button>
