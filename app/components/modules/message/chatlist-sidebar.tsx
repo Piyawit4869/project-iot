@@ -156,12 +156,11 @@ export default function ChatlistSidebar({
     const socket = socketConfig(api);
 
     if (me?.branchId) {
-      console.log("me?.branchId", me?.branchId);
       socket.emit("rooms", `${me.branchId}`);
     }
 
     socket.on("rooms", (room: any) => {
-      // console.log("rooms in", room);
+      console.log("rooms in", room);
 
       setAllRooms((prev) => mergeRoomImmutable(prev, room));
 
@@ -471,20 +470,8 @@ export default function ChatlistSidebar({
               <Separator className="w-full m-0" />
 
               <div className="flex justify-end gap-3 mt-2 px-3">
-                {/* <button
-                  className="text-sm font-semibold hover:text-gray-700"
-                  onClick={() =>
-                    console.log("ปิดใช้งานการบันทึกอัตโนมัติ clicked")
-                  }
-                >
-                  <p className="text-xs font-semibold">
-                    ปิดใช้งานการบันทึกอัตโนมัติ
-                  </p>
-                </button> */}
-                {/* <p className="text-xs font-semibold">|</p> */}
                 <button
                   className="text-sm font-semibold hover:text-gray-700 cursor-pointer"
-                  // onClick={() => console.log("ลบทั้งหมด clicked")}
                   onClick={clearRecent}
                 >
                   <p className="text-xs font-semibold">ลบทั้งหมด</p>

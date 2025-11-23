@@ -5,7 +5,7 @@ import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
 
 import FeatureCard from "~/components/shared/feature-card";
-import { MessagesSquare } from "lucide-react";
+import { Dot, MessagesSquare } from "lucide-react";
 import ChatInput from "./chat-input";
 
 import { socketConfig } from "~/lib/sockets";
@@ -18,6 +18,7 @@ import { formatDateAndTime } from "~/components/shared/global-format";
 
 import LoadingAnimation from "./loading-animation";
 import { MessageRenderer } from "./render-message-content";
+import { MessageMenu } from "./MessageMenu";
 
 export const ChatMessages = ({
   api,
@@ -34,6 +35,8 @@ export const ChatMessages = ({
   const [playing, setPlaying] = React.useState(false);
   const [currentTime, setCurrentTime] = React.useState(0);
   const [duration, setDuration] = React.useState(0);
+
+  const [openMenuId, setOpenMenuId] = React.useState<string | null>(null);
 
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
 
@@ -60,12 +63,14 @@ export const ChatMessages = ({
   const [buttonScrollToBottom, setButtonScrollToBottom] = React.useState(false);
   const [hasInitialScroll, setHasInitialScroll] = React.useState(false);
 
+  const [replyRefMessage, setReplyRefMessage] = useState<string | null>(null);
+
   const { messages: socketMessages, addMessage } = useChat();
 
   const messageRefs = useRef<{ [id: string]: HTMLDivElement | null }>({});
 
   const [targetMessageId, setTargetMessageId] = useState<string>("");
-  const [direction, setDirection] = useState<string>("before");
+  const [direction, setDirection] = useState<string>("prev");
 
   const [hasScrolledToTarget, setHasScrolledToTarget] = useState(false);
 
@@ -78,7 +83,6 @@ export const ChatMessages = ({
   } = usePaginatedMessagesCursor(selectedRoom.id, targetMessageId, direction);
 
   const meta = messagesData?.pages?.[0]?.meta;
-  console.log({ meta });
 
   const paginatedMessages = messagesData?.pages.flatMap((page) => page) ?? [];
 
@@ -193,6 +197,18 @@ export const ChatMessages = ({
     setHasInitialScroll(false);
   };
 
+  const onReply = (msg: any) => {
+    setReplyRefMessage(msg);
+  };
+
+  const copyMessage = (text: string) => {
+    if (!navigator?.clipboard) return;
+
+    navigator.clipboard.writeText(text).catch((err) => {
+      console.error("copy failed", err);
+    });
+  };
+
   React.useEffect(() => {
     //new message and auto scroll
     const el = scrollAreaRef.current;
@@ -209,21 +225,21 @@ export const ChatMessages = ({
     }
   }, [combinedMessages]);
 
-  // React.useEffect(() => {
-  //   if (messagesData?.pages?.length === 1) {
-  //     setAutoScroll(true);
-  //   }
-  // }, [messagesData]);
+  React.useEffect(() => {
+    if (messagesData?.pages?.length === 1) {
+      setAutoScroll(true);
+    }
+  }, [messagesData]);
 
-  // React.useLayoutEffect(() => {
-  //   const el = scrollAreaRef.current;
-  //   if (!el || !combinedMessages?.length) return;
-  //   requestAnimationFrame(() => {
-  //     el.scrollTop = el.scrollHeight;
+  React.useEffect(() => {
+    const el = scrollAreaRef.current;
+    if (!el || !combinedMessages?.length) return;
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
 
-  //     setHasInitialScroll(true);
-  //   });
-  // }, [!!combinedMessages?.length]);
+      setHasInitialScroll(true);
+    });
+  }, [!!combinedMessages?.length]);
 
   React.useEffect(() => {
     // weิb socket
@@ -288,10 +304,10 @@ export const ChatMessages = ({
     const onScroll = () => {
       if (!hasNextPage || isFetchingNextPage) return;
 
-      if (el.scrollTop <= THRESHOLD && meta.before) {
+      if (el.scrollTop <= THRESHOLD && meta.prev) {
         const prevScrollHeight = el.scrollHeight;
         setShowTopLoading(true);
-        setDirection("before");
+        setDirection("prev");
 
         fetchNextPage().finally(() => {
           setShowTopLoading(false);
@@ -307,17 +323,8 @@ export const ChatMessages = ({
       const isBottom =
         el.scrollTop + el.clientHeight >= el.scrollHeight - THRESHOLD;
 
-      console.log({ isBottom });
-      console.log("meta.after", meta.after);
-      if (
-        isBottom &&
-        meta.after
-
-        // && hasInitialScroll
-      ) {
-        console.log("bottom reached");
-
-        setDirection("after");
+      if (isBottom && meta.next) {
+        setDirection("next");
         fetchNextPage();
       }
       // }
@@ -328,7 +335,7 @@ export const ChatMessages = ({
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   React.useEffect(() => {
-    // search and shakex
+    // search and shaker
     if (!targetMessageId || hasScrolledToTarget) return;
 
     const el = messageRefs.current[targetMessageId];
@@ -451,7 +458,7 @@ export const ChatMessages = ({
                     </div>
                   )}
                   <div
-                    className={`flex flex-col ${msg.isLabel ? "" : "max-w-[75%]"} ${
+                    className={`group flex flex-col ${msg.isLabel ? "" : "max-w-[75%]"} ${
                       msg.platform === "backoffice"
                         ? "items-end ml-auto"
                         : "items-start mr-auto"
@@ -474,19 +481,37 @@ export const ChatMessages = ({
                         </span>
                       </div>
                     )}
-                    <MessageRenderer
-                      msg={msg}
-                      isBackoffice={isBackoffice}
-                      setPreviewUrl={setPreviewUrl}
-                      playing={playing}
-                      setPlaying={setPlaying}
-                      currentTime={currentTime}
-                      setCurrentTime={setCurrentTime}
-                      duration={duration}
-                      setDuration={setDuration}
-                      audioRef={audioRef}
-                      togglePlay={togglePlay}
-                    />
+
+                    <div className="flex flex-row gap-2 items-center">
+                      {/* {msg.platform === "backoffice" && (
+                        <MessageMenu
+                          msg={msg}
+                          onReply={() => onReply(msg)}
+                          onCopy={() => copyMessage(msg.message)}
+                        />
+                      )} */}
+
+                      <MessageRenderer
+                        msg={msg}
+                        isBackoffice={isBackoffice}
+                        setPreviewUrl={setPreviewUrl}
+                        playing={playing}
+                        setPlaying={setPlaying}
+                        currentTime={currentTime}
+                        setCurrentTime={setCurrentTime}
+                        duration={duration}
+                        setDuration={setDuration}
+                        audioRef={audioRef}
+                        togglePlay={togglePlay}
+                      />
+                      {msg.platform !== "backoffice" && (
+                        <MessageMenu
+                          msg={msg}
+                          onReply={() => onReply(msg)}
+                          onCopy={() => copyMessage(msg.message)}
+                        />
+                      )}
+                    </div>
 
                     {msg.showTime && !msg.isLabel && (
                       <span className="text-[10px] text-muted-foreground mt-1 ">
@@ -530,7 +555,12 @@ export const ChatMessages = ({
           )}
         </div>
 
-        <ChatInput selectedRoom={selectedRoom} customer={customer} />
+        <ChatInput
+          selectedRoom={selectedRoom}
+          customer={customer}
+          replyRefMessage={replyRefMessage}
+          setReplyRefMessage={setReplyRefMessage}
+        />
       </div>
 
       {previewUrl && (

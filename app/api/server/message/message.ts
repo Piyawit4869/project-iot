@@ -109,7 +109,7 @@ export const fetchAllMessageCursorWithRoomId = async (
   roomId: string,
   currentId?: string | null,
   limit = 20,
-  direction = "before"
+  direction = ""
 ) => {
   const res = await ApiConfig.get(`/chats/${roomId}/messages/cursor`, {
     params: { currentId, limit, direction },

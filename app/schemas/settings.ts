@@ -217,6 +217,8 @@ export const pushMessageSchema = z.object({
   customerId: z.string().optional(),
   platform: z.string(),
   messageLabel: z.string(),
+  packageId: z.string().optional(),
+  stickerId: z.string().optional(),
 });
 
 export type PushMessageValues = z.infer<typeof pushMessageSchema>;

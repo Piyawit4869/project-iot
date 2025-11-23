@@ -38,6 +38,7 @@ const formatTime = (sec: number) => {
 };
 
 export function MessageRenderer({
+  onlyShow = false,
   msg,
   isBackoffice,
   setPreviewUrl,
@@ -52,18 +53,18 @@ export function MessageRenderer({
   audioRef,
   togglePlay,
 }: {
+  onlyShow?: boolean;
   msg: any;
   isBackoffice: boolean;
-  setPreviewUrl: (url: string) => void;
-
-  playing: boolean;
-  setPlaying: (b: boolean) => void;
-  currentTime: number;
-  setCurrentTime: (n: number) => void;
-  duration: number;
-  setDuration: (n: number) => void;
-  audioRef: any;
-  togglePlay: () => void;
+  setPreviewUrl?: (url: string) => void;
+  playing?: boolean;
+  setPlaying?: (b: boolean) => void;
+  currentTime?: number;
+  setCurrentTime?: (n: number) => void;
+  duration?: number;
+  setDuration?: (n: number) => void;
+  audioRef?: any;
+  togglePlay?: () => void;
 }) {
   const message = msg?.message ?? "";
   const type = msg?.messageType;
@@ -92,7 +93,11 @@ export function MessageRenderer({
     return (
       <div
         className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
-          isBackoffice ? "bg-blue-500 text-white" : "bg-muted text-primary"
+          onlyShow
+            ? ""
+            : isBackoffice
+              ? "bg-blue-500 text-white"
+              : "bg-muted text-primary"
         }`}
       >
         <MessageText text={String(message)} />
@@ -129,7 +134,7 @@ export function MessageRenderer({
   // IMAGE
   if (type === "image") {
     return (
-      <div onClick={() => setPreviewUrl(message)} className="cursor-pointer">
+      <div onClick={() => setPreviewUrl?.(message)} className="cursor-pointer">
         <img
           src={message}
           width={180}
@@ -205,7 +210,7 @@ export function MessageRenderer({
         </span>
 
         <span className="text-xs font-medium ml-2">
-          {formatTime(currentTime)} / {formatTime(duration)}
+          {formatTime(currentTime || 0)} / {formatTime(duration || 0)}
         </span>
 
         <audio
@@ -214,15 +219,15 @@ export function MessageRenderer({
           preload="auto"
           onLoadedMetadata={() => {
             if (!audioRef.current) return;
-            setDuration(audioRef.current.duration);
+            setDuration?.(audioRef.current.duration);
           }}
           onTimeUpdate={() => {
             if (!audioRef.current) return;
-            setCurrentTime(audioRef.current.currentTime);
+            setCurrentTime?.(audioRef.current.currentTime);
           }}
           onEnded={() => {
-            setPlaying(false);
-            setCurrentTime(0);
+            setPlaying?.(false);
+            setCurrentTime?.(0);
           }}
         />
       </div>
