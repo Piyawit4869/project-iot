@@ -19,6 +19,11 @@ export interface User {
   firstName: string;
   lastName: string;
   avatarUrl?: string;
+  profile?: {
+    firstName: string;
+    lastName: string;
+    imageUrl: string;
+  };
 }
 
 export type PermissionRole = {
