@@ -8,8 +8,10 @@ import { Button } from "~/components/ui/button";
 import ModalUser from "../../permission/components/modal-select-user";
 import type { RolesFormValues } from "~/schemas/roles/roles";
 import { useGetAllUsers } from "~/api/client/user";
-import { useGrantUsers } from "~/api/client/role/useGetRole";
+import { useGetRoles, useGrantUsers } from "~/api/client/role/useGetRole";
 import { useParams } from "react-router";
+import { DataTable } from "~/components/shared/data-table";
+import { useUserColumns } from "../component/columns";
 export interface RolesFormProps {
   form: UseFormReturn<RolesFormValues>;
   data?: Partial<RolesFormValues>;
@@ -21,10 +23,14 @@ export const GrantUser: React.FC<RolesFormProps> = ({
   loading = false,
 }) => {
   const params = useParams<{ id: string }>();
+  const columns = useUserColumns();
   const { data: user } = useGetAllUsers();
+  const { data: roles, isLoading } = useGetRoles(params.id ?? "");
   const { mutate } = useGrantUsers(params.id ?? "");
   const [open, setOpen] = React.useState(false);
   const [selectedUserIds, setSelectedUserIds] = React.useState<string[]>([]);
+
+  console.log("roles", roles?.users);
 
   const handleCloseModal = () => {
     setOpen(false);
@@ -81,6 +87,23 @@ export const GrantUser: React.FC<RolesFormProps> = ({
         </CardContent>
       ) : (
         <CardContent className="space-y-4">
+          <DataTable
+            // queryFunction={(res) =>
+            //   paginate({
+            //     pageIndex: res.pageIndex,
+            //     status: status === "all" ? "" : status,
+            //     limit: res.pageSize,
+            //     ...filters,
+            //     createdFrom,
+            //     createdTo,
+            //     updatedFrom,
+            //     updatedTo,
+            //   } as any)
+            // }
+            data={roles?.users ?? []}
+            columns={columns}
+            isCustomLoading={isLoading}
+          />
           {/* {editingIndex !== null && ( */}
           <ModalUser
             open={open}

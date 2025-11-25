@@ -96,7 +96,7 @@ export default function SingleRoles() {
             </div>
             <div className="w-full">
               <Card className="p-4 h-full">
-                <GrantPermission form={form} data={data} />
+                <GrantPermission />
               </Card>
             </div>
           </div>

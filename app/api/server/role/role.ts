@@ -33,6 +33,15 @@ export const fetchRolesById = async (id: string) => {
   }
 };
 
+export const fetchAllPermission = async () => {
+  try {
+    const { data } = await ApiConfig.get(`/crud/permissions`);
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const fetchCreateRoles = async (payload: RolesFormValues) => {
   try {
     const { data } = await ApiConfig.post(
@@ -67,6 +76,21 @@ export const fetchGrantUsers = async (
   try {
     const res = await ApiConfig.post(
       `/crud/organization-roles/${id}/grant-users`,
+      payload
+    );
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchGrantPermission = async (
+  id: string,
+  payload: { permissionIds: string[] }
+) => {
+  try {
+    const res = await ApiConfig.post(
+      `/crud/organization-roles/${id}/grant-permissions`,
       payload
     );
     return res.data;
