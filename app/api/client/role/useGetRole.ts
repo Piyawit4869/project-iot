@@ -3,6 +3,7 @@ import type { UsersFormValues } from "~/schemas/users/user";
 import type { PasswordFormValues } from "~/schemas/users/password-user";
 import {
   fetchCreateRoles,
+  fetchGrantUsers,
   fetchRolesById,
   fetchRolesPagination,
   fetchUpdateRoles,
@@ -50,6 +51,12 @@ export const useCreateRoles = () => {
 export const useUpdateRoles = (id: string) => {
   return useMutation({
     mutationFn: (values: RolesFormValues) => fetchUpdateRoles(id, values),
+  });
+};
+
+export const useGrantUsers = (id: string) => {
+  return useMutation({
+    mutationFn: (values: { userIds: string[] }) => fetchGrantUsers(id, values),
   });
 };
 

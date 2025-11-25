@@ -19,22 +19,21 @@ export default function ModalUser({
   value = [],
   taken = [],
   open,
+  onSubmit,
   onClose,
   onChange,
   onSave,
   triggerElement,
 }: ModalUserProps) {
-  // const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
 
   const userList = Array.isArray(users) ? users.flat() : [];
-  console.log("userList", userList);
 
   const filteredUsers = userList.filter((u) =>
-    `${u.firstName} ${u.lastName}`.toLowerCase().includes(search.toLowerCase())
+    `${u?.firstName} ${u?.lastName}`
+      .toLowerCase()
+      .includes(search.toLowerCase())
   );
-
-  console.log("filteredUsers", filteredUsers);
 
   const toggleUser = (id: string) => {
     if (value.includes(id)) onChange(value.filter((v) => v !== id));
@@ -54,7 +53,7 @@ export default function ModalUser({
 
       <DialogContent className="max-w-md p-6">
         <DialogHeader>
-          <DialogTitle>สมาชิก</DialogTitle>
+          <DialogTitle>พนักงาน</DialogTitle>
         </DialogHeader>
 
         <div className="flex items-center gap-2 mb-4">
@@ -64,7 +63,7 @@ export default function ModalUser({
             onChange={(e) => setSearch(e.target.value)}
             className="flex-1"
           />
-          <Button onClick={handleSave}>บันทึก</Button>
+          <Button onClick={onSubmit}>บันทึก</Button>
         </div>
 
         <ScrollArea className="h-60 rounded-md border">
@@ -82,7 +81,7 @@ export default function ModalUser({
                     checked={
                       filteredUsers.length > 0 &&
                       filteredUsers.every(
-                        (u) => value.includes(u.id) || taken.includes(u.id)
+                        (u) => value.includes(u?.id) || taken.includes(u?.id)
                       )
                     }
                     onCheckedChange={(checked) =>
@@ -92,14 +91,14 @@ export default function ModalUser({
                               new Set([
                                 ...value,
                                 ...filteredUsers
-                                  .filter((u) => !taken.includes(u.id))
-                                  .map((u) => u.id),
+                                  .filter((u) => !taken.includes(u?.id))
+                                  .map((u) => u?.id),
                               ])
                             )
                           : value.filter(
                               (id) =>
                                 !filteredUsers.some(
-                                  (u) => u.id === id && !taken.includes(id)
+                                  (u) => u?.id === id && !taken.includes(id)
                                 )
                             )
                       )
@@ -111,32 +110,34 @@ export default function ModalUser({
 
             <tbody>
               {filteredUsers.map((user) => {
-                const disabled = taken.includes(user.id);
+                const disabled = taken.includes(user?.id);
                 return (
                   <tr
-                    key={user.id}
+                    key={user?.id}
                     className={`border-b ${
                       disabled ? "opacity-50 cursor-not-allowed" : ""
                     }`}
                   >
                     <td className="p-2">
                       <img
-                        src={user.profile?.imageUrl ?? "/default-avatar.png"}
-                        alt={`${user.profile?.firstName} ${user.profile?.lastName}`}
+                        src={user?.profile?.imageUrl ?? "/default-avatar.png"}
+                        alt={`${user?.profile?.firstName} ${user?.profile?.lastName}`}
                         width={32}
                         height={32}
                         className="w-8 h-8 rounded-full object-cover"
                       />
                     </td>
                     <td className="p-2">
-                      {user.profile?.firstName ?? ""}{" "}
-                      {user.profile?.lastName ?? ""}
+                      {user?.profile?.firstName ?? ""}{" "}
+                      {user?.profile?.lastName ?? ""}
                     </td>
                     <td className="p-2 pr-4 text-center">
                       <Checkbox
-                        checked={value.includes(user.id)}
+                        checked={value.includes(user?.id)}
                         disabled={disabled}
-                        onCheckedChange={() => !disabled && toggleUser(user.id)}
+                        onCheckedChange={() =>
+                          !disabled && toggleUser(user?.id)
+                        }
                       />
                     </td>
                   </tr>
