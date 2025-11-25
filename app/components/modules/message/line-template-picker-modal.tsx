@@ -218,7 +218,10 @@ function ChatBubble({ text }: { text: string }) {
 
 function ImageCard({ items }: ProfileCardProps) {
   return (
-    <div className="mx-auto w-[300px]  overflow-hidden rounded-[28px] bg-white text-card-foreground  ">
+    <div
+      data-card="image"
+      className="mx-auto w-[300px] shrink-0  overflow-hidden rounded-[28px] bg-white text-card-foreground  "
+    >
       <div className="relative overflow-hidden rounded-2xl bg-muted">
         {items?.imageUrl ? (
           <GlobalImage
@@ -281,7 +284,10 @@ function PlaceCard({ items }: ProfileCardProps) {
         ? PhoneCall
         : Info;
   return (
-    <div className="mx-auto w-[270px] h-[430px] overflow-hidden rounded-[28px] bg-white text-card-foreground  ">
+    <div
+      data-card="place"
+      className="mx-auto shrink-0  min-w-[270px] h-[430px] overflow-hidden rounded-[28px] bg-white text-card-foreground  "
+    >
       <div
         className="rounded-t-[28px] px-5 pt-5 pb-10 text-white"
         style={{
@@ -387,7 +393,10 @@ function ProductCard({ items }: ProfileCardProps) {
     //   </div>
     // </div>
 
-    <div className="mx-auto w-[270px] h-[430px] overflow-hidden rounded-[28px] bg-white text-card-foreground  ">
+    <div
+      data-card="product"
+      className="mx-auto shrink-0 min-w-[270px] h-[370px] overflow-hidden rounded-[28px] bg-white text-card-foreground  "
+    >
       <div
         className="rounded-t-[28px] px-5 pt-5 pb-10 text-white"
         style={{
@@ -480,7 +489,10 @@ function ProfileCard({ items }: ProfileCardProps) {
     //     </a>
     //   </div>
     // </div>
-    <div className="mx-auto w-[240px] h-[300px] rounded-[24px] bg-white p-10 text-center shadow-lg">
+    <div
+      data-card="profile"
+      className="mx-auto shrink-0 min-w-[240px] h-[300px] rounded-[24px] bg-white p-10 text-center shadow-lg"
+    >
       <div className="mx-auto mb-4 size-24 overflow-hidden rounded-full bg-muted flex items-center justify-center">
         {items?.imageUrl ? (
           <GlobalImage
@@ -544,11 +556,14 @@ function ProfileCardCarousel({ items, category }: ProfileCardProps) {
   // โปรโมชั่น: ความกว้างต่อการเลื่อน (เท่ากับการ์ด 1 ใบ + gap)
   const getStep = () => {
     const card = listRef.current?.querySelector<HTMLDivElement>(
-      '[data-card="profile"]'
+      '[data-card="profile"], [data-card="product"], [data-card="image"], [data-card="place"]'
     );
+
     if (!card) return 300; // fallback
+
     const style = getComputedStyle(card);
     const gap = 16; // gap-4
+
     return (
       card.offsetWidth +
       parseInt(style.marginLeft) +
@@ -637,10 +652,7 @@ function ProfileCardCarousel({ items, category }: ProfileCardProps) {
             ogga
           </div>
 
-          <div
-            ref={listRef}
-            className="flex mt-2 items-stretch gap-4 overflow-x-auto no-scrollbar scroll-smooth pr-6"
-          >
+          <div className="flex mt-2 items-stretch gap-4 overflow-x-auto no-scrollbar scroll-smooth pr-6">
             <div
               ref={listRef}
               className="flex items-stretch gap-4 overflow-x-auto no-scrollbar scroll-smooth"
