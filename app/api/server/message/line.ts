@@ -43,6 +43,19 @@ export const createReplyMessage = async (payload: TeamMessageCreateDTO) => {
   }
 };
 
+export const sendCardContent = async (id: string, payload: { to?: string }) => {
+  try {
+    const res = await ApiConfig.post(
+      `/thirdparty/line/content/push-to-line/${id}`,
+      payload
+    );
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const updateReplyMessage = async (
   id: string,
   payload: TeamMessageCreateDTO
@@ -83,6 +96,6 @@ export const markFavoriteReplyMessage = async (id: string) => {
 
 // FIXME: wait for full api with sticker list.
 export const getAllLineSticker = async () => {
-    const res = await ApiConfig.get(`/chat-stickers`);
-    return res.data;
-}
+  const res = await ApiConfig.get(`/chat-stickers`);
+  return res.data;
+};
