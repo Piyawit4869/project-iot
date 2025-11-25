@@ -141,7 +141,8 @@ export const LineContainerSettings: React.FC = () => {
             key="save-btn"
             type="submit"
             form="config-line"
-            className="w-full">
+            className="w-full"
+          >
             <>
               <Save /> สร้าง
             </>

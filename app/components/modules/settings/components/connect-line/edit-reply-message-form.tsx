@@ -23,6 +23,8 @@ import {
   useLineGetReplyMessage,
   useLineUpdateReplyMessage,
 } from "~/api/client/settings";
+import { ChevronLeft } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router";
 
 type Props = {
   mode: "create" | "edit";
@@ -38,9 +40,10 @@ export default function EditReplyMessageForm({
   onCancel,
 }: Props) {
   const { mutate } = useLineUpdateReplyMessage(replyId ?? "");
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const { data } = useLineGetReplyMessage(replyId ?? "");
-
   const form = useForm<ReplyValues>({
     resolver: zodResolver(ReplySchema),
     defaultValues: {
@@ -49,6 +52,10 @@ export default function EditReplyMessageForm({
       content: "",
     },
   });
+
+  const name = form.watch("name")?.length ?? 0;
+  const description = form.watch("description")?.length ?? 0;
+  const text = form.watch("content")?.length ?? 0;
 
   React.useEffect(() => {
     if (mode === "edit" && replyId && data) {
@@ -60,9 +67,13 @@ export default function EditReplyMessageForm({
     }
   }, [mode, replyId, form, data]);
 
-  const name = form.watch("name")?.length ?? 0;
-  const description = form.watch("description")?.length ?? 0;
-  const text = form.watch("content")?.length ?? 0;
+  const handleNaviagateBack = () => {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete("view");
+
+    navigate(`/setting-organization/third-party/line?${params.toString()}`);
+  };
 
   const onSubmit = (values: ReplyValues) => {
     GlobalModal.info({
@@ -128,9 +139,15 @@ export default function EditReplyMessageForm({
   return (
     <div className="w-full">
       <Card className="p-6">
-        <h2 className="text-lg font-semibold mb-4">
-          {mode === "create" ? "สร้างข้อความตอบกลับ" : "แก้ไขข้อความตอบกลับ"}
-        </h2>
+        <div className="flex flex-row gap-2 items-center">
+          <ChevronLeft
+            className="cursor-pointer"
+            onClick={handleNaviagateBack}
+          />
+          <h2 className="text-lg font-semibold">
+            {mode === "create" ? "สร้างข้อความตอบกลับ" : "แก้ไขข้อความตอบกลับ"}
+          </h2>
+        </div>
 
         <Form {...form}>
           <form

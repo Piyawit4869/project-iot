@@ -324,7 +324,7 @@ function CardFieldBlock({
 type ActionFieldProps = {
   form: UseFormReturn<MessageCardFormValues>;
   enabledName: Path<MessageCardFormValues>;
-  textName: Path<MessageCardFormValues>;
+  textName: any;
   label: string;
 };
 
@@ -340,7 +340,7 @@ function ActionField({ form, enabledName, textName, label }: ActionFieldProps) {
           <FormItem className="flex flex-row items-center gap-2 space-y-0">
             <FormControl>
               <Checkbox
-                checked={field.value}
+                checked={field.value as any}
                 onCheckedChange={(checked) => field.onChange(checked === true)}
               />
             </FormControl>

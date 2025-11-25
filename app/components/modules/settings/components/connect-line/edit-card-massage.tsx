@@ -29,6 +29,8 @@ import { ImageCardEditor } from "./image-card-editor";
 import { buildProductCardBody, buildPlaceCardBody } from "./utils";
 import { buildPersonCardBody } from "./utils/person-card-content";
 import { useLineGetCardContent } from "~/api/client/settings";
+import { useNavigate, useSearchParams } from "react-router";
+import { ChevronLeft } from "lucide-react";
 
 type Props = {
   id: string;
@@ -37,6 +39,9 @@ type Props = {
 };
 
 export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
   const { data } = useLineGetCardContent(id);
   const form = useForm<MessageCardFormValues>({
     defaultValues: MESSAGE_CARD_DEFAULT_VALUES,
@@ -48,6 +53,14 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
   const selectedCategory = CARD_CATEGORY_OPTIONS.find(
     (option) => option.id === selectedCategoryId
   );
+
+  const handleNaviagateBack = () => {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete("view");
+
+    navigate(`/setting-organization/third-party/line?${params.toString()}`);
+  };
 
   const buildCategoryPayload = (values: MessageCardFormValues) => {
     switch (values.category) {
@@ -166,12 +179,20 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
     <Form {...form}>
       <form className="space-y-8">
         <div className="flex w-full flex-col  space-y-6">
-          <h1 className="text-2xl font-bold">แก้ไขการ์ดเมสเสจ</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            ข้อความในรูปแบบการ์ดที่รวมเนื้อหาต่างๆ เอาไว้ในที่เดียว
-            โดยระบบจะแสดงผลแบบภาพสไลด์ที่ผู้คนสามารถเปิดการ์ดไปด้านข้างเพื่อดูเนื้อหาการ์ดอื่นได้
-          </p>
           <Card>
+            <div className="p-6">
+              <div className="flex flex-row gap-2 items-center">
+                <ChevronLeft
+                  className="cursor-pointer"
+                  onClick={handleNaviagateBack}
+                />
+                <h1 className="text-2xl font-bold">แก้ไขการ์ดเมสเสจ</h1>
+              </div>
+              <p className="text-muted-foreground text-sm mt-1">
+                ข้อความในรูปแบบการ์ดที่รวมเนื้อหาต่างๆ เอาไว้ในที่เดียว
+                โดยระบบจะแสดงผลแบบภาพสไลด์ที่ผู้คนสามารถเปิดการ์ดไปด้านข้างเพื่อดูเนื้อหาการ์ดอื่นได้
+              </p>
+            </div>
             <CardHeader>
               <CardTitle>รายละเอียดการ์ด</CardTitle>
             </CardHeader>
@@ -223,7 +244,8 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
                         <Button
                           type="button"
                           variant="outline"
-                          onClick={() => setCategoryDialogOpen(true)}>
+                          onClick={() => setCategoryDialogOpen(true)}
+                        >
                           {selectedCategory?.label || "เลือก"}
                         </Button>
                       </>

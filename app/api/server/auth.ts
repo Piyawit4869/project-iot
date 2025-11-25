@@ -11,6 +11,7 @@ export const getMe = async (token: string) => {
 
     return res.data;
   } catch (error) {
+    console.error("getMe error:", error);
     throw error;
   }
 };
