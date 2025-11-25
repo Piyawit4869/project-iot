@@ -11,6 +11,7 @@ import {
   fetchGetConnectionLine,
   fetchGetOrganizations,
   fetchLineCardContentPaginate,
+  fetchLineFeaturePaginate,
   fetchLineMassagePaginate,
   fetchRoomChatAIConfigLoadMore,
   fetchRoomChatAILoadMore,
@@ -187,6 +188,27 @@ export const usePaginatedChatRooms = () => {
   });
 };
 
+export const useLineFeatureMessagePaginate = ({
+  pageIndex,
+  pageSize = 10,
+  limit,
+}: {
+  pageIndex: number;
+  pageSize?: number;
+  limit: number;
+}) => {
+  return useQuery({
+    queryKey: ["line-feature-paginate", pageIndex, pageSize, limit],
+    queryFn: () =>
+      fetchLineFeaturePaginate({
+        page: pageIndex,
+        itemsPerPage: pageSize,
+        limit: limit,
+      }),
+    enabled: !!pageIndex && !!pageSize,
+  });
+};
+
 export const useLineMassagePaginate = ({
   pageIndex,
   pageSize = 10,
@@ -228,7 +250,7 @@ export const useLineCardContentPaginate = ({
   }
 
   return useQuery({
-    queryKey: ["customer-paginate", pageIndex, pageSize, limit, filter],
+    queryKey: ["card-line-paginate", pageIndex, pageSize, limit, filter],
     queryFn: () =>
       fetchLineCardContentPaginate({
         page: pageIndex,

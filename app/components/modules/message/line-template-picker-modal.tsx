@@ -34,6 +34,8 @@ import {
 } from "lucide-react";
 import { cn } from "~/lib/utils";
 import {
+  useLineCardContentPaginate,
+  useLineFeatureMessagePaginate,
   useLineMarkFavoriteRplyMessage,
   useLineMassagePaginate,
 } from "~/api/client/settings";
@@ -433,6 +435,14 @@ export default function LineTemplatePickerModal({
     pageIndex: 1,
     limit: 100,
   });
+
+  const { data: lineFeatureFlex, isLoading: lineFeatureLoading } =
+    useLineFeatureMessagePaginate({
+      pageIndex: 1,
+      limit: 100,
+    });
+
+  console.log({ lineFeatureFlex, lineFeatureLoading });
 
   const { mutate } = useLineMarkFavoriteRplyMessage();
 
