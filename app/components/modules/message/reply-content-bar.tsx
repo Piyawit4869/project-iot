@@ -48,7 +48,6 @@ export function ReplyContentBar({
       messageType: "sticker",
       isAiReply: false,
       recipient: customer?.name ?? "Unknown",
-      customerId: selectedRoom?.customerId ?? "",
       platform: "backoffice",
       messageLabel: MessageLabelType.SENDSTICKER,
       packageId: stickerPackage.packageId,

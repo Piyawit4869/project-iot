@@ -103,8 +103,10 @@ export default function ChatInput({
   selectedRoom,
   customer,
   replyRefMessage,
+  subId,
   setReplyRefMessage,
 }: {
+  subId: string;
   selectedRoom: any;
   customer: any;
   replyRefMessage: any;
@@ -208,7 +210,6 @@ export default function ChatInput({
             messageType,
             isAiReply: false,
             recipient: customer?.name ?? "Unknown",
-            customerId: selectedRoom?.customerId ?? "",
             platform: "backoffice",
             messageLabel: MessageLabelType.SENDIMAGE,
             quoteToken: replyRefMessage?.quoteToken || "",
@@ -235,7 +236,6 @@ export default function ChatInput({
         messageType: "text",
         isAiReply: false,
         recipient: customer?.name ?? "Unknown",
-        customerId: selectedRoom?.customerId ?? "",
         platform: "backoffice",
         messageLabel: MessageLabelType.SENDTEXT,
         quoteToken: replyRefMessage?.quoteToken || "",
@@ -322,7 +322,6 @@ export default function ChatInput({
           thumbnailUrl, // <-- ADD HERE
           isAiReply: false,
           recipient: customer?.name ?? "Unknown",
-          customerId: selectedRoom?.customerId ?? "",
           platform: "backoffice",
           messageLabel: getLabelFromType(messageType),
           quoteToken: replyRefMessage?.quoteToken || "",
@@ -355,6 +354,7 @@ export default function ChatInput({
             selectedRoom={selectedRoom}
             customer={customer}
             replyRefMessage={replyRefMessage}
+            setShowStickerSelector={setShowStickerSelector}
           />
         </div>
       )}

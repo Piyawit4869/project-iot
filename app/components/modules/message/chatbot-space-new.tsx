@@ -13,6 +13,7 @@ import { OrderProvider } from "~/hooks/order/order";
 import { cn } from "~/lib/utils";
 import { ChatMessageRender } from "./chat-message-render";
 import { ChatMessageNoData } from "./noData/chat-message-no-data";
+import { ParticipantType, RoomUserType } from "~/utils/enum";
 
 export default function ChatbotSpaceNew({
   api,
@@ -27,24 +28,34 @@ export default function ChatbotSpaceNew({
   const [selectedRoom, setSelectedRoom] = React.useState<any>();
   const [showChatList, setShowChatList] = React.useState(true);
 
-  const {
-    data: customerSingle,
-    isLoading,
-    refetch,
-  } = useCustomer((selectedRoom && selectedRoom.customerId) ?? "");
-
   const [isCreateOrderOpen, setCreateOrderOpen] = React.useState(false);
   const [drawer, setDrawer] = React.useState(false);
   const [addCustomerDetail, setAddCustomerDetail] =
     React.useState<boolean>(false);
 
-  const isLineGroup = selectedRoom?.kind === "group";
+  const subId =
+    selectedRoom && selectedRoom?.kind === RoomUserType.CUSTOMER_USER_DM
+      ? selectedRoom?.lineSubId
+      : selectedRoom?.lineGroupId;
+  const hasCustomerId = !!(selectedRoom && subId);
 
-  const hasCustomerId = !selectedRoom
-    ? true
-    : selectedRoom?.customerId
-      ? true
-      : false;
+  const findCustomerInParticipant = selectedRoom?.participants?.find(
+    (participant: any) =>
+      participant.participantType === ParticipantType.CUSTOMER
+  );
+
+  const customerId =
+    selectedRoom?.kind === RoomUserType.CUSTOMER_USER_DM
+      ? findCustomerInParticipant?.participantId
+      : null;
+
+  const {
+    data: customerSingle,
+    isLoading,
+    refetch,
+  } = useCustomer(customerId ?? "");
+
+  const isLineGroup = selectedRoom?.kind === RoomUserType.GROUP;
 
   return (
     <div className="flex flex-row h-[calc(100vh-56px)]">
@@ -86,6 +97,7 @@ export default function ChatbotSpaceNew({
               }}
               handleOpenDrawer={() => setDrawer(true)}
               isLineGroup={isLineGroup}
+              subId={subId}
             />
           ) : (
             <ChatMessageNoData
@@ -99,7 +111,7 @@ export default function ChatbotSpaceNew({
 
         {customerInfoOpen && !isMobile && !isLineGroup && (
           <div className="w-96">
-            {selectedRoom && selectedRoom?.id && selectedRoom?.customerId ? (
+            {selectedRoom && selectedRoom?.id && subId ? (
               <ChatCustomerInfo
                 selectedRoom={selectedRoom}
                 refetchCustomer={refetch}
@@ -127,7 +139,7 @@ export default function ChatbotSpaceNew({
         <CreateOrderDialog
           open={isCreateOrderOpen}
           onOpenChange={setCreateOrderOpen}
-          customerId={selectedRoom?.customerId}
+          customerId={customerId}
         />
       </OrderProvider>
     </div>

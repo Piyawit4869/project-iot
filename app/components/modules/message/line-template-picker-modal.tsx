@@ -442,8 +442,6 @@ export default function LineTemplatePickerModal({
       limit: 100,
     });
 
-  console.log({ lineFeatureFlex, lineFeatureLoading });
-
   const { mutate } = useLineMarkFavoriteRplyMessage();
 
   const [open, setOpen] = React.useState<boolean>(false);

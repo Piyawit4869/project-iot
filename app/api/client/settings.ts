@@ -137,11 +137,11 @@ export const useGetConnectionAi = (id: string) =>
     enabled: !!id,
   });
 
-export const usePaginatedChatRoomAI = (chatRoomId: string) => {
+export const usePaginatedChatRoomAIConfig = (chatRoomId: string) => {
   return useInfiniteQuery({
-    queryKey: ["roomChat-ai", chatRoomId],
+    queryKey: ["room-chat-ai-config", chatRoomId],
     queryFn: async ({ pageParam }) =>
-      fetchRoomChatAILoadMore(chatRoomId, pageParam, 10),
+      fetchRoomChatAIConfigLoadMore(chatRoomId, pageParam, 10),
 
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
@@ -153,11 +153,11 @@ export const usePaginatedChatRoomAI = (chatRoomId: string) => {
   });
 };
 
-export const usePaginatedChatRoomAIConfig = (chatRoomId: string) => {
+export const usePaginatedChatRoomAIAssistant = (chatRoomId: string) => {
   return useInfiniteQuery({
-    queryKey: ["room-chat-ai-config", chatRoomId],
+    queryKey: ["room-chat-ai-assistant", chatRoomId],
     queryFn: async ({ pageParam }) =>
-      fetchRoomChatAIConfigLoadMore(chatRoomId, pageParam, 10),
+      fetchRoomChatAILoadMore(chatRoomId, pageParam, 10),
 
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {

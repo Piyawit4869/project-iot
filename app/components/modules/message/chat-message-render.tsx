@@ -17,6 +17,7 @@ export const ChatMessageRender = ({
   handleCloseDrawer,
   handleShowSetting,
   handleOpenDrawer,
+  subId,
 }: any) => {
   const [autoScroll, setAutoScroll] = React.useState(true);
   const [showAllParticipants, setShowAllParticipants] = React.useState(false);
@@ -43,6 +44,7 @@ export const ChatMessageRender = ({
           autoScroll={autoScroll}
           setAutoScroll={setAutoScroll}
           customer={customerSingle}
+          subId={subId}
         />
       )}
 

@@ -42,7 +42,6 @@ import { useCustomerPaginate } from "~/api/client/customer/useCustomer";
 
 export const OrderForm: React.FC<OrderFormProps> = ({
   form,
-  customers,
   Price,
   quantities,
   totalVat,

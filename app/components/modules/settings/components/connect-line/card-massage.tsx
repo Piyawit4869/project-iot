@@ -92,9 +92,16 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
 
   const handleSubmit = async (values: MessageCardFormValues) => {
     const toastId = toast.loading("กำลังบันทึกการ์ด...");
-    const categoryPayload = buildCategoryPayload(values);
 
-    console.log({ values, categoryPayload, cards });
+    let items = [] as any;
+
+    const categoryPayload = cards.map((c) =>
+      items.push(buildCategoryPayload(c))
+    );
+
+    const itemsNoKey = items.map((item: any) => Object.values(item)[0]);
+
+    // console.log({ result, values, categoryPayload, cards });
 
     if (!values.category || !categoryPayload) {
       toast.error("กรุณาเลือกประเภทการ์ด", { id: toastId });
@@ -105,32 +112,49 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
       let payload = {
         name: values.name.trim(),
         category: values.category,
-        ...categoryPayload,
+        items,
       };
 
-      switch (values.category) {
-        case "product":
-          payload = buildProductCardBody(payload);
-          break;
-        case "place":
-          payload = buildPlaceCardBody(payload);
-          break;
-        case "person":
-          payload = buildPersonCardBody(payload);
-          break;
-        case "image":
-          payload = buildImageCardBody(payload);
-          break;
-        default:
-          break;
-      }
+      console.log({ payload });
+
+      const newPayload = payload.items.map((c: any) => {
+        switch (values.category) {
+          case "product":
+            return buildProductCardBody(c);
+          case "place":
+            return buildPlaceCardBody(c);
+          case "person":
+            return buildPersonCardBody(c);
+          case "image":
+            return buildImageCardBody(c);
+          default:
+            break;
+        }
+
+        return;
+      });
+
+      console.log({ newPayload });
+
+      const merged = newPayload.flatMap((item: any) => item.content.contents);
+
+      const mergedCarousel = {
+        content: {
+          type: "carousel",
+          contents: merged,
+        },
+      };
+
+      console.log({ mergedCarousel });
 
       const finalPayload = {
-        ...payload,
+        ...newPayload[0],
+        ...mergedCarousel,
+        name: values.name.trim(),
         meta: {
           name: values.name.trim(),
           category: values.category,
-          ...categoryPayload,
+          items: itemsNoKey,
         },
       };
 
@@ -157,20 +181,6 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
         duration: 2500,
         position: "bottom-right",
       });
-    }
-  };
-
-  const handleSubmitAll = async () => {
-    const toastId = toast.loading("กำลังบันทึกการ์ดทั้งหมด...");
-    console.log({ cards });
-    try {
-      for (const item of cards) {
-        // await handleSubmitOne(item);
-      }
-
-      toast.success("บันทึกทั้งหมดสำเร็จ", { id: toastId });
-    } catch (err) {
-      toast.error("บันทึกไม่ครบ", { id: toastId });
     }
   };
 
@@ -323,6 +333,8 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
     isProductCardValid,
     selectedCategoryId,
   ]);
+
+  console.log({ cards });
 
   const addCard = () => {
     setCards((prev) => [

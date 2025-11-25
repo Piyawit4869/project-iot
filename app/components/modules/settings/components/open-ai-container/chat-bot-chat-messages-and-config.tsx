@@ -1,9 +1,6 @@
 import dayjs from "dayjs";
 import React from "react";
-import {
-  usePaginatedChatRoomAI,
-  usePaginatedChatRoomAIConfig,
-} from "~/api/client/settings";
+import { usePaginatedChatRoomAIConfig } from "~/api/client/settings";
 import type { ChatRoomSchemaType, ConnectAiValues } from "~/schemas/settings";
 import { flushSync } from "react-dom";
 import { GlobalImage } from "~/components/shared/global-image";

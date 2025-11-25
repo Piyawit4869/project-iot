@@ -34,7 +34,6 @@ export default function CreateOrder() {
     state: { formCreate, isCreating },
   } = useOrderViewModel();
   const { mutateAsync: creation } = useCreateOrder();
-  const { data: allCustomers, isLoading: loadCustomers } = useAllCustomer();
 
   const [productsSelected, setProductsSelected] = useState<ProductColumn[]>([]);
 
@@ -178,7 +177,6 @@ export default function CreateOrder() {
               <OrderForm
                 form={formCreate}
                 initialData={initData.initialOrderFormData}
-                customers={allCustomers}
                 Price={Price}
                 totalVat={totalVat}
                 quantities={productsSelected}
