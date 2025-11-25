@@ -18,11 +18,13 @@ export default function ModalUser({
   users = [],
   value = [],
   taken = [],
+  open,
+  onClose,
   onChange,
   onSave,
   triggerElement,
 }: ModalUserProps) {
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
 
   const userList = Array.isArray(users) ? users.flat() : [];
@@ -41,15 +43,14 @@ export default function ModalUser({
 
   const handleSave = () => {
     onSave?.(value);
-    setOpen(false);
+    // setOpen(false);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <Dialog open={open} onOpenChange={onClose}>
+      {/* <DialogTrigger asChild>
         {triggerElement ?? <Button variant="outline">เลือกสมาชิก</Button>}
-        {/* เลือกสมาชิก */}
-      </DialogTrigger>
+      </DialogTrigger> */}
 
       <DialogContent className="max-w-md p-6">
         <DialogHeader>

@@ -41,6 +41,8 @@ export interface ModalUserProps {
   users?: User[];
   value?: string[];
   taken?: string[];
+  open?: boolean;
+  onClose: () => void;
   onChange: (selected: string[]) => void;
   onSave?: (selected: string[]) => void;
   triggerElement?: ReactNode;

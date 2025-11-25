@@ -1,24 +1,22 @@
 import React, { useEffect } from "react";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
-
 import { PlusIcon } from "lucide-react";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 import dayjs from "dayjs";
-
 import { useFieldArray, useWatch, type UseFormReturn } from "react-hook-form";
 import { CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
-import type { UsersFormValues } from "~/schemas/users/user";
-import { CompensationModal } from "../../users/components/formCompensationModal";
-
-export interface UserFormProfileProps {
-  form: UseFormReturn<UsersFormValues>;
-  data?: Partial<UsersFormValues>;
+import ModalUser from "../../permission/components/modal-select-user";
+import type { RolesFormValues } from "~/schemas/roles/roles";
+import { useGetAllUsers } from "~/api/client/user";
+export interface RolesFormProps {
+  form: UseFormReturn<RolesFormValues>;
+  data?: Partial<RolesFormValues>;
   loading?: boolean;
 }
 
-export const UserCompensation: React.FC<UserFormProfileProps> = ({
+export const GrantUser: React.FC<RolesFormProps> = ({
   form,
   data,
   loading = false,
@@ -41,6 +39,12 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
 
   const [open, setOpen] = React.useState(false);
   const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
+  const { data: user } = useGetAllUsers();
+  const [selectedUserIds, setSelectedUserIds] = React.useState<string[]>([]);
+
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
 
   const handleOpenCreate = () => {
     const nextIndex =
@@ -228,7 +232,7 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
         <CardContent className="space-y-4">
           <div className="lg:col-span-2 flex flex-col gap-3 mt-5">
             <div className="flex items-center justify-between">
-              <h1 className="font-bold">ค่าตอบแทน</h1>
+              <h1 className="font-bold">เพิ่มพนักงาน</h1>
               <Button
                 type="button"
                 size="sm"
@@ -241,7 +245,7 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
 
             {cfFields.length === 0 ? (
               <div className="rounded-xl text-sm text-muted-foreground">
-                ยังไม่มีค่าตอบแทน กรุณากดปุ่ม “+” เพื่อเพิ่มรายการแรก
+                ยังไม่มีพนักงาน กรุณากดปุ่ม “+” เพื่อเพิ่มพนักงานในตำแหน่งนี้
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-5">
@@ -373,20 +377,12 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
       )}
 
       {editingIndex !== null && (
-        <CompensationModal
+        <ModalUser
           open={open}
-          title={
-            form.getValues(
-              `profile.compensationConfigs.${editingIndex}.baseSalary`
-            )
-              ? "แก้ไขค่าตอบแทน"
-              : "เพิ่มค่าตอบแทน"
-          }
-          form={form}
-          indexPath={editingIndex}
-          onClose={handleClose}
-          onSubmit={handleSubmitFromModal}
-          updateCf={updateCf}
+          onClose={handleCloseModal}
+          users={[user]}
+          value={selectedUserIds}
+          onChange={setSelectedUserIds}
         />
       )}
     </>
