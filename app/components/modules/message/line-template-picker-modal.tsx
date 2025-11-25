@@ -42,6 +42,7 @@ import {
   useLineFeatureMessagePaginate,
   useLineMarkFavoriteRplyMessage,
   useLineMassagePaginate,
+  useLineSendCardContent,
 } from "~/api/client/settings";
 import { Link } from "react-router";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
@@ -786,8 +787,12 @@ export default function LineTemplatePickerModal({
       ? lineFeatureFlex?.items
       : []
   );
-
   const [selectedId, setSelectedId] = React.useState<string | undefined>();
+  const [categoryValue, setCategoryValue] = React.useState<
+    string | undefined
+  >();
+
+  const { mutate: lineSendCard } = useLineSendCardContent(selectedId || "");
 
   const toggleStar = (id: string) => {
     setItems((prev) =>
@@ -827,6 +832,31 @@ export default function LineTemplatePickerModal({
         ? +new Date(b.createdAt) - +new Date(a.createdAt)
         : +new Date(a.createdAt) - +new Date(b.createdAt)
     );
+
+  const onSelect = () => {
+    const value = selected?.content?.messages?.[0]?.text;
+
+    if (categoryValue === "card") {
+      sendCardApi(selectedId || "");
+    } else {
+      handleSelectChange(value);
+      setOpen(false);
+    }
+  };
+
+  const sendCardApi = async (id: string) => {
+    await lineSendCard(
+      { to: "U4bf11290a9d563e8b6a36676232bf19d" },
+      {
+        onSuccess: () => {
+          setOpen(false);
+        },
+        onError: (error: any) => {
+          console.error("❌", error);
+        },
+      }
+    );
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -938,7 +968,10 @@ export default function LineTemplatePickerModal({
                                 "w-full text-left px-4 py-3 hover:bg-muted/60 grid grid-cols-[1fr_auto] gap-2",
                                 selectedId === it.id && "bg-muted"
                               )}
-                              onClick={() => setSelectedId(it.id)}
+                              onClick={() => {
+                                setSelectedId(it.id);
+                                setCategoryValue(it.type);
+                              }}
                             >
                               <div>
                                 <div className="flex items-center gap-2 font-medium">
@@ -1000,13 +1033,8 @@ export default function LineTemplatePickerModal({
           <Button variant="secondary" onClick={() => setOpen(false)}>
             ยกเลิก
           </Button>
-          <Button
-            onClick={() => {
-              setOpen(false);
-              handleSelectChange(selected?.content?.messages?.[0]?.text);
-            }}
-          >
-            เลือก
+          <Button onClick={onSelect}>
+            {category === "card" ? "ส่ง" : "เลือก"}
           </Button>
         </div>
       </DialogContent>
