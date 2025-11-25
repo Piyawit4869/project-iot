@@ -26,7 +26,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         cell: (info) => {
           const url = info.getValue() as string;
           const userName = info.row.original?.userName;
-
+          console.log(userName);
           return (
             <GlobalImage
               src={url}

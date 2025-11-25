@@ -29,8 +29,12 @@ export default function ModalUser({
 
   const userList = Array.isArray(users) ? users.flat() : [];
 
+  const safeTaken = Array.isArray(taken) ? taken : [];
+
+  const visibleUsers = userList.filter((u) => !safeTaken.includes(u?.id));
+
   const filteredUsers = userList.filter((u) =>
-    `${u?.firstName} ${u?.lastName}`
+    `${u?.profile?.firstName ?? ""} ${u?.profile?.lastName ?? ""}`
       .toLowerCase()
       .includes(search.toLowerCase())
   );

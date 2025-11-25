@@ -42,7 +42,7 @@ export default function CreateRoles() {
         mutate(values, {
           onSuccess: (data) => {
             toast.success("สร้างตำแหน่งเรียบร้อยแล้ว!", { id: toastId });
-            navigate(`/users/${data?.id}`);
+            navigate(`/roles/${data?.id}`);
           },
           onError: () => {
             toast.error("เกิดข้อผิดพลาดขณะสร้างตำแหน่ง", { id: toastId });
