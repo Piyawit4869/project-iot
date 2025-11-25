@@ -12,16 +12,12 @@ import { TabControl } from "~/components/shared/tab-control";
 import { Save } from "lucide-react";
 import { RolesFormSchema, type RolesFormValues } from "~/schemas/roles/roles";
 import { useGetRoles, useUpdateRoles } from "~/api/client/role/useGetRole";
-import { getRequiredPaths } from "~/utils/form-adapter";
-import ModalUser from "../../permission/components/modal-select-user";
-import { useGetAllUsers } from "~/api/client/user";
-import React from "react";
 import { FormRolesSingle } from "../components/fromSingle";
 import { GrantUser } from "../components/grantUser";
+import { GrantPermission } from "../components/grantPermission";
 
 export default function SingleRoles() {
   const navigate = useNavigate();
-  const checkFields = new Set(getRequiredPaths(RolesFormSchema as any));
   const params = useParams<{ id: string }>();
   const { data, isLoading } = useGetRoles(params.id ?? "");
 
@@ -87,21 +83,21 @@ export default function SingleRoles() {
             }
           })}
         >
-          <div className="mt-2 flex flex-col md:flex-row gap-5">
-            <div className="md:w-[35%] h-[50%] w-full">
+          <div className="mt-2 flex flex-col gap-5">
+            <div className="w-full">
               <Card className="p-4 h-full">
                 <FormRolesSingle form={form} data={data} />
               </Card>
             </div>
-
-            <div className="md:w-[65%] w-full flex flex-col gap-5">
-              <Card className="p-2 py-8">
+            <div className="w-full">
+              <Card className="p-4 h-full">
                 <GrantUser form={form} data={data} />
               </Card>
-
-              {/* <Card className="p-2 py-8">
-                <UserCompensation form={form} data={data} />
-              </Card> */}
+            </div>
+            <div className="w-full">
+              <Card className="p-4 h-full">
+                <GrantPermission />
+              </Card>
             </div>
           </div>
         </form>

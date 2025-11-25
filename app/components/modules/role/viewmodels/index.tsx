@@ -7,7 +7,7 @@ import { DataTable } from "~/components/shared/data-table";
 import { Button } from "~/components/ui/button";
 import { Plus } from "lucide-react";
 import { useSidebar } from "~/components/ui/sidebar";
-import { useUserColumns } from "../component/columns";
+import { useRolesColumns } from "../component/columns";
 import { useAllUserSummary } from "~/api/client/user";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
 import { TabControl } from "~/components/shared/tab-control";
@@ -23,7 +23,7 @@ export default function Roles() {
   const { data: user, isLoading } = useAllUserSummary();
   const paginate = usePaginate;
 
-  const columns = useUserColumns();
+  const columns = useRolesColumns();
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
   const location = useLocation();
