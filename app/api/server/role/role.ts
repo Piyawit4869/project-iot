@@ -13,13 +13,6 @@ export const fetchRolesPagination = async (params: {
 }) => {
   try {
     const p = { ...params } as any;
-    // p.page = params.page;
-    // p.userName = params.userName;
-    // p.email = params.email;
-    // p.limit = params.limit;
-    // if (params.status && params.status === "all") {
-    //   delete p.status;
-    // }
 
     const res = await ApiConfig.get(`/crud/organization-roles`, {
       params: p,
@@ -31,36 +24,14 @@ export const fetchRolesPagination = async (params: {
   }
 };
 
-// export const fetchGetAllUsers = async () => {
-//   try {
-//     const { data } = await ApiConfig.get(`/crud/users`);
-//     return data;
-//   } catch (error) {
-//     return error;
-//   }
-// };
-
-// export const fetchGetAllUsersLimit = async (params: { isAll: boolean }) => {
-//   try {
-//     const { data } = await ApiConfig.get(`/crud/users/?limit=0`, {
-//       params: {
-//         isAll: params.isAll,
-//       },
-//     });
-//     return data;
-//   } catch (error) {
-//     return error;
-//   }
-// };
-
-// export const fetchUserById = async (id: string) => {
-//   try {
-//     const { data } = await ApiConfig.get(`/crud/users/${id}`);
-//     return data;
-//   } catch (error) {
-//     return error;
-//   }
-// };
+export const fetchRolesById = async (id: string) => {
+  try {
+    const { data } = await ApiConfig.get(`/crud/organization-roles/${id}`);
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
 
 export const fetchCreateRoles = async (payload: RolesFormValues) => {
   try {
@@ -74,17 +45,20 @@ export const fetchCreateRoles = async (payload: RolesFormValues) => {
   }
 };
 
-// export const fetchUpdateUsers = async (
-//   id: string,
-//   payload: UsersFormValues
-// ) => {
-//   try {
-//     const res = await ApiConfig.put(`/crud/users/edit/${id}`, payload);
-//     return res.data;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+export const fetchUpdateRoles = async (
+  id: string,
+  payload: RolesFormValues
+) => {
+  try {
+    const res = await ApiConfig.put(
+      `/crud/organization-roles/${id}/edit`,
+      payload
+    );
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 // export const fetchChangePassword = async (
 //   id: string,

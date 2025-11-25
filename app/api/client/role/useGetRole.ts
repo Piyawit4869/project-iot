@@ -1,7 +1,12 @@
 import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import type { UsersFormValues } from "~/schemas/users/user";
 import type { PasswordFormValues } from "~/schemas/users/password-user";
-import { fetchCreateRoles, fetchRolesPagination } from "~/api/server/role/role";
+import {
+  fetchCreateRoles,
+  fetchRolesById,
+  fetchRolesPagination,
+  fetchUpdateRoles,
+} from "~/api/server/role/role";
 import type { RolesFormValues } from "~/schemas/roles/roles";
 
 export const usePaginate = ({
@@ -29,24 +34,12 @@ export const usePaginate = ({
   });
 };
 
-// export const useGetUsers = (id: string) =>
-//   useQuery({
-//     queryKey: ["user", id],
-//     queryFn: () => fetchUserById(id),
-//     enabled: !!id,
-//   });
-
-// export const useGetAllUsers = () =>
-//   useQuery({
-//     queryKey: ["user-all"],
-//     queryFn: () => fetchGetAllUsers(),
-//   });
-
-// export const useGetAllUsersLimit = (isAll: boolean) =>
-//   useQuery({
-//     queryKey: ["user-all"],
-//     queryFn: () => fetchGetAllUsersLimit({ isAll }),
-//   });
+export const useGetRoles = (id: string) =>
+  useQuery({
+    queryKey: ["user", id],
+    queryFn: () => fetchRolesById(id),
+    enabled: !!id,
+  });
 
 export const useCreateRoles = () => {
   return useMutation({
@@ -54,11 +47,11 @@ export const useCreateRoles = () => {
   });
 };
 
-// export const useUpdateUsers = (id: string) => {
-//   return useMutation({
-//     mutationFn: (values: UsersFormValues) => fetchUpdateUsers(id, values),
-//   });
-// };
+export const useUpdateRoles = (id: string) => {
+  return useMutation({
+    mutationFn: (values: RolesFormValues) => fetchUpdateRoles(id, values),
+  });
+};
 
 // export const useChangePassword = (id: string) => {
 //   return useMutation({

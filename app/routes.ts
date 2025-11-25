@@ -47,7 +47,7 @@ export default [
     ...prefix("roles", [
       index("routes/backoffice/roles/index.tsx"),
       route("create", "routes/backoffice/roles/create.tsx"),
-      // route("/:id", "routes/backoffice/roles/single.tsx"),
+      route("/:id", "routes/backoffice/roles/single.tsx"),
       // route("/:id", "routes/backoffice/users/edit.tsx"),
     ]),
 

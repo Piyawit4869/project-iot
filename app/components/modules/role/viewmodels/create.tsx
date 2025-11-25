@@ -12,15 +12,17 @@ import { TabControl } from "~/components/shared/tab-control";
 import { Save } from "lucide-react";
 import { RolesFormSchema, type RolesFormValues } from "~/schemas/roles/roles";
 import { useCreateRoles } from "~/api/client/role/useGetRole";
-import { RoleCreate } from "../components/formInformationCreate";
+import { getRequiredPaths } from "~/utils/form-adapter";
+import { GlobalFormField } from "~/components/shared/global-form";
+import { CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 export default function CreateRoles() {
   const navigate = useNavigate();
+  const checkFields = new Set(getRequiredPaths(RolesFormSchema as any));
 
   const form = useForm<RolesFormValues>({
     resolver: zodResolver(RolesFormSchema as any),
     defaultValues: {
-      id: "",
       name: "",
       description: "",
     },
@@ -83,7 +85,37 @@ export default function CreateRoles() {
           <div className="mt-2 flex flex-col md:flex-row gap-5">
             <div className="w-full">
               <Card className="p-4 h-full">
-                <RoleCreate form={form} />
+                <CardHeader>
+                  <div className="flex gap-2">
+                    <CardTitle className="text-base font-bold">
+                      ข้อมูลตำแหน่ง
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className=" w-full">
+                    <div className="lg:col-span-1 flex flex-col gap-3">
+                      <div className=" grid grid-cols-1 md:grid-cols-1 gap-5">
+                        <GlobalFormField
+                          control={form.control}
+                          name="name"
+                          label="ชื่อตำแหน่ง"
+                          type="input"
+                          checkFields={checkFields}
+                          placeholder="กรอกชื่อตำแหน่ง"
+                        />
+                        <GlobalFormField
+                          control={form.control}
+                          name="description"
+                          label="รายละเอียด"
+                          type="textarea"
+                          checkFields={checkFields}
+                          placeholder="กรอกรายละเอียด"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
               </Card>
             </div>
           </div>

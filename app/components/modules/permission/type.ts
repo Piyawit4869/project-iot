@@ -19,6 +19,11 @@ export interface User {
   firstName: string;
   lastName: string;
   avatarUrl?: string;
+  profile?: {
+    firstName: string;
+    lastName: string;
+    imageUrl: string;
+  };
 }
 
 export type PermissionRole = {
@@ -36,6 +41,8 @@ export interface ModalUserProps {
   users?: User[];
   value?: string[];
   taken?: string[];
+  open?: boolean;
+  onClose: () => void;
   onChange: (selected: string[]) => void;
   onSave?: (selected: string[]) => void;
   triggerElement?: ReactNode;

@@ -27,7 +27,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
 
           return (
             <span className="text-blue-400 hover:text-blue-300 hover:underline">
-              <Link to={`/users/${id}`}>
+              <Link to={`/roles/${id}`}>
                 {/* <span className=" text-muted-foreground hover:text-blue-400 hover:underline"> */}
                 {(info.getValue() as string) || "-"}
               </Link>
