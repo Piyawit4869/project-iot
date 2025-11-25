@@ -38,6 +38,7 @@ import {
   getAllLineSticker,
   getReplyMessage,
   markFavoriteReplyMessage,
+  sendCardContent,
   updateReplyMessage,
 } from "../server/message/line";
 import { useSearchParams } from "react-router";
@@ -259,6 +260,13 @@ export const useLineCardContentPaginate = ({
         filter: { category: category },
       }),
     enabled: pageIndex !== undefined,
+  });
+};
+
+export const useLineSendCardContent = (id: string) => {
+  return useMutation({
+    mutationFn: async (payload: { to?: string }) =>
+      sendCardContent(id, payload),
   });
 };
 
