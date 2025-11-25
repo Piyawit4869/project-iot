@@ -213,6 +213,8 @@ export default function ChatInput({
             messageLabel: MessageLabelType.SENDIMAGE,
             quoteToken: replyRefMessage?.quoteToken || "",
           });
+
+          setReplyRefMessage(null);
         }
       } catch (err) {
         console.error("Upload file(s) failed", err);
@@ -239,7 +241,7 @@ export default function ChatInput({
         quoteToken: replyRefMessage?.quoteToken || "",
       });
     }
-
+    setReplyRefMessage(null);
     setInput("");
     requestAnimationFrame(autoResize);
   };
@@ -325,6 +327,7 @@ export default function ChatInput({
           messageLabel: getLabelFromType(messageType),
           quoteToken: replyRefMessage?.quoteToken || "",
         });
+        setReplyRefMessage(null);
       } catch (err) {
         console.error("Upload file failed:", err);
       }

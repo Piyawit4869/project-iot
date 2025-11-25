@@ -15,12 +15,31 @@ export const LineMassageColumns = (
 ): ColumnDef<UserColumn>[] => {
   const [sp] = useSearchParams();
 
+  const [searchParams] = useSearchParams();
+
   const columns = useMemo<ColumnDef<UserColumn>[]>(
     () => [
       {
         accessorKey: "name",
         header: "ชื่อ",
-        cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
+        cell: (info: any) => {
+          const subId = info?.row?.original?.id;
+
+          const params = new URLSearchParams({
+            id: searchParams.get("id") || "",
+            tab: searchParams.get("tab") || "",
+            view: "edit",
+            subId,
+          });
+
+          return (
+            <Link
+              to={`/setting-organization/third-party/line?${params.toString()}`}
+            >
+              <span>{(info.getValue() as string) || "-"}</span>
+            </Link>
+          );
+        },
       },
       {
         accessorKey: "content.messages.text",
@@ -55,11 +74,13 @@ export const LineMassageColumns = (
           return (
             <div className="flex items-center gap-2">
               <Link
-                to={`/setting-organization/third-party/line?id=${id}&tab=${tabFromUrl}&view=edit&subId=${subId}`}>
+                to={`/setting-organization/third-party/line?id=${id}&tab=${tabFromUrl}&view=edit&subId=${subId}`}
+              >
                 <Button
                   className="h-9 w-9 p-0 bg-[#737373] hover:bg-[#5E5E5E]"
                   aria-label="แก้ไข"
-                  title="แก้ไข">
+                  title="แก้ไข"
+                >
                   <PenLine className="w-4 h-4 text-white" />
                 </Button>
               </Link>

@@ -1,15 +1,23 @@
 import { formatShowTime } from "~/components/shared/global-format";
 import { MessageText } from "./message-text";
-import { Play, PauseIcon, AudioLines } from "lucide-react";
-
 import {
+  Play,
+  PauseIcon,
+  AudioLines,
   FileText,
   FileType,
   FileSpreadsheet,
   FileArchive,
   File,
   PlayIcon,
+  Check,
 } from "lucide-react";
+
+const formatTime = (sec: number) => {
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+};
 
 function getFileIcon(filename: string) {
   const ext = filename.split(".").pop()?.toLowerCase() || "";
@@ -31,11 +39,52 @@ function getFileIcon(filename: string) {
   }
 }
 
-const formatTime = (sec: number) => {
-  const m = Math.floor(sec / 60);
-  const s = Math.floor(sec % 60);
-  return `${m}:${s.toString().padStart(2, "0")}`;
-};
+function getReferencePreview(ref: any) {
+  if (!ref) return "";
+
+  switch (ref.messageType) {
+    case "text":
+      return ref.message;
+    case "image":
+      return "[รูปภาพ]";
+    case "sticker":
+      return "[สติ๊กเกอร์]";
+    case "file":
+      return "[ไฟล์แนบ]";
+    case "audio":
+      return "[เสียง]";
+    case "video":
+      return "[วิดีโอ]";
+    default:
+      return "[ข้อความ]";
+  }
+}
+
+function ReplyReference({ refMsg }: { refMsg: any }) {
+  if (!refMsg) return null;
+
+  const preview = getReferencePreview(refMsg);
+
+  return (
+    <div className="min-w-[180px] bg-white/30 px-3 py-2 border-b border-black/10 rounded-t-xl">
+      <div className="flex items-center gap-2">
+        <img
+          src={refMsg.imageUrl || "/avatar.png"}
+          className="w-6 h-6 rounded-full object-cover"
+        />
+        <span className="text-sm font-semibold text-primary">
+          {refMsg.sender || "ผู้ส่งเดิม"}
+        </span>
+      </div>
+
+      <div className="text-xs text-muted-foreground mt-1">
+        {refMsg.messageType === "text" ? "ข้อความ" : refMsg.messageType}
+      </div>
+
+      <div className="text-sm mt-1 line-clamp-1">{preview}</div>
+    </div>
+  );
+}
 
 export function MessageRenderer({
   onlyShow = false,
@@ -43,7 +92,6 @@ export function MessageRenderer({
   isBackoffice,
   setPreviewUrl,
 
-  // AUDIO STATES
   playing,
   setPlaying,
   currentTime,
@@ -57,6 +105,7 @@ export function MessageRenderer({
   msg: any;
   isBackoffice: boolean;
   setPreviewUrl?: (url: string) => void;
+
   playing?: boolean;
   setPlaying?: (b: boolean) => void;
   currentTime?: number;
@@ -69,8 +118,9 @@ export function MessageRenderer({
   const message = msg?.message ?? "";
   const type = msg?.messageType;
   const isLabel = msg?.isLabel;
+  const reference = msg?.messageReference;
 
-  // LABEL MESSAGE
+  // LABEL
   if (isLabel) {
     const formattedTime = formatShowTime(
       msg.createdAt ? msg.createdAt : msg.timestamp
@@ -88,156 +138,185 @@ export function MessageRenderer({
     );
   }
 
+  // WRAPPER (รองรับ Reply Reference)
+  // WRAPPER: เพิ่ม max-width และลบพื้นหลังเวลาเป็น image/sticker
+  const Wrapper = ({ children }: any) => {
+    const isMedia = ["image", "sticker"].includes(msg?.messageType);
+    const hasRef = !!reference;
+
+    return (
+      <div
+        className={`
+        rounded-xl overflow-hidden 
+        ${onlyShow ? "" : isMedia ? "" : isBackoffice ? "bg-blue-500/10" : "bg-muted-foreground/10"}
+        ${hasRef ? "max-w-[260px]" : "max-w-[220px]"} 
+      `}
+      >
+        {reference && <ReplyReference refMsg={reference} />}
+        <div className={`${isMedia ? "p-0" : "px-4 py-2"}`}>{children}</div>
+      </div>
+    );
+  };
+
   // TEXT
   if (type === "text" || type === null) {
     return (
-      <div
-        className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
-          onlyShow
-            ? ""
-            : isBackoffice
-              ? "bg-blue-500 text-white"
-              : "bg-muted text-primary"
-        }`}
-      >
+      <Wrapper>
         <MessageText text={String(message)} />
-      </div>
+      </Wrapper>
     );
   }
 
   // STICKER
   if (type === "sticker") {
-    return <img src={message} width={150} height={150} />;
+    return (
+      <Wrapper>
+        <img
+          src={message}
+          className="rounded-xl max-w-[220px] h-auto object-contain"
+        />
+      </Wrapper>
+    );
   }
 
-  // FILE (PDF/DOC/ZIP)
+  // FILE
   if (type === "file") {
     const filename = message.split("/").pop() ?? "ไฟล์แนบ";
-
     return (
-      <div
-        className="flex items-center gap-3 bg-muted p-3 rounded-xl cursor-pointer hover:bg-muted/70"
-        onClick={() => window.open(message, "_blank")}
-      >
-        {getFileIcon(filename)}
-
-        <div className="flex flex-col">
-          <span className="text-sm font-medium">{filename}</span>
-          <span className="text-xs text-muted-foreground">
-            แตะเพื่อเปิดไฟล์
-          </span>
+      <Wrapper>
+        <div
+          className="flex items-center gap-3 bg-white/40 p-3 rounded-xl cursor-pointer hover:bg-white/70"
+          onClick={() => window.open(message, "_blank")}
+        >
+          {getFileIcon(filename)}
+          <div className="flex flex-col">
+            <span className="text-sm font-medium">{filename}</span>
+            <span className="text-xs text-muted-foreground">
+              แตะเพื่อเปิดไฟล์
+            </span>
+          </div>
         </div>
-      </div>
+      </Wrapper>
     );
   }
 
   // IMAGE
   if (type === "image") {
     return (
-      <div onClick={() => setPreviewUrl?.(message)} className="cursor-pointer">
-        <img
-          src={message}
-          width={180}
-          height={180}
-          className="rounded-md object-cover"
-        />
-      </div>
+      <Wrapper>
+        <div
+          onClick={() => setPreviewUrl?.(message)}
+          className="cursor-pointer"
+        >
+          <img
+            src={message}
+            className="
+            rounded-xl 
+            object-cover 
+            max-w-[260px] 
+          "
+          />
+        </div>
+      </Wrapper>
     );
   }
 
   // VIDEO
   if (type === "video") {
     return (
-      <div
-        className="relative cursor-pointer"
-        onClick={() => {
-          const videoEl = document.createElement("video");
-          videoEl.src = message;
-          videoEl.autoplay = true;
-          videoEl.controls = true;
-          videoEl.style.width = "100%";
-          videoEl.style.height = "100%";
+      <Wrapper>
+        <div
+          className="relative cursor-pointer"
+          onClick={() => {
+            const videoEl = document.createElement("video");
+            videoEl.src = message;
+            videoEl.autoplay = true;
+            videoEl.controls = true;
+            videoEl.style.width = "100%";
+            videoEl.style.height = "100%";
 
-          videoEl.onloadedmetadata = async () => {
-            document.body.appendChild(videoEl);
-
-            try {
-              if (videoEl.requestFullscreen) {
-                await videoEl.requestFullscreen();
+            videoEl.onloadedmetadata = async () => {
+              document.body.appendChild(videoEl);
+              try {
+                if (videoEl.requestFullscreen) {
+                  await videoEl.requestFullscreen();
+                }
+                await videoEl.play();
+              } catch (_) {
+                videoEl.play();
               }
-              await videoEl.play();
-            } catch (_) {
-              videoEl.play();
-            }
 
-            videoEl.onfullscreenchange = () => {
-              if (!document.fullscreenElement) {
-                videoEl.pause();
-                videoEl.remove();
-              }
+              videoEl.onfullscreenchange = () => {
+                if (!document.fullscreenElement) {
+                  videoEl.pause();
+                  videoEl.remove();
+                }
+              };
             };
-          };
-        }}
-      >
-        <video
-          src={message}
-          width={200}
-          height={200}
-          className="rounded-lg"
-          muted
-        />
+          }}
+        >
+          <video
+            src={message}
+            width={200}
+            height={200}
+            className="rounded-lg"
+            muted
+          />
 
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="bg-black/60 rounded-full p-3">
-            <Play className="w-6 h-6 text-white" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="bg-black/60 rounded-full p-3">
+              <Play className="w-6 h-6 text-white" />
+            </div>
           </div>
         </div>
-      </div>
+      </Wrapper>
     );
   }
 
   // AUDIO
   if (type === "audio") {
     return (
-      <div
-        className="flex items-center gap-3 bg-muted px-3 py-2 rounded-xl cursor-pointer"
-        onClick={togglePlay}
-      >
-        <AudioLines className="w-6 h-6 text-primary" />
+      <Wrapper>
+        <div
+          className="flex items-center gap-3 bg-white/40 px-3 py-2 rounded-xl cursor-pointer"
+          onClick={togglePlay}
+        >
+          <AudioLines className="w-6 h-6 text-primary" />
+          <span className="font-medium text-sm">
+            {playing ? <PauseIcon size={14} /> : <PlayIcon size={14} />}
+          </span>
+          <span className="text-xs font-medium ml-2">
+            {formatTime(currentTime || 0)} / {formatTime(duration || 0)}
+          </span>
 
-        <span className="font-medium text-sm">
-          {playing ? <PauseIcon size={14} /> : <PlayIcon size={14} />}
-        </span>
-
-        <span className="text-xs font-medium ml-2">
-          {formatTime(currentTime || 0)} / {formatTime(duration || 0)}
-        </span>
-
-        <audio
-          ref={audioRef}
-          src={message}
-          preload="auto"
-          onLoadedMetadata={() => {
-            if (!audioRef.current) return;
-            setDuration?.(audioRef.current.duration);
-          }}
-          onTimeUpdate={() => {
-            if (!audioRef.current) return;
-            setCurrentTime?.(audioRef.current.currentTime);
-          }}
-          onEnded={() => {
-            setPlaying?.(false);
-            setCurrentTime?.(0);
-          }}
-        />
-      </div>
+          <audio
+            ref={audioRef}
+            src={message}
+            preload="auto"
+            onLoadedMetadata={() => {
+              if (!audioRef.current) return;
+              setDuration?.(audioRef.current.duration);
+            }}
+            onTimeUpdate={() => {
+              if (!audioRef.current) return;
+              setCurrentTime?.(audioRef.current.currentTime);
+            }}
+            onEnded={() => {
+              setPlaying?.(false);
+              setCurrentTime?.(0);
+            }}
+          />
+        </div>
+      </Wrapper>
     );
   }
 
   // FALLBACK
   return (
-    <span className="text-[16px] text-muted-foreground mt-1">
-      ระบบยังไม่รองรับการส่งแบบ Location
-    </span>
+    <Wrapper>
+      <span className="text-[16px] text-muted-foreground mt-1">
+        ระบบยังไม่รองรับการส่งแบบ Location
+      </span>
+    </Wrapper>
   );
 }

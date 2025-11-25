@@ -11,6 +11,7 @@ import {
   fetchGetConnectionLine,
   fetchGetOrganizations,
   fetchLineCardContentPaginate,
+  fetchLineFeaturePaginate,
   fetchLineMassagePaginate,
   fetchRoomChatAIConfigLoadMore,
   fetchRoomChatAILoadMore,
@@ -39,6 +40,7 @@ import {
   markFavoriteReplyMessage,
   updateReplyMessage,
 } from "../server/message/line";
+import { useSearchParams } from "react-router";
 
 export const useGetOrganizations = () =>
   useQuery({
@@ -186,6 +188,27 @@ export const usePaginatedChatRooms = () => {
   });
 };
 
+export const useLineFeatureMessagePaginate = ({
+  pageIndex,
+  pageSize = 10,
+  limit,
+}: {
+  pageIndex: number;
+  pageSize?: number;
+  limit: number;
+}) => {
+  return useQuery({
+    queryKey: ["line-feature-paginate", pageIndex, pageSize, limit],
+    queryFn: () =>
+      fetchLineFeaturePaginate({
+        page: pageIndex,
+        itemsPerPage: pageSize,
+        limit: limit,
+      }),
+    enabled: !!pageIndex && !!pageSize,
+  });
+};
+
 export const useLineMassagePaginate = ({
   pageIndex,
   pageSize = 10,
@@ -218,17 +241,22 @@ export const useLineCardContentPaginate = ({
   limit: number;
   filter?: { category?: string };
 }) => {
+  const [searchParams] = useSearchParams();
+
+  const category = searchParams.get("category") || "";
+
   if (filter?.category === "all") {
     filter.category = "";
   }
+
   return useQuery({
-    queryKey: ["customer-paginate", pageIndex, pageSize, limit, filter],
+    queryKey: ["card-line-paginate", pageIndex, pageSize, limit, filter],
     queryFn: () =>
       fetchLineCardContentPaginate({
         page: pageIndex,
         itemsPerPage: pageSize,
         limit,
-        filter: { category: filter?.category || "" },
+        filter: { category: category },
       }),
     enabled: pageIndex !== undefined,
   });

@@ -210,7 +210,7 @@ export const fetchRoomChatLoadMore = async (offset = 0, limit = 20) => {
   }
 };
 
-export const fetchLineMassagePaginate = async (params: {
+export const fetchLineFeaturePaginate = async (params: {
   page: number;
   itemsPerPage: number;
   limit: number;
@@ -223,6 +223,63 @@ export const fetchLineMassagePaginate = async (params: {
     const res = await ApiConfig.get(`/thirdparty/line/contents/paginate`, {
       params: p,
     });
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchLineMassagePaginate = async (params: {
+  page: number;
+  itemsPerPage: number;
+  limit: number;
+}) => {
+  try {
+    const p = Object.assign({});
+    p.page = params.page;
+    p.limit = params.limit;
+
+    const res = await ApiConfig.get(
+      `/thirdparty/line/contents/paginate?type=reply`,
+      {
+        params: p,
+      }
+    );
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchLineCardContentPaginate = async (params: {
+  page: number;
+  itemsPerPage: number;
+  limit: number;
+  filter?: { category: string };
+}) => {
+  try {
+    const p = Object.assign({});
+    p.page = params.page;
+    p.limit = params.limit;
+
+    const res = await ApiConfig.get(
+      `/thirdparty/line/contents/paginate?type=card&category=${params.filter?.category || ""}`,
+      {
+        params: p,
+      }
+    );
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getCardContent = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(`/thirdparty/line/contents/${id}`);
 
     return res.data;
   } catch (error) {

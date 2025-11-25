@@ -13,7 +13,7 @@ import { Button } from "~/components/ui/button";
 import { DataTable } from "~/components/shared/data-table";
 import { useLineCardContentPaginate } from "~/api/client/settings";
 import { LineMassageColumns } from "./columns-massage";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import { ApiConfig } from "~/api/config";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
@@ -41,6 +41,16 @@ export default function TableCardMassage({
   const [filter, setFilter] = React.useState<string>(defaultFilter);
   const queryClient = useQueryClient();
   const Paginate = useLineCardContentPaginate;
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const handleSearch = (v: MassageFilter) => {
+    const params = new URLSearchParams(searchParams);
+
+    params.set("category", v);
+
+    navigate(`/setting-organization/third-party/line?${params.toString()}`);
+  };
 
   const handleDelete = async (id: string) => {
     const toastId = toast.loading("กำลังดำเนินการ...");
@@ -88,7 +98,8 @@ export default function TableCardMassage({
           <Button
             key="button"
             variant="outline"
-            className="flex items-center gap-2 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm">
+            className="flex items-center gap-2 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+          >
             <MessageCircle className="h-4 w-4" />
             <span className="hidden sm:inline">กลับไปที่แชท</span>
           </Button>
@@ -97,7 +108,7 @@ export default function TableCardMassage({
 
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">
-          <Select value={filter} onValueChange={(v: MassageFilter) => {}}>
+          <Select value={filter} onValueChange={handleSearch}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="ทั้งหมด" />
             </SelectTrigger>
@@ -115,7 +126,8 @@ export default function TableCardMassage({
           <Button
             onClick={onCreate}
             type="button"
-            className="ml-1 whitespace-nowrap">
+            className="ml-1 whitespace-nowrap"
+          >
             <Plus className="mr-1.5 h-4 w-4" />
             สร้างใหม่
           </Button>
