@@ -232,37 +232,3 @@ export const fetchLineMassagePaginate = async (params: {
     return error;
   }
 };
-
-export const fetchLineCardContentPaginate = async (params: {
-  page: number;
-  itemsPerPage: number;
-  limit: number;
-  filter?: { category: string };
-}) => {
-  try {
-    const p = Object.assign({});
-    p.page = params.page;
-    p.limit = params.limit;
-
-    const res = await ApiConfig.get(
-      `/thirdparty/line/contents/paginate?type=card&category=${params.filter?.category || ""}`,
-      {
-        params: p,
-      }
-    );
-
-    return res.data;
-  } catch (error) {
-    return error;
-  }
-};
-
-export const getCardContent = async (id: string) => {
-  try {
-    const res = await ApiConfig.get(`/thirdparty/line/contents/${id}`);
-
-    return res.data;
-  } catch (error) {
-    return error;
-  }
-};

@@ -18,17 +18,23 @@ export default function ModalUser({
   users = [],
   value = [],
   taken = [],
+  open,
+  onClose,
   onChange,
   onSave,
   triggerElement,
 }: ModalUserProps) {
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
 
-  const userList = Array.isArray(users) ? users : [];
+  const userList = Array.isArray(users) ? users.flat() : [];
+  console.log("userList", userList);
+
   const filteredUsers = userList.filter((u) =>
     `${u.firstName} ${u.lastName}`.toLowerCase().includes(search.toLowerCase())
   );
+
+  console.log("filteredUsers", filteredUsers);
 
   const toggleUser = (id: string) => {
     if (value.includes(id)) onChange(value.filter((v) => v !== id));
@@ -37,15 +43,14 @@ export default function ModalUser({
 
   const handleSave = () => {
     onSave?.(value);
-    setOpen(false);
+    // setOpen(false);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {/* {triggerElement ?? <Button variant="outline">เลือกสมาชิก</Button>} */}
-        เลือกสมาชิก
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onClose}>
+      {/* <DialogTrigger asChild>
+        {triggerElement ?? <Button variant="outline">เลือกสมาชิก</Button>}
+      </DialogTrigger> */}
 
       <DialogContent className="max-w-md p-6">
         <DialogHeader>
@@ -116,15 +121,16 @@ export default function ModalUser({
                   >
                     <td className="p-2">
                       <img
-                        src={user.avatarUrl || "/default-avatar.png"}
-                        alt={`${user.firstName} ${user.lastName}`}
+                        src={user.profile?.imageUrl ?? "/default-avatar.png"}
+                        alt={`${user.profile?.firstName} ${user.profile?.lastName}`}
                         width={32}
                         height={32}
                         className="w-8 h-8 rounded-full object-cover"
                       />
                     </td>
                     <td className="p-2">
-                      {user.firstName} {user.lastName}
+                      {user.profile?.firstName ?? ""}{" "}
+                      {user.profile?.lastName ?? ""}
                     </td>
                     <td className="p-2 pr-4 text-center">
                       <Checkbox
