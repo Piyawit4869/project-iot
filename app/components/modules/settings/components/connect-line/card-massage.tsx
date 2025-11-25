@@ -32,6 +32,10 @@ import {
   buildImageCardBody,
 } from "./utils";
 import { buildPersonCardBody } from "./utils/person-card-content";
+import { Chevron } from "react-day-picker";
+import { ChevronLeft, ChevronRight, Copy, Trash2 } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router";
+import React from "react";
 
 type Props = {
   onSaved?: () => void;
@@ -39,10 +43,19 @@ type Props = {
 };
 
 export default function MessageCardForm({ onSaved, onCancel }: Props) {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [cards, setCards] = useState<MessageCardFormValues[]>([
+    MESSAGE_CARD_DEFAULT_VALUES,
+  ]);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
   const form = useForm<MessageCardFormValues>({
-    defaultValues: MESSAGE_CARD_DEFAULT_VALUES,
+    defaultValues: cards[activeIndex],
     mode: "onChange",
   });
+
   const [isCategoryDialogOpen, setCategoryDialogOpen] = useState(false);
   const selectedCategoryId = form.watch("category");
   const nameValue = form.watch("name");
@@ -53,6 +66,14 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
   const selectedCategory = CARD_CATEGORY_OPTIONS.find(
     (option) => option.id === selectedCategoryId
   );
+
+  const handleNaviagateBack = () => {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete("view");
+
+    navigate(`/setting-organization/third-party/line?${params.toString()}`);
+  };
 
   const buildCategoryPayload = (values: MessageCardFormValues) => {
     switch (values.category) {
@@ -72,6 +93,8 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
   const handleSubmit = async (values: MessageCardFormValues) => {
     const toastId = toast.loading("กำลังบันทึกการ์ด...");
     const categoryPayload = buildCategoryPayload(values);
+
+    console.log({ values, categoryPayload, cards });
 
     if (!values.category || !categoryPayload) {
       toast.error("กรุณาเลือกประเภทการ์ด", { id: toastId });
@@ -111,6 +134,8 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
         },
       };
 
+      console.log({ finalPayload });
+
       const { data } = await ApiConfig.post(
         "/thirdparty/line/contents/created",
         finalPayload
@@ -132,6 +157,20 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
         duration: 2500,
         position: "bottom-right",
       });
+    }
+  };
+
+  const handleSubmitAll = async () => {
+    const toastId = toast.loading("กำลังบันทึกการ์ดทั้งหมด...");
+    console.log({ cards });
+    try {
+      for (const item of cards) {
+        // await handleSubmitOne(item);
+      }
+
+      toast.success("บันทึกทั้งหมดสำเร็จ", { id: toastId });
+    } catch (err) {
+      toast.error("บันทึกไม่ครบ", { id: toastId });
     }
   };
 
@@ -285,55 +324,111 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
     selectedCategoryId,
   ]);
 
+  const addCard = () => {
+    setCards((prev) => [
+      ...prev,
+      {
+        ...MESSAGE_CARD_DEFAULT_VALUES,
+        name: prev[activeIndex].name,
+        category: prev[activeIndex].category,
+      },
+    ]);
+    setActiveIndex(cards.length); // ไปใบใหม่ทันที
+  };
+
+  const duplicateCard = () => {
+    console.log("duplicateCard");
+    const cloned = { ...cards[activeIndex] };
+    setCards([...cards, cloned]);
+  };
+
+  const removeCard = () => {
+    if (cards.length === 1) return;
+    const newList = cards.filter((_, i) => i !== activeIndex);
+    setCards(newList);
+    setActiveIndex((prev) => Math.max(0, prev - 1));
+  };
+
+  const movePrev = () => {
+    setActiveIndex((i) => Math.max(0, i - 1));
+  };
+
+  const moveNext = () => {
+    setActiveIndex((i) => Math.min(cards.length - 1, i + 1));
+  };
+
+  // Sync ค่า form กับ cards เมื่อเปลี่ยน active card
+  React.useEffect(() => {
+    form.reset(cards[activeIndex]);
+  }, [activeIndex]);
+
+  // เมื่อ form เปลี่ยน → update card index ปัจจุบัน
+  React.useEffect(() => {
+    const subscription = form.watch((value) => {
+      const newCards = [...cards];
+      newCards[activeIndex] = value as MessageCardFormValues;
+      setCards(newCards);
+    });
+    return () => subscription.unsubscribe();
+  }, [form, cards, activeIndex]);
+
   return (
     <Form {...form}>
       <form className="space-y-8">
-        <div className="flex w-full flex-col  space-y-6">
-          <h1 className="text-2xl font-bold">การ์ดเมสเสจ</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            ข้อความในรูปแบบการ์ดที่รวมเนื้อหาต่างๆ เอาไว้ในที่เดียว
-            โดยระบบจะแสดงผลแบบภาพสไลด์ที่ผู้คนสามารถเปิดการ์ดไปด้านข้างเพื่อดูเนื้อหาการ์ดอื่นได้
-          </p>
+        <div className="flex w-full flex-col space-y-6">
           <Card>
-            <CardHeader>
-              <CardTitle>รายละเอียดการ์ด</CardTitle>
-            </CardHeader>
-
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label>
-                  ID{" "}
-                  <p className="text-sm text-muted-foreground">
-                    ระบบจะออก ID หลังสร้าง
-                  </p>
-                </Label>
+            <div className="p-6">
+              <div className="flex flex-row gap-2 items-center">
+                <ChevronLeft
+                  className="cursor-pointer"
+                  onClick={handleNaviagateBack}
+                />
+                <h1 className="text-2xl font-bold">การ์ดเมสเสจ</h1>
               </div>
+              <p className="text-muted-foreground text-sm mt-1">
+                ข้อความในรูปแบบการ์ดที่รวมเนื้อหาต่างๆ เอาไว้ในที่เดียว
+                โดยระบบจะแสดงผลแบบภาพสไลด์ที่ผู้คนสามารถเปิดการ์ดไปด้านข้างเพื่อดูเนื้อหาการ์ดอื่นได้
+              </p>
+            </div>
 
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>ชื่อไอเทม</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        value={field.value ?? ""}
-                        placeholder="ใส่ชื่อไอเทม"
-                      />
-                    </FormControl>
-                    <p className="text-xs text-muted-foreground">
-                      ชื่อจะถูกแสดงในรายการเมสเสจแบบสรุปหรือเมสเสจเต็ม
+            <div className="max-w-[800px]">
+              <CardHeader>
+                <CardTitle>รายละเอียดการ์ด</CardTitle>
+              </CardHeader>
+
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <Label>
+                    ID{" "}
+                    <p className="text-sm text-muted-foreground">
+                      ระบบจะออก ID หลังสร้าง
                     </p>
-                  </FormItem>
-                )}
-              />
-            </CardContent>
+                  </Label>
+                </div>
 
-            <CardHeader>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ชื่อไอเทม</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          value={field.value ?? ""}
+                          placeholder="ใส่ชื่อไอเทม"
+                        />
+                      </FormControl>
+                      <p className="text-xs text-muted-foreground">
+                        ชื่อจะถูกแสดงในรายการเมสเสจแบบสรุปหรือเมสเสจเต็ม
+                      </p>
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </div>
+            <CardHeader className="mt-5 max-w-[800px]">
               <CardTitle>ตั้งค่าการ์ด</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
               <FormField
                 control={form.control}
                 name="category"
@@ -346,7 +441,8 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
                         <Button
                           type="button"
                           variant="outline"
-                          onClick={() => setCategoryDialogOpen(true)}>
+                          onClick={() => setCategoryDialogOpen(true)}
+                        >
                           {selectedCategory?.label || "เลือก"}
                         </Button>
                       </>
@@ -360,7 +456,61 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
                   </FormItem>
                 )}
               />
+            </CardHeader>
+
+            <CardContent className="space-y-6">
+              {/* NAVIGATION + ACTION BUTTONS */}
+
               <div className="border-t pt-6">
+                {selectedCategoryId && (
+                  <div className="flex w-full justify-between gap-3 mb-4">
+                    <div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={movePrev}
+                        disabled={activeIndex === 0}
+                      >
+                        <ChevronLeft />
+                      </Button>
+
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={moveNext}
+                        disabled={activeIndex === cards.length - 1}
+                      >
+                        <ChevronRight />
+                      </Button>
+
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={duplicateCard}
+                      >
+                        <Copy />
+                      </Button>
+
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={removeCard}
+                      >
+                        <Trash2 />
+                      </Button>
+                    </div>
+
+                    {selectedCategoryId && (
+                      <Button type="button" variant="outline" onClick={addCard}>
+                        เพิ่มการ์ด
+                      </Button>
+                    )}
+                    {/* <Button type="button" onClick={handleSubmitAll}>
+                  บันทึกทั้งหมด
+                </Button> */}
+                  </div>
+                )}
+
                 {!selectedCategoryId && (
                   <p className="text-muted-foreground text-sm">
                     เลือกประเภทการ์ดเพื่อเริ่มตั้งค่าส่วนแสดงผล
@@ -395,6 +545,7 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
                   )}
               </div>
             </CardContent>
+
             <div className="flex justify-end p-5">
               <Button type="button" variant="ghost" onClick={onCancel}>
                 ยกเลิก

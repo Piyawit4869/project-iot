@@ -459,7 +459,7 @@ export const ChatMessages = ({
                   )}
                   <div
                     className={`group flex flex-col ${msg.isLabel ? "" : "max-w-[75%]"} ${
-                      msg.platform === "backoffice"
+                      msg.platform !== "line"
                         ? "items-end ml-auto"
                         : "items-start mr-auto"
                     } ${msg.isFirstInGroup ? "pt-5" : "pt-0"}`}
@@ -483,14 +483,6 @@ export const ChatMessages = ({
                     )}
 
                     <div className="flex flex-row gap-2 items-center">
-                      {/* {msg.platform === "backoffice" && (
-                        <MessageMenu
-                          msg={msg}
-                          onReply={() => onReply(msg)}
-                          onCopy={() => copyMessage(msg.message)}
-                        />
-                      )} */}
-
                       <MessageRenderer
                         msg={msg}
                         isBackoffice={isBackoffice}
@@ -504,7 +496,7 @@ export const ChatMessages = ({
                         audioRef={audioRef}
                         togglePlay={togglePlay}
                       />
-                      {msg.platform !== "backoffice" && (
+                      {msg.platform === "line" && (
                         <MessageMenu
                           msg={msg}
                           onReply={() => onReply(msg)}

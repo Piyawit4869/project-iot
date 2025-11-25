@@ -39,6 +39,7 @@ import {
   markFavoriteReplyMessage,
   updateReplyMessage,
 } from "../server/message/line";
+import { useSearchParams } from "react-router";
 
 export const useGetOrganizations = () =>
   useQuery({
@@ -218,9 +219,14 @@ export const useLineCardContentPaginate = ({
   limit: number;
   filter?: { category?: string };
 }) => {
+  const [searchParams] = useSearchParams();
+
+  const category = searchParams.get("category") || "";
+
   if (filter?.category === "all") {
     filter.category = "";
   }
+
   return useQuery({
     queryKey: ["customer-paginate", pageIndex, pageSize, limit, filter],
     queryFn: () =>
@@ -228,7 +234,7 @@ export const useLineCardContentPaginate = ({
         page: pageIndex,
         itemsPerPage: pageSize,
         limit,
-        filter: { category: filter?.category || "" },
+        filter: { category: category },
       }),
     enabled: pageIndex !== undefined,
   });
