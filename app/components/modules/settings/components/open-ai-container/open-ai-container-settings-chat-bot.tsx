@@ -144,19 +144,19 @@ export const OpenAiContainerSettingsChatBot: React.FC<
         title="ROME Assistant"
         noneSticky={true}
         backpath="/setting-organization/third-party"
-        buttons={[
-          <Button
-            key="save-btn"
-            type="submit"
-            form="config-ai"
-            className="w-full"
-            disabled={!id} // กันเคสยังไม่ได้เลือก config
-          >
-            <>
-              <Save /> บันทึก
-            </>
-          </Button>,
-        ]}
+        // buttons={[
+        //   <Button
+        //     key="save-btn"
+        //     type="submit"
+        //     form="config-ai"
+        //     className="w-full"
+        //     disabled={!id} // กันเคสยังไม่ได้เลือก config
+        //   >
+        //     <>
+        //       <Save /> บันทึก
+        //     </>
+        //   </Button>,
+        // ]}
       />
 
       {/* ✅ 3 Panels Layout */}
