@@ -47,4 +47,5 @@ export const keyToModuleMap: Record<string, string> = {
   "setting-organization": "setting",
   loginLog: "loginLog",
   inventory: "inventory",
+  role: "roles",
 };

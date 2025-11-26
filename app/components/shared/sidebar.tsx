@@ -7,7 +7,6 @@ import {
   SidebarContent,
   SidebarHeader,
 } from "~/components/ui/sidebar";
-import { SkeletonLoading } from "./skeleton-loading";
 
 import { HeadSidebar } from "./sidebar/head-sidebar";
 import { HomeSidebar, type SidebarItem } from "./sidebar/home-sidebar";
