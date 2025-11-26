@@ -232,6 +232,8 @@ export const ChatBotChatMessagesAndConfig: React.FC<
           {combinedMessages.map((msg, index) => {
             const isUser = msg.sender !== "ROME AI";
 
+            if (msg.messageLabel === "ROME AI กำลังประมวลผล") return null;
+
             const avatarFallback =
               msg.imageUrl && !msg.imageUrl.includes("http")
                 ? `https://ui-avatars.com/api/?name=${encodeURIComponent(

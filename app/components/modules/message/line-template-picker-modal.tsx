@@ -766,11 +766,10 @@ export default function LineTemplatePickerModal({
     limit: 100,
   });
 
-  const { data: lineFeatureFlex, isLoading: lineFeatureLoading } =
-    useLineFeatureMessagePaginate({
-      pageIndex: 1,
-      limit: 100,
-    });
+  const { data: lineFeatureFlex } = useLineFeatureMessagePaginate({
+    pageIndex: 1,
+    limit: 100,
+  });
 
   const { mutate } = useLineMarkFavoriteRplyMessage();
 
@@ -807,14 +806,25 @@ export default function LineTemplatePickerModal({
       lineFeatureFlex.items &&
       lineFeatureFlex.items?.length
     ) {
-      setSelectedId(
-        lineFeatureFlex?.items?.length ? lineFeatureFlex?.items[0]?.id : ""
-      );
+      setSelectedId(data?.length ? data?.id : "");
       setItems(lineFeatureFlex?.items);
     }
   }, [lineFeatureFlex]);
 
   const selected = items.find((i) => i.id === selectedId);
+
+  // const filtered = items
+  //   .filter((i) => (category === "all" ? true : i.type === category))
+  //   .filter((i) =>
+  //     [i.name, i.content?.messages?.[0]?.text].some((t) =>
+  //       t?.toLowerCase().includes(query.toLowerCase())
+  //     )
+  //   )
+  //   .sort((a, b) =>
+  //     sortBy === "newest"
+  //       ? +new Date(b.createdAt) - +new Date(a.createdAt)
+  //       : +new Date(a.createdAt) - +new Date(b.createdAt)
+  //   );
 
   const filtered = items
     .filter((i) => (category === "all" ? true : i.type === category))
@@ -823,11 +833,19 @@ export default function LineTemplatePickerModal({
         t?.toLowerCase().includes(query.toLowerCase())
       )
     )
-    .sort((a, b) =>
-      sortBy === "newest"
+    .sort((a, b) => {
+      const isReplyA = a.type === "reply";
+      const isReplyB = b.type === "reply";
+
+      // ให้ reply มาก่อนทั้งหมด
+      if (isReplyA && !isReplyB) return -1;
+      if (!isReplyA && isReplyB) return 1;
+
+      // ถ้าทั้งคู่เป็น reply หรือทั้งคู่ไม่ใช่ reply → เรียงตามวันที่ปกติ
+      return sortBy === "newest"
         ? +new Date(b.createdAt) - +new Date(a.createdAt)
-        : +new Date(a.createdAt) - +new Date(b.createdAt)
-    );
+        : +new Date(a.createdAt) - +new Date(b.createdAt);
+    });
 
   const onSelect = () => {
     const value = selected?.content?.messages?.[0]?.text;
