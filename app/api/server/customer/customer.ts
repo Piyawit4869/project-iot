@@ -120,7 +120,7 @@ export const fetchAiReplySettings = async (
 ) => {
   try {
     const res = await ApiConfig.put(
-      `/crud/customers/edit/${id}/ai-reply-settings`,
+      `/crud/chats/rooms/edit/${id}/ai-reply-settings`,
       payload
     );
 
@@ -165,6 +165,18 @@ export const fetchGetAnalyzeCustomer = async (id: string) => {
     const res = await ApiConfig.get(
       `/crud/customers/${id}/summary-chat-message
        `
+    );
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchGetAiSettings = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(
+      `/crud/chats/rooms/${id}/ai-reply-settings`
     );
 
     return res.data;

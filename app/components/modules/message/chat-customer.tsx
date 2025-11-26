@@ -51,6 +51,7 @@ import {
   useChatRoomParticipants,
   useConnectedChatRoomAssistant,
   useGetAiNote,
+  useGetAiReplySettings,
   useGetAllTags,
   useGetSummaryAINote,
   useUpdateCustomerTags,
@@ -201,7 +202,7 @@ export default function ChatCustomerInfo({
   const { setProducts } = useOrder();
 
   const customer = currentCustomer;
-  const { mutate: update } = useAiReplySettings(customer?.id);
+  const { mutate: update } = useAiReplySettings(selectedRoom?.id);
   const customerAI = currentCustomer?.aiReplySettings?.[0];
 
   const { data: allUser, isLoading } = useGetAllUsers();
@@ -212,6 +213,9 @@ export default function ChatCustomerInfo({
     selectedRoom?.id ?? ""
   );
 
+  const { data: aiSettingData, isLoading: aiSettingLoading } =
+    useGetAiReplySettings(selectedRoom?.id ?? "");
+
   const { data, refetch } = useGetAllOrders();
   const [chatRoomAssistantId, setChatRoomAssistantId] =
     React.useState<string>(assistantId);
@@ -221,19 +225,16 @@ export default function ChatCustomerInfo({
 
   const navigate = useNavigate();
 
+  console.log({ aiSettingData });
+
   const [isFirstTimeAI, setIsFirstTimeAI] = React.useState<boolean>(true);
   const [firstTimeMessage, setFirstTimeMessage] = React.useState<string>("");
-  const [aiEnabled, setAiEnabled] = React.useState<boolean>(
-    customerAI?.allDay || false
-  );
+  const [aiEnabled, setAiEnabled] = React.useState<boolean>(false);
   const [aiEnabledWithCondition, setAiEnabledWithCondition] =
     React.useState(false);
-  const [aiStartTime, setAiStartTime] = React.useState(
-    customerAI?.startTime || "09:00"
-  );
-  const [aiEndTime, setAiEndTime] = React.useState(
-    customerAI?.endTime || "18:00"
-  );
+  const [aiStartTime, setAiStartTime] = React.useState("09:00");
+  const [aiEndTime, setAiEndTime] = React.useState("18:00");
+  const [aiAutoReadMessage, setAiAutoReadMessage] = React.useState<boolean>();
 
   const [hours, setHours] = React.useState("");
   const [minutes, setMinutes] = React.useState("");
@@ -309,18 +310,15 @@ export default function ChatCustomerInfo({
 
   const handleChangeAIConfig = () => {
     const data = {
-      isAiReply: true,
-      settings: [
-        {
-          enabled: aiEnabled ? false : true,
-          allDay: aiEnabled ? true : false,
-          startTime: aiEnabled ? "00:00" : aiStartTime || "",
-          endTime: aiEnabled ? "23:59" : aiEndTime || "",
-          aiReplyResponseDuration: aiEnabledWithCondition
-            ? totalMinutes || ""
-            : "",
-        },
-      ],
+      isAiReply: aiEnabled,
+      enabled: aiEnabled ? false : true,
+      aiAutoReadMessage: aiAutoReadMessage,
+      aiReplyResponseDuration: aiEnabledWithCondition ? totalMinutes || 0 : 0,
+      allDay: aiEnabled ? true : false,
+      startTime: aiEnabled ? "00:00" : aiStartTime || "",
+      endTime: aiEnabled ? "23:59" : aiEndTime || "",
+      timezone: "Asia/Bangkok",
+      remark: "",
     };
 
     GlobalModal.info({
@@ -629,6 +627,18 @@ export default function ChatCustomerInfo({
       setSelectedTags(currentCustomer?.tags as []);
     }
   }, [currentCustomer, selectedRoom]);
+
+  React.useEffect(() => {
+    if (!aiSettingLoading && aiSettingData) {
+      setAiEnabled(aiSettingData.aiReplySettings.allDay || false);
+      setAiStartTime(aiSettingData.aiReplySettings.startTime || "09:00");
+      setAiEndTime(aiSettingData.aiReplySettings.endTime || "18:00");
+      setAiAutoReadMessage(
+        aiSettingData.aiReplySettings.aiAutoReadMessage || false
+      );
+      setAiEnabledWithCondition(aiSettingData.aiReplySettings.enabled || false);
+    }
+  }, [aiSettingLoading, aiSettingData]);
 
   const countFilterOption: number = selected.length;
 
@@ -1445,6 +1455,19 @@ export default function ChatCustomerInfo({
                   if (state) {
                     setAiEnabledWithCondition(false);
                   }
+                }}
+              />
+            </div>
+
+            <div className="flex items-center justify-between mt-4 mb-3">
+              <Label htmlFor="ai-enabled-condition" className="text-sm">
+                ตั้งค่าให้ AI อ่านแล้วบน Line
+              </Label>
+              <Switch
+                id="ai-enabled-condition"
+                checked={aiAutoReadMessage}
+                onCheckedChange={(state) => {
+                  setAiAutoReadMessage(state);
                 }}
               />
             </div>

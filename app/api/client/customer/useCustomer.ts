@@ -28,6 +28,7 @@ import {
   createTag,
   getAllTags,
   getChatRoomPartipants,
+  fetchGetAiSettings,
 } from "../../server/customer/customer";
 import type {
   ContactValues,
@@ -204,6 +205,14 @@ export const useUpdateCustomer = (id: string) => {
 export const useAiReplySettings = (id: string) => {
   return useMutation({
     mutationFn: (values: any) => fetchAiReplySettings(id, values),
+  });
+};
+
+export const useGetAiReplySettings = (id: string) => {
+  return useQuery({
+    queryKey: ["ai-reply-setting", id],
+    queryFn: () => fetchGetAiSettings(id),
+    enabled: !!id,
   });
 };
 
