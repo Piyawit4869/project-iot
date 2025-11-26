@@ -45,6 +45,7 @@ export const ChatMessageRender = ({
           setAutoScroll={setAutoScroll}
           customer={customerSingle}
           subId={subId}
+          isLineGroup={isLineGroup}
         />
       )}
 
