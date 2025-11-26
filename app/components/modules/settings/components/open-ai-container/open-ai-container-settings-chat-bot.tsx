@@ -43,7 +43,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
   const { user } = useRouteLoaderData("root") as any;
 
   const { data } = useGetConnectionAi(id ?? "");
-  const chatRoomId = data?.chatRoomId;
+  const chatroomConfigId = data?.chatroomConfigId;
 
   const { addMessageAI } = useChat();
   const [autoScroll, setAutoScroll] = React.useState<boolean>(true);
@@ -240,7 +240,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
 
                 <div className="flex-1 overflow-y-auto">
                   <ChatBotChatMessagesAndConfig
-                    chatRoomId={chatRoomId}
+                    chatRoomId={chatroomConfigId}
                     searchPrompt={firstTimeMessage}
                     data={data}
                     autoScroll={autoScroll}

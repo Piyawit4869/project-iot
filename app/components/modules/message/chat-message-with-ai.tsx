@@ -188,29 +188,6 @@ export default function ChatMessagesWithAI({
     return <CustomerChatSkeleton />;
   }
 
-  const messagesLoading = [
-    {
-      id: 1,
-      type: "text",
-      messageType: "text",
-      message: searchPrompt,
-      sender: "user",
-      imageUrl: profile?.imageUrl,
-      recipient: "",
-      name: profile?.firstName,
-    },
-    {
-      id: 2,
-      type: "text",
-      messageType: "text",
-      message: "AI กำลังตอบ...",
-      sender: "ROME Ai",
-      imageUrl: "https://api.dicebear.com/9.x/glass/svg?seed=rome",
-      recipient: "",
-      name: "ROME AI Assistant",
-    },
-  ];
-
   return (
     <div className="flex flex-col h-[calc(100vh-500px)] border-1 rounded-sm bg-white dark:bg-background overflow-hidden">
       <div

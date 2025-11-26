@@ -139,10 +139,9 @@ export const useConnectedChatRoomAssistant = () => {
   });
 };
 
-export const useConnectedChatRoomAIConfig = (chatRoomId: string) => {
+export const useConnectedChatRoomAIConfig = () => {
   return useMutation({
-    mutationFn: (values: any) =>
-      connectedChatRoomAIConfig({ ...values, chatRoomId: chatRoomId }),
+    mutationFn: (values: any) => connectedChatRoomAIConfig({ ...values }),
   });
 };
 

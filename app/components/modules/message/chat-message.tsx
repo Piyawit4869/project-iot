@@ -213,38 +213,6 @@ export const ChatMessages = ({
   };
 
   React.useEffect(() => {
-    //new message and auto scroll
-    const el = scrollAreaRef.current;
-    const messages = combinedMessages;
-    if (!el || messages?.length === 0) return;
-    const newest = messages[messages.length - 1] as any;
-    const isNewMessage =
-      newestSeenId.current && newestSeenId.current !== newest.timestamp;
-    newestSeenId.current = newest.timestamp;
-    if (isNewMessage) {
-      requestAnimationFrame(() => {
-        el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
-      });
-    }
-  }, [combinedMessages]);
-
-  React.useEffect(() => {
-    if (messagesData?.pages?.length === 1) {
-      setAutoScroll(true);
-    }
-  }, [messagesData]);
-
-  React.useEffect(() => {
-    const el = scrollAreaRef.current;
-    if (!el || !combinedMessages?.length) return;
-    requestAnimationFrame(() => {
-      el.scrollTop = el.scrollHeight;
-
-      setHasInitialScroll(true);
-    });
-  }, [!!combinedMessages?.length]);
-
-  React.useEffect(() => {
     // weิb socket
 
     const socket = socketConfig(api);
@@ -280,6 +248,38 @@ export const ChatMessages = ({
   }, [selectedRoom, me]);
 
   React.useEffect(() => {
+    //new message and auto scroll
+    const el = scrollAreaRef.current;
+    const messages = combinedMessages;
+    if (!el || messages?.length === 0) return;
+    const newest = messages[messages.length - 1] as any;
+    const isNewMessage =
+      newestSeenId.current && newestSeenId.current !== newest.timestamp;
+    newestSeenId.current = newest.timestamp;
+    if (isNewMessage) {
+      requestAnimationFrame(() => {
+        el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+      });
+    }
+  }, [combinedMessages]);
+
+  React.useEffect(() => {
+    if (messagesData?.pages?.length === 1) {
+      setAutoScroll(true);
+    }
+  }, [messagesData]);
+
+  React.useEffect(() => {
+    const el = scrollAreaRef.current;
+    if (!el || !combinedMessages?.length) return;
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+
+      setHasInitialScroll(true);
+    });
+  }, [!!combinedMessages?.length]);
+
+  React.useEffect(() => {
     // show button to scroll down
     const scrollArea = scrollAreaRef.current;
     if (!scrollArea) return;
@@ -287,7 +287,7 @@ export const ChatMessages = ({
     const handleScroll = () => {
       const { scrollHeight, scrollTop, clientHeight } = scrollArea;
       const isContentScrollable = scrollHeight > clientHeight;
-      const SCROLL_THRESHOLD = 50;
+      const SCROLL_THRESHOLD = 5;
       const isNotAtBottom =
         scrollTop < scrollHeight - clientHeight - SCROLL_THRESHOLD;
       setButtonScrollToBottom(isContentScrollable && isNotAtBottom);
@@ -490,28 +490,28 @@ export const ChatMessages = ({
                       </div>
                     )}
 
-                    <div className="flex flex-row gap-2 items-center">
-                      <MessageRenderer
+                    {/* <div className="flex flex-row gap-2 items-center"> */}
+                    <MessageRenderer
+                      msg={msg}
+                      isBackoffice={isBackoffice}
+                      setPreviewUrl={setPreviewUrl}
+                      playing={playing}
+                      setPlaying={setPlaying}
+                      currentTime={currentTime}
+                      setCurrentTime={setCurrentTime}
+                      duration={duration}
+                      setDuration={setDuration}
+                      audioRef={audioRef}
+                      togglePlay={togglePlay}
+                    />
+                    {msg.platform === "line" && (
+                      <MessageMenu
                         msg={msg}
-                        isBackoffice={isBackoffice}
-                        setPreviewUrl={setPreviewUrl}
-                        playing={playing}
-                        setPlaying={setPlaying}
-                        currentTime={currentTime}
-                        setCurrentTime={setCurrentTime}
-                        duration={duration}
-                        setDuration={setDuration}
-                        audioRef={audioRef}
-                        togglePlay={togglePlay}
+                        onReply={() => onReply(msg)}
+                        onCopy={() => copyMessage(msg.message)}
                       />
-                      {msg.platform === "line" && (
-                        <MessageMenu
-                          msg={msg}
-                          onReply={() => onReply(msg)}
-                          onCopy={() => copyMessage(msg.message)}
-                        />
-                      )}
-                    </div>
+                    )}
+                    {/* </div> */}
 
                     {msg.showTime && !msg.isLabel && (
                       <span className="text-[10px] text-muted-foreground mt-1 ">

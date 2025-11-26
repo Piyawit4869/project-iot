@@ -150,6 +150,7 @@ export const dataInTaps = [
   { value: "settingAI", label: "AI Insight", Icon: Bot },
 ];
 export default function ChatCustomerInfo({
+  isLineGroup,
   selectedRoom,
   refetchCustomer,
   modelCustomerDetails,
@@ -159,6 +160,7 @@ export default function ChatCustomerInfo({
   currentCustomer,
   api,
 }: {
+  isLineGroup: boolean;
   selectedRoom: any;
   refetchCustomer: any;
   modelCustomerDetails?: boolean;
@@ -169,6 +171,10 @@ export default function ChatCustomerInfo({
   api: string;
 }) {
   const { data: allTags } = useGetAllTags();
+
+  const assistantId = selectedRoom?.assistantId;
+
+  console.log({ assistantId });
 
   const { data: participantData, refetch: refetchParicipant } =
     useChatRoomParticipants(selectedRoom?.id);
@@ -212,7 +218,7 @@ export default function ChatCustomerInfo({
 
   const { data, refetch } = useGetAllOrders();
   const [chatRoomAssistantId, setChatRoomAssistantId] =
-    React.useState<string>("");
+    React.useState<string>(assistantId);
 
   const { mutateAsync: connectedChatRoomAI, isPending: isPendingAI } =
     useConnectedChatRoomAssistant();
@@ -485,18 +491,15 @@ export default function ChatCustomerInfo({
     setFirstTimeMessage(value);
 
     try {
-      // const res = await new Promise<{ chatRoomId: string }>((resolve) =>
-      //   setTimeout(() => {
-      //     resolve({ chatRoomId: "34bc45eb-403e-4882-aa82-aa46fd222196" });
-      //   }, 5000)
-      // );
-
       const res = await connectedChatRoomAI({
         message: value,
         messageType: "text",
+        chatRoomId: selectedRoom?.id,
       });
 
-      setChatRoomAssistantId(res.chatRoomId);
+      console.log({ res });
+
+      setChatRoomAssistantId(res.assistantId);
     } catch (err) {
       setIsFirstTimeAI(false);
       console.error(err);
@@ -612,9 +615,10 @@ export default function ChatCustomerInfo({
     }
   }, [data, currentCustomer]);
 
-  React.useEffect(() => {
-    const assistantId = selectedRoom?.assistantId;
+  console.log({ selectedRoom });
 
+  React.useEffect(() => {
+    console.log({ assistantId });
     if (assistantId) {
       setChatRoomAssistantId(assistantId || "");
     }
