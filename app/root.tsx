@@ -16,16 +16,19 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GlobalModalStatic } from "./components/shared/modal/global-modal-static";
 import type { Route } from "./routes/backoffice/customer/+types";
 import { RouteProvider } from "./providers/RouteProvider";
+import { getUserMapPermission } from "./utils/permission";
 
 export async function loader({ request }: Route.LoaderArgs) {
   //TODO:FIX TO NOT PASS ACCESS TOKEN
   const token = await getAccessToken(request);
   const user = await getUser(request);
 
+  const permission = getUserMapPermission(user);
+
   if (user?.id) {
-    return { user, token, me: user };
+    return { user, token, me: user, permission };
   } else {
-    return { user: null, token: null };
+    return { user: null, token: null, permission: null };
   }
 }
 

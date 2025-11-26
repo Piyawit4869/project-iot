@@ -1,7 +1,7 @@
 import React from "react";
 import { FormProvider, useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams, useRouteLoaderData, useSearchParams } from "react-router";
+import { useRouteLoaderData, useSearchParams } from "react-router";
 import {
   useGetConnectionAi,
   useUpdateConnectionAi,
@@ -18,10 +18,13 @@ import {
 } from "~/components/ui/resizeble";
 import { ChatbotSideBarSettings } from "./chat-bot-side-bar-settings";
 import { ChatBotChatMessagesAndConfig } from "./chat-bot-chat-messages-and-config";
-import { useChat, type Message } from "~/providers/chat/useChat";
+import { useChat } from "~/providers/chat/useChat";
 import { socketConfig } from "~/lib/sockets";
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
 import { Save } from "lucide-react";
+
+// ✅ NEW
+import { AiConfigListPanel } from "./ai-config-list-panel"; // <- ปรับ path ให้ตรงไฟล์ที่คุณสร้าง
 
 interface OpenAiContainerSettingsChatBotProps {
   api: string;
@@ -32,32 +35,25 @@ export const OpenAiContainerSettingsChatBot: React.FC<
 > = (props) => {
   const { api } = props;
 
-  // Get openAI config id from params.
-  const [sp] = useSearchParams("");
+  const [sp] = useSearchParams();
   const id = sp.get("id") ?? "";
 
   const { mutate: UpdateConnectionAi } = useUpdateConnectionAi(String(id));
   const { refetch: refetchChatAI } = useGetConnectionAi(String(id));
-  const { user } = useRouteLoaderData("root");
+  const { user } = useRouteLoaderData("root") as any;
 
-  // Get Ai Chatroom id.
   const { data } = useGetConnectionAi(id ?? "");
   const chatRoomId = data?.chatRoomId;
 
   const { addMessageAI } = useChat();
-
   const [autoScroll, setAutoScroll] = React.useState<boolean>(true);
-
-  const [
-    firstTimeMessage,
-    // setFirstTimeMessage
-  ] = React.useState<string>("");
+  const [firstTimeMessage] = React.useState<string>("");
 
   const form = useForm<ConnectAiValues>({
     resolver: zodResolver(ConnectAiSchema) as Resolver<ConnectAiValues>,
   });
 
-  const onSubmit = (data: ConnectAiValues) => {
+  const onSubmit = (formData: ConnectAiValues) => {
     GlobalModal.info({
       title: "ยืนยันการบันทึกการตั้งค่า AI Assistant",
       description: "คุณต้องการบันทึกค่าการเชื่อมต่อ AI Assistant ใช่หรือไม่",
@@ -65,7 +61,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
       cancelText: "ยกเลิก",
       onConfirm: async () => {
         const toastId = toast.loading("กำลังบันทึกการเชื่อมต่อ...");
-        UpdateConnectionAi(data, {
+        UpdateConnectionAi(formData, {
           onSuccess: () => {
             toast.success("บันทึกการเชื่อมต่อสำเร็จ !", {
               id: toastId,
@@ -75,7 +71,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
             refetchChatAI();
           },
           onError: (error) => {
-            console.error("Remove inventory error:", error);
+            console.error("Update connection ai error:", error);
             toast.error("เกิดข้อผิดพลาดขณะบันทึกการเชื่อมต่อ", {
               id: toastId,
             });
@@ -101,7 +97,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
     if (data) {
       form.reset({
         id: data?.id ?? "",
-        active: data?.active ?? true,
+        active: data?.active ?? false,
         name: data?.name ?? "",
         aiKey: data?.aiKey ?? "",
         systemInstructions: data.systemInstructions ?? "",
@@ -127,8 +123,6 @@ export const OpenAiContainerSettingsChatBot: React.FC<
     }
 
     socket.on("rooms", (room: any) => {
-      console.log("rooms", room);
-
       if (room.chatRoomType === "config") {
         addMessageAI({
           ...room,
@@ -142,7 +136,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
     return () => {
       socket.disconnect();
     };
-  }, [data]);
+  }, [api, addMessageAI, user?.branchId]);
 
   return (
     <div>
@@ -156,6 +150,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
             type="submit"
             form="config-ai"
             className="w-full"
+            disabled={!id} // กันเคสยังไม่ได้เลือก config
           >
             <>
               <Save /> บันทึก
@@ -163,41 +158,99 @@ export const OpenAiContainerSettingsChatBot: React.FC<
           </Button>,
         ]}
       />
-      <div className="flex h-full w-full bg-muted/40 relative px-2">
-        <ResizablePanelGroup direction="horizontal">
-          <ResizablePanel minSize={50}>
-            <FormProvider {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} id="config-ai">
-                <ChatbotSideBarSettings form={form} id={id} />
-              </form>
-            </FormProvider>
-          </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel minSize={25}>
-            <div className="flex-1 overflow-y-auto">
-              <div className="flex-1 flex flex-col bg-background justify-between">
-                <div className="border-b px-4 py-2 flex items-center justify-between mb-5">
-                  <h2 className="font-semibold text-lg">{assistantName}</h2>
+
+      {/* ✅ 3 Panels Layout */}
+      <div className="h-[calc(100vh-theme(spacing.32))] w-full px-2">
+        {/* container */}
+        <div className="h-full w-full rounded-xl border bg-muted/40 overflow-hidden">
+          <ResizablePanelGroup direction="horizontal" className="h-full">
+            {/* LEFT */}
+            <ResizablePanel minSize={16} defaultSize={22} maxSize={28}>
+              <div className="h-full bg-background">
+                {/* sticky header */}
+                <div className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur px-4 py-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-sm font-semibold">
+                        รายการ Assistant
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        เลือก config เพื่อแก้ไข
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                {/* {isFirstTimeAI && !currentCustomer?.chatRoomAssistantId ? (
-                  <HeroSearch onInputChange={handleFirstTimeAISearch} />
-                ) : ( */}
-                <ChatBotChatMessagesAndConfig
-                  chatRoomId={chatRoomId}
-                  searchPrompt={firstTimeMessage}
-                  data={data}
-                  autoScroll={autoScroll}
-                  setAutoScroll={setAutoScroll}
-                />
-                {/* <ChatInput /> */}
-                {/* <ChatInputAITest
-                    chatRoomId={data?.chatRoomId}
-                    isAILoading={false}
-                  /> */}
+
+                {/* content (scroll) */}
+                <div className="h-[calc(100%-56px)] overflow-y-auto p-3">
+                  <AiConfigListPanel />
+                </div>
               </div>
-            </div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
+            </ResizablePanel>
+
+            <ResizableHandle withHandle className="bg-border" />
+
+            {/* MIDDLE */}
+            <ResizablePanel minSize={38} defaultSize={45}>
+              <div className="h-full bg-background">
+                <div className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur px-4 py-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-sm font-semibold">
+                        การตั้งค่าผู้ช่วย
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        ตั้งค่า model, policy, และ system instructions
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="h-[calc(100%-56px)] overflow-y-auto p-3">
+                  <FormProvider {...form}>
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      id="config-ai"
+                      className="h-full"
+                    >
+                      <ChatbotSideBarSettings form={form} id={id} />
+                    </form>
+                  </FormProvider>
+                </div>
+              </div>
+            </ResizablePanel>
+
+            <ResizableHandle withHandle className="bg-border" />
+
+            {/* RIGHT */}
+            <ResizablePanel minSize={26} defaultSize={33}>
+              <div className="h-full bg-background flex flex-col">
+                <div className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur px-4 py-3">
+                  <div className="flex items-center justify-between">
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold truncate">
+                        {assistantName || "ROME Assistant"}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        ทดสอบการคุยและดู output
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex-1 overflow-y-auto">
+                  <ChatBotChatMessagesAndConfig
+                    chatRoomId={chatRoomId}
+                    searchPrompt={firstTimeMessage}
+                    data={data}
+                    autoScroll={autoScroll}
+                    setAutoScroll={setAutoScroll}
+                  />
+                </div>
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </div>
       </div>
     </div>
   );

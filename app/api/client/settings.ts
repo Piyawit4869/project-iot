@@ -8,6 +8,7 @@ import {
   fetchBranchPagination,
   fetchChatBotPagination,
   fetchGetConnectionAi,
+  fetchGetConnectionAiByBranch,
   fetchGetConnectionLine,
   fetchGetOrganizations,
   fetchLineCardContentPaginate,
@@ -136,6 +137,19 @@ export const useGetConnectionAi = (id: string) =>
     queryKey: ["OpenAi", id],
     queryFn: () => fetchGetConnectionAi(id),
     enabled: !!id,
+  });
+export const useGetConnectionAiByBranch = (branchId: string) =>
+  useQuery({
+    queryKey: ["OpenAiByBranch", branchId],
+    queryFn: () => fetchGetConnectionAiByBranch(branchId),
+    enabled: !!branchId,
+    select: (res: any) => {
+      // รองรับทั้งกรณี API ส่งเป็น array ตรง ๆ หรือห่อมาใน data/items
+      if (Array.isArray(res)) return res;
+      if (Array.isArray(res?.items)) return res.items;
+      if (Array.isArray(res?.data)) return res.data;
+      return [];
+    },
   });
 
 export const usePaginatedChatRoomAIConfig = (chatRoomId: string) => {

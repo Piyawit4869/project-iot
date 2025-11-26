@@ -155,7 +155,16 @@ export const fetchGetConnectionAi = async (id: string) => {
     return error;
   }
 };
-
+export const fetchGetConnectionAiByBranch = async (branchId: string) => {
+  try {
+    const res = await ApiConfig.get(
+      `/thridparty/openai/config/branch/${branchId}`
+    );
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
 export const fetchRoomChatAILoadMore = async (
   chatRoomId: string,
   offset = 0,

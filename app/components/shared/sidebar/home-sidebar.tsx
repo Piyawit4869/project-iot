@@ -9,7 +9,7 @@ import {
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
 
-interface SidebarItem {
+export interface SidebarItem {
   name: string;
   key: string;
   path: string;
