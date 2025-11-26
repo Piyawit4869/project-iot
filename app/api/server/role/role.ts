@@ -33,6 +33,15 @@ export const fetchRolesById = async (id: string) => {
   }
 };
 
+export const fetchAllPermission = async () => {
+  try {
+    const { data } = await ApiConfig.get(`/crud/permissions`);
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const fetchCreateRoles = async (payload: RolesFormValues) => {
   try {
     const { data } = await ApiConfig.post(
@@ -60,50 +69,32 @@ export const fetchUpdateRoles = async (
   }
 };
 
-// export const fetchChangePassword = async (
-//   id: string,
-//   payload: PasswordFormValues
-// ) => {
-//   try {
-//     const { data } = await ApiConfig.put(
-//       `/crud/users/change-password/${id}`,
-//       payload
-//     );
-//     return data;
-//   } catch (error) {
-//     return error;
-//   }
-// };
+export const fetchGrantUsers = async (
+  id: string,
+  payload: { userIds: string[] }
+) => {
+  try {
+    const res = await ApiConfig.post(
+      `/crud/organization-roles/${id}/grant-users`,
+      payload
+    );
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
-// export const fetchDeleteUsers = async (id: string) => {
-//   try {
-//     const { data } = await ApiConfig.delete(`/crud/users/delete/${id}`);
-//     return data;
-//   } catch (error) {
-//     return error;
-//   }
-// };
-
-// export const fetchGetAllDepartments = async (params: { isAll: boolean }) => {
-//   try {
-//     const { data } = await ApiConfig.get(`/crud/departments/`, {
-//       params: {
-//         isAll: params.isAll,
-//       },
-//     });
-
-//     return data;
-//   } catch (error) {
-//     return error;
-//   }
-// };
-
-// export const fetchUserSummary = async () => {
-//   try {
-//     const res = await ApiConfig.get(`/crud/users/status-summary`);
-
-//     return res.data;
-//   } catch (error) {
-//     return error;
-//   }
-// };
+export const fetchGrantPermission = async (
+  id: string,
+  payload: { permissionIds: string[] }
+) => {
+  try {
+    const res = await ApiConfig.post(
+      `/crud/organization-roles/${id}/grant-permissions`,
+      payload
+    );
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};

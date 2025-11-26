@@ -45,6 +45,7 @@ export interface ModalUserProps {
   onClose: () => void;
   onChange: (selected: string[]) => void;
   onSave?: (selected: string[]) => void;
+  onSubmit: () => void;
   triggerElement?: ReactNode;
 }
 

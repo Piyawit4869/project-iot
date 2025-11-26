@@ -32,7 +32,6 @@ import {
   buildImageCardBody,
 } from "./utils";
 import { buildPersonCardBody } from "./utils/person-card-content";
-import { Chevron } from "react-day-picker";
 import { ChevronLeft, ChevronRight, Copy, Trash2 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router";
 import React from "react";
@@ -101,8 +100,6 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
 
     const itemsNoKey = items.map((item: any) => Object.values(item)[0]);
 
-    // console.log({ result, values, categoryPayload, cards });
-
     if (!values.category || !categoryPayload) {
       toast.error("กรุณาเลือกประเภทการ์ด", { id: toastId });
       return;
@@ -114,8 +111,6 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
         category: values.category,
         items,
       };
-
-      console.log({ payload });
 
       const newPayload = payload.items.map((c: any) => {
         switch (values.category) {
@@ -134,8 +129,6 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
         return;
       });
 
-      console.log({ newPayload });
-
       const merged = newPayload.flatMap((item: any) => item.content.contents);
 
       const mergedCarousel = {
@@ -144,8 +137,6 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
           contents: merged,
         },
       };
-
-      console.log({ mergedCarousel });
 
       const finalPayload = {
         ...newPayload[0],
@@ -157,8 +148,6 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
           items: itemsNoKey,
         },
       };
-
-      console.log({ finalPayload });
 
       const { data } = await ApiConfig.post(
         "/thirdparty/line/contents/created",
@@ -334,8 +323,6 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
     selectedCategoryId,
   ]);
 
-  console.log({ cards });
-
   const addCard = () => {
     setCards((prev) => [
       ...prev,
@@ -349,7 +336,6 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
   };
 
   const duplicateCard = () => {
-    console.log("duplicateCard");
     const cloned = { ...cards[activeIndex] };
     setCards([...cards, cloned]);
   };

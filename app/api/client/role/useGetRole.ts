@@ -2,7 +2,10 @@ import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import type { UsersFormValues } from "~/schemas/users/user";
 import type { PasswordFormValues } from "~/schemas/users/password-user";
 import {
+  fetchAllPermission,
   fetchCreateRoles,
+  fetchGrantPermission,
+  fetchGrantUsers,
   fetchRolesById,
   fetchRolesPagination,
   fetchUpdateRoles,
@@ -36,9 +39,15 @@ export const usePaginate = ({
 
 export const useGetRoles = (id: string) =>
   useQuery({
-    queryKey: ["user", id],
+    queryKey: ["roles", id],
     queryFn: () => fetchRolesById(id),
     enabled: !!id,
+  });
+
+export const useGetAllPermission = () =>
+  useQuery({
+    queryKey: ["permission-all"],
+    queryFn: () => fetchAllPermission(),
   });
 
 export const useCreateRoles = () => {
@@ -50,6 +59,19 @@ export const useCreateRoles = () => {
 export const useUpdateRoles = (id: string) => {
   return useMutation({
     mutationFn: (values: RolesFormValues) => fetchUpdateRoles(id, values),
+  });
+};
+
+export const useGrantUsers = (id: string) => {
+  return useMutation({
+    mutationFn: (values: { userIds: string[] }) => fetchGrantUsers(id, values),
+  });
+};
+
+export const useGrantPermission = (id: string) => {
+  return useMutation({
+    mutationFn: (values: { permissionIds: string[] }) =>
+      fetchGrantPermission(id, values),
   });
 };
 
