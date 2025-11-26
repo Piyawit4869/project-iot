@@ -7,7 +7,6 @@ import PolicyImage2 from "/assets/images/Illustration.png";
 import PolicyImage3 from "/assets/images/Art.png";
 import PolicyImage4 from "/assets/images/rafiki.png";
 
-
 import {
   Dialog,
   DialogContent,
@@ -27,7 +26,6 @@ export default function WebSitePolicyDialog({ openWeb, setOpen }: Props) {
     <>
       <Dialog open={openWeb} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-4xl w-full max-h-[96vh] overflow-auto rounded-lg p-6">
-
           <DialogHeader>
             <DialogTitle className="text-3xl font-bold text-center">
               นโยบายเว็บไซต์ (Website Policy)
@@ -43,13 +41,12 @@ export default function WebSitePolicyDialog({ openWeb, setOpen }: Props) {
           </div>
 
           <div className="space-y-12 px-2">
-
             <SectionWithImage
               title="1. วัตถุประสงค์ของเว็บไซต์"
               content={`เว็บไซต์นี้จัดทำขึ้นเพื่อให้บริการข้อมูล ข่าวสาร กิจกรรม ผลงาน และภารกิจของหน่วยงานแก่ประชาชนทั่วไป โดยมีวัตถุประสงค์เพื่อเผยแพร่ข้อมูลข่าวสารของหน่วยงานให้ประชาชนได้รับทราบอย่างถูกต้อง รวดเร็ว และโปร่งใส รวมถึงสนับสนุนให้ประชาชนเข้าถึงข้อมูลและบริการของภาครัฐได้สะดวกมากยิ่งขึ้น
               เว็บไซต์นี้ยังเป็นช่องทางสื่อสารระหว่างหน่วยงานกับประชาชน เพื่อรับฟังความคิดเห็นหรือข้อเสนอแนะที่เป็นประโยชน์ต่อการพัฒนาองค์กร โดยมุ่งหวังให้เว็บไซต์นี้เป็นศูนย์กลางข้อมูลออนไลน์ของหน่วยงานและเป็นสื่อกลางในการให้บริการข้อมูลสาธารณะอย่างมีประสิทธิภาพและปลอดภัย`}
               image={PolicyImage1}
-              position= {SidePanel.LEFT}
+              position={SidePanel.LEFT}
             />
 
             <SectionWithImage
@@ -67,7 +64,7 @@ export default function WebSitePolicyDialog({ openWeb, setOpen }: Props) {
 
             หน่วยงานขอสงวนสิทธิ์ในการปรับปรุง แก้ไข หรือยกเลิกข้อมูลโดยไม่ต้องแจ้งให้ทราบล่วงหน้า และไม่รับผิดชอบต่อผลที่เกิดจากการใช้ข้อมูลจากเว็บไซต์นี้โดยตรงหรือโดยอ้อม ผู้ใช้งานควรตรวจสอบข้อมูลจากแหล่งทางการก่อนนำไปใช้อ้างอิงหรือเผยแพร่ต่อ`}
               image={PolicyImage2}
-              position= {SidePanel.LEFT}
+              position={SidePanel.LEFT}
             />
 
             <SectionWithImage
@@ -75,7 +72,7 @@ export default function WebSitePolicyDialog({ openWeb, setOpen }: Props) {
               content={`เว็บไซต์นี้อาจมีลิงก์เชื่อมโยงไปยังเว็บไซต์ของหน่วยงานอื่นหรือเว็บไซต์ภายนอก เพื่ออำนวยความสะดวกแก่ผู้ใช้งาน อย่างไรก็ตาม หน่วยงานไม่มีอำนาจควบคุมหรือรับรองความถูกต้องของข้อมูลในเว็บไซต์ภายนอกเหล่านั้น\n
             การเชื่อมโยงดังกล่าวไม่ถือเป็นการรับรองหรือสนับสนุนเนื้อหาของเว็บไซต์ภายนอกในทางใด และหน่วยงานไม่รับผิดชอบต่อความเสียหายใด ๆ ที่เกิดจากการเข้าชมหรือใช้งานเว็บไซต์ภายนอกนั้น`}
               image={PolicyImage3}
-              position= {SidePanel.RIGHT}
+              position={SidePanel.RIGHT}
             />
 
             <SectionWithImage
@@ -92,7 +89,7 @@ export default function WebSitePolicyDialog({ openWeb, setOpen }: Props) {
               content={`หน่วยงานขอสงวนสิทธิ์ในการปรับปรุงหรือแก้ไขนโยบายเว็บไซต์นี้ได้ทุกเมื่อ โดยจะประกาศแจ้งให้ทราบผ่านหน้าเว็บไซต์เมื่อมีการเปลี่ยนแปลงที่สำคัญ ผู้ใช้ควรตรวจสอบนโยบายนี้เป็นระยะ เพื่อให้ทราบข้อกำหนดล่าสุดก่อนเข้าใช้งาน\n
             นโยบายนี้มีผลบังคับใช้ตั้งแต่วันที่ประกาศและถือเป็นแนวทางปฏิบัติสำหรับการใช้งานเว็บไซต์ของหน่วยงานโดยรวม`}
               image={PolicyImage4}
-              position= {SidePanel.LEFT}
+              position={SidePanel.LEFT}
             />
           </div>
 

@@ -13,29 +13,40 @@ export default function SectionWithImage({
   content,
   image,
   position = "left",
+  className = "",
 }: SectionWithImageProps) {
-  const isleft = position === "left";
+  const isLeft = position === "left";
   const hasImage = Boolean(image);
 
   return (
     <section
       className={`
-        flex flex-col lg:flex-row items-center mt-16 gap-10
-        text-gray-900 dark:text-sidebar-foreground
-        ${isleft ? "" : "lg:flex-row-reverse"}
+        flex flex-col 
+        lg:flex-row 
+        items-center 
+        lg:items-start 
+        gap-6           
+        lg:gap-16      
+        mt-10           
+        lg:mt-16       
+        ${isLeft ? "" : "lg:flex-row-reverse"}
+        ${className}
       `}
     >
       {hasImage && (
         <div
-          className={`flex-1 flex ${
-            isleft ? "justify-start" : "justify-end"
-          }`}
+          className={`
+            w-full lg:w-1/2 
+            flex 
+            ${isLeft ? "justify-start" : "justify-end"}
+            lg:justify-center
+          `}
         >
           {typeof image === "string" ? (
             <img
               src={image}
               alt=""
-              className="w-40 lg:w-70 object-contain lg:mx-6"
+              className="w-40 sm:w-48 lg:w-72 object-contain"
             />
           ) : (
             image
@@ -45,25 +56,20 @@ export default function SectionWithImage({
 
       <div
         className={`
-          flex-1 space-y-4 max-w-[80%]
-          ${
-            !hasImage
-              ? isleft
-                ? "lg:text-left"
-                : "lg:text-left lg:pl-[21.5%]"
-              : ""
-          }
+          w-full 
+          ${hasImage ? "lg:w-1/2" : "lg:w-full"}
+          flex flex-col 
+          space-y-3        /* mobile: ลดจากเดิม */
+          lg:space-y-4     /* desktop: ระยะห่างปกติ */
+          text-gray-900 dark:text-sidebar-foreground
         `}
       >
-        <h2 className="text-3xl font-semibold text-gray-900 dark:text-sidebar-foreground">
-          {title}
-        </h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold">{title}</h2>
 
-        <div className="text-gray-600 dark:text-muted-foreground leading-relaxed space-y-2 whitespace-pre-line">
+        <div className="text-gray-600 dark:text-muted-foreground leading-relaxed space-y-1.5 whitespace-pre-line">
           {content}
         </div>
       </div>
     </section>
   );
-
 }

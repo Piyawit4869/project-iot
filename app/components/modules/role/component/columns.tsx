@@ -1,13 +1,11 @@
 import { GlobalImage } from "~/components/shared/global-image";
-
-import { Eye, PenLine, Trash } from "lucide-react";
+import { Eye, Trash } from "lucide-react";
 import { useMemo } from "react";
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
 
-import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import type { UserColumn } from "~/types/user/type-user";
 import { statusMap } from "~/types/user/init-data";
 import {
@@ -15,6 +13,7 @@ import {
   formatDateTH,
   formatPhoneNumber,
 } from "~/components/shared/global-format";
+import GlobalButton from "~/components/shared/global-button";
 
 export const useRolesColumns = (): ColumnDef<UserColumn>[] => {
   const columns = useMemo<ColumnDef<UserColumn>[]>(
@@ -28,7 +27,6 @@ export const useRolesColumns = (): ColumnDef<UserColumn>[] => {
           return (
             <span className="text-blue-400 hover:text-blue-300 hover:underline">
               <Link to={`/roles/${id}`}>
-                {/* <span className=" text-muted-foreground hover:text-blue-400 hover:underline"> */}
                 {(info.getValue() as string) || "-"}
               </Link>
             </span>
@@ -71,7 +69,7 @@ export const useRolesColumns = (): ColumnDef<UserColumn>[] => {
         header: "วันที่แก้ไข",
         cell: (info) => {
           const value = info.getValue() as string;
-          return <span className="">{formatDateAndTime(value)}</span>;
+          return <span>{formatDateAndTime(value)}</span>;
         },
       },
       {
@@ -97,28 +95,19 @@ export const useRolesColumns = (): ColumnDef<UserColumn>[] => {
         header: "การดำเนินการ",
         cell: (info) => {
           const id = info.row.original.id;
+
           return (
             <div className="flex items-center gap-2">
               <Link to={`/roles/${id}`}>
                 <Button
+                  type="button"
                   className="h-9 w-9 p-0 bg-[#737373] hover:bg-[#5E5E5E]"
-                  aria-label="แก้ไข"
-                  title="แก้ไข"
+                  aria-label="ดูรายละเอียดตำแหน่ง"
+                  title="ดูรายละเอียด"
                 >
                   <Eye className="w-4 h-4 text-white" />
                 </Button>
               </Link>
-
-              {/* <div className="w-9">
-                <GlobalButton
-                  label=""
-                  icon={<Trash className="w-4 h-4 text-white" />}
-                  onClick={() => {}}
-                  className="h-10 w-10 p-0 bg-[#FF7062] text-white hover:bg-[#E8594B] hover:text-white transition-colors"
-                  aria-label="ลบ"
-                  disabled
-                />
-              </div> */}
             </div>
           );
         },
@@ -130,7 +119,14 @@ export const useRolesColumns = (): ColumnDef<UserColumn>[] => {
   return columns;
 };
 
-export const useUserColumns = (): ColumnDef<UserColumn>[] => {
+export const useUserColumns = (
+  opts: {
+    onView?: (userId: string) => void;
+    onRemove?: (userId: string) => void;
+  } = {}
+): ColumnDef<UserColumn>[] => {
+  const { onView, onRemove } = opts;
+
   const columns = useMemo<ColumnDef<UserColumn>[]>(
     () => [
       {
@@ -139,6 +135,10 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         cell: (info) => {
           const url = info.getValue() as string;
           const userName = info.row.original?.userName;
+          console.log(
+            "row.profile.imageUrl =",
+            info.row.original?.profile?.imageUrl
+          );
 
           return (
             <GlobalImage
@@ -163,16 +163,11 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
 
           const fullName = `${info.row.original.profile?.prefix || ""} ${
             info.row.original.profile?.firstName || ""
-          } ${info.row.original.profile?.lastName || ""} ${
-            nickName || ""
-          }`.trim();
+          } ${info.row.original.profile?.lastName || ""} ${nickName || ""}`.trim();
 
           return (
             <span className="text-blue-400 hover:text-blue-300 hover:underline">
-              <Link to={`/users/${id}`}>
-                {/* <span className=" text-muted-foreground hover:text-blue-400 hover:underline"> */}
-                {fullName || "-"}
-              </Link>
+              <Link to={`/users/${id}`}>{fullName || "-"}</Link>
             </span>
           );
         },
@@ -186,7 +181,6 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         accessorKey: "email",
         header: "อีเมล",
         minSize: 600,
-
         cell: (info) => (
           <span className="text-muted-foreground">
             {(info.getValue() as string) || "-"}
@@ -201,8 +195,8 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
 
           const current = statusMap[status] || {
             label: status || "-",
-            // className: "text-xs",
             icon: null,
+            className: "",
           };
 
           return (
@@ -233,9 +227,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
       {
         accessorKey: "departmentName",
         header: "แผนก",
-        cell: (info) => (
-          <span className="">{(info.getValue() as string) || "-"}</span>
-        ),
+        cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
       },
       {
         accessorKey: "gender",
@@ -255,10 +247,9 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         header: "วัน / เดือน / ปีเกิด",
         cell: (info) => {
           const value = info.row.original.profile?.birthDate as string;
-          return <span className="">{formatDateTH(value)}</span>;
+          return <span>{formatDateTH(value)}</span>;
         },
       },
-
       {
         accessorKey: "createdAt",
         header: "วันที่สร้าง",
@@ -267,7 +258,6 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
           <span>{formatDateAndTime(info.getValue() as string)}</span>
         ),
       },
-
       {
         accessorKey: "createdBy",
         header: "ผู้สร้าง",
@@ -291,7 +281,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         header: "วันที่แก้ไข",
         cell: (info) => {
           const value = info.getValue() as string;
-          return <span className="">{formatDateAndTime(value)}</span>;
+          return <span>{formatDateAndTime(value)}</span>;
         },
       },
       {
@@ -312,39 +302,63 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
           );
         },
       },
+
       {
         id: "actions",
         header: "การดำเนินการ",
         cell: (info) => {
           const id = info.row.original.id;
           return (
-            <div className="flex items-center gap-2">
-              <Link to={`/users/${id}`}>
-                <Button
-                  className="h-9 w-9 p-0 bg-[#737373] hover:bg-[#5E5E5E]"
-                  aria-label="แก้ไข"
-                  title="แก้ไข"
-                >
-                  <Eye className="w-4 h-4 text-white" />
-                </Button>
-              </Link>
+            // <div className="flex items-center gap-2 w-full">
+            //   <Link to={`/users/${id}`}>
+            //     <Button
+            //       className="w-full p-0 bg-[#737373] hover:bg-[#5E5E5E]"
+            //       aria-label="แก้ไข"
+            //       title="แก้ไข"
+            //     >
+            //       <Eye className=" text-white" />
+            //     </Button>
+            //   </Link>
 
-              {/* <div className="w-9">
+            <div className="w-auto">
+              <Link to={`/users/${id}`}>
                 <GlobalButton
                   label=""
-                  icon={<Trash className="w-4 h-4 text-white" />}
+                  icon={<Eye className="w-4 h-4 text-white" />}
                   onClick={() => {}}
-                  className="h-10 w-10 p-0 bg-[#FF7062] text-white hover:bg-[#E8594B] hover:text-white transition-colors"
+                  className="h-10 w-10 p-0 bg-[#737373] text-white hover:bg-[#E8594B] hover:text-white transition-colors"
                   aria-label="ลบ"
                   disabled
                 />
-              </div> */}
+              </Link>
+            </div>
+            // </div>
+          );
+        },
+      },
+      {
+        id: "remove",
+        header: "ลบพนักงาน",
+        cell: (info) => {
+          const userId = info.row.original.id;
+
+          return (
+            <div className="w-auto">
+              <GlobalButton
+                label=""
+                icon={<Trash className="w-4 h-4 text-white" />}
+                onClick={() => onRemove?.(userId)}
+                className="h-10 w-10 p-0 bg-[#FF7062] text-white hover:bg-[#E8594B] hover:text-white transition-colors"
+                aria-label="ลบออกจากตำแหน่ง"
+                disabled={!onRemove}
+                type="button"
+              />
             </div>
           );
         },
       },
     ],
-    []
+    [onView, onRemove]
   );
 
   return columns;

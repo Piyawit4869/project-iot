@@ -7,7 +7,6 @@ import PolicyImage2 from "/assets/images/Illustration.png";
 import PolicyImage3 from "/assets/images/Art.png";
 import PolicyImage4 from "/assets/images/rafiki.png";
 
-
 import {
   Dialog,
   DialogContent,
@@ -41,12 +40,11 @@ export default function SavePolicyDialog({ openSave, setOpen }: Props) {
         </div>
 
         <div className="space-y-20 px-2">
-
           <SectionWithImage
             title="1. วัตถุประสงค์"
             content={`นโยบายนี้จัดทำขึ้นเพื่อกำหนดแนวทางและมาตรการในการรักษาความมั่นคงปลอดภัยของเว็บไซต์และระบบสารสนเทศของหน่วยงาน เพื่อให้การให้บริการข้อมูลแก่ประชาชนเป็นไปอย่างมั่นคง ปลอดภัย และเชื่อถือได้ รวมถึงป้องกันไม่ให้เกิดการเข้าถึง การทำลาย หรือการใช้ข้อมูลโดยมิชอบด้วยกฎหมาย\nทั้งนี้ เพื่อให้เป็นไปตามแนวทางของหน่วยงานภาครัฐ และสอดคล้องกับหลักเกณฑ์ด้านความมั่นคงปลอดภัยไซเบอร์ของประเทศไทย`}
             image={PolicyImage1}
-            position= {SidePanel.LEFT}
+            position={SidePanel.LEFT}
           />
 
           <SectionWithImage
@@ -71,7 +69,7 @@ export default function SavePolicyDialog({ openSave, setOpen }: Props) {
 • วิเคราะห์สาเหตุและจัดทำรายงาน Post-Incident Report
 • แจ้ง ThaiCERT หรือหน่วยงานที่เกี่ยวข้องหากเข้าข่าย`}
             image={PolicyImage2}
-            position= {SidePanel.LEFT}
+            position={SidePanel.LEFT}
           />
 
           <SectionWithImage
@@ -95,13 +93,13 @@ export default function SavePolicyDialog({ openSave, setOpen }: Props) {
             title="6. การตรวจสอบและประเมินความปลอดภัย"
             content={`ดำเนินการตรวจสอบความปลอดภัยเว็บไซต์เป็นประจำ อย่างน้อยปีละ 1 ครั้ง รวมถึงทดสอบเจาะระบบ (PenTest) โดยผู้เชี่ยวชาญภายนอกหากจำเป็น`}
             image={PolicyImage4}
-            position= {SidePanel.LEFT}
+            position={SidePanel.LEFT}
           />
 
           <SectionWithImage
             title="7. การปรับปรุงและทบทวนนโยบาย"
             content={`หน่วยงานจะทบทวนและปรับปรุงนโยบายนี้อย่างน้อยปีละครั้ง หรือเมื่อเทคโนโลยีหรือกฎหมายมีการเปลี่ยนแปลง เพื่อให้สอดคล้องกับภัยคุกคามที่เปลี่ยนแปลง`}
-            position= {SidePanel.RIGHT}
+            position={SidePanel.RIGHT}
           />
         </div>
 
