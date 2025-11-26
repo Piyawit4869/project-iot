@@ -119,7 +119,7 @@ export type CustomerValueNote = {
 export type CustomerConnectedChatRoomAI = {
   message: string;
   messageType: string;
-  customerId: string;
+  chatRoomId: string;
 };
 
 export type CustomerUpdateValueNote = {

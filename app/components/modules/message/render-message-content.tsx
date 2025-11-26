@@ -149,7 +149,7 @@ export function MessageRenderer({
         className={`
         rounded-xl overflow-hidden 
         ${onlyShow ? "" : isMedia ? "" : isBackoffice ? "bg-blue-500/10" : "bg-muted-foreground/10"}
-        ${hasRef ? "max-w-[260px]" : "max-w-[220px]"} 
+        ${hasRef ? "max-w-[260px]" : ""} 
       `}
       >
         {reference && <ReplyReference refMsg={reference} />}
@@ -173,7 +173,7 @@ export function MessageRenderer({
       <Wrapper>
         <img
           src={message}
-          className="rounded-xl max-w-[220px] h-auto object-contain"
+          className="rounded-xl max-w-[180px] h-auto object-contain"
         />
       </Wrapper>
     );

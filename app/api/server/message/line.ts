@@ -46,7 +46,7 @@ export const createReplyMessage = async (payload: TeamMessageCreateDTO) => {
 export const sendCardContent = async (id: string, payload: { to?: string }) => {
   try {
     const res = await ApiConfig.post(
-      `/thirdparty/line/content/push-to-line/${id}`,
+      `/thirdparty/line/contents/push-to-line/${id}`,
       payload
     );
 

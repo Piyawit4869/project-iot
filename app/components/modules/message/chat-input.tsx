@@ -430,7 +430,7 @@ export default function ChatInput({
         >
           <Smile className="w-4 h-4" />
         </Button>
-        <LineTemplatePickerModal handleSelectChange={setInput} />
+        <LineTemplatePickerModal handleSelectChange={setInput} subId={subId} />
 
         <Button
           variant="ghost"

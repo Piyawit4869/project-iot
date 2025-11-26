@@ -9,6 +9,7 @@ import { useMessage, type Message } from "~/providers/chat/useMessage";
 import { MessageLabelType } from "~/types/global";
 
 interface ChatInputOpenAiConfigProps {
+  data: any;
   chatRoomId: string;
   isAILoading: boolean;
   isPendingAI: boolean;
@@ -18,7 +19,8 @@ interface ChatInputOpenAiConfigProps {
 export const ChatInputOpenAiConfig: React.FC<ChatInputOpenAiConfigProps> = (
   props
 ) => {
-  const { chatRoomId, isAILoading, isPendingAI, connectedChatRoomAI } = props;
+  const { data, chatRoomId, isAILoading, isPendingAI, connectedChatRoomAI } =
+    props;
 
   const { messagesAI } = useMessage();
 
@@ -82,7 +84,8 @@ export const ChatInputOpenAiConfig: React.FC<ChatInputOpenAiConfigProps> = (
     connectedChatRoomAI({
       message: messageText,
       messageType: "text",
-      chatRoomId: chatRoomId,
+      chatroomConfigId: chatRoomId,
+      configAiId: data?.id,
     });
   };
 

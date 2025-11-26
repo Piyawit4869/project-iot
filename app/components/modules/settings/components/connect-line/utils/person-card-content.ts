@@ -62,6 +62,38 @@ export function buildPersonCardBody(input: any): LineFlex {
       });
   }
 
+  const heroContents: any[] = [
+    {
+      type: "image",
+      url: p.imageUrl,
+      size: "full",
+      aspectMode: "cover",
+      aspectRatio: "20:13",
+    },
+  ];
+
+  if (p.tagEnabled && p.tagText) {
+    heroContents.push({
+      type: "box",
+      layout: "vertical",
+      position: "absolute",
+      offsetTop: "10px",
+      offsetStart: "10px",
+      paddingAll: "4px",
+      cornerRadius: "999px",
+      backgroundColor: p.tagColor || "#444444",
+      contents: [
+        {
+          type: "text",
+          text: p.tagText,
+          size: "xxs",
+          align: "center",
+          color: "#ffffff",
+        },
+      ],
+    });
+  }
+
   const card: LineFlex = {
     active: true,
     name: input.name,
@@ -73,6 +105,13 @@ export function buildPersonCardBody(input: any): LineFlex {
       contents: [
         {
           type: "bubble",
+          hero: {
+            type: "image",
+            url: p.imageUrl,
+            size: "full",
+            aspectMode: "cover",
+            aspectRatio: "20:13",
+          },
           body: {
             type: "box",
             layout: "vertical",

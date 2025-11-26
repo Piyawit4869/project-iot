@@ -58,7 +58,7 @@ export const ChatBotChatMessagesAndConfig: React.FC<
   } = usePaginatedChatRoomAIConfig(chatRoomId || "");
 
   const { mutateAsync: connectedChatRoomAI, isPending: isPendingAI } =
-    useConnectedChatRoomAIConfig(chatRoomId);
+    useConnectedChatRoomAIConfig();
 
   const paginatedMessages = messagesData?.pages.flatMap((page) => page) ?? [];
 
@@ -343,6 +343,7 @@ export const ChatBotChatMessagesAndConfig: React.FC<
           )}
         </div>
         <ChatInputOpenAiConfig
+          data={data}
           chatRoomId={chatRoomId}
           isAILoading={false}
           isPendingAI={isPendingAI}

@@ -756,8 +756,10 @@ function PreviewPane({ item }: { item?: any }) {
 
 export default function LineTemplatePickerModal({
   handleSelectChange,
+  subId,
 }: {
   handleSelectChange: React.Dispatch<React.SetStateAction<any>>;
+  subId?: string;
 }) {
   const { data, refetch, isLoading } = useLineMassagePaginate({
     pageIndex: 1,
@@ -839,8 +841,8 @@ export default function LineTemplatePickerModal({
   };
 
   const sendCardApi = async (id: string) => {
-    await lineSendCard(
-      { to: "U4bf11290a9d563e8b6a36676232bf19d" },
+    lineSendCard(
+      { to: subId },
       {
         onSuccess: () => {
           setOpen(false);
