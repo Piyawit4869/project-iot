@@ -2,7 +2,13 @@ import { useState, useCallback, useMemo } from "react";
 import { FileDown, FileUp, Plus } from "lucide-react";
 import { useSidebar } from "~/components/ui/sidebar";
 import GlobalButton from "~/components/shared/global-button";
-import { Link, useNavigate, useLocation, useSearchParams } from "react-router";
+import {
+  Link,
+  useNavigate,
+  useLocation,
+  useSearchParams,
+  useRouteLoaderData,
+} from "react-router";
 import { Button } from "~/components/ui/button";
 import { useCustomerColumns } from "./components/columns";
 import { customerFilterFields } from "./utils/filter";
@@ -17,15 +23,17 @@ import {
 import { TabControl } from "~/components/shared/tab-control";
 import { parseDateRangeParam, pickSearchParams } from "./utils/search-params";
 import { formatForNumber } from "~/components/shared/global-format";
+import { getUserActionByPermission } from "~/utils/permission";
+import { PermissionAction } from "../permission/iniData";
+import { PermissionBaseAction } from "~/types/roles/permission";
 
 export default function Customer() {
+  const { permission } = useRouteLoaderData("root");
 
   const [customerTypeTab, setCustomerTypeTab] = useState("allCustomer");
 
   const summaryType =
-    customerTypeTab === "allCustomer"
-      ? undefined
-      : customerTypeTab; 
+    customerTypeTab === "allCustomer" ? undefined : customerTypeTab;
 
   const { data: categories, isLoading } = useAllCustomerSummary(summaryType);
 
@@ -80,48 +88,58 @@ export default function Customer() {
     }
   };
 
+  const tabControlButtons = [
+    <GlobalButton
+      label={
+        <>
+          <FileDown className="h-4 w-4" />
+          <span className="hidden sm:inline">&nbsp;นำเข้าข้อมูล</span>
+        </>
+      }
+      variant="outline"
+      disabled
+      key="import-button"
+    />,
+    <GlobalButton
+      label={
+        <>
+          <FileUp className="h-4 w-4" />
+          <span className="hidden sm:inline">&nbsp;นำออกข้อมูล</span>
+        </>
+      }
+      variant="outline"
+      disabled
+      key="export-button"
+    />,
+  ];
+
+  if (
+    getUserActionByPermission(
+      permission,
+      "customer",
+      PermissionBaseAction.CREATE
+    )
+  ) {
+    tabControlButtons.push(
+      <Link to="/customer/create" key="create-link">
+        <Button
+          key="create-button"
+          className="px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+        >
+          <Plus className="h-4 w-4" />
+          <span className="hidden sm:inline">&nbsp;สร้าง</span>
+        </Button>
+      </Link>
+    );
+  }
+
   return (
     <div className="flex flex-col w-full space-y-4 p-8 dark:bg-background">
-      <TabControl
-        title="ลูกค้า"
-        buttons={[
-          <GlobalButton
-            label={
-              <>
-                <FileDown className="h-4 w-4" />
-                <span className="hidden sm:inline">&nbsp;นำเข้าข้อมูล</span>
-              </>
-            }
-            variant="outline"
-            disabled
-            key="import-button"
-          />,
-          <GlobalButton
-            label={
-              <>
-                <FileUp className="h-4 w-4" />
-                <span className="hidden sm:inline">&nbsp;นำออกข้อมูล</span>
-              </>
-            }
-            variant="outline"
-            disabled
-            key="export-button"
-          />,
-          <Link to="/customer/create" key="create-link">
-            <Button
-              key="create-button"
-              className="px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-            >
-              <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline">&nbsp;สร้าง</span>
-            </Button>
-          </Link>,
-        ]}
-      />
+      <TabControl title="ลูกค้า" buttons={tabControlButtons} />
 
       <Tabs
         value={customerTypeTab}
-        onValueChange={(val) => setCustomerTypeTab(val)} 
+        onValueChange={(val) => setCustomerTypeTab(val)}
       >
         <TabsList>
           <TabsTrigger
@@ -152,7 +170,6 @@ export default function Customer() {
           </TabsTrigger>
         </TabsList>
 
-
         <TabsContent value={customerTypeTab}>
           <DataTable
             key={tableKey}
@@ -161,7 +178,7 @@ export default function Customer() {
                 pageIndex,
                 pageSize,
                 status: status === "all" ? "" : status,
-                customerType: summaryType, 
+                customerType: summaryType,
                 limit: pageSize,
                 ...filters,
                 createdFrom,
