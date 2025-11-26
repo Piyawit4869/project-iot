@@ -26,12 +26,14 @@ export const ChatMessages = ({
   subId,
   customer,
   selectedRoom,
+  isLineGroup,
   setAutoScroll,
 }: {
   api: string;
   subId: string;
   customer: any;
   autoScroll: boolean;
+  isLineGroup: boolean;
   selectedRoom: ChatRoomSchemaType;
   setAutoScroll: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {

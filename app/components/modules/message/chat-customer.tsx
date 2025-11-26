@@ -665,19 +665,40 @@ export default function ChatCustomerInfo({
     <>
       <aside className="flex flex-col w-full bg-white dark:bg-background h-full border-l overflow-y-auto">
         <div className="py-4 px-2 flex w-full mt-6 items-center justify-between gap-2 h-[60px] rounded-2xl bg-background">
-          <div>
-            <div className="flex gap-2">
-              <GlobalImage
-                src={currentCustomer.profile?.imageUrl || ""}
-                alt="Customer"
-                className="w-[50px] h-[50px] rounded-full object-cover mt-1"
-              />
-              <div className="flex flex-col ml-1">
-                {currentCustomer.profile?.name ? (
-                  <>
+          {!isLineGroup ? (
+            <div>
+              <div className="flex gap-2">
+                <GlobalImage
+                  src={currentCustomer.profile?.imageUrl || ""}
+                  alt="Customer"
+                  className="w-[50px] h-[50px] rounded-full object-cover mt-1"
+                />
+                <div className="flex flex-col ml-1">
+                  {currentCustomer.profile?.name ? (
+                    <>
+                      <div className="flex flex-row gap-2 items-center">
+                        <h2 className="font-semibold text-lg mr-auto">
+                          {currentCustomer.profile.name}
+                        </h2>
+
+                        <UserPen
+                          size={18}
+                          color="#09a799"
+                          className="cursor-pointer"
+                          onClick={() => setAddCustomerDetail(true)}
+                        />
+                      </div>
+
+                      {!isLineNameSameAsCustomerName && (
+                        <h2 className="font-semibold text-sm mr-auto">
+                          {currentCustomer.profile.lineName || "ไม่ทราบชื่อ"}
+                        </h2>
+                      )}
+                    </>
+                  ) : (
                     <div className="flex flex-row gap-2 items-center">
                       <h2 className="font-semibold text-lg mr-auto">
-                        {currentCustomer.profile.name}
+                        {currentCustomer.profile?.lineName || "ไม่ทราบชื่อ"}
                       </h2>
 
                       <UserPen
@@ -687,47 +708,33 @@ export default function ChatCustomerInfo({
                         onClick={() => setAddCustomerDetail(true)}
                       />
                     </div>
-
-                    {!isLineNameSameAsCustomerName && (
-                      <h2 className="font-semibold text-sm mr-auto">
-                        {currentCustomer.profile.lineName || "ไม่ทราบชื่อ"}
-                      </h2>
-                    )}
-                  </>
-                ) : (
-                  <div className="flex flex-row gap-2 items-center">
-                    <h2 className="font-semibold text-lg mr-auto">
-                      {currentCustomer.profile?.lineName || "ไม่ทราบชื่อ"}
-                    </h2>
-
-                    <UserPen
-                      size={18}
-                      color="#09a799"
-                      className="cursor-pointer"
-                      onClick={() => setAddCustomerDetail(true)}
-                    />
-                  </div>
-                )}
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-row gap-2 mt-1">
+                <span
+                  className={`text-xs p-1 px-3 rounded-full ${
+                    STATUS_BG[currentCustomer.status] ??
+                    "bg-gray-400 text-white"
+                  }`}
+                >
+                  {statusCustomer}
+                </span>
+                <span
+                  className={`text-xs p-1 px-3 rounded-full ${
+                    TYPE_BG[currentCustomer.customerType] ??
+                    "bg-gray-400 text-white"
+                  }`}
+                >
+                  {typeCustomer}
+                </span>
               </div>
             </div>
-            <div className="flex flex-row gap-2 mt-1">
-              <span
-                className={`text-xs p-1 px-3 rounded-full ${
-                  STATUS_BG[currentCustomer.status] ?? "bg-gray-400 text-white"
-                }`}
-              >
-                {statusCustomer}
-              </span>
-              <span
-                className={`text-xs p-1 px-3 rounded-full ${
-                  TYPE_BG[currentCustomer.customerType] ??
-                  "bg-gray-400 text-white"
-                }`}
-              >
-                {typeCustomer}
-              </span>
-            </div>
-          </div>
+          ) : (
+            <h2 className="font-semibold text-lg mr-auto">
+              {selectedRoom?.name}
+            </h2>
+          )}
           <div className="flex items-center gap-3">
             <GlobalTooltip content={"กดเพื่อดูข้อมูลลูกค้าผ่าน AI"}>
               <Brain
