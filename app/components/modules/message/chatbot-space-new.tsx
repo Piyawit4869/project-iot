@@ -109,10 +109,11 @@ export default function ChatbotSpaceNew({
           )}
         </div>
 
-        {customerInfoOpen && !isMobile && !isLineGroup && (
+        {customerInfoOpen && !isMobile && (
           <div className="w-96">
             {selectedRoom && selectedRoom?.id && subId ? (
               <ChatCustomerInfo
+                isLineGroup={isLineGroup}
                 selectedRoom={selectedRoom}
                 refetchCustomer={refetch}
                 setCreateOrderOpen={setCreateOrderOpen}

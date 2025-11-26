@@ -82,7 +82,6 @@ export default function ChatInputAIAssistant({
       message: messageText,
       messageType: "text",
       chatRoomId,
-      customerId,
     });
   };
 

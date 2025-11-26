@@ -142,14 +142,13 @@ export const fetchDeleteCustomer = async (id: string) => {
 export const fetchCustomerSummary = async (customerType?: string) => {
   try {
     const res = await ApiConfig.get(`/crud/customers/status-summary`, {
-      params:  {customerType} ,
+      params: { customerType },
     });
     return res.data;
   } catch (error) {
     throw error;
   }
 };
-
 
 export const fetchAllContact = async () => {
   try {
@@ -273,6 +272,7 @@ export const fetchUpdateCustomerNote = async (
 export const connectedChatRoomAssistant = async (
   payload: CustomerConnectedChatRoomAI
 ) => {
+  console.log({ payload });
   try {
     const res = await ApiConfig.post(`/chats/push-message/assistants`, payload);
 
