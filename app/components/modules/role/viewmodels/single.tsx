@@ -25,7 +25,6 @@ export default function SingleRoles() {
   const { data, isLoading } = useGetRoles(roleId);
   const { mutate } = useUpdateRoles(roleId);
 
-  // ✅ ใช้ defaultValues + reset เมื่อ data มา
   const form = useForm<RolesFormValues>({
     resolver: zodResolver(RolesFormSchema as any),
     defaultValues: {
@@ -56,7 +55,6 @@ export default function SingleRoles() {
         mutate(values, {
           onSuccess: (res) => {
             toast.success("แก้ไขตำแหน่งเรียบร้อยแล้ว!", { id: toastId });
-            // ✅ path ให้ถูก
             navigate(`/roles/${res?.id ?? roleId}`);
           },
           onError: (err: any) => {
@@ -73,7 +71,6 @@ export default function SingleRoles() {
   return (
     <div className="flex flex-col space-y-3 p-8">
       <Form {...form}>
-        {/* ✅ ย้าย form มา “ครอบ” TabControl เพื่อให้ปุ่ม submit ชัวร์ */}
         <form
           id="roles"
           onSubmit={form.handleSubmit(onSubmit, (errors) => {
@@ -96,7 +93,6 @@ export default function SingleRoles() {
                 key="edit-button"
                 type="submit"
                 loading={isSubmitting}
-                // ✅ ไม่ต้องพึ่ง form="roles" แล้ว
               />,
             ]}
           />

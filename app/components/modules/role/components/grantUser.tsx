@@ -34,7 +34,9 @@ export const GrantUser: React.FC<RolesFormProps> = ({
   const userMap = React.useMemo(() => {
     return new Map(allUsers.map((u: any) => [u.id, u]));
   }, [allUsers]);
+
   const { data: roles, isLoading } = useGetRoles(roleId);
+
   const { mutate } = useGrantUsers(roleId);
 
   const [open, setOpen] = React.useState(false);
@@ -89,6 +91,7 @@ export const GrantUser: React.FC<RolesFormProps> = ({
     onView: (userId) => navigate(`/users/${userId}`),
     onRemove: handleRemoveUser,
   });
+  
 
   const handleCloseModal = () => setOpen(false);
   const handleOpenModal = () => setOpen(true);
