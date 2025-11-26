@@ -630,13 +630,15 @@ export default function ChatCustomerInfo({
 
   React.useEffect(() => {
     if (!aiSettingLoading && aiSettingData) {
-      setAiEnabled(aiSettingData.aiReplySettings.allDay || false);
-      setAiStartTime(aiSettingData.aiReplySettings.startTime || "09:00");
-      setAiEndTime(aiSettingData.aiReplySettings.endTime || "18:00");
+      setAiEnabled(aiSettingData.aiReplySettings?.allDay || false);
+      setAiStartTime(aiSettingData.aiReplySettings?.startTime || "09:00");
+      setAiEndTime(aiSettingData.aiReplySettings?.endTime || "18:00");
       setAiAutoReadMessage(
-        aiSettingData.aiReplySettings.aiAutoReadMessage || false
+        aiSettingData.aiReplySettings?.aiAutoReadMessage || false
       );
-      setAiEnabledWithCondition(aiSettingData.aiReplySettings.enabled || false);
+      setAiEnabledWithCondition(
+        aiSettingData?.aiReplySettings?.enabled || false
+      );
     }
   }, [aiSettingLoading, aiSettingData]);
 
