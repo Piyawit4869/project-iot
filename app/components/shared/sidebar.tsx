@@ -10,8 +10,9 @@ import {
 import { SkeletonLoading } from "./skeleton-loading";
 
 import { HeadSidebar } from "./sidebar/head-sidebar";
-import { HomeSidebar } from "./sidebar/home-sidebar";
+import { HomeSidebar, type SidebarItem } from "./sidebar/home-sidebar";
 import { MainSidebar } from "./sidebar/main-sidebar";
+import { getUserMapPermission, keyToModuleMap } from "~/utils/permission";
 
 const renderIcon = (iconName: string) => {
   const IconComponent = Icons[iconName as keyof typeof Icons] as React.FC<
@@ -101,14 +102,53 @@ function filterMenuByRole(items: MenuItem[], role: Role): MenuItem[] {
     .filter((it) => allow.has(it.key));
 }
 
+const permissionToMenuKey: Record<string, string> = {
+  chat: "messages",
+  customers: "customer",
+  order: "orders",
+  inventory: "inventory",
+  product: "product",
+  user: "employee",
+  role: "role",
+};
+
 export function AppSidebar({ data, ...props }: AppSidebarProps) {
   const { user } = useRouteLoaderData("root");
 
-  const role = React.useMemo(() => inferRole(user), [user]);
-  const homeItems = React.useMemo(
-    () => filterMenuByRole(data.home as MenuItem[], role),
-    [data.home, role]
-  ) as any;
+  const normalizedPermissions = getUserMapPermission(user);
+
+  const defaultHomeMenu: SidebarItem[] = [
+    {
+      name: "หน้าแรก",
+      key: "home",
+      path: "/",
+      icon: "Home",
+      isActive: false,
+    },
+  ];
+
+  const homeItems = React.useMemo(() => {
+    if (!normalizedPermissions) return defaultHomeMenu;
+
+    const items = (data.home as MenuItem[])
+      .map((item) => ({
+        ...item,
+        key: item.key === "customner" ? "customer" : item.key,
+      }))
+      .filter((item) => {
+        if (item.key === "home") return true;
+
+        const permKey = keyToModuleMap[item.key] ?? item.key;
+
+        return Boolean(normalizedPermissions[permKey]?.length);
+      });
+
+    return items.map((it) => ({
+      ...it,
+      path: it.path ?? "/",
+      isActive: it.isActive ?? false,
+    }));
+  }, [data.home, normalizedPermissions]);
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -116,7 +156,7 @@ export function AppSidebar({ data, ...props }: AppSidebarProps) {
         <HeadSidebar org={user} />
       </SidebarHeader>
       <SidebarContent>
-        {!role ? (
+        {/* {!role ? (
           <div className="flex flex-col gap-3 p-4">
             <SkeletonLoading className="h-[32px]" />
             <SkeletonLoading className="h-[32px]" />
@@ -126,9 +166,9 @@ export function AppSidebar({ data, ...props }: AppSidebarProps) {
             <SkeletonLoading className="h-[32px]" />
             <SkeletonLoading className="h-[32px]" />
           </div>
-        ) : (
-          <HomeSidebar home={homeItems} icon={renderIcon} />
-        )}
+        ) : ( */}
+        <HomeSidebar home={homeItems} icon={renderIcon} />
+        {/* )} */}
         <MainSidebar items={data.main} icon={renderIcon} />
       </SidebarContent>
     </Sidebar>

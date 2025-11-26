@@ -51,7 +51,7 @@ function filterAppsByRole(items: RomeApp[], role: Role): RomeApp[] {
 }
 
 export default function HomeComponent() {
-  const { user } = useRouteLoaderData("root");
+  const { user, permission } = useRouteLoaderData("root");
 
   const role = React.useMemo(() => inferRole(user), [user]);
 
@@ -117,7 +117,22 @@ export default function HomeComponent() {
     },
   ];
 
-  const appsForUser = filterAppsByRole(romeApps, role);
+  const getHomeMenu = (
+    permission: Record<string, string[]> | undefined
+  ): RomeApp[] => {
+    if (!permission) return [];
+
+    return romeApps.filter((app) => {
+      const key = app.id === "customner" ? "customer" : app.id;
+
+      return Array.isArray(permission[key]) && permission[key].length > 0;
+    });
+  };
+
+  const appsForUser = React.useMemo(
+    () => getHomeMenu(permission),
+    [permission]
+  );
 
   return (
     <div className="container h-[calc(100vh-58px)] mx-auto">
