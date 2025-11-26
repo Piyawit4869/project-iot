@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -26,11 +26,16 @@ import { ProductCardEditor } from "./product-card-editor";
 import { PlaceCardEditor } from "./place-card-editor";
 import { PersonCardEditor } from "./person-card-editor";
 import { ImageCardEditor } from "./image-card-editor";
-import { buildProductCardBody, buildPlaceCardBody } from "./utils";
+import {
+  buildProductCardBody,
+  buildPlaceCardBody,
+  buildImageCardBody,
+} from "./utils";
 import { buildPersonCardBody } from "./utils/person-card-content";
-import { useLineGetCardContent } from "~/api/client/settings";
+import { ChevronLeft, ChevronRight, Copy, Trash2 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router";
-import { ChevronLeft } from "lucide-react";
+import React from "react";
+import { useLineGetCardContent } from "~/api/client/settings";
 
 type Props = {
   id: string;
@@ -39,17 +44,37 @@ type Props = {
 };
 
 export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
+  const { data } = useLineGetCardContent(id);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [cards, setCards] = useState<MessageCardFormValues[]>([
+    {
+      ...data?.meta?.items?.[0],
+      name: data?.name,
+      category: data?.type,
+    },
+  ]);
 
-  const { data } = useLineGetCardContent(id);
+  const [activeIndex, setActiveIndex] = useState(0);
+
   const form = useForm<MessageCardFormValues>({
     defaultValues: MESSAGE_CARD_DEFAULT_VALUES,
     mode: "onChange",
   });
-  const [isCategoryDialogOpen, setCategoryDialogOpen] = useState(false);
-  const selectedCategoryId = form.watch("category");
 
+  const values = form.watch();
+
+  const [isCategoryDialogOpen, setCategoryDialogOpen] = useState(false);
+
+  const [selectedCategoryId, setSelectedCategoryId] = useState(
+    data?.meta?.category
+  );
+
+  const nameValue = form.watch("name");
+  const productValues = form.watch("product");
+  const placeValues = form.watch("place");
+  const personValues = form.watch("person");
+  const imageValues = form.watch("image");
   const selectedCategory = CARD_CATEGORY_OPTIONS.find(
     (option) => option.id === selectedCategoryId
   );
@@ -79,7 +104,14 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
 
   const handleSubmit = async (values: MessageCardFormValues) => {
     const toastId = toast.loading("กำลังบันทึกการ์ด...");
-    const categoryPayload = buildCategoryPayload(values);
+
+    let items = [] as any;
+
+    const categoryPayload = cards.map((c) =>
+      items.push(buildCategoryPayload(c))
+    );
+
+    const itemsNoKey = items.map((item: any) => Object.values(item)[0]);
 
     if (!values.category || !categoryPayload) {
       toast.error("กรุณาเลือกประเภทการ์ด", { id: toastId });
@@ -90,29 +122,43 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
       let payload = {
         name: values.name.trim(),
         category: values.category,
-        ...categoryPayload,
+        items,
       };
 
-      switch (values.category) {
-        case "product":
-          payload = buildProductCardBody(payload);
-          break;
-        case "place":
-          payload = buildPlaceCardBody(payload);
-          break;
-        case "person":
-          payload = buildPersonCardBody(payload);
-          break;
-        default:
-          break;
-      }
+      const newPayload = payload.items.map((c: any) => {
+        switch (values.category) {
+          case "product":
+            return buildProductCardBody(c);
+          case "place":
+            return buildPlaceCardBody(c);
+          case "person":
+            return buildPersonCardBody(c);
+          case "image":
+            return buildImageCardBody(c);
+          default:
+            break;
+        }
+
+        return;
+      });
+
+      const merged = newPayload.flatMap((item: any) => item.content.contents);
+
+      const mergedCarousel = {
+        content: {
+          type: "carousel",
+          contents: merged,
+        },
+      };
 
       const finalPayload = {
-        ...payload,
+        ...newPayload[0],
+        ...mergedCarousel,
+        name: values.name.trim(),
         meta: {
           name: values.name.trim(),
           category: values.category,
-          ...categoryPayload,
+          items: itemsNoKey,
         },
       };
 
@@ -120,7 +166,7 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
         `/thirdparty/line/contents/${id}/edit`,
         finalPayload
       );
-      toast.success("บันทึกการ์ดสำเร็จ", {
+      toast.success("บันทึกการ์ดเมสเสจสำเร็จ", {
         id: toastId,
         duration: 2000,
         position: "bottom-right",
@@ -131,7 +177,7 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
     } catch (error) {
       const message =
         (error as { response?: { data?: { message?: string } } })?.response
-          ?.data?.message || "เกิดข้อผิดพลาดขณะบันทึกการ์ด";
+          ?.data?.message || "เกิดข้อผิดพลาดขณะบันทึกการ์ดเมสเสจ";
       toast.error(message, {
         id: toastId,
         duration: 2500,
@@ -140,45 +186,237 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
     }
   };
 
-  const handleSetDefaultFormValue = () => {
-    const formValue = {
-      name: data?.name,
-      category: data?.meta?.category,
-      product: {},
-      place: {},
-      person: {},
-      image: {},
-    };
+  const isFieldFilled = (value?: string) =>
+    Boolean(value && value.toString().trim().length > 0);
 
-    switch (data?.meta?.category) {
-      case "product":
-        formValue.product = data?.meta?.product;
-        break;
-      case "place":
-        formValue.place = data?.meta?.place;
-        break;
-      case "person":
-        formValue.person = data?.meta?.person;
-        break;
-      case "image":
-        formValue.image = data?.meta?.image;
-        break;
-      default:
-        break;
+  const isProductCardValid = useMemo(() => {
+    if (selectedCategoryId !== "product") return false;
+    if (!productValues) return false;
+    if (!productValues.imageUrl) return false;
+    if (!isFieldFilled(productValues.title)) return false;
+    if (!isFieldFilled(productValues.subtitle)) return false;
+    if (!isFieldFilled(productValues.description)) return false;
+
+    if (productValues.tagEnabled && !isFieldFilled(productValues.tagText)) {
+      return false;
     }
-    form.reset(formValue);
+
+    if (productValues.priceEnabled && !isFieldFilled(productValues.price)) {
+      return false;
+    }
+
+    if (
+      productValues.ctaPrimaryEnabled &&
+      !isFieldFilled(productValues.ctaPrimaryText)
+    ) {
+      return false;
+    }
+
+    if (
+      productValues.ctaSecondaryEnabled &&
+      !isFieldFilled(productValues.ctaSecondaryText)
+    ) {
+      return false;
+    }
+
+    return true;
+  }, [productValues, selectedCategoryId]);
+
+  const isPlaceCardValid = useMemo(() => {
+    if (selectedCategoryId !== "place") return false;
+    if (!placeValues) return false;
+    if (!placeValues.imageUrl) return false;
+    if (!isFieldFilled(placeValues.title)) return false;
+
+    if (placeValues.tagEnabled && !isFieldFilled(placeValues.tagText)) {
+      return false;
+    }
+
+    if (placeValues.addressEnabled && !isFieldFilled(placeValues.addressText)) {
+      return false;
+    }
+
+    if (
+      placeValues.extraInfoEnabled &&
+      !isFieldFilled(placeValues.extraInfoValue)
+    ) {
+      return false;
+    }
+
+    if (
+      placeValues.ctaPrimaryEnabled &&
+      (!isFieldFilled(placeValues.ctaPrimaryText) ||
+        !isFieldFilled(placeValues.ctaPrimaryType))
+    ) {
+      return false;
+    }
+
+    if (
+      placeValues.ctaSecondaryEnabled &&
+      (!isFieldFilled(placeValues.ctaSecondaryText) ||
+        !isFieldFilled(placeValues.ctaSecondaryType))
+    ) {
+      return false;
+    }
+
+    return true;
+  }, [placeValues, selectedCategoryId]);
+
+  const isPersonCardValid = useMemo(() => {
+    if (selectedCategoryId !== "person") return false;
+    if (!personValues) return false;
+    if (!personValues.imageUrl) return false;
+    if (!isFieldFilled(personValues.name)) return false;
+
+    const invalidTag =
+      personValues.tags?.some(
+        (tag) => tag.enabled && !isFieldFilled(tag.text)
+      ) ?? false;
+
+    if (invalidTag) return false;
+
+    if (
+      personValues.descriptionEnabled &&
+      !isFieldFilled(personValues.description)
+    ) {
+      return false;
+    }
+
+    const invalidAction =
+      personValues.actions?.some(
+        (action) =>
+          action.enabled &&
+          (!isFieldFilled(action.text) || !isFieldFilled(action.type))
+      ) ?? false;
+
+    if (invalidAction) return false;
+
+    return true;
+  }, [personValues, selectedCategoryId]);
+
+  const isImageCardValid = useMemo(() => {
+    if (selectedCategoryId !== "image") return false;
+    if (!imageValues) return false;
+    if (!imageValues.imageUrl) return false;
+
+    if (imageValues.tagEnabled && !isFieldFilled(imageValues.tagText)) {
+      return false;
+    }
+
+    if (
+      imageValues.actionEnabled &&
+      (!isFieldFilled(imageValues.actionText) ||
+        !isFieldFilled(imageValues.actionType))
+    ) {
+      return false;
+    }
+
+    return true;
+  }, [imageValues, selectedCategoryId]);
+
+  const categoryIsReady = useMemo(() => {
+    if (!selectedCategoryId) return false;
+    switch (selectedCategoryId) {
+      case "product":
+        return isProductCardValid;
+      case "place":
+        return isPlaceCardValid;
+      case "person":
+        return isPersonCardValid;
+      case "image":
+        return isImageCardValid;
+      default:
+        return false;
+    }
+  }, [
+    isImageCardValid,
+    isPersonCardValid,
+    isPlaceCardValid,
+    isProductCardValid,
+    selectedCategoryId,
+  ]);
+
+  const addCard = () => {
+    setCards((prev) => [
+      ...prev,
+      {
+        ...MESSAGE_CARD_DEFAULT_VALUES,
+        name: prev[activeIndex].name,
+        category: prev[activeIndex].category,
+      },
+    ]);
+    setActiveIndex(cards.length); // ไปใบใหม่ทันที
   };
 
-  useEffect(() => {
-    if (data) {
-      handleSetDefaultFormValue();
+  const duplicateCard = () => {
+    const cloned = { ...cards[activeIndex] };
+    setCards([...cards, cloned]);
+  };
+
+  const removeCard = () => {
+    if (cards.length === 1) return;
+    const newList = cards.filter((_, i) => i !== activeIndex);
+    setCards(newList);
+    setActiveIndex((prev) => Math.max(0, prev - 1));
+  };
+
+  const movePrev = () => {
+    setActiveIndex((i) => Math.max(0, i - 1));
+  };
+
+  const moveNext = () => {
+    setActiveIndex((i) => Math.min(cards.length - 1, i + 1));
+  };
+
+  // Sync ค่า form กับ cards เมื่อเปลี่ยน active card
+  React.useEffect(() => {
+    form.reset(cards[activeIndex]);
+  }, [activeIndex]);
+
+  // เมื่อ form เปลี่ยน → update card index ปัจจุบัน
+  React.useEffect(() => {
+    const subscription = form.watch((value) => {
+      setCards((prev) => {
+        const next = [...prev];
+        next[activeIndex] = value as MessageCardFormValues;
+        return next;
+      });
+    });
+    return () => subscription.unsubscribe();
+  }, [form, activeIndex]);
+
+  React.useEffect(() => {
+    if (!data) return;
+
+    // แปลง meta.items จาก API → array ของ MessageCardFormValues
+    const mappedCards = (data.meta?.items ?? []).map((item: any) => ({
+      [data?.meta?.category]: item,
+
+      name: data.name,
+      category: data?.meta?.category,
+    }));
+
+    // ป้องกันกรณีไม่มีการ์ด -> ให้มีใบว่างใบแรก
+    if (mappedCards.length === 0) {
+      mappedCards.push({
+        [data?.meta?.category]: MESSAGE_CARD_DEFAULT_VALUES,
+        name: data.name,
+        category: data?.meta?.category,
+      });
     }
+
+    setSelectedCategoryId(data?.meta?.category);
+    setCards(mappedCards);
+
+    // reset ค่า form ให้ตรงกับการ์ดใบแรก
+    form.reset(mappedCards[0]);
+    setActiveIndex(0);
   }, [data]);
 
   return (
     <Form {...form}>
       <form className="space-y-8">
-        <div className="flex w-full flex-col  space-y-6">
+        <div className="flex w-full flex-col space-y-6">
           <Card>
             <div className="p-6">
               <div className="flex flex-row gap-2 items-center">
@@ -186,52 +424,52 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
                   className="cursor-pointer"
                   onClick={handleNaviagateBack}
                 />
-                <h1 className="text-2xl font-bold">แก้ไขการ์ดเมสเสจ</h1>
+                <h1 className="text-2xl font-bold">การ์ดเมสเสจ</h1>
               </div>
               <p className="text-muted-foreground text-sm mt-1">
                 ข้อความในรูปแบบการ์ดที่รวมเนื้อหาต่างๆ เอาไว้ในที่เดียว
                 โดยระบบจะแสดงผลแบบภาพสไลด์ที่ผู้คนสามารถเปิดการ์ดไปด้านข้างเพื่อดูเนื้อหาการ์ดอื่นได้
               </p>
             </div>
-            <CardHeader>
-              <CardTitle>รายละเอียดการ์ด</CardTitle>
-            </CardHeader>
 
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label>
-                  ID{" "}
-                  <p className="text-sm text-muted-foreground">
-                    ระบบจะออก ID หลังสร้าง
-                  </p>
-                </Label>
-              </div>
+            <div className="max-w-[800px]">
+              <CardHeader>
+                <CardTitle>รายละเอียดการ์ด</CardTitle>
+              </CardHeader>
 
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>ชื่อไอเทม</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        value={field.value ?? ""}
-                        placeholder="ใส่ชื่อไอเทม"
-                      />
-                    </FormControl>
-                    <p className="text-xs text-muted-foreground">
-                      ชื่อจะถูกแสดงในรายการเมสเสจแบบสรุปหรือเมสเสจเต็ม
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <Label>
+                    ID{" "}
+                    <p className="text-sm text-muted-foreground">
+                      ระบบจะออก ID หลังสร้าง
                     </p>
-                  </FormItem>
-                )}
-              />
-            </CardContent>
+                  </Label>
+                </div>
 
-            <CardHeader>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ชื่อไอเทม</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          value={field.value ?? ""}
+                          placeholder="ใส่ชื่อไอเทม"
+                        />
+                      </FormControl>
+                      <p className="text-xs text-muted-foreground">
+                        ชื่อจะถูกแสดงในรายการเมสเสจแบบสรุปหรือเมสเสจเต็ม
+                      </p>
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </div>
+            <CardHeader className="mt-5 max-w-[800px]">
               <CardTitle>ตั้งค่าการ์ด</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
               <FormField
                 control={form.control}
                 name="category"
@@ -259,7 +497,61 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
                   </FormItem>
                 )}
               />
+            </CardHeader>
+
+            <CardContent className="space-y-6">
+              {/* NAVIGATION + ACTION BUTTONS */}
+
               <div className="border-t pt-6">
+                {selectedCategoryId && (
+                  <div className="flex w-full justify-between gap-3 mb-4">
+                    <div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={movePrev}
+                        disabled={activeIndex === 0}
+                      >
+                        <ChevronLeft />
+                      </Button>
+
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={moveNext}
+                        disabled={activeIndex === cards.length - 1}
+                      >
+                        <ChevronRight />
+                      </Button>
+
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={duplicateCard}
+                      >
+                        <Copy />
+                      </Button>
+
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={removeCard}
+                      >
+                        <Trash2 />
+                      </Button>
+                    </div>
+
+                    {selectedCategoryId && (
+                      <Button type="button" variant="outline" onClick={addCard}>
+                        เพิ่มการ์ด
+                      </Button>
+                    )}
+                    {/* <Button type="button" onClick={handleSubmitAll}>
+                  บันทึกทั้งหมด
+                </Button> */}
+                  </div>
+                )}
+
                 {!selectedCategoryId && (
                   <p className="text-muted-foreground text-sm">
                     เลือกประเภทการ์ดเพื่อเริ่มตั้งค่าส่วนแสดงผล
@@ -294,6 +586,7 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
                   )}
               </div>
             </CardContent>
+
             <div className="flex justify-end p-5">
               <Button type="button" variant="ghost" onClick={onCancel}>
                 ยกเลิก

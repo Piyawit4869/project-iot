@@ -770,12 +770,6 @@ export default function LineTemplatePickerModal({
       limit: 100,
     });
 
-  // const { data: lineFeatureFlex, isLoading: lineFeatureLoading } =
-  //   useLineCardContentPaginate({
-  //     pageIndex: 1,
-  //     limit: 100,
-  //   });
-
   const { mutate } = useLineMarkFavoriteRplyMessage();
 
   const [open, setOpen] = React.useState<boolean>(false);

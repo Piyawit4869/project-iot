@@ -260,7 +260,8 @@ export function CreateOrderDialog({
           <DialogContent
             style={{ width: "100%", maxWidth: "1200px", maxHeight: "90vh" }}
             className="max-w-6xl w-full overflow-y-auto p-8 bg-[#F8F8F8]"
-            onPointerDown={(e) => e.stopPropagation()}>
+            onPointerDown={(e) => e.stopPropagation()}
+          >
             <DialogHeader>
               <DialogTitle>ตะกร้าสินค้า {products.length} รายการ</DialogTitle>
             </DialogHeader>
@@ -408,7 +409,8 @@ export function CreateOrderDialog({
                             <div>
                               <div
                                 key={p.id}
-                                className="grid grid-cols-[1fr_150px_100px_120px] items-center px-6 py-4">
+                                className="grid grid-cols-[1fr_150px_100px_120px] items-center px-6 py-4"
+                              >
                                 <div className="flex items-center gap-4">
                                   <img
                                     src={
@@ -450,7 +452,8 @@ export function CreateOrderDialog({
                                     onClick={() =>
                                       updateQuantity(i, (p.quantity ?? 1) - 1)
                                     }
-                                    className="w-7 h-7 flex items-center justify-center rounded-md bg-gray-200 hover:bg-gray-300">
+                                    className="w-7 h-7 flex items-center justify-center rounded-md bg-gray-200 hover:bg-gray-300"
+                                  >
                                     –
                                   </button>
                                   <span className="w-6 text-center text-sm">
@@ -460,7 +463,8 @@ export function CreateOrderDialog({
                                     onClick={() =>
                                       updateQuantity(i, (p.quantity ?? 1) + 1)
                                     }
-                                    className="w-7 h-7 flex items-center justify-center rounded-md bg-gray-200 hover:bg-gray-300">
+                                    className="w-7 h-7 flex items-center justify-center rounded-md bg-gray-200 hover:bg-gray-300"
+                                  >
                                     +
                                   </button>
                                 </div>
@@ -476,13 +480,15 @@ export function CreateOrderDialog({
                               <div className="flex items-center justify-end">
                                 <button
                                   onClick={() => handleRemove(i)}
-                                  className="flex text-red-500 text-sm hover:text-red-600">
+                                  className="flex text-red-500 text-sm hover:text-red-600"
+                                >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="w-4 h-4 mr-1"
                                     fill="none"
                                     viewBox="0 0 24 24"
-                                    stroke="currentColor">
+                                    stroke="currentColor"
+                                  >
                                     <path
                                       strokeLinecap="round"
                                       strokeLinejoin="round"
@@ -621,7 +627,8 @@ export function CreateOrderDialog({
                                     <Select
                                       value={field.value}
                                       onValueChange={field.onChange}
-                                      defaultValue="THB">
+                                      defaultValue="THB"
+                                    >
                                       <FormControl>
                                         <SelectTrigger className="w-full ">
                                           <SelectValue placeholder="เลือกสกุลเงิน" />
@@ -631,7 +638,8 @@ export function CreateOrderDialog({
                                         {currencyType?.map((item) => (
                                           <SelectItem
                                             key={item.value}
-                                            value={item.value}>
+                                            value={item.value}
+                                          >
                                             {item.icon} {item.label}
                                           </SelectItem>
                                         ))}
@@ -655,7 +663,8 @@ export function CreateOrderDialog({
                                       <FormLabel>ผู้ขาย</FormLabel>
                                       <Select
                                         value={field.value}
-                                        onValueChange={field.onChange}>
+                                        onValueChange={field.onChange}
+                                      >
                                         <FormControl>
                                           <SelectTrigger className="w-full ">
                                             <SelectValue placeholder="เลือกผู้ขาย" />
@@ -680,7 +689,8 @@ export function CreateOrderDialog({
                                       <FormLabel>บริษัท (Company)</FormLabel>
                                       <Select
                                         value={field.value}
-                                        onValueChange={field.onChange}>
+                                        onValueChange={field.onChange}
+                                      >
                                         <FormControl>
                                           <SelectTrigger className="w-full ">
                                             <SelectValue placeholder="เลือกบริษัท" />
@@ -748,7 +758,8 @@ export function CreateOrderDialog({
               <Button
                 variant="outline"
                 onClick={() => onOpenChange(false)}
-                type="button">
+                type="button"
+              >
                 ยกเลิก
               </Button>
 
@@ -757,7 +768,8 @@ export function CreateOrderDialog({
                 className="text-white"
                 // type="submit"
 
-                onClick={onCreate}>
+                onClick={onCreate}
+              >
                 สร้างคำสั่งซื้อ
               </Button>
             </div>

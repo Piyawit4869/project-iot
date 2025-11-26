@@ -21,7 +21,6 @@ import type {
   UpdateStatusProgressTagPayLoad,
 } from "~/schemas/message/message";
 
-//api/thirdparty/line/config/bundle/branch/
 export const useLineBundleConfig = (id: string, enabled: boolean) => {
   return useQuery({
     queryKey: ["line-bunddle-config"],

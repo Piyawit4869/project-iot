@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import { useSendMessage } from "~/api/client/message/useMessage";
 import { useLineGetSticker } from "~/api/client/settings";
 import {
@@ -19,10 +20,12 @@ export function StickerSelectorBar({
   selectedRoom,
   customer,
   replyRefMessage,
+  setShowStickerSelector,
 }: {
   selectedRoom: any;
   customer: any;
   replyRefMessage: any;
+  setShowStickerSelector: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { setMessages } = useCustomer();
 
@@ -43,6 +46,8 @@ export function StickerSelectorBar({
       return prev;
     });
 
+    setShowStickerSelector(false);
+
     send({
       chatRoomId: selectedRoom.id,
       lineSubId: customer?.lineSubId ?? "",
@@ -50,7 +55,6 @@ export function StickerSelectorBar({
       messageType: "sticker",
       isAiReply: false,
       recipient: customer?.name ?? "Unknown",
-      customerId: selectedRoom?.customerId ?? "",
       platform: "backoffice",
       messageLabel: MessageLabelType.SENDSTICKER,
       packageId: stickerPackage.packageId,
@@ -61,6 +65,12 @@ export function StickerSelectorBar({
 
   return (
     <div className="h-60 flex flex-col border-b">
+      <div className="w-full flex justify-end -mb-2">
+        <X
+          className="cursor-pointer"
+          onClick={() => setShowStickerSelector(false)}
+        />
+      </div>
       <div className="h-14 border-b border-neutral-200 flex items-center gap-2 px-2">
         {data?.map((stickerPackage: StickerPackage) => {
           const firstSticker = stickerPackage.stickers[0];
@@ -80,7 +90,7 @@ export function StickerSelectorBar({
         })}
       </div>
 
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2 mt-2">
         {data?.map((stickerPackage: StickerPackage) =>
           stickerPackage.stickers.map((sticker: LineSticker) => (
             <button

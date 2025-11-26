@@ -32,7 +32,6 @@ import {
   buildImageCardBody,
 } from "./utils";
 import { buildPersonCardBody } from "./utils/person-card-content";
-import { Chevron } from "react-day-picker";
 import { ChevronLeft, ChevronRight, Copy, Trash2 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router";
 import React from "react";
@@ -92,9 +91,14 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
 
   const handleSubmit = async (values: MessageCardFormValues) => {
     const toastId = toast.loading("กำลังบันทึกการ์ด...");
-    const categoryPayload = buildCategoryPayload(values);
 
-    console.log({ values, categoryPayload, cards });
+    let items = [] as any;
+
+    const categoryPayload = cards.map((c) =>
+      items.push(buildCategoryPayload(c))
+    );
+
+    const itemsNoKey = items.map((item: any) => Object.values(item)[0]);
 
     if (!values.category || !categoryPayload) {
       toast.error("กรุณาเลือกประเภทการ์ด", { id: toastId });
@@ -105,36 +109,45 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
       let payload = {
         name: values.name.trim(),
         category: values.category,
-        ...categoryPayload,
+        items,
       };
 
-      switch (values.category) {
-        case "product":
-          payload = buildProductCardBody(payload);
-          break;
-        case "place":
-          payload = buildPlaceCardBody(payload);
-          break;
-        case "person":
-          payload = buildPersonCardBody(payload);
-          break;
-        case "image":
-          payload = buildImageCardBody(payload);
-          break;
-        default:
-          break;
-      }
+      const newPayload = payload.items.map((c: any) => {
+        switch (values.category) {
+          case "product":
+            return buildProductCardBody(c);
+          case "place":
+            return buildPlaceCardBody(c);
+          case "person":
+            return buildPersonCardBody(c);
+          case "image":
+            return buildImageCardBody(c);
+          default:
+            break;
+        }
 
-      const finalPayload = {
-        ...payload,
-        meta: {
-          name: values.name.trim(),
-          category: values.category,
-          ...categoryPayload,
+        return;
+      });
+
+      const merged = newPayload.flatMap((item: any) => item.content.contents);
+
+      const mergedCarousel = {
+        content: {
+          type: "carousel",
+          contents: merged,
         },
       };
 
-      console.log({ finalPayload });
+      const finalPayload = {
+        ...newPayload[0],
+        ...mergedCarousel,
+        name: values.name.trim(),
+        meta: {
+          name: values.name.trim(),
+          category: values.category,
+          items: itemsNoKey,
+        },
+      };
 
       const { data } = await ApiConfig.post(
         "/thirdparty/line/contents/created",
@@ -157,20 +170,6 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
         duration: 2500,
         position: "bottom-right",
       });
-    }
-  };
-
-  const handleSubmitAll = async () => {
-    const toastId = toast.loading("กำลังบันทึกการ์ดทั้งหมด...");
-    console.log({ cards });
-    try {
-      for (const item of cards) {
-        // await handleSubmitOne(item);
-      }
-
-      toast.success("บันทึกทั้งหมดสำเร็จ", { id: toastId });
-    } catch (err) {
-      toast.error("บันทึกไม่ครบ", { id: toastId });
     }
   };
 
@@ -337,7 +336,6 @@ export default function MessageCardForm({ onSaved, onCancel }: Props) {
   };
 
   const duplicateCard = () => {
-    console.log("duplicateCard");
     const cloned = { ...cards[activeIndex] };
     setCards([...cards, cloned]);
   };

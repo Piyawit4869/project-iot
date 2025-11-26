@@ -496,7 +496,6 @@ export default function ChatCustomerInfo({
       const res = await connectedChatRoomAI({
         message: value,
         messageType: "text",
-        customerId: customer?.id,
       });
 
       setChatRoomAssistantId(res.chatRoomId);
@@ -616,14 +615,16 @@ export default function ChatCustomerInfo({
   }, [data, currentCustomer]);
 
   React.useEffect(() => {
-    if (currentCustomer) {
-      setChatRoomAssistantId(currentCustomer?.chatRoomAssistantId || "");
+    const assistantId = selectedRoom?.assistantId;
+
+    if (assistantId) {
+      setChatRoomAssistantId(assistantId || "");
     }
 
     if (currentCustomer && currentCustomer?.tags) {
       setSelectedTags(currentCustomer?.tags as []);
     }
-  }, [currentCustomer]);
+  }, [currentCustomer, selectedRoom]);
 
   const countFilterOption: number = selected.length;
 

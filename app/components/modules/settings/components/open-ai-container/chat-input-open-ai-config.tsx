@@ -117,7 +117,6 @@ export const ChatInputOpenAiConfig: React.FC<ChatInputOpenAiConfigProps> = (
           messageType: "image",
           isAiReply: false,
           recipient: selectedRoom.customer?.fullName ?? "Unknown",
-          customerId: selectedRoom.customerId ?? "",
           platform: "line",
           messageLabel: MessageLabelType.SENDIMAGE,
         });

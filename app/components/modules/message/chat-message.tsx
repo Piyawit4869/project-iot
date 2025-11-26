@@ -5,7 +5,7 @@ import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
 
 import FeatureCard from "~/components/shared/feature-card";
-import { Dot, MessagesSquare } from "lucide-react";
+import { MessagesSquare } from "lucide-react";
 import ChatInput from "./chat-input";
 
 import { socketConfig } from "~/lib/sockets";
@@ -19,24 +19,27 @@ import { formatDateAndTime } from "~/components/shared/global-format";
 import LoadingAnimation from "./loading-animation";
 import { MessageRenderer } from "./render-message-content";
 import { MessageMenu } from "./MessageMenu";
+import { useRouteLoaderData } from "react-router";
 
 export const ChatMessages = ({
   api,
+  subId,
   customer,
   selectedRoom,
   setAutoScroll,
 }: {
   api: string;
+  subId: string;
   customer: any;
   autoScroll: boolean;
   selectedRoom: ChatRoomSchemaType;
   setAutoScroll: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const { me } = useRouteLoaderData("root");
+
   const [playing, setPlaying] = React.useState(false);
   const [currentTime, setCurrentTime] = React.useState(0);
   const [duration, setDuration] = React.useState(0);
-
-  const [openMenuId, setOpenMenuId] = React.useState<string | null>(null);
 
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
 
@@ -253,6 +256,11 @@ export const ChatMessages = ({
     socket.on("chat", (msg: Message) => {
       console.log("chat", msg);
 
+      socket.emit("mark-read", {
+        chatRoomId: `${selectedRoom.id}`,
+        branchId: me?.branchId,
+      });
+
       if (msg && msg?.platform === "line") {
         const audio = new Audio("/sounds/level-up.mp3");
         audio.play();
@@ -269,7 +277,7 @@ export const ChatMessages = ({
     return () => {
       socket.disconnect();
     };
-  }, [selectedRoom]);
+  }, [selectedRoom, me]);
 
   React.useEffect(() => {
     // show button to scroll down
@@ -548,6 +556,7 @@ export const ChatMessages = ({
         </div>
 
         <ChatInput
+          subId={subId}
           selectedRoom={selectedRoom}
           customer={customer}
           replyRefMessage={replyRefMessage}

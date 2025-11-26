@@ -15,7 +15,7 @@ import { useChat } from "~/providers/chat/useChat";
 import { StreamingText } from "./streaming-text";
 import { useConnectedChatRoomAssistant } from "~/api/client/customer/useCustomer";
 import LoadingAnimation from "./loading-animation";
-import { usePaginatedChatRoomAIConfig } from "~/api/client/settings";
+import { usePaginatedChatRoomAIAssistant } from "~/api/client/settings";
 
 export default function ChatMessagesWithAI({
   customerId,
@@ -47,7 +47,6 @@ export default function ChatMessagesWithAI({
   const [isScrollReady, setIsScrollReady] = useState(false);
   const [buttonScrollToBottom, setButtonScrollToBottom] = React.useState(false);
   const { messagesAI: socketMessages } = useChat();
-
   const {
     data: messagesData,
     fetchNextPage,
@@ -55,7 +54,9 @@ export default function ChatMessagesWithAI({
     isFetchingNextPage,
     isLoading,
     // refetch,
-  } = usePaginatedChatRoomAIConfig(chatRoomId || "");
+  } = usePaginatedChatRoomAIAssistant(chatRoomId || "");
+
+  console.log({ messagesData });
 
   const { mutateAsync: connectedChatRoomAIAssistant, isPending: isPendingAI } =
     useConnectedChatRoomAssistant();
@@ -210,11 +211,6 @@ export default function ChatMessagesWithAI({
     },
   ];
 
-  const lastMessage =
-    messagesLoading &&
-    messagesLoading.length &&
-    messagesLoading[messagesLoading.length - 1];
-
   return (
     <div className="flex flex-col h-[calc(100vh-500px)] border-1 rounded-sm bg-white dark:bg-background overflow-hidden">
       <div
@@ -242,8 +238,9 @@ export default function ChatMessagesWithAI({
             </div>
           )}
 
-          {combinedMessages && combinedMessages.length
-            ? combinedMessages.map((msg, index) => {
+          {
+            combinedMessages && combinedMessages.length ? (
+              combinedMessages.map((msg, index) => {
                 const isUser = msg.sender !== "ROME AI";
 
                 const avatarFallback =
@@ -317,64 +314,68 @@ export default function ChatMessagesWithAI({
                   </div>
                 );
               })
-            : messagesLoading.map((msg, index) => {
-                const isUser = msg.sender !== "ROME Ai";
+            ) : (
+              <></>
+            )
+            // messagesLoading.map((msg, index) => {
+            //     const isUser = msg.sender !== "ROME Ai";
 
-                const avatarFallback =
-                  msg.imageUrl && !msg.imageUrl.includes("http")
-                    ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                        msg.imageUrl
-                      )}`
-                    : msg.imageUrl;
+            //     const avatarFallback =
+            //       msg.imageUrl && !msg.imageUrl.includes("http")
+            //         ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
+            //             msg.imageUrl
+            //           )}`
+            //         : msg.imageUrl;
 
-                return (
-                  <div
-                    key={index}
-                    className={`mt-4 flex max-w-[75%] flex-col gap-1 ${
-                      isUser ? "ml-auto items-end" : "mr-auto items-start"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <Avatar className="w-6 h-6">
-                        <img
-                          src={avatarFallback || "/avatar.png"}
-                          alt="avatar"
-                          className="rounded-full object-cover"
-                        />
-                        <AvatarFallback>
-                          {(msg.sender || "U")[0]}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="text-xs text-muted-foreground font-medium">
-                        {msg.sender || msg.recipient || "Anonymous"}
-                      </span>
-                    </div>
+            //     return (
+            //       <div
+            //         key={index}
+            //         className={`mt-4 flex max-w-[75%] flex-col gap-1 ${
+            //           isUser ? "ml-auto items-end" : "mr-auto items-start"
+            //         }`}
+            //       >
+            //         <div className="flex items-center gap-2 mb-1">
+            //           <Avatar className="w-6 h-6">
+            //             <img
+            //               src={avatarFallback || "/avatar.png"}
+            //               alt="avatar"
+            //               className="rounded-full object-cover"
+            //             />
+            //             <AvatarFallback>
+            //               {(msg.sender || "U")[0]}
+            //             </AvatarFallback>
+            //           </Avatar>
+            //           <span className="text-xs text-muted-foreground font-medium">
+            //             {msg.sender || msg.recipient || "Anonymous"}
+            //           </span>
+            //         </div>
 
-                    {msg.messageType === "text" ? (
-                      <div
-                        className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
-                          isUser
-                            ? "bg-blue-500 text-white"
-                            : "bg-muted text-primary"
-                        }`}
-                      >
-                        {msg.message === "AI กำลังตอบ..." ? (
-                          <LoadingAnimation />
-                        ) : (
-                          msg.message
-                        )}
-                      </div>
-                    ) : (
-                      <div
-                        onClick={() => setPreviewUrl(msg?.message || "")}
-                        className="cursor-pointer"
-                      >
-                        <GlobalImage src={msg?.message || ""} />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+            //         {msg.messageType === "text" ? (
+            //           <div
+            //             className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
+            //               isUser
+            //                 ? "bg-blue-500 text-white"
+            //                 : "bg-muted text-primary"
+            //             }`}
+            //           >
+            //             {msg.message === "AI กำลังตอบ..." ? (
+            //               <LoadingAnimation />
+            //             ) : (
+            //               msg.message
+            //             )}
+            //           </div>
+            //         ) : (
+            //           <div
+            //             onClick={() => setPreviewUrl(msg?.message || "")}
+            //             className="cursor-pointer"
+            //           >
+            //             <GlobalImage src={msg?.message || ""} />
+            //           </div>
+            //         )}
+            //       </div>
+            //     );
+            //   })
+          }
 
           {isPendingAI && (
             <div className="mt-4 flex max-w-[50%] flex-col gap-1 mr-auto items-start">

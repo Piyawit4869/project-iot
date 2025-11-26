@@ -168,7 +168,7 @@ export const useAllCustomer = (id?: string) =>
 
 export const useCustomer = (id: string) => {
   return useQuery({
-    queryKey: ["customer", id],
+    queryKey: ["customer-single", id],
     queryFn: () => fetchCustomerById(id),
     enabled: !!id,
   });
