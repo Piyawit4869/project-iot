@@ -32,7 +32,7 @@ export const useOrderSetup = () => {
       note: null,
       trackingNo: null,
       refCode: null,
-      docNo: null,
+      docNo: "",
       discount: 0,
       vat: 0,
       wht: 0,

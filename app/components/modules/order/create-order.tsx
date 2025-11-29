@@ -2,14 +2,10 @@
 
 import { useState } from "react";
 import { Save } from "lucide-react";
-
-import React from "react";
-
 import { toast } from "sonner";
 import { useOrderViewModel } from "./viewmodels/useOrderViewModel";
 import { useNavigate } from "react-router";
 import { useCreateOrder } from "~/api/client/order/useGetOrder";
-import { useAllCustomer } from "~/api/client/customer/useCustomer";
 import type { OrderFormValues } from "~/schemas/order/order";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { TabControl } from "~/components/shared/tab-control";
