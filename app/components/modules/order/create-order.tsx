@@ -24,7 +24,8 @@ import {
 } from "./components/order-function";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { OrderProvider } from "~/hooks/order/order";
-import { ListProduct } from "./components/product-list";
+import { ListProduct } from "./components/product-select";
+import { DetailProduct } from "./components/product-detail";
 
 export default function CreateOrder() {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ export default function CreateOrder() {
   const { mutateAsync: creation } = useCreateOrder();
 
   const [productsSelected, setProductsSelected] = useState<ProductColumn[]>([]);
+  console.log("productsSelected", productsSelected);
 
   const updateSelectedProducts = (newProducts: ProductColumn[]) => {
     const mergedProducts = newProducts.map((p) => {
@@ -179,6 +181,8 @@ export default function CreateOrder() {
                 Price={Price}
                 totalVat={totalVat}
                 quantities={productsSelected}
+                products={productsSelected}
+                onChangeProducts={setProductsSelected}
               />
             </div>
 
@@ -196,13 +200,13 @@ export default function CreateOrder() {
                   </TabsList>
                   <TabsContent value="order">
                     <h1 className="font-semibold p-3 text-xl">ข้อมูลออเดอร์</h1>
-                    {/* {productsSelected.length === 0 ? (
+                    {productsSelected.length === 0 ? (
                       <div className="text-center text-gray-500 pb-5">
                         ยังไม่มีสินค้าที่เลือก
                       </div>
                     ) : (
                       <>
-                        <CardGoods
+                        {/* <CardGoods
                           data={productsSelected}
                           key={productsSelected.length}
                           quantities={productsSelected}
@@ -228,16 +232,16 @@ export default function CreateOrder() {
                               {formatNumber(totalPrice)} บาท
                             </span>
                           </div>
-                        </div>
+                        </div> */}
+                        <OrderProvider>
+                          <DetailProduct products={productsSelected} />
+                        </OrderProvider>
                       </>
                     )}
-                    <OrderProduct
+                    {/* <OrderProduct
                       selectedProducts={productsSelected}
                       onAddProduct={handleAddProduct as any}
                     /> */}
-                    <OrderProvider>
-                      <ListProduct customerId={""} />
-                    </OrderProvider>
                   </TabsContent>
                   <TabsContent value="notation"></TabsContent>
                 </Tabs>

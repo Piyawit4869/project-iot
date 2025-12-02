@@ -28,19 +28,17 @@ import { currencyType, notationType } from "~/initData/order-initData";
 import type { OrderFormProps } from "~/schemas/order/type";
 import { useDebounce } from "../order-function";
 import { useCustomerPaginate } from "~/api/client/customer/useCustomer";
-import { ListProduct } from "../product-list";
+import { ListProduct } from "../product-select";
 import { OrderProvider } from "~/hooks/order/order";
 import { SignatureDocument } from "../signature";
-// import SignatureDocument from "../signature";
-// import { ListProduct } from "../product-list";
-
-// import { CustomerType } from "@/app/(backoffice)/[organization]/customer/_modules/types/customer";
 
 export const OrderForm: React.FC<OrderFormProps> = ({
   form,
   Price,
   quantities,
   totalVat,
+  products,
+  onChangeProducts,
 }) => {
   const customerPaginate = useCustomerPaginate;
   const [search, setSearch] = React.useState("");
@@ -459,7 +457,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
 
       <h1 className="font-semibold text-xl">รายการสินค้า</h1>
       <OrderProvider>
-        <ListProduct customerId={""} />
+        <ListProduct products={products} onChangeProducts={onChangeProducts} />
       </OrderProvider>
 
       <hr />
