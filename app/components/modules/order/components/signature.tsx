@@ -122,7 +122,10 @@ export function SignatureDocument() {
     <Dialog>
       <DialogTrigger asChild>
         <div>
-          <button className="flex items-center gap-3 px-20 py-3 border text-black text-lg font-semibold rounded-sm hover:from-blue-700 hover:to-blue-800 transition-all hover:shadow-xl transform hover:-translate-y-0.5">
+          <button
+            type="button"
+            className="flex items-center gap-2 px-20 py-3 border text-black text-lg font-semibold rounded-sm transition-all hover:shadow-sm transform"
+          >
             <Signature />
             เซ็นต์ลายเซ็นต์
           </button>

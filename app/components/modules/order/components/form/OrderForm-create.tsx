@@ -1,6 +1,6 @@
 "use client";
 
-import { Hourglass, User } from "lucide-react";
+import { Hourglass, ImageUp, User } from "lucide-react";
 import React from "react";
 import { DatePicker } from "~/components/shared/date-picker";
 import { FormTextRow } from "~/components/shared/formTextRow";
@@ -607,22 +607,35 @@ export const OrderForm: React.FC<OrderFormProps> = ({
 
         <div>
           <h1 className="font-semibold text-xl">อนุมัติโดย</h1>
-
           <FormField
             control={form.control}
             name="note"
             render={({ field }) => (
               <FormItem className="mt-3">
-                {/* <FormLabel>อัพโหลดลายเซ็นต์</FormLabel> */}
-                <FormControl>
-                  <div>
-                    <Input
-                      type="file"
-                      placeholder="เลือกไฟล์ ตราประทับ"
-                      value={field.value || ""}
-                      className="hidden"
-                    />
+                <FormLabel>อัพโหลดลายเซ็นต์</FormLabel>
+                <FormControl className="w-full">
+                  <div className="flex gap-4">
                     <SignatureDocument />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        document.getElementById("note-file")?.click()
+                      }
+                      className="flex items-center gap-2 hover:text-gray-800"
+                    >
+                      <ImageUp className="h-6 w-6" />
+                    </button>
+
+                    <input
+                      id="note-file"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0] ?? null;
+                        field.onChange(file);
+                      }}
+                    />
                   </div>
                 </FormControl>
               </FormItem>
