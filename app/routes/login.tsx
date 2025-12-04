@@ -24,13 +24,24 @@ export async function action({ request }: Route.ActionArgs) {
 
     const me = await getMe(accessToken ?? "");
 
+    const result = Object.assign({}, me);
+
+    delete result.role;
+    delete result.tempPassword;
+    delete result.mainDepartment;
+    delete result.updatedAt;
+    delete result.createdAt;
+    delete result.organization.branches;
+
+    //  delete result.permissions = {};
+
     if (!res?.accessToken) {
       throw new Error("Invalid email or password");
     }
 
     return await createUserSession({
       request,
-      user: me,
+      user: result,
       accessToken,
       refreshToken,
       // refreshTokenMaxAgeSec: 60,
