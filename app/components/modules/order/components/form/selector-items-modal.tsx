@@ -161,7 +161,7 @@ export const SelectorItemsModal: React.FC<SelectorItemsModalProps> = ({
                         <Checkbox
                           checked={selectedItems.includes(item.id)}
                           onCheckedChange={() => toggleItem(item.id ?? "")}
-                          disabled={isOut}
+                          // disabled={isOut}
                           className={cn(
                             "w-5 h-5 rounded-md border-2",
                             "data-[state=checked]:bg-black data-[state=checked]:border-black",

@@ -1,15 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Save } from "lucide-react";
-
-import React from "react";
-
+import { Box, FileText, Save } from "lucide-react";
 import { toast } from "sonner";
 import { useOrderViewModel } from "./viewmodels/useOrderViewModel";
 import { useNavigate } from "react-router";
 import { useCreateOrder } from "~/api/client/order/useGetOrder";
-import { useAllCustomer } from "~/api/client/customer/useCustomer";
 import type { OrderFormValues } from "~/schemas/order/order";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { TabControl } from "~/components/shared/tab-control";
@@ -26,6 +22,10 @@ import {
   calculateTotals,
   generateOrderNumber,
 } from "./components/order-function";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { OrderProvider } from "~/hooks/order/order";
+import { ListProduct } from "./components/product-select";
+import { DetailProduct } from "./components/product-detail";
 
 export default function CreateOrder() {
   const navigate = useNavigate();
@@ -36,6 +36,7 @@ export default function CreateOrder() {
   const { mutateAsync: creation } = useCreateOrder();
 
   const [productsSelected, setProductsSelected] = useState<ProductColumn[]>([]);
+  console.log("productsSelected", productsSelected);
 
   const updateSelectedProducts = (newProducts: ProductColumn[]) => {
     const mergedProducts = newProducts.map((p) => {
@@ -180,51 +181,70 @@ export default function CreateOrder() {
                 Price={Price}
                 totalVat={totalVat}
                 quantities={productsSelected}
+                products={productsSelected}
+                onChangeProducts={setProductsSelected}
               />
             </div>
 
-            <div className="flex-1  w-1/2 md:order-2 flex flex-col ">
+            <div className="flex-1 w-1/2 md:order-2 flex flex-col ">
               <Card className="p-3 space-y-3 w-full">
-                <h1 className="font-semibold p-3 text-xl">รายการสินค้า</h1>
-                {productsSelected.length === 0 ? (
-                  <div className="text-center text-gray-500 pb-5">
-                    ยังไม่มีสินค้าที่เลือก
-                  </div>
-                ) : (
-                  <>
-                    <CardGoods
-                      data={productsSelected}
-                      key={productsSelected.length}
-                      quantities={productsSelected}
-                      setQuantities={setProductsSelected}
-                      onRemove={handleRemove}
-                    />
-                    <div className="flex flex-col items-end mt-4 text-lg font-semibold">
-                      <div className="flex">
-                        ราคาสินค้า :{" "}
-                        <span className="ml-2 block">
-                          {formatNumber(Price)} บาท
-                        </span>
+                <Tabs defaultValue="order" className="gap-4">
+                  <TabsList className="bg-gray-100 rounded-sm px-6 p-1 ml-auto max-w-xs w-full">
+                    <TabsTrigger value="order">
+                      ข้อมูลออเดอร์
+                      <Box />
+                    </TabsTrigger>
+                    <TabsTrigger value="notation">
+                      ใบเสนอราคา <FileText />
+                    </TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="order">
+                    <h1 className="font-semibold p-3 text-xl">ข้อมูลออเดอร์</h1>
+                    {productsSelected.length === 0 ? (
+                      <div className="text-center text-gray-500 pb-5">
+                        ยังไม่มีสินค้าที่เลือก
                       </div>
-                      <div className="flex">
-                        ภาษี :{" "}
-                        <span className="ml-2 block">
-                          {formatNumber(totalVat)} บาท
-                        </span>
-                      </div>
-                      <div className="flex">
-                        ราคารวมสินค้า :{" "}
-                        <span className="ml-2 block">
-                          {formatNumber(totalPrice)} บาท
-                        </span>
-                      </div>
-                    </div>
-                  </>
-                )}
-                <OrderProduct
-                  selectedProducts={productsSelected}
-                  onAddProduct={handleAddProduct as any}
-                />
+                    ) : (
+                      <>
+                        {/* <CardGoods
+                          data={productsSelected}
+                          key={productsSelected.length}
+                          quantities={productsSelected}
+                          setQuantities={setProductsSelected}
+                          onRemove={handleRemove}
+                        />
+                        <div className="flex flex-col items-end mt-4 text-lg font-semibold">
+                          <div className="flex">
+                            ราคาสินค้า :{" "}
+                            <span className="ml-2 block">
+                              {formatNumber(Price)} บาท
+                            </span>
+                          </div>
+                          <div className="flex">
+                            ภาษี :{" "}
+                            <span className="ml-2 block">
+                              {formatNumber(totalVat)} บาท
+                            </span>
+                          </div>
+                          <div className="flex">
+                            ราคารวมสินค้า :{" "}
+                            <span className="ml-2 block">
+                              {formatNumber(totalPrice)} บาท
+                            </span>
+                          </div>
+                        </div> */}
+                        <OrderProvider>
+                          <DetailProduct products={productsSelected} />
+                        </OrderProvider>
+                      </>
+                    )}
+                    {/* <OrderProduct
+                      selectedProducts={productsSelected}
+                      onAddProduct={handleAddProduct as any}
+                    /> */}
+                  </TabsContent>
+                  <TabsContent value="notation"></TabsContent>
+                </Tabs>
               </Card>
             </div>
           </div>

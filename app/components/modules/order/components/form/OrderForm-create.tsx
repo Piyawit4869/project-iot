@@ -1,18 +1,9 @@
 "use client";
 
-import {
-  Coins,
-  CreditCard,
-  Hourglass,
-  Percent,
-  Receipt,
-  ShoppingCart,
-  User,
-} from "lucide-react";
+import { Hourglass, ImageUp, User } from "lucide-react";
 import React from "react";
 import { DatePicker } from "~/components/shared/date-picker";
 import { FormTextRow } from "~/components/shared/formTextRow";
-import { formatNumber } from "~/components/shared/global-format";
 import { GlobalImage } from "~/components/shared/global-image";
 import { RequiredLabel } from "~/components/shared/required-design";
 import { Card } from "~/components/ui/card";
@@ -37,14 +28,17 @@ import { currencyType, notationType } from "~/initData/order-initData";
 import type { OrderFormProps } from "~/schemas/order/type";
 import { useDebounce } from "../order-function";
 import { useCustomerPaginate } from "~/api/client/customer/useCustomer";
-
-// import { CustomerType } from "@/app/(backoffice)/[organization]/customer/_modules/types/customer";
+import { ListProduct } from "../product-select";
+import { OrderProvider } from "~/hooks/order/order";
+import { SignatureDocument } from "../signature";
 
 export const OrderForm: React.FC<OrderFormProps> = ({
   form,
   Price,
   quantities,
   totalVat,
+  products,
+  onChangeProducts,
 }) => {
   const customerPaginate = useCustomerPaginate;
   const [search, setSearch] = React.useState("");
@@ -103,7 +97,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
   return (
     <Card className="p-6">
       <h3 className="font-semibold text-xl">ข้อมูลออเดอร์</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* <FormField
           control={form.control}
           name="docNo"
@@ -127,6 +121,38 @@ export const OrderForm: React.FC<OrderFormProps> = ({
               <FormControl>
                 <Input placeholder="กรอกชื่อออเดอร์" {...field} />
               </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="notationType"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>บริษัท (Company)</FormLabel>
+              <Select
+                {...field}
+                onValueChange={field.onChange}
+                defaultValue="quotation"
+              >
+                <FormControl>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="เลือกประเภทเอกสาร" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {notationType.map((item) => (
+                    <SelectItem
+                      disabled={item.value !== "quotation"}
+                      key={item.value}
+                      value={item.value}
+                    >
+                      {item.icon}
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </FormItem>
           )}
         />
@@ -162,6 +188,40 @@ export const OrderForm: React.FC<OrderFormProps> = ({
             </FormItem>
           )}
         />
+        <div className="col-span-3">
+          <FormField
+            control={form.control}
+            name="suppliers"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>ผู้ขาย</FormLabel>
+                <Select
+                  {...field}
+                  value={field.value ?? undefined}
+                  onValueChange={field.onChange}
+                >
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="เลือกผู้ขาย" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {/* {notationType.map((item) => (
+                      <SelectItem
+                        disabled={item.value !== "quotation"}
+                        key={item.value}
+                        value={item.value}
+                      >
+                        {item.icon}
+                        {item.label}
+                      </SelectItem>
+                    ))} */}
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+        </div>
 
         {/* <FormField
           control={form.control}
@@ -234,10 +294,26 @@ export const OrderForm: React.FC<OrderFormProps> = ({
             </FormItem>
           )}
         />
+        <div className="col-span-2">
+          <FormField
+            control={form.control}
+            name="docNo"
+            render={({ field }) => (
+              <FormItem>
+                <RequiredLabel required>
+                  หมายเลขเอกสาร <FormMessage />
+                </RequiredLabel>
+                <FormControl>
+                  <Input placeholder="กรอกชื่อออเดอร์" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
       </div>
 
       <Card className="w-full p-4.5">
-        <h3 className="font-semibold text-xl">การชำระเงิน</h3>
+        <h3 className="font-semibold text-xl">ข้อมูลลูกค้า</h3>
         <div className="grid grid-cols-1 gap-3 mt-1">
           <FormField
             control={form.control}
@@ -246,7 +322,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
               return (
                 <FormItem>
                   <RequiredLabel required>
-                    เลือกข้อมูลลูกค้า <FormMessage />
+                    เลือกลูกค้า <FormMessage />
                   </RequiredLabel>
                   <FormControl>
                     <Select
@@ -336,8 +412,8 @@ export const OrderForm: React.FC<OrderFormProps> = ({
         <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormTextRow
             control={form.control}
-            name="customer.taxID"
-            label="เลขประจำตัวผู้เสียภาษี"
+            name="customer.companyName"
+            label="ชื่อบริษัท"
           />
           <FormTextRow
             control={form.control}
@@ -346,13 +422,13 @@ export const OrderForm: React.FC<OrderFormProps> = ({
           />
           <FormTextRow
             control={form.control}
-            name="customer.email"
-            label="อีเมล"
+            name="customer.taxID"
+            label="เลขประจำตัวผู้เสียภาษี"
           />
           <FormTextRow
             control={form.control}
-            name="customer.phone"
-            label="เบอร์โทรศัพท์"
+            name="customer.taxID"
+            label="ผู้ติดต่อ (Contact Person)"
           />
           <FormTextRow
             control={form.control}
@@ -364,21 +440,63 @@ export const OrderForm: React.FC<OrderFormProps> = ({
             name="customer.postalCode"
             label="รหัสไปรษณีย์"
           />
+          <FormTextRow
+            control={form.control}
+            name="customer.email"
+            label="อีเมล"
+          />
+          <FormTextRow
+            control={form.control}
+            name="customer.phone"
+            label="เบอร์โทรศัพท์"
+          />
         </div>
       </Card>
 
-      <h1 className="font-semibold text-xl">การชำระเงิน</h1>
+      <hr />
 
-      <div className="grid grid-cols-1 gap-4">
+      <h1 className="font-semibold text-xl">รายการสินค้า</h1>
+      <OrderProvider>
+        <ListProduct products={products} onChangeProducts={onChangeProducts} />
+      </OrderProvider>
+
+      <hr />
+
+      <h1 className="font-semibold text-xl">การชำระเงินและเงื่อนไข</h1>
+      <div className="grid grid-cols-2 gap-6">
         <FormField
           control={form.control}
           name="discount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ส่วนลด</FormLabel>
+              <FormLabel>ภาษีมูลค่าเพิ่ม</FormLabel>
+              <FormControl>
+                <Input placeholder="0" {...field} value={field.value ?? ""} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="discount"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>ภาษีมูลหัก ณ ที่จ่าย</FormLabel>
+              <FormControl>
+                <Input placeholder="0" {...field} value={field.value ?? ""} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="discount"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>จำนวนวันเครดิต (วัน)</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="กรอกส่วนลด"
+                  placeholder="30 วัน"
                   {...field}
                   value={field.value ?? ""}
                 />
@@ -391,7 +509,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
           name="currency"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>เลือกสกุลเงิน</FormLabel>
+              <FormLabel>สกุลเงิน</FormLabel>
               <Select
                 value={field.value}
                 onValueChange={field.onChange}
@@ -413,98 +531,189 @@ export const OrderForm: React.FC<OrderFormProps> = ({
             </FormItem>
           )}
         />
+        {/* <FormField
+          control={form.control}
+          name="discount"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>ส่วนลด</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="กรอกส่วนลด"
+                  {...field}
+                  value={field.value ?? ""}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        /> */}
+        <FormField
+          control={form.control}
+          name="note"
+          render={({ field }) => (
+            <FormItem className="col-span-2">
+              <FormLabel>หมายเหตุ</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="ระบุหมายเหตุ..."
+                  value={field.value || ""}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
       </div>
 
-      <Card className="p-4 w-full">
-        <h3 className="font-semibold text-lg">สรุปราคาสินค้า</h3>
-
-        <div className="flex justify-between">
-          <div className="flex items-center gap-2">
-            <ShoppingCart className="w-4 h-4 text-gray-500" />
-            <span>จำนวนสินค้า :</span>
-          </div>
-          <span>
-            {(quantities || []).reduce((sum, q) => sum + q.quantity, 0)} ชิ้น
-          </span>
-        </div>
-
-        <div className="flex justify-between">
-          <div className="flex items-center gap-2">
-            <Coins className="w-4 h-4 text-gray-500" />
-            <span>ราคารวมสินค้า :</span>
-          </div>
-          <span>{formatNumber(Price)} บาท</span>
-        </div>
-
-        {/* <div className="flex justify-between">
-          <div className="flex items-center gap-2">
-            <ReceiptText className="w-4 h-4 text-gray-500" />
-            <span>ภาษีหัก ณ ที่จ่าย:</span>
-          </div>
-          <span>{wht} บาท</span>
-        </div> */}
-
-        {/* <div className="flex justify-between">
-          <div className="flex items-center gap-2">
-            <Calculator className="w-4 h-4 text-gray-500" />
-            <span>ยอดรวมสุทธิ (ยังไม่รวม VAT):</span>
-          </div>
-          <span>{totalNoVat} บาท</span>
-        </div> */}
-
-        <div className="flex justify-between">
-          <div className="flex items-center gap-2">
-            <Receipt className="w-4 h-4 text-gray-500" />
-            <span>ภาษีมูลค่าเพิ่ม : </span>
-          </div>
-          <span>
-            <span>{formatNumber(totalVat)} บาท</span>
-          </span>
-        </div>
-
-        <div className="flex justify-between">
-          <div className="flex items-center gap-2">
-            <CreditCard className="w-4 h-4 text-gray-500" />
-            <span>
-              <span className="inline sm:hidden">ยอดชำระทั้งหมด : </span>
-              <span className="hidden sm:inline">
-                ยอดชำระทั้งหมด (รวม VAT/ค่าธรรมเนียม) :
-              </span>
-            </span>
-          </div>
-          <span>{formatNumber((Price ?? 0) + (totalVat ?? 0))} บาท</span>
-        </div>
-
-        <div className="flex justify-between">
-          <div className="flex items-center gap-2">
-            <Percent className="w-4 h-4 text-gray-500" />
-            <span>ส่วนลด : </span>
-          </div>
-          <span>{formatNumber(discount)} บาท</span>
-        </div>
-        <div className="flex justify-between font-bold text-green-700 dark:text-green-400 text-lg border-t pt-2">
-          <div className="flex items-center gap-2">
-            <span>ยอดรวมสุทธิ : </span>
-          </div>
-          <span>{formatNumber(totalAddVat)} บาท</span>
-        </div>
-      </Card>
-
+      <h1 className="font-semibold text-xl">ส่วนเซ็นเอกสาร</h1>
       <FormField
         control={form.control}
         name="note"
         render={({ field }) => (
           <FormItem className="col-span-2">
-            <FormLabel>หมายเหตุ</FormLabel>
+            <FormLabel>ตราประทับ</FormLabel>
             <FormControl>
-              <Textarea
-                placeholder="ระบุหมายเหตุ..."
+              <Input
+                type="file"
+                placeholder="เลือกไฟล์ ตราประทับ"
                 value={field.value || ""}
               />
             </FormControl>
           </FormItem>
         )}
       />
+
+      <div className="grid grid-cols-2 gap-6">
+        <div>
+          <h1 className="font-semibold text-xl">ผู้จัดทำ</h1>
+          <FormField
+            control={form.control}
+            name="note"
+            render={({ field }) => (
+              <FormItem className="mt-3">
+                <FormLabel>อัพโหลดลายเซ็นต์</FormLabel>
+                <FormControl>
+                  <Input
+                    type="file"
+                    placeholder="เลือกไฟล์ ตราประทับ"
+                    value={field.value || ""}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div>
+          <h1 className="font-semibold text-xl">อนุมัติโดย</h1>
+          <FormField
+            control={form.control}
+            name="note"
+            render={({ field }) => (
+              <FormItem className="mt-3">
+                <FormLabel>อัพโหลดลายเซ็นต์</FormLabel>
+                <FormControl className="w-full">
+                  <div className="flex gap-4">
+                    <SignatureDocument />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        document.getElementById("note-file")?.click()
+                      }
+                      className="flex items-center gap-2 hover:text-gray-800"
+                    >
+                      <ImageUp className="h-6 w-6" />
+                    </button>
+
+                    <input
+                      id="note-file"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0] ?? null;
+                        field.onChange(file);
+                      }}
+                    />
+                  </div>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name="note"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>ชื่อ</FormLabel>
+              <FormControl>
+                <Input placeholder="กรอกชื่อ" value={field.value || ""} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="note"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>ชื่อ</FormLabel>
+              <FormControl>
+                <Input placeholder="กรอกชื่อ" value={field.value || ""} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="note"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>ตำแหน่ง</FormLabel>
+              <FormControl>
+                <Input placeholder="กรอกตำแหน่ง" value={field.value || ""} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="note"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>ตำแหน่ง</FormLabel>
+              <FormControl>
+                <Input placeholder="กรอกตำแหน่ง" value={field.value || ""} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="startDate"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>วันที่</FormLabel>
+              <FormControl>
+                <DatePicker value={field.value} onChange={field.onChange} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="startDate"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>วันที่</FormLabel>
+              <FormControl>
+                <DatePicker value={field.value} onChange={field.onChange} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+      </div>
     </Card>
   );
 };

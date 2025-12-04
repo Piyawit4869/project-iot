@@ -174,8 +174,6 @@ export default function ChatCustomerInfo({
 
   const assistantId = selectedRoom?.assistantId;
 
-  console.log({ assistantId });
-
   const { data: participantData, refetch: refetchParicipant } =
     useChatRoomParticipants(selectedRoom?.id);
   let participants = participantData && participantData?.items;
@@ -1244,7 +1242,14 @@ export default function ChatCustomerInfo({
                         productsPaginate.items.map((item: Product) => (
                           <li
                             key={item?.id}
-                            className="flex items-center justify-between gap-4 p-3 rounded-lg hover:bg-muted/60 transition-colors"
+                            className={cn(
+                              "flex items-center justify-between gap-4 p-3 rounded-lg transition-colors",
+                              cartItems.some(
+                                (cartItem) => cartItem.id === item.id
+                              )
+                                ? "bg-muted/100"
+                                : "hover:bg-muted/60"
+                            )}
                           >
                             {item?.id && (
                               <div

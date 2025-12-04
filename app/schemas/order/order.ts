@@ -167,7 +167,7 @@ export const configureOrderSchema = z.object({
 
 export const customerSchema = z.object({
   id: z.string(),
-  // companyName: z.string().optional(),
+  companyName: z.string().optional(),
   // customerId: z.string(),
   firstName: z.string().nullable().optional(),
   lastName: z.string().nullable().optional(),
@@ -206,7 +206,7 @@ export const orderFormSchema = z.object({
   note: z.string().optional().nullable(),
   trackingNo: z.string().nullable(),
   refCode: z.string().nullable(),
-  docNo: z.string().nullable(),
+  docNo: z.string().min(1, "กรุณากรอกหมายเลขออเดอร์"),
   discount: z.coerce.number().nullable(),
   vat: z.coerce.number().nullable(),
   wht: z.coerce.number().nullable(),
@@ -215,6 +215,8 @@ export const orderFormSchema = z.object({
   net: z.coerce.number().nullable(),
   subTotal: z.coerce.number().nullable(),
   customerId: z.string().min(1, "กรุณาเลือกลูกค้า"),
+
+  company: z.string().optional(),
 
   // discount: z.number().optional(),
   // type: TypeEnum,

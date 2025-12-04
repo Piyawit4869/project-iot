@@ -137,6 +137,8 @@ export interface OrderFormProps {
   isLoading?: boolean;
   totalWht?: number;
   quantities?: ProductColumn[];
+  products: ProductColumn[];
+  onChangeProducts: (items: ProductColumn[]) => void;
 }
 
 export const OrderFilterFields: FilterField[] = [
