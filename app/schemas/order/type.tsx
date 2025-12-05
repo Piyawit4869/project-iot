@@ -138,6 +138,7 @@ export interface OrderFormProps {
   totalWht?: number;
   quantities?: ProductColumn[];
   products: ProductColumn[];
+  viewMode?: boolean;
   onChangeProducts: (items: ProductColumn[]) => void;
 }
 

@@ -194,6 +194,7 @@ export const StatusEnum = z.enum(["draft", "approved", "sent", "cancelled"]);
 export const orderFormSchema = z.object({
   active: z.boolean(),
   branchId: z.string().nullable(),
+  saler: z.string().nullable(),
   suppliers: z.string().nullable(),
   arrivalDate: z.string().nullable(),
   orderDate: z.string().nullable(),
@@ -216,7 +217,7 @@ export const orderFormSchema = z.object({
   subTotal: z.coerce.number().nullable(),
   customerId: z.string().min(1, "กรุณาเลือกลูกค้า"),
 
-  company: z.string().optional(),
+  company: z.string().optional().nullable(),
 
   // discount: z.number().optional(),
   // type: TypeEnum,
@@ -232,10 +233,23 @@ export const orderFormSchema = z.object({
   // signatureUrl: z.string(),
   // stampUrl: z.string().optional(),
 
+  discountCode: z.string().optional().nullable(),
+  credit: z.string().optional().nullable(),
+  discountStep: z.string().optional().nullable(),
+  discountType: z.string().optional().nullable(),
+  discountNote: z.string().optional().nullable(),
+  seal: z.string().optional().nullable(),
+  makeSign: z.string().optional().nullable(),
+  approvedSign: z.string().optional().nullable(),
+  makeByName: z.string().optional().nullable(),
+  approvedByName: z.string().optional().nullable(),
+  makeByPosition: z.string().optional().nullable(),
+  approvedByPosition: z.string().optional().nullable(),
+  profile: customerSchema,
   orderType: TypeEnum,
   currency: currencyEnum,
   customer: customerSchema.optional(),
-  orderDetail: itemSchema,
+  orderDetails: itemSchema,
 });
 
 export type OrderFormValues = z.infer<typeof orderFormSchema>;

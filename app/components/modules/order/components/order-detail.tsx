@@ -7,9 +7,10 @@ import { Form } from "~/components/ui/form";
 import { Card } from "~/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { CreditZone } from "./credit-zone";
-import { ViewOrderDetail } from "./view-order-detail";
+
 import { CustomTabs } from "~/components/shared/custom-tabs";
 import { BotMessageSquare, FileText } from "lucide-react";
+import { OrderForm } from "./form/OrderForm-create";
 
 export const OrderDetail: React.FC<OrderFormProps> = (props) => {
   const {
@@ -57,7 +58,14 @@ export const OrderDetail: React.FC<OrderFormProps> = (props) => {
                   icon: <FileText className="w-4 h-4" />,
                   content: (
                     <div className="p-2">
-                      <ViewOrderDetail order={order} />
+                      {/* <ViewOrderDetail order={order} /> */}
+                      <OrderForm
+                        order={order}
+                        form={formUpdate}
+                        viewMode={true}
+                        products={[]}
+                        onChangeProducts={() => {}}
+                      />
                     </div>
                   ),
                 },

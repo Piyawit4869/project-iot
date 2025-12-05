@@ -1,6 +1,6 @@
 "use client";
 
-import { Upload } from "lucide-react";
+import { Box, Upload } from "lucide-react";
 import { useParams } from "react-router";
 import { useOrderViewModel } from "./viewmodels/useOrderViewModel";
 import { useGetOrder } from "~/api/client/order/useGetOrder";
@@ -14,7 +14,12 @@ import { useOrderColumnTable } from "./components/order-column-table";
 import { ViewCardGoods } from "./components/view-goods";
 import { TabControl } from "~/components/shared/tab-control";
 import { OrderDetail } from "./components/order-detail";
-import { Card } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
+import { OrderForm } from "./components/form/OrderForm-create";
+import { QuotationMock } from "~/components/modules/order/components/template";
+import { calculateTotals } from "./components/order-function";
+import { useState } from "react";
+import type { ProductColumn } from "~/schemas/order/type";
 
 export default function SingleOrdersDetail() {
   const params = useParams();
@@ -27,7 +32,10 @@ export default function SingleOrdersDetail() {
 
   const { data: order, isLoading: loadOrder } = useGetOrder(id);
   const columns = useOrderColumnTable();
-  const products = order?.orderDetails?.products;
+  const [productsSelected, setProductsSelected] = useState<ProductColumn[]>([]);
+
+  const approvedSign = formUpdate.watch("approvedSign");
+  const makeImage = formUpdate.watch("makeSign");
 
   useEntityBreadcrumb({
     feature: "order",
@@ -67,6 +75,7 @@ export default function SingleOrdersDetail() {
           // </Button>,
         ]}
       />
+
       <div className="flex flex-col md:flex-row gap-4">
         <div className="w-full md:w-1/2 md:order-1">
           {loadOrder ? (
@@ -78,6 +87,8 @@ export default function SingleOrdersDetail() {
               onSubmit={onUpdate}
               initialData={initData.initialOrderFormData}
               order={order}
+              products={[]}
+              onChangeProducts={() => []}
             />
           )}
         </div>
@@ -88,14 +99,25 @@ export default function SingleOrdersDetail() {
               <SkeletonLoading className="min-h-[120px]" />
               <SkeletonLoading className="min-h-[120px]" />
             </>
-          ) : products && products.length > 0 ? (
-            <ViewCardGoods columns={columns} data={products} quantity={0} />
           ) : (
-            <Card className="p-3 space-y-3 w-full">
-              <h1 className="font-semibold p-3 text-xl">รายการสินค้า</h1>
-              <div className="text-center text-gray-500 pb-5">
-                ยังไม่มีสินค้าที่เลือก
+            <Card className="p-6  w-full ">
+              <div className="flex flex-row gap-3">
+                {" "}
+                <span className="font-semibold text-xl">ข้อมูลออเดอร์</span>
+                <Box />
               </div>
+
+              <CardContent className="p-0 px-0">
+                <div className="w-full">
+                  {" "}
+                  <QuotationMock
+                    data={formUpdate.getValues()}
+                    product={productsSelected}
+                    makeImage={makeImage}
+                    approvedImage={approvedSign}
+                  />
+                </div>
+              </CardContent>
             </Card>
           )}
         </div>

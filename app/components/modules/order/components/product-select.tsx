@@ -11,8 +11,12 @@ import {
 } from "~/components/ui/select";
 import type { CreateCRUDOrderInput, ProductType } from "~/schemas/order/order";
 import { SingleSelectOnModalProduct } from "../../message";
-import { Coins, Percent, Receipt, ShoppingCart } from "lucide-react";
+import { Coins, Percent, Receipt, ShoppingCart, Trash2 } from "lucide-react";
 import type { ProductColumn } from "~/schemas/order/type";
+import { GlobalImage } from "~/components/shared/global-image";
+import { calculateTotals } from "./order-function";
+import { formatNumber } from "~/components/shared/global-format";
+import type { Product } from "~/schemas/product/product";
 
 type ProductOption = {
   id: string;
@@ -23,8 +27,10 @@ type ProductOption = {
 
 export function ListProduct({
   products,
+  productDetails,
   onChangeProducts,
 }: {
+  productDetails: ProductColumn[];
   products: ProductColumn[];
   onChangeProducts: (items: ProductColumn[]) => void;
 }) {
@@ -44,14 +50,8 @@ export function ListProduct({
     }));
   }, [getProducts]);
 
-  // const toggleAddOn = (addon: string) => {
-  //   const newAddOns = order.addOns.includes(addon)
-  //     ? order.addOns.filter((a) => a !== addon)
-  //     : [...order.addOns, addon];
-  //   setOrder({ ...order, addOns: newAddOns });
-  // };
-
-  const formOrder = useForm<CreateCRUDOrderInput>({
+  // ❗ formOrder ใช้แค่ฟิลด์อื่น ๆ — ไม่ใช้ควบคุม products
+  const formOrder = useForm<any>({
     mode: "onSubmit",
     defaultValues: {
       active: true,
@@ -65,30 +65,35 @@ export function ListProduct({
       wht: 0,
       customerId: "",
       orderDetail: {
-        products: [],
+        products: [], // ใช้เก็บเฉย ๆ ถ้าต้อง submit form
       },
     },
   });
 
+  const displayProducts =
+    (productDetails?.length ?? 0) > 0 ? productDetails : products;
+  /** ------------------------------
+   *  แก้ตรงนี้เต็มๆ → updateQuantity ใช้ products (props)
+   *  ------------------------------ */
   const updateQuantity = (index: number, newQty: number) => {
     const qty = Math.max(1, newQty);
-    const currentProducts = formOrder.getValues("orderDetail.products");
 
-    const updatedProducts = currentProducts.map((product, idx) => {
-      if (idx === index) {
-        return { ...product, quantity: qty };
-      }
+    const updatedProducts = products.map((product, idx) => {
+      if (idx === index) return { ...product, quantity: qty };
       return product;
     });
 
-    // onChangeProducts(updatedProducts);
+    // อัปเดต UI
+    onChangeProducts(updatedProducts);
+
+    // sync ไป form ถ้าต้องใช้ตอน submit
     formOrder.setValue("orderDetail.products", updatedProducts);
   };
 
   const handleRemove = (index: number) => {
     const updated = products.filter((_, i) => i !== index);
     onChangeProducts(updated);
-    // formOrder.setValue("orderDetail.products", updated);
+    formOrder.setValue("orderDetail.products", updated);
   };
 
   const handleSelectProduct = (productId: string) => {
@@ -96,11 +101,10 @@ export function ListProduct({
       (prod: ProductType) => prod.id === productId
     );
 
-    const idxProductInCart = products.findIndex(
-      (prod) => prod.id === productId
-    );
-    if (idxProductInCart === -1) {
-      const cartItems = [
+    const idx = products.findIndex((prod) => prod.id === productId);
+
+    if (idx === -1) {
+      const added = [
         ...products,
         {
           ...productDetail,
@@ -108,212 +112,158 @@ export function ListProduct({
           quantity: 1,
         },
       ];
-      onChangeProducts(cartItems);
-      formOrder.setValue("orderDetail.products", cartItems);
+      onChangeProducts(added);
+      formOrder.setValue("orderDetail.products", added);
       return;
     }
 
     const updatedProducts = products.map((p, index) =>
-      index === idxProductInCart ? { ...p, quantity: p.quantity + 1 } : p
+      index === idx ? { ...p, quantity: p.quantity + 1 } : p
     );
+
     onChangeProducts(updatedProducts);
-    // formOrder.setValue("orderDetail.products", updatedProducts);
+    formOrder.setValue("orderDetail.products", updatedProducts);
   };
 
-  // React.useEffect(() => {
-  //   if (products && products.length) {
-  //     formOrder.setValue("orderDetail.products", products);
-  //   }
-  // }, [products, formOrder]);
+  // const discountPrice = products.reduce((sum, p) => sum + p.discountPrice, 0);
 
   return (
-    <div className="gap-4 mt-3">
+    <div className="gap-4">
       <div className="flex flex-col gap-2">
-        <Label className="font-semibold">เลือกรายการสินค้า</Label>
+        {!productDetails && (
+          <>
+            <Label className="font-semibold">เลือกรายการสินค้า</Label>
+            <SingleSelectOnModalProduct
+              options={productOptions}
+              onChange={(productId) => handleSelectProduct(productId)}
+            />
+          </>
+        )}
 
-        <SingleSelectOnModalProduct
-          options={productOptions}
-          onChange={(productId) => {
-            handleSelectProduct(productId);
-          }}
-        />
+        {displayProducts.length > 0 && (
+          <>
+            <div className={productDetails ? "productDetails" : "mt-6"}>
+              <div className="grid grid-cols-[1fr_150px_100px_120px] items-center border-b border-gray-200">
+                <span className="text-sm font-semibold text-gray-700">
+                  รายละเอียดสินค้า
+                </span>
+                <span className="text-sm font-semibold text-gray-700 text-center">
+                  จำนวน
+                </span>
+                <span className="text-sm font-semibold text-gray-700 text-center">
+                  ราคา
+                </span>
+                <span className="text-sm font-semibold text-gray-700 text-center">
+                  ราคารวม
+                </span>
+              </div>
 
-        <div className="mt-6">
-          <div className="grid grid-cols-[1fr_150px_100px_120px] items-center border-b border-gray-200">
-            <span className="text-sm font-semibold text-gray-700">
-              รายละเอียดสินค้า
-            </span>
-            <span className="text-sm font-semibold text-gray-700 text-center">
-              จำนวน
-            </span>
-            <span className="text-sm font-semibold text-gray-700 text-center">
-              ราคา
-            </span>
-            <span className="text-sm font-semibold text-gray-700 text-center">
-              ราคารวม
-            </span>
-          </div>
+              <div className="mt-6 flex flex-col gap-4 overflow-y-auto">
+                {displayProducts.map((p, i) => {
+                  const prod =
+                    getProducts?.find(
+                      (prod: ProductType) => prod.id === p.id
+                    ) ?? null;
 
-          {/* List of product cards with quantity input */}
-          <div className="mt-6 flex flex-col gap-4 overflow-y-auto">
-            {products.map((p, i) => {
-              const productDetails =
-                getProducts &&
-                getProducts.length &&
-                getProducts?.find((prod: ProductType) => prod.id === p?.id);
-              const fallbackImage =
-                "https://ui-avatars.com/api/?name=" +
-                encodeURIComponent(productDetails?.name ?? "image");
+                  const price = prod?.salePrice ?? 0;
+                  const totalPrice = price * (p.quantity ?? 1);
 
-              const price = productDetails?.price ?? 0;
-              const totalPrice = price * (p.quantity ?? 1);
+                  return (
+                    <div key={p.id}>
+                      <div className="grid grid-cols-[1fr_150px_100px_120px] items-center">
+                        <div className="flex items-center gap-4">
+                          <GlobalImage
+                            src={
+                              prod?.imageUrl ||
+                              "https://ui-avatars.com/api/?name=" +
+                                encodeURIComponent(prod?.name ?? "image")
+                            }
+                            alt={prod?.name ?? "Unknown"}
+                            className="w-16 h-16 rounded-md object-cover border border-gray-200"
+                          />
 
-              return (
-                <div>
-                  <div
-                    key={p.id}
-                    className="grid grid-cols-[1fr_150px_100px_120px] items-center"
-                  >
-                    <div className="flex items-center gap-4">
-                      <img
-                        src={productDetails?.imageUrl || fallbackImage}
-                        alt={productDetails?.name || "Unknown Product"}
-                        className="w-16 h-16 rounded-md object-cover border border-gray-200"
-                      />
-                      <div className="flex flex-col">
-                        <h3 className="text-sm font-semibold text-gray-900">
-                          {productDetails?.name || "Unknown Product"}
-                        </h3>
-                        <p className="text-xs text-gray-500">
-                          {productDetails?.sku}
-                        </p>
-                        <div className="mt-1">
-                          <Select>
-                            <SelectTrigger className="">
-                              <SelectValue placeholder="ดำ, S" />
-                            </SelectTrigger>
+                          <div className="flex flex-col">
+                            <h3 className="text-sm font-semibold text-gray-900">
+                              {prod?.name ?? "Unknown Product"}
+                            </h3>
+                            <p className="text-xs text-gray-500">{prod?.sku}</p>
+                          </div>
+                        </div>
 
-                            <SelectContent>
-                              <SelectItem key="test" value="test">
-                                ดำ, S
-                              </SelectItem>
-                              <SelectItem key="test2" value="test2">
-                                ขาว, M
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
+                        {/* Quantity */}
+                        <div className="flex items-center justify-center gap-2 ml-4">
+                          {!productDetails && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                updateQuantity(i, (p.quantity ?? 1) - 1)
+                              }
+                              className="w-7 h-7 flex items-center justify-center rounded-md bg-gray-200 hover:bg-gray-300"
+                            >
+                              –
+                            </button>
+                          )}
+
+                          {productDetails ? (
+                            <span>{p.quantity}</span>
+                          ) : (
+                            <input
+                              type="number"
+                              value={p.quantity ?? 1}
+                              onChange={(e) => {
+                                const value = Number(e.target.value);
+                                updateQuantity(i, value <= 0 ? 1 : value);
+                              }}
+                              className="
+                              w-10 text-center text-sm border rounded-md h-9
+                              focus:outline-none focus:ring-2 focus:ring-primary
+                            "
+                            />
+                          )}
+
+                          {!productDetails && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                updateQuantity(i, (p.quantity ?? 1) + 1)
+                              }
+                              className="w-7 h-7 flex items-center justify-center rounded-md bg-gray-200 hover:bg-gray-300"
+                            >
+                              +
+                            </button>
+                          )}
+                        </div>
+
+                        <div className="text-sm text-center text-gray-800">
+                          {price} ฿
+                        </div>
+                        <div className="flex flex-col items-center justify-end gap-3">
+                          <span className="text-sm font-semibold text-gray-900">
+                            {totalPrice} ฿
+                          </span>
                         </div>
                       </div>
+
+                      {!productDetails && (
+                        <div className="flex items-center justify-end">
+                          <button
+                            onClick={() => handleRemove(i)}
+                            className="flex text-red-500 text-sm hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4 mr-1.5" />
+                            ลบ
+                          </button>
+                        </div>
+                      )}
                     </div>
-                    <div className="flex items-center justify-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => updateQuantity(i, (p.quantity ?? 1) - 1)}
-                        className="w-7 h-7 flex items-center justify-center rounded-md bg-gray-200 hover:bg-gray-300"
-                      >
-                        –
-                      </button>
-                      <span className="w-6 text-center text-sm">
-                        {p.quantity}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => updateQuantity(i, (p.quantity ?? 1) + 1)}
-                        className="w-7 h-7 flex items-center justify-center rounded-md bg-gray-200 hover:bg-gray-300"
-                      >
-                        +
-                      </button>
-                    </div>
-                    <div className="text-sm text-center text-gray-800">
-                      {price} ฿
-                    </div>
-                    <div className="flex flex-col items-center justify-end gap-3">
-                      <span className="text-sm font-semibold text-gray-900">
-                        {totalPrice} ฿
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-end">
-                    <button
-                      onClick={() => handleRemove(i)}
-                      className="flex text-red-500 text-sm hover:text-red-600"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-4 h-4 mr-1"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22m-5-4H6a2 2 0 00-2 2v2h16V5a2 2 0 00-2-2z"
-                        />
-                      </svg>
-                      ลบ
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        <hr />
-
-        <div className="p-4 mt-3 w-full rounded-2xl bg-gray-50 shadow-inner">
-          <h3 className="font-semibold text-lg mb-4">สรุปราคาสินค้า</h3>
-
-          <div className="flex justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <ShoppingCart className="w-4 h-4 text-gray-500" />
-              <span>จำนวนสินค้า :</span>
+                  );
+                })}
+              </div>
             </div>
-            <span>
-              {/* {(quantities || []).reduce((sum, q) => sum + q.quantity, 0)}{" "} */}
-              ชิ้น
-            </span>
-          </div>
 
-          <div className="flex justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Coins className="w-4 h-4 text-gray-500" />
-              <span>ราคารวมสินค้า :</span>
-            </div>
-            {/* <span>{formatNumber(Price)} บาท</span> */}
-            <span>บาท</span>
-          </div>
-
-          <div className="flex justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Percent className="w-4 h-4 text-gray-500" />
-              <span>ส่วนลด : </span>
-            </div>
-            <span>บาท</span>
-            {/* <span>{formatNumber(discount)} บาท</span> */}
-          </div>
-
-          <div className="flex justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Receipt className="w-4 h-4 text-gray-500" />
-              <span>ภาษีมูลค่าเพิ่ม : </span>
-            </div>
-            <span>
-              {/* <span>{formatNumber(totalVat)} บาท</span> */}
-              <span>%</span>
-            </span>
-          </div>
-
-          <div className="flex justify-between font-bold text-lg mb-3">
-            <div className="flex items-center gap-2">
-              <span>ยอดรวม : </span>
-            </div>
-            <span>บาท</span>
-            {/* <span>{formatNumber(totalAddVat)} บาท</span> */}
-          </div>
-        </div>
+            <hr />
+          </>
+        )}
       </div>
     </div>
   );

@@ -12,14 +12,22 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { Signature } from "lucide-react";
+import { ApiConfig } from "~/api/config";
 
-export function SignatureDocument() {
+export function SignatureDocument({
+  value,
+  onChange,
+}: {
+  value?: string;
+  onChange: (val: string | null) => void;
+}) {
   const [goal, setGoal] = React.useState(350);
 
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = React.useState(false);
   const [hasSignature, setHasSignature] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
     const canvas = canvasRef.current;
@@ -90,17 +98,35 @@ export function SignatureDocument() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     setHasSignature(false);
-  };
 
+    onChange(null);
+  };
   const saveSignature = async () => {
     const canvas = canvasRef.current;
     if (!canvas || !hasSignature) return;
 
     setIsSaving(true);
 
-    const signatureData = canvas.toDataURL("image/png");
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
 
-    setIsSaving(false);
+      const formData = new FormData();
+      formData.append("file", blob, "signature.png");
+
+      try {
+        const res = await ApiConfig.post(`/upload`, formData);
+        const fileUrl = res.data?.url ?? null;
+
+        // สำคัญที่สุด !!!
+        onChange(fileUrl);
+
+        setIsSaving(false);
+        setOpen(false);
+      } catch (err) {
+        console.error(err);
+        setIsSaving(false);
+      }
+    }, "image/png");
   };
 
   const formatAmount = (amount: number) => {
@@ -119,12 +145,13 @@ export function SignatureDocument() {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <div>
+        <div className="w-full ">
           <button
             type="button"
-            className="flex items-center gap-2 px-20 py-3 border text-black text-lg font-semibold rounded-sm transition-all hover:shadow-sm transform"
+            onClick={() => setOpen(true)}
+            className="flex items-center gap-2 p-1.5 w-full justify-center border text-black text-sm font-semibold rounded-sm transition-all hover:shadow-sm transform"
           >
             <Signature />
             เซ็นต์ลายเซ็นต์
@@ -154,8 +181,6 @@ export function SignatureDocument() {
                   <div className="border-1 border-gray-300 rounded-lg bg-white relative">
                     <canvas
                       ref={canvasRef}
-                      width={600}
-                      height={200}
                       onMouseDown={startDrawing}
                       onMouseMove={draw}
                       onMouseUp={stopDrawing}
@@ -163,7 +188,7 @@ export function SignatureDocument() {
                       onTouchStart={startDrawing}
                       onTouchMove={draw}
                       onTouchEnd={stopDrawing}
-                      className="w-full cursor-crosshair touch-none"
+                      className=" cursor-crosshair touch-none"
                     />
                   </div>
                   <div className="flex justify-center gap-4">
