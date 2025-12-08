@@ -10,7 +10,10 @@ export function QuotationMock({
   makeImage?: any;
   approvedImage?: any;
 }) {
-  const resultTotal = product.reduce((sum: any, p: any) => sum + p.quantity, 0);
+  const resultTotal = product?.reduce(
+    (sum: any, p: any) => sum + p.quantity,
+    0
+  );
 
   return (
     <div className="px-5 text-[#333] font-sans w-full mx-auto">

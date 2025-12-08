@@ -32,7 +32,7 @@ interface GlobalFormFieldProps {
     | "custom";
   placeholder?: any;
   options?: { label: string; value: string }[];
-  view?: boolean; // true = view mode
+  view?: string; // true = view mode
   customeOnValue?: any;
   heightTextRow?: any;
   customControl?: any;
@@ -42,6 +42,7 @@ interface GlobalFormFieldProps {
 
 export function GlobalFormField({
   control,
+  // ref,
   name,
   label,
   defaultValueLabel,
@@ -54,7 +55,7 @@ export function GlobalFormField({
   iconFront,
   iconBack,
   heightTextRow = 2,
-  view = false,
+  view = "create",
   customControl,
 }: GlobalFormFieldProps) {
   return (
@@ -69,7 +70,7 @@ export function GlobalFormField({
 
           {/*   VIEW MODE  */}
 
-          {view ? (
+          {view === "view" ? (
             <div className="text-sm w-full">
               {type === "date"
                 ? formatDateFull(field.value)
@@ -77,7 +78,7 @@ export function GlobalFormField({
             </div>
           ) : (
             <FormControl>
-              <>
+              <div>
                 {/* Input / Number */}
                 {(type === "input" || type === "number") && (
                   <Input
@@ -151,9 +152,9 @@ export function GlobalFormField({
                     />
                     <button
                       type="button"
-                      onClick={() =>
-                        document.getElementById(`${name}-file`)?.click()
-                      }
+                      // onClick={() =>
+                      //   document.getElementById(`${name}-file`)?.click()
+                      // }
                       className="flex items-center gap-2 hover:text-gray-800 cursor-pointer"
                     >
                       <ImageUp className="h-5 w-5" />
@@ -171,7 +172,7 @@ export function GlobalFormField({
                 )}
 
                 {type === "custom" && customControl(field)}
-              </>
+              </div>
             </FormControl>
           )}
         </FormItem>

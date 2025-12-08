@@ -26,7 +26,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { OrderProvider } from "~/hooks/order/order";
 import { ListProduct } from "./components/product-select";
 import { DetailProduct } from "./components/product-detail";
-import { QuotationMock } from "~/components/modules/order/components/template";
+import { QuotationMock } from "./components/template";
 
 export default function CreateOrder() {
   const navigate = useNavigate();
@@ -178,6 +178,8 @@ export default function CreateOrder() {
           <div className="flex flex-wrap gap-6 justify-between w-full">
             <div className="w-full md:w-1/2 md:order-1">
               <OrderForm
+                isEdit={false}
+                viewMode={false}
                 form={formCreate}
                 initialData={initData.initialOrderFormData}
                 Price={Price}

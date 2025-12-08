@@ -37,15 +37,16 @@ import { statusOptions } from "~/initData/product-init-data";
 import { GlobalFormField } from "~/components/shared/global-formField";
 
 import { CustomerSection } from "../customerSection";
+import { cn } from "~/lib/utils";
 
 export const OrderForm: React.FC<OrderFormProps> = ({
   form,
   Price,
   order,
-
-  // totalVat,
+  isEdit,
   viewMode,
   products,
+  setProductsSelected,
   onChangeProducts,
 }) => {
   const customerPaginate = useCustomerPaginate;
@@ -103,9 +104,9 @@ export const OrderForm: React.FC<OrderFormProps> = ({
     return d;
   }, [expireDate]);
 
-  const { totalVat, totalPrice } = calculateTotals(products);
+  const { totalVat, totalPrice } = calculateTotals(products ?? []);
 
-  const discountPrice = products?.reduce(
+  const discountPrice = (products ?? [])?.reduce(
     (sum, p) => sum + (p.discountPrice ?? 0),
     0
   );
@@ -120,11 +121,25 @@ export const OrderForm: React.FC<OrderFormProps> = ({
           : 0; // ไม่มีเลย
 
   // 2) ยอดสุทธิหลังหักส่วนลด
-  const resultTotal = products.reduce((sum, p) => sum + p.quantity, 0);
+  const resultTotal = (products ?? []).reduce((sum, p) => sum + p.quantity, 0);
+
+  let view = "create"; // ค่า default
+
+  if (viewMode && !isEdit) {
+    view = "view";
+  }
+
   const finalPrice = totalPrice - appliedDiscount;
 
   return (
-    <Card className="p-6 ">
+    <div
+      className={cn(
+        "flex flex-col gap-6 p-8 bg-card text-card-foreground rounded-xl border shadow-sm", // ใช้ทุกกรณี
+        !viewMode ||
+          (isEdit &&
+            "p-6 bg-card text-card-foreground rounded-xl border shadow-sm")
+      )}
+    >
       <h3 className="font-semibold text-xl">ข้อมูลออเดอร์</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <GlobalFormField
@@ -132,7 +147,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
           name="docName"
           label="ชื่อออเดอร์"
           type="input"
-          view={viewMode}
+          view={view}
           placeholder="กรอกชื่อออเดอร์"
         />
 
@@ -141,7 +156,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
           name="company"
           label="บริษัท (Company)"
           type="select"
-          view={viewMode}
+          view={view}
           placeholder="เลือกประเภทเอกสาร"
           options={notationType}
         />
@@ -151,7 +166,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
           name="notationType"
           label="ประเภทเอกสาร"
           type="select"
-          view={viewMode}
+          view={view}
           defaultValueLabel="quotation"
           placeholder="เลือกประเภทเอกสาร"
           options={notationType}
@@ -164,7 +179,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
             name="saler"
             label="ผู้ขาย"
             type="select"
-            view={viewMode}
+            view={view}
             defaultValueLabel="quotation"
             placeholder="เลือกผู้ขาย"
             options={[]}
@@ -202,7 +217,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
           name="startDate"
           label="วันที่สั่งซื้อออเดอร์"
           type="date"
-          view={viewMode}
+          view={view}
           placeholder="เลือกวันที่"
           options={[]}
           disabled={(d: any) => {
@@ -217,7 +232,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
           label="วันที่หมดอายุ"
           type="date"
           placeholder="เลือกวันที่"
-          view={viewMode}
+          view={view}
           disabled={(d: any) => {
             const dd = new Date(d);
             dd.setHours(0, 0, 0, 0);
@@ -231,7 +246,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
             name="docNo"
             label="หมายเลขเอกสาร"
             type="input"
-            view={viewMode}
+            view={view}
             placeholder="กรอกชื่อออเดอร์"
             iconBack={
               <RefreshCcw className="mt-0.5 w-3.5 h-3.5 hover:text-gray-500" />
@@ -255,8 +270,12 @@ export const OrderForm: React.FC<OrderFormProps> = ({
       <h1 className="font-semibold text-xl">รายการสินค้า</h1>
       <OrderProvider>
         <ListProduct
-          products={products}
-          onChangeProducts={onChangeProducts}
+          isEdit={isEdit}
+          products={products ?? []}
+          onChangeProducts={(items) => {
+            setProductsSelected?.(items);
+            onChangeProducts?.(items);
+          }}
           productDetails={productDetails as any}
         />
       </OrderProvider>
@@ -267,7 +286,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
         <GlobalFormField
           control={form.control}
           name="discount"
-          view={viewMode}
+          view={view}
           label="ส่วนลด"
           type="input"
           placeholder="0"
@@ -276,7 +295,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
         <GlobalFormField
           control={form.control}
           name="discountType"
-          view={viewMode}
+          view={view}
           label="ประเภทเหตุผลส่วนลด"
           type="select"
           placeholder="เลือกเหตุผลส่วนลด"
@@ -296,7 +315,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
         control={form.control}
         name="discountNote"
         label="หมายเหตุ"
-        view={viewMode}
+        view={view}
         type="textArea"
         placeholder="ระบุหมายเหตุ..."
         options={statusOptions}
@@ -306,7 +325,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
         control={form.control}
         name="discountStep"
         label="ส่วนลดขั้นบันได"
-        view={true}
+        view={"view"}
         placeholder="ระบุหมายเหตุ..."
         options={statusOptions}
       />
@@ -340,7 +359,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
       <h1 className="font-semibold text-xl">การชำระเงินและเงื่อนไข</h1>
       <div className="grid grid-cols-2 gap-4">
         <GlobalFormField
-          view={viewMode}
+          view={view}
           control={form.control}
           name="vat"
           label="ภาษีมูลค่าเพิ่ม"
@@ -350,7 +369,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
         />
 
         <GlobalFormField
-          view={viewMode}
+          view={view}
           control={form.control}
           name="wht"
           label="ภาษีมูลหัก ณ ที่จ่าย"
@@ -360,7 +379,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
         />
 
         <GlobalFormField
-          view={viewMode}
+          view={view}
           control={form.control}
           name="credit"
           label="จำนวนวันเครดิต (วัน)"
@@ -370,7 +389,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
         />
 
         <GlobalFormField
-          view={viewMode}
+          view={view}
           control={form.control}
           name="currency"
           label="สกุลเงิน"
@@ -397,7 +416,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
         /> */}
       </div>
       <GlobalFormField
-        view={viewMode}
+        view={view}
         control={form.control}
         name="note"
         label="หมายเหตุ"
@@ -456,85 +475,108 @@ export const OrderForm: React.FC<OrderFormProps> = ({
 
       <h1 className="font-semibold text-xl">ส่วนเซ็นเอกสาร</h1>
 
-      <GlobalFormField
-        view={viewMode}
-        control={form.control}
-        name="seal"
-        label="ตราประทับ"
-        type="file"
-        placeholder="เลือกไฟล์ ตราประทับ..."
-      />
-
-      <div className="grid grid-cols-2 gap-6">
-        <div>
-          <h1 className="font-semibold text-xl">ผู้จัดทำ</h1>
+      {viewMode && isEdit ? (
+        <>
           <GlobalFormField
-            view={viewMode}
+            view={view}
             control={form.control}
-            name="makeSign"
-            label={<span className="py-1">อัพโหลดลายเซ็นต์</span>}
-            type="signature"
-          />{" "}
-        </div>
-        <div>
-          <h1 className="font-semibold text-xl">อนุมัติโดย</h1>
-          <GlobalFormField
-            view={viewMode}
-            control={form.control}
-            name="approvedSign"
-            label={<span className="py-1">อัพโหลดลายเซ็นต์</span>}
-            type="signature"
+            name="seal"
+            label="ตราประทับ"
+            type="file"
+            placeholder="เลือกไฟล์ ตราประทับ..."
           />
+
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <h1 className="font-semibold text-xl">ผู้จัดทำ</h1>
+              <GlobalFormField
+                view={view}
+                control={form.control}
+                name="makeSign"
+                label={<span className="py-1">อัพโหลดลายเซ็นต์</span>}
+                type="signature"
+              />{" "}
+            </div>
+            <div>
+              <h1 className="font-semibold text-xl">อนุมัติโดย</h1>
+              <GlobalFormField
+                view={view}
+                control={form.control}
+                name="approvedSign"
+                label={<span className="py-1">อัพโหลดลายเซ็นต์</span>}
+                type="signature"
+              />
+            </div>
+
+            <GlobalFormField
+              view={view}
+              control={form.control}
+              name="makeByName"
+              label="ชื่อ"
+              type="input"
+              placeholder="กรอกชื่อ"
+            />
+            <GlobalFormField
+              view={view}
+              control={form.control}
+              name="approvedByName"
+              label="ชื่อ"
+              type="input"
+              placeholder="กรอกชื่อ"
+            />
+
+            <GlobalFormField
+              view={view}
+              control={form.control}
+              name="makeByPosition"
+              label="ตำแหน่ง"
+              type="input"
+              placeholder="กรอกตำแหน่ง"
+            />
+            <GlobalFormField
+              view={view}
+              control={form.control}
+              name="approvedByPosition"
+              label="ตำแหน่ง"
+              type="input"
+              placeholder="กรอกตำแหน่ง"
+            />
+          </div>
+        </>
+      ) : (
+        <div className="grid grid-cols-3 gap-6">
+          <div>
+            <h1 className="font-semibold text-xl">ตราประทับ</h1>
+            <GlobalFormField
+              view={view}
+              control={form.control}
+              name="seal"
+              label=""
+              type="signature"
+            />{" "}
+          </div>
+          <div>
+            <h1 className="font-semibold text-xl">ผู้จัดทำ</h1>
+            <GlobalFormField
+              view={view}
+              control={form.control}
+              name="makeSign"
+              label=""
+              type="signature"
+            />{" "}
+          </div>
+          <div>
+            <h1 className="font-semibold text-xl">อนุมัติโดย</h1>
+            <GlobalFormField
+              view={view}
+              control={form.control}
+              name="approvedSign"
+              label=""
+              type="signature"
+            />
+          </div>
         </div>
-        <GlobalFormField
-          view={viewMode}
-          control={form.control}
-          name="makeByName"
-          label="ชื่อ"
-          type="input"
-          placeholder="กรอกชื่อ"
-        />
-        <GlobalFormField
-          view={viewMode}
-          control={form.control}
-          name="approvedByName"
-          label="ชื่อ"
-          type="input"
-          placeholder="กรอกชื่อ"
-        />
-
-        <GlobalFormField
-          view={viewMode}
-          control={form.control}
-          name="makeByPosition"
-          label="ตำแหน่ง"
-          type="input"
-          placeholder="กรอกตำแหน่ง"
-        />
-        <GlobalFormField
-          view={viewMode}
-          control={form.control}
-          name="approvedByPosition"
-          label="ตำแหน่ง"
-          type="input"
-          placeholder="กรอกตำแหน่ง"
-        />
-
-        {/* <GlobalFormField
-          control={form.control}
-          name="startDate"
-          label="วันที่"
-          type="date"
-          placeholder="เลือกเวลา"
-        />
-        <GlobalFormField
-          control={form.control}
-          name="startDate"
-          label="วันที่"
-          type="date"
-          placeholder="เลือกเวลา"
-        /> */}
-      </div>
-    </Card>
+      )}
+    </div>
   );
 };

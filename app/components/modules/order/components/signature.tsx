@@ -117,7 +117,6 @@ export function SignatureDocument({
         const res = await ApiConfig.post(`/upload`, formData);
         const fileUrl = res.data?.url ?? null;
 
-        // สำคัญที่สุด !!!
         onChange(fileUrl);
 
         setIsSaving(false);

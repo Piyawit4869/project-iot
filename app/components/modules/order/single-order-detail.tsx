@@ -1,6 +1,15 @@
 "use client";
 
-import { Box, Upload } from "lucide-react";
+import {
+  Activity,
+  BotMessageSquare,
+  Box,
+  FileText,
+  PenLine,
+  Save,
+  Upload,
+  X,
+} from "lucide-react";
 import { useParams } from "react-router";
 import { useOrderViewModel } from "./viewmodels/useOrderViewModel";
 import { useGetOrder } from "~/api/client/order/useGetOrder";
@@ -18,8 +27,13 @@ import { Card, CardContent } from "~/components/ui/card";
 import { OrderForm } from "./components/form/OrderForm-create";
 import { QuotationMock } from "~/components/modules/order/components/template";
 import { calculateTotals } from "./components/order-function";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ProductColumn } from "~/schemas/order/type";
+import ArrowProgress from "./components/ArrowProgress";
+import { CustomTabs } from "~/components/shared/custom-tabs";
+import { CreditZone } from "./components/credit-zone";
+import { ViewCustomerActivityLog } from "../customer/components/customer-activityLog";
+import GlobalButton from "~/components/shared/global-button";
 
 export default function SingleOrdersDetail() {
   const params = useParams();
@@ -31,11 +45,22 @@ export default function SingleOrdersDetail() {
   } = useOrderViewModel();
 
   const { data: order, isLoading: loadOrder } = useGetOrder(id);
-  const columns = useOrderColumnTable();
-  const [productsSelected, setProductsSelected] = useState<ProductColumn[]>([]);
+
+  const products = order?.orderDetails?.products;
+
+  const [productsSelected, setProductsSelected] =
+    useState<ProductColumn[]>(products);
+
+  const [isEdit, setIsEdit] = useState(false);
 
   const approvedSign = formUpdate.watch("approvedSign");
   const makeImage = formUpdate.watch("makeSign");
+
+  const cancelEdit = () => {
+    formUpdate.reset();
+    setProductsSelected(order?.orderDetails?.products ?? []);
+    setIsEdit(false);
+  };
 
   useEntityBreadcrumb({
     feature: "order",
@@ -49,15 +74,22 @@ export default function SingleOrdersDetail() {
     },
   });
 
+  useEffect(() => {
+    if (products) {
+      setProductsSelected(products);
+    }
+  }, [products]);
+
   return (
     <div className="flex flex-col w-full space-y-8 p-8">
       <TabControl
         backpath="/orders"
         title={`ดูรายละเอียดออเดอร์ ${order?.docName || ""}`}
         buttons={[
+          // ส่งออก (ยัง disabled อยู่)
           <Button
             form="orders"
-            key={"export"}
+            key="export"
             type="submit"
             className="bg-[#737373]"
             onClick={() => {
@@ -69,12 +101,37 @@ export default function SingleOrdersDetail() {
           >
             <Upload /> ส่งออก
           </Button>,
-          // <Button form="orders" key={"close order"} type="submit">
-          //   <X />
-          //   ปิดคำสั่งซื้อ
-          // </Button>,
+
+          isEdit && (
+            <div>
+              <Button key="cancel" className="mr-3" onClick={cancelEdit}>
+                <X />
+                ยกเลิก
+              </Button>
+              <Button
+                key="save-order"
+                form="orders"
+                onClick={() => setIsEdit(false)}
+              >
+                <Save />
+                บันทึก
+              </Button>
+            </div>
+          ),
+
+          !isEdit && (
+            <Button key="edit" onClick={() => setIsEdit(true)}>
+              <PenLine />
+              แก้ไข
+            </Button>
+          ),
         ]}
       />
+
+      <div className="mb-4">
+        {" "}
+        <ArrowProgress />{" "}
+      </div>
 
       <div className="flex flex-col md:flex-row gap-4">
         <div className="w-full md:w-1/2 md:order-1">
@@ -82,13 +139,15 @@ export default function SingleOrdersDetail() {
             <SkeletonLoading className="min-h-[720px]" />
           ) : (
             <OrderDetail
+              isEdit={isEdit}
               isLoading={loadOrder}
               form={formUpdate}
               onSubmit={onUpdate}
               initialData={initData.initialOrderFormData}
               order={order}
-              products={[]}
-              onChangeProducts={() => []}
+              products={products}
+              productsSelected={productsSelected}
+              setProductsSelected={setProductsSelected}
             />
           )}
         </div>
@@ -100,21 +159,53 @@ export default function SingleOrdersDetail() {
               <SkeletonLoading className="min-h-[120px]" />
             </>
           ) : (
-            <Card className="p-6  w-full ">
-              <div className="flex flex-row gap-3">
-                {" "}
-                <span className="font-semibold text-xl">ข้อมูลออเดอร์</span>
-                <Box />
-              </div>
-
-              <CardContent className="p-0 px-0">
-                <div className="w-full">
-                  {" "}
-                  <QuotationMock
-                    data={formUpdate.getValues()}
-                    product={productsSelected}
-                    makeImage={makeImage}
-                    approvedImage={approvedSign}
+            <Card className="p-6 w-full ">
+              <CardContent className="p-0 px-0 ">
+                <div className="flex justify-end items-end">
+                  <CustomTabs
+                    listClassName="self-end"
+                    defaultValue="details"
+                    items={[
+                      {
+                        key: "details",
+                        label: "รายละเอียดสินค้า",
+                        icon: <FileText className="w-4 h-4" />,
+                        content: (
+                          <div className="p-2">
+                            <div className="flex flex-row gap-3">
+                              <span className="font-bold text-xl">
+                                ตัวอย่างใบเสนอราคา
+                              </span>
+                              <Box />
+                            </div>
+                            {/* <ViewOrderDetail order={order} /> */}
+                            <QuotationMock
+                              data={formUpdate.getValues()}
+                              product={productsSelected || []}
+                              makeImage={makeImage}
+                              approvedImage={approvedSign}
+                            />
+                          </div>
+                        ),
+                      },
+                      {
+                        key: "active",
+                        label: "บันทึกกิจกรรม",
+                        icon: <Activity className="w-4 h-4" />,
+                        content: (
+                          <>
+                            <div className="p-2">
+                              <div className="flex flex-row gap-3">
+                                <span className="font-bold text-xl">
+                                  บันทึกกิจกรรม
+                                </span>
+                              </div>
+                            </div>
+                            <ViewCustomerActivityLog />
+                          </>
+                        ),
+                      },
+                    ]}
                   />
                 </div>
               </CardContent>

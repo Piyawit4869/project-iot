@@ -93,6 +93,33 @@ export const useOrderSetup = () => {
   });
 
   const { isSubmitting: isCreating } = formCreate.formState;
+
+  const defaultValues = {
+    active: data?.active ?? true,
+    branchId: data?.branchId ?? null,
+    suppliers: data?.suppliers ?? null,
+    arrivalDate: data?.arrivalDate ?? null,
+    orderDate: data?.orderDate ?? null,
+    shipping: data?.shipping ?? null,
+    startDate: data?.startDate ?? new Date().toISOString(),
+    expireDate: data?.expireDate ?? null,
+    note: data?.note ?? null,
+    trackingNo: data?.trackingNo ?? null,
+    refCode: data?.refCode ?? null,
+    docName: data?.docName ?? null,
+    docNo: data?.docNo ?? null,
+    notationType: data?.notationType ?? "quotation",
+    discount: data?.discount ?? 0,
+    vat: data?.vat ?? 0,
+    wht: data?.wht ?? 0,
+    orderType: "quotation",
+    currency: "THB" as const, // <-- แก้ตรงนี้
+    customerId: data?.customerId ?? null,
+    orderDetails: {
+      products: data?.orderDetails?.products ?? [],
+    },
+  };
+
   const formUpdate = useForm<OrderFormValues>({
     resolver: zodResolver(orderFormSchema) as Resolver<OrderFormValues>,
     mode: "onSubmit",

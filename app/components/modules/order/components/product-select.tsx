@@ -29,9 +29,12 @@ export function ListProduct({
   products,
   productDetails,
   onChangeProducts,
+  isEdit,
 }: {
   productDetails: ProductColumn[];
   products: ProductColumn[];
+  setProductsSelected?: any;
+  isEdit?: boolean;
   onChangeProducts: (items: ProductColumn[]) => void;
 }) {
   const { data: getProducts, isLoading } = useGetProducts();
@@ -50,7 +53,6 @@ export function ListProduct({
     }));
   }, [getProducts]);
 
-  // ❗ formOrder ใช้แค่ฟิลด์อื่น ๆ — ไม่ใช้ควบคุม products
   const formOrder = useForm<any>({
     mode: "onSubmit",
     defaultValues: {
@@ -65,16 +67,13 @@ export function ListProduct({
       wht: 0,
       customerId: "",
       orderDetail: {
-        products: [], // ใช้เก็บเฉย ๆ ถ้าต้อง submit form
+        products: [],
       },
     },
   });
 
-  const displayProducts =
-    (productDetails?.length ?? 0) > 0 ? productDetails : products;
-  /** ------------------------------
-   *  แก้ตรงนี้เต็มๆ → updateQuantity ใช้ products (props)
-   *  ------------------------------ */
+  // const displayProducts = isEdit ? products : (productDetails ?? []);
+
   const updateQuantity = (index: number, newQty: number) => {
     const qty = Math.max(1, newQty);
 
@@ -83,10 +82,9 @@ export function ListProduct({
       return product;
     });
 
-    // อัปเดต UI
+    onChangeProducts;
     onChangeProducts(updatedProducts);
 
-    // sync ไป form ถ้าต้องใช้ตอน submit
     formOrder.setValue("orderDetail.products", updatedProducts);
   };
 
@@ -125,12 +123,13 @@ export function ListProduct({
     formOrder.setValue("orderDetail.products", updatedProducts);
   };
 
+  const showBtn = !productDetails || isEdit;
   // const discountPrice = products.reduce((sum, p) => sum + p.discountPrice, 0);
 
   return (
     <div className="gap-4">
       <div className="flex flex-col gap-2">
-        {!productDetails && (
+        {showBtn && (
           <>
             <Label className="font-semibold">เลือกรายการสินค้า</Label>
             <SingleSelectOnModalProduct
@@ -140,7 +139,7 @@ export function ListProduct({
           </>
         )}
 
-        {displayProducts.length > 0 && (
+        {products.length > 0 && (
           <>
             <div className={productDetails ? "productDetails" : "mt-6"}>
               <div className="grid grid-cols-[1fr_150px_100px_120px] items-center border-b border-gray-200">
@@ -159,7 +158,7 @@ export function ListProduct({
               </div>
 
               <div className="mt-6 flex flex-col gap-4 overflow-y-auto">
-                {displayProducts.map((p, i) => {
+                {products.map((p, i) => {
                   const prod =
                     getProducts?.find(
                       (prod: ProductType) => prod.id === p.id
@@ -192,7 +191,7 @@ export function ListProduct({
 
                         {/* Quantity */}
                         <div className="flex items-center justify-center gap-2 ml-4">
-                          {!productDetails && (
+                          {showBtn && (
                             <button
                               type="button"
                               onClick={() =>
@@ -221,7 +220,7 @@ export function ListProduct({
                             />
                           )}
 
-                          {!productDetails && (
+                          {showBtn && (
                             <button
                               type="button"
                               onClick={() =>
@@ -244,7 +243,7 @@ export function ListProduct({
                         </div>
                       </div>
 
-                      {!productDetails && (
+                      {showBtn && (
                         <div className="flex items-center justify-end">
                           <button
                             onClick={() => handleRemove(i)}
