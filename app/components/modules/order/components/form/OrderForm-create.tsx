@@ -38,6 +38,7 @@ import { GlobalFormField } from "~/components/shared/global-formField";
 
 import { CustomerSection } from "../customerSection";
 import { cn } from "~/lib/utils";
+import { useGetAllUsers } from "~/api/client/user";
 
 export const OrderForm: React.FC<OrderFormProps> = ({
   form,
@@ -51,6 +52,8 @@ export const OrderForm: React.FC<OrderFormProps> = ({
 }) => {
   const customerPaginate = useCustomerPaginate;
   const [search, setSearch] = React.useState("");
+
+  const { data: saleData } = useGetAllUsers("sale");
 
   const debouncedSearch = useDebounce(search, 500);
   const { data, isLoading } = customerPaginate({
@@ -178,11 +181,82 @@ export const OrderForm: React.FC<OrderFormProps> = ({
             control={form.control}
             name="saler"
             label="ผู้ขาย"
-            type="select"
+            type="custom"
             view={view}
             defaultValueLabel="quotation"
             placeholder="เลือกผู้ขาย"
-            options={[]}
+            customControl={(field: any) => (
+              <Select
+                {...field}
+                value={field.value ?? ""}
+                disabled={isLoading}
+                onValueChange={(val) => {
+                  field.onChange(val);
+                }}
+              >
+                <SelectTrigger className="w-full h-5 py-5">
+                  <SelectValue
+                    placeholder={
+                      isLoading ? (
+                        <>
+                          <Hourglass /> กำลังโหลดรายชื่อ
+                        </>
+                      ) : (
+                        <>
+                          <User /> เลือกผู้ขาย
+                        </>
+                      )
+                    }
+                  />
+                </SelectTrigger>
+
+                <SelectContent>
+                  {/* SEARCH BOX */}
+                  <div className="p-2">
+                    <input
+                      type="input"
+                      placeholder="ค้นหาลูกค้าด้วยชื่อ"
+                      value={search}
+                      onChange={(e) => setSearch?.(e.target.value)}
+                      className="w-full px-2 py-2 border rounded"
+                    />
+                    <Separator className="my-3" />
+                  </div>
+
+                  {saleData && saleData.length > 0 ? (
+                    saleData?.map((item: any) => {
+                      const fullName =
+                        [
+                          item.profile?.prefix,
+                          item.profile?.firstName,
+                          item.profile?.lastName,
+                        ]
+                          .filter(Boolean)
+                          .join(" ") || item.profile?.name;
+
+                      return (
+                        <SelectItem key={item.id} value={item.id}>
+                          <div className="flex items-center gap-3">
+                            <GlobalImage
+                              src={item?.profile?.imageUrl || ""}
+                              fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${fullName}`}
+                              className="w-7 h-7 rounded-full"
+                            />
+                            <div className="flex flex-col items-start">
+                              <span>{fullName}</span>
+                            </div>
+                          </div>
+                        </SelectItem>
+                      );
+                    })
+                  ) : (
+                    <div className="px-4 py-5 text-center text-gray-500">
+                      ไม่พบผู้ขาย กรุณาลองใหม่อีกครั้ง
+                    </div>
+                  )}
+                </SelectContent>
+              </Select>
+            )}
           />
         </div>
 

@@ -14,7 +14,7 @@ export const TagsCard = ({
   className,
 }: {
   loading: boolean;
-  isEdit: boolean;
+  isEdit?: boolean;
   tags: any;
   className: string;
   form: UseFormReturn<CustomerValues>;

@@ -42,9 +42,9 @@ export const fetchUserPagination = async (params: {
   }
 };
 
-export const fetchGetAllUsers = async () => {
+export const fetchGetAllUsers = async (params?: { role?: string | null }) => {
   try {
-    const { data } = await ApiConfig.get(`/crud/users`);
+    const { data } = await ApiConfig.get(`/crud/users`, { params });
     return data;
   } catch (error) {
     return error;

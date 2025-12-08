@@ -127,8 +127,8 @@ const statusTh: Record<string, string> = {
   churned: "ยกเลิก",
 };
 
-const displayStatus = (s: CustomerStatusValue | null) =>
-  s ? statusTh[s] ?? s : "ยังไม่มีข้อมูล";
+const displayStatus = (s: CustomerStatusValue | null | undefined) =>
+  s ? (statusTh[s] ?? s) : "ยังไม่มีข้อมูล";
 
 const displayConsent = (b: boolean | null) =>
   b === null ? "ยังไม่มีข้อมูล" : b ? "ยินยอม" : "ไม่ยินยอม";
@@ -186,7 +186,7 @@ export function AiGetDataFromChat({
     },
     {
       label: "ยินยอมข้อมูลส่วนบุคคล",
-      value: displayConsent(data?.consentPii),
+      value: displayConsent(data?.consentPii ?? false),
       icon: <ShieldCheck />,
     },
     { label: "เลขผู้เสียภาษี", value: data?.taxId, icon: <FileText /> },
@@ -222,7 +222,9 @@ export function AiGetDataFromChat({
     <Card>
       <CardHeader>
         <div className="flex  items-center ">
-          <CardTitle className="text-base font-bold">ข้อมูลจาก AI</CardTitle>
+          <CardTitle className="text-2xl font-extrabold">
+            ข้อมูลจาก AI
+          </CardTitle>
         </div>
       </CardHeader>
 
@@ -230,19 +232,22 @@ export function AiGetDataFromChat({
         <div className="space-y-3  ">
           <div className="space-y-2">
             {infoItems.map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center flex-wrap gap-2 py-1"
-              >
-                <span className="flex items-center justify-center w-5 h-5 text-muted-foreground">
-                  {item.icon}
-                </span>
-                <span className="text-md font-semibold text-foreground min-w-[120px]">
-                  {item.label}
-                </span>
-                <span className="text-md text-muted-foreground flex-1">
-                  {item.value || "ยังไม่มีข้อมูล"}
-                </span>
+              <div key={index} className="flex  flex-col flex-wrap gap-2 py-1">
+                <div className="flex flex-row gap-3">
+                  {" "}
+                  <span className="flex items-center justify-center w-5 h-5 text-muted-foreground">
+                    {item.icon}
+                  </span>
+                  <span className="text-md font-semibold text-foreground min-w-[120px]">
+                    {item.label}
+                  </span>
+                </div>
+
+                <div className="ml-10">
+                  <span className="text-md text-muted-foreground flex-1">
+                    {item.value || "ยังไม่มีข้อมูล"}
+                  </span>
+                </div>
               </div>
             ))}
           </div>

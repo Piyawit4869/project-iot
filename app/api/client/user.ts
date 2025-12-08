@@ -100,10 +100,10 @@ export const useGetUsers = (id: string) =>
     enabled: !!id,
   });
 
-export const useGetAllUsers = () =>
+export const useGetAllUsers = (role?: string | null) =>
   useQuery({
     queryKey: ["user-all"],
-    queryFn: () => fetchGetAllUsers(),
+    queryFn: () => fetchGetAllUsers({ role }),
   });
 
 export const useGetAllUsersLimit = (isAll: boolean) =>

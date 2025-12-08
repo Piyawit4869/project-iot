@@ -1,6 +1,6 @@
 "use client";
 
-import { Link, Save, X } from "lucide-react";
+import { Bot, LayoutDashboard, Link, Save, User, X } from "lucide-react";
 
 import React from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
@@ -19,14 +19,14 @@ import { CustomerProvider } from "~/hooks/customer/useCustomerStore";
 import { TabControl } from "~/components/shared/tab-control";
 import GlobalButton from "~/components/shared/global-button";
 import { Form } from "~/components/ui/form";
-import { Card, CardContent } from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { DataTable } from "~/components/shared/data-table";
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
 import { useOrdersPaginateFilter } from "~/api/client/order/useGetOrder";
 import { FormCustomerDetailCard } from "./components/form/customer-detail-form";
 import { FormCustomerInfoCard } from "./components/form/customer-info-form";
 import { FormCustomerContact } from "./components/form/customer-contact-form";
-import { ViewCustomerDeatailCard } from "./components/view/customer-detail-view";
+import { ViewCustomerDeatailCard } from "./components/view/customer-detail-view-new";
 import { ViewCustomerInfoCard } from "./components/view/customer-info-view";
 import { ViewCustomerContact } from "./components/view/customer-contact";
 import { RelationshipCard } from "./components/relationship";
@@ -34,6 +34,11 @@ import { ViewCustomerActivityLog } from "./components/customer-activityLog";
 import { AIMessageView } from "../message/ai-message-view-modal";
 import { useOrderColumns } from "../order/components/columns";
 import { AiGetDataFromChat } from "./components/ai-getdata-from-chat";
+import { CustomTabs } from "~/components/shared/custom-tabs";
+import { NotesCard } from "./components/cardZone/NoteCard";
+import { PieChart } from "~/components/shared/charts/pie-chart";
+import { SkeletonLoading } from "~/components/shared/skeleton-loading";
+import { RemarkCard } from "./components/cardZone/RemarkCard";
 
 export default function SingDetailleCustomer() {
   const navigate = useNavigate();
@@ -49,12 +54,25 @@ export default function SingDetailleCustomer() {
   const dataFromAI = getData?.customerData;
   const columns = useOrderColumns();
   const { mutate: update, isPending } = useUpdateCustomer(id);
+  const { data: analyzeCustomer, isLoading: loadAnalyzeCustomer } =
+    useGetAnalyzeCustomer(id);
+
+  const {
+    state: {
+      customerNote,
+      fetchCustomerNote,
+      customerAISetting,
+      fetchCustomercAISetting,
+    },
+  } = useCustomerViewModel();
+
   const [isEdit, setIsEdit] = React.useState(false);
   const [AIOpen, setAIOpen] = React.useState(false);
 
   const data = customer?.profile;
   const otherName = data?.name;
   const lineName = data?.lineName;
+
   const fullName = [data?.firstName, data?.lastName]
     .filter(Boolean)
     .join(" ")
@@ -242,7 +260,7 @@ export default function SingDetailleCustomer() {
             buttons={[
               isEdit ? (
                 <div className="w-full flex flex-row flex-wrap gap-2">
-                  {/* <GlobalButton
+                  <GlobalButton
                     key="sync-ai"
                     type="button"
                     onClick={onSync}
@@ -253,7 +271,7 @@ export default function SingDetailleCustomer() {
                     label={
                       <span className="hidden sm:inline">Sync ข้อมูล AI</span>
                     }
-                  /> */}
+                  />
 
                   <GlobalButton
                     key="cancel-btn"
@@ -288,6 +306,168 @@ export default function SingDetailleCustomer() {
           />
 
           <Form {...formUpdate}>
+            <CustomTabs
+              defaultValue="dashboard"
+              items={[
+                {
+                  key: "dashboard",
+                  label: "แดชบอร์ด (สรุป) ",
+                  icon: <LayoutDashboard className="w-4 h-4" />,
+                  content: (
+                    <>
+                      <div className="flex flex-row gap-5">
+                        <div className="w-[50%] h-auto">
+                          <ViewCustomerDeatailCard
+                            customer={customer}
+                            form={formUpdate}
+                            loading={loadCustomer}
+                          />
+                        </div>
+
+                        <Card className="w-[50%]">
+                          <CardHeader>
+                            <CardTitle className="text-base font-bold">
+                              ความสัมพันธ์ลูกค้า
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-4 w-full">
+                            {loadAnalyzeCustomer ? (
+                              <>
+                                <div className="flex justify-center">
+                                  <SkeletonLoading
+                                    shape="rounded"
+                                    width="w-[190px]"
+                                    height="h-[190px]"
+                                    className="mb-10"
+                                  />
+                                </div>
+                                <SkeletonLoading />
+                                <SkeletonLoading />
+                                <SkeletonLoading />
+                                <SkeletonLoading />
+                              </>
+                            ) : (
+                              <div className="flex w-full">
+                                <PieChart initData={analyzeCustomer} />
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </div>
+                      <Card className="my-5">
+                        <div className="flex gap-2 mx-6">
+                          <span className="text-base font-bold pb-4">
+                            ออเดอร์ที่สั่งซื้อล่าสุด
+                          </span>
+                        </div>
+                        <CardContent>
+                          <DataTable
+                            offSearch
+                            offFilter
+                            queryFunction={({ pageIndex, pageSize }) =>
+                              useOrdersPaginateFilter({
+                                pageIndex,
+                                pageSize,
+                                customerId: id,
+                              })
+                            }
+                            columns={columns}
+                          />
+                        </CardContent>
+                      </Card>
+                    </>
+                  ),
+                },
+                {
+                  key: "customerDetail",
+                  label: "ข้อมูลลูกค้า",
+                  icon: <User className="w-4 h-4" />,
+                  content: (
+                    <div className="flex flex-row gap-5">
+                      <div className="w-[50%]">
+                        <ViewCustomerInfoCard
+                          customer={customer}
+                          form={formUpdate}
+                          loading={loadCustomer}
+                        />
+                      </div>
+                      <div className="w-[50%]">
+                        <ViewCustomerContact
+                          customer={customer}
+                          form={formUpdate}
+                          loading={loadCustomer}
+                        />
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  key: "dataFromAI",
+                  label: "ข้อมูลจาก AI",
+                  icon: <Bot className="w-4 h-4" />,
+                  content: (
+                    <>
+                      <AiGetDataFromChat data={dataFromAI} />
+                    </>
+                  ),
+                },
+                {
+                  key: "note",
+                  label: "บันทึกโน๊ต/กิจกรรม",
+                  icon: <Bot className="w-4 h-4" />,
+                  content: (
+                    <>
+                      <div className="flex flex-row gap-4">
+                        <div className="w-[50%]  ">
+                          <NotesCard
+                            loading={isLoading ?? false}
+                            notes={customer?.note ?? []}
+                            // isEdit={isEdit}
+                            customerNote={customerNote}
+                            fetchCustomerNote={fetchCustomerNote ?? (() => {})}
+                            className="min-h-50 h-auto"
+                          />
+                          <RemarkCard
+                            isEdit={isEdit ?? false}
+                            loading={isLoading ?? false}
+                            remark={customer?.remark || ""}
+                            form={formUpdate}
+                            className="min-h-50 h-auto mt-5"
+                          />
+                        </div>
+                        <div className="w-[50%] h-105">
+                          <ViewCustomerActivityLog className="h-full" />
+                        </div>
+                      </div>
+                      <Card className="my-5">
+                        <div className="flex gap-2 mx-6">
+                          <span className="text-base font-bold pb-4">
+                            ออเดอร์ที่เคยสั่งซื้อ
+                          </span>
+                        </div>
+                        <CardContent>
+                          <DataTable
+                            offSearch
+                            offFilter
+                            queryFunction={({ pageIndex, pageSize }) =>
+                              useOrdersPaginateFilter({
+                                pageIndex,
+                                pageSize,
+                                customerId: id,
+                              })
+                            }
+                            columns={columns}
+                          />
+                        </CardContent>
+                      </Card>
+                    </>
+                  ),
+                },
+              ]}
+            />
+          </Form>
+
+          {/* <Form {...formUpdate}>
             <form id="customer" onSubmit={formUpdate.handleSubmit(onUpdate)}>
               <div className="flex w-full gap-3 flex-col md:flex-row">
                 <div className="flex-1 flex flex-col gap-3 transition-all">
@@ -338,34 +518,12 @@ export default function SingDetailleCustomer() {
                     loading={loadCustomer}
                     isEdit={isEdit}
                   />
-                  <AiGetDataFromChat data={dataFromAI} />
+
                   <ViewCustomerActivityLog loading={loadCustomer} />
                 </div>
               </div>
             </form>
-          </Form>
-
-          <Card>
-            <div className="flex gap-2 mx-6">
-              <span className="text-base font-bold pb-4">
-                ออเดอร์ที่เคยสั่งซื้อ
-              </span>
-            </div>
-            <CardContent>
-              <DataTable
-                offSearch
-                offFilter
-                queryFunction={({ pageIndex, pageSize }) =>
-                  useOrdersPaginateFilter({
-                    pageIndex,
-                    pageSize,
-                    customerId: id,
-                  })
-                }
-                columns={columns}
-              />
-            </CardContent>
-          </Card>
+          </Form> */}
         </div>
       </CustomerProvider>
 
