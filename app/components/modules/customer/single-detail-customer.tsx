@@ -61,9 +61,15 @@ export default function SingDetailleCustomer() {
     .trim();
   const phoneContactState = formUpdate.watch("contacts.0.phone");
   const nameContactState = formUpdate.watch("contacts.0.name");
-  const isAnyFilled =
-    (!!phoneContactState?.trim() && !nameContactState?.trim()) ||
-    (!phoneContactState?.trim() && !!nameContactState?.trim());
+
+  //disable btn
+  let isAnyFilled = false;
+  if (phoneContactState && !nameContactState) {
+    isAnyFilled = true;
+  }
+  if (!phoneContactState && nameContactState) {
+    isAnyFilled = true;
+  }
 
   const { isDirty } = formUpdate.formState;
 
