@@ -136,9 +136,13 @@ export interface OrderFormProps {
   totalPrice?: number;
   isLoading?: boolean;
   totalWht?: number;
+  isEdit?: boolean;
   quantities?: ProductColumn[];
-  products: ProductColumn[];
-  onChangeProducts: (items: ProductColumn[]) => void;
+  products?: ProductColumn[];
+  viewMode?: boolean;
+  productsSelected?: ProductColumn[];
+  setProductsSelected?: any;
+  onChangeProducts?: (items: ProductColumn[]) => void;
 }
 
 export const OrderFilterFields: FilterField[] = [

@@ -61,6 +61,16 @@ export default function SingDetailleCustomer() {
     .trim();
   const phoneContactState = formUpdate.watch("contacts.0.phone");
   const nameContactState = formUpdate.watch("contacts.0.name");
+
+  //disable btn
+  let isAnyFilled = false;
+  if (phoneContactState && !nameContactState) {
+    isAnyFilled = true;
+  }
+  if (!phoneContactState && nameContactState) {
+    isAnyFilled = true;
+  }
+
   const { isDirty } = formUpdate.formState;
 
   useEntityBreadcrumb({
@@ -260,12 +270,7 @@ export default function SingDetailleCustomer() {
                     type="submit"
                     form="customer"
                     loading={isUpdating}
-                    disabled={
-                      isLoading ||
-                      isPending ||
-                      !phoneContactState?.trim() ||
-                      !nameContactState?.trim()
-                    }
+                    disabled={isLoading || isPending || isAnyFilled}
                     className="flex-1  flex items-center gap-1 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm dark:disabled:bg-transparent dark:disabled:text-white dark:disabled:border-white  dark:disabled:border-1"
                     icon={<Save />}
                     label={<span className="hidden sm:inline">บันทึก</span>}

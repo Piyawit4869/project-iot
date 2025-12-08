@@ -1,6 +1,6 @@
 "use client";
 
-import { Hourglass, ImageUp, User } from "lucide-react";
+import { Hourglass, ImageUp, RefreshCcw, User } from "lucide-react";
 import React from "react";
 import { DatePicker } from "~/components/shared/date-picker";
 import { FormTextRow } from "~/components/shared/formTextRow";
@@ -26,18 +26,27 @@ import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
 import { currencyType, notationType } from "~/initData/order-initData";
 import type { OrderFormProps } from "~/schemas/order/type";
-import { useDebounce } from "../order-function";
+import { calculateTotals, useDebounce } from "../order-function";
 import { useCustomerPaginate } from "~/api/client/customer/useCustomer";
 import { ListProduct } from "../product-select";
 import { OrderProvider } from "~/hooks/order/order";
 import { SignatureDocument } from "../signature";
+import { formatNumber } from "~/components/shared/global-format";
+import type { ProductType } from "~/schemas/order/order";
+import { statusOptions } from "~/initData/product-init-data";
+import { GlobalFormField } from "~/components/shared/global-formField";
+
+import { CustomerSection } from "../customerSection";
+import { cn } from "~/lib/utils";
 
 export const OrderForm: React.FC<OrderFormProps> = ({
   form,
   Price,
-  quantities,
-  totalVat,
+  order,
+  isEdit,
+  viewMode,
   products,
+  setProductsSelected,
   onChangeProducts,
 }) => {
   const customerPaginate = useCustomerPaginate;
@@ -51,6 +60,10 @@ export const OrderForm: React.FC<OrderFormProps> = ({
   });
 
   const customerData = data?.items;
+
+  const productDetails = order?.orderDetails?.products;
+  const orderCustomer = order?.customer as any;
+  const customerProfile = orderCustomer?.profile as any;
 
   const customerDetail = (customerId: string) => {
     const singleCustomer = customerData?.find((c: any) => c.id === customerId);
@@ -69,14 +82,11 @@ export const OrderForm: React.FC<OrderFormProps> = ({
       singleCustomer.profile.postalCode ?? ""
     );
   };
+
   // const vat = form.watch("vat");
-  const discount = form.watch("discount");
+  const discount = form.watch("discount") ?? 0;
   const startDate = form.watch("startDate");
   const expireDate = form.watch("expireDate");
-
-  // const wht = form.watch("wht");
-  // const totalNoVat = (Price ?? 0) - (discount ?? 0) - (wht ?? 0);
-  const totalAddVat = (Price ?? 0) + (totalVat ?? 0) - (discount ?? 0);
 
   const startDay = React.useMemo(() => {
     const d = new Date(startDate);
@@ -94,132 +104,85 @@ export const OrderForm: React.FC<OrderFormProps> = ({
     return d;
   }, [expireDate]);
 
+  const { totalVat, totalPrice } = calculateTotals(products ?? []);
+
+  const discountPrice = (products ?? [])?.reduce(
+    (sum, p) => sum + (p.discountPrice ?? 0),
+    0
+  );
+
+  const appliedDiscount =
+    discount > 0 && discountPrice > 0
+      ? Number(discount) + Number(discountPrice) // มีทั้งคู่ → รวม
+      : discount > 0
+        ? Number(discount) // มีแค่ discount
+        : discountPrice > 0
+          ? Number(discountPrice) // มีแค่ discountPrice
+          : 0; // ไม่มีเลย
+
+  // 2) ยอดสุทธิหลังหักส่วนลด
+  const resultTotal = (products ?? []).reduce((sum, p) => sum + p.quantity, 0);
+
+  let view = "create"; // ค่า default
+
+  if (viewMode && !isEdit) {
+    view = "view";
+  }
+
+  const finalPrice = totalPrice - appliedDiscount;
+
   return (
-    <Card className="p-6">
+    <div
+      className={cn(
+        "flex flex-col gap-6 p-8 bg-card text-card-foreground rounded-xl border shadow-sm", // ใช้ทุกกรณี
+        !viewMode ||
+          (isEdit &&
+            "p-6 bg-card text-card-foreground rounded-xl border shadow-sm")
+      )}
+    >
       <h3 className="font-semibold text-xl">ข้อมูลออเดอร์</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* <FormField
-          control={form.control}
-          name="docNo"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>เลขที่ออเดอร์</FormLabel>
-              <FormControl>
-                <Input placeholder="12345" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        /> */}
-        <FormField
+        <GlobalFormField
           control={form.control}
           name="docName"
-          render={({ field }) => (
-            <FormItem>
-              <RequiredLabel required>
-                ชื่อออเดอร์ <FormMessage />
-              </RequiredLabel>
-              <FormControl>
-                <Input placeholder="กรอกชื่อออเดอร์" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
+          label="ชื่อออเดอร์"
+          type="input"
+          view={view}
+          placeholder="กรอกชื่อออเดอร์"
         />
-        <FormField
+
+        <GlobalFormField
+          control={form.control}
+          name="company"
+          label="บริษัท (Company)"
+          type="select"
+          view={view}
+          placeholder="เลือกประเภทเอกสาร"
+          options={notationType}
+        />
+
+        <GlobalFormField
           control={form.control}
           name="notationType"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>บริษัท (Company)</FormLabel>
-              <Select
-                {...field}
-                onValueChange={field.onChange}
-                defaultValue="quotation"
-              >
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="เลือกประเภทเอกสาร" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {notationType.map((item) => (
-                    <SelectItem
-                      disabled={item.value !== "quotation"}
-                      key={item.value}
-                      value={item.value}
-                    >
-                      {item.icon}
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
+          label="ประเภทเอกสาร"
+          type="select"
+          view={view}
+          defaultValueLabel="quotation"
+          placeholder="เลือกประเภทเอกสาร"
+          options={notationType}
+          disabledItem={(item: any) => item.value !== "quotation"}
         />
-        <FormField
-          control={form.control}
-          name="notationType"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>ประเภทเอกสาร</FormLabel>
-              <Select
-                {...field}
-                onValueChange={field.onChange}
-                defaultValue="quotation"
-              >
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="เลือกประเภทเอกสาร" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {notationType.map((item) => (
-                    <SelectItem
-                      disabled={item.value !== "quotation"}
-                      key={item.value}
-                      value={item.value}
-                    >
-                      {item.icon}
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
-        />
+
         <div className="col-span-3">
-          <FormField
+          <GlobalFormField
             control={form.control}
-            name="suppliers"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>ผู้ขาย</FormLabel>
-                <Select
-                  {...field}
-                  value={field.value ?? undefined}
-                  onValueChange={field.onChange}
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="เลือกผู้ขาย" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {/* {notationType.map((item) => (
-                      <SelectItem
-                        disabled={item.value !== "quotation"}
-                        key={item.value}
-                        value={item.value}
-                      >
-                        {item.icon}
-                        {item.label}
-                      </SelectItem>
-                    ))} */}
-                  </SelectContent>
-                </Select>
-              </FormItem>
-            )}
+            name="saler"
+            label="ผู้ขาย"
+            type="select"
+            view={view}
+            defaultValueLabel="quotation"
+            placeholder="เลือกผู้ขาย"
+            options={[]}
           />
         </div>
 
@@ -249,288 +212,192 @@ export const OrderForm: React.FC<OrderFormProps> = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField
+        <GlobalFormField
           control={form.control}
           name="startDate"
-          // name="orderDate"
-          render={({ field }) => (
-            <FormItem>
-              <RequiredLabel required>
-                วันที่สั่งซื้อออเดอร์ <FormMessage />
-              </RequiredLabel>
-              <FormControl>
-                <DatePicker
-                  value={field.value}
-                  onChange={field.onChange}
-                  disabled={(d) => {
-                    const dd = new Date(d);
-                    dd.setHours(0, 0, 0, 0);
-                    return dd > endDay;
-                  }}
-                />
-              </FormControl>
-            </FormItem>
-          )}
+          label="วันที่สั่งซื้อออเดอร์"
+          type="date"
+          view={view}
+          placeholder="เลือกวันที่"
+          options={[]}
+          disabled={(d: any) => {
+            const dd = new Date(d);
+            dd.setHours(0, 0, 0, 0);
+            return dd > endDay;
+          }}
         />
-        <FormField
+        <GlobalFormField
           control={form.control}
           name="expireDate"
-          render={({ field }) => (
-            <FormItem>
-              <RequiredLabel required>
-                วันที่หมดอายุ <FormMessage />
-              </RequiredLabel>
-              <FormControl>
-                <DatePicker
-                  value={field.value}
-                  onChange={field.onChange}
-                  disabled={(d) => {
-                    const dd = new Date(d);
-                    dd.setHours(0, 0, 0, 0);
-                    return dd < startDay;
-                  }}
-                />
-              </FormControl>
-            </FormItem>
-          )}
+          label="วันที่หมดอายุ"
+          type="date"
+          placeholder="เลือกวันที่"
+          view={view}
+          disabled={(d: any) => {
+            const dd = new Date(d);
+            dd.setHours(0, 0, 0, 0);
+            return dd < startDay;
+          }}
         />
+
         <div className="col-span-2">
-          <FormField
+          <GlobalFormField
             control={form.control}
             name="docNo"
-            render={({ field }) => (
-              <FormItem>
-                <RequiredLabel required>
-                  หมายเลขเอกสาร <FormMessage />
-                </RequiredLabel>
-                <FormControl>
-                  <Input placeholder="กรอกชื่อออเดอร์" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
+            label="หมายเลขเอกสาร"
+            type="input"
+            view={view}
+            placeholder="กรอกชื่อออเดอร์"
+            iconBack={
+              <RefreshCcw className="mt-0.5 w-3.5 h-3.5 hover:text-gray-500" />
+            }
           />
         </div>
       </div>
 
-      <Card className="w-full p-4.5">
-        <h3 className="font-semibold text-xl">ข้อมูลลูกค้า</h3>
-        <div className="grid grid-cols-1 gap-3 mt-1">
-          <FormField
-            control={form.control}
-            name="customerId"
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <RequiredLabel required>
-                    เลือกลูกค้า <FormMessage />
-                  </RequiredLabel>
-                  <FormControl>
-                    <Select
-                      {...field}
-                      disabled={isLoading}
-                      onValueChange={(val) => {
-                        field.onChange(val);
-                        customerDetail(val);
-                      }}
-                    >
-                      <SelectTrigger className="w-full h-12 py-6">
-                        <SelectValue
-                          placeholder={
-                            isLoading ? (
-                              <>
-                                <Hourglass />
-                                กำลังโหลดรายชื่อลูกค้า
-                              </>
-                            ) : (
-                              <>
-                                <User />
-                                เลือกลูกค้า
-                              </>
-                            )
-                          }
-                        />
-                      </SelectTrigger>
-
-                      <SelectContent>
-                        <div className="p-2">
-                          <input
-                            type="text"
-                            placeholder="ค้นหาลูกค้าด้วยชื่อ"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className="w-full px-2 py-2 border rounded"
-                          />
-                          <Separator className="my-3" />
-                        </div>
-
-                        {customerData && customerData.length > 0 ? (
-                          customerData.map((item: any) => {
-                            const fullName =
-                              [
-                                item.profile?.prefix,
-                                item.profile?.firstName,
-                                item.profile?.lastName,
-                              ]
-                                .filter(Boolean)
-                                .join(" ") || item.profile?.name;
-
-                            return (
-                              <SelectItem key={item.id} value={item.id}>
-                                <div className="flex items-center gap-3 w-full p-0.5">
-                                  <GlobalImage
-                                    src={item?.profile?.imageUrl || ""}
-                                    fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${
-                                      fullName || ""
-                                    }`}
-                                    className="w-10 h-10 rounded-full"
-                                  />
-                                  <div className="flex flex-col items-start ">
-                                    <span>{fullName}</span>
-                                    <span className="text-gray-500 text-sm">
-                                      {item?.profile?.lineName
-                                        ? `ไอดีไลน์ : ${item.profile.lineName}`
-                                        : "ไอดีไลน์ : -"}
-                                    </span>
-                                  </div>
-                                </div>
-                              </SelectItem>
-                            );
-                          })
-                        ) : (
-                          <div className="px-4 py-5 text-center text-gray-500">
-                            ไม่พบลูกค้า กรุณาลองใหม่อีกครั้ง
-                          </div>
-                        )}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-              );
-            }}
-          />
-        </div>
-        <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormTextRow
-            control={form.control}
-            name="customer.companyName"
-            label="ชื่อบริษัท"
-          />
-          <FormTextRow
-            control={form.control}
-            name="customer.customerType"
-            label="ประเภทผู้ติดต่อ"
-          />
-          <FormTextRow
-            control={form.control}
-            name="customer.taxID"
-            label="เลขประจำตัวผู้เสียภาษี"
-          />
-          <FormTextRow
-            control={form.control}
-            name="customer.taxID"
-            label="ผู้ติดต่อ (Contact Person)"
-          />
-          <FormTextRow
-            control={form.control}
-            name="customer.address"
-            label="ที่อยู่"
-          />
-          <FormTextRow
-            control={form.control}
-            name="customer.postalCode"
-            label="รหัสไปรษณีย์"
-          />
-          <FormTextRow
-            control={form.control}
-            name="customer.email"
-            label="อีเมล"
-          />
-          <FormTextRow
-            control={form.control}
-            name="customer.phone"
-            label="เบอร์โทรศัพท์"
-          />
-        </div>
-      </Card>
+      <CustomerSection
+        mode={viewMode ? "view" : "create"}
+        form={form}
+        customerData={viewMode ? customerProfile : customerData}
+        isLoading={isLoading}
+        search={search}
+        setSearch={setSearch}
+        customerDetail={customerDetail}
+      />
 
       <hr />
 
       <h1 className="font-semibold text-xl">รายการสินค้า</h1>
       <OrderProvider>
-        <ListProduct products={products} onChangeProducts={onChangeProducts} />
+        <ListProduct
+          isEdit={isEdit}
+          products={products ?? []}
+          onChangeProducts={(items) => {
+            setProductsSelected?.(items);
+            onChangeProducts?.(items);
+          }}
+          productDetails={productDetails as any}
+        />
       </OrderProvider>
 
       <hr />
+      <h1 className="font-semibold text-xl">ส่วนลด</h1>
+      <div className="grid grid-cols-2 gap-4">
+        <GlobalFormField
+          control={form.control}
+          name="discount"
+          view={view}
+          label="ส่วนลด"
+          type="input"
+          placeholder="0"
+        />
+
+        <GlobalFormField
+          control={form.control}
+          name="discountType"
+          view={view}
+          label="ประเภทเหตุผลส่วนลด"
+          type="select"
+          placeholder="เลือกเหตุผลส่วนลด"
+          options={statusOptions}
+        />
+
+        {/* <GlobalFormField
+          control={form.control}
+          name="discountCode"
+          label="โค้ดส่วนลด"
+          type="input"
+          placeholder="SALE2026"
+          options={statusOptions}
+        /> */}
+      </div>
+      <GlobalFormField
+        control={form.control}
+        name="discountNote"
+        label="หมายเหตุ"
+        view={view}
+        type="textArea"
+        placeholder="ระบุหมายเหตุ..."
+        options={statusOptions}
+      />
+
+      <GlobalFormField
+        control={form.control}
+        name="discountStep"
+        label="ส่วนลดขั้นบันได"
+        view={"view"}
+        placeholder="ระบุหมายเหตุ..."
+        options={statusOptions}
+      />
+
+      <hr />
+      {/* -----------------------  Summary ----------------------- */}
+      <div className="p-4 mt-3 w-full rounded-2xl bg-gray-50 shadow-inner">
+        <h3 className="font-semibold text-lg mb-4">ราคาส่วนลด</h3>
+
+        <div className="flex justify-between mb-3">
+          <span>ราคาเดิม :</span>
+          <span>{resultTotal || 0} ชิ้น</span>
+        </div>
+
+        <div className="flex justify-between mb-3">
+          <span>ส่วนลด :</span>
+          <span>{discountPrice || 0} บาท</span>
+        </div>
+        <div className="flex justify-between mb-3">
+          <span>ส่วนลดเพิ่มเติม :</span>
+          <span>{discount || 0} บาท</span>
+        </div>
+
+        <div className="flex justify-between font-bold text-lg mb-3">
+          <span>ราคาหลังหักส่วนลด :</span>
+          <span>{formatNumber(finalPrice)} บาท</span>
+        </div>
+      </div>
+      <hr />
 
       <h1 className="font-semibold text-xl">การชำระเงินและเงื่อนไข</h1>
-      <div className="grid grid-cols-2 gap-6">
-        <FormField
+      <div className="grid grid-cols-2 gap-4">
+        <GlobalFormField
+          view={view}
           control={form.control}
-          name="discount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>ภาษีมูลค่าเพิ่ม</FormLabel>
-              <FormControl>
-                <Input placeholder="0" {...field} value={field.value ?? ""} />
-              </FormControl>
-            </FormItem>
-          )}
+          name="vat"
+          label="ภาษีมูลค่าเพิ่ม"
+          type="input"
+          placeholder="0"
+          options={statusOptions}
         />
-        <FormField
+
+        <GlobalFormField
+          view={view}
           control={form.control}
-          name="discount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>ภาษีมูลหัก ณ ที่จ่าย</FormLabel>
-              <FormControl>
-                <Input placeholder="0" {...field} value={field.value ?? ""} />
-              </FormControl>
-            </FormItem>
-          )}
+          name="wht"
+          label="ภาษีมูลหัก ณ ที่จ่าย"
+          type="input"
+          placeholder="0"
+          options={statusOptions}
         />
-        <FormField
+
+        <GlobalFormField
+          view={view}
           control={form.control}
-          name="discount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>จำนวนวันเครดิต (วัน)</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="30 วัน"
-                  {...field}
-                  value={field.value ?? ""}
-                />
-              </FormControl>
-            </FormItem>
-          )}
+          name="credit"
+          label="จำนวนวันเครดิต (วัน)"
+          type="number"
+          placeholder="30 วัน"
+          options={statusOptions}
         />
-        <FormField
+
+        <GlobalFormField
+          view={view}
           control={form.control}
           name="currency"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>สกุลเงิน</FormLabel>
-              <Select
-                value={field.value}
-                onValueChange={field.onChange}
-                defaultValue="THB"
-              >
-                <FormControl>
-                  <SelectTrigger className="w-full ">
-                    <SelectValue placeholder="เลือกสกุลเงิน" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {currencyType?.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.icon} {item.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
+          label="สกุลเงิน"
+          type="number"
+          placeholder="THB"
+          options={currencyType}
         />
+
         {/* <FormField
           control={form.control}
           name="discount"
@@ -547,173 +414,169 @@ export const OrderForm: React.FC<OrderFormProps> = ({
             </FormItem>
           )}
         /> */}
-        <FormField
-          control={form.control}
-          name="note"
-          render={({ field }) => (
-            <FormItem className="col-span-2">
-              <FormLabel>หมายเหตุ</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="ระบุหมายเหตุ..."
-                  value={field.value || ""}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
       </div>
-
-      <h1 className="font-semibold text-xl">ส่วนเซ็นเอกสาร</h1>
-      <FormField
+      <GlobalFormField
+        view={view}
         control={form.control}
         name="note"
-        render={({ field }) => (
-          <FormItem className="col-span-2">
-            <FormLabel>ตราประทับ</FormLabel>
-            <FormControl>
-              <Input
-                type="file"
-                placeholder="เลือกไฟล์ ตราประทับ"
-                value={field.value || ""}
-              />
-            </FormControl>
-          </FormItem>
-        )}
+        label="หมายเหตุ"
+        type="textArea"
+        placeholder="ระบุหมายเหตุ..."
       />
+      <hr />
+      {/* -----------------------  Summary ----------------------- */}
+      <div className="p-4 mt-3 w-full rounded-2xl bg-gray-50 shadow-inner">
+        <h3 className="font-semibold text-lg mb-4">สรุปราคาสินค้า</h3>
 
-      <div className="grid grid-cols-2 gap-6">
-        <div>
-          <h1 className="font-semibold text-xl">ผู้จัดทำ</h1>
-          <FormField
-            control={form.control}
-            name="note"
-            render={({ field }) => (
-              <FormItem className="mt-3">
-                <FormLabel>อัพโหลดลายเซ็นต์</FormLabel>
-                <FormControl>
-                  <Input
-                    type="file"
-                    placeholder="เลือกไฟล์ ตราประทับ"
-                    value={field.value || ""}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
+        <div className="flex justify-between mb-3">
+          <span>จำนวนสินค้า :</span>
+          <span>{resultTotal} ชิ้น</span>
         </div>
 
-        <div>
-          <h1 className="font-semibold text-xl">อนุมัติโดย</h1>
-          <FormField
-            control={form.control}
-            name="note"
-            render={({ field }) => (
-              <FormItem className="mt-3">
-                <FormLabel>อัพโหลดลายเซ็นต์</FormLabel>
-                <FormControl className="w-full">
-                  <div className="flex gap-4">
-                    <SignatureDocument />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        document.getElementById("note-file")?.click()
-                      }
-                      className="flex items-center gap-2 hover:text-gray-800"
-                    >
-                      <ImageUp className="h-6 w-6" />
-                    </button>
-
-                    <input
-                      id="note-file"
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0] ?? null;
-                        field.onChange(file);
-                      }}
-                    />
-                  </div>
-                </FormControl>
-              </FormItem>
-            )}
-          />
+        <div className="flex justify-between mb-3">
+          <span>ราคารวมสินค้า :</span>
+          <span>{formatNumber(Price)} บาท</span>
         </div>
 
-        <FormField
-          control={form.control}
-          name="note"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>ชื่อ</FormLabel>
-              <FormControl>
-                <Input placeholder="กรอกชื่อ" value={field.value || ""} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="note"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>ชื่อ</FormLabel>
-              <FormControl>
-                <Input placeholder="กรอกชื่อ" value={field.value || ""} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="note"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>ตำแหน่ง</FormLabel>
-              <FormControl>
-                <Input placeholder="กรอกตำแหน่ง" value={field.value || ""} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="note"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>ตำแหน่ง</FormLabel>
-              <FormControl>
-                <Input placeholder="กรอกตำแหน่ง" value={field.value || ""} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="startDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>วันที่</FormLabel>
-              <FormControl>
-                <DatePicker value={field.value} onChange={field.onChange} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="startDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>วันที่</FormLabel>
-              <FormControl>
-                <DatePicker value={field.value} onChange={field.onChange} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+        <div className="flex justify-between mb-3">
+          <span>ส่วนลด :</span>
+          <span>
+            {discount ? (
+              discount > 0 && discountPrice > 0 ? (
+                //  แสดงแค่ผลรวม
+                <>{appliedDiscount}</>
+              ) : discount > 0 ? (
+                // discount
+                <>{discount}</>
+              ) : discountPrice > 0 ? (
+                //  discountPrice
+                <>{discountPrice}</>
+              ) : (
+                <>0</>
+              )
+            ) : (
+              <>0</>
+            )}{" "}
+            บาท
+          </span>
+        </div>
+
+        <div className="flex justify-between mb-3">
+          <span>ภาษีมูลค่าเพิ่ม :</span>
+          <span>{formatNumber(totalVat)} บาท</span>
+        </div>
+
+        <div className="flex justify-between font-bold text-lg mb-3">
+          <span>ยอดรวม :</span>
+          <span>{formatNumber(finalPrice)} บาท</span>
+        </div>
       </div>
-    </Card>
+      <hr />
+
+      <h1 className="font-semibold text-xl">ส่วนเซ็นเอกสาร</h1>
+
+      {viewMode && isEdit ? (
+        <>
+          <GlobalFormField
+            view={view}
+            control={form.control}
+            name="seal"
+            label="ตราประทับ"
+            type="file"
+            placeholder="เลือกไฟล์ ตราประทับ..."
+          />
+
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <h1 className="font-semibold text-xl">ผู้จัดทำ</h1>
+              <GlobalFormField
+                view={view}
+                control={form.control}
+                name="makeSign"
+                label={<span className="py-1">อัพโหลดลายเซ็นต์</span>}
+                type="signature"
+              />{" "}
+            </div>
+            <div>
+              <h1 className="font-semibold text-xl">อนุมัติโดย</h1>
+              <GlobalFormField
+                view={view}
+                control={form.control}
+                name="approvedSign"
+                label={<span className="py-1">อัพโหลดลายเซ็นต์</span>}
+                type="signature"
+              />
+            </div>
+
+            <GlobalFormField
+              view={view}
+              control={form.control}
+              name="makeByName"
+              label="ชื่อ"
+              type="input"
+              placeholder="กรอกชื่อ"
+            />
+            <GlobalFormField
+              view={view}
+              control={form.control}
+              name="approvedByName"
+              label="ชื่อ"
+              type="input"
+              placeholder="กรอกชื่อ"
+            />
+
+            <GlobalFormField
+              view={view}
+              control={form.control}
+              name="makeByPosition"
+              label="ตำแหน่ง"
+              type="input"
+              placeholder="กรอกตำแหน่ง"
+            />
+            <GlobalFormField
+              view={view}
+              control={form.control}
+              name="approvedByPosition"
+              label="ตำแหน่ง"
+              type="input"
+              placeholder="กรอกตำแหน่ง"
+            />
+          </div>
+        </>
+      ) : (
+        <div className="grid grid-cols-3 gap-6">
+          <div>
+            <h1 className="font-semibold text-xl">ตราประทับ</h1>
+            <GlobalFormField
+              view={view}
+              control={form.control}
+              name="seal"
+              label=""
+              type="signature"
+            />{" "}
+          </div>
+          <div>
+            <h1 className="font-semibold text-xl">ผู้จัดทำ</h1>
+            <GlobalFormField
+              view={view}
+              control={form.control}
+              name="makeSign"
+              label=""
+              type="signature"
+            />{" "}
+          </div>
+          <div>
+            <h1 className="font-semibold text-xl">อนุมัติโดย</h1>
+            <GlobalFormField
+              view={view}
+              control={form.control}
+              name="approvedSign"
+              label=""
+              type="signature"
+            />
+          </div>
+        </div>
+      )}
+    </div>
   );
 };

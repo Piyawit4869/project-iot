@@ -15,23 +15,34 @@ interface TabItem {
 interface CustomTabsProps {
   defaultValue: string;
   items: TabItem[];
+  listClassName?: string;
   className?: string;
 }
 
 export const CustomTabs = ({
   defaultValue,
   items,
+  listClassName,
   className,
 }: CustomTabsProps) => {
   return (
-    <Tabs defaultValue={defaultValue} className={cn("w-full mt-2", className)}>
-      <TabsList className="bg-[#f4f4f5] dark:bg-[#1f1f23] p-1 dark:border-gray-700 flex flex-wrap gap-1">
+    <Tabs
+      defaultValue={defaultValue}
+      className={cn("flex w-full flex-col mt-2", className)}
+    >
+      <TabsList
+        className={cn(
+          " bg-[#f4f4f5] dark:bg-[#1f1f23] p-1 dark:border-gray-700 gap-1",
+          listClassName
+        )}
+      >
         {items?.map((item) => (
           <TabsTrigger
             key={item.key}
             value={item.key}
             className={cn(
-              `data-[state=active]:bg-white data-[state=active]:text-black
+              ` 
+              data-[state=active]:bg-white data-[state=active]:text-black
                dark:data-[state=active]:bg-[#41414a] dark:data-[state=active]:text-white
                text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#41414a]
                transition-colors flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium`

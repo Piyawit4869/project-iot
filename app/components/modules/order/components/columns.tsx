@@ -74,6 +74,54 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
         );
       },
     },
+    {
+      accessorKey: "orderDetails.createdAt",
+      header: "วันที่สั่งซื้อ",
+      accessorFn: (row: OrderType) => row.orderDetails?.createdAt,
+      cell: (info) => {
+        const date = info.getValue() as string;
+        return <span>{formatDateAndTime(date)}</span>;
+      },
+    },
+    {
+      id: "productCount",
+      header: "จำนวนสินค้า",
+      accessorFn: (row: OrderType) => row.orderDetails?.products?.length ?? 0,
+      cell: ({ getValue }) => <span>{`${getValue()} รายการ`}</span>,
+    },
+    {
+      accessorKey: "status",
+      header: "สถานะชำระเงิน",
+      cell: (info) => {
+        const status = info.getValue() as string;
+        return (
+          <span className="flex justify-center">
+            <GlobalStatusBadge value={status} />
+          </span>
+        );
+      },
+    },
+
+    {
+      accessorKey: "net",
+      header: "กำไรโดยประมาณ",
+      cell: (info) => {
+        const price = info.getValue() as number;
+        return (
+          <span className="font-medium">฿ {formatNumber(price ?? 0.0)} </span>
+        );
+      },
+    },
+    {
+      accessorKey: "total",
+      header: "ยอดรวม",
+      cell: (info) => {
+        const price = info.getValue() as number;
+        return (
+          <span className="font-medium">฿ {formatNumber(price ?? 0.0)} </span>
+        );
+      },
+    },
     // {
     //   accessorKey: "docStatus",
     //   header: "สถานะออเดอร์",
@@ -107,12 +155,7 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
         return <span>{formatDateAndTime(date)}</span>;
       },
     },
-    {
-      id: "productCount",
-      header: "จำนวนสินค้า",
-      accessorFn: (row: OrderType) => row.orderDetails?.products?.length ?? 0,
-      cell: ({ getValue }) => <span>{`${getValue()} รายการ`}</span>,
-    },
+
     // {
     //   accessorKey: "status",
     //   header: "สถานะการชำระเงิน",
@@ -125,26 +168,6 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
     //     );
     //   },
     // },
-    {
-      accessorKey: "net",
-      header: "กำไรโดยประมาณ",
-      cell: (info) => {
-        const price = info.getValue() as number;
-        return (
-          <span className="font-medium">฿ {formatNumber(price ?? 0.0)} </span>
-        );
-      },
-    },
-    {
-      accessorKey: "total",
-      header: "ยอดรวม",
-      cell: (info) => {
-        const price = info.getValue() as number;
-        return (
-          <span className="font-medium">฿ {formatNumber(price ?? 0.0)} </span>
-        );
-      },
-    },
 
     {
       id: "actions",
@@ -157,12 +180,12 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
                 <Eye />
               </Button>
             </a>
-            {/* <Button
+            <Button
               className="text-sm bg-[#FF7062]"
               onClick={() => onDelete(row.original.id)}
             >
               <Trash />
-            </Button> */}
+            </Button>
           </>
         );
       },

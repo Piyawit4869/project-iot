@@ -12,11 +12,12 @@ import type { OrderFormValues } from "~/schemas/order/order";
 
 export const initialOrderFormData: OrderFormValues = {
   active: false,
-  branchId: "",
-  suppliers: "",
-  arrivalDate: "",
-  orderDate: "",
-  shipping: "",
+  branchId: null,
+  saler: null,
+  suppliers: null,
+  arrivalDate: null,
+  orderDate: null,
+  shipping: null,
   startDate: new Date().toISOString(),
   expireDate: new Date().toISOString(),
   note: "",
@@ -32,21 +33,31 @@ export const initialOrderFormData: OrderFormValues = {
   grandTotal: 0,
   net: 0,
   subTotal: 0,
-  orderType: "quotation" as const,
-  currency: "THB" as const,
+  orderType: "quotation",
+  currency: "THB",
   customerId: "",
   customer: {
     id: "",
-    // firstName: "",
-    // lastName: "",
-    // taxID: "",
-    // customerType: "",
-    // email: "",
-    // phone: "",
-    // address: "",
-    // postalCode: "",
   },
-  orderDetail: {
+
+  // ← เพิ่มใหม่ตาม type
+  profile: {
+    id: "",
+    companyName: "",
+    // customerId: "",
+    firstName: "",
+    lastName: "",
+    // contactEmail: "".email(),
+    // contactPhone: "",
+    taxID: "",
+    customerType: "",
+    email: "",
+    phone: "",
+    address: "",
+    postalCode: "",
+  },
+
+  orderDetails: {
     products: [
       {
         id: "",

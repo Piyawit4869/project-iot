@@ -54,9 +54,10 @@ export const FormCustomerContact: React.FC<CustomerFormCreateProps> = ({
                   <FormControl className="w-full">
                     <Input
                       value={field.value || ""}
-                      placeholder="กรอกเบอร์โทรสำนักงาน/บริษัท"
-                      onChange={onlyNumber(field)}
-                      maxLength={10}
+                      placeholder="กรอกชื่อบริษัท เช่น บริษัท ทำได้ไม่ จำกัด"
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
                     />
                   </FormControl>
                   <FormMessage />

@@ -12,7 +12,7 @@ import { TabControl } from "~/components/shared/tab-control";
 import GlobalButton from "~/components/shared/global-button";
 import { Form } from "~/components/ui/form";
 import initData from "~/initData/order-initData";
-import { Card } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { formatNumber } from "~/components/shared/global-format";
 import { OrderForm } from "./components/form/OrderForm-create";
 import type { ProductColumn } from "~/schemas/order/type";
@@ -26,6 +26,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { OrderProvider } from "~/hooks/order/order";
 import { ListProduct } from "./components/product-select";
 import { DetailProduct } from "./components/product-detail";
+import { QuotationMock } from "./components/template";
 
 export default function CreateOrder() {
   const navigate = useNavigate();
@@ -36,55 +37,56 @@ export default function CreateOrder() {
   const { mutateAsync: creation } = useCreateOrder();
 
   const [productsSelected, setProductsSelected] = useState<ProductColumn[]>([]);
-  console.log("productsSelected", productsSelected);
 
-  const updateSelectedProducts = (newProducts: ProductColumn[]) => {
-    const mergedProducts = newProducts.map((p) => {
-      const match = productsSelected.find((sp) => sp.id === p.id);
-      return { ...p, quantity: match?.quantity ?? p.quantity ?? 1 };
-    });
+  // const updateSelectedProducts = (newProducts: ProductColumn[]) => {
+  //   const mergedProducts = newProducts.map((p) => {
+  //     const match = productsSelected.find((sp) => sp.id === p.id);
+  //     return { ...p, quantity: match?.quantity ?? p.quantity ?? 1 };
+  //   });
 
-    setProductsSelected(mergedProducts);
+  //   setProductsSelected(mergedProducts);
 
-    formCreate.setValue(
-      "orderDetail.products",
-      mergedProducts.map((p) => ({
-        id: p.id,
-        name: p.name,
-        quantity: p.quantity,
-        sku: p.sku,
-        matType: p.matType,
-        status: p.status,
-        price: p.salePrice,
-        salePrice: p.salePrice,
-        costPrice: p.costPrice,
-        wht: p.wht,
-        discountPrice: p.discountPrice,
-        vatPrice: p.vatPrice,
-        active: p.active ?? true,
-      }))
-    );
-  };
+  //   formCreate.setValue(
+  //     "orderDetail.products",
+  //     mergedProducts.map((p) => ({
+  //       id: p.id,
+  //       name: p.name,
+  //       quantity: p.quantity,
+  //       sku: p.sku,
+  //       matType: p.matType,
+  //       status: p.status,
+  //       price: p.salePrice,
+  //       salePrice: p.salePrice,
+  //       costPrice: p.costPrice,
+  //       wht: p.wht,
+  //       discountPrice: p.discountPrice,
+  //       vatPrice: p.vatPrice,
+  //       active: p.active ?? true,
+  //     }))
+  //   );
+  // };
 
-  // add goods
-  const handleAddProduct = (products: ProductColumn[]) => {
-    const newProducts = products.filter(
-      (p) => !productsSelected.some((sp) => sp.id === p.id)
-    );
-    updateSelectedProducts([...productsSelected, ...newProducts]);
-  };
+  // // add goods
+  // const handleAddProduct = (products: ProductColumn[]) => {
+  //   const newProducts = products.filter(
+  //     (p) => !productsSelected.some((sp) => sp.id === p.id)
+  //   );
+  //   updateSelectedProducts([...productsSelected, ...newProducts]);
+  // };
 
-  // del goods
-  const handleRemove = (id: string) => {
-    const updatedProducts = productsSelected.filter((p) => p.id !== id);
-    updateSelectedProducts(updatedProducts);
-  };
+  // // del goods
+  // const handleRemove = (id: string) => {
+  //   const updatedProducts = productsSelected.filter((p) => p.id !== id);
+  //   updateSelectedProducts(updatedProducts);
+  // };
 
   // cal
   const { Price, totalVat, totalPrice } = calculateTotals(productsSelected);
 
   const discount = Number(formCreate.watch("discount") || 0);
   const totalAddVat = (Price ?? 0) + (totalVat ?? 0) - (discount ?? 0);
+  const approvedSign = formCreate.watch("approvedSign");
+  const makeImage = formCreate.watch("makeSign");
 
   const onCreate = (values: OrderFormValues) => {
     const productsPayload = productsSelected.map((p) => ({
@@ -176,6 +178,8 @@ export default function CreateOrder() {
           <div className="flex flex-wrap gap-6 justify-between w-full">
             <div className="w-full md:w-1/2 md:order-1">
               <OrderForm
+                isEdit={false}
+                viewMode={false}
                 form={formCreate}
                 initialData={initData.initialOrderFormData}
                 Price={Price}
@@ -187,8 +191,23 @@ export default function CreateOrder() {
             </div>
 
             <div className="flex-1 w-1/2 md:order-2 flex flex-col ">
-              <Card className="p-3 space-y-3 w-full">
-                <Tabs defaultValue="order" className="gap-4">
+              <Card className="p-6  w-full ">
+                <div className="flex flex-row gap-3">
+                  <span className="font-semibold text-xl">ข้อมูลออเดอร์</span>
+                  <Box />
+                </div>
+
+                <CardContent className="p-0 px-0">
+                  <div className="w-full">
+                    <QuotationMock
+                      data={formCreate.getValues()}
+                      product={productsSelected}
+                      makeImage={makeImage}
+                      approvedImage={approvedSign}
+                    />
+                  </div>
+                </CardContent>
+                {/* <Tabs defaultValue="order" className="gap-4">
                   <TabsList className="bg-gray-100 rounded-sm px-6 p-1 ml-auto max-w-xs w-full">
                     <TabsTrigger value="order">
                       ข้อมูลออเดอร์
@@ -206,7 +225,7 @@ export default function CreateOrder() {
                       </div>
                     ) : (
                       <>
-                        {/* <CardGoods
+                        <CardGoods
                           data={productsSelected}
                           key={productsSelected.length}
                           quantities={productsSelected}
@@ -232,19 +251,18 @@ export default function CreateOrder() {
                               {formatNumber(totalPrice)} บาท
                             </span>
                           </div>
-                        </div> */}
+                        </div>
                         <OrderProvider>
                           <DetailProduct products={productsSelected} />
                         </OrderProvider>
                       </>
                     )}
-                    {/* <OrderProduct
+                    <OrderProduct
                       selectedProducts={productsSelected}
                       onAddProduct={handleAddProduct as any}
-                    /> */}
+                    />
                   </TabsContent>
-                  <TabsContent value="notation"></TabsContent>
-                </Tabs>
+                </Tabs> */}
               </Card>
             </div>
           </div>

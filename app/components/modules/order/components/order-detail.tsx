@@ -7,46 +7,22 @@ import { Form } from "~/components/ui/form";
 import { Card } from "~/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { CreditZone } from "./credit-zone";
-import { ViewOrderDetail } from "./view-order-detail";
+
 import { CustomTabs } from "~/components/shared/custom-tabs";
 import { BotMessageSquare, FileText } from "lucide-react";
+import { OrderForm } from "./form/OrderForm-create";
 
 export const OrderDetail: React.FC<OrderFormProps> = (props) => {
   const {
-    state: { formUpdate /* , isUpdate */ },
+    // state: { formUpdate /* , isUpdate */ },
     actions: { onUpdate },
   } = useOrderViewModel();
-  const { order } = props;
-
-  // const onSubmit = (values: OrderFormValues) => {
-  //   GlobalModal.info({
-  //     title: "ปิดคำสั่งซื้อออเดอร์",
-  //     description: "คุณต้องการปิดออเดอร์นี้ใช่หรือไม่",
-  //     confirmText: "ยืนยัน",
-  //     cancelText: "ยกเลิก",
-  //     onConfirm: () => {
-  //       /* const toastId = toast.loading("กำลังสร้างออเดอร์...");
-  //       mutate(values, {
-  //         onSuccess: (data) => {
-  //           toast.success("สร้างออเดอร์เรียบร้อยแล้ว!", {
-  //             id: toastId,
-  //           });
-  //           router.push(`/organization/orders/${data.data.id}`);
-  //         },
-  //         onError: () => {
-  //           toast.error("เกิดข้อผิดพลาดขณะสร้างออเดอร์", {
-  //             id: toastId,
-  //           });
-  //         },
-  //       }); */
-  //     },
-  //   });
-  // };
+  const { order, isEdit, setProductsSelected, form, productsSelected } = props;
 
   return (
     <>
-      <Form {...formUpdate}>
-        <form id="orders" onSubmit={formUpdate.handleSubmit(onUpdate)}>
+      <Form {...form}>
+        <form id="orders" onSubmit={form.handleSubmit(onUpdate)}>
           <Card className="p-6 space-y-6">
             <CustomTabs
               defaultValue="details"
@@ -57,7 +33,15 @@ export const OrderDetail: React.FC<OrderFormProps> = (props) => {
                   icon: <FileText className="w-4 h-4" />,
                   content: (
                     <div className="p-2">
-                      <ViewOrderDetail order={order} />
+                      {/* <ViewOrderDetail order={order} /> */}
+                      <OrderForm
+                        order={order}
+                        products={productsSelected}
+                        form={form}
+                        viewMode={true}
+                        isEdit={isEdit}
+                        setProductsSelected={setProductsSelected}
+                      />
                     </div>
                   ),
                 },

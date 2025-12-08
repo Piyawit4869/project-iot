@@ -18,9 +18,11 @@ export const useOrderSetup = () => {
     resolver: zodResolver(orderFormSchema) as Resolver<OrderFormValues>,
     mode: "onSubmit",
     reValidateMode: "onChange",
-    values: {
+    defaultValues: {
       active: true,
       branchId: null,
+      saler: null,
+      company: null,
       customerId: "",
       suppliers: null,
       arrivalDate: null,
@@ -30,6 +32,7 @@ export const useOrderSetup = () => {
       docName: "",
       expireDate: "",
       note: null,
+      discountType: undefined,
       trackingNo: null,
       refCode: null,
       docNo: "",
@@ -40,6 +43,19 @@ export const useOrderSetup = () => {
       grandTotal: 0,
       net: 0,
       subTotal: 0,
+
+      discountCode: null,
+      credit: null,
+      discountStep: null,
+
+      discountNote: null,
+      seal: null,
+      makeSign: null,
+      approvedSign: null,
+      makeByName: null,
+      approvedByName: null,
+      makeByPosition: null,
+      approvedByPosition: null,
       notationType: "quotation",
       orderType: "quotation",
       currency: "THB",
@@ -55,7 +71,7 @@ export const useOrderSetup = () => {
         postalCode: null,
       },
 
-      orderDetail: {
+      orderDetails: {
         products: [
           {
             id: null,
@@ -77,6 +93,33 @@ export const useOrderSetup = () => {
   });
 
   const { isSubmitting: isCreating } = formCreate.formState;
+
+  const defaultValues = {
+    active: data?.active ?? true,
+    branchId: data?.branchId ?? null,
+    suppliers: data?.suppliers ?? null,
+    arrivalDate: data?.arrivalDate ?? null,
+    orderDate: data?.orderDate ?? null,
+    shipping: data?.shipping ?? null,
+    startDate: data?.startDate ?? new Date().toISOString(),
+    expireDate: data?.expireDate ?? null,
+    note: data?.note ?? null,
+    trackingNo: data?.trackingNo ?? null,
+    refCode: data?.refCode ?? null,
+    docName: data?.docName ?? null,
+    docNo: data?.docNo ?? null,
+    notationType: data?.notationType ?? "quotation",
+    discount: data?.discount ?? 0,
+    vat: data?.vat ?? 0,
+    wht: data?.wht ?? 0,
+    orderType: "quotation",
+    currency: "THB" as const, // <-- แก้ตรงนี้
+    customerId: data?.customerId ?? null,
+    orderDetails: {
+      products: data?.orderDetails?.products ?? [],
+    },
+  };
+
   const formUpdate = useForm<OrderFormValues>({
     resolver: zodResolver(orderFormSchema) as Resolver<OrderFormValues>,
     mode: "onSubmit",
@@ -104,7 +147,7 @@ export const useOrderSetup = () => {
       currency: "THB" as const,
       customerId: data?.customerId ?? null,
 
-      orderDetail: {
+      orderDetails: {
         products: [
           {
             id: data?.orderDetails?.products[0]?.id ?? null,
@@ -150,7 +193,7 @@ export const useOrderSetup = () => {
         currency: "THB" as const,
         customerId: data?.customerId ?? null,
 
-        orderDetail: {
+        orderDetails: {
           products: [
             {
               id: data?.orderDetail?.products[0]?.id ?? null,
