@@ -1,6 +1,14 @@
 "use client";
 
-import { Bot, LayoutDashboard, Link, Save, User, X } from "lucide-react";
+import {
+  Bot,
+  FileText,
+  LayoutDashboard,
+  Link,
+  Save,
+  User,
+  X,
+} from "lucide-react";
 
 import React from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
@@ -39,6 +47,9 @@ import { NotesCard } from "./components/cardZone/NoteCard";
 import { PieChart } from "~/components/shared/charts/pie-chart";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { RemarkCard } from "./components/cardZone/RemarkCard";
+import { Button } from "~/components/ui/button";
+import { OrderFilterFields } from "~/schemas/order/type";
+import { AiCustomerFields } from "../message/AiCustomerFields";
 
 export default function SingDetailleCustomer() {
   const navigate = useNavigate();
@@ -68,6 +79,7 @@ export default function SingDetailleCustomer() {
 
   const [isEdit, setIsEdit] = React.useState(false);
   const [AIOpen, setAIOpen] = React.useState(false);
+  const [tab, setTab] = React.useState("dashboard");
 
   const data = customer?.profile;
   const otherName = data?.name;
@@ -159,19 +171,20 @@ export default function SingDetailleCustomer() {
       id,
       contacts: [
         {
-          name: dataFromAI.customerName || baseValues.contacts?.[0]?.name || "",
-          email: dataFromAI.email || baseValues.contacts?.[0]?.email || "",
+          name:
+            dataFromAI?.customerName || baseValues?.contacts?.[0]?.name || "",
+          email: dataFromAI?.email || baseValues?.contacts?.[0]?.email || "",
           phone:
-            dataFromAI.contactNumber || baseValues.contacts?.[0]?.phone || "",
+            dataFromAI?.contactNumber || baseValues?.contacts?.[0]?.phone || "",
         },
       ],
       status: status || "newly_registered",
       profile: {
-        ...baseValues.profile,
-        taxId: dataFromAI.taxId || baseValues.profile?.taxId || "",
+        ...baseValues?.profile,
+        taxId: dataFromAI?.taxId || baseValues?.profile?.taxId || "",
       },
-      consentPii: dataFromAI.consentPii ?? baseValues.consentPii,
-      remark: dataFromAI.summary || baseValues.remark,
+      consentPii: dataFromAI?.consentPii ?? baseValues?.consentPii,
+      remark: dataFromAI?.summary || baseValues?.remark,
     };
 
     GlobalModal.info({
@@ -263,7 +276,9 @@ export default function SingDetailleCustomer() {
                   <GlobalButton
                     key="sync-ai"
                     type="button"
-                    onClick={onSync}
+                    onClick={() => {
+                      setAIOpen(true);
+                    }}
                     // disabled={isLoading || dataFromAI === null}
                     variant="secondary"
                     className="flex-1  bg-[#2e498d] text-white hover:bg-[#142a60] hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
@@ -308,6 +323,8 @@ export default function SingDetailleCustomer() {
           <Form {...formUpdate}>
             <CustomTabs
               defaultValue="dashboard"
+              value={tab}
+              onValueChange={(val) => setTab(val)}
               items={[
                 {
                   key: "dashboard",
@@ -354,11 +371,15 @@ export default function SingDetailleCustomer() {
                           </CardContent>
                         </Card>
                       </div>
+
                       <Card className="my-5">
-                        <div className="flex gap-2 mx-6">
-                          <span className="text-base font-bold pb-4">
+                        <div className="flex gap-2 mx-6 justify-between items-center">
+                          <span className="text-base font-bold ">
                             ออเดอร์ที่สั่งซื้อล่าสุด
                           </span>
+                          <Button onClick={() => setTab("order")}>
+                            ดูทั้งหมด
+                          </Button>
                         </div>
                         <CardContent>
                           <DataTable
@@ -367,10 +388,13 @@ export default function SingDetailleCustomer() {
                             queryFunction={({ pageIndex, pageSize }) =>
                               useOrdersPaginateFilter({
                                 pageIndex,
-                                pageSize,
+                                pageSize: 5,
                                 customerId: id,
+                                sortField: "orderDetails_createdAt",
+                                sortingBy: "desc",
                               })
                             }
+                            offPaginate={true}
                             columns={columns}
                           />
                         </CardContent>
@@ -412,12 +436,43 @@ export default function SingDetailleCustomer() {
                   ),
                 },
                 {
+                  key: "order",
+                  label: "ออเดอร์ที่เคยสั่งซื้อ",
+                  icon: <FileText className="w-4 h-4" />,
+                  content: (
+                    <>
+                      {/* <Card className="">
+                        <div className="flex gap-2 mx-6">
+                          <span className="text-base font-bold  ">
+                            ออเดอร์ที่เคยสั่งซื้อ
+                          </span>
+                        </div>
+                        <CardContent className="px-6">
+                          
+                        </CardContent>
+                      </Card> */}
+                      <DataTable
+                        queryFunction={({ pageIndex, pageSize }) =>
+                          useOrdersPaginateFilter({
+                            pageIndex,
+                            pageSize,
+                            customerId: id,
+                          })
+                        }
+                        columns={columns}
+                        customerFilterFields={OrderFilterFields}
+                        showAdvancedButton={false}
+                      />
+                    </>
+                  ),
+                },
+                {
                   key: "note",
                   label: "บันทึกโน๊ต/กิจกรรม",
                   icon: <Bot className="w-4 h-4" />,
                   content: (
                     <>
-                      <div className="flex flex-row gap-4">
+                      <div className="flex flex-row gap-4 h-full">
                         <div className="w-[50%]  ">
                           <NotesCard
                             loading={isLoading ?? false}
@@ -435,31 +490,10 @@ export default function SingDetailleCustomer() {
                             className="min-h-50 h-auto mt-5"
                           />
                         </div>
-                        <div className="w-[50%] h-105">
+                        <div className="w-[50%] ">
                           <ViewCustomerActivityLog className="h-full" />
                         </div>
                       </div>
-                      <Card className="my-5">
-                        <div className="flex gap-2 mx-6">
-                          <span className="text-base font-bold pb-4">
-                            ออเดอร์ที่เคยสั่งซื้อ
-                          </span>
-                        </div>
-                        <CardContent>
-                          <DataTable
-                            offSearch
-                            offFilter
-                            queryFunction={({ pageIndex, pageSize }) =>
-                              useOrdersPaginateFilter({
-                                pageIndex,
-                                pageSize,
-                                customerId: id,
-                              })
-                            }
-                            columns={columns}
-                          />
-                        </CardContent>
-                      </Card>
                     </>
                   ),
                 },
@@ -527,14 +561,30 @@ export default function SingDetailleCustomer() {
         </div>
       </CustomerProvider>
 
-      <AIMessageView
+      {/* <AIMessageView
         open={AIOpen}
         onOpenChange={setAIOpen}
         customer={getData}
         onClickBtn={onSync}
         closeBtn={true}
         // isLoading={isLoadingAiNote}
-      />
+      /> */}
+
+      <div className="flex flex-col space-y-2 overflow-y-auto">
+        <AIMessageView
+          open={AIOpen}
+          onOpenChange={setAIOpen}
+          customer={dataFromAI}
+          closeBtn={true}
+          onClickBtn={onSync}
+        />
+        {/* <AiCustomerFields
+          data={customer}
+          onClickBtn={onSync}
+          closeBtn={true}
+          noSyncBtn={true}
+        /> */}
+      </div>
     </>
   );
 }

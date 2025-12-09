@@ -17,6 +17,8 @@ interface CustomTabsProps {
   items: TabItem[];
   listClassName?: string;
   className?: string;
+  value?: string;
+  onValueChange?: (value: string) => void;
 }
 
 export const CustomTabs = ({
@@ -24,10 +26,14 @@ export const CustomTabs = ({
   items,
   listClassName,
   className,
+  value,
+  onValueChange,
 }: CustomTabsProps) => {
   return (
     <Tabs
       defaultValue={defaultValue}
+      value={value}
+      onValueChange={onValueChange}
       className={cn("flex w-full flex-col mt-2", className)}
     >
       <TabsList

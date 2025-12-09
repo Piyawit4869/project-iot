@@ -54,6 +54,7 @@ interface DataTableProps<TData, TValue> {
   customerFilterFields?: any;
   isCustomLoading?: boolean;
   showAdvancedButton?: boolean;
+  offPaginate?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -61,6 +62,7 @@ export function DataTable<TData, TValue>({
   queryFunction,
   // offSearch,
   // offFilter,
+  offPaginate,
   addOn,
   data: propData,
   customerFilterFields,
@@ -243,7 +245,8 @@ export function DataTable<TData, TValue>({
                         style={{
                           width: header.getSize(),
                           position: "relative",
-                        }}>
+                        }}
+                      >
                         {header.isPlaceholder
                           ? null
                           : header.column.id === "actions" ||
@@ -270,12 +273,14 @@ export function DataTable<TData, TValue>({
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
-                    data-state={row.getIsSelected() && "selected"}>
+                    data-state={row.getIsSelected() && "selected"}
+                  >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
                         style={{ width: cell.column.getSize() }}
-                        className="text-sm sm:text-base text-muted-foreground max-w-[300px] truncate">
+                        className="text-sm sm:text-base text-muted-foreground max-w-[300px] truncate"
+                      >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -288,7 +293,8 @@ export function DataTable<TData, TValue>({
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className="h-24 text-center">
+                    className="h-24 text-center"
+                  >
                     <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
                       <FileSearch className="w-8 h-8" />
                       <span>ไม่พบข้อมูล</span>
@@ -301,7 +307,7 @@ export function DataTable<TData, TValue>({
         </div>
       )}
 
-      <TablePagination table={table} data={totalItems} />
+      {!offPaginate && <TablePagination table={table} data={totalItems} />}
     </div>
   );
 }
