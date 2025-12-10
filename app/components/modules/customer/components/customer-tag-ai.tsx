@@ -12,7 +12,7 @@ export const CustomerTagAndAI: React.FC<CustomerFormCreateProps> = ({
 }) => {
   return (
     <>
-      <Card className="mt-4">
+      <Card>
         <CardContent>
           <div className="flex gap-2">
             <CardTitle className="text-base font-bold">หมายเหตุ</CardTitle>

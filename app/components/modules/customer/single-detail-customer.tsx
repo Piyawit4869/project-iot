@@ -31,12 +31,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { DataTable } from "~/components/shared/data-table";
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
 import { useOrdersPaginateFilter } from "~/api/client/order/useGetOrder";
-import { FormCustomerDetailCard } from "./components/form/customer-detail-form";
-import { FormCustomerInfoCard } from "./components/form/customer-info-form";
-import { FormCustomerContact } from "./components/form/customer-contact-form";
-import { ViewCustomerDeatailCard } from "./components/view/customer-detail-view-new";
-import { ViewCustomerInfoCard } from "./components/view/customer-info-view";
-import { ViewCustomerContact } from "./components/view/customer-contact";
+
 import { RelationshipCard } from "./components/relationship";
 import { ViewCustomerActivityLog } from "./components/customer-activityLog";
 import { AIMessageView } from "../message/ai-message-view-modal";
@@ -50,6 +45,10 @@ import { RemarkCard } from "./components/cardZone/RemarkCard";
 import { Button } from "~/components/ui/button";
 import { OrderFilterFields } from "~/schemas/order/type";
 import { AiCustomerFields } from "../message/AiCustomerFields";
+import { CustomerDeail } from "./components/form-view/customer-deail";
+import { OrganizationDetails } from "./components/form-view/organization-details";
+import { ContactCustomer } from "./components/form-view/contact-customer";
+import { set } from "react-hook-form";
 
 export default function SingDetailleCustomer() {
   const navigate = useNavigate();
@@ -67,6 +66,12 @@ export default function SingDetailleCustomer() {
   const { mutate: update, isPending } = useUpdateCustomer(id);
   const { data: analyzeCustomer, isLoading: loadAnalyzeCustomer } =
     useGetAnalyzeCustomer(id);
+
+  const [customerForms, setCustomerForms] = React.useState([
+    { key: "contact_detail", mode: "view" },
+    { key: "customer_detail", mode: "view" },
+    { key: "organization_detail", mode: "view" },
+  ]);
 
   const {
     state: {
@@ -89,34 +94,8 @@ export default function SingDetailleCustomer() {
     .filter(Boolean)
     .join(" ")
     .trim();
-  const phoneContactState = formUpdate.watch("contacts.0.phone");
-  const nameContactState = formUpdate.watch("contacts.0.name");
-
-  //disable btn
-  let isAnyFilled = false;
-  if (phoneContactState && !nameContactState) {
-    isAnyFilled = true;
-  }
-  if (!phoneContactState && nameContactState) {
-    isAnyFilled = true;
-  }
 
   const { isDirty } = formUpdate.formState;
-
-  useEntityBreadcrumb({
-    feature: "customer",
-    entity: customer
-      ? {
-          id: id,
-          name: fullName || lineName || otherName,
-        }
-      : undefined,
-    base: customer && {
-      href: `/customers/${id}`,
-      label: fullName || lineName || otherName,
-      uuid: id,
-    },
-  });
 
   const onUpdate = (values: CustomerValues) => {
     const payload = Object.assign({}, values);
@@ -231,9 +210,32 @@ export default function SingDetailleCustomer() {
     });
   };
 
-  const handleCancel = () => {
+  const handleCloseForm = (key: string) => {
+    setCustomerForms((prev) => {
+      return prev.map((form) => {
+        if (form.key === key) {
+          return { ...form, mode: "view" };
+        }
+        return form;
+      });
+    });
+  };
+
+  const handleEditForm = (key: string) => {
+    setCustomerForms((prev) => {
+      return prev.map((form) => {
+        if (form.key === key) {
+          return { ...form, mode: "edit" };
+        }
+        return form;
+      });
+    });
+  };
+
+  const handleCancel = (key: string) => {
     if (!isDirty) {
-      setIsEdit(false);
+      handleCloseForm(key);
+      formUpdate.reset();
     } else {
       GlobalModal.warning({
         title: "ยืนยันการออกจากหน้าแก้ไขลูกค้า",
@@ -242,7 +244,8 @@ export default function SingDetailleCustomer() {
         confirmText: "ยืนยัน",
         cancelText: "ยกเลิก",
         onConfirm: () => {
-          setIsEdit(false);
+          handleCloseForm(key);
+          formUpdate.reset();
         },
         onCancel: () => {
           useModalStore.getState().hide();
@@ -259,6 +262,21 @@ export default function SingDetailleCustomer() {
     }
   };
 
+  useEntityBreadcrumb({
+    feature: "customer",
+    entity: customer
+      ? {
+          id: id,
+          name: fullName || lineName || otherName,
+        }
+      : undefined,
+    base: customer && {
+      href: `/customers/${id}`,
+      label: fullName || lineName || otherName,
+      uuid: id,
+    },
+  });
+
   return (
     <>
       <CustomerProvider>
@@ -271,52 +289,22 @@ export default function SingDetailleCustomer() {
                 : `ลูกค้า ${fullName || otherName || ""}`
             }
             buttons={[
-              isEdit ? (
-                <div className="w-full flex flex-row flex-wrap gap-2">
-                  <GlobalButton
-                    key="sync-ai"
-                    type="button"
-                    onClick={() => {
-                      setAIOpen(true);
-                    }}
-                    // disabled={isLoading || dataFromAI === null}
-                    variant="secondary"
-                    className="flex-1  bg-[#2e498d] text-white hover:bg-[#142a60] hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-                    icon={<Link />}
-                    label={
-                      <span className="hidden sm:inline">Sync ข้อมูล AI</span>
-                    }
-                  />
-
-                  <GlobalButton
-                    key="cancel-btn"
-                    type="button"
-                    onClick={handleCancel}
-                    variant="outline"
-                    className="flex-1 flex items-center gap-1 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-                    // icon={<X />}
-                    label={<span className="hidden sm:inline">ยกเลิก</span>}
-                  />
-
-                  <GlobalButton
-                    key="save"
-                    type="submit"
-                    form="customer"
-                    loading={isUpdating}
-                    disabled={isLoading || isPending || isAnyFilled}
-                    className="flex-1  flex items-center gap-1 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm dark:disabled:bg-transparent dark:disabled:text-white dark:disabled:border-white  dark:disabled:border-1"
-                    icon={<Save />}
-                    label={<span className="hidden sm:inline">บันทึก</span>}
-                  />
-                </div>
-              ) : (
+              <div className="w-full flex flex-row flex-wrap gap-2">
                 <GlobalButton
-                  label="แก้ไข"
-                  key="update-button"
+                  key="sync-ai"
                   type="button"
-                  onClick={() => setIsEdit(true)}
+                  onClick={() => {
+                    setAIOpen(true);
+                  }}
+                  // disabled={isLoading || dataFromAI === null}
+                  variant="secondary"
+                  className="flex-1  bg-[#2e498d] text-white hover:bg-[#142a60] hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+                  icon={<Link />}
+                  label={
+                    <span className="hidden sm:inline">Sync ข้อมูล AI</span>
+                  }
                 />
-              ),
+              </div>,
             ]}
           />
 
@@ -334,10 +322,19 @@ export default function SingDetailleCustomer() {
                     <>
                       <div className="flex flex-row gap-5">
                         <div className="w-[50%] h-auto">
-                          <ViewCustomerDeatailCard
+                          <ContactCustomer
                             customer={customer}
                             form={formUpdate}
                             loading={loadCustomer}
+                            onClick={onUpdate}
+                            disabled={isLoading || isPending}
+                            mode={
+                              customerForms.find(
+                                (f) => f.key === "contact_detail"
+                              )?.mode
+                            }
+                            onCancel={handleCancel}
+                            onEditForm={handleEditForm}
                           />
                         </div>
 
@@ -409,17 +406,35 @@ export default function SingDetailleCustomer() {
                   content: (
                     <div className="flex flex-row gap-5">
                       <div className="w-[50%]">
-                        <ViewCustomerInfoCard
+                        <CustomerDeail
                           customer={customer}
                           form={formUpdate}
                           loading={loadCustomer}
+                          onClick={onUpdate}
+                          disabled={isLoading || isPending}
+                          mode={
+                            customerForms.find(
+                              (f) => f.key === "customer_detail"
+                            )?.mode
+                          }
+                          onCancel={handleCancel}
+                          onEditForm={handleEditForm}
                         />
                       </div>
                       <div className="w-[50%]">
-                        <ViewCustomerContact
+                        <OrganizationDetails
                           customer={customer}
                           form={formUpdate}
                           loading={loadCustomer}
+                          onClick={onUpdate}
+                          disabled={isLoading || isPending}
+                          mode={
+                            customerForms.find(
+                              (f) => f.key === "organization_detail"
+                            )?.mode
+                          }
+                          onCancel={handleCancel}
+                          onEditForm={handleEditForm}
                         />
                       </div>
                     </div>
@@ -441,16 +456,6 @@ export default function SingDetailleCustomer() {
                   icon: <FileText className="w-4 h-4" />,
                   content: (
                     <>
-                      {/* <Card className="">
-                        <div className="flex gap-2 mx-6">
-                          <span className="text-base font-bold  ">
-                            ออเดอร์ที่เคยสั่งซื้อ
-                          </span>
-                        </div>
-                        <CardContent className="px-6">
-                          
-                        </CardContent>
-                      </Card> */}
                       <DataTable
                         queryFunction={({ pageIndex, pageSize }) =>
                           useOrdersPaginateFilter({
@@ -477,16 +482,17 @@ export default function SingDetailleCustomer() {
                           <NotesCard
                             loading={isLoading ?? false}
                             notes={customer?.note ?? []}
-                            // isEdit={isEdit}
                             customerNote={customerNote}
+                            onClick={onUpdate}
                             fetchCustomerNote={fetchCustomerNote ?? (() => {})}
                             className="min-h-50 h-auto"
                           />
+
                           <RemarkCard
-                            isEdit={isEdit ?? false}
                             loading={isLoading ?? false}
                             remark={customer?.remark || ""}
                             form={formUpdate}
+                            onClick={onUpdate}
                             className="min-h-50 h-auto mt-5"
                           />
                         </div>
@@ -500,64 +506,6 @@ export default function SingDetailleCustomer() {
               ]}
             />
           </Form>
-
-          {/* <Form {...formUpdate}>
-            <form id="customer" onSubmit={formUpdate.handleSubmit(onUpdate)}>
-              <div className="flex w-full gap-3 flex-col md:flex-row">
-                <div className="flex-1 flex flex-col gap-3 transition-all">
-                  {isEdit ? (
-                    <>
-                      <FormCustomerDetailCard
-                        customer={customer}
-                        form={formUpdate}
-                        loading={loadCustomer}
-                      />
-                      <FormCustomerInfoCard
-                        customer={customer}
-                        form={formUpdate}
-                        loading={loadCustomer}
-                        dataFromAI={dataFromAI || []}
-                      />
-                      <FormCustomerContact
-                        customer={customer}
-                        form={formUpdate}
-                        loading={loadCustomer}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <ViewCustomerDeatailCard
-                        customer={customer}
-                        form={formUpdate}
-                        loading={loadCustomer}
-                      />
-                      <ViewCustomerInfoCard
-                        customer={customer}
-                        form={formUpdate}
-                        loading={loadCustomer}
-                      />
-                      <ViewCustomerContact
-                        customer={customer}
-                        form={formUpdate}
-                        loading={loadCustomer}
-                      />
-                    </>
-                  )}
-                </div>
-
-                <div className="flex-1 flex flex-col gap-3 transition-all h-full">
-                  <RelationshipCard
-                    form={formUpdate}
-                    customer={customer}
-                    loading={loadCustomer}
-                    isEdit={isEdit}
-                  />
-
-                  <ViewCustomerActivityLog loading={loadCustomer} />
-                </div>
-              </div>
-            </form>
-          </Form> */}
         </div>
       </CustomerProvider>
 

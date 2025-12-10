@@ -58,7 +58,7 @@ export const CustomerSupportSelector: React.FC<CustomerFormCreateProps> = ({
   };
 
   return (
-    <div className="space-y-6 ">
+    <div className="grid grid-cols-1  md:grid-cols-2 gap-4">
       <FormField
         control={form.control}
         name={"supports"}
@@ -111,8 +111,8 @@ export const CustomerSupportSelector: React.FC<CustomerFormCreateProps> = ({
                       {isLoading
                         ? "กำลังโหลดรายชื่อผู้รับผิดชอบหลัก"
                         : mainInfo
-                        ? "เปลี่ยนผู้รับผิดชอบหลัก"
-                        : "เลือกผู้รับผิดชอบหลัก +"}
+                          ? "เปลี่ยนผู้รับผิดชอบหลัก"
+                          : "เลือกผู้รับผิดชอบหลัก +"}
                     </Button>
                   </PopoverTrigger>
 
