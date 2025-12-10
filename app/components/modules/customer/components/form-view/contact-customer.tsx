@@ -147,118 +147,107 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
         </div>
       </CardHeader>
 
-      {loading ? (
-        <CardContent className="space-y-4 ">
-          <SkeletonLoading />
-          <SkeletonLoading />
-          <SkeletonLoading />
-          <SkeletonLoading />
-        </CardContent>
-      ) : (
-        <CardContent className="space-y-4">
-          <div className="flex flex-col gap-2">
-            <span className="text-base font-bold leading-none  ">
-              แท๊กลูกค้า
-            </span>
+      <CardContent className="space-y-4">
+        <div className="flex flex-col gap-2">
+          <span className="text-base font-bold leading-none  ">แท๊กลูกค้า</span>
 
-            <div className="flex flex-wrap text-muted-foreground gap-2">
-              {isEdit ? (
-                <TagsSelectorModal form={form} />
-              ) : customer && customer.tags && customer.tags.length > 0 ? (
-                customer.tags.map((tag: any, index: number) => (
-                  <GlobalTagsBadge key={index} value={tag.name ?? "new"} />
-                ))
-              ) : (
-                "ลูกค้าคนนี้ยังไม่มีแท๊ก"
-              )}
+          <div className="flex flex-wrap text-muted-foreground gap-2">
+            {isEdit ? (
+              <TagsSelectorModal form={form} />
+            ) : customer && customer.tags && customer.tags.length > 0 ? (
+              customer.tags.map((tag: any, index: number) => (
+                <GlobalTagsBadge key={index} value={tag.name ?? "new"} />
+              ))
+            ) : (
+              "ลูกค้าคนนี้ยังไม่มีแท๊ก"
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1  md:grid-cols-2 mt-5 gap-7">
+          <GlobalFormField
+            control={form.control}
+            name="contacts.0.email"
+            label="อีเมลผู้ติดต่อ"
+            type="input"
+            view={isEdit ? "edit" : "view"}
+            placeholder="กรอกอีเมลผู้ติดต่อ เช่น contact@gmail.com"
+          />
+          <GlobalFormField
+            control={form.control}
+            name="contacts.0.phone"
+            label="เบอร์โทรศัพท์ผู้ติดต่อ (ตัวเลขเท่านั้น)"
+            type="number"
+            view={isEdit ? "edit" : "view"}
+            placeholder="กรอกเบอร์โทรศัพท์ผู้ติดต่อ เช่น 0612345678"
+          />
+
+          <GlobalFormField
+            control={form.control}
+            name="contacts.0.position"
+            label="แผนกผู้ติดต่อ"
+            type="input"
+            view={isEdit ? "edit" : "view"}
+            placeholder="กรอกแผนกของผู้ติดต่อ เช่น ฝ่ายการตลาด"
+          />
+
+          <GlobalFormField
+            control={form.control}
+            name="contacts.0.department"
+            label="ตำแหน่งผู้ติดต่อ"
+            type="number"
+            view={isEdit ? "edit" : "view"}
+            placeholder="กรอกตำแหน่งของผู้ติดต่อ เช่น ที่ปรึกษาด้านการตลาด"
+          />
+        </div>
+
+        {isEdit ? (
+          <CustomerSupportSelector form={form} />
+        ) : (
+          <div className="grid grid-cols-1  md:grid-cols-2 gap-7">
+            <div className="flex flex-col w-full">
+              <span>ผู้รับผิดชอบหลัก</span>
+              <span className="mt-2 text-sm text-[#71717A]">
+                {mainSupport ? (
+                  <div className="flex items-center gap-2 text-[#71717A]  dark:text-[#b4b4c5]">
+                    <GlobalImage
+                      src={
+                        mainSupport.imageUrl ||
+                        `https://api.dicebear.com/9.x/initials/svg?seed=${mainSupport.fullName}`
+                      }
+                      alt={mainSupport.fullName}
+                      className="w-6 h-6 rounded-full"
+                    />
+                    <span>{mainSupport.fullName}</span>
+                  </div>
+                ) : (
+                  <span>ยังไม่ได้เลือกผู้รับผิดชอบ</span>
+                )}
+              </span>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1  md:grid-cols-2 mt-5 gap-7">
-            <GlobalFormField
-              control={form.control}
-              name="contacts.0.email"
-              label="อีเมลผู้ติดต่อ"
-              type="input"
-              view={isEdit ? "edit" : "view"}
-              placeholder="กรอกอีเมลผู้ติดต่อ เช่น contact@gmail.com"
-            />
-            <GlobalFormField
-              control={form.control}
-              name="contacts.0.phone"
-              label="เบอร์โทรศัพท์ผู้ติดต่อ (ตัวเลขเท่านั้น)"
-              type="number"
-              view={isEdit ? "edit" : "view"}
-              placeholder="กรอกเบอร์โทรศัพท์ผู้ติดต่อ เช่น 0612345678"
-            />
-
-            <GlobalFormField
-              control={form.control}
-              name="contacts.0.position"
-              label="แผนกผู้ติดต่อ"
-              type="input"
-              view={isEdit ? "edit" : "view"}
-              placeholder="กรอกแผนกของผู้ติดต่อ เช่น ฝ่ายการตลาด"
-            />
-
-            <GlobalFormField
-              control={form.control}
-              name="contacts.0.department"
-              label="ตำแหน่งผู้ติดต่อ"
-              type="number"
-              view={isEdit ? "edit" : "view"}
-              placeholder="กรอกตำแหน่งของผู้ติดต่อ เช่น ที่ปรึกษาด้านการตลาด"
-            />
-          </div>
-
-          {isEdit ? (
-            <CustomerSupportSelector form={form} />
-          ) : (
-            <div className="grid grid-cols-1  md:grid-cols-2 gap-7">
-              <div className="flex flex-col w-full">
-                <span>ผู้รับผิดชอบหลัก</span>
-                <span className="mt-2 text-sm text-[#71717A]">
-                  {mainSupport ? (
-                    <div className="flex items-center gap-2 text-[#71717A]  dark:text-[#b4b4c5]">
+            <div className="flex flex-col w-full">
+              <span>ผู้รับผิดชอบรอง</span>
+              <span className=" mt-2 text-sm text-[#71717A]  dark:text-[#b4b4c5]">
+                {secondarySupports && secondarySupports.length > 0 ? (
+                  secondarySupports.map((s: any) => (
+                    <div key={s.id} className="flex items-center mt-2 gap-2">
                       <GlobalImage
-                        src={
-                          mainSupport.imageUrl ||
-                          `https://api.dicebear.com/9.x/initials/svg?seed=${mainSupport.fullName}`
-                        }
-                        alt={mainSupport.fullName}
-                        className="w-6 h-6 rounded-full"
+                        src={`https://api.dicebear.com/9.x/initials/svg?seed=${s.fullName}`}
+                        fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${s.fullName}`}
+                        className="w-8 h-8 rounded-full"
                       />
-                      <span>{mainSupport.fullName}</span>
+                      <span>{s.fullName}</span>
                     </div>
-                  ) : (
-                    <span>ยังไม่ได้เลือกผู้รับผิดชอบ</span>
-                  )}
-                </span>
-              </div>
-
-              <div className="flex flex-col w-full">
-                <span>ผู้รับผิดชอบรอง</span>
-                <span className=" mt-2 text-sm text-[#71717A]  dark:text-[#b4b4c5]">
-                  {secondarySupports && secondarySupports.length > 0 ? (
-                    secondarySupports.map((s: any) => (
-                      <div key={s.id} className="flex items-center mt-2 gap-2">
-                        <GlobalImage
-                          src={`https://api.dicebear.com/9.x/initials/svg?seed=${s.fullName}`}
-                          fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${s.fullName}`}
-                          className="w-8 h-8 rounded-full"
-                        />
-                        <span>{s.fullName}</span>
-                      </div>
-                    ))
-                  ) : (
-                    <span>ยังไม่ได้เลือกผู้รับผิดชอบ</span>
-                  )}
-                </span>
-              </div>
+                  ))
+                ) : (
+                  <span>ยังไม่ได้เลือกผู้รับผิดชอบ</span>
+                )}
+              </span>
             </div>
-          )}
-        </CardContent>
-      )}
+          </div>
+        )}
+      </CardContent>
     </Card>
   );
 };

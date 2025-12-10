@@ -32,23 +32,13 @@ import { DataTable } from "~/components/shared/data-table";
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
 import { useOrdersPaginateFilter } from "~/api/client/order/useGetOrder";
 
-import { RelationshipCard } from "./components/relationship";
-import { ViewCustomerActivityLog } from "./components/customer-activityLog";
 import { AIMessageView } from "../message/ai-message-view-modal";
 import { useOrderColumns } from "../order/components/columns";
 import { AiGetDataFromChat } from "./components/ai-getdata-from-chat";
 import { CustomTabs } from "~/components/shared/custom-tabs";
-import { NotesCard } from "./components/cardZone/NoteCard";
-import { PieChart } from "~/components/shared/charts/pie-chart";
-import { SkeletonLoading } from "~/components/shared/skeleton-loading";
-import { RemarkCard } from "./components/cardZone/RemarkCard";
-import { Button } from "~/components/ui/button";
+
 import { OrderFilterFields } from "~/schemas/order/type";
-import { AiCustomerFields } from "../message/AiCustomerFields";
-import { CustomerDeail } from "./components/form-view/customer-deail";
-import { OrganizationDetails } from "./components/form-view/organization-details";
-import { ContactCustomer } from "./components/form-view/contact-customer";
-import { set } from "react-hook-form";
+
 import { DashboardTabContent } from "./contents-tabs/dashboard-tab-content";
 import { CustomerDetailTabContent } from "./contents-tabs/customer-detail-tab-content";
 import { NoteTabContent } from "./contents-tabs/note-tab-content";

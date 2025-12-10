@@ -102,7 +102,7 @@ export const CustomerDeail: React.FC<CustomerFormCreateProps> = ({
               view={isEdit ? "edit" : "view"}
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+          <div className="grid grid-cols-1 lg:g gap-6 pt-4">
             <GlobalFormField
               control={form.control}
               name="profile.prefix"
@@ -115,7 +115,6 @@ export const CustomerDeail: React.FC<CustomerFormCreateProps> = ({
                     options={prefix}
                     value={field.value || ""}
                     onChange={field.onChange}
-                    columns={3}
                   />
                 );
               }}
