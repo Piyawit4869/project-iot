@@ -30,12 +30,11 @@ import { PermissionBaseAction } from "~/types/roles/permission";
 export default function Customer() {
   const { permission } = useRouteLoaderData("root");
 
-  const [customerTypeTab, setCustomerTypeTab] = useState("allCustomer");
+  const [customerTypeTab, setCustomerTypeTab] = useState("");
 
-  const summaryType =
-    customerTypeTab === "allCustomer" ? undefined : customerTypeTab;
-
-  const { data: categories, isLoading } = useAllCustomerSummary(summaryType);
+  const { data: categories, isLoading } = useAllCustomerSummary(
+    customerTypeTab || ""
+  );
 
   const { isMobile } = useSidebar();
   const customerPaginate = useCustomerPaginate;
@@ -143,7 +142,7 @@ export default function Customer() {
       >
         <TabsList>
           <TabsTrigger
-            value="allCustomer"
+            value=""
             className="hover:bg-border mb-3 relative px-4 py-2 !shadow-none !border-0 rounded-md 
             after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black 
             after:transition-all after:w-0 data-[state=active]:after:w-full"
@@ -178,7 +177,7 @@ export default function Customer() {
                 pageIndex,
                 pageSize,
                 status: status === "all" ? "" : status,
-                customerType: summaryType,
+                customerType: customerTypeTab,
                 limit: pageSize,
                 ...filters,
                 createdFrom,
