@@ -1,7 +1,9 @@
 "use client";
 
 import {
+  Activity,
   Bot,
+  ClipboardList,
   FileText,
   LayoutDashboard,
   Link,
@@ -381,7 +383,7 @@ export default function SingDetailleCustomer() {
                 {
                   key: "note",
                   label: "โน๊ต/กิจกรรม",
-                  icon: <Bot className="w-4 h-4" />,
+                  icon: <Activity className="w-4 h-4" />,
                   content: (
                     <NoteTabContent
                       isLoading={isLoading}
