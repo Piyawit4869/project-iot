@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-react";
 
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { toast } from "sonner";
 import { useCustomerViewModel } from "./viewmodels/useCustomerViewModel";
@@ -49,6 +49,9 @@ import { CustomerDeail } from "./components/form-view/customer-deail";
 import { OrganizationDetails } from "./components/form-view/organization-details";
 import { ContactCustomer } from "./components/form-view/contact-customer";
 import { set } from "react-hook-form";
+import { DashboardTabContent } from "./contents-tabs/dashboard-tab-content";
+import { CustomerDetailTabContent } from "./contents-tabs/customer-detail-tab-content";
+import { NoteTabContent } from "./contents-tabs/note-tab-content";
 
 export default function SingDetailleCustomer() {
   const navigate = useNavigate();
@@ -67,12 +70,6 @@ export default function SingDetailleCustomer() {
   const { data: analyzeCustomer, isLoading: loadAnalyzeCustomer } =
     useGetAnalyzeCustomer(id);
 
-  const [customerForms, setCustomerForms] = React.useState([
-    { key: "contact_detail", mode: "view" },
-    { key: "customer_detail", mode: "view" },
-    { key: "organization_detail", mode: "view" },
-  ]);
-
   const {
     state: {
       customerNote,
@@ -84,6 +81,11 @@ export default function SingDetailleCustomer() {
 
   const [isEdit, setIsEdit] = React.useState(false);
   const [AIOpen, setAIOpen] = React.useState(false);
+  const [customerForms, setCustomerForms] = useState([
+    { key: "contact_detail", mode: "view" },
+    { key: "customer_detail", mode: "view" },
+    { key: "organization_detail", mode: "view" },
+  ]);
   const [tab, setTab] = React.useState("dashboard");
 
   const data = customer?.profile;
@@ -319,84 +321,22 @@ export default function SingDetailleCustomer() {
                   label: "แดชบอร์ด (สรุป) ",
                   icon: <LayoutDashboard className="w-4 h-4" />,
                   content: (
-                    <>
-                      <div className="flex flex-row gap-5">
-                        <div className="w-[50%] h-auto">
-                          <ContactCustomer
-                            customer={customer}
-                            form={formUpdate}
-                            loading={loadCustomer}
-                            onClick={onUpdate}
-                            disabled={isLoading || isPending}
-                            mode={
-                              customerForms.find(
-                                (f) => f.key === "contact_detail"
-                              )?.mode
-                            }
-                            onCancel={handleCancel}
-                            onEditForm={handleEditForm}
-                          />
-                        </div>
-
-                        <Card className="w-[50%]">
-                          <CardHeader>
-                            <CardTitle className="text-base font-bold">
-                              ความสัมพันธ์ลูกค้า
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent className="space-y-4 w-full">
-                            {loadAnalyzeCustomer ? (
-                              <>
-                                <div className="flex justify-center">
-                                  <SkeletonLoading
-                                    shape="rounded"
-                                    width="w-[190px]"
-                                    height="h-[190px]"
-                                    className="mb-10"
-                                  />
-                                </div>
-                                <SkeletonLoading />
-                                <SkeletonLoading />
-                                <SkeletonLoading />
-                                <SkeletonLoading />
-                              </>
-                            ) : (
-                              <div className="flex w-full">
-                                <PieChart initData={analyzeCustomer} />
-                              </div>
-                            )}
-                          </CardContent>
-                        </Card>
-                      </div>
-
-                      <Card className="my-5">
-                        <div className="flex gap-2 mx-6 justify-between items-center">
-                          <span className="text-base font-bold ">
-                            ออเดอร์ที่สั่งซื้อล่าสุด
-                          </span>
-                          <Button onClick={() => setTab("order")}>
-                            ดูทั้งหมด
-                          </Button>
-                        </div>
-                        <CardContent>
-                          <DataTable
-                            offSearch
-                            offFilter
-                            queryFunction={({ pageIndex, pageSize }) =>
-                              useOrdersPaginateFilter({
-                                pageIndex,
-                                pageSize: 5,
-                                customerId: id,
-                                sortField: "orderDetails_createdAt",
-                                sortingBy: "desc",
-                              })
-                            }
-                            offPaginate={true}
-                            columns={columns}
-                          />
-                        </CardContent>
-                      </Card>
-                    </>
+                    <DashboardTabContent
+                      isLoading={isLoading}
+                      customer={customer}
+                      formUpdate={formUpdate}
+                      loadCustomer={loadCustomer}
+                      onUpdate={onUpdate}
+                      isPending={isPending}
+                      handleCancel={handleCancel}
+                      handleEditForm={handleEditForm}
+                      columns={columns}
+                      id={id}
+                      customerForms={customerForms}
+                      analyzeCustomer={analyzeCustomer}
+                      loadAnalyzeCustomer={loadAnalyzeCustomer}
+                      setTab={setTab}
+                    />
                   ),
                 },
                 {
@@ -404,40 +344,17 @@ export default function SingDetailleCustomer() {
                   label: "ข้อมูลลูกค้า",
                   icon: <User className="w-4 h-4" />,
                   content: (
-                    <div className="flex flex-row gap-5">
-                      <div className="w-[50%]">
-                        <CustomerDeail
-                          customer={customer}
-                          form={formUpdate}
-                          loading={loadCustomer}
-                          onClick={onUpdate}
-                          disabled={isLoading || isPending}
-                          mode={
-                            customerForms.find(
-                              (f) => f.key === "customer_detail"
-                            )?.mode
-                          }
-                          onCancel={handleCancel}
-                          onEditForm={handleEditForm}
-                        />
-                      </div>
-                      <div className="w-[50%]">
-                        <OrganizationDetails
-                          customer={customer}
-                          form={formUpdate}
-                          loading={loadCustomer}
-                          onClick={onUpdate}
-                          disabled={isLoading || isPending}
-                          mode={
-                            customerForms.find(
-                              (f) => f.key === "organization_detail"
-                            )?.mode
-                          }
-                          onCancel={handleCancel}
-                          onEditForm={handleEditForm}
-                        />
-                      </div>
-                    </div>
+                    <CustomerDetailTabContent
+                      customer={customer}
+                      formUpdate={formUpdate}
+                      loadCustomer={loadCustomer}
+                      onUpdate={onUpdate}
+                      isLoading={isLoading}
+                      isPending={isPending}
+                      customerForms={customerForms}
+                      handleCancel={handleCancel}
+                      handleEditForm={handleEditForm}
+                    />
                   ),
                 },
                 {
@@ -473,34 +390,17 @@ export default function SingDetailleCustomer() {
                 },
                 {
                   key: "note",
-                  label: "บันทึกโน๊ต/กิจกรรม",
+                  label: "โน๊ต/กิจกรรม",
                   icon: <Bot className="w-4 h-4" />,
                   content: (
-                    <>
-                      <div className="flex flex-row gap-4 h-full">
-                        <div className="w-[50%]  ">
-                          <NotesCard
-                            loading={isLoading ?? false}
-                            notes={customer?.note ?? []}
-                            customerNote={customerNote}
-                            onClick={onUpdate}
-                            fetchCustomerNote={fetchCustomerNote ?? (() => {})}
-                            className="min-h-50 h-auto"
-                          />
-
-                          <RemarkCard
-                            loading={isLoading ?? false}
-                            remark={customer?.remark || ""}
-                            form={formUpdate}
-                            onClick={onUpdate}
-                            className="min-h-50 h-auto mt-5"
-                          />
-                        </div>
-                        <div className="w-[50%] ">
-                          <ViewCustomerActivityLog className="h-full" />
-                        </div>
-                      </div>
-                    </>
+                    <NoteTabContent
+                      isLoading={isLoading}
+                      customer={customer}
+                      formUpdate={formUpdate}
+                      onUpdate={onUpdate}
+                      fetchCustomerNote={fetchCustomerNote}
+                      customerNote={customerNote}
+                    />
                   ),
                 },
               ]}
@@ -508,15 +408,6 @@ export default function SingDetailleCustomer() {
           </Form>
         </div>
       </CustomerProvider>
-
-      {/* <AIMessageView
-        open={AIOpen}
-        onOpenChange={setAIOpen}
-        customer={getData}
-        onClickBtn={onSync}
-        closeBtn={true}
-        // isLoading={isLoadingAiNote}
-      /> */}
 
       <div className="flex flex-col space-y-2 overflow-y-auto">
         <AIMessageView
@@ -526,12 +417,6 @@ export default function SingDetailleCustomer() {
           closeBtn={true}
           onClickBtn={onSync}
         />
-        {/* <AiCustomerFields
-          data={customer}
-          onClickBtn={onSync}
-          closeBtn={true}
-          noSyncBtn={true}
-        /> */}
       </div>
     </>
   );

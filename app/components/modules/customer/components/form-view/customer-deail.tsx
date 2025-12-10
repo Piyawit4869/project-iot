@@ -35,27 +35,61 @@ export const CustomerDeail: React.FC<CustomerFormCreateProps> = ({
           <div className="flex gap-2">
             <CardTitle className="text-base font-bold">ข้อมูลลูกค้า</CardTitle>
           </div>
-
-          <EditActionButtons
-            isEdit={isEdit}
-            disabled={disabled}
-            onSave={onClick}
-            onEdit={() => {
-              onEditForm?.("customer_detail");
-            }}
-            onCancel={() => {
-              onCancel?.("customer_detail");
-            }}
-          />
+          {loading ? (
+            <div className="flex ml-auto">
+              <SkeletonLoading className="w-10 h-10" />
+            </div>
+          ) : (
+            <EditActionButtons
+              isEdit={isEdit}
+              disabled={disabled}
+              onSave={onClick}
+              onEdit={() => {
+                onEditForm?.("customer_detail");
+              }}
+              onCancel={() => {
+                onCancel?.("customer_detail");
+              }}
+            />
+          )}
         </div>
       </CardHeader>
 
       {loading ? (
         <CardContent className="space-y-4 ">
-          <SkeletonLoading />
-          <SkeletonLoading />
-          <SkeletonLoading />
-          <SkeletonLoading />
+          <div className="flex flex-col gap-2">
+            <SkeletonLoading className="w-20 h-4  " />
+            <SkeletonLoading className="w-30 h-30  " />
+          </div>
+          <div className="flex flex-col gap-2">
+            <SkeletonLoading className="w-20 h-4  " />
+            <SkeletonLoading className="w-40 h-10  " />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <SkeletonLoading
+                key={i}
+                className={`h-6 ${i % 4 < 2 ? "w-30" : ""}`}
+              />
+            ))}
+          </div>
+          <div className="flex flex-row gap-2 items-center">
+            <SkeletonLoading className="w-5 h-5  " />
+            <SkeletonLoading className="w-80 h-7  " />
+          </div>
+          <div className="flex flex-row gap-2">
+            {Array.from({ length: 13 }).map((_, i) => (
+              <SkeletonLoading key={i} className={`h-10 w-8`} />
+            ))}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <SkeletonLoading
+                key={i}
+                className={`h-6 ${i % 4 < 2 ? "w-30" : ""}`}
+              />
+            ))}
+          </div>
         </CardContent>
       ) : (
         <CardContent className="space-y-4">

@@ -29,26 +29,41 @@ export const OrganizationDetails: React.FC<CustomerFormCreateProps> = ({
             </CardTitle>
           </div>
 
-          <EditActionButtons
-            isEdit={isEdit}
-            disabled={disabled}
-            onSave={onClick}
-            onEdit={() => {
-              onEditForm?.("organization_detail");
-            }}
-            onCancel={() => {
-              onCancel?.("organization_detail");
-            }}
-          />
+          {loading ? (
+            <div className="flex ml-auto">
+              <SkeletonLoading className="w-10 h-10" />
+            </div>
+          ) : (
+            <EditActionButtons
+              isEdit={isEdit}
+              disabled={disabled}
+              onSave={onClick}
+              onEdit={() => {
+                onEditForm?.("organization_detail");
+              }}
+              onCancel={() => {
+                onCancel?.("organization_detail");
+              }}
+            />
+          )}
         </div>
       </CardHeader>
 
       {loading ? (
         <CardContent className="space-y-4 ">
-          <SkeletonLoading />
-          <SkeletonLoading />
-          <SkeletonLoading />
-          <SkeletonLoading />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {Array.from({ length: 16 }).map((_, i) => (
+              <SkeletonLoading
+                key={i}
+                className={`h-6 ${i % 4 < 2 ? "w-30" : ""}`}
+              />
+            ))}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-5">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <SkeletonLoading key={i} className={`h-6 w-100`} />
+            ))}
+          </div>
         </CardContent>
       ) : (
         <CardContent className="space-y-4">

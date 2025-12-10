@@ -7,6 +7,7 @@ interface EditActionButtonsProps {
   onSave?: (value: any) => void;
   onEdit?: () => void;
   onCancel?: () => void;
+  loading?: boolean;
 }
 
 export function EditActionButtons({
@@ -15,6 +16,7 @@ export function EditActionButtons({
   isAnyFilled = false,
   onSave,
   onEdit,
+  loading,
   onCancel,
 }: EditActionButtonsProps) {
   // logic ของ disable สำหรับปุ่มนี้
@@ -24,7 +26,6 @@ export function EditActionButtons({
 
   return (
     <div className="ml-auto flex flex-row gap-3 text-muted-foreground">
-      {/* Save button (เมื่อ edit mode) */}
       {isEdit ? (
         <div
           className={`edit-icon-container ${
@@ -37,7 +38,6 @@ export function EditActionButtons({
           </div>
         </div>
       ) : (
-        /* Pen button (เข้าโหมดแก้ไข) */
         <div
           className={`edit-icon-container ${
             disableEdit ? "pointer-events-none opacity-40" : "cursor-pointer"
@@ -50,7 +50,6 @@ export function EditActionButtons({
         </div>
       )}
 
-      {/* Cancel button (เฉพาะตอนแก้ไข) */}
       {isEdit && (
         <div
           className={`edit-icon-container ${
