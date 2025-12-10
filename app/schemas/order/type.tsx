@@ -151,12 +151,12 @@ export const OrderFilterFields: FilterField[] = [
   // { id: "name", label: "ชื่อลูกค้า", kind: "text", showIn: "main" },
   { id: "name", label: "ชื่อลูกค้า", kind: "text", showIn: "main" },
   // { id: "profit", label: "กำไรโดยประมาณ", kind: "number", showIn: "main" },
-  { id: "total", label: "ยอดรวม", kind: "number", showIn: "main" },
+
   {
     id: "createdAt",
     label: "วันที่ออกเอกสาร",
     kind: "date",
-    showIn: "advanced",
+    showIn: "main",
   },
   // {
   //   id: "docStatus",

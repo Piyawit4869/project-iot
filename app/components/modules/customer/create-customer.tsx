@@ -7,13 +7,37 @@ import { useModalStore } from "~/components/shared/modal/modal-controller";
 import { CustomerProvider } from "~/hooks/customer/useCustomerStore";
 import { TabControl } from "~/components/shared/tab-control";
 import GlobalButton from "~/components/shared/global-button";
-import { Save } from "lucide-react";
+import { ArrowBigLeftDash, ArrowBigRightDash, Save } from "lucide-react";
 import { Form } from "~/components/ui/form";
 import { useCreateCustomer } from "~/api/client/customer/useCustomer";
 import { CustomerInfoCard } from "./components/customer-info";
 import { CustomerDeatailCard } from "./components/customer-detail-card";
 import { CustomerTagAndAI } from "./components/customer-tag-ai";
 import type { CustomerValues } from "~/schemas/customer/customer-form";
+import { StepsVertical } from "~/components/shared/global-step";
+import { OtherDetatil } from "./components/other-detatil";
+import React from "react";
+import { Button } from "~/components/ui/button";
+
+export function calculateProgress(formValues: any, requiredFields: string[]) {
+  let filled = 0;
+
+  requiredFields.forEach((field) => {
+    const value = field
+      .split(".")
+      .reduce((obj: any, key: string) => obj?.[key], formValues);
+
+    if (value !== undefined && value !== null && value !== "") {
+      filled += 1;
+    }
+  });
+
+  return Math.round((filled / requiredFields.length) * 100);
+}
+
+export type ProgressConfig = {
+  [stepKey: string]: string[]; // array ของ required fields ในแต่ละ step
+};
 
 export default function CreateCustomer() {
   const navigate = useNavigate();
@@ -32,6 +56,17 @@ export default function CreateCustomer() {
     !!isPending ||
     ((!!phoneContact?.trim() || !!nameContact?.trim()) &&
       (!phoneContact?.trim() || !nameContact?.trim()));
+
+  const [current, setCurrent] = React.useState(0);
+  const totalSteps = 4;
+
+  const next = () => {
+    setCurrent((c) => Math.min(c + 1, totalSteps - 1));
+  };
+
+  const prev = () => {
+    setCurrent((c) => Math.max(c - 1, 0));
+  };
 
   const onCreate = (values: CustomerValues) => {
     const payload = Object.assign({}, values);
@@ -99,37 +134,131 @@ export default function CreateCustomer() {
     }
   };
 
+  const requiredCustomerFields = [
+    // "profile.imageUrl",
+    "status",
+    "profile.firstName",
+    // "profile.lastName",
+    // "profile.gender",
+    // "profile.birthDate",
+    // "profile.age",
+    // "customerType",
+    // "profile.phone",
+  ];
+
+  const requiredOrganizationFields = [
+    "organizationDetails.businessName",
+    "organizationDetails.fromType",
+    // "organizationDetails.branchCode",
+    // "organizationDetails.businessPhone",
+    // "organizationDetails.businessFax",
+    // "organizationDetails.businessEmail",
+    // "organizationDetails.importantDate",
+    // "organizationDetails.openingDate",
+    // "organizationDetails.orgType",
+    // "organizationDetails.websiteUrl",
+    // "organizationDetails.note",
+    // "organizationDetails.descriptions",
+  ];
+
+  const values = formCreate.getValues();
+  const progressCustomerData = calculateProgress(
+    values,
+    requiredCustomerFields
+  );
+
+  const progressOrganizationData = calculateProgress(
+    values,
+    requiredOrganizationFields
+  );
+
   return (
     <CustomerProvider>
       <div className="flex flex-col space-y-3 p-4    ">
         <TabControl
           title="สร้างลูกค้า"
           backpath={() => cancelCreate()}
-          buttons={[
-            <>
-              <GlobalButton
-                label={
-                  <>
-                    <Save /> สร้าง
-                  </>
-                }
-                type="submit"
-                loading={isCreating}
-                disabled={isDisabled}
-                form="customer"
-              />
-            </>,
-          ]}
+          // buttons={[
+          //   <>
+
+          //   </>,
+          // ]}
         />
+
         <Form {...formCreate}>
           <form id="customer" onSubmit={formCreate.handleSubmit(onCreate)}>
             <div className="flex flex-col md:flex-row gap-4">
-              <div className="w-full md:w-1/2 md:order-1">
-                <CustomerInfoCard form={formCreate} customer={null} />
-              </div>
-              <div className="w-full md:w-1/2 md:order-2 flex flex-col ">
-                <CustomerDeatailCard form={formCreate} />
-                <CustomerTagAndAI form={formCreate} />
+              <div className="  w-full">
+                <StepsVertical
+                  current={current}
+                  onChange={setCurrent}
+                  classNameContent="w-full"
+                  steps={[
+                    {
+                      title: "ข้อมูลลูกค้า",
+                      descriptions:
+                        "กรุณากรอกข้อมูลลูกค้าให้ครบถ้วนเพื่อใช้ในการดำเนินงาน",
+                      progress: progressCustomerData,
+                      content: (
+                        <CustomerInfoCard form={formCreate} customer={null} />
+                      ),
+                    },
+
+                    {
+                      title: "ข้อมูลบริษัท",
+                      descriptions:
+                        "กรอกข้อมูลบริษัทเพื่อใช้ในการติดต่อและดำเนินงาน",
+                      progress: progressOrganizationData,
+                      content: <OtherDetatil form={formCreate} />,
+                    },
+                    {
+                      title: "หมายเหตุ/Tags ลูกค้า",
+                      descriptions:
+                        "สามารถเพิ่มหมายเหตุหรือแท็กเพื่อจัดหมวดหมู่ลูกค้าได้",
+                      content: <CustomerTagAndAI form={formCreate} />,
+                    },
+                    {
+                      title: "ข้อมูลผู้ติดต่อ (ไม่บังคับ)",
+                      descriptions:
+                        "กรอกผู้ติดต่อเพิ่มเติมหากมี ในกรณีที่ผู้ที่ต้องติดต่อไม่ใช่ลูกค้าโดยตรง",
+                      content: <CustomerDeatailCard form={formCreate} />,
+                    },
+                  ]}
+                  buttonBottom={
+                    <div className="flex gap-3 justify-end w-full">
+                      <Button
+                        className="w-25 bg-white border border-gray-300 text-black hover:bg-gray-100 
+                        group transition-all duration-200 hover:shadow-md"
+                        onClick={prev}
+                        disabled={current === 0}
+                      >
+                        <ArrowBigLeftDash className="transition-all duration-200 group-hover:-translate-x-1" />
+                        กลับไป
+                      </Button>
+
+                      {current < 3 && (
+                        <Button
+                          onClick={next}
+                          className="w-25 group transition-all duration-200 hover:shadow-md"
+                        >
+                          ถัดไป
+                          <ArrowBigRightDash className=" transition-all duration-200 group-hover:translate-x-1" />
+                        </Button>
+                      )}
+
+                      {current === 3 && (
+                        <Button
+                          type="submit"
+                          disabled={isDisabled || isCreating}
+                          form="customer"
+                          className="w-30 transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
+                        >
+                          <Save /> สร้างลูกค้า
+                        </Button>
+                      )}
+                    </div>
+                  }
+                />
               </div>
             </div>
           </form>

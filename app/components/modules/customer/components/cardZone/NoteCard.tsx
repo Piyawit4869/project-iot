@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { NoteLists } from "./note-lists";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { DateISOToDisplayDate } from "~/utils/date-format";
+import { EditActionButtons } from "../edit-action-buttons";
+import React from "react";
 
 export interface TNote {
   id: string;
@@ -17,23 +19,41 @@ export interface TNote {
 export const NotesCard = ({
   loading,
   notes,
-  isEdit,
+  onClick,
   customerNote,
   fetchCustomerNote,
   className,
 }: {
   loading: boolean;
   notes?: any;
-  isEdit?: boolean;
+  onClick?: any;
   customerNote?: any;
   className: string;
   fetchCustomerNote?: () => void;
 }) => {
+  const [isEdit, setIsEdit] = React.useState(false);
   return (
     <Card className={className}>
       {!isEdit ? (
-        <CardHeader>
-          <CardTitle className="text-base font-bold">โน้ต</CardTitle>
+        <CardHeader className=" gap-0">
+          <div className="flex gap-2">
+            <div className="flex  flex-col">
+              <CardTitle className="text-base font-bold mt-2">
+                โน้ตลูกค้า
+              </CardTitle>
+            </div>
+
+            <EditActionButtons
+              isEdit={isEdit}
+              onSave={onClick}
+              onEdit={() => {
+                setIsEdit(true);
+              }}
+              onCancel={() => {
+                setIsEdit(false);
+              }}
+            />
+          </div>
         </CardHeader>
       ) : (
         <></>
