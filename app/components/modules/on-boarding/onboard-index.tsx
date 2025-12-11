@@ -10,13 +10,6 @@ import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
 import { Modal } from "./components/modaldialog";
 import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
 
 export default function OnboardIndex() {
   const paginate = usePaginate;
@@ -40,21 +33,7 @@ export default function OnboardIndex() {
             </Button>,
           ]}
         />
-        {/* <Modal
-          isOpen={open}
-          onClose={() => setOpen(false)}
-          title="สร้างเทมเพลต"
-          footer={
-            <>
-              <Button variant="outline" onClick={() => setOpen(false)}>
-                ยกเลิก
-              </Button>
-              <Button onClick={() => alert("บันทึกสำเร็จ")}>บันทึก</Button>
-            </>
-          }
-        >
-          <p className="text-gray-600">เนื้อหา</p>
-        </Modal> */}
+
         <DataTable
           // queryFunction={(res) =>
           //   paginate({
