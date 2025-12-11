@@ -73,20 +73,33 @@ export const useOrdersPaginateFilter = ({
   pageSize = 20,
   isAll,
   customerId,
+  sortField,
+  sortingBy,
 }: {
   pageIndex: number;
   pageSize: number;
   isAll?: boolean;
   customerId?: string;
+  sortField?: string;
+  sortingBy?: string;
 }) => {
   return useQuery({
-    queryKey: ["paginate", pageIndex, pageSize, customerId],
+    queryKey: [
+      "paginate",
+      pageIndex,
+      pageSize,
+      customerId,
+      sortField,
+      sortingBy,
+    ],
     queryFn: () =>
       fetchOrderPaginationFilter({
         page: pageIndex,
         itemsPerPage: pageSize,
         limit: isAll ? 0 : 10,
         customerId,
+        sortField,
+        sortingBy,
       }),
   });
 };

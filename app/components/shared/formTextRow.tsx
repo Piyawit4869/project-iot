@@ -32,6 +32,8 @@ type FormTextRowProps<T extends FieldValues> = {
   label: string;
   type?: "text" | "phone" | "date" | "number" | "dateFull";
   canCopy?: boolean;
+  valueClassName?: string;
+  labelClassName?: string;
 };
 
 function getLabel(
@@ -47,6 +49,8 @@ export function FormTextRow<T extends FieldValues>({
   label,
   type = "text",
   canCopy,
+  labelClassName,
+  valueClassName,
 }: FormTextRowProps<T>) {
   const value = useWatch({ control, name });
 
@@ -84,7 +88,7 @@ export function FormTextRow<T extends FieldValues>({
       displayValue =
         typeof value === "string"
           ? getLabel(value, allOptions) || value || "-"
-          : value ?? "-";
+          : (value ?? "-");
       break;
   }
 
@@ -118,8 +122,12 @@ export function FormTextRow<T extends FieldValues>({
         </>
       ) : (
         <>
-          <span className="dark:text-[#ffffff]">{label}</span>
-          <span className="mt-2 text-sm text-[#71717A]  dark:text-[#b4b4c5]">
+          <span className={`dark:text-[#ffffff] ${labelClassName ?? ""}`}>
+            {label}
+          </span>
+          <span
+            className={`mt-2 text-sm text-[#71717A] dark:text-[#b4b4c5] ${valueClassName ?? ""}`}
+          >
             {displayValue}
           </span>
         </>

@@ -33,6 +33,14 @@ export interface CustomerFormCreateProps {
   form: UseFormReturn<CustomerValues>;
   loading?: boolean;
   dataFromAI?: any;
+  disabled?: boolean;
+  isEdit?: boolean;
+  setIsEdit?: React.Dispatch<React.SetStateAction<boolean>>;
+  mode?: string;
+
+  onClick?: (values: any) => void;
+  onCancel?: (key: string) => void;
+  onEditForm?: (key: string) => void;
 }
 
 export interface CustomerContactFormProps {

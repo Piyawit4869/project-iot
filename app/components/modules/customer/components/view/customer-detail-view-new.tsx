@@ -8,6 +8,8 @@ import { StarRating } from "~/components/shared/StarRating";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { FormField } from "~/components/ui/form";
 import type { CustomerFormCreateProps } from "~/schemas/customer/customer";
+import { TagsCard } from "../cardZone/TagsCard";
+import { GlobalTagsBadge } from "~/components/shared/global-tags";
 
 export const ViewCustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
   customer,
@@ -20,9 +22,33 @@ export const ViewCustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
   return (
     <Card>
       <CardHeader>
-        <div className="flex gap-2">
-          <CardTitle className="text-base font-bold">รายละเอียด</CardTitle>
+        <div className="flex gap-2 justify-between">
+          <CardTitle className="text-base font-bold">ชื่อผู้ติดต่อ</CardTitle>
+          <GlobalStatusBadge value={customer?.active} />
         </div>
+
+        <FormTextRow
+          control={form.control}
+          name="contacts.0.name"
+          label=""
+          labelClassName="text-3xl"
+          valueClassName="text-3xl"
+        />
+        <FormField
+          control={form.control}
+          name={"priority"}
+          render={({ field }) => (
+            <>
+              <div className="flex flex-col w-full">
+                <StarRating
+                  rating={field.value}
+                  interactive={false}
+                  size={20}
+                />
+              </div>
+            </>
+          )}
+        />
       </CardHeader>
 
       {loading ? (
@@ -34,29 +60,21 @@ export const ViewCustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
         </CardContent>
       ) : (
         <CardContent className="space-y-4">
-          <GlobalStatusBadge value={customer?.active} />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
-            <FormTextRow
-              control={form.control}
-              name="contacts.0.name"
-              label="ผู้ติดต่อ"
-            />
+          <div className="flex flex-col gap-2">
+            <span className="text-base font-bold leading-none  ">
+              แท๊กลูกค้า
+            </span>
+
+            <div className="flex flex-wrap text-muted-foreground gap-2">
+              {customer && customer.tags && customer.tags.length > 0
+                ? customer.tags.map((tag: any, index: number) => (
+                    <GlobalTagsBadge key={index} value={tag.name ?? "new"} />
+                  ))
+                : "ลูกค้าคนนี้ยังไม่มีแท๊ก"}
+            </div>
           </div>
-          <div className="grid grid-cols-1  md:grid-cols-2 gap-4 my-7">
-            <FormField
-              control={form.control}
-              name={"priority"}
-              render={({ field }) => (
-                <>
-                  <div className="flex flex-col w-full">
-                    <span className="mb-2">ความสำคัญ</span>
-                    <StarRating rating={field.value} interactive={false} />
-                  </div>
-                </>
-              )}
-            />
-          </div>
-          <div className="grid grid-cols-1  md:grid-cols-2 gap-7">
+
+          <div className="grid grid-cols-1  md:grid-cols-2 mt-5 gap-7">
             <FormTextRow
               control={form.control}
               name="contacts.0.email"

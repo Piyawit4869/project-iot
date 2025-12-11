@@ -3,6 +3,7 @@ import React from "react";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { cn } from "~/lib/utils";
 
 // ----- Types -----
 export type Activity = {
@@ -20,14 +21,16 @@ type CustomerFormCreateProps = {
   form?: any;
   loading?: boolean;
   activities?: Activity[];
+  className?: any;
 };
 
 export const ViewCustomerActivityLog: React.FC<CustomerFormCreateProps> = ({
   loading = false,
   activities = [],
+  className,
 }) => {
   return (
-    <Card className="h-50">
+    <Card className={cn("h-50", className)}>
       <CardHeader>
         <div className="flex  items-center ">
           <CardTitle className="text-base font-bold">บันทึกกิจกรรม</CardTitle>

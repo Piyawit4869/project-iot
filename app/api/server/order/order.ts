@@ -38,6 +38,8 @@ export const fetchOrderPaginationFilter = async (params: {
   itemsPerPage: number;
   limit?: number;
   customerId?: string;
+  sortField?: string;
+  sortingBy?: string;
 }) => {
   try {
     const res = await ApiConfig.get(`/crud/orders/paginate`, {

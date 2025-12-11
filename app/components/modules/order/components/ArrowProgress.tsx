@@ -50,62 +50,59 @@ export default function ArrowProgress({
         margin: 0,
       }}
     >
-      {(() => {
+      {steps.map((step, index) => {
+        const isFirst = index === 0;
+        const isLast = index === steps.length - 1;
+
         const convert = Number(Number(data?.phase ?? "1")) - 1;
 
-        // หา index ของ active step
         const activeIndex = steps.findIndex(
           (s) => s.label === (activeStep ?? steps[convert]?.label)
         );
+        const isActive = step.label === (activeStep ?? steps[convert]?.label);
 
-        return steps.map((step, index) => {
-          const isFirst = index === 0;
-          const isLast = index === steps.length - 1;
+        const isNext = index === activeIndex + 1; // สเตปถัดไป
 
-          const isActive = index === activeIndex; // สเตปปัจจุบัน
-          const isNext = index === activeIndex + 1; // สเตปถัดไป
+        // สีพื้นหลัง
+        const bgColor = isActive ? "#34C759" : isNext ? "#8FB8FA" : "#e6e6e6";
 
-          // สีพื้นหลัง
-          const bgColor = isActive ? "#34C759" : isNext ? "#8FB8FA" : "#e6e6e6";
+        const textColor = isActive ? "#fff" : isNext ? "" : "#000";
 
-          const textColor = isActive ? "#fff" : isNext ? "" : "#000";
+        const arrowSize = 10;
 
-          const arrowSize = 10;
+        const clipPath = isFirst
+          ? `polygon(0% 0%, calc(100% - ${arrowSize}px) 0%, 100% 50%, calc(100% - ${arrowSize}px) 100%, 0% 100%)`
+          : isLast
+            ? `polygon(${arrowSize}px 50%, 0% 0%, 100% 0%, 100% 100%, 0% 100%)`
+            : `polygon(${arrowSize}px 50%, 0% 0%, calc(100% - ${arrowSize}px) 0%, 100% 50%, calc(100% - ${arrowSize}px) 100%, 0% 100%)`;
 
-          const clipPath = isFirst
-            ? `polygon(0% 0%, calc(100% - ${arrowSize}px) 0%, 100% 50%, calc(100% - ${arrowSize}px) 100%, 0% 100%)`
-            : isLast
-              ? `polygon(${arrowSize}px 50%, 0% 0%, 100% 0%, 100% 100%, 0% 100%)`
-              : `polygon(${arrowSize}px 50%, 0% 0%, calc(100% - ${arrowSize}px) 0%, 100% 50%, calc(100% - ${arrowSize}px) 100%, 0% 100%)`;
+        return (
+          <div
+            key={index}
+            style={{
+              flex: 1,
+              position: "relative",
+              padding: "10px 10px 10px 10px",
+              maxWidth: 270,
+              textAlign: "center",
+              color: textColor,
 
-          return (
-            <div
-              key={index}
-              style={{
-                flex: 1,
-                position: "relative",
-                padding: "10px 10px 10px 10px",
-                maxWidth: 270,
-                textAlign: "center",
-                color: textColor,
-
-                background: bgColor,
-                clipPath: clipPath,
-                borderRadius: "6px",
-                boxShadow: isActive
-                  ? "0 3px 8px rgba(0,0,0,0.25)"
-                  : "0 2px 5px rgba(0,0,0,0.1)",
-                transition: "all 0.3s ease",
-                fontWeight: isActive ? 600 : 400,
-                marginLeft: index > 0 ? "-2px" : "0",
-                userSelect: "none",
-              }}
-            >
-              <span className="text-sm whitespace-pre-line">{step.label}</span>
-            </div>
-          );
-        });
-      })()}
+              background: bgColor,
+              clipPath: clipPath,
+              borderRadius: "6px",
+              boxShadow: isActive
+                ? "0 3px 8px rgba(0,0,0,0.25)"
+                : "0 2px 5px rgba(0,0,0,0.1)",
+              transition: "all 0.3s ease",
+              fontWeight: isActive ? 600 : 400,
+              marginLeft: index > 0 ? "-2px" : "0",
+              userSelect: "none",
+            }}
+          >
+            <span className="text-sm whitespace-pre-line">{step.label}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }

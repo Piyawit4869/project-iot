@@ -52,24 +52,109 @@ export const PieChart = ({ initData }: any) => {
     }, 1000);
   }, [initData]);
 
+  // const config = {
+  //   data,
+  //   angleField: "value",
+  //   colorField: "type",
+  //   label: {
+  //     text: "type",
+  //     position: "outside",
+  //     style: {
+  //       fontWeight: "bold",
+  //     },
+  //   },
+  //   legend: {
+  //     color: {
+  //       title: false,
+  //       position: "bottom",
+  //       rowPadding: 5,
+  //     },
+  //   },
+  // };
+  // return <Pie {...config} />;
+
   const config = {
     data,
+    height: 330,
+
     angleField: "value",
-    colorField: "type",
+    colorField: "label",
+    innerRadius: 0.6,
     label: {
-      text: "type",
-      position: "outside",
+      text: "value",
       style: {
         fontWeight: "bold",
       },
     },
     legend: {
       color: {
-        title: false,
-        position: "bottom",
-        rowPadding: 5,
+        itemLabelMaxWidth: 9999,
+        itemLabelFill: "#000000",
+        itemLabelFontSize: 15,
+        position: "top",
+
+        itemLabelFontFamily: "IBMPlexSansThai",
+        layout: "vertical",
+      },
+      size: {
+        titleFontSize: 16,
+        titleFontFamily: "IBMPlexSansThai",
+      },
+    },
+
+    scale: {
+      color: {
+        range: [
+          "#F0EEF7",
+          "#B3A9D6",
+          "#7664B5",
+          "#5D4A9B",
+          "#332956",
+          "#19142A",
+        ],
       },
     },
   };
-  return <Pie {...config} />;
+  return (
+    <div className="flex flex-col w-full">
+      <Pie {...config} />
+      {/* <div className="mt-6 space-y-5">
+       
+        <div>
+          <h3 className="font-semibold text-lg mb-2">Seller</h3>
+          <div className="grid grid-cols-2 gap-y-2">
+            {data.map((s, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <span
+                  className="w-4 h-4 rounded-sm"
+                  style={{ backgroundColor: s.color }}
+                />
+                <span className="text-sm">
+                  {s.label}: {s.percent}%
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+       
+        <div>
+          <h3 className="font-semibold text-lg mb-2">AI</h3>
+          <div className="grid grid-cols-2 gap-y-2">
+            {data.map((s, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <span
+                  className="w-4 h-4 rounded-sm"
+                  style={{ backgroundColor: s.color }}
+                />
+                <span className="text-sm"> 
+                  {s.label}: {s.percent}%
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div> */}
+    </div>
+  );
 };
