@@ -23,7 +23,7 @@
     },
     {
       "name": "ลูกค้า",
-      "key": "customner",
+      "key": "customer",
       "icon": "ShieldUser",
       "isActive": false,
       "path": "/customer"
@@ -64,6 +64,14 @@
       "icon": "Users",
       "isActive": false
     },
+    { 
+      "name": "ออนบอร์ด",
+      "key": "on_boarding",
+      "path": "/on-boarding",
+      "icon": "BookOpen",
+      "isActive": false
+    },
+
     {
       "name": "การตั้งค่า",
       "key": "setting-organization",

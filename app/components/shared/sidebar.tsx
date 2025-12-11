@@ -112,8 +112,9 @@ const permissionToMenuKey: Record<string, string> = {
 };
 
 export function AppSidebar({ data, ...props }: AppSidebarProps) {
+  console.log (data)
   const { user } = useRouteLoaderData("root");
-
+console.log ({user})
   const normalizedPermissions = getUserMapPermission(user);
 
   const defaultHomeMenu: SidebarItem[] = [
@@ -132,12 +133,13 @@ export function AppSidebar({ data, ...props }: AppSidebarProps) {
     const items = (data.home as MenuItem[])
       .map((item) => ({
         ...item,
-        key: item.key === "customner" ? "customer" : item.key,
+        key: item.key === "customer" ? "customer" : item.key,
       }))
       .filter((item) => {
         if (item.key === "home") return true;
 
         const permKey = keyToModuleMap[item.key] ?? item.key;
+
 
         return Boolean(normalizedPermissions[permKey]?.length);
       });
@@ -149,6 +151,8 @@ export function AppSidebar({ data, ...props }: AppSidebarProps) {
     }));
   }, [data.home, normalizedPermissions]);
 
+  ;
+  console.log ({homeItems})
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

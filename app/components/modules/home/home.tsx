@@ -1,5 +1,6 @@
 "use client";
 
+import { id } from "date-fns/locale";
 import {
   Package,
   Settings,
@@ -8,6 +9,8 @@ import {
   MessageCircleMore,
   ShieldUser,
   BookA,
+  Book,
+  Users,
 } from "lucide-react";
 import React from "react";
 import { Link, useRouteLoaderData } from "react-router";
@@ -22,9 +25,11 @@ type RomeApp = {
   path: string;
 };
 
+
 function filterAppsByRole(items: RomeApp[], role: Role): RomeApp[] {
   // fix id ที่สะกดผิด
-  const fixId = (id: string) => (id === "customner" ? "customer" : id);
+  const fixId = (id: string) => (id === "customer" ? "customer" : id);
+
 
   if (role === "owner") {
     return items.map((it) => ({ ...it, id: fixId(it.id) }));
@@ -33,18 +38,18 @@ function filterAppsByRole(items: RomeApp[], role: Role): RomeApp[] {
   if (role === "manager") {
     return items
       .map((it) => ({ ...it, id: fixId(it.id) }))
-      .filter((it) => it.id !== "settings");
+      .filter((it) => it.id !== "setting");
   }
 
   if (role === "sale") {
-    const allow = new Set(["chat", "customer", "order"]);
+    const allow = new Set(["chat", "customers", "order", "on_boarding"]);
     return items
       .map((it) => ({ ...it, id: fixId(it.id) }))
       .filter((it) => allow.has(it.id));
   }
 
   // role === "stock"
-  const allow = new Set(["product", "inventory"]);
+  const allow = new Set(["product", "inventory", "on_boarding"]);
   return items
     .map((it) => ({ ...it, id: fixId(it.id) }))
     .filter((it) => allow.has(it.id));
@@ -66,13 +71,14 @@ export default function HomeComponent() {
     },
 
     {
-      id: "customner",
-      name: "Customner",
+      id: "customers",
+      name: "Customer",
       nameLocal: "ลูกค้า",
       icon: ShieldUser,
       color: "bg-gradient-to-br from-cyan-500 to-blue-500",
       path: "/customer",
     },
+
     {
       id: "order",
       name: "Order",
@@ -99,16 +105,36 @@ export default function HomeComponent() {
       color: "bg-gradient-to-br from-cyan-500 to-teal-500",
       path: "/products",
     },
+
     {
-      id: "employee",
+      id: "user",
       name: "Employee",
       nameLocal: "พนักงาน",
       icon: User,
-      color: "bg-gradient-to-br from-purple-500 to-blue-500",
+      color: "bg-gradient-to-br from-yellow-500 to-green-500",
       path: "/users",
     },
+
     {
-      id: "settings",
+      id: "roles",
+      name: "Role",
+      nameLocal: "ตำแหน่ง",
+      icon: Users,
+      color: "bg-gradient-to-br from-blue-500 to-green-500",
+      path: "/roles",
+    },
+
+    {
+      id: "on_boarding",
+      name: "On Boarding",
+      nameLocal: "ออนบอร์ด",
+      icon: Book,
+      color: "bg-gradient-to-br from-purple-500 to-blue-500",
+      path: "/on-boarding",
+    },
+    
+    {
+      id: "setting",
       name: "Settings",
       nameLocal: "การตั้งค่า",
       icon: Settings,
@@ -123,7 +149,7 @@ export default function HomeComponent() {
     if (!permission) return [];
 
     return romeApps.filter((app) => {
-      const key = app.id === "customner" ? "customer" : app.id;
+      const key = app.id === "customer" ? "customer" : app.id;
 
       return Array.isArray(permission[key]) && permission[key].length > 0;
     });
@@ -133,6 +159,11 @@ export default function HomeComponent() {
     () => getHomeMenu(permission),
     [permission]
   );
+  
+console.log("romeapps:", romeApps);
+console.log("gethomemanu:", getHomeMenu);
+console.log("appsforuser:", appsForUser);
+console.log("permission:", permission);
 
   return (
     <div className="container h-[calc(100vh-58px)] mx-auto">
