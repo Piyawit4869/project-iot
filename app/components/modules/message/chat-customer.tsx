@@ -223,8 +223,6 @@ export default function ChatCustomerInfo({
 
   const navigate = useNavigate();
 
-  console.log({ aiSettingData });
-
   const [isFirstTimeAI, setIsFirstTimeAI] = React.useState<boolean>(true);
   const [firstTimeMessage, setFirstTimeMessage] = React.useState<string>("");
   const [aiEnabled, setAiEnabled] = React.useState<boolean>(false);
