@@ -1,47 +1,55 @@
-// /chat/hooks/useChatPagination.ts
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { fetchAllMessageCursorWithRoomId } from "~/api/server/message/message";
+import { useEffect, useState, type RefObject } from "react";
+import type { PaginatedPage } from "~/types/messages.type";
 
-export function useChatPagination(
-  roomId: string,
-  currentId: string = "",
-  direction: "none" | "before" | "after" = "none"
-) {
-  const limit = 20;
+interface UseChatPaginationProps {
+  scrollAreaRef: React.RefObject<HTMLDivElement | null>;
+  meta: PaginatedPage["meta"];
+  fetchNextPage: () => Promise<any>;
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
+}
 
-  return useInfiniteQuery({
-    queryKey: ["messages-cursor", roomId, currentId, direction],
+export function useChatPagination({
+  scrollAreaRef,
+  meta,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+}: UseChatPaginationProps) {
+  const [showTopLoading, setShowTopLoading] = useState(false);
 
-    queryFn: async ({ pageParam = currentId }) => {
-      console.log("Cursor Query:", { roomId, pageParam, direction });
+  useEffect(() => {
+    const el = scrollAreaRef.current;
+    if (!el) return;
 
-      return fetchAllMessageCursorWithRoomId(
-        roomId,
-        pageParam,
-        limit,
-        direction
-      );
-    },
+    const TH = 5;
 
-    initialPageParam: currentId ?? "",
+    const onScroll = () => {
+      if (!hasNextPage || isFetchingNextPage) return;
 
-    getPreviousPageParam: (firstPage) => {
-      if (!firstPage?.meta?.before) return undefined;
-      return { before: firstPage.meta.before };
-    },
+      if (el.scrollTop <= TH && meta.prev) {
+        const prevHeight = el.scrollHeight;
+        setShowTopLoading(true);
 
-    getNextPageParam: (lastPage) => {
-      if (!lastPage?.meta) return undefined;
+        fetchNextPage().finally(() => {
+          setShowTopLoading(false);
+          requestAnimationFrame(() => {
+            const newHeight = el.scrollHeight;
+            el.scrollTop = newHeight - prevHeight;
+          });
+        });
+      }
 
-      const meta = lastPage.meta;
+      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - TH;
 
-      // direction = "after" → ดึงหน้าใหม่กว่า
-      if (direction === "after") return meta.after;
+      if (atBottom && meta.next) {
+        fetchNextPage();
+      }
+    };
 
-      // default = "before" → ดึงข้อความเก่ากว่า
-      return meta.before;
-    },
+    el.addEventListener("scroll", onScroll);
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [meta, hasNextPage, isFetchingNextPage]);
 
-    enabled: !!roomId,
-  });
+  return { showTopLoading };
 }
