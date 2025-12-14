@@ -230,6 +230,7 @@ export default function CreateCustomer() {
                         className="w-25 bg-white border border-gray-300 text-black hover:bg-gray-100 
                         group transition-all duration-200 hover:shadow-md"
                         onClick={prev}
+                        type="button"
                         disabled={current === 0}
                       >
                         <ArrowBigLeftDash className="transition-all duration-200 group-hover:-translate-x-1" />
@@ -238,6 +239,7 @@ export default function CreateCustomer() {
 
                       {current < 3 && (
                         <Button
+                          type="button"
                           onClick={next}
                           className="w-25 group transition-all duration-200 hover:shadow-md"
                         >

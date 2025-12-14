@@ -30,3 +30,14 @@
   transform: scale(1.10);
 }
 
+
+.step-content {
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.step-content.active {
+  opacity: 1;
+  transform: translateY(0);
+}

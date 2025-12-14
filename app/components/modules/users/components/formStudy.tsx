@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import dayjs from "dayjs";
 import { useFieldArray, useWatch, type UseFormReturn } from "react-hook-form";
 import type { UsersFormValues } from "~/schemas/users/user";
-import { CardContent } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { UserStudyModal } from "./formStudyModal";
 
@@ -186,7 +186,7 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
   }, [data, form, replaceEdu]);
 
   return (
-    <>
+    <Card className="py-0 pb-5">
       {loading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
@@ -231,8 +231,8 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
                           ev?.isGraduated
                             ? formatDate(ev?.endDate)
                             : ev?.endDate
-                            ? formatDate(ev?.endDate)
-                            : "ปัจจุบัน"
+                              ? formatDate(ev?.endDate)
+                              : "ปัจจุบัน"
                         }`
                       : "";
 
@@ -334,6 +334,6 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
           onSubmit={handleSubmitFromModal}
         />
       )}
-    </>
+    </Card>
   );
 };

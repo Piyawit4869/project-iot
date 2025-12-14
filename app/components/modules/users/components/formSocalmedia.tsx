@@ -5,7 +5,7 @@ import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 import { useFieldArray, useWatch, type UseFormReturn } from "react-hook-form";
 import type { UsersFormValues } from "~/schemas/users/user";
-import { CardContent } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { UserSocialModal } from "./formSocalmediaModal";
 
@@ -144,7 +144,7 @@ export const UserSocalmedias: React.FC<UserFormProfileProps> = ({
   }, [data, replaceSm]);
 
   return (
-    <>
+    <Card className="py-0 pb-5">
       {loading ? (
         <CardContent className="space-y-4">
           <SkeletonLoading />
@@ -276,6 +276,6 @@ export const UserSocalmedias: React.FC<UserFormProfileProps> = ({
           onSubmit={handleSubmitFromModal}
         />
       )}
-    </>
+    </Card>
   );
 };

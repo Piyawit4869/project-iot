@@ -8,7 +8,7 @@ import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 import { DocumentModal } from "./formDocumentsModal";
 
-import { CardContent } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import type { UsersFormValues } from "~/schemas/users/user";
 // import dayjs from "dayjs";
@@ -166,11 +166,11 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
           const tagsArr = Array.isArray(current?.tags)
             ? current.tags
             : current?.tags
-            ? String(current.tags)
-                .split(",")
-                .map((s: string) => s.trim())
-                .filter(Boolean)
-            : [];
+              ? String(current.tags)
+                  .split(",")
+                  .map((s: string) => s.trim())
+                  .filter(Boolean)
+              : [];
 
           updateDm(editingIndex, {
             type: current?.type ?? "",
@@ -310,7 +310,7 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
   };
 
   return (
-    <>
+    <Card className="py-0 pb-5">
       {loading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
@@ -390,6 +390,6 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
           onSubmit={handleSubmitFromModal}
         />
       )}
-    </>
+    </Card>
   );
 };

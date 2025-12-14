@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import { WorkExperienceModal } from "./formworkExperiencesModal";
 import { useFieldArray, useWatch, type UseFormReturn } from "react-hook-form";
 import type { UsersFormValues } from "~/schemas/users/user";
-import { CardContent } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 
 export interface UserFormProfileProps {
@@ -144,7 +144,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
   };
 
   return (
-    <>
+    <Card className="py-0 pb-5">
       {loading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
@@ -190,8 +190,8 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
                           wv?.isGraduated
                             ? formatDate(wv?.endDate)
                             : wv?.endDate
-                            ? formatDate(wv?.endDate)
-                            : "ปัจจุบัน"
+                              ? formatDate(wv?.endDate)
+                              : "ปัจจุบัน"
                         }`
                       : "";
 
@@ -217,8 +217,8 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
                             {company
                               ? `บริษัท: ${company}`
                               : position
-                              ? `ตำแหน่ง: ${position}`
-                              : `ประวัติประสบการณ์ทำงาน #${index + 1}`}
+                                ? `ตำแหน่ง: ${position}`
+                                : `ประวัติประสบการณ์ทำงาน #${index + 1}`}
                           </h4>
 
                           {details.length > 0 && (
@@ -284,6 +284,6 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
           onSubmit={handleSubmitFromModal}
         />
       )}
-    </>
+    </Card>
   );
 };
