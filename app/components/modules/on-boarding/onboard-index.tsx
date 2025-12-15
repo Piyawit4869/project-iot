@@ -8,13 +8,20 @@ import { useOnboardColumns } from "../on-boarding/components/columns";
 import { OnboardFilterFields } from "~/types/onboard/filter";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
-import { Modal } from "./components/modaldialog";
-import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
+import React from "react";
+import CreateTempletDialog from "./components/modaldialog";
 
 export default function OnboardIndex() {
   const paginate = usePaginate;
   const columns = useOnboardColumns();
-  const [open, setOpen] = useState(false);
+  const [openTemplate, setTemplatePoOpen] = React.useState<boolean>(false);
 
   return (
     <>
@@ -24,13 +31,17 @@ export default function OnboardIndex() {
           backpath="/on-boarding"
           buttons={[
             <Button
-              onClick={() => setOpen(true)}
+              onClick={() => setTemplatePoOpen(true)}
               key="create-button"
               className="px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
             >
               <Plus className="h-4 w-4" />
               <span className="hidden sm:inline">&nbsp;สร้าง</span>
             </Button>,
+            <CreateTempletDialog
+              openTemplate={openTemplate}
+              setOpen={setTemplatePoOpen}
+            />,
           ]}
         />
 

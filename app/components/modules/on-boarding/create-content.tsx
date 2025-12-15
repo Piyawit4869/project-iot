@@ -19,9 +19,9 @@ export default function OnboardIndex() {
       <div className="flex flex-col space-y-3 p-8">
         <TabControl
           title="ฝ่ายขาย (Sale)"
-          backpath="/on-boarding/create"
+          backpath="/on-boarding/content-create"
           buttons={[
-            <Link to={`/On-boarding/createcontent`} key="create-link">
+            <Link to={`/On-boarding/single`} key="create-link">
               <Button
                 key="create-button"
                 className="px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"

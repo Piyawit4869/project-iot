@@ -22,8 +22,6 @@ import WebSitePolicyDialog from "~/components/modules/auth/web-policy";
 import { useState } from "react";
 import SavePolicyDialog from "~/components/modules/auth/save-policy";
 
-
-
 export default function LoginForm() {
   const { state } = useNavigation();
 
@@ -34,8 +32,6 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [openWeb, setWebPoOpen] = React.useState<boolean>(false);
   const [openSave, setSavePoOpen] = React.useState<boolean>(false);
-
-
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -142,7 +138,8 @@ export default function LoginForm() {
                 <FormItem>
                   <FormLabel>
                     <Icons.Mail className="w-5 h-5" />
-                    ชื่อผู้ใช้งาน / อีเมล</FormLabel>
+                    ชื่อผู้ใช้งาน / อีเมล
+                  </FormLabel>
                   <FormControl>
                     <Input {...field} placeholder="กรอกชื่อผู้ใช้งาน/อีเมล" />
                   </FormControl>
@@ -157,8 +154,9 @@ export default function LoginForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    <Icons.UnlockIcon className="w-5 h-5" />                    
-                    รหัสผ่าน</FormLabel>
+                    <Icons.UnlockIcon className="w-5 h-5" />
+                    รหัสผ่าน
+                  </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
@@ -210,26 +208,22 @@ export default function LoginForm() {
         </Form>
 
         <div className="mt-10 flex flex-row gap-2">
-              <div
-                key="hover:underline"
-                className="cursor-pointer"
-                onClick={() => setWebPoOpen(true)}
-              >
-                นโยบายเว็บไซต์
-              </div>
-              <WebSitePolicyDialog openWeb={openWeb} setOpen={setWebPoOpen} />
-          |
-              <div
-                key="hover:underline"
-                className="cursor-pointer"
-                onClick={() => setSavePoOpen(true)}
-              >
-                นโยบายการรักษาความมั่นคงปลอดภัย
-              </div>
-              <SavePolicyDialog openSave={openSave} setOpen={setSavePoOpen} />
-             
-
-              
+          <div
+            key="hover:underline"
+            className="cursor-pointer"
+            onClick={() => setWebPoOpen(true)}
+          >
+            นโยบายเว็บไซต์
+          </div>
+          <WebSitePolicyDialog openWeb={openWeb} setOpen={setWebPoOpen} />|
+          <div
+            key="hover:underline"
+            className="cursor-pointer"
+            onClick={() => setSavePoOpen(true)}
+          >
+            นโยบายการรักษาความมั่นคงปลอดภัย
+          </div>
+          <SavePolicyDialog openSave={openSave} setOpen={setSavePoOpen} />
         </div>
       </div>
     </div>

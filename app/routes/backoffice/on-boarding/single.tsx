@@ -1,5 +1,5 @@
-import SingleOnboardDetail from "~/components/modules/on-boarding/create-onboard";
+import NewContent from "~/components/modules/on-boarding/new-content";
 
 export default function OnboardPage() {
-  return <SingleOnboardDetail />;
+  return <NewContent />;
 }
