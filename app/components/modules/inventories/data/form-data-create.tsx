@@ -609,7 +609,7 @@ export const CreateInventory: React.FC<FormInventoryProps> = (props) => {
                                   <Input
                                     type="number"
                                     placeholder="เช่น 100"
-                                    {...field}
+                                    value={field.value ?? ""}
                                     onChange={(e) =>
                                       field.onChange(
                                         e.target.value === ""
@@ -666,7 +666,7 @@ export const CreateInventory: React.FC<FormInventoryProps> = (props) => {
                                   <Input
                                     type="number"
                                     placeholder="เช่น 10"
-                                    {...field}
+                                    value={field.value ?? ""}
                                     onChange={(e) =>
                                       field.onChange(
                                         e.target.value === ""

@@ -13,8 +13,8 @@ const InventoryCreateSchema = z.object({
 
   hasCapacityLimit: z.boolean().default(false),
   enableLowStockAlert: z.boolean().default(false),
-  lowStockThreshold: z.number().optional(),
-  capacityThreshold: z.number().optional(),
+  lowStockThreshold: z.number().nullable().optional(),
+  capacityThreshold: z.number().nullable().optional(),
 
   inventoryType: z
     .enum([
@@ -33,9 +33,9 @@ const InventoryCreateSchema = z.object({
 
   allowSell: z.boolean().optional(),
   allowBorrow: z.boolean().optional(),
-  maxBorrowQty: z.number().optional(),
+  maxBorrowQty: z.number().nullable().optional(),
   allowRent: z.boolean().optional(),
-  rentPrice: z.number().optional(),
+  rentPrice: z.number().nullable().optional(),
 
   description: z.string().optional(),
   address: z.string().optional(),
@@ -77,6 +77,7 @@ const InventoryCreateSchema = z.object({
       const num = Number(val);
       return isNaN(num) ? undefined : num;
     }, z.number().nonnegative("เป้าหมายต้องไม่ติดลบ"))
+    .nullable()
     .optional(),
 
   soldQtyThisPeriod: z
