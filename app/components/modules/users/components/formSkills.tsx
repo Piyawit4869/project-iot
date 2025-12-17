@@ -5,7 +5,7 @@ import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 import type { UsersFormValues } from "~/schemas/users/user";
 import { useFieldArray, useWatch, type UseFormReturn } from "react-hook-form";
-import { CardContent } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { UserSkillModal } from "./formSkillsModal";
 
@@ -133,7 +133,7 @@ export const UserSkills: React.FC<UserFormProfileProps> = ({
   };
 
   return (
-    <>
+    <Card className="py-0 pb-5">
       {loading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
@@ -195,8 +195,8 @@ export const UserSkills: React.FC<UserFormProfileProps> = ({
                             {name
                               ? `ทักษะ: ${name}`
                               : level
-                              ? `ระดับ: ${level}`
-                              : `ประวัติทักษะ #${index + 1}`}
+                                ? `ระดับ: ${level}`
+                                : `ประวัติทักษะ #${index + 1}`}
                           </h4>
 
                           {details.length > 0 && (
@@ -262,6 +262,6 @@ export const UserSkills: React.FC<UserFormProfileProps> = ({
           onSubmit={handleSubmitFromModal}
         />
       )}
-    </>
+    </Card>
   );
 };

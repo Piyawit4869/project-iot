@@ -9,7 +9,7 @@ import ImageUpload from "~/components/shared/image-upload";
 import { RequiredLabel } from "~/components/shared/required-design";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { Button } from "~/components/ui/button";
-import { CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Checkbox } from "~/components/ui/checkbox";
 import {
   Command,
@@ -96,13 +96,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
   type OptionItem = { id: string; name: string; active?: boolean }; // ของ list ที่ใช้เลือก
 
   return (
-    <>
-      <CardHeader>
-        <div className="flex gap-2">
-          <CardTitle className="text-base font-bold">ข้อมูลพนักงาน</CardTitle>
-        </div>
-      </CardHeader>
-
+    <Card>
       {loading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
@@ -647,6 +641,6 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
           </div>
         </CardContent>
       )}
-    </>
+    </Card>
   );
 };

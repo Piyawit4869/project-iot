@@ -8,7 +8,7 @@ import { CompensationModal } from "./formCompensationModal";
 import dayjs from "dayjs";
 
 import { useFieldArray, useWatch, type UseFormReturn } from "react-hook-form";
-import { CardContent } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import type { UsersFormValues } from "~/schemas/users/user";
 
@@ -216,7 +216,7 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
   }, [data, form, replaceCf]);
 
   return (
-    <>
+    <Card className="py-0 pb-5">
       {loading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
@@ -264,8 +264,8 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
                           v?.isGraduated
                             ? formatDate(v?.endDate)
                             : v?.endDate
-                            ? formatDate(v?.endDate)
-                            : "ปัจจุบัน"
+                              ? formatDate(v?.endDate)
+                              : "ปัจจุบัน"
                         }`
                       : "-";
 
@@ -276,8 +276,8 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
                         currency === "THB"
                           ? "บาท"
                           : currency === "USD"
-                          ? "ดอลลาร์"
-                          : currency,
+                            ? "ดอลลาร์"
+                            : currency,
                     },
                     {
                       label: "โบนัส",
@@ -319,8 +319,8 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
                             {salary !== undefined && !Number.isNaN(salary)
                               ? `เงินเดือนพื้นฐาน: ${salary}`
                               : contract
-                              ? `สัญญา: ${contract}`
-                              : `ค่าตอบแทน #${index + 1}`}
+                                ? `สัญญา: ${contract}`
+                                : `ค่าตอบแทน #${index + 1}`}
                           </h4>
 
                           {details.length > 0 && (
@@ -389,6 +389,6 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
           updateCf={updateCf}
         />
       )}
-    </>
+    </Card>
   );
 };
