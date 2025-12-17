@@ -554,8 +554,8 @@ export const CreateInventory: React.FC<FormInventoryProps> = (props) => {
                                       onChange={(e) =>
                                         field.onChange(
                                           e.target.value === ""
-                                            ? null
-                                            : Number(e.target.value)
+                                            ? ""
+                                            : e.target.value
                                         )
                                       }
                                     />

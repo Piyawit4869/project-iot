@@ -13,10 +13,10 @@ import GlobalButton from "~/components/shared/global-button";
 import { formatForNumber } from "~/components/shared/global-format";
 
 interface ModalCalculateProps {
-  quantity: number;
-  setQuantity: React.Dispatch<React.SetStateAction<number>>;
-  price: number;
-  setPrice: React.Dispatch<React.SetStateAction<number>>;
+  quantity: string;
+  setQuantity: React.Dispatch<React.SetStateAction<string>>;
+  price: string;
+  setPrice: React.Dispatch<React.SetStateAction<string>>;
   discountPerItem: number;
   setDiscountPerItem: React.Dispatch<React.SetStateAction<number>>;
   totalDiscount: number;
@@ -57,13 +57,13 @@ export function ModalCalculate({
     }
 
     const matchedRule = discountRules
-      .filter((rule: DiscountRule) => quantity >= rule.minQty)
+      .filter((rule: DiscountRule) => Number(quantity) >= rule.minQty)
       .sort((a: DiscountRule, b: DiscountRule) => b.minQty - a.minQty)[0];
     const discount = matchedRule ? matchedRule.discount : 0;
     const perItemDiscount = discount;
-    const totalDiscountCalc = perItemDiscount * quantity;
-    const finalPerItem = price - perItemDiscount;
-    const totalPrice = finalPerItem * quantity;
+    const totalDiscountCalc = perItemDiscount * Number(quantity);
+    const finalPerItem = Number(price) - perItemDiscount;
+    const totalPrice = finalPerItem * Number(quantity);
 
     setDiscountPerItem(perItemDiscount);
     setTotalDiscount(totalDiscountCalc);
@@ -87,14 +87,14 @@ export function ModalCalculate({
               <Input
                 type="number"
                 value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
+                onChange={(e) => setQuantity(e.target.value)}
                 placeholder="กรอกจำนวนสินค้า"
               />
               <span>ราคาสินค้าต่อชิ้น</span>
               <Input
                 type="number"
                 value={price}
-                onChange={(e) => setPrice(Number(e.target.value))}
+                onChange={(e) => setPrice(e.target.value)}
                 placeholder="กรอกราคาสินค้า"
               />
             </div>
