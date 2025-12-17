@@ -99,7 +99,7 @@ export const useProductsColumnTable = (): ColumnDef<ProductColumn>[] => {
         const name = info.row.original?.name;
 
         return (
-          <div className=" w-[60px] h-[60px] relative ">
+          <div className="w-[60px] h-[60px] relative ">
             <GlobalImage
               src={url || ""}
               alt={name}
@@ -183,8 +183,8 @@ export const useProductsColumnTable = (): ColumnDef<ProductColumn>[] => {
             {value === "material"
               ? "วัสดุ"
               : value === "non_material"
-              ? "ไม่ใช่วัสดุ"
-              : "-"}
+                ? "ไม่ใช่วัสดุ"
+                : "-"}
           </span>
         );
       },
