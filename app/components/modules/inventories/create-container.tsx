@@ -50,76 +50,75 @@ const InventoryCreateContainer = () => {
   // };
 
   return (
-    <div className="flex flex-1 flex-col gap-4">
-      <div className="flex-1 flex-col space-y-3 p-8 md:flex">
-        <TabControl
-          title={
-            loading.inventory ? (
-              <SkeletonLoading className="w-[200px]" />
-            ) : (
-              "สร้างคลังสินค้า"
-            )
-          }
-          backpath="/inventory"
-          buttons={[
-            <GlobalButton
-              key="create button"
-              label={
-                <>
-                  <Save className="mr-2" /> สร้าง
-                </>
-              }
-              type="submit"
-              form="inventory"
-              loading={isSubmitting}
-              // onClick={handleCreate}
-            />,
-            // <GlobalButton
-            //   label="ยกเลิก"
-            //   variant="outline"
-            //   key="cancel"
-            //   onClick={() => ...}
-            // />,
-          ]}
-        />
-
-        <Card className="p-4">
-          {loading.inventory ? (
-            <IndexLayoutTableLoading />
+    // <div className="flex flex-1 flex-col gap-4">
+    <div className="flex flex-col w-full space-y-4 p-8 md:flex">
+      <TabControl
+        title={
+          loading.inventory ? (
+            <SkeletonLoading className="w-[200px]" />
           ) : (
-            <CreateInventory form={form} onSubmit={onSubmit.create} />
-          )}
-        </Card>
+            "สร้างคลังสินค้า"
+          )
+        }
+        backpath="/inventory"
+        buttons={[
+          <GlobalButton
+            key="create button"
+            label={
+              <>
+                <Save className="mr-2" /> สร้าง
+              </>
+            }
+            type="submit"
+            form="inventory"
+            loading={isSubmitting}
+            // onClick={handleCreate}
+          />,
+          // <GlobalButton
+          //   label="ยกเลิก"
+          //   variant="outline"
+          //   key="cancel"
+          //   onClick={() => ...}
+          // />,
+        ]}
+      />
 
-        <Card className="p-4 mt-5">
-          <div className="flex items-center mb-2">
-            <h2 className="text-lg font-bold mr-5">สินค้าในคลัง</h2>
+      <Card className="p-4">
+        {loading.inventory ? (
+          <IndexLayoutTableLoading />
+        ) : (
+          <CreateInventory form={form} onSubmit={onSubmit.create} />
+        )}
+      </Card>
 
-            <div className="flex gap-2">
-              <SelectorItemsModal
-                items={products.filter((item: { id: string }) => !!item.id)}
-                selected={selectItemIds}
-                onChange={handleChangeItems}
-                customButton={
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-[30px] w-[110px] p-2 gap-2 border-amber-500"
-                  >
-                    <PlusCircleIcon />
-                    <span className="text-[12px]">เพิ่มสินค้า</span>
-                  </Button>
-                }
-              />
-            </div>
+      <Card className="p-4 mt-5">
+        <div className="flex items-center mb-2">
+          <h2 className="text-lg font-bold mr-5">สินค้าในคลัง</h2>
+
+          <div className="flex gap-2">
+            <SelectorItemsModal
+              items={products.filter((item: { id: string }) => !!item.id)}
+              selected={selectItemIds}
+              onChange={handleChangeItems}
+              customButton={
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-[30px] w-[110px] p-2 gap-2 border-amber-500"
+                >
+                  <PlusCircleIcon />
+                  <span className="text-[12px]">เพิ่มสินค้า</span>
+                </Button>
+              }
+            />
           </div>
+        </div>
 
-          <div>
-            <DataTable data={inventoryProducts} columns={columns} />
-          </div>
-        </Card>
-      </div>
+        <DataTable data={inventoryProducts} columns={columns} />
+      </Card>
     </div>
+
+    // </div>
   );
 };
 

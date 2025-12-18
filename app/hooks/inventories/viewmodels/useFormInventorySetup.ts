@@ -59,8 +59,8 @@ export const useFormInventorySetup = (slug: string) => {
 
       hasCapacityLimit: false,
       enableLowStockAlert: false,
-      lowStockThreshold: 0,
-      capacityThreshold: 0,
+      lowStockThreshold: null,
+      capacityThreshold: null,
 
       inventoryType: "main_warehouse",
       contactName: "",
@@ -69,9 +69,9 @@ export const useFormInventorySetup = (slug: string) => {
 
       allowSell: false,
       allowBorrow: false,
-      maxBorrowQty: 0,
+      maxBorrowQty: null,
       allowRent: false,
-      rentPrice: 0,
+      rentPrice: null,
 
       description: "",
       address: "",
@@ -86,7 +86,7 @@ export const useFormInventorySetup = (slug: string) => {
 
       // targetQty: 0,
       // soldQtyThisPeriod: 0,
-      monthlyTarget: 0,
+      monthlyTarget: null,
     },
   });
 
@@ -98,8 +98,8 @@ export const useFormInventorySetup = (slug: string) => {
 
         hasCapacityLimit: inventory.hasCapacityLimit ?? false,
         enableLowStockAlert: inventory.enableLowStockAlert ?? false,
-        lowStockThreshold: inventory.lowStockThreshold ?? 0,
-        capacityThreshold: inventory.capacityThreshold ?? 0,
+        lowStockThreshold: inventory.lowStockThreshold ?? null,
+        capacityThreshold: inventory.capacityThreshold ?? null,
 
         inventoryType:
           (inventory.inventoryType as InventoryForm["inventoryType"]) ??
@@ -110,9 +110,9 @@ export const useFormInventorySetup = (slug: string) => {
 
         allowSell: inventory.allowSell ?? false,
         allowBorrow: inventory.allowBorrow ?? false,
-        maxBorrowQty: inventory.maxBorrowQty ?? 0,
+        maxBorrowQty: inventory.maxBorrowQty ?? null,
         allowRent: inventory.allowRent ?? false,
-        rentPrice: inventory.rentPrice ?? 0,
+        rentPrice: inventory.rentPrice ?? null,
 
         description: inventory.description ?? "",
         address: inventory.address ?? "",
@@ -127,7 +127,7 @@ export const useFormInventorySetup = (slug: string) => {
 
         // targetQty: inventory.targetQty ?? 0,
         // soldQtyThisPeriod: inventory.soldQtyThisPeriod ?? 0,
-        monthlyTarget: inventory.monthlyTarget ?? 0,
+        monthlyTarget: inventory.monthlyTarget ?? null,
       });
     } else {
       form.reset({
@@ -136,8 +136,8 @@ export const useFormInventorySetup = (slug: string) => {
 
         hasCapacityLimit: false,
         enableLowStockAlert: false,
-        lowStockThreshold: 0,
-        capacityThreshold: 0,
+        lowStockThreshold: null,
+        capacityThreshold: null,
 
         inventoryType: "main_warehouse",
         contactName: "",
@@ -146,9 +146,9 @@ export const useFormInventorySetup = (slug: string) => {
 
         allowSell: false,
         allowBorrow: false,
-        maxBorrowQty: 0,
+        maxBorrowQty: null,
         allowRent: false,
-        rentPrice: 0,
+        rentPrice: null,
 
         description: "",
         address: "",
@@ -163,7 +163,7 @@ export const useFormInventorySetup = (slug: string) => {
 
         // targetQty: 0,
         // soldQtyThisPeriod: 0,
-        monthlyTarget: 0,
+        monthlyTarget: null,
       });
     }
   }, [inventory, form]);

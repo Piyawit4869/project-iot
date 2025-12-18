@@ -89,8 +89,8 @@ export const TabPrice: React.FC<FormProductProps> = ({
   productData,
   isCreate,
 }) => {
-  const [productQuantity, setProductQuantity] = useState<number>(0);
-  const [price, setPrice] = useState<number>(0);
+  const [productQuantity, setProductQuantity] = useState("");
+  const [price, setPrice] = useState("");
   const [discountRules, setDiscountRules] = useState<
     { minQty: number; discount: number }[]
   >([]);
@@ -135,7 +135,7 @@ export const TabPrice: React.FC<FormProductProps> = ({
         <CardTitle className="text-base font-bold">การกำหนดราคา</CardTitle>
 
         <div className="grid grid-cols-2 gap-3 mt-4">
-          {isEdit ?? isCreate ? (
+          {(isEdit ?? isCreate) ? (
             <>
               <FormField
                 control={form.control}
@@ -183,7 +183,7 @@ export const TabPrice: React.FC<FormProductProps> = ({
         </div>
 
         <div className="grid grid-cols-4 gap-3 mt-4">
-          {isEdit ?? isCreate ? (
+          {(isEdit ?? isCreate) ? (
             <>
               <FormField
                 control={form.control}
@@ -361,8 +361,8 @@ export const TabPrice: React.FC<FormProductProps> = ({
             <Dialog
               onOpenChange={(open) => {
                 if (!open) {
-                  setProductQuantity(0);
-                  setPrice(0);
+                  setProductQuantity("");
+                  setPrice("");
                   setDiscountPerItem(0);
                   setTotalDiscount(0);
                   setFinalPricePerItem(0);
