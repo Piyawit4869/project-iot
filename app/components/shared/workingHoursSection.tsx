@@ -146,11 +146,14 @@ export default function WorkingHoursSection({
             <div key={key} className="rounded-xl p-3 bg-card ">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{DAY_LABEL[key]}</span>
-                <label className="flex items-center gap-2 text-sm font-medium cursor-pointer select-none">
+                <label
+                  className="flex items-center gap-2 text-sm font-medium cursor-pointer select-none"
+                  onClick={() => openModal(key)}
+                >
                   <span className="text-sm">
                     {day?.time ? day.time : "ตั้งเวลา (กดเพื่อเลือก)"}
                   </span>
-                  <Pencil className="h-4 w-4" onClick={() => openModal(key)} />
+                  <Pencil className="h-4 w-4" />
                 </label>
               </div>
             </div>
@@ -193,12 +196,13 @@ export default function WorkingHoursSection({
                 ? selectedDays.days.length === 7
                   ? "ทั้งหมด"
                   : selectedDays.days.length > 1
-                  ? `${DAY_LABEL[selectedDays.days[0] ?? "mon"]} - ${
-                      DAY_LABEL[
-                        selectedDays.days[selectedDays.days.length - 1] ?? "mon"
-                      ]
-                    }`
-                  : DAY_LABEL[selectedDays.days[0] ?? "mon"]
+                    ? `${DAY_LABEL[selectedDays.days[0] ?? "mon"]} - ${
+                        DAY_LABEL[
+                          selectedDays.days[selectedDays.days.length - 1] ??
+                            "mon"
+                        ]
+                      }`
+                    : DAY_LABEL[selectedDays.days[0] ?? "mon"]
                 : ""}
             </DialogTitle>
           </DialogHeader>

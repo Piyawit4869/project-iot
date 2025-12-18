@@ -42,7 +42,7 @@ export const keyToModuleMap: Record<string, string> = {
   orders: "order",
   product: "product",
   messages: "chat",
-  customer: "customers",
+  customer: "customer",
   employee: "user",
   "setting-organization": "setting",
   loginLog: "loginLog",

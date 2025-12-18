@@ -56,7 +56,7 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
               type="select"
               checkFields={checkFields}
               placeholder="สว่าง"
-              disable={isEditing}
+              // disable={isEditing}
               selectOptions={[
                 { label: "สว่าง", value: "light" },
                 { label: "มืด", value: "dark" },
@@ -69,7 +69,7 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
               type="select"
               checkFields={checkFields}
               placeholder="xs (12px)"
-              disable={isEditing}
+              // disable={pointer-events-none opacity-60 select-none}
               selectOptions={[
                 { label: "เล็กที่สุด", value: "extraSmall" },
                 { label: "เล็ก", value: "small" },
@@ -85,7 +85,7 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
               type="select"
               checkFields={checkFields}
               placeholder="ไทย, อังกฤษ"
-              disable={isEditing}
+              // disable={isEditing}
               selectOptions={[
                 { label: "ไทย", value: "TH" },
                 { label: "อังกฤษ", value: "EN" },
@@ -112,7 +112,7 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
             <fieldset
               disabled={isEditing}
               className={
-                isEditing ? "pointer-events-none opacity-60 select-none" : ""
+                isEditing ? "" : " pointer-events-none opacity-60 select-none"
               }
             >
               <WorkingHoursSection value={organization} />

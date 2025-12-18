@@ -305,7 +305,11 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                 disabled={!isEditing}
                 className={!isEditing ? "opacity-70" : ""}
               >
-                <SettingForm form={settingForm} organization isEditing />
+                <SettingForm
+                  form={settingForm}
+                  organization
+                  isEditing={isEditing}
+                />
               </fieldset>
             </form>
           </TabsContent>
