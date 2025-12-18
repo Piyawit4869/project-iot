@@ -84,10 +84,31 @@ export default [
     // On-Boarding
     ...prefix("on-boarding", [
       index("routes/backoffice/on-boarding/index.tsx"),
-      route("create", "routes/backoffice/on-boarding/create.tsx"),
-      route("/:id", "routes/backoffice/on-boarding/single.tsx"),
-      // route("/:id", "routes/backoffice/users/edit.tsx"),
+      route("management", "routes/backoffice/on-boarding/management/index.tsx"),
+      route(
+        "management/create",
+        "routes/backoffice/on-boarding/management/create.tsx"
+      ),
+      route(
+        "/management/single",
+        "routes/backoffice/on-boarding/management/single.tsx"
+      ),
+      route("team", "routes/backoffice/on-boarding/team/index.tsx"),
+      route("team/single", "routes/backoffice/on-boarding/team/single.tsx"),
+      route("setting", "routes/backoffice/on-boarding/setting.tsx"),
     ]),
+
+    //onboarding
+    // index
+    // onboarding-management
+    // create
+    // single/detail
+
+    // onboarding-team
+    // create
+    // single/detail
+
+    // onboarding-setting
 
     //   // customer
     //   ...prefix("customer", [
@@ -99,7 +120,7 @@ export default [
     //     route("/:id", "routes/tickets/single/view.tsx"),
     //     route("/create", "routes/tickets/create.tsx"),
     //   ]),
-    
+
     //   // products
     //   ...prefix("products", [
     //     index("routes/users/index.tsx"),

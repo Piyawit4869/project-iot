@@ -34,13 +34,68 @@ export interface TopicContentProps {
   title?: string;
   description?: string;
   thumbnailUrl?: string;
+  onDelete?: () => void;
 }
 
-export interface TestProps {
+export interface ExamProps {
   title?: string;
   description?: string;
+  name?: string;
   imageUrl?: string;
+  onDelete?: () => void;
 }
+
+export interface TemplateProps {
+  name?: string;
+  thumbnailUrl?: string;
+}
+
+export const TemplateSchema = z.object({
+  name: z.string(),
+  thumbnailUrl: z.string(),
+});
+
+export type TemplateValues = z.infer<typeof TemplateSchema>;
+
+export interface ContentProps {
+  title?: string;
+  description?: string;
+  name?: string;
+  imageUrl?: string;
+  onDelete?: () => void;
+}
+
+export interface VideoProps {
+  title?: string;
+  name?: string;
+  description?: string;
+  videoUrl?: string;
+  onDelete?: () => void;
+}
+
+export const VideoSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  videoUrl: z.string(),
+});
+
+export type VideoValues = z.infer<typeof VideoSchema>;
+
+export interface ImageProps {
+  title?: string;
+  name?: string;
+  description?: string;
+  imageUrl?: string;
+  onDelete?: () => void;
+}
+
+export const ImageSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  imageUrl: z.string(),
+});
+
+export type ImageValues = z.infer<typeof ImageSchema>;
 
 export const OnboardSchema = z.object({
   title: z.string(),
@@ -74,17 +129,19 @@ export interface ContentFormCreateProps {
   // onClick?: (values: any) => void;
 }
 
-export const TestSchema = z.object({
+export const ExamSchema = z.object({
   title: z.string(),
   description: z.string(),
+  name: z.string(),
+  active: z.boolean(),
   imageUrl: z.string(),
 });
 
-export type TestValues = z.infer<typeof TestSchema>;
+export type ExamValues = z.infer<typeof ExamSchema>;
 
-export interface TestFormCreateProps {
+export interface ExamFormCreateProps {
   // title?: string;
-  form: UseFormReturn<TestValues>;
+  form: UseFormReturn<ExamValues>;
 
   // onClick?: (values: any) => void;
 }

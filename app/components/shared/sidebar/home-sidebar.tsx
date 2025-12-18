@@ -22,7 +22,7 @@ export interface SidebarItem {
     isActive: boolean;
     disabled?: boolean;
   }[];
-}                            
+}
 
 export function HomeSidebar({
   home,
@@ -46,7 +46,6 @@ export function HomeSidebar({
       setActiveKey("home");
     }
   }, [segments]);
- console.log ({home})
   return (
     <SidebarGroup>
       <SidebarMenu>

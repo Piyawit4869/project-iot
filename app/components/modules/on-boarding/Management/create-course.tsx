@@ -4,7 +4,7 @@ import { TabControl } from "~/components/shared/tab-control";
 import { Plus } from "lucide-react";
 import { DataTable } from "~/components/shared/data-table";
 import { usePaginate } from "~/api/client/user";
-import { useOnboardColumns } from "./components/columns";
+import { useOnboardColumns } from "../components/Management/columns";
 import { OnboardFilterFields } from "~/types/onboard/filter";
 import { Button } from "~/components/ui/button";
 import { Link } from "react-router";

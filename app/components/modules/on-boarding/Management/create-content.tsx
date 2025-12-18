@@ -4,13 +4,13 @@ import { TabControl } from "~/components/shared/tab-control";
 import { Plus, Save, Settings } from "lucide-react";
 import { DataTable } from "~/components/shared/data-table";
 import { usePaginate } from "~/api/client/user";
-import { useOnboardColumns } from "../on-boarding/components/columns";
+import { useOnboardColumns } from "../components/Management/columns";
 import { OnboardFilterFields } from "~/types/onboard/filter";
 import { Button } from "~/components/ui/button";
 import { Link } from "react-router";
 import GlobalButton from "~/components/shared/global-button";
 
-export default function OnboardIndex() {
+export default function OnBoardingManagementCreate() {
   const paginate = usePaginate;
   const columns = useOnboardColumns();
 
@@ -19,9 +19,9 @@ export default function OnboardIndex() {
       <div className="flex flex-col space-y-3 p-8">
         <TabControl
           title="ฝ่ายขาย (Sale)"
-          backpath="/on-boarding/create"
+          backpath="/on-boarding/management"
           buttons={[
-            <Link to={`/On-boarding/createcontent`} key="create-link">
+            <Link to={`/on-boarding/management/single`} key="create-link">
               <Button
                 key="create-button"
                 className="px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"

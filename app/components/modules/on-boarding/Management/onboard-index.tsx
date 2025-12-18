@@ -4,21 +4,13 @@ import { TabControl } from "~/components/shared/tab-control";
 import { Plus } from "lucide-react";
 import { DataTable } from "~/components/shared/data-table";
 import { usePaginate } from "~/api/client/user";
-import { useOnboardColumns } from "../on-boarding/components/columns";
 import { OnboardFilterFields } from "~/types/onboard/filter";
-import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
 import React from "react";
-import CreateTempletDialog from "./components/modaldialog";
+import { useOnboardColumns } from "../components/Management/columns";
+import CreateTempletDialog from "../components/Management/modaldialog";
 
-export default function OnboardIndex() {
+export default function OnBoardingManagementIndex() {
   const paginate = usePaginate;
   const columns = useOnboardColumns();
   const [openTemplate, setTemplatePoOpen] = React.useState<boolean>(false);
@@ -38,13 +30,12 @@ export default function OnboardIndex() {
               <Plus className="h-4 w-4" />
               <span className="hidden sm:inline">&nbsp;สร้าง</span>
             </Button>,
-            <CreateTempletDialog
-              openTemplate={openTemplate}
-              setOpen={setTemplatePoOpen}
-            />,
           ]}
         />
-
+        <CreateTempletDialog
+          openTemplate={openTemplate}
+          setOpen={setTemplatePoOpen}
+        />
         <DataTable
           // queryFunction={(res) =>
           //   paginate({
