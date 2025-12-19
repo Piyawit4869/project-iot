@@ -11,7 +11,7 @@ import { GlobalModal } from "~/components/shared/modal/modal";
 import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash } from "lucide-react";
-import { QuestionBuilder } from "./creat-previewtest";
+import { QuestionBuilder } from "./question-builder";
 
 export const Exam: React.FC<ExamProps> = ({ onDelete }) => {
   const formExam = useForm<ExamValues>({

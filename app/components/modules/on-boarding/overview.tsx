@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 import peopleplaycomputer from "/assets/images/imgindex.png";
 import { Link } from "react-router";
-import { NavCard } from "./Management/navigatecard";
-import { StatusCount } from "./Management/cardcountstatus";
+import { NavigateCard } from "./components/Management/navigate-card";
+import { StatusCount } from "./components/Management/status-count";
 
 export default function OnboardOverview() {
   return (
@@ -68,19 +68,19 @@ export default function OnboardOverview() {
         </div>
         <div className="col-span-1 space-y-4">
           <Link to="management" className="block">
-            <NavCard
+            <NavigateCard
               icon={<BookOpen className="h-10 w-10" />}
               title="จัดการหลักสูตร On-Boarding"
             />
           </Link>
           <Link to="team" className="block">
-            <NavCard
+            <NavigateCard
               icon={<Users className="h-10 w-10" />}
               title="รู้จักทีมและเพื่อนร่วมงาน"
             />
           </Link>
           <Link to="setting" className="block">
-            <NavCard
+            <NavigateCard
               icon={<Settings className="h-10 w-10" />}
               title="ตั้งค่า On-Boarding"
             />

@@ -1,18 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, Plus, Save, X } from "lucide-react";
+import { Check, Save, X } from "lucide-react";
 import * as React from "react";
 import { useForm, type Resolver, type UseFormReturn } from "react-hook-form";
 import { Link } from "react-router";
-import { toast } from "sonner";
 import { useGetAllDepartments } from "~/api/client/user";
 import GlobalButton from "~/components/shared/global-button";
-import { GlobalFormField } from "~/components/shared/global-formField";
-import ImageUpload from "~/components/shared/image-upload";
-import { GlobalModal } from "~/components/shared/modal/modal";
 import { RequiredLabel } from "~/components/shared/required-design";
 import { useNavigate } from "react-router";
 import { useState } from "react";
-
 import {
   Dialog,
   DialogContent,
@@ -29,18 +24,11 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
-import {
   OnboardSchema,
   type OnboardValues,
 } from "~/schemas/on-boarding/onboard";
 import { string } from "zod";
-import { TemplateCard } from "./template";
+import { TemplateCard } from "./template-card";
 import Template1 from "/assets/images/Template1.png";
 import Template2 from "/assets/images/Template2.png";
 import Template3 from "/assets/images/Template3.png";
@@ -107,8 +95,6 @@ export default function CreateTempletDialog({ openTemplate, setOpen }: Props) {
     },
   ];
 
-  console.log({ data });
-
   const onCreate = (values: OnboardValues) => string;
   return (
     <>
@@ -141,53 +127,6 @@ export default function CreateTempletDialog({ openTemplate, setOpen }: Props) {
                       </FormItem>
                     )}
                   />
-
-                  {/* <FormField
-                    control={formOnboard.control}
-                    name="department"
-                    render={({ field }) => (
-                      <FormItem className="w-full">
-                        <RequiredLabel>แผนก</RequiredLabel>
-
-                        <FormControl>
-                          <Select
-                            {...field}
-                            disabled={isLoading}
-                            onValueChange={field.onChange}
-                          >
-                            <SelectTrigger className="w-full">
-                              <SelectValue
-                                placeholder={
-                                  isLoading ? "กำลังโหลดแผนก..." : "เลือกแผนก"
-                                }
-                              />
-                            </SelectTrigger>
-
-                            <SelectContent className="w-full">
-                              {isLoading ? (
-                                <SelectItem value="loading" disabled>
-                                  กำลังโหลด...
-                                </SelectItem>
-                              ) : (
-                                data &&
-                                data.length > 0 &&
-                                data?.map((item: any) => (
-                                  <SelectItem
-                                    key={item.value}
-                                    value={item.value}
-                                  >
-                                    {item.name}
-                                  </SelectItem>
-                                ))
-                              )}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  /> */}
 
                   <FormField
                     control={formOnboard.control}

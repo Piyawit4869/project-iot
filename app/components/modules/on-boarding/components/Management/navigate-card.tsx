@@ -2,7 +2,7 @@ import { Card, CardTitle } from "~/components/ui/card";
 import React from "react";
 import type { NavCardProps } from "~/schemas/on-boarding/onboard";
 
-export const NavCard: React.FC<NavCardProps> = ({ title, icon }) => {
+export const NavigateCard: React.FC<NavCardProps> = ({ title, icon }) => {
   return (
     <>
       <Card className="w-full text-center items-center">

@@ -8,7 +8,7 @@ import { OnboardFilterFields } from "~/types/onboard/filter";
 import { Button } from "~/components/ui/button";
 import React from "react";
 import { useOnboardColumns } from "../components/Management/columns";
-import CreateTempletDialog from "../components/Management/modaldialog";
+import CreateTempletDialog from "../components/Management/create-template-dialog";
 
 export default function OnBoardingManagementIndex() {
   const paginate = usePaginate;

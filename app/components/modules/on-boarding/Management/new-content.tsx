@@ -22,7 +22,7 @@ import { useState, type JSX } from "react";
 import { Content } from "../components/Management/content";
 import { Exam } from "../components/Management/exam";
 import { Video } from "../components/Management/video";
-import { Topic } from "../components/Management/topic-content";
+import { Topic } from "../components/Management/topic";
 
 export default function OnBoardingManagementSingle() {
   const [topics, setTopics] = useState<number[]>([]);
@@ -103,7 +103,11 @@ export default function OnBoardingManagementSingle() {
       </div>
 
       <div className="inline-flex items-center gap-3 w-fit px-2 py-1.5 border-2 border-dashed border-gray-400 rounded-lg">
-        <Heading className="w-5 h-5 cursor-pointer" onClick={handleAddTopic} />
+        <Heading 
+          className="w-5 h-5 cursor-pointer" 
+          onClick={handleAddTopic} 
+        />
+        
         <MessageCirclePlus
           className="w-5 h-5 cursor-pointer"
           onClick={handleAddContent}

@@ -10,8 +10,8 @@ import {
 } from "lexical";
 import { $patchStyleText } from "@lexical/selection";
 import { TOGGLE_LINK_COMMAND } from "@lexical/link";
-import ToolbarButton from "./toolbarbutton";
-import ToolbarDivider from "./toolbardivider";
+import ToolbarButton from "./toolbar-button";
+import ToolbarDivider from "./toolbar-divider";
 import {
   Undo2,
   Redo2,
@@ -34,7 +34,7 @@ import {
   INSERT_UNORDERED_LIST_COMMAND,
   REMOVE_LIST_COMMAND,
 } from "@lexical/list";
-import FontSizeSelect from "./toolbarselect";
+import FontSizeSelect from "./font-size-select";
 
 type Action = "unordered" | "ordered" | "remove";
 

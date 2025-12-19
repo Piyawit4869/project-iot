@@ -159,11 +159,6 @@ export default function HomeComponent() {
     () => getHomeMenu(permission),
     [permission]
   );
-  
-console.log("romeapps:", romeApps);
-console.log("gethomemanu:", getHomeMenu);
-console.log("appsforuser:", appsForUser);
-console.log("permission:", permission);
 
   return (
     <div className="container h-[calc(100vh-58px)] mx-auto">
