@@ -292,7 +292,6 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
             )}
           </div>
         </div>
-
         <div className="grid grid-cols-1  md:grid-cols-2 mt-5 gap-7">
           <GlobalFormField
             control={form.control}
@@ -330,43 +329,54 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
-          <ParticipantsSection
-            title="ผู้รับผิดชอบหลัก"
-            isMain
-            isEdit={isEdit}
-            mainParticipant={mainParticipant}
-            participants={[]}
-            onDelete={handleDeleteParticipants}
-            onAdd={handleUserButtonClick}
-            navigate={navigate}
-            isPopoverOpen={isPopoverMainParticipantsOpen}
-            setIsPopoverOpen={setIsPopoverMainParticipantsOpen}
-            search={search}
-            setSearch={setSearch}
-            filteredUser={filteredUser}
-            supportedUserIds={supportedUserIds}
-            isLoading={userIsLoading}
-            isCreatingSupport={isCreatingSupport}
-          />
+        {customer &&
+        customer.chatRoomDetail &&
+        (customer.chatRoomDetail.chatRoomId === null ||
+          customer.chatRoomDetail.chatRoomId === undefined) ? (
+          <div className="flex items-center justify-center py-6">
+            <span className="text-sm text-muted-foreground">
+              ลูกค้าคนนี้ยังไม่มีการโต้ตอบภายในแชท
+            </span>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
+            <ParticipantsSection
+              title="ผู้รับผิดชอบหลัก"
+              isMain
+              isEdit={isEdit}
+              mainParticipant={mainParticipant}
+              participants={[]}
+              onDelete={handleDeleteParticipants}
+              onAdd={handleUserButtonClick}
+              navigate={navigate}
+              isPopoverOpen={isPopoverMainParticipantsOpen}
+              setIsPopoverOpen={setIsPopoverMainParticipantsOpen}
+              search={search}
+              setSearch={setSearch}
+              filteredUser={filteredUser}
+              supportedUserIds={supportedUserIds}
+              isLoading={userIsLoading}
+              isCreatingSupport={isCreatingSupport}
+            />
 
-          <ParticipantsSection
-            title="ผู้รับผิดชอบรอง"
-            isEdit={isEdit}
-            participants={normalParticipants}
-            onDelete={handleDeleteParticipants}
-            onAdd={handleUserButtonClick}
-            navigate={navigate}
-            isPopoverOpen={isPopoverOpen}
-            setIsPopoverOpen={setIsPopoverOpen}
-            search={search}
-            setSearch={setSearch}
-            filteredUser={filteredUser}
-            supportedUserIds={supportedUserIds}
-            isLoading={userIsLoading}
-            isCreatingSupport={isCreatingSupport}
-          />
-        </div>
+            <ParticipantsSection
+              title="ผู้รับผิดชอบรอง"
+              isEdit={isEdit}
+              participants={normalParticipants}
+              onDelete={handleDeleteParticipants}
+              onAdd={handleUserButtonClick}
+              navigate={navigate}
+              isPopoverOpen={isPopoverOpen}
+              setIsPopoverOpen={setIsPopoverOpen}
+              search={search}
+              setSearch={setSearch}
+              filteredUser={filteredUser}
+              supportedUserIds={supportedUserIds}
+              isLoading={userIsLoading}
+              isCreatingSupport={isCreatingSupport}
+            />
+          </div>
+        )}
       </CardContent>
     </Card>
   );
