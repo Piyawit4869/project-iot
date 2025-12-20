@@ -42,6 +42,7 @@ export interface CustomerFormCreateProps {
 
   onCancel?: (key: string) => void;
   onEditForm?: (key: string) => void;
+  fetchCustomer?: () => void;
 }
 
 export interface CustomerContactFormProps {
