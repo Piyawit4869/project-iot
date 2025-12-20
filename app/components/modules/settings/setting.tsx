@@ -58,8 +58,6 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
   const { data: organization } = useGetOrganizations();
   const { data: org } = useGetOrganization(selectedOrgId);
 
-  console.log({ organization, org });
-
   const columns = useOrganizationColumns();
 
   const paginate = useGetOrganizationsPaginate;
