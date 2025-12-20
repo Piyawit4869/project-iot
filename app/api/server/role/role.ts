@@ -24,6 +24,16 @@ export const fetchRolesPagination = async (params: {
   }
 };
 
+export const fetchAllRoles = async () => {
+  try {
+    const { data } = await ApiConfig.get(`/crud/organization-roles`);
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const fetchRolesById = async (id: string) => {
   try {
     const { data } = await ApiConfig.get(`/crud/organization-roles/${id}`);
