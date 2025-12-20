@@ -33,7 +33,7 @@ export const getUserActionByPermission = (
   action: PermissionBaseAction
 ): boolean => {
   if (!permission) return false;
-  const actions = permission[module === "customer" ? "customers" : module];
+  const actions = permission[module === "customer" ? "customer" : module];
   return Array.isArray(actions) && actions.includes(action);
 };
 

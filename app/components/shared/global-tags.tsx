@@ -127,6 +127,7 @@ interface GlobalTagsBadgeProps {
   value: TagsKey | string;
   onClick?: () => void;
   fontSize?: number;
+  showIcon?: boolean;
   paddingX?: number;
 }
 
@@ -134,6 +135,7 @@ export function GlobalTagsBadge({
   value,
   onClick,
   fontSize = 12,
+  showIcon,
   paddingX = 3,
 }: GlobalTagsBadgeProps) {
   const status = tagsKey[value as TagsKey];
@@ -160,10 +162,11 @@ export function GlobalTagsBadge({
     <Badge
       className={`inline-flex items-center justify-start rounded-xl border py-1 px-${paddingX} 
     text-[${fontSize}px] font-medium w-fit gap-1 transition-colors dark:bg-gray-700 
-    ${colorTag} whitespace-normal break-words`}
+    ${colorTag} whitespace-normal break-words ${onClick ? "cursor-pointer hover:opacity-80" : "cursor-default"}`}
+      onClick={onClick}
     >
       {icon} {label}
-      {onClick && (
+      {showIcon && (
         <span
           className="cursor-pointer hover:text-red-500 ml-1"
           onClick={onClick}
