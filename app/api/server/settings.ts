@@ -9,9 +9,37 @@ import type {
 import { ApiConfig } from "../config";
 import { generateOrganizationCode } from "~/utils/organization";
 
+export const fetchGetOrganizationsPaginate = async (params: {
+  page: number;
+  limit: number;
+}) => {
+  try {
+    const res = await ApiConfig.get(`/crud/organizations`, {
+      params: {
+        page: params.page,
+        limit: params.limit,
+      },
+    });
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const fetchGetOrganizations = async () => {
   try {
     const res = await ApiConfig.get(`/configurations/organizations/details`);
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchGetOrganizationDetail = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(`/crud/organizations/${id}`);
 
     return res.data;
   } catch (error) {

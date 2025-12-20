@@ -10,7 +10,9 @@ import {
   fetchGetConnectionAi,
   fetchGetConnectionAiByBranch,
   fetchGetConnectionLine,
+  fetchGetOrganizationDetail,
   fetchGetOrganizations,
+  fetchGetOrganizationsPaginate,
   fetchLineCardContentPaginate,
   fetchLineFeaturePaginate,
   fetchLineMassagePaginate,
@@ -44,10 +46,33 @@ import {
 } from "../server/message/line";
 import { useSearchParams } from "react-router";
 
+export const useGetOrganizationsPaginate = ({
+  pageIndex,
+  pageSize,
+}: {
+  pageIndex: number;
+  pageSize: number;
+}) => {
+  return useQuery({
+    queryKey: ["organization-paginate", pageIndex, pageSize],
+    queryFn: () =>
+      fetchGetOrganizationsPaginate({ page: pageIndex, limit: pageSize }),
+    placeholderData: keepPreviousData,
+    enabled: !!pageIndex && !!pageSize,
+  });
+};
+
 export const useGetOrganizations = () =>
   useQuery({
     queryKey: ["organization"],
     queryFn: () => fetchGetOrganizations(),
+  });
+
+export const useGetOrganization = (id: string) =>
+  useQuery({
+    queryKey: ["organization-detail"],
+    queryFn: () => fetchGetOrganizationDetail(id),
+    enabled: !!id,
   });
 
 export const useUpdateOrganization = (

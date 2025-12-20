@@ -141,3 +141,44 @@ export const fetchUserSummary = async () => {
     return error;
   }
 };
+
+export const fetchSearchUserOrgs = async (search?: string) => {
+  try {
+    const { data } = await ApiConfig.get(`/crud/users/search/org`, {
+      params: search,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchSearchUserBranches = async (
+  groupId: string,
+  search?: string
+) => {
+  try {
+    const { data } = await ApiConfig.get(
+      `/crud/users/search/${groupId}/branch`,
+      {
+        params: search,
+      }
+    );
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const changeActiveOrg = async (
+  userId: string,
+  payload: { organizationId: string }
+) => {
+  try {
+    const { data } = await ApiConfig.put(`/crud/users/meta/${userId}`, payload);
+    return data;
+  } catch (error) {
+    return error;
+  }
+};

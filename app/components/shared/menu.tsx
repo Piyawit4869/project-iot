@@ -30,7 +30,6 @@ type NotificationItem = {
   time: string;
 };
 
-
 export function Menu() {
   const { me } = useRouteLoaderData("root");
   const navigate = useNavigate();
@@ -97,7 +96,6 @@ export function Menu() {
     Setting: "การตั้งค่า",
   } as const;
   const notification = [
-  
     {
       band: Badge.Chat,
       noti: "New project created",
@@ -146,7 +144,7 @@ export function Menu() {
       name: "sarah Smith",
       email: "sarah@example.com",
       time: "151 นาทีที่แล้ว",
-    },  
+    },
     {
       band: Badge.Chat,
       noti: "Team member added to your workspace",
@@ -160,7 +158,7 @@ export function Menu() {
       name: "sarah Smith",
       email: "sarah@example.com",
       time: "151 นาทีที่แล้ว",
-    },                       
+    },
   ];
   function renderNotification(notification: NotificationItem[]) {
     const elements = [];
@@ -178,7 +176,8 @@ export function Menu() {
           </div>
           <h6 className="font-medium leading-none">{item.noti}</h6>
           <p className="text-sm text-muted-foreground">
-            {item.name}<br />
+            {item.name}
+            <br />
             {item.email}
           </p>
         </div>
@@ -186,8 +185,7 @@ export function Menu() {
     }
     return elements;
   }
-  
-
+  console.log({ me });
   return (
     <div className="justify-between items-center flex gap-1 pr-3">
       {/* <button
@@ -214,19 +212,20 @@ export function Menu() {
           <DropdownMenuSeparator />
           <DropdownMenuLabel className="text-base flex ">
             <button className="flex  text-blue-600">
-            <Icons.Check className="items-center hover:text-accent1  " />
-            ทำเครื่องหมายทั้งหมดว่าอ่านแล้ว
+              <Icons.Check className="items-center hover:text-accent1  " />
+              ทำเครื่องหมายทั้งหมดว่าอ่านแล้ว
             </button>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <div className="grid gap-4 mt-4 overflow-y-auto max-h-128 pr-2 bg-blue-1">
-            {renderNotification(notification)}            
+            {renderNotification(notification)}
           </div>
-        <DropdownMenuSeparator />
+          <DropdownMenuSeparator />
           <DropdownMenuLabel className="text-base flex justify-center item-aligmen-center">
-            <button className="flex justify-center text-blue-600">ดูการแจ้งเตือนทั้งหมด</button>
+            <button className="flex justify-center text-blue-600">
+              ดูการแจ้งเตือนทั้งหมด
+            </button>
           </DropdownMenuLabel>
-          
         </PopoverContent>
       </Popover>
 
@@ -241,6 +240,7 @@ export function Menu() {
           ) : (
             <GlobalImage
               src={me?.profile?.imageUrl}
+              fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${me?.userName}`}
               alt="profile-image"
               width={30}
               height={30}
@@ -323,6 +323,5 @@ export function Menu() {
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-    
   );
 }

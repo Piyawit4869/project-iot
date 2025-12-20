@@ -24,11 +24,13 @@ const GlobalImageComponent: React.FC<GlobalImageProps> = ({
   height = 100,
   className,
   notShowPreview = false,
+  fallbackSrc,
 }) => {
   const [hasError, setHasError] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const imageSrc = !src || hasError ? (PlaceholderImage as any).src : src;
+  const imageSrc =
+    !src || hasError ? fallbackSrc || (PlaceholderImage as any).src : src;
 
   const ImagePreview: React.FC<{
     src: string;

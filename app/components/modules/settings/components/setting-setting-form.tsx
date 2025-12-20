@@ -46,7 +46,7 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
       <Form {...form}>
         <div className="gap-4 mb-6">
           <div className="mb-5">
-            <h2 className="text-xl font-bold">ตั้งค่าองค์กร</h2>
+            <h2 className="text-xl font-bold">ทั่วไป</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <GlobalFormField
