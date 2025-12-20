@@ -284,7 +284,6 @@ export const fetchUpdateCustomerNote = async (
 export const connectedChatRoomAssistant = async (
   payload: CustomerConnectedChatRoomAI
 ) => {
-  console.log({ payload });
   try {
     const res = await ApiConfig.post(`/chats/push-message/assistants`, payload);
 

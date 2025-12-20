@@ -176,7 +176,7 @@ export const CustomerSchema = z.object({
   organizationDetails: OrganizationDetailsSchema.optional(),
   contacts: z.array(ContactSchema).optional().nullable(),
   tags: z.array(TagSchema).optional().nullable(),
-  supports: z.array(SupportSchema).optional().nullable(),
+  // supports: z.array(SupportSchema).optional().nullable(),
   /* .min(2, "กรุณาเลือกผู้รับผิดชอบอย่างน้อย 2 คน") 
     .refine((supports) => supports.some((s) => s.isMain === true), {
       message: "กรุณาเลือกผู้รับผิดชอบหลัก 1 คน",
@@ -282,7 +282,7 @@ export const QueryCustomerSchema = z.object({
   branchId: z.string().uuid(),
   organizationDetails: z.any().nullable().optional(),
   contacts: z.array(z.any()),
-  supports: z.array(z.any()),
+  // supports: z.array(z.any()),
   profile: ProfileSchema.optional(),
   chatRoomAssistantId: z.string().optional(),
   aiReplySettings: z.array(

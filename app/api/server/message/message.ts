@@ -76,6 +76,18 @@ export const markAsDone = async (chatRoomId: string, done: boolean) => {
     return error;
   }
 };
+export const markAsSpam = async (chatRoomId: string, isSpam: boolean) => {
+  try {
+    const res = await ApiConfig.put(
+      `/crud/chats/rooms/${chatRoomId}/mark-as-spam`,
+      { isSpam }
+    );
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const fetchUpdateStatusProgressTag = async (
   chatRoomId: string,

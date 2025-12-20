@@ -10,8 +10,6 @@ import {
   fetchGetAllUsersLimit,
   fetchGetAllDepartments,
   fetchUserSummary,
-  fetchSearchUserOrgs,
-  fetchSearchUserBranches,
 } from "../server/user";
 import type { UsersFormValues } from "~/schemas/users/user";
 import type { PasswordFormValues } from "~/schemas/users/password-user";
@@ -149,21 +147,5 @@ export const useAllUserSummary = () => {
     queryKey: ["contacts"],
     queryFn: () => fetchUserSummary(),
     enabled: true,
-  });
-};
-
-export const useSearchUserOrgs = (isGroup: boolean, search: string) => {
-  return useQuery({
-    queryKey: ["get-orgs", search],
-    queryFn: () => fetchSearchUserOrgs(search),
-    enabled: isGroup,
-  });
-};
-
-export const useGetUserBranches = (groupId: string, search: string) => {
-  return useQuery({
-    queryKey: ["get-org-branches", search],
-    queryFn: () => fetchSearchUserBranches(groupId, search),
-    enabled: !!groupId,
   });
 };

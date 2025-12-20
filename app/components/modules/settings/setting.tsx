@@ -6,7 +6,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import type { TabKey } from "~/types/settings";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  useGetOrganization,
   useGetOrganizations,
+  useGetOrganizationsPaginate,
   useUpdateAddress,
   useUpdateOrganization,
   useUpdateSettings,
@@ -24,33 +26,49 @@ import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 import { SettingOrganizationForm } from "./components/setting-organization-form";
 import { RenderHeaderButtons } from "./components/render-header-buttons";
-import { useRouteLoaderData } from "react-router";
+import { useRouteLoaderData, useSearchParams } from "react-router";
 import { SettingAddressForm } from "./components/setting-address-form";
 import { SettingForm } from "./components/setting-setting-form";
 import { TabControl } from "~/components/shared/tab-control";
+import { DataTable } from "~/components/shared/data-table";
+import { useOrganizationColumns } from "./components/org-columns";
+import { OrgSelectorDropdown } from "./components/org-selector-dropdown";
+import { useChangeActiveOrg } from "~/api/client/user";
+import GlobalButton from "~/components/shared/global-button";
 
 interface SettingsPageProps {}
 
 export const Setting: React.FC<SettingsPageProps> = (props) => {
   const {} = props;
 
-  const { user_data } = useRouteLoaderData("root");
+  const { user_data, user } = useRouteLoaderData("root");
+
+  const [searchParams] = useSearchParams();
+
+  const selectedOrgId = searchParams.get("organizationId") || "";
+
+  const isSingleOrg = !user?.organizationGroupId || selectedOrgId;
 
   const [activeTab, setActiveTab] = React.useState<TabKey>(
     "SettingOrganization"
   );
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
+  // const [selectedOrgId, setSelectedOrgId] = React.useState<string>("");
 
   const { data: organization } = useGetOrganizations();
+  const { data: org } = useGetOrganization(selectedOrgId);
 
+  const columns = useOrganizationColumns();
+
+  const paginate = useGetOrganizationsPaginate;
   const organizationId =
-    organization?.res?.data?.organization?.id ?? organization?.id ?? "";
+    org?.id ?? organization?.organization?.id ?? organization?.id ?? "";
 
   const settingAddressId =
-    organization?.res?.data?.address?.id ?? organization?.id ?? "";
+    org?.address?.id ?? organization?.address?.id ?? organization?.id ?? "";
 
   const settingId =
-    organization?.res?.data?.settings?.id ?? organization?.id ?? "";
+    org?.settings?.id ?? organization?.settings?.id ?? organization?.id ?? "";
 
   const userId = user_data?.profile?.id ?? "";
 
@@ -65,69 +83,72 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
   );
 
   const { mutate: updateSetting } = useUpdateSettings(settingId || "", userId);
+  const { mutate } = useChangeActiveOrg(user.id);
+
+  const orgSource = org ?? organization;
 
   const orgForm = useForm<OrganizationFormValues>({
     resolver: zodResolver(
       organizationSchema
     ) as Resolver<OrganizationFormValues>,
     values: {
-      nameTh: organization?.nameTh ?? "",
-      nameEn: organization?.nameEn ?? "",
-      contactEmail: organization?.contactEmail ?? "",
-      websiteUrl: organization?.websiteUrl ?? "",
-      status: organization?.status ?? "",
-      openingDate: organization?.openingDate ?? "",
-      descriptionsEn: organization?.descriptionsEn ?? "",
-      descriptionsTh: organization?.descriptionsTh ?? "",
-      fromType: organization?.fromType ?? "ordinary_person",
-      taxId: organization?.taxId ?? "",
-      registerVat: organization?.registerVat ?? false,
-      active: organization?.active ?? false,
-      isMain: organization?.isMain ?? false,
-      branchType: organization?.branchType ?? "taxpayer",
-      domainName: organization?.domainName ?? "",
-      contactName: organization?.contactName ?? "",
-      contactPhone: organization?.contactPhone ?? "",
-      contactLine: organization?.contactLine ?? "",
-      contactFacebook: organization?.contactFacebook ?? "",
-      contactWhatsapp: organization?.contactWhatsapp ?? "",
-      contactWebsite: organization?.contactWebsite ?? "",
-      logoUrl: organization?.logoUrl ?? "",
-      contactNote: organization?.contactNote ?? "",
+      nameTh: orgSource?.nameTh ?? "",
+      nameEn: orgSource?.nameEn ?? "",
+      contactEmail: orgSource?.contactEmail ?? "",
+      websiteUrl: orgSource?.websiteUrl ?? "",
+      status: orgSource?.status ?? "",
+      openingDate: orgSource?.openingDate ?? "",
+      descriptionsEn: orgSource?.descriptionsEn ?? "",
+      descriptionsTh: orgSource?.descriptionsTh ?? "",
+      fromType: orgSource?.fromType ?? "ordinary_person",
+      taxId: orgSource?.taxId ?? "",
+      registerVat: orgSource?.registerVat ?? false,
+      active: orgSource?.active ?? false,
+      isMain: orgSource?.isMain ?? false,
+      branchType: orgSource?.branchType ?? "taxpayer",
+      domainName: orgSource?.domainName ?? "",
+      contactName: orgSource?.contactName ?? "",
+      contactPhone: orgSource?.contactPhone ?? "",
+      contactLine: orgSource?.contactLine ?? "",
+      contactFacebook: orgSource?.contactFacebook ?? "",
+      contactWhatsapp: orgSource?.contactWhatsapp ?? "",
+      contactWebsite: orgSource?.contactWebsite ?? "",
+      logoUrl: orgSource?.logoUrl ?? "",
+      contactNote: orgSource?.contactNote ?? "",
     },
   });
 
   const addressForm = useForm<AddressSchemaValues>({
     resolver: zodResolver(addressSchema) as Resolver<AddressSchemaValues>,
     values: {
-      id: organization?.address?.id ?? "",
-      name: organization?.address?.name ?? "",
-      building: organization?.address?.building ?? "",
-      village: organization?.address?.village ?? "",
-      roomNo: organization?.address?.roomNo ?? "",
-      floorNo: organization?.address?.floorNo ?? "",
-      villageNo: organization?.address?.villageNo ?? "",
-      houseNo: organization?.address?.houseNo ?? "",
-      alley: organization?.address?.alley ?? "",
-      road: organization?.address?.road ?? "",
-      subDistrict: organization?.address?.subDistrict ?? "",
-      city: organization?.address?.city ?? "",
-      province: organization?.address?.province ?? "",
-      nation: organization?.address?.nation ?? "",
-      postalCode: organization?.address?.postalCode ?? "",
-      note: organization?.address?.note ?? "",
-      isMain: organization?.address?.isMain ?? false,
+      id: orgSource?.address?.id ?? "",
+      name: orgSource?.address?.name ?? "",
+      building: orgSource?.address?.building ?? "",
+      village: orgSource?.address?.village ?? "",
+      roomNo: orgSource?.address?.roomNo ?? "",
+      floorNo: orgSource?.address?.floorNo ?? "",
+      villageNo: orgSource?.address?.villageNo ?? "",
+      houseNo: orgSource?.address?.houseNo ?? "",
+      alley: orgSource?.address?.alley ?? "",
+      road: orgSource?.address?.road ?? "",
+      subDistrict: orgSource?.address?.subDistrict ?? "",
+      city: orgSource?.address?.city ?? "",
+      province: orgSource?.address?.province ?? "",
+      nation: orgSource?.address?.nation ?? "",
+      postalCode: orgSource?.address?.postalCode ?? "",
+      note: orgSource?.address?.note ?? "",
+      isMain: orgSource?.address?.isMain ?? false,
     },
   });
 
   const settingForm = useForm<SettingSchemaValues>({
-    resolver: zodResolver(SettingSchema),
+    resolver: zodResolver(SettingSchema) as Resolver<SettingSchemaValues>,
     values: {
-      id: organization?.setting?.id ?? "",
-      theme: organization?.setting?.theme ?? "",
-      textDisplay: organization?.setting?.textDisplay ?? "",
-      defaultLanguage: organization?.setting?.defaultLanguage ?? "",
-      active: organization?.setting?.active ?? false,
+      id: orgSource?.setting?.id ?? "",
+      theme: orgSource?.setting?.theme ?? "",
+      textDisplay: orgSource?.setting?.textDisplay ?? "",
+      defaultLanguage: orgSource?.setting?.defaultLanguage ?? "",
+      active: orgSource?.setting?.active ?? false,
     },
   });
 
@@ -213,6 +234,35 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
 
   const handleClickEditButton = () => setIsEditing(true);
 
+  const handleChangeActiveOrg = (organizationId: string) => {
+    const toastId = toast.loading("กำลังเปลี่ยนองค์กร...", {
+      position: "bottom-right",
+    });
+
+    mutate(
+      { organizationId },
+      {
+        onSuccess: () => {
+          toast.success("เปลี่ยนเปลี่ยนองค์กร !", {
+            id: toastId,
+            duration: 2500,
+            position: "bottom-right",
+          });
+
+          localStorage.setItem("organizaionId", organizationId);
+        },
+        onError: () => {
+          toast.error("เกิดข้อผิดพลาดในการเปลี่ยนองค์กร", {
+            id: toastId,
+
+            duration: 3000,
+            position: "bottom-right",
+          });
+        },
+      }
+    );
+  };
+
   return (
     <Tabs
       value={activeTab}
@@ -221,100 +271,126 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     >
       <div className="mb-4">
         <TabControl
-          title="องค์กร"
-          buttons={RenderHeaderButtons({
-            isEditing,
-            handleClickEditButton,
-            handleClickCancleButton: handleCancel,
-            activeTab,
-          })}
+          title={
+            selectedOrgId ? (
+              <OrgSelectorDropdown
+                currentOrgId={organizationId}
+                currentOrganization={user?.organization}
+                onChangeOrg={handleChangeActiveOrg}
+              />
+            ) : (
+              "องค์กรทั้งหมด"
+            )
+          }
+          buttons={
+            selectedOrgId
+              ? RenderHeaderButtons({
+                  isEditing,
+                  handleClickEditButton,
+                  handleClickCancleButton: handleCancel,
+                  activeTab,
+                })
+              : [
+                  <GlobalButton
+                    label="เพิ่ม"
+                    key="add-btn"
+                    disabled
+                    // type="submit"
+                    // form={activeTab}
+                  />,
+                ]
+          }
           noneSticky={true}
         />
       </div>
 
-      <div className="grid grid-cols-[19%_80%] gap-4">
-        <Card className="p-4 space-y-3">
-          <TabsList className="flex flex-col w-full bg-transparent p-0 space-y-3">
-            <Card className="p-0 overflow-hidden bg-background">
-              <TabsTrigger
-                value="SettingOrganization"
-                className="flex w-full justify-start text-left px-4 py-3 text-base h-12 rounded-none data-[state=active]:bg-secondary data-[state=active]:text-foreground"
-              >
-                <Briefcase className="w-5 h-5 mr-3" />
-                ข้อมูลองค์กร
-              </TabsTrigger>
-            </Card>
+      {!isSingleOrg ? (
+        <DataTable queryFunction={paginate} columns={columns} />
+      ) : (
+        <div className="grid grid-cols-[19%_80%] gap-4">
+          <Card className="p-4 space-y-3">
+            <TabsList className="flex flex-col w-full bg-transparent p-0 space-y-3">
+              <Card className="p-0 overflow-hidden bg-background">
+                <TabsTrigger
+                  value="SettingOrganization"
+                  className="flex w-full justify-start text-left px-4 py-3 text-base h-12 rounded-none data-[state=active]:bg-secondary data-[state=active]:text-foreground"
+                >
+                  <Briefcase className="w-5 h-5 mr-3" />
+                  ข้อมูลองค์กร
+                </TabsTrigger>
+              </Card>
 
-            <Card className="p-0 overflow-hidden bg-background">
-              <TabsTrigger
-                value="SettingAddress"
-                className="flex w-full justify-start text-left px-4 py-3 text-base h-12 rounded-none data-[state=active]:bg-secondary data-[state=active]:text-foreground"
-              >
-                <MapPinCheck className="w-5 h-5 mr-3" />
-                ที่อยู่ติดต่อ
-              </TabsTrigger>
-            </Card>
+              <Card className="p-0 overflow-hidden bg-background">
+                <TabsTrigger
+                  value="SettingAddress"
+                  className="flex w-full justify-start text-left px-4 py-3 text-base h-12 rounded-none data-[state=active]:bg-secondary data-[state=active]:text-foreground"
+                >
+                  <MapPinCheck className="w-5 h-5 mr-3" />
+                  ที่อยู่ติดต่อ
+                </TabsTrigger>
+              </Card>
 
-            <Card className="p-0 overflow-hidden bg-background">
-              <TabsTrigger
-                value="Setting"
-                className="flex w-full justify-start text-left px-4 py-3 text-base h-12 rounded-none data-[state=active]:bg-secondary data-[state=active]:text-foreground"
-              >
-                <Settings className="w-5 h-5 mr-3" />
-                ตั้งค่า
-              </TabsTrigger>
-            </Card>
-          </TabsList>
-        </Card>
+              <Card className="p-0 overflow-hidden bg-background">
+                <TabsTrigger
+                  value="Setting"
+                  className="flex w-full justify-start text-left px-4 py-3 text-base h-12 rounded-none data-[state=active]:bg-secondary data-[state=active]:text-foreground"
+                >
+                  <Settings className="w-5 h-5 mr-3" />
+                  ทั่วไป
+                </TabsTrigger>
+              </Card>
+            </TabsList>
+          </Card>
 
-        <Card>
-          <TabsContent value="SettingOrganization">
-            <form
-              id="SettingOrganization"
-              onSubmit={orgForm.handleSubmit(handleOrgOnSubmit)}
-            >
-              <fieldset
-                disabled={!isEditing}
-                className={!isEditing ? "opacity-70" : ""}
+          <Card>
+            <TabsContent value="SettingOrganization">
+              <form
+                id="SettingOrganization"
+                onSubmit={orgForm.handleSubmit(handleOrgOnSubmit)}
               >
-                <SettingOrganizationForm form={orgForm} />
-              </fieldset>
-            </form>
-          </TabsContent>
+                <fieldset
+                  disabled={!isEditing}
+                  className={!isEditing ? "opacity-70" : ""}
+                >
+                  <SettingOrganizationForm form={orgForm} />
+                </fieldset>
+              </form>
+            </TabsContent>
 
-          <TabsContent value="SettingAddress">
-            <form
-              id="SettingAddress"
-              onSubmit={addressForm.handleSubmit(handleAddressOnSubmit)}
-            >
-              <fieldset
-                disabled={!isEditing}
-                className={!isEditing ? "opacity-70" : ""}
+            <TabsContent value="SettingAddress">
+              <form
+                id="SettingAddress"
+                onSubmit={addressForm.handleSubmit(handleAddressOnSubmit)}
               >
-                <SettingAddressForm form={addressForm} />
-              </fieldset>
-            </form>
-          </TabsContent>
+                <fieldset
+                  disabled={!isEditing}
+                  className={!isEditing ? "opacity-70" : ""}
+                >
+                  <SettingAddressForm form={addressForm} />
+                </fieldset>
+              </form>
+            </TabsContent>
 
-          <TabsContent value="Setting">
-            <form
-              id="Setting"
-              onSubmit={settingForm.handleSubmit(handleSettingOnSubmit)}
-            >
-              <fieldset
-                disabled={!isEditing}
-                className={!isEditing ? "opacity-70" : ""}
+            <TabsContent value="Setting">
+              <form
+                id="Setting"
+                onSubmit={settingForm.handleSubmit(handleSettingOnSubmit)}
               >
-                <SettingForm
-                  form={settingForm}
-                  organization
-                  isEditing={isEditing}
-                />
-              </fieldset>
-            </form>
-          </TabsContent>
-        </Card>
-      </div>
+                <fieldset
+                  disabled={!isEditing}
+                  className={!isEditing ? "opacity-70" : ""}
+                >
+                  <SettingForm
+                    form={settingForm}
+                    organization
+                    isEditing={isEditing}
+                  />
+                </fieldset>
+              </form>
+            </TabsContent>
+          </Card>
+        </div>
+      )}
     </Tabs>
   );
 };

@@ -4,6 +4,7 @@ import * as React from "react";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -689,7 +690,7 @@ function PreviewPane({ item }: { item?: any }) {
 
   if (!item) {
     return (
-      <div className="h-full gap-0 pt-6 pb-0">
+      <div className="h-full gap-0  pb-0">
         {/* <CardHeader className="border-b">
           <div className="flex items-center justify-between pb-0">
             <div className="font-medium">ดูตัวอย่าง</div>
@@ -871,7 +872,6 @@ export default function LineTemplatePickerModal({
       }
     );
   };
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -879,103 +879,95 @@ export default function LineTemplatePickerModal({
           <PlusCircle className="w-4 h-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="min-w-[65%] h-[85%] p-0 gap-0 overflow-auto">
-        <DialogHeader className="px-6 pt-5 pb-3">
+
+      {/* IMPORTANT: flex-col, NO overflow here */}
+      <DialogContent className="min-w-[65%] h-[90vh] p-0 gap-0 flex flex-col">
+        {/* Header */}
+        <DialogHeader className="px-6 pt-5 shrink-0">
           <DialogTitle>เลือกคอนเทนต์</DialogTitle>
         </DialogHeader>
 
-        <div className="px-6">
-          <Tabs defaultValue="all" className="w-full">
+        {/* ===== Scrollable Content ===== */}
+        <div className="flex-1 min-h-0 overflow-auto">
+          {/* Tabs */}
+          <Tabs defaultValue="all" className="w-full px-6 mt-2">
             <TabsList className="grid grid-cols-3 w-fit">
               <TabsTrigger
                 value="all"
                 onClick={() => setCategory("all")}
-                className="hover:bg-border relative !shadow-none !border-0 rounded-md 
-            after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black 
-            after:transition-all after:w-0 data-[state=active]:after:w-full"
+                className="hover:bg-border relative !shadow-none !border-0 rounded-md
+                after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black
+                after:transition-all after:w-0 data-[state=active]:after:w-full"
               >
                 ทั้งหมด
               </TabsTrigger>
+
               <TabsTrigger
                 value="reply"
                 onClick={() => setCategory("reply")}
-                className="hover:bg-border relative !shadow-none !border-0 rounded-md 
-            after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black 
-            after:transition-all after:w-0 data-[state=active]:after:w-full"
+                className="hover:bg-border relative !shadow-none !border-0 rounded-md
+                after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black
+                after:transition-all after:w-0 data-[state=active]:after:w-full"
               >
                 ข้อความตอบกลับ
               </TabsTrigger>
+
               <TabsTrigger
                 value="displayCard"
                 onClick={() => setCategory("card")}
-                className="hover:bg-border  relative  !shadow-none !border-0 rounded-md 
-            after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black 
-            after:transition-all after:w-0 data-[state=active]:after:w-full"
+                className="hover:bg-border relative !shadow-none !border-0 rounded-md
+                after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black
+                after:transition-all after:w-0 data-[state=active]:after:w-full"
               >
                 การ์ดแสดงผล
               </TabsTrigger>
-              {/* <TabsTrigger value="coupon" onClick={() => setCategory("coupon")}>
-                คูปอง
-              </TabsTrigger> */}
             </TabsList>
           </Tabs>
-        </div>
 
-        <div className="px-6 pt-3 pb-5 grid grid-cols-12 gap-4">
-          {/* Left Pane */}
-          <div className="col-span-12 lg:col-span-5">
-            <div className="flex items-center gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                <Input
-                  placeholder="ค้นหาชื่อหัวข้อ"
-                  className="pl-8"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                />
+          {/* Content */}
+          <div className="px-6 pb-5 grid grid-cols-12 gap-4 mt-3">
+            {/* Left Pane */}
+            <div className="col-span-12 lg:col-span-5 flex flex-col">
+              {/* Search */}
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1">
+                  <Search className="absolute left-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                  <Input
+                    placeholder="ค้นหาชื่อหัวข้อ"
+                    className="pl-8"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
+                </div>
+
+                <Select
+                  value={sortBy}
+                  onValueChange={(v) => setSortBy(v as "newest" | "oldest")}
+                >
+                  <SelectTrigger className="w-[150px]">
+                    <SelectValue placeholder="เรียงลำดับ" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="newest">สร้างล่าสุด</SelectItem>
+                    <SelectItem value="oldest">เก่าสุด</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              {/* <Select
-                value={category}
-                onValueChange={(v) => setCategory(v as CategoryKey | "all")}
-              >
-                <SelectTrigger className="w-[130px]">
-                  <SelectValue placeholder="ทั้งหมด" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">ทั้งหมด ({items.length})</SelectItem>
-                  <SelectItem value="reply">ข้อความ</SelectItem>
-                  <SelectItem value="displayCard">การ์ด</SelectItem>
-                  <SelectItem value="coupon">คูปอง</SelectItem>
-                </SelectContent>
-              </Select> */}
-              <Select
-                value={sortBy}
-                onValueChange={(v) => setSortBy(v as "newest" | "oldest")}
-              >
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="เรียงลำดับ" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="newest">สร้างล่าสุด</SelectItem>
-                  <SelectItem value="oldest">เก่าสุด</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
 
-            {/* data in select */}
-            <Card className="mt-3">
-              <ScrollArea className="h-[520px]">
-                {isLoading ? (
-                  <ul className="flex flex-col gap-3 px-4">
-                    <SkeletonLoading className="w-full h-15" />
-                    <SkeletonLoading className="w-full h-15" />
-                    <SkeletonLoading className="w-full h-15" />
-                    <SkeletonLoading className="w-full h-15" />
-                  </ul>
-                ) : (
-                  <ul>
-                    {filtered && filtered.length > 0
-                      ? filtered.map((it) => (
+              {/* List */}
+              <Card className="mt-3  h-[370px]">
+                <ScrollArea className="h-full">
+                  {isLoading ? (
+                    <ul className="flex flex-col gap-3 px-4 py-4">
+                      <SkeletonLoading className="w-full h-15" />
+                      <SkeletonLoading className="w-full h-15" />
+                      <SkeletonLoading className="w-full h-15" />
+                      <SkeletonLoading className="w-full h-15" />
+                    </ul>
+                  ) : (
+                    <ul>
+                      {filtered?.length > 0 &&
+                        filtered.map((it) => (
                           <li key={it.id}>
                             <button
                               className={cn(
@@ -1000,57 +992,59 @@ export default function LineTemplatePickerModal({
                                   </p>
                                 )}
                               </div>
-                              <div className="flex items-start">
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-8 w-8"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleStar(it.id);
-                                  }}
-                                  aria-label={it.isFavorite ? "Unstar" : "Star"}
-                                >
-                                  {it.isFavorite ? (
-                                    <Star className="size-4 fill-current" />
-                                  ) : (
-                                    <StarOff className="size-4" />
-                                  )}
-                                </Button>
-                              </div>
+
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-8 w-8"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleStar(it.id);
+                                }}
+                              >
+                                {it.isFavorite ? (
+                                  <Star className="size-4 fill-current" />
+                                ) : (
+                                  <StarOff className="size-4" />
+                                )}
+                              </Button>
                             </button>
                             <Separator />
                           </li>
-                        ))
-                      : null}
-                  </ul>
-                )}
-              </ScrollArea>
-            </Card>
+                        ))}
+                    </ul>
+                  )}
+                </ScrollArea>
+              </Card>
 
-            <div className="mt-3">
-              <Link to="/setting-organization/third-party/line?tab=massage-line&view=create">
-                <Button variant="secondary" className="w-full">
-                  สร้างข้อความตอบกลับ
-                </Button>
-              </Link>
+              {/* Create Button */}
+              <div className="mt-3">
+                <Link to="/setting-organization/third-party/line?tab=massage-line&view=create">
+                  <Button variant="secondary" className="w-full">
+                    สร้างข้อความตอบกลับ
+                  </Button>
+                </Link>
+              </div>
             </div>
-          </div>
 
-          {/* Right Pane */}
-          <div className="col-span-12 lg:col-span-7">
-            <PreviewPane item={selected} />
+            {/* Right Pane */}
+            <div className="col-span-12 lg:col-span-7 h-[430px]">
+              <div className="h-full">
+                <PreviewPane item={selected} />
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="px-6 pb-6 flex items-center justify-end gap-2">
+        {/* Footer (FIXED) */}
+        <DialogFooter className="px-6 py-5   shrink-0 flex items-center justify-end gap-5">
           <Button variant="secondary" onClick={() => setOpen(false)}>
             ยกเลิก
           </Button>
           <Button onClick={onSelect}>
             {category === "card" ? "ส่ง" : "เลือก"}
           </Button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

@@ -493,8 +493,6 @@ export default function ChatCustomerInfo({
         chatRoomId: selectedRoom?.id,
       });
 
-      console.log({ res });
-
       setChatRoomAssistantId(res.assistantId);
     } catch (err) {
       setIsFirstTimeAI(false);
@@ -561,9 +559,12 @@ export default function ChatCustomerInfo({
       : []
   );
 
-  const filteredUser = allUser?.filter((item: any) =>
-    item.userName?.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredUser =
+    allUser?.length > 0
+      ? allUser.filter((item: any) =>
+          item.userName?.toLowerCase().includes(search.toLowerCase())
+        )
+      : [];
 
   React.useEffect(() => {
     if (customerAI) {
@@ -611,10 +612,7 @@ export default function ChatCustomerInfo({
     }
   }, [data, currentCustomer]);
 
-  console.log({ selectedRoom });
-
   React.useEffect(() => {
-    console.log({ assistantId });
     if (assistantId) {
       setChatRoomAssistantId(assistantId || "");
     }

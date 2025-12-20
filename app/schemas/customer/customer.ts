@@ -38,9 +38,11 @@ export interface CustomerFormCreateProps {
   setIsEdit?: React.Dispatch<React.SetStateAction<boolean>>;
   mode?: string;
 
-  onClick?: (values: any) => void;
+  onClick?: (values: CustomerValues) => void;
+
   onCancel?: (key: string) => void;
   onEditForm?: (key: string) => void;
+  fetchCustomer?: () => void;
 }
 
 export interface CustomerContactFormProps {

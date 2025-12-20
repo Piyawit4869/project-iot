@@ -121,6 +121,7 @@ export default function SingDetailleCustomer() {
             }
             toast.success("แก้ไขข้อมูลลูกค้าสำเร็จ !", { id: toastId });
             fetchCustomer();
+
             setIsEdit(false);
           },
           onError: () => {
@@ -326,6 +327,7 @@ export default function SingDetailleCustomer() {
                       analyzeCustomer={analyzeCustomer}
                       loadAnalyzeCustomer={loadAnalyzeCustomer}
                       setTab={setTab}
+                      fetchCustomer={fetchCustomer}
                     />
                   ),
                 },
