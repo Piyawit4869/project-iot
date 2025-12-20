@@ -38,6 +38,7 @@ import {
 } from "~/components/ui/command";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
+import { useMarkAsSpam } from "~/api/client/message/useMessage";
 
 interface Props {
   handleChangeSelectedRoom: (room: any) => void;
@@ -271,7 +272,7 @@ export default function ChatlistSidebar({
                 <CommandGroup heading="">
                   <CommandItem
                     className={`
-    flex justify-between items-center cursor-pointer 
+    flex justify-between items-center cursor-pointer
     ${select === "all" ? "bg-orange-50 font-semibold" : ""}
   `}
                     onSelect={() => handleClickMenu("all")}
@@ -300,7 +301,7 @@ export default function ChatlistSidebar({
                   </CommandItem> */}
                   <CommandItem
                     className={`
-    flex justify-between items-center cursor-pointer 
+    flex justify-between items-center cursor-pointer
     ${select === "unread" ? "bg-orange-50 font-semibold" : ""}
   `}
                     onSelect={() => handleClickMenu("unread")}
@@ -318,7 +319,7 @@ export default function ChatlistSidebar({
                   </CommandItem>
                   <CommandItem
                     className={`
-    flex justify-between items-center cursor-pointer 
+    flex justify-between items-center cursor-pointer
     ${select === "isProcess" ? "bg-orange-50 font-semibold" : ""}
   `}
                     onSelect={() => handleClickMenu("isProcess")}
@@ -338,7 +339,7 @@ export default function ChatlistSidebar({
 
                   <CommandItem
                     className={`
-    flex justify-between items-center cursor-pointer 
+    flex justify-between items-center cursor-pointer
     ${select === "done" ? "bg-orange-50 font-semibold" : ""}
   `}
                     onSelect={() => handleClickMenu("done")}
@@ -365,8 +366,8 @@ export default function ChatlistSidebar({
                   <CommandSeparator />
                   <CommandItem
                     className={`
-    flex justify-between items-center cursor-pointer 
-    ${select === "done" ? "bg-orange-50 font-semibold" : ""}
+    flex justify-between items-center cursor-pointer
+    ${select === "isSpam" ? "bg-orange-50 font-semibold" : ""}
   `}
                     onSelect={() => handleClickMenu("isSpam")}
                   >
@@ -620,6 +621,7 @@ function ChatItem({
   roomId,
   roomDetail,
 }: ChatItemProps) {
+  const { mutate: markAsSpam, isPending } = useMarkAsSpam(roomId);
   const fallbackImage = `https://ui-avatars.com/api/?name=${encodeURIComponent(
     name
   )}`;
@@ -676,12 +678,12 @@ function ChatItem({
                       <button
                         onClick={(e) => e.stopPropagation()}
                         className="
-          opacity-0 
-          group-hover:opacity-100 
-          transition 
+          opacity-0
+          group-hover:opacity-100
+          transition
          cursor-pointer
          hover:text-black
-         
+
         "
                       >
                         <MoreVertical className="w-4 h-4 text-muted-foreground" />
@@ -692,10 +694,43 @@ function ChatItem({
                       <Command className="max-h-none overflow-visible">
                         <CommandList>
                           <CommandGroup>
-                            <CommandItem className="flex items-center gap-2 text-red-500">
-                              <OctagonAlert className="w-4 h-4" />
-                              สแปม
-                            </CommandItem>
+                            {roomDetail?.isSpam ? (
+                              <CommandItem
+                                className="flex items-center gap-2 cursor-pointer"
+                                disabled={isPending}
+                                onSelect={() => {
+                                  markAsSpam(false, {
+                                    onSuccess: () => {
+                                      setOpenOption(false);
+                                    },
+                                    onError: (err) => {
+                                      console.error("unmark spam error", err);
+                                    },
+                                  });
+                                }}
+                              >
+                                <OctagonAlert className="w-4 h-4" />
+                                ยกเลิกสแปม
+                              </CommandItem>
+                            ) : (
+                              <CommandItem
+                                className="flex items-center gap-2 text-red-500 cursor-pointer"
+                                disabled={isPending}
+                                onSelect={() => {
+                                  markAsSpam(true, {
+                                    onSuccess: () => {
+                                      setOpenOption(false);
+                                    },
+                                    onError: (err) => {
+                                      console.error("mark as spam error", err);
+                                    },
+                                  });
+                                }}
+                              >
+                                <OctagonAlert className="w-4 h-4" />
+                                กำหนดเป็นสแปม
+                              </CommandItem>
+                            )}
                           </CommandGroup>
                         </CommandList>
                       </Command>
@@ -734,6 +769,16 @@ function ChatItem({
                         <MessagesSquare className="mr-1 h-[10px] w-[10px]" />
                       }
                       color="orange"
+                      className="text-[10px]"
+                    />
+                  )}
+                  {roomDetail.isSpam && (
+                    <TagLabel
+                      label="สแปม"
+                      icon={
+                        <MessagesSquare className="mr-1 h-[10px] w-[10px]" />
+                      }
+                      color="red"
                       className="text-[10px]"
                     />
                   )}
