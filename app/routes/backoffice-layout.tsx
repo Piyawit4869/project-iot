@@ -30,7 +30,6 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   return null;
 }
-
 export default function AdminLayout() {
   return (
     <div className="flex h-screen">

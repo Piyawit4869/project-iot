@@ -46,7 +46,6 @@ export function HomeSidebar({
       setActiveKey("home");
     }
   }, [segments]);
-
   return (
     <SidebarGroup>
       <SidebarMenu>

@@ -35,6 +35,36 @@ export default [
     index("routes/backoffice/home.tsx"),
     route("message", "routes/backoffice/messages/index.tsx"),
 
+    // customer
+    ...prefix("customer", [
+      index("routes/backoffice/customer/index.tsx"),
+      route("/create", "routes/backoffice/customer/create.tsx"),
+      route("/:id", "routes/backoffice/customer/single.tsx"),
+      // route("/:id/edit", "routes/tickets/single/edit.tsx"),
+    ]),
+
+    // Orders
+    ...prefix("orders", [
+      index("routes/backoffice/orders/index.tsx"),
+      route("/create", "routes/backoffice/orders/create.tsx"),
+      route("/:id", "routes/backoffice/orders/single.tsx"),
+      // route("/:id/edit", "routes/tickets/single/edit.tsx"),
+    ]),
+
+    // Inventories
+    ...prefix("inventory", [
+      index("routes/backoffice/inventory/index.tsx"),
+      route("create", "routes/backoffice/inventory/create.tsx"),
+      route(":id", "routes/backoffice/inventory/single.tsx"),
+    ]),
+
+    // Products
+    ...prefix("products", [
+      index("routes/backoffice/products/index.tsx"),
+      route("create", "routes/backoffice/products/create.tsx"),
+      route(":id", "routes/backoffice/products/single.tsx"),
+    ]),
+
     // User
     ...prefix("users", [
       index("routes/backoffice/users/index.tsx"),
@@ -51,19 +81,34 @@ export default [
       // route("/:id", "routes/backoffice/users/edit.tsx"),
     ]),
 
-    // Products
-    ...prefix("products", [
-      index("routes/backoffice/products/index.tsx"),
-      route("create", "routes/backoffice/products/create.tsx"),
-      route(":id", "routes/backoffice/products/single.tsx"),
+    // On-Boarding
+    ...prefix("on-boarding", [
+      index("routes/backoffice/on-boarding/index.tsx"),
+      route("management", "routes/backoffice/on-boarding/management/index.tsx"),
+      route(
+        "management/create",
+        "routes/backoffice/on-boarding/management/create.tsx"
+      ),
+      route(
+        "/management/single",
+        "routes/backoffice/on-boarding/management/single.tsx"
+      ),
+      route("team", "routes/backoffice/on-boarding/team/index.tsx"),
+      route("team/single", "routes/backoffice/on-boarding/team/single.tsx"),
+      route("setting", "routes/backoffice/on-boarding/setting.tsx"),
     ]),
 
-    // Inventories
-    ...prefix("inventory", [
-      index("routes/backoffice/inventory/index.tsx"),
-      route("create", "routes/backoffice/inventory/create.tsx"),
-      route(":id", "routes/backoffice/inventory/single.tsx"),
-    ]),
+    //onboarding
+    // index
+    // onboarding-management
+    // create
+    // single/detail
+
+    // onboarding-team
+    // create
+    // single/detail
+
+    // onboarding-setting
 
     //   // customer
     //   ...prefix("customer", [
@@ -75,19 +120,7 @@ export default [
     //     route("/:id", "routes/tickets/single/view.tsx"),
     //     route("/create", "routes/tickets/create.tsx"),
     //   ]),
-    // customer
-    ...prefix("customer", [
-      index("routes/backoffice/customer/index.tsx"),
-      route("/create", "routes/backoffice/customer/create.tsx"),
-      route("/:id", "routes/backoffice/customer/single.tsx"),
-      // route("/:id/edit", "routes/tickets/single/edit.tsx"),
-    ]),
-    ...prefix("orders", [
-      index("routes/backoffice/orders/index.tsx"),
-      route("/create", "routes/backoffice/orders/create.tsx"),
-      route("/:id", "routes/backoffice/orders/single.tsx"),
-      // route("/:id/edit", "routes/tickets/single/edit.tsx"),
-    ]),
+
     //   // products
     //   ...prefix("products", [
     //     index("routes/users/index.tsx"),
