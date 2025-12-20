@@ -30,12 +30,19 @@ const ACTION_LABEL: Record<string, string> = {
 
 const ACTION_ORDER = ["get_all", "get_single", "create", "update", "delete"];
 const FEATURE_LABEL: Record<string, string> = {
+  home: "หน้าหลัก",
   chat: "แชท",
-  customers: "ลูกค้า",
+  customer: "ลูกค้า",
   order: "ออเดอร์",
   inventory: "คลังสินค้า",
   product: "สินค้า",
   user: "พนักงาน",
+  login_log: "ประวัติการเข้าสู่ระบบ",
+  on_boarding: "On Boarding",
+  organization: "องค์กร",
+  roles: "บทบาท",
+  branch: "สาขา",
+  setting: "ตั้งค่า",
 };
 
 const featureTH = (feature?: string) => {

@@ -33,7 +33,7 @@ export const getUserActionByPermission = (
   action: PermissionBaseAction
 ): boolean => {
   if (!permission) return false;
-  const actions = permission[module === "customer" ? "customers" : module];
+  const actions = permission[module === "customer" ? "customer" : module];
   return Array.isArray(actions) && actions.includes(action);
 };
 
@@ -42,7 +42,7 @@ export const keyToModuleMap: Record<string, string> = {
   orders: "order",
   product: "product",
   messages: "chat",
-  customer: "customers",
+  customer: "customer",
   employee: "user",
   "setting-organization": "setting",
   loginLog: "loginLog",

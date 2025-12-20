@@ -82,9 +82,41 @@ export const SingleUsersView: React.FC<EditUsersViewProps> = ({
           </div>
         </div>
       </Card> */}
+      {/* <Card className="p-2 pt-4 h-full">
+        <UserProfileView data={data} loading={loading} />
+      </Card>
+      <div className="mt-2 flex flex-col md:flex-row gap-5">
+        <div className="md:w-[35%] h-[50%] w-full"></div>
+
+        <div className="md:w-[65%] w-full flex flex-col gap-5">
+          <Card className="p-2p py-8">
+            <UserCompensation data={data} loading={loading} />
+          </Card>
+
+          <Card className="p-2 py-8">
+            <UserSkills data={data} loading={loading} />
+          </Card>
+
+          <Card className="p-2 py-8">
+            <UserWorkExperience data={data} loading={loading} />
+          </Card>
+
+          <Card className="p-2 py-8">
+            <UserStudy data={data} loading={loading} />
+          </Card>
+
+          <Card className="p-2 py-8">
+            <UserSocalmedias data={data} loading={loading} />
+          </Card>
+
+          <Card className="p-2 py-8">
+            <UserDocuments data={data} loading={loading} />
+          </Card>
+        </div>
+      </div> */}
       <div className="mt-2 flex flex-col md:flex-row gap-5">
         <div className="md:w-[35%] h-[50%] w-full">
-          <Card className="p-4 h-full">
+          <Card className="p-2 pt-4 h-full">
             <UserProfileView data={data} loading={loading} />
           </Card>
         </div>

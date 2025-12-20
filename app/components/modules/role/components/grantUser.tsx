@@ -91,7 +91,6 @@ export const GrantUser: React.FC<RolesFormProps> = ({
     onView: (userId) => navigate(`/users/${userId}`),
     onRemove: handleRemoveUser,
   });
-  
 
   const handleCloseModal = () => setOpen(false);
   const handleOpenModal = () => setOpen(true);
@@ -126,7 +125,7 @@ export const GrantUser: React.FC<RolesFormProps> = ({
   return (
     <>
       <CardHeader>
-        <div className="flex gap-2 justify-between">
+        <div className="flex gap-2 justify-between mt-2">
           <CardTitle className="text-base font-bold">
             ตารางพนักงานที่อยู่ในตำแหน่ง
           </CardTitle>
@@ -145,12 +144,14 @@ export const GrantUser: React.FC<RolesFormProps> = ({
           <SkeletonLoading />
         </CardContent>
       ) : (
-        <CardContent className="space-y-4">
-          <DataTable
-            data={roles?.users ?? []}
-            columns={columns}
-            isCustomLoading={isLoading}
-          />
+        <CardContent className="px-2">
+          <div className="max-w-325">
+            <DataTable
+              data={roles?.users ?? []}
+              columns={columns}
+              isCustomLoading={isLoading}
+            />
+          </div>
 
           <ModalUser
             open={open}

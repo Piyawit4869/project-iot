@@ -245,7 +245,7 @@ export const orderFormSchema = z.object({
   approvedByName: z.string().optional().nullable(),
   makeByPosition: z.string().optional().nullable(),
   approvedByPosition: z.string().optional().nullable(),
-  profile: customerSchema,
+  profile: customerSchema.optional().nullable(),
   orderType: TypeEnum,
   currency: currencyEnum,
   customer: customerSchema.optional(),
