@@ -114,7 +114,9 @@ const InventoryCreateContainer = () => {
           </div>
         </div>
 
-        <DataTable data={inventoryProducts} columns={columns} />
+        <div className="md:max-w-[calc(100vw-360px)] max-w-none">
+          <DataTable data={inventoryProducts} columns={columns} />
+        </div>
       </Card>
     </div>
 
