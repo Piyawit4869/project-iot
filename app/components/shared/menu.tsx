@@ -185,7 +185,6 @@ export function Menu() {
     }
     return elements;
   }
-  console.log({ me });
   return (
     <div className="justify-between items-center flex gap-1 pr-3">
       {/* <button

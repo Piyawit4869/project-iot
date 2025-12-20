@@ -135,10 +135,6 @@ export const useUserColumns = (
         cell: (info) => {
           const url = info.getValue() as string;
           const userName = info.row.original?.userName;
-          console.log(
-            "row.profile.imageUrl =",
-            info.row.original?.profile?.imageUrl
-          );
 
           return (
             <GlobalImage
