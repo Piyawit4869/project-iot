@@ -43,6 +43,7 @@ type OrgSwitcherProps = {
   onChangeOrg: (orgId: string) => void;
   onOpenManage?: () => void;
   onOpenCreate?: () => void;
+  refetch?: () => void;
 };
 
 export function OrgSelectorDropdown({
@@ -51,6 +52,7 @@ export function OrgSelectorDropdown({
   onChangeOrg,
   onOpenManage,
   onOpenCreate,
+  refetch,
 }: OrgSwitcherProps) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
@@ -127,38 +129,44 @@ export function OrgSelectorDropdown({
                   const selected = org.id === currentOrgId;
 
                   return (
-                    <CommandItem
+                    <Link
                       key={org.id}
-                      value={org.nameTh}
-                      onSelect={() => {
-                        !selected && onChangeOrg(org.id);
-                        setOpen(false);
-                      }}
-                      className="rounded-lg"
+                      to={`/setting-organization?organizationId=${org.id}`}
+                      onClick={() => refetch?.()}
                     >
-                      <div className="flex items-center gap-2 min-w-0 flex-1">
-                        <Avatar className="h-6 w-6">
-                          <AvatarImage src={org.logoUrl} alt={org.nameTh} />
-                          <AvatarFallback>
-                            {initials(org.nameTh)}
-                          </AvatarFallback>
-                        </Avatar>
+                      <CommandItem
+                        key={org.id}
+                        value={org.nameTh}
+                        onSelect={() => {
+                          // !selected && onChangeOrg(org.id);
+                          setOpen(false);
+                        }}
+                        className="rounded-lg"
+                      >
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                          <Avatar className="h-6 w-6">
+                            <AvatarImage src={org.logoUrl} alt={org.nameTh} />
+                            <AvatarFallback>
+                              {initials(org.nameTh)}
+                            </AvatarFallback>
+                          </Avatar>
 
-                        <div className="min-w-0">
-                          <div className="truncate text-sm">{org.nameTh}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {selected ? "เลือกอยู่" : ""}
+                          <div className="min-w-0">
+                            <div className="truncate text-sm">{org.nameTh}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {selected ? "เลือกอยู่" : ""}
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <Check
-                        className={cn(
-                          "h-4 w-4",
-                          selected ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                    </CommandItem>
+                        {/* <Check
+                          className={cn(
+                            "h-4 w-4",
+                            selected ? "opacity-100" : "opacity-0"
+                          )}
+                        /> */}
+                      </CommandItem>
+                    </Link>
                   );
                 })
               ) : (

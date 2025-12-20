@@ -26,7 +26,7 @@ import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 import { SettingOrganizationForm } from "./components/setting-organization-form";
 import { RenderHeaderButtons } from "./components/render-header-buttons";
-import { useRouteLoaderData, useSearchParams } from "react-router";
+import { useNavigate, useRouteLoaderData, useSearchParams } from "react-router";
 import { SettingAddressForm } from "./components/setting-address-form";
 import { SettingForm } from "./components/setting-setting-form";
 import { TabControl } from "~/components/shared/tab-control";
@@ -53,16 +53,27 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     "SettingOrganization"
   );
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
+
   // const [selectedOrgId, setSelectedOrgId] = React.useState<string>("");
 
   const { data: organization } = useGetOrganizations();
-  const { data: org } = useGetOrganization(selectedOrgId);
+  const {
+    data: org,
+    isRefetching,
+    refetch,
+  } = useGetOrganization(selectedOrgId);
+
+  console.log({ isRefetching });
 
   const columns = useOrganizationColumns();
 
   const paginate = useGetOrganizationsPaginate;
   const organizationId =
-    org?.id ?? organization?.organization?.id ?? organization?.id ?? "";
+    selectedOrgId ??
+    org?.id ??
+    organization?.organization?.id ??
+    organization?.id ??
+    "";
 
   const settingAddressId =
     org?.address?.id ?? organization?.address?.id ?? organization?.id ?? "";
@@ -83,7 +94,6 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
   );
 
   const { mutate: updateSetting } = useUpdateSettings(settingId || "", userId);
-  const { mutate } = useChangeActiveOrg(user.id);
 
   const orgSource = org ?? organization;
 
@@ -235,32 +245,9 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
   const handleClickEditButton = () => setIsEditing(true);
 
   const handleChangeActiveOrg = (organizationId: string) => {
-    const toastId = toast.loading("กำลังเปลี่ยนองค์กร...", {
-      position: "bottom-right",
-    });
+    window.location.href = `/setting-organization?organizationId=${organizationId}`;
 
-    mutate(
-      { organizationId },
-      {
-        onSuccess: () => {
-          toast.success("เปลี่ยนเปลี่ยนองค์กร !", {
-            id: toastId,
-            duration: 2500,
-            position: "bottom-right",
-          });
-
-          localStorage.setItem("organizaionId", organizationId);
-        },
-        onError: () => {
-          toast.error("เกิดข้อผิดพลาดในการเปลี่ยนองค์กร", {
-            id: toastId,
-
-            duration: 3000,
-            position: "bottom-right",
-          });
-        },
-      }
-    );
+    refetch();
   };
 
   return (
@@ -277,6 +264,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                 currentOrgId={organizationId}
                 currentOrganization={user?.organization}
                 onChangeOrg={handleChangeActiveOrg}
+                refetch={refetch}
               />
             ) : (
               "องค์กรทั้งหมด"
