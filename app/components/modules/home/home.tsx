@@ -1,6 +1,5 @@
 "use client";
 
-import { id } from "date-fns/locale";
 import {
   Package,
   Settings,
@@ -25,11 +24,9 @@ type RomeApp = {
   path: string;
 };
 
-
 function filterAppsByRole(items: RomeApp[], role: Role): RomeApp[] {
   // fix id ที่สะกดผิด
   const fixId = (id: string) => (id === "customer" ? "customer" : id);
-
 
   if (role === "owner") {
     return items.map((it) => ({ ...it, id: fixId(it.id) }));
@@ -132,7 +129,7 @@ export default function HomeComponent() {
       color: "bg-gradient-to-br from-purple-500 to-blue-500",
       path: "/on-boarding",
     },
-    
+
     {
       id: "setting",
       name: "Settings",
