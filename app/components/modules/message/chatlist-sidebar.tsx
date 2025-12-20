@@ -15,8 +15,11 @@ import {
   Clock,
   FileUp,
   Inbox,
+  MailWarning,
   Menu,
   MessagesSquare,
+  MoreVertical,
+  OctagonAlert,
 } from "lucide-react";
 import { TagLabel } from "~/components/shared/tag-label";
 import { DateTimeStampChatDisplay } from "~/utils/date-format";
@@ -35,6 +38,7 @@ import {
 } from "~/components/ui/command";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
+import { useMarkAsSpam } from "~/api/client/message/useMessage";
 
 interface Props {
   handleChangeSelectedRoom: (room: any) => void;
@@ -52,6 +56,7 @@ export default function ChatlistSidebar({
 
   const [open, setOpen] = React.useState<boolean>(false);
   const [inputOpen, setInputOpen] = React.useState<boolean>(false);
+
   const containerRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -77,7 +82,7 @@ export default function ChatlistSidebar({
   const { currentRoomId, addMessageAI, removeMessage } = useChat();
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
-  type StatusKey = "unread" | "done" | "isProcess" | "all";
+  type StatusKey = "unread" | "done" | "isProcess" | "spam" | "all";
 
   const handleScroll = () => {
     const el = scrollRef.current;
@@ -189,6 +194,7 @@ export default function ChatlistSidebar({
     unread: "ยังไม่อ่าน",
     done: "ดำเนินการแล้ว",
     isProcess: "ต้องดำเนินการ",
+    spam: "ต้องดำเนินการ",
     all: "ทั้งหมด",
   };
 
@@ -266,7 +272,7 @@ export default function ChatlistSidebar({
                 <CommandGroup heading="">
                   <CommandItem
                     className={`
-    flex justify-between items-center cursor-pointer 
+    flex justify-between items-center cursor-pointer
     ${select === "all" ? "bg-orange-50 font-semibold" : ""}
   `}
                     onSelect={() => handleClickMenu("all")}
@@ -295,7 +301,7 @@ export default function ChatlistSidebar({
                   </CommandItem> */}
                   <CommandItem
                     className={`
-    flex justify-between items-center cursor-pointer 
+    flex justify-between items-center cursor-pointer
     ${select === "unread" ? "bg-orange-50 font-semibold" : ""}
   `}
                     onSelect={() => handleClickMenu("unread")}
@@ -313,7 +319,7 @@ export default function ChatlistSidebar({
                   </CommandItem>
                   <CommandItem
                     className={`
-    flex justify-between items-center cursor-pointer 
+    flex justify-between items-center cursor-pointer
     ${select === "isProcess" ? "bg-orange-50 font-semibold" : ""}
   `}
                     onSelect={() => handleClickMenu("isProcess")}
@@ -333,7 +339,7 @@ export default function ChatlistSidebar({
 
                   <CommandItem
                     className={`
-    flex justify-between items-center cursor-pointer 
+    flex justify-between items-center cursor-pointer
     ${select === "done" ? "bg-orange-50 font-semibold" : ""}
   `}
                     onSelect={() => handleClickMenu("done")}
@@ -358,6 +364,24 @@ export default function ChatlistSidebar({
                     <FileUp className="w-4 h-4 text-gray-500" /> นำออกข้อมูล
                   </CommandItem>
                   <CommandSeparator />
+                  <CommandItem
+                    className={`
+    flex justify-between items-center cursor-pointer
+    ${select === "isSpam" ? "bg-orange-50 font-semibold" : ""}
+  `}
+                    onSelect={() => handleClickMenu("isSpam")}
+                  >
+                    <div className="flex items-center gap-2">
+                      <OctagonAlert className="w-4 h-4 text-gray-500" /> สแปม
+                    </div>
+                    <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
+                      {isLoading ? (
+                        <SkeletonLoading />
+                      ) : (
+                        meta?.statusSummary?.totalSpam
+                      )}
+                    </span>
+                  </CommandItem>
                   {/* <CommandItem className="flex items-center gap-2 cursor-pointer">
                     <User className="w-4 h-4 text-gray-500" /> รับผิดชอบ
                   </CommandItem>
@@ -597,6 +621,7 @@ function ChatItem({
   roomId,
   roomDetail,
 }: ChatItemProps) {
+  const { mutate: markAsSpam, isPending } = useMarkAsSpam(roomId);
   const fallbackImage = `https://ui-avatars.com/api/?name=${encodeURIComponent(
     name
   )}`;
@@ -605,11 +630,12 @@ function ChatItem({
 
   const { autoReadMsg } = useChatRoom();
   const { setCurrentRoomId, currentRoomId } = useChat();
+  const [openOption, setOpenOption] = React.useState<boolean>(false);
 
   return (
     <div
       className={cn(
-        "sm:justify-center",
+        "group sm:justify-center",
         currentRoomId === roomId && "bg-gray-300 dark:bg-gray-700",
         // resize <= 25 && "justify-center",
         "flex items-center px-4 py-3 hover:bg-border cursor-pointer transition w-full"
@@ -638,13 +664,80 @@ function ChatItem({
 
       {!isMobile && (
         <div className="hidden ml-3 lg:flex flex-col min-w-0 flex-1">
-          <div className="flex flex-col justify-between items-start gap-2 min-w-0">
+          <div className="flex flex-col gap-2 min-w-0">
             <div className="flex w-full justify-between items-center gap-2 min-w-0">
               <p className={cn("text-sm truncate max-w-[160px]")}>{name}</p>
 
-              <span className="text-xs text-black-400 whitespace-nowrap shrink-0 text-end">
-                {DateTimeStampChatDisplay(time ?? "")}
-              </span>
+              <div className="flex items-center gap-2  ">
+                <span className="text-xs text-black-400 whitespace-nowrap shrink-0 text-end">
+                  {DateTimeStampChatDisplay(time ?? "")}
+                </span>
+                <div className="group flex items-center  ">
+                  <Popover open={openOption} onOpenChange={setOpenOption}>
+                    <PopoverTrigger asChild>
+                      <button
+                        onClick={(e) => e.stopPropagation()}
+                        className="
+          opacity-0
+          group-hover:opacity-100
+          transition
+         cursor-pointer
+         hover:text-black
+
+        "
+                      >
+                        <MoreVertical className="w-4 h-4 text-muted-foreground" />
+                      </button>
+                    </PopoverTrigger>
+
+                    <PopoverContent align="start" className="w-56 p-1 mt-2">
+                      <Command className="max-h-none overflow-visible">
+                        <CommandList>
+                          <CommandGroup>
+                            {roomDetail?.isSpam ? (
+                              <CommandItem
+                                className="flex items-center gap-2 cursor-pointer"
+                                disabled={isPending}
+                                onSelect={() => {
+                                  markAsSpam(false, {
+                                    onSuccess: () => {
+                                      setOpenOption(false);
+                                    },
+                                    onError: (err) => {
+                                      console.error("unmark spam error", err);
+                                    },
+                                  });
+                                }}
+                              >
+                                <OctagonAlert className="w-4 h-4" />
+                                ยกเลิกสแปม
+                              </CommandItem>
+                            ) : (
+                              <CommandItem
+                                className="flex items-center gap-2 text-red-500 cursor-pointer"
+                                disabled={isPending}
+                                onSelect={() => {
+                                  markAsSpam(true, {
+                                    onSuccess: () => {
+                                      setOpenOption(false);
+                                    },
+                                    onError: (err) => {
+                                      console.error("mark as spam error", err);
+                                    },
+                                  });
+                                }}
+                              >
+                                <OctagonAlert className="w-4 h-4" />
+                                กำหนดเป็นสแปม
+                              </CommandItem>
+                            )}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
             </div>
 
             <div className="flex w-full flex-row justify-between">
@@ -676,6 +769,16 @@ function ChatItem({
                         <MessagesSquare className="mr-1 h-[10px] w-[10px]" />
                       }
                       color="orange"
+                      className="text-[10px]"
+                    />
+                  )}
+                  {roomDetail.isSpam && (
+                    <TagLabel
+                      label="สแปม"
+                      icon={
+                        <MessagesSquare className="mr-1 h-[10px] w-[10px]" />
+                      }
+                      color="red"
                       className="text-[10px]"
                     />
                   )}

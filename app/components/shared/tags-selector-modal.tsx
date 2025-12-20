@@ -47,7 +47,7 @@ export const TagsSelectorModal: React.FC<TagsSelectorModalProps> = ({
   const availableTags =
     allTags && allTags.length
       ? allTags
-          .filter((a: any, index: number) => index < 20)
+          // .filter((a: any, index: number) => index < 20)
           .map((b: any) => {
             return { name: b.name, id: b.id };
           })

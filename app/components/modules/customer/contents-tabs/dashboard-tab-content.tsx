@@ -21,6 +21,7 @@ export function DashboardTabContent({
   analyzeCustomer,
   loadAnalyzeCustomer,
   setTab,
+  fetchCustomer,
 }: any) {
   return (
     <>
@@ -66,6 +67,7 @@ export function DashboardTabContent({
               }
               onCancel={handleCancel}
               onEditForm={handleEditForm}
+              fetchCustomer={fetchCustomer}
             />
           )}
         </div>
