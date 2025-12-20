@@ -47,8 +47,8 @@ export function OrgSelector({
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
 
-  const debouncedSearch = useDebounce(search);
-  const { data } = useSearchUserOrgs(debouncedSearch);
+  // const debouncedSearch = useDebounce(search);
+  const { data } = useSearchUserOrgs();
 
   const orgs = data?.organizations;
 
@@ -61,6 +61,8 @@ export function OrgSelector({
       ? (orgs.find((o: Org) => o.id === currentOrgId) ?? orgs[0])
       : currentOrganization;
   }, [orgs, currentOrgId]);
+
+  console.log({ current, currentOrgId });
 
   const initials = (name?: string) =>
     (name ?? "")
@@ -75,7 +77,7 @@ export function OrgSelector({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="h-10 w-full justify-between rounded-xl"
+          className="h-10 w-full justify-between rounded-md"
           aria-label="Switch organization"
         >
           <div className="flex items-center gap-2 min-w-0">
@@ -123,7 +125,7 @@ export function OrgSelector({
                         !selected && onChangeOrg(org.id);
                         setOpen(false);
                       }}
-                      className="rounded-lg"
+                      className="rounded-lg h-[45px] cursor-pointer"
                     >
                       <div className="flex items-center gap-2 min-w-0 flex-1">
                         <Avatar className="h-6 w-6">
@@ -136,7 +138,9 @@ export function OrgSelector({
                         <div className="min-w-0">
                           <div className="truncate text-sm">{org.nameTh}</div>
                           <div className="text-xs text-muted-foreground">
-                            {org.status === "inactive" ? "Inactive" : "Active"}
+                            {/* {org.status === "inactive" ? "Inactive" : "Active"} */}
+
+                            {selected ? "เลือกอยู่" : ""}
                           </div>
                         </div>
                       </div>

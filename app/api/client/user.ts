@@ -16,6 +16,7 @@ import {
 } from "../server/user";
 import type { UsersFormValues } from "~/schemas/users/user";
 import type { PasswordFormValues } from "~/schemas/users/password-user";
+import { getCurrentMe, getMe } from "../server/auth";
 
 export const usePaginate = ({
   pageIndex,
@@ -95,6 +96,12 @@ export const usePaginate = ({
     enabled: !!pageIndex,
   });
 };
+
+export const useGetMe = () =>
+  useQuery({
+    queryKey: ["me"],
+    queryFn: () => getCurrentMe(),
+  });
 
 export const useGetUsers = (id: string) =>
   useQuery({

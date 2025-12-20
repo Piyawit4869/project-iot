@@ -71,7 +71,6 @@ export default function App() {
 
   if (typeof window !== "undefined") {
     localStorage.setItem("accessToken", token);
-    localStorage.setItem("organizaionId", user?.organizaionId);
   }
 
   return (

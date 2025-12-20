@@ -13,8 +13,9 @@ import { HomeSidebar, type SidebarItem } from "./sidebar/home-sidebar";
 import { MainSidebar } from "./sidebar/main-sidebar";
 import { getUserMapPermission, keyToModuleMap } from "~/utils/permission";
 import { OrgSelector } from "./sidebar/org-selector";
-import { useChangeActiveOrg } from "~/api/client/user";
+import { useChangeActiveOrg, useGetMe } from "~/api/client/user";
 import { toast } from "sonner";
+import { SkeletonLoading } from "./skeleton-loading";
 
 const renderIcon = (iconName: string) => {
   const IconComponent = Icons[iconName as keyof typeof Icons] as React.FC<
@@ -117,10 +118,14 @@ const permissionToMenuKey: Record<string, string> = {
 export function AppSidebar({ data, ...props }: AppSidebarProps) {
   const { user } = useRouteLoaderData("root");
 
+  const { data: me, isLoading, refetch } = useGetMe();
+
+  const selectedOrganization = me?.meta?.selectedOrganization;
+
   const { mutate } = useChangeActiveOrg(user.id);
 
   const isSingleOrg = !user?.organizationGroupId;
-  const organizationId = user?.organizationId;
+  const organizationId = selectedOrganization || user?.organizationId;
 
   const normalizedPermissions = getUserMapPermission(user);
 
@@ -172,7 +177,7 @@ export function AppSidebar({ data, ...props }: AppSidebarProps) {
             position: "bottom-right",
           });
 
-          localStorage.setItem("organizaionId", organizationId);
+          refetch();
         },
         onError: () => {
           toast.error("เกิดข้อผิดพลาดในการเปลี่ยนองค์กร", {
@@ -189,15 +194,19 @@ export function AppSidebar({ data, ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        {isSingleOrg ? (
-          <HeadSidebar org={user} />
-        ) : (
-          <OrgSelector
-            currentOrgId={organizationId}
-            currentOrganization={user?.organization}
-            onChangeOrg={handleChangeActiveOrg}
-          />
-        )}
+        <>
+          {isSingleOrg ? (
+            <HeadSidebar org={user} />
+          ) : isLoading ? (
+            <SkeletonLoading className="h-10 w-full" />
+          ) : (
+            <OrgSelector
+              currentOrgId={organizationId}
+              currentOrganization={user?.organization}
+              onChangeOrg={handleChangeActiveOrg}
+            />
+          )}
+        </>
       </SidebarHeader>
       <SidebarContent>
         <HomeSidebar home={homeItems} icon={renderIcon} />
