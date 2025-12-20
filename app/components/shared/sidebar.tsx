@@ -132,7 +132,7 @@ export function AppSidebar({ data, ...props }: AppSidebarProps) {
     const items = (data.home as MenuItem[])
       .map((item) => ({
         ...item,
-        key: item.key === "customner" ? "customer" : item.key,
+        key: item.key === "customer" ? "customer" : item.key,
       }))
       .filter((item) => {
         if (item.key === "home") return true;
