@@ -116,9 +116,9 @@ export const useCustomerSetup = () => {
 
       tags: [],
 
-      supports: [
-        /* { userId: "", isMain: true } */
-      ],
+      // supports: [
+      //    { userId: "", isMain: true }
+      // ],
     },
   });
   const { isSubmitting: isCreating, isDirty: isDirtyCreate } =
@@ -184,7 +184,7 @@ export const useCustomerSetup = () => {
       },
 
       contacts: customer?.contacts ?? [],
-      supports: customer?.supports ?? [],
+      // supports: customer?.supports ?? [],
       tags: customer?.tags ?? [],
     },
   });
@@ -259,11 +259,11 @@ export const useCustomerSetup = () => {
             ? customer?.contacts
             : [customer?.contacts]
           : [],
-        supports: customer?.supports
-          ? Array.isArray(customer?.supports)
-            ? customer?.supports
-            : [customer?.supports]
-          : [],
+        // supports: customer?.supports
+        //   ? Array.isArray(customer?.supports)
+        //     ? customer?.supports
+        //     : [customer?.supports]
+        //   : [],
         tags: Array.isArray(customer?.tags)
           ? customer?.tags
           : customer?.tags
