@@ -327,6 +327,7 @@ export default function SingDetailleCustomer() {
                       analyzeCustomer={analyzeCustomer}
                       loadAnalyzeCustomer={loadAnalyzeCustomer}
                       setTab={setTab}
+                      fetchCustomer={fetchCustomer}
                     />
                   ),
                 },

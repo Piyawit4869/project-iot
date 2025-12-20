@@ -46,6 +46,13 @@ export function convertStatsToChart(data: any) {
 export const PieChart = ({ initData }: any) => {
   const [data, setData] = React.useState<any>([]);
 
+  const handleGetInitialTheme = (): boolean => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("theme") === "dark";
+  };
+
+  const [isDark, _] = React.useState<boolean>(handleGetInitialTheme);
+
   React.useEffect(() => {
     setTimeout(() => {
       setData(convertStatsToChart(initData));
@@ -78,21 +85,24 @@ export const PieChart = ({ initData }: any) => {
     height: 330,
 
     angleField: "value",
-    colorField: "label",
+    colorField: "type",
     innerRadius: 0.6,
     label: {
       text: "value",
       style: {
-        fontWeight: "bold",
+        stroke: isDark ? "#D3D3D3" : "#000000",
       },
     },
+
     legend: {
       color: {
-        itemLabelMaxWidth: 9999,
-        itemLabelFill: "#000000",
+        // itemLabelMaxWidth: 9999,
+        itemLabelFill: isDark ? "#D3D3D3" : "#000000",
         itemLabelFontSize: 15,
-        position: "top",
+        position: "bottom",
+        rowPadding: 5,
 
+        maxRows: 3,
         itemLabelFontFamily: "IBMPlexSansThai",
         layout: "vertical",
       },
@@ -104,16 +114,21 @@ export const PieChart = ({ initData }: any) => {
 
     scale: {
       color: {
-        range: [
-          "#F0EEF7",
-          "#B3A9D6",
-          "#7664B5",
-          "#5D4A9B",
-          "#332956",
-          "#19142A",
-        ],
+        range: ["#ce517cff", "#103F91", "#3e813aff", "#d78f1cff"],
       },
     },
+    annotations: [
+      {
+        type: "text",
+        style: {
+          x: "50%",
+          y: "50%",
+          textAlign: "center",
+          fontSize: 35,
+          fontStyle: "bold",
+        },
+      },
+    ],
   };
   return (
     <div className="flex flex-col w-full">
