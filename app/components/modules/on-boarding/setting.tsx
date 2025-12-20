@@ -3,6 +3,7 @@
 import { TabControl } from "~/components/shared/tab-control";
 import { Save } from "lucide-react";
 import GlobalButton from "~/components/shared/global-button";
+import { LearningCondition } from "./components/setting/learning-condition";
 
 export default function OnboardSetting() {
   return (
@@ -20,6 +21,7 @@ export default function OnboardSetting() {
           />,
         ]}
       />
+      <LearningCondition />
     </div>
   );
 }

@@ -12,6 +12,8 @@ import Toolbar from "./editor-toolbar/toolbar";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { Trash } from "lucide-react";
 import type { ContentProps } from "~/schemas/on-boarding/onboard";
+import { ImageNode } from "./image-node";
+import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 
 export const Content: React.FC<ContentProps> = ({ onDelete }) => {
   return (
@@ -38,6 +40,7 @@ export const Content: React.FC<ContentProps> = ({ onDelete }) => {
             CodeNode,
             CodeHighlightNode,
             LinkNode,
+            ImageNode,
           ],
           onError(error) {
             console.error(error);
@@ -59,7 +62,9 @@ export const Content: React.FC<ContentProps> = ({ onDelete }) => {
             }
             ErrorBoundary={LexicalErrorBoundary}
           />
+
           <HistoryPlugin />
+          <ListPlugin />
           <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
         </div>
       </LexicalComposer>

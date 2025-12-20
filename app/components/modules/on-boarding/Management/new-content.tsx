@@ -61,10 +61,6 @@ export default function OnBoardingManagementSingle() {
     },
   });
 
-  function addBlock(arg0: string): void {
-    throw new Error("Function not implemented.");
-  }
-
   return (
     <div className="flex flex-col space-y-3 p-8">
       <TabControl
@@ -103,11 +99,8 @@ export default function OnBoardingManagementSingle() {
       </div>
 
       <div className="inline-flex items-center gap-3 w-fit px-2 py-1.5 border-2 border-dashed border-gray-400 rounded-lg">
-        <Heading 
-          className="w-5 h-5 cursor-pointer" 
-          onClick={handleAddTopic} 
-        />
-        
+        <Heading className="w-5 h-5 cursor-pointer" onClick={handleAddTopic} />
+
         <MessageCirclePlus
           className="w-5 h-5 cursor-pointer"
           onClick={handleAddContent}
@@ -122,6 +115,7 @@ export default function OnBoardingManagementSingle() {
           className="w-5 h-5 cursor-pointer"
           onClick={handleAddVideo}
         />
+
         <BotMessageSquare className="w-5 h-5 cursor-pointer" />
       </div>
     </div>

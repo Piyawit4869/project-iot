@@ -1,11 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, Save, X } from "lucide-react";
 import * as React from "react";
-import { useForm, type Resolver, type UseFormReturn } from "react-hook-form";
-import { Link } from "react-router";
-import { useGetAllDepartments } from "~/api/client/user";
-import GlobalButton from "~/components/shared/global-button";
-import { RequiredLabel } from "~/components/shared/required-design";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import {
@@ -40,9 +33,7 @@ function SwitchItem({
     <div className="flex items-center justify-between">
       <div>
         <p className="font-medium">{label}</p>
-        {description && (
-          <p className="text-sm text-gray-500">{description}</p>
-        )}
+        {description && <p className="text-sm text-gray-500">{description}</p>}
       </div>
 
       <button
@@ -80,10 +71,10 @@ export default function SettingScoreDialog({ openSetting, setOpen }: Props) {
       <Dialog open={openSetting} onOpenChange={setOpen}>
         <DialogContent className="max-h-[96vh] overflow-auto rounded-lg p-6">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">
-              การตั้งค่า
-            </DialogTitle>
-            <DialogDescription>การตั้งค่าจะสามารถกำหนดคะแนนเต็ม และให้ระบบตรวจคำตอบได้</DialogDescription>
+            <DialogTitle className="text-2xl font-bold">การตั้งค่า</DialogTitle>
+            <DialogDescription>
+              การตั้งค่าจะสามารถกำหนดคะแนนเต็ม และให้ระบบตรวจคำตอบได้
+            </DialogDescription>
           </DialogHeader>
           <div>
             <DialogTitle className="pb-5">เผยแพร่คะแนน</DialogTitle>
@@ -95,6 +86,7 @@ export default function SettingScoreDialog({ openSetting, setOpen }: Props) {
                   value="immediately"
                   checked={value === "immediately"}
                   onChange={() => setValue("immediately")}
+                  className="accent-black"
                 />
                 ทันทีหลังจากส่งคำตอบ
               </label>
@@ -106,6 +98,7 @@ export default function SettingScoreDialog({ openSetting, setOpen }: Props) {
                   value="never"
                   checked={value === "never"}
                   onChange={() => setValue("never")}
+                  className="accent-black"
                 />
                 ไม่เฉลย
               </label>
@@ -114,7 +107,7 @@ export default function SettingScoreDialog({ openSetting, setOpen }: Props) {
           <div>
             <DialogTitle className="pb-5">การตั้งค่าสำหรับผู้ตอบ</DialogTitle>
             <div className="space-y-2">
-               <div className="space-y-6">
+              <div className="space-y-6">
                 <SwitchItem
                   label="คำตอบที่ถูกต้อง"
                   description="ผู้ตอบจะเห็นคำตอบที่ถูกต้องหลังจากได้รับคะแนนแล้ว"
@@ -132,11 +125,11 @@ export default function SettingScoreDialog({ openSetting, setOpen }: Props) {
             </div>
           </div>
           <Button
-              key="create-button"
-              className="px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-            >
-              <span className="hidden sm:inline">&nbsp;บันทึก</span>
-            </Button>
+            key="create-button"
+            className="px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+          >
+            <span className="hidden sm:inline">&nbsp;บันทึก</span>
+          </Button>
         </DialogContent>
       </Dialog>
     </>

@@ -8,7 +8,6 @@ import { useOnboardColumns } from "../components/Management/columns";
 import { OnboardFilterFields } from "~/types/onboard/filter";
 import { Button } from "~/components/ui/button";
 import { Link } from "react-router";
-import GlobalButton from "~/components/shared/global-button";
 import SettingScoreDialog from "../components/Management/setting-score-dialog";
 import React from "react";
 
@@ -23,7 +22,6 @@ export default function OnBoardingManagementCreate() {
         <TabControl
           title="ฝ่ายขาย (Sale)"
           backpath="/on-boarding/management"
-          
           buttons={[
             <Button
               variant="outline"
@@ -42,7 +40,6 @@ export default function OnBoardingManagementCreate() {
                 <span className="hidden sm:inline">&nbsp;สร้าง</span>
               </Button>
             </Link>,
-            
           ]}
         />
         <SettingScoreDialog

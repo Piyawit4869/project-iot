@@ -55,6 +55,10 @@ export const TemplateSchema = z.object({
   thumbnailUrl: z.string(),
 });
 
+export type BaseRow = {
+  id: number | string;
+};
+
 export type TemplateValues = z.infer<typeof TemplateSchema>;
 
 export interface ContentProps {

@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Checkbox } from "@radix-ui/react-checkbox";
 import type { StringOrTemplateHeader } from "@tanstack/react-table";
 import { enIE } from "date-fns/locale";
 import { ChevronDown, CircleFadingPlus, Plus, X } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useForm, type Resolver } from "react-hook-form";
 import ImageUpload from "~/components/shared/image-upload";
+import { Checkbox } from "~/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -228,10 +228,9 @@ export const QuestionBuilder = () => {
                         <div className="space-y-2">
                           {q.choices.map((c, i) => (
                             <div key={i} className="flex items-center gap-2">
-                              <input
-                                type="checkbox"
+                              <Checkbox
                                 checked={q.correctIndex === i}
-                                onChange={() =>
+                                onCheckedChange={() =>
                                   updateQuestion(q.id, { correctIndex: i })
                                 }
                                 className="w-4 h-4"
@@ -365,6 +364,7 @@ export const QuestionBuilder = () => {
                           onChange={() =>
                             setAnswers((prev) => ({ ...prev, [q.id]: i }))
                           }
+                          className="accent-black"
                         />
                         {c}
                       </label>

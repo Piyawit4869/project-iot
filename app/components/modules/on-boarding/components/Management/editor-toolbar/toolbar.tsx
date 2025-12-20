@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
   FORMAT_TEXT_COMMAND,
@@ -7,6 +7,7 @@ import {
   FORMAT_ELEMENT_COMMAND,
   $getSelection,
   $isRangeSelection,
+  $insertNodes,
 } from "lexical";
 import { $patchStyleText } from "@lexical/selection";
 import { TOGGLE_LINK_COMMAND } from "@lexical/link";
@@ -35,19 +36,40 @@ import {
   REMOVE_LIST_COMMAND,
 } from "@lexical/list";
 import FontSizeSelect from "./font-size-select";
+import { useRef } from "react";
+import { $createImageNode } from "../image-node";
+import { $getNearestNodeOfType } from "@lexical/utils";
+import { ListNode } from "@lexical/list";
 
 type Action = "unordered" | "ordered" | "remove";
+
+type ToolbarProps = {
+  onSelectImage: (url: string) => void;
+};
 
 const Toolbar: React.FC = () => {
   const [editor] = useLexicalComposerContext();
 
   const [align, setAlign] = useState<"left" | "center" | "right">("left");
-  const [action, setAction] = useState<Action>("unordered");
+  const [action, setAction] = useState<Action>("remove");
 
   const handleChangeAlign = (newAlign: "left" | "center" | "right") => {
     setAlign(newAlign);
     editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, newAlign);
   };
+
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    return editor.registerUpdateListener(({ editorState }) => {
+      editorState.read(() => {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+          setIsActive(selection.hasFormat("code"));
+        }
+      });
+    });
+  }, [editor]);
 
   const iconMap = {
     left: <TextAlignStart className="h-4 w-4" />,
@@ -59,24 +81,37 @@ const Toolbar: React.FC = () => {
     remove: <ListX className="h-4 w-4" />,
   };
 
-  const handleCycleAction = () => {
-    const order: Action[] = ["unordered", "ordered", "remove"];
-    const currentIndex = order.indexOf(action);
-    const nextIndex = (currentIndex + 1) % order.length;
-    const nextAction = order[nextIndex];
-    setAction(nextAction);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
-    switch (nextAction) {
-      case "unordered":
-        editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
-        break;
-      case "ordered":
-        editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
-        break;
-      case "remove":
-        editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
-        break;
+  const handleSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const imageUrl = URL.createObjectURL(file);
+
+    editor.update(() => {
+      const imageNode = $createImageNode(imageUrl);
+      $insertNodes([imageNode]);
+    });
+  };
+
+  const handleCycleAction = () => {
+    editor.focus();
+
+    if (action === "remove") {
+      editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
+      setAction("unordered");
+      return;
     }
+
+    if (action === "unordered") {
+      editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
+      setAction("ordered");
+      return;
+    }
+
+    editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
+    setAction("remove");
   };
 
   return (
@@ -118,22 +153,31 @@ const Toolbar: React.FC = () => {
         <Underline className="h-4 w-4" />
       </ToolbarButton>
 
-      <ToolbarButton
-        onClick={() => {
-          editor.update(() => {
-            const selection = $getSelection();
-            if ($isRangeSelection(selection)) {
-              $patchStyleText(selection, {
-                backgroundColor: "#fff3a0",
-              });
-            }
-          });
-        }}
+      <button
+        type="button"
+        onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code")}
+        className={`
+        p-2 rounded
+        transition
+        ${
+          isActive
+            ? "bg-gray-900 text-white"
+            : "hover:bg-gray-200 text-gray-600"
+        }
+      `}
       >
         <Code className="h-4 w-4" />
-      </ToolbarButton>
+      </button>
 
-      <button className="p-2" onClick={handleCycleAction}>
+      <button
+        type="button"
+        className="p-2 rounded hover:bg-gray-100"
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleCycleAction();
+        }}
+      >
         {iconMap[action]}
       </button>
 
@@ -149,17 +193,21 @@ const Toolbar: React.FC = () => {
       </button>
 
       <ToolbarDivider />
-      <ToolbarButton
-        onClick={() =>
-          editor.dispatchCommand(TOGGLE_LINK_COMMAND, "https://example.com")
-        }
-      >
+      <ToolbarButton>
         <Link className="h-4 w-4" />
       </ToolbarButton>
 
-      <ToolbarButton>
+      <ToolbarButton onClick={() => inputRef.current?.click()}>
         <ImagePlus className="h-4 w-4" />
       </ToolbarButton>
+
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        hidden
+        onChange={handleSelectFile}
+      />
     </div>
   );
 };
