@@ -12,6 +12,9 @@ import { HeadSidebar } from "./sidebar/head-sidebar";
 import { HomeSidebar, type SidebarItem } from "./sidebar/home-sidebar";
 import { MainSidebar } from "./sidebar/main-sidebar";
 import { getUserMapPermission, keyToModuleMap } from "~/utils/permission";
+import { OrgSelector } from "./sidebar/org-selector";
+import { useChangeActiveOrg } from "~/api/client/user";
+import { toast } from "sonner";
 
 const renderIcon = (iconName: string) => {
   const IconComponent = Icons[iconName as keyof typeof Icons] as React.FC<
@@ -114,6 +117,11 @@ const permissionToMenuKey: Record<string, string> = {
 export function AppSidebar({ data, ...props }: AppSidebarProps) {
   const { user } = useRouteLoaderData("root");
 
+  const { mutate } = useChangeActiveOrg(user.id);
+
+  const isSingleOrg = !user?.organizationGroupId;
+  const organizationId = user?.organizationId;
+
   const normalizedPermissions = getUserMapPermission(user);
 
   const defaultHomeMenu: SidebarItem[] = [
@@ -149,25 +157,50 @@ export function AppSidebar({ data, ...props }: AppSidebarProps) {
     }));
   }, [data.home, normalizedPermissions]);
 
+  const handleChangeActiveOrg = (organizationId: string) => {
+    const toastId = toast.loading("กำลังเปลี่ยนองค์กร...", {
+      position: "bottom-right",
+    });
+
+    mutate(
+      { organizationId },
+      {
+        onSuccess: () => {
+          toast.success("เปลี่ยนเปลี่ยนองค์กร !", {
+            id: toastId,
+            duration: 2500,
+            position: "bottom-right",
+          });
+
+          localStorage.setItem("organizaionId", organizationId);
+        },
+        onError: () => {
+          toast.error("เกิดข้อผิดพลาดในการเปลี่ยนองค์กร", {
+            id: toastId,
+
+            duration: 3000,
+            position: "bottom-right",
+          });
+        },
+      }
+    );
+  };
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <HeadSidebar org={user} />
+        {isSingleOrg ? (
+          <HeadSidebar org={user} />
+        ) : (
+          <OrgSelector
+            currentOrgId={organizationId}
+            currentOrganization={user?.organization}
+            onChangeOrg={handleChangeActiveOrg}
+          />
+        )}
       </SidebarHeader>
       <SidebarContent>
-        {/* {!role ? (
-          <div className="flex flex-col gap-3 p-4">
-            <SkeletonLoading className="h-[32px]" />
-            <SkeletonLoading className="h-[32px]" />
-            <SkeletonLoading className="h-[32px]" />
-            <SkeletonLoading className="h-[32px]" />
-            <SkeletonLoading className="h-[32px]" />
-            <SkeletonLoading className="h-[32px]" />
-            <SkeletonLoading className="h-[32px]" />
-          </div>
-        ) : ( */}
         <HomeSidebar home={homeItems} icon={renderIcon} />
-        {/* )} */}
         <MainSidebar items={data.main} icon={renderIcon} />
       </SidebarContent>
     </Sidebar>

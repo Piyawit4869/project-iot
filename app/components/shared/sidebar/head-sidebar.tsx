@@ -1,5 +1,3 @@
-"use client";
-
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -42,7 +40,6 @@ export function HeadSidebar({ org, isLoading }: HeaderType) {
             alt="ROME"
             width={40}
             height={40}
-            // unoptimized
             className="rounded-lg"
           />
           <span className="font-semibold ml-3 text-base">ROME</span>
@@ -53,12 +50,10 @@ export function HeadSidebar({ org, isLoading }: HeaderType) {
     return (
       <div className="flex items-center">
         <img
-          // loader={({ src }) => src}
           src={logoUrl}
           alt="logo"
           width={40}
           height={40}
-          // unoptimized
           className="rounded-lg"
         />
         {state === "expanded" && (
