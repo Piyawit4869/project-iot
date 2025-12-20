@@ -4,8 +4,9 @@ interface EditActionButtonsProps {
   isEdit?: boolean;
   disabled?: boolean;
   isAnyFilled?: boolean;
-  onSave?: (value: any) => void;
-  onEdit?: () => void;
+  form?: any;
+  onSave?: (value?: any) => void;
+  onEdit?: (value?: any) => void;
   onCancel?: () => void;
   loading?: boolean;
 }
@@ -16,6 +17,7 @@ export function EditActionButtons({
   isAnyFilled = false,
   onSave,
   onEdit,
+  form,
   loading,
   onCancel,
 }: EditActionButtonsProps) {
@@ -31,7 +33,13 @@ export function EditActionButtons({
           className={`edit-icon-container ${
             disableSave ? "pointer-events-none opacity-40" : "cursor-pointer"
           }`}
-          onClick={!disableSave ? onSave : undefined}
+          onClick={
+            disableSave
+              ? undefined
+              : form?.handleSubmit((values: any) => {
+                  onSave?.(values);
+                })
+          }
         >
           <div className="edit-icon-wrapper">
             <Save size={20} className="edit-icon" />

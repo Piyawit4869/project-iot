@@ -46,20 +46,20 @@ export const TagManagerModal: React.FC<TagManagerModalProps> = ({
   loading,
   handleInputKeyDown,
 }) => {
-  const defaultTags = [
-    { id: 1, name: "ลูกค้า VIP", active: true },
-    { id: 2, name: "ลูกค้าใหม่", active: true },
-    { id: 3, name: "ลูกค้าประจำ", active: true },
-    { id: 4, name: "ลูกค้าที่สนใจ", active: true },
-    { id: 5, name: "ลูกค้าไม่เคลื่อนไหว", active: false },
-    { id: 6, name: "ใช้โปรโมชั่น", active: true },
-    { id: 7, name: "มียอดซื้อสูง", active: true },
-    { id: 8, name: "มีประวัติร้องเรียน", active: false },
-    { id: 9, name: "ลูกค้าขายส่ง", active: true },
-    { id: 10, name: "ลูกค้าปลีก", active: true },
-    { id: 11, name: "สมาชิก", active: true },
-    { id: 12, name: "Walk-in", active: true },
-  ];
+  // const defaultTags = [
+  //   { id: 1, name: "ลูกค้า VIP", active: true },
+  //   { id: 2, name: "ลูกค้าใหม่", active: true },
+  //   { id: 3, name: "ลูกค้าประจำ", active: true },
+  //   { id: 4, name: "ลูกค้าที่สนใจ", active: true },
+  //   { id: 5, name: "ลูกค้าไม่เคลื่อนไหว", active: false },
+  //   { id: 6, name: "ใช้โปรโมชั่น", active: true },
+  //   { id: 7, name: "มียอดซื้อสูง", active: true },
+  //   { id: 8, name: "มีประวัติร้องเรียน", active: false },
+  //   { id: 9, name: "ลูกค้าขายส่ง", active: true },
+  //   { id: 10, name: "ลูกค้าปลีก", active: true },
+  //   { id: 11, name: "สมาชิก", active: true },
+  //   { id: 12, name: "Walk-in", active: true },
+  // ];
   if (!open) return null;
 
   return (
@@ -145,14 +145,14 @@ export const TagManagerModal: React.FC<TagManagerModalProps> = ({
                   onClick={() => onAddTag(tag)}
                 />
               ))}
-              {defaultTags?.map((tag) => (
+              {/* {defaultTags?.map((tag) => (
                 <GlobalTagsBadge
                   key={tag.id ?? tag.name}
                   value={tag.name}
                   showIcon={false}
                   onClick={() => onAddTag(tag)}
                 />
-              ))}
+              ))} */}
             </div>
           </div>
         </div>

@@ -43,6 +43,7 @@ export const CustomerDeail: React.FC<CustomerFormCreateProps> = ({
             <EditActionButtons
               isEdit={isEdit}
               disabled={disabled}
+              form={form}
               onSave={onClick}
               onEdit={() => {
                 onEditForm?.("customer_detail");

@@ -561,9 +561,12 @@ export default function ChatCustomerInfo({
       : []
   );
 
-  const filteredUser = allUser?.filter((item: any) =>
-    item.userName?.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredUser =
+    allUser?.length > 0
+      ? allUser.filter((item: any) =>
+          item.userName?.toLowerCase().includes(search.toLowerCase())
+        )
+      : [];
 
   React.useEffect(() => {
     if (customerAI) {
