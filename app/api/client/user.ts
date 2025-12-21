@@ -10,6 +10,9 @@ import {
   fetchGetAllUsersLimit,
   fetchGetAllDepartments,
   fetchUserSummary,
+  fetchSearchUserOrgs,
+  fetchSearchUserBranches,
+  changeActiveOrg,
 } from "../server/user";
 import type { UsersFormValues } from "~/schemas/users/user";
 import type { PasswordFormValues } from "~/schemas/users/password-user";
@@ -154,5 +157,28 @@ export const useAllUserSummary = () => {
     queryKey: ["contacts"],
     queryFn: () => fetchUserSummary(),
     enabled: true,
+  });
+};
+
+export const useSearchUserOrgs = (search?: string) => {
+  return useQuery({
+    queryKey: ["get-orgs", search],
+    queryFn: () => fetchSearchUserOrgs(search),
+    enabled: true,
+  });
+};
+
+export const useGetUserBranches = (groupId: string, search?: string) => {
+  return useQuery({
+    queryKey: ["get-org-branches", search],
+    queryFn: () => fetchSearchUserBranches(groupId, search),
+    enabled: !!groupId,
+  });
+};
+
+export const useChangeActiveOrg = (userId: string) => {
+  return useMutation({
+    mutationFn: (payload: { organizationId: string }) =>
+      changeActiveOrg(userId, payload),
   });
 };
