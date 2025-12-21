@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { organizationSchema } from "../settings";
+import { branchSchema } from "../order/order";
 
 export const UsersFormSchema = z.object({
   id: z.string().optional(),
@@ -156,6 +158,9 @@ export const UsersFormSchema = z.object({
       })
     )
     .default([]),
+  organizationId: z.string().optional(),
+  branchId: z.string().optional(),
+  rolesId: z.string().optional(),
   permissions: z.array(z.string()).default([]),
   activate: z.boolean().default(true),
 });

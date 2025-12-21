@@ -44,6 +44,8 @@ import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { getRequiredPaths } from "~/utils/form-adapter";
 import { nationalityMap, religionMap } from "~/initData/user-initData";
+import ChangePassword from "~/components/shared/change-password";
+import { OrganizationSelector } from "./formSelectOrganization";
 
 type OptionItem = { id: string; name: string; active?: boolean };
 
@@ -51,12 +53,14 @@ export interface UserFormProfileProps {
   form: UseFormReturn<UsersFormValues>;
   data?: Partial<UsersFormValues>;
   loading?: boolean;
-  departments: any;
+  roles: any;
+  // departments: any;
 }
 
 export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
   form,
-  departments,
+  // departments,
+  roles,
   loading = false,
 }) => {
   const checkFields = new Set(getRequiredPaths(UsersFormSchema as any));
@@ -64,9 +68,10 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
   const [search, setSearch] = React.useState("");
   const [openSub, setOpenSub] = React.useState(false);
 
-  const userDepartments = Array.isArray(departments) ? departments : [];
+  // const userDepartments = Array.isArray(departments) ? departments : [];
+  const userRoles = Array.isArray(roles) ? roles : [];
 
-  const filtered = userDepartments.filter((item: any) => {
+  const filtered = userRoles.filter((item: any) => {
     const a = item.name?.toLowerCase().includes(search.toLowerCase());
 
     return a;
@@ -146,14 +151,6 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                   checkFields={checkFields}
                   placeholder="กรอกชื่อพนักงาน"
                 /> */}
-                <GlobalFormField
-                  control={form.control}
-                  name="email"
-                  label="อีเมล"
-                  type="input"
-                  checkFields={checkFields}
-                  placeholder="กรอกอีเมล"
-                />
                 <FormField
                   control={form.control}
                   name="status"
@@ -184,11 +181,32 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
+                <GlobalFormField
+                  control={form.control}
+                  name="userName"
+                  label="ชื่อพนักงาน"
+                  type="input"
+                  checkFields={checkFields}
+                  placeholder="กรกอรชื่อพนักงาน"
+                />
+                <div className="col-span-2">
+                  <GlobalFormField
+                    control={form.control}
+                    name="email"
+                    label="อีเมล"
+                    type="input"
+                    checkFields={checkFields}
+                    placeholder="กรอกอีเมล"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <ChangePassword title="เปลี่ยนรหัสผ่าน" />
+                </div>
               </div>
               <div className="md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
-                  name="userDepartments"
+                  name="rolesId"
                   render={({ field }) => {
                     const selected = Array.isArray(field.value)
                       ? (field.value as {
@@ -224,11 +242,11 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                     };
 
                     const findDep = (id?: string) =>
-                      (userDepartments ?? []).find((d) => d.id === id);
+                      (userRoles ?? []).find((d) => d.id === id);
 
                     return (
                       <FormItem>
-                        <RequiredLabel required>แผนก</RequiredLabel>
+                        <RequiredLabel required>ตำแหน่ง</RequiredLabel>
                         <div className="flex flex-wrap gap-2">
                           {selected.map((s) => {
                             const dep = findDep(s.id);
@@ -273,7 +291,7 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                                 className="px-4 py-2 rounded-full"
                                 disabled={!!selected.length}
                               >
-                                เพิ่มแผนก +
+                                เพิ่มตำแหน่ง +
                               </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-64">
@@ -320,6 +338,9 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                     );
                   }}
                 />
+              </div>
+              <div>
+                <OrganizationSelector form={form} roles={roles} isEdit={true} />
               </div>
 
               <h1 className="font-bold">ข้อมูลส่วนตัว</h1>

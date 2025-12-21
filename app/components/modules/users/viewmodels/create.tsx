@@ -1,14 +1,12 @@
 "use client";
 
+import React from "react";
 import GlobalButton from "~/components/shared/global-button";
 import { Form } from "~/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Card } from "~/components/ui/card";
-
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
-
 import { useCreateUsers, useGetAllDepartments } from "~/api/client/user";
 import { useNavigate } from "react-router";
 import { TabControl } from "~/components/shared/tab-control";
@@ -21,16 +19,15 @@ import { UserStudy } from "../components/formStudy";
 import { UserSocalmedias } from "../components/formSocalmedia";
 import { UserDocuments } from "../components/formDocuments";
 import { ArrowBigLeftDash, ArrowBigRightDash, Save } from "lucide-react";
-import { PermissionControl } from "../../permission/components/tabal-permission";
 import { StepsVertical } from "~/components/shared/global-step";
-import React from "react";
 import { calculateProgress } from "../../customer/create-customer";
 import { Button } from "~/components/ui/button";
-import Stepper, { Step } from "~/components/Stepper";
+import { useGetAllRoles } from "~/api/client/role/useGetRole";
 
 export default function CreateUsers() {
   const navigate = useNavigate();
   const { data } = useGetAllDepartments(true);
+  const { data: roles } = useGetAllRoles();
 
   const [current, setCurrent] = React.useState(0);
 
@@ -76,6 +73,9 @@ export default function CreateUsers() {
         documents: [],
       },
       userDepartments: [],
+      rolesId: "",
+      organizationId: "",
+      branchId: "",
       permissions: [],
     },
   });
@@ -94,10 +94,13 @@ export default function CreateUsers() {
         mutate(values, {
           onSuccess: (data) => {
             toast.success("สร้างพนักงานเรียบร้อยแล้ว!", { id: toastId });
+            console.log("Created user:", data);
+
             navigate(`/users/${data?.id}`);
           },
-          onError: () => {
+          onError: (error) => {
             toast.error("เกิดข้อผิดพลาดขณะสร้างพนักงาน", { id: toastId });
+            console.log("Error creating user", error);
           },
         });
       },
@@ -155,6 +158,7 @@ export default function CreateUsers() {
             if (count > 0) {
               toast.error(`กรอกข้อมูลไม่ครบหรือไม่ถูกต้อง (${count} จุด)`);
             }
+            console.log("errors", errors);
           })}
         >
           <StepsVertical
@@ -168,7 +172,9 @@ export default function CreateUsers() {
                 descriptions:
                   "กรอกข้อมูลพื้นฐานของพนักงาน เช่น ชื่อ ตำแหน่ง แผนก",
                 progress: progressCustomer,
-                content: <UserProfileCreate form={form} data={data} />,
+                content: (
+                  <UserProfileCreate form={form} data={data} roles={roles} />
+                ),
               },
 
               {
@@ -241,7 +247,7 @@ export default function CreateUsers() {
                 {current === 5 && (
                   <Button
                     type="submit"
-                    form="customer"
+                    form="users"
                     className="w-35 transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
                   >
                     <Save /> สร้างผู้ใช้งาน
