@@ -226,6 +226,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
             isEdit={isEdit}
             isAnyFilled={isAnyFilled}
             onSave={onClick}
+            form={form}
             onEdit={() => {
               onEditForm?.("contact_detail");
             }}
@@ -275,7 +276,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
 
       <CardContent className="space-y-4">
         <div className="flex flex-col gap-2">
-          <span className="text-base font-bold leading-none  ">แท๊กลูกค้า</span>
+          <span className="text-base font-bold leading-none  ">แท็กลูกค้า</span>
 
           <div className="flex flex-wrap text-muted-foreground gap-2">
             {isEdit ? (

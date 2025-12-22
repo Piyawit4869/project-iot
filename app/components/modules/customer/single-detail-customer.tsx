@@ -122,6 +122,10 @@ export default function SingDetailleCustomer() {
             toast.success("แก้ไขข้อมูลลูกค้าสำเร็จ !", { id: toastId });
             fetchCustomer();
 
+            setCustomerForms((prev) =>
+              prev.map((f) => ({ ...f, mode: "view" }))
+            );
+
             setIsEdit(false);
           },
           onError: () => {
