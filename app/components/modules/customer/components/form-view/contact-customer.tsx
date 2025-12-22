@@ -82,7 +82,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
     if (!users || users.length === 0) return [];
 
     const key = search.toLowerCase();
-    return users.filter(
+    return users?.filter(
       (item: any) =>
         item && item.userName && item.userName.toLowerCase().includes(key)
     );
@@ -305,7 +305,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
             control={form.control}
             name="contacts.0.phone"
             label="เบอร์โทรศัพท์ผู้ติดต่อ (ตัวเลขเท่านั้น)"
-            type="number"
+            type="numberBox"
             view={isEdit ? "edit" : "view"}
             placeholder="กรอกเบอร์โทรศัพท์ผู้ติดต่อ เช่น 0612345678"
           />

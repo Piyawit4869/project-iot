@@ -1,54 +1,94 @@
-import { useEffect } from "react";
+import { useRef } from "react";
 import { Input } from "../ui/input";
 import { cn } from "~/lib/utils";
 
 export function InputNumberBox({
   value,
   onChange,
-  length = 13,
-  inputClass = "w-7.5 h-9 border rounded text-center",
+  groups = [13],
+  format = "-",
+  inputClass = "w-7 h-8.5 border rounded text-center",
   gap = "gap-1",
 }: {
   value: string;
   onChange: (v: string) => void;
-  length?: number;
+  groups?: number[];
+  format?: string;
   inputClass?: string;
   gap?: string;
 }) {
-  const digits = value?.split("") || [];
+  const digits = value.split("");
+  const totalLength = groups.reduce((a, b) => a + b, 0);
+
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const handleInput = (index: number, v: string) => {
     if (!/^[0-9]?$/.test(v)) return;
 
-    const newValue = digits.slice();
+    const newValue = Array(totalLength).fill("");
+    digits.forEach((d, i) => (newValue[i] = d));
     newValue[index] = v;
 
-    const combined = newValue.join("");
-    onChange(combined);
+    onChange(newValue.join(""));
 
-    const next = document.getElementById(`digit-${index + 1}`);
-    if (v && next) next.focus();
-  };
-
-  const handleKeyDown = (index: number, e: any) => {
-    if (e.key === "Backspace" && !digits[index] && index > 0) {
-      const prev = document.getElementById(`digit-${index - 1}`);
-      if (prev) prev.focus();
+    // 👉 พิมพ์แล้วโฟกัสช่องถัดไปเสมอ (ข้าม - อัตโนมัติ)
+    if (v && index + 1 < totalLength) {
+      requestAnimationFrame(() => {
+        inputRefs.current[index + 1]?.focus();
+      });
     }
   };
 
+  const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
+    if (e.key === "Backspace") {
+      // ถ้าช่องนี้มีค่า → ลบเฉย ๆ
+      if (digits[index]) {
+        const newValue = Array(totalLength).fill("");
+        digits.forEach((d, i) => (newValue[i] = d));
+        newValue[index] = "";
+
+        onChange(newValue.join(""));
+        return;
+      }
+
+      // ถ้าช่องว่าง → ย้อนกลับ
+      if (index > 0) {
+        requestAnimationFrame(() => {
+          inputRefs.current[index - 1]?.focus();
+        });
+      }
+    }
+  };
+
+  let globalIndex = 0;
+
   return (
-    <div className={`flex ${gap}`}>
-      {Array.from({ length }).map((_, idx) => (
-        <Input
-          key={idx}
-          id={`digit-${idx}`}
-          value={digits[idx] || ""}
-          maxLength={1}
-          onChange={(e) => handleInput(idx, e.target.value)}
-          onKeyDown={(e) => handleKeyDown(idx, e)}
-          className={cn("px-0 py-0", inputClass)}
-        />
+    <div className={cn("flex items-center", gap)}>
+      {groups.map((groupLen, groupIdx) => (
+        <div key={groupIdx} className="flex items-center gap-1">
+          {Array.from({ length: groupLen }).map(() => {
+            const idx = globalIndex++;
+
+            return (
+              <Input
+                key={idx}
+                ref={(el) => {
+                  inputRefs.current[idx] = el;
+                }}
+                value={digits[idx] || ""}
+                maxLength={1}
+                inputMode="numeric"
+                onChange={(e) => handleInput(idx, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(idx, e)}
+                className={cn("px-0 py-0", inputClass)}
+              />
+            );
+          })}
+
+          {groupIdx < groups.length - 1 && (
+            <span className="mx-1 text-muted-foreground">{format}</span>
+          )}
+        </div>
       ))}
     </div>
   );

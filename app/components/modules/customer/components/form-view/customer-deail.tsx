@@ -164,7 +164,7 @@ export const CustomerDeail: React.FC<CustomerFormCreateProps> = ({
               control={form.control}
               name="profile.gender"
               label="เพศ"
-              type="select"
+              type="selectRadioCard"
               view={isEdit ? "edit" : "view"}
               placeholder="เลือกเพศของลูกค้า"
               options={gender}
@@ -221,17 +221,10 @@ export const CustomerDeail: React.FC<CustomerFormCreateProps> = ({
               control={form.control}
               name="profile.taxId"
               label="เลขประจำตัวผู้เสียภาษี"
-              type="custom"
+              type="numberBox"
+              groups={[1, 4, 5, 2, 1]}
+              format="-"
               view={isEdit ? "edit" : "view"}
-              customControl={(field: any) => {
-                return (
-                  <InputNumberBox
-                    value={field.value || ""}
-                    onChange={field.onChange}
-                    length={13}
-                  />
-                );
-              }}
             />
           </div>
 
@@ -268,7 +261,7 @@ export const CustomerDeail: React.FC<CustomerFormCreateProps> = ({
               control={form.control}
               name="profile.phone"
               label="เบอร์โทรศัพท์ (ตัวเลขเท่านั้น)"
-              type="number"
+              type="numberBox"
               view={isEdit ? "edit" : "view"}
               placeholder="กรอกเบอร์โทรศัพท์ เช่น 0912345678"
             />

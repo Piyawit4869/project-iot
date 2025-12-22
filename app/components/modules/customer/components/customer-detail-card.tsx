@@ -15,6 +15,7 @@ import {
 import { Input } from "~/components/ui/input";
 import type { CustomerFormCreateProps } from "~/schemas/customer/customer";
 import { CustomerSupportSelector } from "./select-support";
+import { InputNumberBox } from "~/components/shared/input-number-box";
 
 export const CustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
   form,
@@ -185,12 +186,18 @@ export const CustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
                     เบอร์โทรศัพท์ผู้ติดต่อ (ตัวเลขเท่านั้น) <FormMessage />{" "}
                   </RequiredLabel>
                   <FormControl className="w-full">
-                    <Input
+                    <InputNumberBox
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      groups={[3, 3, 4]}
+                      format="-"
+                    />
+                    {/* <Input
                       value={field.value || ""}
                       placeholder="กรอกเบอร์โทรศัพท์ผู้ติดต่อ เช่น 0612345678"
                       maxLength={10}
                       onChange={onlyNumber(field)}
-                    />
+                    /> */}
                   </FormControl>
                 </FormItem>
               )}

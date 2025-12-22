@@ -17,6 +17,8 @@ import ImageUpload from "./image-upload";
 import { GlobalImage } from "./global-image";
 import { copyTextToClipboard } from "~/lib/utils";
 import React from "react";
+import { InputNumberBox } from "./input-number-box";
+import { RadioCardGroup } from "./global-radio-card";
 
 interface GlobalFormFieldProps {
   control: any;
@@ -24,10 +26,14 @@ interface GlobalFormFieldProps {
   label: string | ReactElement;
   disabledItem?: any;
   disabled?: any;
+  groups?: number[];
+  format?: string;
   defaultValueLabel?: any;
   type?:
     | "input"
+    | "selectRadioCard"
     | "number"
+    | "numberBox"
     | "file"
     | "select"
     | "date"
@@ -38,6 +44,7 @@ interface GlobalFormFieldProps {
   placeholder?: any;
   options?: { label: string; value: string }[];
   view?: string; // true = view mode
+  columns?: number;
   customeOnValue?: any;
   heightTextRow?: any;
   customControl?: any;
@@ -53,8 +60,8 @@ export function GlobalFormField({
   // ref,
   name,
   label,
-  defaultValueLabel,
-  customeOnValue,
+  groups = [3, 3, 4],
+  format = "-",
   type = "input",
   placeholder,
   options = [],
@@ -66,6 +73,7 @@ export function GlobalFormField({
   widthImage = 140,
   heightImage = 140,
   view = "create",
+  columns,
   customControl,
   canCopy,
 }: GlobalFormFieldProps) {
@@ -123,6 +131,16 @@ export function GlobalFormField({
             placeholder={placeholder}
             value={field.value ?? ""}
             className="w-full"
+          />
+        );
+
+      case "numberBox":
+        return (
+          <InputNumberBox
+            value={field.value || ""}
+            onChange={field.onChange}
+            groups={groups}
+            format={format}
           />
         );
 
@@ -188,6 +206,16 @@ export function GlobalFormField({
           </Select>
         );
 
+      case "selectRadioCard":
+        return (
+          <RadioCardGroup
+            options={options}
+            value={field.value || ""}
+            onChange={field.onChange}
+            columns={columns}
+          />
+        );
+
       case "custom":
         return customControl(field);
 
@@ -208,7 +236,7 @@ export function GlobalFormField({
               <button
                 type="button"
                 onClick={() => handleCopy(field.value)}
-                className="text-gray-400 hover:text-gray-600 transition"
+                className="text-gray-400 hover:text-gray-600 transition cursor-pointer"
               >
                 {copied ? (
                   <span className="text-[#b4b4c5] text-xs">คัดลอกแล้ว</span>

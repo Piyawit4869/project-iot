@@ -32,6 +32,7 @@ import {
 } from "~/initData/customer-initData";
 import { DatePicker } from "~/components/shared/date-picker";
 import { onlyNumber } from "~/components/shared/global-format";
+import { InputNumberBox } from "~/components/shared/input-number-box";
 
 export const OtherDetatil: React.FC<CustomerFormCreateProps> = ({
   form,
@@ -151,12 +152,18 @@ export const OtherDetatil: React.FC<CustomerFormCreateProps> = ({
                     เบอร์โทรสำนักงาน/บริษัท (ตัวเลขเท่านั้น)
                   </RequiredLabel>
                   <FormControl className="w-full">
-                    <Input
+                    <InputNumberBox
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      groups={[3, 3, 4]}
+                      format="-"
+                    />
+                    {/* <Input
                       value={field.value || ""}
                       placeholder="กรอกเบอร์โทรสำนักงาน/บริษัท เช่น 0421234567"
                       onChange={onlyNumber(field)}
                       maxLength={10}
-                    />
+                    /> */}
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -170,11 +177,17 @@ export const OtherDetatil: React.FC<CustomerFormCreateProps> = ({
                 <FormItem>
                   <RequiredLabel>เบอร์โทรสาร (ตัวเลขเท่านั้น)</RequiredLabel>
                   <FormControl className="w-full">
-                    <Input
+                    <InputNumberBox
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      groups={[3, 3, 4]}
+                      format="-"
+                    />
+                    {/* <Input
                       value={field.value || ""}
                       placeholder="กรอกเบอร์โทรสาร เช่น 0123456789"
                       onChange={onlyNumber(field)}
-                    />
+                    /> */}
                   </FormControl>
                   <FormMessage />
                 </FormItem>
