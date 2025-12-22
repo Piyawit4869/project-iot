@@ -47,7 +47,7 @@ import { formToJSON } from "axios";
 export interface UserFormProfileProps {
   form: UseFormReturn<UsersFormValues>;
   data?: Partial<UsersFormValues>;
-  roles: any;
+  roles?: any;
   loading?: boolean;
   isEdit?: boolean;
 }
@@ -62,9 +62,9 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
   const [openSub, setOpenSub] = React.useState(false);
   const [search, setSearch] = React.useState("");
 
-  const userDepartments = Array.isArray(roles) ? roles : [];
+  const allRoles = Array.isArray(roles) ? roles : [];
 
-  const filtered = userDepartments.filter((item: any) => {
+  const filtered = allRoles.filter((item: any) => {
     const a = item.name?.toLowerCase().includes(search.toLowerCase());
 
     return a;
@@ -281,7 +281,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     // };
 
                     const findDep = (id?: string) =>
-                      (userDepartments ?? []).find((d) => d.id === id);
+                      (allRoles ?? []).find((d) => d.id === id);
 
                     return (
                       <FormItem>
@@ -378,7 +378,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                 />
               </div>
               <div>
-                <OrganizationSelector form={form} roles={roles} />
+                <OrganizationSelector form={form} />
               </div>
 
               <h1 className="font-bold">ข้อมูลส่วนตัว</h1>
