@@ -33,14 +33,11 @@ import { TabControl } from "~/components/shared/tab-control";
 import { DataTable } from "~/components/shared/data-table";
 import { useOrganizationColumns } from "./components/org-columns";
 import { OrgSelectorDropdown } from "./components/org-selector-dropdown";
-import { useChangeActiveOrg } from "~/api/client/user";
 import GlobalButton from "~/components/shared/global-button";
 
 interface SettingsPageProps {}
 
 export const Setting: React.FC<SettingsPageProps> = (props) => {
-  const {} = props;
-
   const { user_data, user } = useRouteLoaderData("root");
 
   const [searchParams] = useSearchParams();
@@ -54,22 +51,18 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
   );
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
 
-  // const [selectedOrgId, setSelectedOrgId] = React.useState<string>("");
+  const [orgId, setOrgId] = React.useState<string>(selectedOrgId);
+
+  const navigate = useNavigate();
 
   const { data: organization } = useGetOrganizations();
-  const {
-    data: org,
-    isRefetching,
-    refetch,
-  } = useGetOrganization(selectedOrgId);
-
-  console.log({ isRefetching });
+  const { data: org, isRefetching, refetch } = useGetOrganization(orgId);
 
   const columns = useOrganizationColumns();
 
   const paginate = useGetOrganizationsPaginate;
   const organizationId =
-    selectedOrgId ??
+    orgId ??
     org?.id ??
     organization?.organization?.id ??
     organization?.id ??
@@ -101,65 +94,70 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     resolver: zodResolver(
       organizationSchema
     ) as Resolver<OrganizationFormValues>,
-    values: {
-      nameTh: orgSource?.nameTh ?? "",
-      nameEn: orgSource?.nameEn ?? "",
-      contactEmail: orgSource?.contactEmail ?? "",
-      websiteUrl: orgSource?.websiteUrl ?? "",
-      status: orgSource?.status ?? "",
-      openingDate: orgSource?.openingDate ?? "",
-      descriptionsEn: orgSource?.descriptionsEn ?? "",
-      descriptionsTh: orgSource?.descriptionsTh ?? "",
-      fromType: orgSource?.fromType ?? "ordinary_person",
-      taxId: orgSource?.taxId ?? "",
-      registerVat: orgSource?.registerVat ?? false,
-      active: orgSource?.active ?? false,
-      isMain: orgSource?.isMain ?? false,
-      branchType: orgSource?.branchType ?? "taxpayer",
-      domainName: orgSource?.domainName ?? "",
-      contactName: orgSource?.contactName ?? "",
-      contactPhone: orgSource?.contactPhone ?? "",
-      contactLine: orgSource?.contactLine ?? "",
-      contactFacebook: orgSource?.contactFacebook ?? "",
-      contactWhatsapp: orgSource?.contactWhatsapp ?? "",
-      contactWebsite: orgSource?.contactWebsite ?? "",
-      logoUrl: orgSource?.logoUrl ?? "",
-      contactNote: orgSource?.contactNote ?? "",
-    },
+    defaultValues: {},
+    // values: {
+    //   nameTh: orgSource?.nameTh ?? "",
+    //   nameEn: orgSource?.nameEn ?? "",
+    //   contactEmail: orgSource?.contactEmail ?? "",
+    //   websiteUrl: orgSource?.websiteUrl ?? "",
+    //   status: orgSource?.status ?? "",
+    //   openingDate: orgSource?.openingDate ?? "",
+    //   descriptionsEn: orgSource?.descriptionsEn ?? "",
+    //   descriptionsTh: orgSource?.descriptionsTh ?? "",
+    //   fromType: orgSource?.fromType ?? "ordinary_person",
+    //   taxId: orgSource?.taxId ?? "",
+    //   registerVat: orgSource?.registerVat ?? false,
+    //   active: orgSource?.active ?? false,
+    //   isMain: orgSource?.isMain ?? false,
+    //   branchType: orgSource?.branchType ?? "taxpayer",
+    //   domainName: orgSource?.domainName ?? "",
+    //   contactName: orgSource?.contactName ?? "",
+    //   contactPhone: orgSource?.contactPhone ?? "",
+    //   contactLine: orgSource?.contactLine ?? "",
+    //   contactFacebook: orgSource?.contactFacebook ?? "",
+    //   contactWhatsapp: orgSource?.contactWhatsapp ?? "",
+    //   contactWebsite: orgSource?.contactWebsite ?? "",
+    //   logoUrl: orgSource?.logoUrl ?? "",
+    //   contactNote: orgSource?.contactNote ?? "",
+    // },
   });
 
   const addressForm = useForm<AddressSchemaValues>({
     resolver: zodResolver(addressSchema) as Resolver<AddressSchemaValues>,
-    values: {
-      id: orgSource?.address?.id ?? "",
-      name: orgSource?.address?.name ?? "",
-      building: orgSource?.address?.building ?? "",
-      village: orgSource?.address?.village ?? "",
-      roomNo: orgSource?.address?.roomNo ?? "",
-      floorNo: orgSource?.address?.floorNo ?? "",
-      villageNo: orgSource?.address?.villageNo ?? "",
-      houseNo: orgSource?.address?.houseNo ?? "",
-      alley: orgSource?.address?.alley ?? "",
-      road: orgSource?.address?.road ?? "",
-      subDistrict: orgSource?.address?.subDistrict ?? "",
-      city: orgSource?.address?.city ?? "",
-      province: orgSource?.address?.province ?? "",
-      nation: orgSource?.address?.nation ?? "",
-      postalCode: orgSource?.address?.postalCode ?? "",
-      note: orgSource?.address?.note ?? "",
-      isMain: orgSource?.address?.isMain ?? false,
-    },
+    defaultValues: {},
+
+    // values: {
+    //   id: orgSource?.address?.id ?? "",
+    //   name: orgSource?.address?.name ?? "",
+    //   building: orgSource?.address?.building ?? "",
+    //   village: orgSource?.address?.village ?? "",
+    //   roomNo: orgSource?.address?.roomNo ?? "",
+    //   floorNo: orgSource?.address?.floorNo ?? "",
+    //   villageNo: orgSource?.address?.villageNo ?? "",
+    //   houseNo: orgSource?.address?.houseNo ?? "",
+    //   alley: orgSource?.address?.alley ?? "",
+    //   road: orgSource?.address?.road ?? "",
+    //   subDistrict: orgSource?.address?.subDistrict ?? "",
+    //   city: orgSource?.address?.city ?? "",
+    //   province: orgSource?.address?.province ?? "",
+    //   nation: orgSource?.address?.nation ?? "",
+    //   postalCode: orgSource?.address?.postalCode ?? "",
+    //   note: orgSource?.address?.note ?? "",
+    //   isMain: orgSource?.address?.isMain ?? false,
+    // },
   });
 
   const settingForm = useForm<SettingSchemaValues>({
     resolver: zodResolver(SettingSchema) as Resolver<SettingSchemaValues>,
-    values: {
-      id: orgSource?.setting?.id ?? "",
-      theme: orgSource?.setting?.theme ?? "",
-      textDisplay: orgSource?.setting?.textDisplay ?? "",
-      defaultLanguage: orgSource?.setting?.defaultLanguage ?? "",
-      active: orgSource?.setting?.active ?? false,
-    },
+    defaultValues: {},
+
+    // values: {
+    //   id: orgSource?.setting?.id ?? "",
+    //   theme: orgSource?.setting?.theme ?? "",
+    //   textDisplay: orgSource?.setting?.textDisplay ?? "",
+    //   defaultLanguage: orgSource?.setting?.defaultLanguage ?? "",
+    //   active: orgSource?.setting?.active ?? false,
+    // },
   });
 
   const handleOrgOnSubmit = (values: OrganizationFormValues) => {
@@ -245,10 +243,69 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
   const handleClickEditButton = () => setIsEditing(true);
 
   const handleChangeActiveOrg = (organizationId: string) => {
-    window.location.href = `/setting-organization?organizationId=${organizationId}`;
+    setOrgId(organizationId);
+    navigate(`/setting-organization?organizationId=${organizationId}`);
 
-    refetch();
+    // refetch();
   };
+
+  React.useEffect(() => {
+    if (!orgSource) return;
+
+    orgForm.reset({
+      nameTh: orgSource?.nameTh ?? "",
+      nameEn: orgSource?.nameEn ?? "",
+      contactEmail: orgSource?.contactEmail ?? "",
+      websiteUrl: orgSource?.websiteUrl ?? "",
+      status: orgSource?.status ?? "",
+      openingDate: orgSource?.openingDate ?? "",
+      descriptionsEn: orgSource?.descriptionsEn ?? "",
+      descriptionsTh: orgSource?.descriptionsTh ?? "",
+      fromType: orgSource?.fromType ?? "ordinary_person",
+      taxId: orgSource?.taxId ?? "",
+      registerVat: orgSource?.registerVat ?? false,
+      active: orgSource?.active ?? false,
+      isMain: orgSource?.isMain ?? false,
+      branchType: orgSource?.branchType ?? "taxpayer",
+      domainName: orgSource?.domainName ?? "",
+      contactName: orgSource?.contactName ?? "",
+      contactPhone: orgSource?.contactPhone ?? "",
+      contactLine: orgSource?.contactLine ?? "",
+      contactFacebook: orgSource?.contactFacebook ?? "",
+      contactWhatsapp: orgSource?.contactWhatsapp ?? "",
+      contactWebsite: orgSource?.contactWebsite ?? "",
+      logoUrl: orgSource?.logoUrl ?? "",
+      contactNote: orgSource?.contactNote ?? "",
+    });
+
+    addressForm.reset({
+      id: orgSource?.address?.id ?? "",
+      name: orgSource?.address?.name ?? "",
+      building: orgSource?.address?.building ?? "",
+      village: orgSource?.address?.village ?? "",
+      roomNo: orgSource?.address?.roomNo ?? "",
+      floorNo: orgSource?.address?.floorNo ?? "",
+      villageNo: orgSource?.address?.villageNo ?? "",
+      houseNo: orgSource?.address?.houseNo ?? "",
+      alley: orgSource?.address?.alley ?? "",
+      road: orgSource?.address?.road ?? "",
+      subDistrict: orgSource?.address?.subDistrict ?? "",
+      city: orgSource?.address?.city ?? "",
+      province: orgSource?.address?.province ?? "",
+      nation: orgSource?.address?.nation ?? "",
+      postalCode: orgSource?.address?.postalCode ?? "",
+      note: orgSource?.address?.note ?? "",
+      isMain: orgSource?.address?.isMain ?? false,
+    });
+
+    settingForm.reset({
+      id: orgSource?.setting?.id ?? "",
+      theme: orgSource?.setting?.theme ?? "",
+      textDisplay: orgSource?.setting?.textDisplay ?? "",
+      defaultLanguage: orgSource?.setting?.defaultLanguage ?? "",
+      active: orgSource?.setting?.active ?? false,
+    });
+  }, [orgId, isRefetching, orgSource?.id]);
 
   return (
     <Tabs
