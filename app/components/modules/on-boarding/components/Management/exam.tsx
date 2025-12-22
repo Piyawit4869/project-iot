@@ -72,7 +72,7 @@ export const Exam: React.FC<ExamProps> = ({ onDelete }) => {
   return (
     <Form {...formExam}>
       <form
-        id="Exam"
+        id="exam"
         // onSubmit={formExam.handleSubmit(onSubmit, (errors) => {
         //   const count = Object.keys(errors).length;
         //   if (count > 0) {

@@ -55,7 +55,7 @@ export const Video: React.FC<VideoProps> = ({ onDelete }) => {
   return (
     <Form {...formVideo}>
       <form
-        id="Video"
+        id="video"
         // onSubmit={formExam.handleSubmit(onSubmit, (errors) => {
         //   const count = Object.keys(errors).length;
         //   if (count > 0) {

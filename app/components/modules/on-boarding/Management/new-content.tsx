@@ -1,5 +1,3 @@
-"use client";
-
 import { TabControl } from "~/components/shared/tab-control";
 import {
   Save,

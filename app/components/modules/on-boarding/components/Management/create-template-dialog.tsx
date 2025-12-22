@@ -108,7 +108,7 @@ export default function CreateTempletDialog({ openTemplate, setOpen }: Props) {
           </DialogHeader>
           <div className="flex justify-between">
             <Form {...formOnboard}>
-              <form id="Onboard" onSubmit={formOnboard.handleSubmit(onCreate)}>
+              <form id="onboard" onSubmit={formOnboard.handleSubmit(onCreate)}>
                 <div className="grid grid-cols-4 gap-3">
                   <FormField
                     control={formOnboard.control}
