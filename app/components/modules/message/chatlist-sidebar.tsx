@@ -39,6 +39,8 @@ import {
 import { useIsMobile } from "~/hooks/use-mobile";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { useMarkAsSpam } from "~/api/client/message/useMessage";
+import { GlobalModal } from "~/components/shared/modal/modal";
+import { toast } from "sonner";
 
 interface Props {
   handleChangeSelectedRoom: (room: any) => void;
@@ -171,7 +173,7 @@ export default function ChatlistSidebar({
       setAllRooms((prev) => {
         const merged = mergeRoomImmutable(prev, room);
 
-        return merged.filter((r: any) => !r.isSpam);
+        return merged;
       });
 
       if (room.chatRoomType === "assistant") {
@@ -405,30 +407,32 @@ export default function ChatlistSidebar({
           (search !== "" ? (
             filterRoom &&
             filterRoom.length > 0 &&
-            filterRoom.map((room: any, i: number) => {
-              return (
-                <ChatItem
-                  key={room?.id + i}
-                  roomId={room?.id ?? ""}
-                  selectedRoom={currentRoomId}
-                  name={room?.name}
-                  message={room?.latestMessage?.message ?? ""}
-                  time={room?.latestMessage?.createdAt ?? ""}
-                  image={room?.imageUrl || ""}
-                  unread={room?.unreadMessageCount > 0}
-                  countUnreadMessage={room?.unreadMessageCount || 0}
-                  roomDetail={room}
-                  currentCustomer={currentCustomer}
-                  onChatClick={() => {
-                    handleChangeSelectedRoom(room);
-                    setSidebarOpen(false);
-                    setOnSelectRoom(true);
-                    removeMessage();
-                    addRecentSearch();
-                  }}
-                />
-              );
-            })
+            filterRoom
+              .filter((r: any) => (select === "isSpam" ? r.isSpam : !r.isSpam))
+              .map((room: any, i: number) => {
+                return (
+                  <ChatItem
+                    key={room?.id + i}
+                    roomId={room?.id ?? ""}
+                    selectedRoom={currentRoomId}
+                    name={room?.name}
+                    message={room?.latestMessage?.message ?? ""}
+                    time={room?.latestMessage?.createdAt ?? ""}
+                    image={room?.imageUrl || ""}
+                    unread={room?.unreadMessageCount > 0}
+                    countUnreadMessage={room?.unreadMessageCount || 0}
+                    roomDetail={room}
+                    currentCustomer={currentCustomer}
+                    onChatClick={() => {
+                      handleChangeSelectedRoom(room);
+                      setSidebarOpen(false);
+                      setOnSelectRoom(true);
+                      removeMessage();
+                      addRecentSearch();
+                    }}
+                  />
+                );
+              })
           ) : (
             <React.Fragment>
               <div className="flex flex-col gap-3 w-full mt-2 px-3 pb-2">
@@ -521,13 +525,44 @@ export default function ChatlistSidebar({
             <LoadingSkeleton />
           ) : select !== "all" ? (
             filterRoom.length > 0 ? (
-              filterRoom.map((room: any, i: number) => (
+              filterRoom
+                .filter((r: any) =>
+                  select === "isSpam" ? r.isSpam : !r.isSpam
+                )
+                .map((room: any, i: number) => (
+                  <ChatItem
+                    key={room?.id + i}
+                    roomId={room?.id ?? ""}
+                    selectedRoom={currentRoomId}
+                    name={room?.name}
+                    message={room?.latestMessage?.message ?? ""}
+                    time={room?.latestMessage?.createdAt ?? ""}
+                    image={room?.imageUrl || ""}
+                    unread={room?.unreadMessageCount > 0}
+                    countUnreadMessage={room?.unreadMessageCount || 0}
+                    currentCustomer={currentCustomer}
+                    roomDetail={room}
+                    onChatClick={() => {
+                      handleChangeSelectedRoom(room);
+                      setSidebarOpen(false);
+                      setOnSelectRoom(true);
+                      removeMessage();
+                    }}
+                  />
+                ))
+            ) : (
+              <EmptyChat />
+            )
+          ) : allRooms.length > 0 ? (
+            allRooms
+              .filter((r: any) => !r.isSpam)
+              .map((room: any, i: number) => (
                 <ChatItem
                   key={room?.id + i}
                   roomId={room?.id ?? ""}
                   selectedRoom={currentRoomId}
                   name={room?.name}
-                  message={room?.latestMessage?.message ?? ""}
+                  message={room?.latestMessage?.messageLabel ?? ""}
                   time={room?.latestMessage?.createdAt ?? ""}
                   image={room?.imageUrl || ""}
                   unread={room?.unreadMessageCount > 0}
@@ -542,31 +577,6 @@ export default function ChatlistSidebar({
                   }}
                 />
               ))
-            ) : (
-              <EmptyChat />
-            )
-          ) : allRooms.length > 0 ? (
-            allRooms.map((room: any, i: number) => (
-              <ChatItem
-                key={room?.id + i}
-                roomId={room?.id ?? ""}
-                selectedRoom={currentRoomId}
-                name={room?.name}
-                message={room?.latestMessage?.messageLabel ?? ""}
-                time={room?.latestMessage?.createdAt ?? ""}
-                image={room?.imageUrl || ""}
-                unread={room?.unreadMessageCount > 0}
-                countUnreadMessage={room?.unreadMessageCount || 0}
-                currentCustomer={currentCustomer}
-                roomDetail={room}
-                onChatClick={() => {
-                  handleChangeSelectedRoom(room);
-                  setSidebarOpen(false);
-                  setOnSelectRoom(true);
-                  removeMessage();
-                }}
-              />
-            ))
           ) : (
             <EmptyChat />
           )}
@@ -638,6 +648,59 @@ function ChatItem({
   const { setCurrentRoomId, currentRoomId } = useChat();
   const [openOption, setOpenOption] = React.useState<boolean>(false);
 
+  const makeSpam = () => {
+    GlobalModal.delete({
+      title: "ทำเครื่องหมายลูกค้ารายนี้เป็นสแปม",
+      description: "คุณต้องการทำเครื่องหมายลูกค้ารายนี้เป็นสแปม ใช่หรือไม่?",
+      confirmText: "ยืนยัน",
+      cancelText: "ยกเลิก",
+      onConfirm: () => {
+        const toastId = toast.loading("กำลังทำเครื่องหมายเป็นสแปม...");
+
+        markAsSpam(true, {
+          onSuccess: () => {
+            toast.success("ทำเครื่องหมายเป็นสแปมเรียบร้อยแล้ว", {
+              id: toastId,
+            });
+          },
+          onError: () => {
+            toast.error(
+              "ไม่สามารถทำเครื่องหมายเป็นสแปมได้ กรุณาลองใหม่อีกครั้ง",
+              { id: toastId }
+            );
+          },
+        });
+      },
+    });
+  };
+
+  const cancelSpam = () => {
+    GlobalModal.delete({
+      title: "ยกเลิกการทำเครื่องหมายลูกค้ารายนี้เป็นสแปม",
+      description:
+        "คุณต้องการยกเลิกการทำเครื่องหมายลูกค้ารายนี้เป็นสแปม ใช่หรือไม่?",
+      confirmText: "ยืนยัน",
+      cancelText: "ยกเลิก",
+      onConfirm: () => {
+        const toastId = toast.loading("กำลังยกเลิกการทำเครื่องหมายเป็นสแปม...");
+
+        markAsSpam(false, {
+          onSuccess: () => {
+            toast.success("ยกเลิกการทำเครื่องหมายเป็นสแปมเรียบร้อยแล้ว", {
+              id: toastId,
+            });
+          },
+          onError: () => {
+            toast.error(
+              "ไม่สามารถยกเลิกการทำเครื่องหมายเป็นสแปมได้ กรุณาลองใหม่อีกครั้ง",
+              { id: toastId }
+            );
+          },
+        });
+      },
+    });
+  };
+
   return (
     <div
       className={cn(
@@ -704,16 +767,7 @@ function ChatItem({
                               <CommandItem
                                 className="flex items-center gap-2 cursor-pointer"
                                 disabled={isPending}
-                                onSelect={() => {
-                                  markAsSpam(false, {
-                                    onSuccess: () => {
-                                      setOpenOption(false);
-                                    },
-                                    onError: (err) => {
-                                      console.error("unmark spam error", err);
-                                    },
-                                  });
-                                }}
+                                onSelect={cancelSpam}
                               >
                                 <OctagonAlert className="w-4 h-4" />
                                 ยกเลิกสแปม
@@ -722,16 +776,7 @@ function ChatItem({
                               <CommandItem
                                 className="flex items-center gap-2 text-red-500 cursor-pointer"
                                 disabled={isPending}
-                                onSelect={() => {
-                                  markAsSpam(true, {
-                                    onSuccess: () => {
-                                      setOpenOption(false);
-                                    },
-                                    onError: (err) => {
-                                      console.error("mark as spam error", err);
-                                    },
-                                  });
-                                }}
+                                onSelect={makeSpam}
                               >
                                 <OctagonAlert className="w-4 h-4" />
                                 กำหนดเป็นสแปม
