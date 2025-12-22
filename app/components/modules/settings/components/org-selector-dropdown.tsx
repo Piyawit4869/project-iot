@@ -1,14 +1,6 @@
 import * as React from "react";
-import {
-  Check,
-  ChevronsUpDown,
-  Settings,
-  Plus,
-  ChevronDown,
-  ChevronLeft,
-} from "lucide-react";
+import { Settings, Plus, ChevronDown, ChevronLeft } from "lucide-react";
 
-import { Button } from "~/components/ui/button";
 import {
   Popover,
   PopoverContent,
@@ -18,13 +10,11 @@ import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
   CommandSeparator,
 } from "~/components/ui/command";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { cn } from "~/lib/utils";
 import { useSearchUserOrgs } from "~/api/client/user";
 import { useDebounce } from "~/hooks/use-debounce";
 import { Link } from "react-router";
