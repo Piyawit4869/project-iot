@@ -82,7 +82,7 @@ export default function ChatlistSidebar({
   const { currentRoomId, addMessageAI, removeMessage } = useChat();
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
-  type StatusKey = "unread" | "done" | "isProcess" | "spam" | "all";
+  type StatusKey = "unread" | "done" | "isProcess" | "isSpam" | "all";
 
   const handleScroll = () => {
     const el = scrollRef.current;
@@ -164,10 +164,15 @@ export default function ChatlistSidebar({
       socket.emit("rooms", `${me.branchId}`);
     }
 
+    console.log("all ", allRooms);
     socket.on("rooms", (room: any) => {
       console.log("rooms in", room);
 
-      setAllRooms((prev) => mergeRoomImmutable(prev, room));
+      setAllRooms((prev) => {
+        const merged = mergeRoomImmutable(prev, room);
+
+        return merged.filter((r: any) => !r.isSpam);
+      });
 
       if (room.chatRoomType === "assistant") {
         addMessageAI({
@@ -194,11 +199,14 @@ export default function ChatlistSidebar({
     unread: "ยังไม่อ่าน",
     done: "ดำเนินการแล้ว",
     isProcess: "ต้องดำเนินการ",
-    spam: "ต้องดำเนินการ",
+    isSpam: "สแปม",
     all: "ทั้งหมด",
   };
 
   const resultStatus = compareText?.[select as StatusKey];
+
+  console.log({ allRooms });
+  console.log({ filterRoom });
 
   return (
     <aside className="h-full border-r dark:bg-background flex flex-col border-l">
@@ -284,9 +292,7 @@ export default function ChatlistSidebar({
                       {isLoading ? (
                         <SkeletonLoading />
                       ) : (
-                        meta?.statusSummary?.totalUnread +
-                        meta?.statusSummary?.totalProcess +
-                        meta?.statusSummary?.totalDone
+                        meta?.statusSummary?.total
                       )}
                     </span>
                   </CommandItem>
