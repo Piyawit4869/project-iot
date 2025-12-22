@@ -150,7 +150,7 @@ export const fetchUserSummary = async () => {
 
 export const fetchSearchUserOrgs = async (search?: string) => {
   try {
-    const { data } = await ApiConfig.get(`/crud/users/search/org`, {
+    const { data } = await ApiConfig.get(`/crud/users/search/organizations`, {
       params: search,
     });
     return data;
