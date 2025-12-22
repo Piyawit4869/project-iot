@@ -31,7 +31,6 @@ export function InputNumberBox({
 
     onChange(newValue.join(""));
 
-    // 👉 พิมพ์แล้วโฟกัสช่องถัดไปเสมอ (ข้าม - อัตโนมัติ)
     if (v && index + 1 < totalLength) {
       requestAnimationFrame(() => {
         inputRefs.current[index + 1]?.focus();
@@ -41,7 +40,6 @@ export function InputNumberBox({
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
     if (e.key === "Backspace") {
-      // ถ้าช่องนี้มีค่า → ลบเฉย ๆ
       if (digits[index]) {
         const newValue = Array(totalLength).fill("");
         digits.forEach((d, i) => (newValue[i] = d));
@@ -51,7 +49,6 @@ export function InputNumberBox({
         return;
       }
 
-      // ถ้าช่องว่าง → ย้อนกลับ
       if (index > 0) {
         requestAnimationFrame(() => {
           inputRefs.current[index - 1]?.focus();

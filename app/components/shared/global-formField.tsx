@@ -31,9 +31,9 @@ interface GlobalFormFieldProps {
   defaultValueLabel?: any;
   type?:
     | "input"
-    | "selectRadioCard"
+    | "select-radio-card"
     | "number"
-    | "numberBox"
+    | "number-box"
     | "file"
     | "select"
     | "date"
@@ -134,7 +134,7 @@ export function GlobalFormField({
           />
         );
 
-      case "numberBox":
+      case "number-box":
         return (
           <InputNumberBox
             value={field.value || ""}
@@ -206,7 +206,7 @@ export function GlobalFormField({
           </Select>
         );
 
-      case "selectRadioCard":
+      case "select-radio-card":
         return (
           <RadioCardGroup
             options={options}

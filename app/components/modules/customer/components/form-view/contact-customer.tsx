@@ -306,7 +306,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
             control={form.control}
             name="contacts.0.phone"
             label="เบอร์โทรศัพท์ผู้ติดต่อ (ตัวเลขเท่านั้น)"
-            type="numberBox"
+            type="number-box"
             view={isEdit ? "edit" : "view"}
             placeholder="กรอกเบอร์โทรศัพท์ผู้ติดต่อ เช่น 0612345678"
           />
