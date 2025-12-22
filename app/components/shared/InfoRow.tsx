@@ -3,7 +3,7 @@
 import React from "react";
 
 export type InfoRowProps = {
-  label: React.ReactNode;
+  label?: React.ReactNode;
   value?: React.ReactNode;
   className?: string;
   labelClassName?: string;

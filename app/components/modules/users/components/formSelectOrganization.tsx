@@ -24,6 +24,7 @@ import {
   CommandItem,
   CommandList,
 } from "~/components/ui/command";
+import { Label } from "~/components/ui/label";
 
 export const OrganizationSelector: React.FC<UserFormProfileProps> = ({
   form,
@@ -35,7 +36,8 @@ export const OrganizationSelector: React.FC<UserFormProfileProps> = ({
   const organizationGroupId = user?.organization?.organizationGroupId;
 
   const { data: organizations, isLoading } = useSearchUserOrgs("");
-  const { data: branchs } = useGetUserBranches(organizationId, "");
+  const organizationsId = form.watch("organizationId") || organizationId;
+  const { data: branchs } = useGetUserBranches(organizationsId, "");
 
   const [search, setSearch] = React.useState("");
   const [openMain, setOpenMain] = React.useState(false);
@@ -54,15 +56,17 @@ export const OrganizationSelector: React.FC<UserFormProfileProps> = ({
       )}
     >
       {!organizationGroupId ? (
-        <div className="flex items-center gap-2 border px-2 py-1.5 rounded-2xl">
-          <GlobalImage
-            src={organization?.logoUrl}
-            alt={organization?.nameEn || ""}
-            className="w-7 h-7 rounded-2xl"
-          />
-          <div className="flex flex-col text-sm">
-            <span>ชื่อองค์กร : {organization.nameEn || "-"}</span>
-            <span>โดเมน : {organization.nameTh || "-"}</span>
+        <div>
+          <Label className="mb-2">องค์กร</Label>
+          <div className="flex items-center gap-2 border px-2 py-1.5 rounded-2xl">
+            <GlobalImage
+              src={organization?.logoUrl}
+              alt={organization?.nameEn || ""}
+              className="w-7 h-7 rounded-2xl"
+            />
+            <div className="flex flex-col text-sm">
+              <span>ชื่อองค์กร : {organization.nameEn || "-"}</span>
+            </div>
           </div>
         </div>
       ) : (
