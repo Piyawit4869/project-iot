@@ -216,8 +216,11 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
         <div className="flex gap-2">
           <div className="flex  flex-col">
             {" "}
+            <CardTitle className="text-base font-bold mt-2 mb-1 gap-2">
+              <span className="mr-3">สถานะลูกค้า</span>
+            </CardTitle>
             <GlobalStatusBadge value={customer?.active} />
-            <CardTitle className="text-base font-bold mt-2">
+            <CardTitle className="text-base font-bold mt-3">
               ชื่อผู้ติดต่อ
             </CardTitle>
           </div>

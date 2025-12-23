@@ -232,7 +232,7 @@ export const TagsSelectorModal: React.FC<TagsSelectorModalProps> = ({
       {customerSingle ? (
         <TagManagerModal
           open={open}
-          title="test012"
+          title="เลือกหรือสร้างแท็ก"
           inputValue={inputValue}
           onInputChange={setInputValue}
           selectedTags={selectedTagObjects}

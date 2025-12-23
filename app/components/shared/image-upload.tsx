@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-
 import * as Icons from "lucide-react";
 import { useId } from "react";
 
@@ -22,8 +21,8 @@ type ImageUploadProps = {
 export default function ImageUpload({
   value,
   onChange,
-  width = 80,
-  height = 80,
+  width = 110,
+  height = 110,
   className,
   disabled = false,
   hideRemoveWhenDisabled = true,
@@ -53,7 +52,7 @@ export default function ImageUpload({
   return (
     <div
       className={cn(
-        "flex flex-col justify-center w-full gap-4 mt-5",
+        "flex flex-col justify-center w-full gap-4  my-2",
         className
       )}
       aria-disabled={disabled}
@@ -68,6 +67,7 @@ export default function ImageUpload({
               ? "cursor-not-allowed border-muted-foreground/20 text-muted-foreground/60 bg-muted/20 pointer-events-none"
               : "cursor-pointer border-gray-300 text-gray-600 hover:border-blue-400 hover:bg-border transition"
           )}
+          style={{ width, height }}
           tabIndex={disabled ? -1 : 0}
         >
           <span className="text-2xl leading-none">+</span>
@@ -81,11 +81,12 @@ export default function ImageUpload({
             "relative w-fit flex justify-center",
             disabled && "pointer-events-none select-none"
           )}
+          style={{ width, height }}
         >
           <GlobalImage
             src={value}
             alt="Image"
-            className="rounded-xl border"
+            className="rounded-xl border object-cover"
             width={width}
             height={height}
           />
