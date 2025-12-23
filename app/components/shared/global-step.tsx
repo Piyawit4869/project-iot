@@ -161,26 +161,41 @@ function SlideContent({ children, direction }: any) {
       animate="center"
       exit="exit"
       variants={slideVariants}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.2 }}
     >
       {children}
     </motion.div>
   );
 }
 const slideVariants = {
-  enter: (dir: number) => ({
-    x: dir > 0 ? "60%" : "-60%",
-    position: "absolute",
+  // enter: (dir: number) => ({
+  //   x: dir > 0 ? "60%" : "-60%",
+  //   position: "absolute",
+  //   opacity: 0,
+  // }),
+  // center: {
+  //   x: 0,
+  //   position: "relative",
+  //   opacity: 1,
+  // },
+  // exit: (dir: number) => ({
+  //   x: dir > 0 ? "-60%" : "60%",
+  //   position: "absolute",
+  //   opacity: 0,
+  // }),
+  enter: {
+    scale: 0.92,
     opacity: 0,
-  }),
-  center: {
-    x: 0,
-    position: "relative",
-    opacity: 1,
+    position: "absolute",
   },
-  exit: (dir: number) => ({
-    x: dir > 0 ? "-60%" : "60%",
-    position: "absolute",
+  center: {
+    scale: 1,
+    opacity: 1,
+    position: "relative",
+  },
+  exit: {
+    scale: 0.85,
     opacity: 0,
-  }),
+    position: "absolute",
+  },
 };

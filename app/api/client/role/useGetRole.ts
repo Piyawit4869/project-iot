@@ -3,6 +3,7 @@ import type { UsersFormValues } from "~/schemas/users/user";
 import type { PasswordFormValues } from "~/schemas/users/password-user";
 import {
   fetchAllPermission,
+  fetchAllRoles,
   fetchCreateRoles,
   fetchGrantPermission,
   fetchGrantUsers,
@@ -36,6 +37,12 @@ export const usePaginate = ({
     enabled: !!pageIndex,
   });
 };
+
+export const useGetAllRoles = () =>
+  useQuery({
+    queryKey: ["permission-all"],
+    queryFn: () => fetchAllRoles(),
+  });
 
 export const useGetRoles = (id: string) =>
   useQuery({

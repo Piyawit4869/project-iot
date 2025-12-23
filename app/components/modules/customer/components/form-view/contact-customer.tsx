@@ -82,7 +82,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
     if (!users || users.length === 0) return [];
 
     const key = search.toLowerCase();
-    return users.filter(
+    return users?.filter(
       (item: any) =>
         item && item.userName && item.userName.toLowerCase().includes(key)
     );
@@ -226,6 +226,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
             isEdit={isEdit}
             isAnyFilled={isAnyFilled}
             onSave={onClick}
+            form={form}
             onEdit={() => {
               onEditForm?.("contact_detail");
             }}
@@ -275,7 +276,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
 
       <CardContent className="space-y-4">
         <div className="flex flex-col gap-2">
-          <span className="text-base font-bold leading-none  ">แท๊กลูกค้า</span>
+          <span className="text-base font-bold leading-none  ">แท็กลูกค้า</span>
 
           <div className="flex flex-wrap text-muted-foreground gap-2">
             {isEdit ? (
@@ -305,7 +306,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
             control={form.control}
             name="contacts.0.phone"
             label="เบอร์โทรศัพท์ผู้ติดต่อ (ตัวเลขเท่านั้น)"
-            type="number"
+            type="number-box"
             view={isEdit ? "edit" : "view"}
             placeholder="กรอกเบอร์โทรศัพท์ผู้ติดต่อ เช่น 0612345678"
           />

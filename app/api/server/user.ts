@@ -3,6 +3,7 @@
 import type { UsersFormValues } from "~/schemas/users/user";
 import { ApiConfig } from "../config";
 import type { PasswordFormValues } from "~/schemas/users/password-user";
+import axios from "axios";
 
 export const fetchUserPagination = async (params: {
   page: number;
@@ -78,7 +79,12 @@ export const fetchCreateUser = async (payload: UsersFormValues) => {
     const { data } = await ApiConfig.post(`/crud/users/create`, payload);
     return data;
   } catch (error) {
-    return error;
+    if (axios.isAxiosError(error)) {
+      console.error("HTTP", error.response?.status);
+      console.error("DATA →", JSON.stringify(error.response?.data, null, 2)); // สำคัญสุด
+      console.error("HEADERS →", error.response?.headers);
+    }
+    throw error;
   }
 };
 
@@ -137,6 +143,47 @@ export const fetchUserSummary = async () => {
     const res = await ApiConfig.get(`/crud/users/status-summary`);
 
     return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchSearchUserOrgs = async (search?: string) => {
+  try {
+    const { data } = await ApiConfig.get(`/crud/users/search/organizations`, {
+      params: search,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchSearchUserBranches = async (
+  groupId: string,
+  search?: string
+) => {
+  try {
+    const { data } = await ApiConfig.get(
+      `/crud/users/search/${groupId}/branches`,
+      {
+        params: search,
+      }
+    );
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const changeActiveOrg = async (
+  userId: string,
+  payload: { organizationId: string }
+) => {
+  try {
+    const { data } = await ApiConfig.put(`/crud/users/meta/${userId}`, payload);
+    return data;
   } catch (error) {
     return error;
   }

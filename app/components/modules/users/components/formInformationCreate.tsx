@@ -41,16 +41,20 @@ import {
 import { Switch } from "~/components/ui/switch";
 import { UsersFormSchema, type UsersFormValues } from "~/schemas/users/user";
 import { getRequiredPaths } from "~/utils/form-adapter";
+import { OrganizationSelector } from "./formSelectOrganization";
+import { formToJSON } from "axios";
 
 export interface UserFormProfileProps {
   form: UseFormReturn<UsersFormValues>;
   data?: Partial<UsersFormValues>;
+  roles?: any;
   loading?: boolean;
+  isEdit?: boolean;
 }
 
 export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
   form,
-  data,
+  roles,
   loading = false,
 }) => {
   const checkFields = new Set(getRequiredPaths(UsersFormSchema as any));
@@ -58,9 +62,9 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
   const [openSub, setOpenSub] = React.useState(false);
   const [search, setSearch] = React.useState("");
 
-  const userDepartments = Array.isArray(data) ? data : [];
+  const allRoles = Array.isArray(roles) ? roles : [];
 
-  const filtered = userDepartments.filter((item: any) => {
+  const filtered = allRoles.filter((item: any) => {
     const a = item.name?.toLowerCase().includes(search.toLowerCase());
 
     return a;
@@ -243,71 +247,73 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
               <div className="md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
-                  name="userDepartments"
+                  name="rolesId"
                   render={({ field }) => {
-                    const selected = Array.isArray(field.value)
-                      ? (field.value as {
-                          id: string;
-                          name: string;
-                          active: boolean;
-                        }[])
-                      : [];
+                    // const selected = Array.isArray(field.value)
+                    //   ? (field.value as {
+                    //       id: string;
+                    //       name: string;
+                    //       active: boolean;
+                    //     }[])
+                    //   : [];
 
-                    const toRef = (item: OptionItem) => ({
-                      id: item.id,
-                      name: item.name,
-                      active: item.active ?? true,
-                    });
+                    // const toRef = (item: OptionItem) => ({
+                    //   id: item.id,
+                    //   name: item.name,
+                    //   active: item.active ?? true,
+                    // });
 
-                    const selectedIds = new Set(selected.map((s) => s.id));
+                    // const selectedIds = new Set(selected.map((s) => s.id));
 
-                    const toggle = (item: OptionItem) => {
-                      const exists = selectedIds.has(item.id);
-                      const next = exists
-                        ? selected.filter((s) => s.id !== item.id)
-                        : [...selected, toRef(item)];
-                      field.onChange(next);
-                      field.onBlur?.();
-                    };
+                    // const toggle = (item: OptionItem) => {
+                    //   const exists = selectedIds.has(item.id);
+                    //   const next = exists
+                    //     ? selected.filter((s) => s.id !== item.id)
+                    //     : [...selected, toRef(item)];
+                    //   field.onChange(next);
+                    //   field.onBlur?.();
+                    // };
 
-                    const removeId = (id: string) => {
-                      const next = selected.filter((s) => s.id !== id);
-                      field.onChange(next);
-                      field.onBlur?.();
-                    };
+                    // const removeId = (id: string) => {
+                    //   const next = selected.filter((s) => s.id !== id);
+                    //   field.onChange(next);
+                    //   field.onBlur?.();
+                    // };
 
                     const findDep = (id?: string) =>
-                      (userDepartments ?? []).find((d) => d.id === id);
+                      (allRoles ?? []).find((d) => d.id === id);
 
                     return (
                       <FormItem>
-                        <RequiredLabel required>แผนก</RequiredLabel>
+                        <RequiredLabel required>ตำแหน่ง</RequiredLabel>
+
                         <div className="flex flex-wrap gap-2">
-                          {selected.map((ref) => {
-                            const dep = findDep(ref.id);
-                            const depId = ref.id;
-                            const depName = dep?.name ?? ref.name ?? "-";
+                          {(() => {
+                            const depId = (field.value ?? "") as string;
+                            if (!depId) return null;
+
+                            const dep = findDep(depId);
+                            const depName = dep?.name ?? "-";
+
                             return (
-                              <div
-                                key={depId}
-                                className="flex items-center gap-2 border-1 px-2 py-1.5 rounded-full"
-                              >
+                              <div className="flex items-center gap-2 border-1 px-2 py-1.5 rounded-full">
                                 <GlobalImage
                                   src={`https://api.dicebear.com/9.x/initials/svg?seed=${depName}`}
                                   alt={depName}
                                   className="w-6 h-6 rounded-full"
                                 />
                                 <span>{depName}</span>
+
                                 <button
                                   type="button"
-                                  onClick={() => removeId(depId)}
+                                  onClick={() => field.onChange("")}
                                   className="ml-1 text-gray-500 hover:text-red-500"
                                 >
                                   <X className="h-3 w-3" />
                                 </button>
                               </div>
                             );
-                          })}
+                          })()}
 
                           <Popover
                             open={openSub}
@@ -321,11 +327,12 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                                 type="button"
                                 variant="outline"
                                 className="px-4 py-2 rounded-full"
-                                disabled={!!selected.length}
+                                disabled={!!field.value}
                               >
-                                เพิ่มแผนก +
+                                เพิ่มตำแหน่ง +
                               </Button>
                             </PopoverTrigger>
+
                             <PopoverContent className="w-64">
                               <Command>
                                 <CommandInput
@@ -334,23 +341,21 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                                   onValueChange={setSearch}
                                 />
                                 <CommandEmpty>ไม่มีข้อมูล</CommandEmpty>
+
                                 <CommandList>
                                   {(filtered ?? []).map((item: OptionItem) => {
-                                    const checked = selectedIds.has(item.id);
+                                    const checked = field.value === item.id;
+
                                     return (
                                       <CommandItem
                                         key={item.id}
                                         onSelect={() => {
-                                          toggle(item);
+                                          field.onChange(item.id);
                                           setOpenSub(false);
                                         }}
                                       >
                                         <Checkbox
                                           checked={checked}
-                                          onCheckedChange={() => {
-                                            toggle(item);
-                                            setOpenSub(false);
-                                          }}
                                           className="mr-2"
                                         />
                                         {item.name}
@@ -365,11 +370,15 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                             </PopoverContent>
                           </Popover>
                         </div>
+
                         <FormMessage />
                       </FormItem>
                     );
                   }}
                 />
+              </div>
+              <div>
+                <OrganizationSelector form={form} />
               </div>
 
               <h1 className="font-bold">ข้อมูลส่วนตัว</h1>

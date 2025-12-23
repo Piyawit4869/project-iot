@@ -67,7 +67,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   const [queryClient] = React.useState(() => new QueryClient());
-  const { token } = useRouteLoaderData("root");
+  const { token, user } = useRouteLoaderData("root");
 
   if (typeof window !== "undefined") {
     localStorage.setItem("accessToken", token);

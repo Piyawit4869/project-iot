@@ -12,6 +12,7 @@ import {
   fetchSendMessage,
   fetchUpdateStatusProgressTag,
   markAsDone,
+  markAsSpam,
   markAsProcess,
 } from "~/api/server/message/message";
 
@@ -44,6 +45,11 @@ export const useMarkAsProcess = (id: string) => {
 export const useMarkAsDone = (id: string) => {
   return useMutation({
     mutationFn: (done: boolean) => markAsDone(id, done),
+  });
+};
+export const useMarkAsSpam = (id: string) => {
+  return useMutation({
+    mutationFn: (spam: boolean) => markAsSpam(id, spam),
   });
 };
 

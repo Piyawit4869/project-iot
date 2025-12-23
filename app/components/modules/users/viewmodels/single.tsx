@@ -16,12 +16,7 @@ import { X } from "lucide-react";
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
 import { ensureIds } from "~/components/shared/withId";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
-import {
-  useDeleteUsers,
-  useGetAllDepartments,
-  useGetUsers,
-  useUpdateUsers,
-} from "~/api/client/user";
+import { useDeleteUsers, useGetUsers, useUpdateUsers } from "~/api/client/user";
 import { useNavigate, useParams } from "react-router";
 import { UsersFormSchema, type UsersFormValues } from "~/schemas/users/user";
 import { TabControl } from "~/components/shared/tab-control";
@@ -33,6 +28,7 @@ import { UserCompensation } from "../components/formCompensation";
 import { UserProfileEdit } from "../components/formInformationEdit";
 import { UserDocuments } from "../components/formDocuments";
 import { SingleUsersView } from "./single-users-view";
+import { useGetAllRoles } from "~/api/client/role/useGetRole";
 
 dayjs.locale("th");
 
@@ -49,7 +45,7 @@ export default function SingleUsers() {
   const { data, isLoading } = useGetUsers(params.id ?? "");
   const { mutate: DeleteUsers } = useDeleteUsers();
 
-  const { data: departments } = useGetAllDepartments(true);
+  const { data: roles } = useGetAllRoles();
   const [isEdit, setIsEdit] = React.useState(false);
   const displayName =
     `${data?.profile?.firstName}` + " " + `${data?.profile?.lastName}`;
@@ -323,10 +319,13 @@ export default function SingleUsers() {
               <GlobalButton
                 label="บันทึก"
                 key="save-btn"
-                type="button"
+                type="submit"
+                form="users"
                 loading={isSubmitting}
                 className="max-w-[90px] mr-5"
-                onClick={form.handleSubmit(onSubmit)}
+                onClick={form.handleSubmit(onSubmit, (errors) => {
+                  console.log("errors", errors);
+                })}
               />
             </div>
           ) : (
@@ -376,6 +375,7 @@ export default function SingleUsers() {
                       `กรอกข้อมูลไม่ครบหรือไม่ถูกต้อง (${count} จุด)`
                     );
                   }
+                  console.log("errors", count);
                 })}
               >
                 <div className="mt-2 flex flex-col md:flex-row gap-5">
@@ -384,7 +384,8 @@ export default function SingleUsers() {
                       <UserProfileEdit
                         form={form}
                         data={data}
-                        departments={departments}
+                        // departments={departments}
+                        roles={roles}
                       />
                     </Card>
                   </div>

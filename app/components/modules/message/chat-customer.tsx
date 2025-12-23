@@ -493,8 +493,6 @@ export default function ChatCustomerInfo({
         chatRoomId: selectedRoom?.id,
       });
 
-      console.log({ res });
-
       setChatRoomAssistantId(res.assistantId);
     } catch (err) {
       setIsFirstTimeAI(false);
@@ -614,10 +612,7 @@ export default function ChatCustomerInfo({
     }
   }, [data, currentCustomer]);
 
-  console.log({ selectedRoom });
-
   React.useEffect(() => {
-    console.log({ assistantId });
     if (assistantId) {
       setChatRoomAssistantId(assistantId || "");
     }

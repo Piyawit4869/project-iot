@@ -1,5 +1,6 @@
 import axios from "axios";
 import { env } from "~/utils/common/env";
+import { ApiConfig } from "../config";
 
 const baseURL = env.PUBLIC_API_URL;
 
@@ -13,6 +14,15 @@ export const getMe = async (token: string) => {
   } catch (error) {
     console.error("getMe error:", error);
     throw error;
+  }
+};
+
+export const getCurrentMe = async () => {
+  try {
+    const { data } = await ApiConfig.get(`/auth/me`);
+    return data;
+  } catch (error) {
+    return error;
   }
 };
 

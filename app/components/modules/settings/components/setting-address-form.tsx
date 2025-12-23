@@ -7,6 +7,7 @@ import { getRequiredPaths } from "~/utils/form-adapter";
 
 interface SettingAddressFormProps {
   form: UseFormReturn<AddressSchemaValues>;
+  // isLoading: boolean;
 }
 
 export const SettingAddressForm: React.FC<SettingAddressFormProps> = (

@@ -56,8 +56,6 @@ export default function ChatMessagesWithAI({
     // refetch,
   } = usePaginatedChatRoomAIAssistant(chatRoomId || "");
 
-  console.log({ messagesData });
-
   const { mutateAsync: connectedChatRoomAIAssistant, isPending: isPendingAI } =
     useConnectedChatRoomAssistant();
 

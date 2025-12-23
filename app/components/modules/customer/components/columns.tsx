@@ -102,7 +102,7 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
         const name = row.original.name;
         return (
           <span className="text-blue-400 hover:text-blue-300 hover:underline">
-            <Link to={`/customer/${row.original.id}`}>{name}</Link>
+            <Link to={`/customer/${row.original.id}`}>{name || "-"}</Link>
           </span>
         );
       },
