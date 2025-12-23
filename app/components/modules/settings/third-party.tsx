@@ -191,7 +191,7 @@ export const ThirdParty: React.FC<ThirdPartyProps> = (props) => {
         offFilter={true}
       />
 
-      <ConnectLineWizardModal
+      {/* <ConnectLineWizardModal
         open={openLine}
         onOpenChange={setOpenLine}
         channelId={selectedId ?? undefined}
@@ -201,7 +201,7 @@ export const ThirdParty: React.FC<ThirdPartyProps> = (props) => {
         open={openAi}
         onOpenChange={setOpenAi}
         channelId={selectedId ?? undefined}
-      />
+      /> */}
     </div>
   );
 };

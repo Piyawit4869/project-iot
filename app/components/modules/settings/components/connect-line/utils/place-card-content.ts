@@ -15,35 +15,41 @@ function buildIcon(extraInfoType: string): string {
 
 export function buildPlaceCardBody(input: any): LineFlex {
   const p = input.place;
+
   const heroContents: any[] = [
     {
       type: "image",
       url: p.imageUrl,
       size: "full",
       aspectMode: "cover",
-      aspectRatio: "20:13",
+      aspectRatio: "1:1",
     },
   ];
 
-  if (p.tagEnabled && p.tagText) {
+  if (
+    p.tagEnabled &&
+    typeof p.tagText === "string" &&
+    p.tagText.trim() !== ""
+  ) {
     heroContents.push({
       type: "box",
       layout: "vertical",
+      contents: [
+        {
+          type: "text",
+          text: p.tagText.trim(),
+          size: "xxs",
+          color: "#ffffff",
+          align: "center",
+        },
+      ],
+
       position: "absolute",
       offsetTop: "10px",
       offsetStart: "10px",
       paddingAll: "4px",
       cornerRadius: "999px",
-      backgroundColor: p.tagColor || "#444444",
-      contents: [
-        {
-          type: "text",
-          text: p.tagText,
-          size: "xxs",
-          align: "center",
-          color: "#ffffff",
-        },
-      ],
+      backgroundColor: p.tagColor || "#4B5D73",
     });
   }
 

@@ -105,13 +105,6 @@ export function buildPersonCardBody(input: any): LineFlex {
       contents: [
         {
           type: "bubble",
-          hero: {
-            type: "image",
-            url: p.imageUrl,
-            size: "full",
-            aspectMode: "cover",
-            aspectRatio: "20:13",
-          },
           body: {
             type: "box",
             layout: "vertical",
@@ -119,9 +112,6 @@ export function buildPersonCardBody(input: any): LineFlex {
               {
                 type: "box",
                 layout: "vertical",
-                width: "80px",
-                height: "80px",
-                cornerRadius: "xxl",
                 contents: [
                   {
                     type: "image",
@@ -131,32 +121,95 @@ export function buildPersonCardBody(input: any): LineFlex {
                     aspectRatio: "1:1",
                   },
                 ],
+                cornerRadius: "xxl",
               },
               {
-                type: "text",
-                text: p.title,
-                weight: "bold",
                 size: "xl",
+                text: "ddd", //!! FIXME: SEND IT
+                type: "text",
                 align: "start",
+                weight: "bold",
               },
-              p.tags && buildTags(p.tags),
-              ...(p.description
-                ? [
-                    {
-                      type: "text",
-                      text: p.description,
-                      size: "sm",
-                      color: "#aaaaaa",
-                    },
-                  ]
-                : []),
+              {
+                type: "box",
+                layout: "horizontal",
+                margin: "md",
+                spacing: "sm",
+                contents: [
+                  {
+                    type: "box",
+                    width: "60px",
+                    layout: "horizontal",
+                    contents: [
+                      {
+                        size: "xxs",
+                        text: "p.text",
+                        type: "text",
+                        align: "center",
+                        color: "#ffffff",
+                      },
+                    ],
+                    paddingAll: "4px",
+                    cornerRadius: "999px",
+                    backgroundColor: "#444444",
+                  },
+                  {
+                    type: "box",
+                    width: "60px",
+                    layout: "horizontal",
+                    contents: [
+                      {
+                        size: "xxs",
+                        text: p.description, //FIXME: SEND IT
+                        type: "text",
+                        align: "center",
+                        color: "#ffffff",
+                      },
+                    ],
+                    paddingAll: "4px",
+                    cornerRadius: "999px",
+                    backgroundColor: "#444444",
+                  },
+                ],
+                justifyContent: "center",
+              },
             ],
+            alignItems: "center",
           },
+
           footer: {
             type: "box",
             layout: "vertical",
             spacing: "sm",
-            contents: footerContents,
+            contents: [
+              {
+                type: "box",
+                layout: "vertical",
+                contents: [
+                  {
+                    type: "button",
+                    style: "link",
+                    action: {
+                      uri: "https://line.me/",
+                      type: "uri",
+                      label: "โทรหาคุณ{ชื่อ}",
+                    },
+                    height: "sm",
+                  },
+                  {
+                    type: "button",
+                    style: "link",
+                    action: {
+                      uri: "https://line.me/",
+                      type: "uri",
+                      label: "ส่งอีเมลล์",
+                    },
+                    height: "sm",
+                  },
+                ],
+                alignItems: "center",
+              },
+            ],
           },
         },
       ],

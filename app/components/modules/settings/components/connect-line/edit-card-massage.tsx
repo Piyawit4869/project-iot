@@ -47,13 +47,15 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
   const { data } = useLineGetCardContent(id);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [cards, setCards] = useState<MessageCardFormValues[]>([
-    {
-      ...data?.meta?.items?.[0],
-      name: data?.name,
-      category: data?.type,
-    },
-  ]);
+  // const [cards, setCards] = useState<MessageCardFormValues[]>([
+  //   {
+  //     ...data?.meta?.items?.[0],
+  //     name: data?.name,
+  //     category: data?.type,
+  //   },
+  // ]);
+
+  const [cards, setCards] = useState<MessageCardFormValues[]>([]);
 
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -103,6 +105,9 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
   };
 
   const handleSubmit = async (values: MessageCardFormValues) => {
+    const updatedCards = [...cards];
+    updatedCards[activeIndex] = values;
+
     const toastId = toast.loading("กำลังบันทึกการ์ด...");
 
     let items = [] as any;
@@ -341,77 +346,82 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
       ...prev,
       {
         ...MESSAGE_CARD_DEFAULT_VALUES,
-        name: prev[activeIndex].name,
-        category: prev[activeIndex].category,
+        name: prev[activeIndex]?.name ?? "",
+        category: prev[activeIndex]?.category ?? "",
       },
     ]);
-    setActiveIndex(cards.length); // ไปใบใหม่ทันที
+    setActiveIndex(cards.length);
   };
 
-  const duplicateCard = () => {
-    const cloned = { ...cards[activeIndex] };
-    setCards([...cards, cloned]);
-  };
+  const duplicateCard = React.useCallback(() => {
+    setCards((prev) => [...prev, { ...prev[activeIndex] }]);
+    setActiveIndex(cards.length);
+  }, [setCards, setActiveIndex]);
 
-  const removeCard = () => {
+  const removeCard = React.useCallback(() => {
     if (cards.length === 1) return;
     const newList = cards.filter((_, i) => i !== activeIndex);
     setCards(newList);
     setActiveIndex((prev) => Math.max(0, prev - 1));
-  };
+  }, [setCards, setActiveIndex]);
 
-  const movePrev = () => {
+  const movePrev = React.useCallback(() => {
+    setCards((prev) => {
+      const next = [...prev];
+      next[activeIndex] = form.getValues();
+      return next;
+    });
     setActiveIndex((i) => Math.max(0, i - 1));
-  };
+  }, [setCards, setActiveIndex]);
 
-  const moveNext = () => {
+  const moveNext = React.useCallback(() => {
+    setCards((prev) => {
+      const next = [...prev];
+      next[activeIndex] = form.getValues();
+      return next;
+    });
     setActiveIndex((i) => Math.min(cards.length - 1, i + 1));
-  };
+  }, [setCards, setActiveIndex]);
 
   // Sync ค่า form กับ cards เมื่อเปลี่ยน active card
   React.useEffect(() => {
-    form.reset(cards[activeIndex]);
-  }, [activeIndex]);
+    if (!cards[activeIndex]) return;
 
-  // เมื่อ form เปลี่ยน → update card index ปัจจุบัน
-  React.useEffect(() => {
-    const subscription = form.watch((value) => {
-      setCards((prev) => {
-        const next = [...prev];
-        next[activeIndex] = value as MessageCardFormValues;
-        return next;
-      });
-    });
-    return () => subscription.unsubscribe();
-  }, [form, activeIndex]);
+    console.log("cards[activeIndex]", cards[activeIndex]);
+
+    form.reset(cards[activeIndex]);
+  }, [activeIndex, cards, form]);
 
   React.useEffect(() => {
     if (!data) return;
 
-    // แปลง meta.items จาก API → array ของ MessageCardFormValues
-    const mappedCards = (data.meta?.items ?? []).map((item: any) => ({
-      [data?.meta?.category]: item,
+    console.log({ data });
 
-      name: data.name,
-      category: data?.meta?.category,
-    }));
+    const mappedCards: MessageCardFormValues[] = (data.meta?.items ?? []).map(
+      (item: any) => ({
+        [data.meta.category]: item,
+        name: data.name,
+        category: data.meta.category,
+      })
+    );
 
-    // ป้องกันกรณีไม่มีการ์ด -> ให้มีใบว่างใบแรก
     if (mappedCards.length === 0) {
       mappedCards.push({
-        [data?.meta?.category]: MESSAGE_CARD_DEFAULT_VALUES,
-        name: data.name,
-        category: data?.meta?.category,
+        ...MESSAGE_CARD_DEFAULT_VALUES,
+        name: (data && data.name) || "",
+        category: (data && data.meta && data.meta.category) || "",
       });
     }
 
-    setSelectedCategoryId(data?.meta?.category);
+    console.log("mappedCards", mappedCards);
+
+    setSelectedCategoryId(data.meta.category);
     setCards(mappedCards);
 
-    // reset ค่า form ให้ตรงกับการ์ดใบแรก
-    form.reset(mappedCards[0]);
     setActiveIndex(0);
-  }, [data]);
+
+    form.reset(mappedCards[0]);
+  }, [data, form]);
 
   return (
     <Form {...form}>
