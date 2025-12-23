@@ -18,6 +18,14 @@ dayjs.extend(relativeTime);
 dayjs.extend(buddhistEra);
 dayjs.extend(localizedFormat);
 
+export const displayMonth = (): string => {
+  return dayjs().tz("Asia/Bangkok").locale("th").format("MMMM");
+};
+
+export const displayYear = (): string => {
+  return dayjs().tz("Asia/Bangkok").locale("th").format("BBBB");
+};
+
 export const DateISOToDisplayDate = (iso: string): string => {
   if (!iso) return "";
 
