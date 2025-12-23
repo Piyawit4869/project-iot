@@ -128,9 +128,18 @@ export default [
     //     route("/create", "routes/users/create.tsx"),
     //   ]),
 
+    ...prefix("setting-organization/:id/branches", [
+      route("create", "routes/backoffice/settings/create.tsx"),
+    ]),
+
+    // ...prefix("setting-organization", [
+    //   route(":id/create", "routes/backoffice/settings/create.tsx"),
+    // ]),
+
     layout("routes/backoffice/settings/setting-layout.tsx", [
       ...prefix("setting-organization", [
         index("routes/backoffice/settings/setting.tsx"),
+        // route("create", "routes/backoffice/settings/create.tsx"),
         route("branch", "routes/backoffice/settings/branch/branch.tsx"),
         route(
           "third-party",

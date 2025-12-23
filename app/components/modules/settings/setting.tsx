@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import type { TabKey } from "~/types/settings";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  useGetBranchesOrganization,
   useGetOrganization,
   useGetOrganizations,
   useGetOrganizationsPaginate,
@@ -26,7 +27,12 @@ import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 import { SettingOrganizationForm } from "./components/setting-organization-form";
 import { RenderHeaderButtons } from "./components/render-header-buttons";
-import { useNavigate, useRouteLoaderData, useSearchParams } from "react-router";
+import {
+  Link,
+  useNavigate,
+  useRouteLoaderData,
+  useSearchParams,
+} from "react-router";
 import { SettingAddressForm } from "./components/setting-address-form";
 import { SettingForm } from "./components/setting-setting-form";
 import { TabControl } from "~/components/shared/tab-control";
@@ -34,6 +40,8 @@ import { DataTable } from "~/components/shared/data-table";
 import { useOrganizationColumns } from "./components/org-columns";
 import { OrgSelectorDropdown } from "./components/org-selector-dropdown";
 import GlobalButton from "~/components/shared/global-button";
+import { useDebounce } from "~/hooks/use-debounce";
+import { useSearchUserOrgs } from "~/api/client/user";
 
 interface SettingsPageProps {}
 
@@ -50,6 +58,10 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     "SettingOrganization"
   );
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
+  const [search, setSearch] = React.useState("");
+
+  const debouncedSearch = useDebounce(search);
+  const { data, isLoading } = useSearchUserOrgs(debouncedSearch);
 
   const [orgId, setOrgId] = React.useState<string>(selectedOrgId);
 
@@ -57,6 +69,9 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
 
   const { data: organization } = useGetOrganizations();
   const { data: org, isRefetching, refetch } = useGetOrganization(orgId);
+
+  const { data: branches } = useGetBranchesOrganization(orgId);
+  const branchesData = branches?.branches?.items || [];
 
   const columns = useOrganizationColumns();
 
@@ -245,8 +260,20 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
   const handleChangeActiveOrg = (organizationId: string) => {
     setOrgId(organizationId);
     navigate(`/setting-organization?organizationId=${organizationId}`);
-
     // refetch();
+  };
+
+  const handleChangeBranch = (branchId: string) => {
+    setOrgId(branchId);
+    navigate(
+      `/setting-organization?organizationId=${organizationId}?branchId=${branchId}`
+    );
+    // refetch();
+  };
+
+  const handleOpenCreate = (orgId: string) => {
+    // navigate("/setting-organization/create");
+    navigate(`/setting-organization/${orgId}/branches/create`);
   };
 
   React.useEffect(() => {
@@ -317,12 +344,33 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
         <TabControl
           title={
             selectedOrgId ? (
-              <OrgSelectorDropdown
-                currentOrgId={organizationId}
-                currentOrganization={user?.organization}
-                onChangeOrg={handleChangeActiveOrg}
-                refetch={refetch}
-              />
+              <div className="flex flex-row gap-5">
+                <OrgSelectorDropdown
+                  currentOrgId={organizationId}
+                  currentOrganization={user?.organization}
+                  onChangeOrg={handleChangeActiveOrg}
+                  refetch={refetch}
+                  setSearch={setSearch}
+                  data={data}
+                  backIcon={true}
+                />{" "}
+                <OrgSelectorDropdown
+                  currentOrgId={organizationId}
+                  currentOrganization={user?.organization}
+                  onChangeOrg={handleChangeBranch}
+                  branches={branchesData}
+                  onOpenCreate={() => handleOpenCreate(orgId)}
+                />
+                {/* {isLoading && branchesData && (
+                  <OrgSelectorDropdown
+                    currentOrgId={user?.branchId}
+                    currentOrganization={user?.branchId}
+                    onChangeOrg={handleChangeBranch}
+                    data={branchesData?.items}
+                    onOpenCreate={() => handleOpenCreate(orgId)}
+                  />
+                )} */}
+              </div>
             ) : (
               "องค์กรทั้งหมด"
             )
@@ -336,13 +384,9 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                   activeTab,
                 })
               : [
-                  <GlobalButton
-                    label="เพิ่ม"
-                    key="add-btn"
-                    disabled
-                    // type="submit"
-                    // form={activeTab}
-                  />,
+                  // <Link to="/setting-organization/create" key="create-link">
+                  //   <GlobalButton label="สร้างองค์กร" key="add-btn" />
+                  // </Link>,
                 ]
           }
           noneSticky={true}
@@ -431,11 +475,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                   disabled={!isEditing}
                   className={!isEditing ? "opacity-70" : ""}
                 >
-                  <SettingForm
-                    form={settingForm}
-                    organization
-                    isEditing={isEditing}
-                  />
+                  <SettingForm form={settingForm} isEditing={isEditing} />
                 </fieldset>
               </form>
             </TabsContent>

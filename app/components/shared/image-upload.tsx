@@ -94,7 +94,7 @@ export default function ImageUpload({
               type="button"
               onClick={() => !disabled && onChange("")}
               className={cn(
-                "absolute -top-2 -right-2 border rounded-full p-1 shadow transition",
+                "absolute -top-2 -right-2 rounded-full p-1 shadow transition",
                 disabled
                   ? "bg-muted text-muted-foreground/70 border-muted-foreground/20 cursor-not-allowed"
                   : "bg-white border-gray-300 hover:bg-gray-100"
