@@ -84,17 +84,21 @@ export default [
     // On-Boarding
     ...prefix("on-boarding", [
       index("routes/backoffice/on-boarding/index.tsx"),
-      route("management", "routes/backoffice/on-boarding/management/index.tsx"),
-      route(
-        "management/create",
-        "routes/backoffice/on-boarding/management/create.tsx"
-      ),
-      route(
-        "/management/single",
-        "routes/backoffice/on-boarding/management/single.tsx"
-      ),
-      route("team", "routes/backoffice/on-boarding/team/index.tsx"),
-      route("team/single", "routes/backoffice/on-boarding/team/single.tsx"),
+      ...prefix("management", [
+        index("routes/backoffice/on-boarding/management/index.tsx"),
+        route(
+          "create",
+          "routes/backoffice/on-boarding/management/create.tsx"
+        ),
+        route(
+          "single",
+          "routes/backoffice/on-boarding/management/single.tsx"
+        ),
+        ]),
+      ...prefix("team", [
+        index("routes/backoffice/on-boarding/team/index.tsx"),
+        route("single", "routes/backoffice/on-boarding/team/single.tsx"),
+        ]),
       route("setting", "routes/backoffice/on-boarding/setting.tsx"),
     ]),
 

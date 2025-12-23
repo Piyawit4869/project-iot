@@ -22,6 +22,13 @@ import { Button } from "react-day-picker";
 import { Trash } from "lucide-react";
 import { GlobalModal } from "~/components/shared/modal/modal";
 
+type CardFieldBlockProps = {
+    title: string;
+    description?: string;
+    control?: ReactNode;
+    children: ReactNode;
+  };
+
 export const Topic: React.FC<TopicContentProps> = ({ onDelete }) => {
   const formContent = useForm<ContentValues>({
     resolver: zodResolver(ContentSchema) as Resolver<ContentValues>,
@@ -57,13 +64,6 @@ export const Topic: React.FC<TopicContentProps> = ({ onDelete }) => {
   };
   const { isSubmitting } = formContent.formState;
 
-  type CardFieldBlockProps = {
-    title: string;
-    description?: string;
-    control?: ReactNode;
-    children: ReactNode;
-  };
-
   function CardFieldBlock({
     title,
     description,
@@ -89,7 +89,7 @@ export const Topic: React.FC<TopicContentProps> = ({ onDelete }) => {
   return (
     <Form {...formContent}>
       <form
-        id="Test"
+        id="topic"
         onSubmit={formContent.handleSubmit(onSubmit, (errors) => {
           const count = Object.keys(errors).length;
           if (count > 0) {
