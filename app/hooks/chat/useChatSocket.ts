@@ -29,10 +29,6 @@ export function useChatSocket({
         branchId: me?.branchId,
       });
 
-      if (msg.platform === "line") {
-        new Audio("/sounds/level-up.mp3").play();
-      }
-
       addMessage({
         ...msg,
         id: uuidv4(),

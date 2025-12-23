@@ -15,7 +15,6 @@ import {
   Clock,
   FileUp,
   Inbox,
-  MailWarning,
   Menu,
   MessagesSquare,
   MoreVertical,
@@ -41,6 +40,14 @@ import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { useMarkAsSpam } from "~/api/client/message/useMessage";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
+import { Avatar } from "~/components/ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
+
+type StatusKey = "unread" | "done" | "isProcess" | "isSpam" | "all";
 
 interface Props {
   handleChangeSelectedRoom: (room: any) => void;
@@ -83,8 +90,6 @@ export default function ChatlistSidebar({
 
   const { currentRoomId, addMessageAI, removeMessage } = useChat();
   const scrollRef = React.useRef<HTMLDivElement>(null);
-
-  type StatusKey = "unread" | "done" | "isProcess" | "isSpam" | "all";
 
   const handleScroll = () => {
     const el = scrollRef.current;
@@ -166,9 +171,12 @@ export default function ChatlistSidebar({
       socket.emit("rooms", `${me.branchId}`);
     }
 
-    console.log("all ", allRooms);
     socket.on("rooms", (room: any) => {
       console.log("rooms in", room);
+
+      // if (room && room?.latestMessage?.createdAt) {
+      //   new Audio("/sounds/level-up.mp3").play();
+      // }
 
       setAllRooms((prev) => {
         const merged = mergeRoomImmutable(prev, room);
@@ -207,28 +215,27 @@ export default function ChatlistSidebar({
 
   const resultStatus = compareText?.[select as StatusKey];
 
-  console.log({ allRooms });
-  console.log({ filterRoom });
-
   return (
     <aside className="h-full border-r dark:bg-background flex flex-col border-l">
       <div className="p-3 border-b flex flex-col">
-        <div className="flex justify-between px-0">
+        <div className="flex justify-between items-center px-0">
           <h2 className="text-lg font-semibold">แชท</h2>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Avatar className="w-[25px] h-[25px]">
+                <GlobalImage
+                  src="https://img.freepik.com/premium-vector/line-icon-vector-logo-set_1097694-1650.jpg"
+                  alt="avatar"
+                  className="rounded-full object-cover"
+                  notShowPreview
+                />
+              </Avatar>
+            </TooltipTrigger>
+            <TooltipContent>เชื่อมต่อกับแอพพลิเคขั่น LINE</TooltipContent>
+          </Tooltip>
         </div>
       </div>
-
-      {/* <GlobalButton // !! for tesing Audio form local path
-        key="save"
-        type="submit"
-        form="customer"
-        icon={<AudioLines />}
-        label={<span className="hidden sm:inline">ทดสอบเสียง</span>}
-        onClick={() => {
-          const audio = new Audio("/sounds/level-up-191997.mp3");
-          audio.play();
-        }}
-      /> */}
 
       <div ref={containerRef} className="relative min-w-[308px]">
         <Popover open={open} onOpenChange={setOpen}>
@@ -405,10 +412,14 @@ export default function ChatlistSidebar({
 
         {inputOpen &&
           (search !== "" ? (
-            filterRoom &&
-            filterRoom.length > 0 &&
-            filterRoom
+            allRooms &&
+            allRooms.length > 0 &&
+            allRooms
               .filter((r: any) => (select === "isSpam" ? r.isSpam : !r.isSpam))
+              .filter(
+                (r: any) =>
+                  !search || r.name.toLowerCase().includes(search.toLowerCase())
+              )
               .map((room: any, i: number) => {
                 return (
                   <ChatItem
@@ -524,10 +535,15 @@ export default function ChatlistSidebar({
           {isLoading ? (
             <LoadingSkeleton />
           ) : select !== "all" ? (
-            filterRoom.length > 0 ? (
-              filterRoom
+            allRooms.length > 0 ? (
+              allRooms
                 .filter((r: any) =>
                   select === "isSpam" ? r.isSpam : !r.isSpam
+                )
+                .filter(
+                  (r: any) =>
+                    !search ||
+                    r.name.toLowerCase().includes(search.toLowerCase())
                 )
                 .map((room: any, i: number) => (
                   <ChatItem
@@ -556,6 +572,10 @@ export default function ChatlistSidebar({
           ) : allRooms.length > 0 ? (
             allRooms
               .filter((r: any) => !r.isSpam)
+              .filter(
+                (r: any) =>
+                  !search || r.name.toLowerCase().includes(search.toLowerCase())
+              )
               .map((room: any, i: number) => (
                 <ChatItem
                   key={room?.id + i}
@@ -720,6 +740,13 @@ function ChatItem({
           alt={name}
           className="w-[40px] h-[40px] rounded-full object-cover"
         />
+        <Avatar className="w-[20px] h-[20px] absolute top-[-5px] right-0">
+          <GlobalImage
+            src="https://img.freepik.com/premium-vector/line-icon-vector-logo-set_1097694-1650.jpg"
+            alt="avatar"
+            className="rounded-full object-cover"
+          />
+        </Avatar>
 
         {!autoReadMsg && countUnreadMessage > 0 && (
           <span
@@ -746,14 +773,7 @@ function ChatItem({
                     <PopoverTrigger asChild>
                       <button
                         onClick={(e) => e.stopPropagation()}
-                        className="
-          opacity-0
-          group-hover:opacity-100
-          transition
-         cursor-pointer
-         hover:text-black
-
-        "
+                        className="opacity-0 group-hover:opacity-100 transition cursor-pointer hover:text-black"
                       >
                         <MoreVertical className="w-4 h-4 text-muted-foreground" />
                       </button>

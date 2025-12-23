@@ -1,5 +1,3 @@
-import React from "react";
-
 import ChatlistSidebar from "./chatlist-sidebar";
 import { useChatRoom } from "~/providers/chat/useChatRoom";
 
