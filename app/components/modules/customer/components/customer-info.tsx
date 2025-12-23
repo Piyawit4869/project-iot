@@ -68,7 +68,7 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
                     <ImageUpload
                       value={field.value || ""}
                       onChange={field.onChange}
-                      className="object-contain"
+                      className="w-full h-full object-cover rounded-md object-center"
                     />
                   </FormControl>
                   <FormMessage />

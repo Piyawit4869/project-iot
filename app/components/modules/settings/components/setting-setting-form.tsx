@@ -2,13 +2,19 @@ import React, { useEffect } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { GlobalFormField } from "~/components/shared/global-form";
 import WorkingHoursSection from "~/components/shared/workingHoursSection";
-import { Form } from "~/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "~/components/ui/form";
 import { SettingSchema, type SettingSchemaValues } from "~/schemas/settings";
 import { getRequiredPaths } from "~/utils/form-adapter";
 
 interface SettingFormProps {
-  form: UseFormReturn<SettingSchemaValues>;
-  organization: any;
+  form: UseFormReturn<any>;
+  organization?: any;
   isEditing: boolean;
 }
 
@@ -42,7 +48,7 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
   }, [organization, form]);
 
   return (
-    <div className="flex flex-col w-full space-y-8 p-8">
+    <div className="flex flex-col w-full space-y-8 px-8 py-4">
       <Form {...form}>
         <div className="gap-4 mb-6">
           <div className="mb-5">
@@ -56,7 +62,7 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
               type="select"
               checkFields={checkFields}
               placeholder="สว่าง"
-              // disable={isEditing}
+              disable={!isEditing}
               selectOptions={[
                 { label: "สว่าง", value: "light" },
                 { label: "มืด", value: "dark" },
@@ -69,6 +75,7 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
               type="select"
               checkFields={checkFields}
               placeholder="xs (12px)"
+              disable={!isEditing}
               // disable={pointer-events-none opacity-60 select-none}
               selectOptions={[
                 { label: "เล็กที่สุด", value: "extraSmall" },
@@ -85,7 +92,7 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
               type="select"
               checkFields={checkFields}
               placeholder="ไทย, อังกฤษ"
-              // disable={isEditing}
+              disable={!isEditing}
               selectOptions={[
                 { label: "ไทย", value: "TH" },
                 { label: "อังกฤษ", value: "EN" },
@@ -110,12 +117,27 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
           </div>
           <div className="mt-5">
             <fieldset
-              disabled={isEditing}
+              // disabled={isEditing}
               className={
-                isEditing ? "" : " pointer-events-none opacity-60 select-none"
+                isEditing ? "" : "pointer-events-none opacity-60 select-none"
               }
             >
-              <WorkingHoursSection value={organization} />
+              <FormField
+                control={form.control}
+                name={"setting.openDays"}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>เปิดใช้งานการตั้งค่า</FormLabel>
+                    <FormControl className="ml-4">
+                      <WorkingHoursSection
+                        form={form}
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
             </fieldset>
           </div>
         </div>

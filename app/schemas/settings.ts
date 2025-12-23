@@ -112,6 +112,89 @@ export const ConnectLineSchema = z.object({
 
 export type ConnectLineValues = z.infer<typeof ConnectLineSchema>;
 
+// --------------------- create org ---------------------
+
+/* ---------- Open Day ---------- */
+const WorkingHoursSchema = z.record(
+  z.enum([
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ]),
+  z.object({
+    open: z.string().optional(),
+    close: z.string().optional(),
+  })
+);
+/* ---------- Setting ---------- */
+export const SettingThemeSchema = z.object({
+  active: z.boolean(),
+  theme: z.enum(["light", "dark"]).optional(),
+  textDisplay: z.string().optional().nullable(),
+  defaultLanguage: z.enum(["TH", "EN"]).optional().nullable(),
+  openDays: WorkingHoursSchema,
+});
+
+/* ---------- Address ---------- */
+
+export const AddressSchema = z.object({
+  active: z.boolean(),
+  name: z.string().optional().nullable(),
+  building: z.string().optional().nullable(),
+  roomNo: z.string().optional().nullable(),
+  floorNo: z.string().optional().nullable(),
+  village: z.string().optional().nullable(),
+  villageNo: z.coerce.number().optional(),
+  houseNo: z.string().optional().nullable(),
+  alley: z.string().optional().nullable(),
+  road: z.string().optional().nullable(),
+  nation: z.string().optional().nullable(),
+  subDistrict: z.string().optional().nullable(),
+  city: z.string().optional().nullable(),
+  province: z.string().optional().nullable(),
+  postalCode: z.string().optional().nullable(),
+  note: z.string().optional().nullable(),
+  organizationId: z.string().optional().nullable(),
+});
+
+/* ---------- Main Branch ---------- */
+export const OrganizationSchema = z.object({
+  code: z.string().optional().nullable(),
+  active: z.boolean().optional().nullable(),
+  isMain: z.boolean().optional().nullable(),
+
+  status: z.string().optional().nullable(),
+  fromType: z.string().optional().nullable(),
+  taxId: z.string().optional().nullable(),
+  branchType: z.string().optional().nullable(),
+
+  openingDate: z.string().optional().nullable(), // หรือ .date() ถ้าแปลงก่อน
+  nameTh: z.string().optional().nullable(),
+  nameEn: z.string().optional().nullable(),
+  descriptionsTh: z.string().optional().optional().nullable(),
+  descriptionsEn: z.string().optional().optional().nullable(),
+  websiteUrl: z.string().optional().optional().nullable(),
+
+  registerVat: z.boolean(),
+
+  logoUrl: z.string().optional().nullable(),
+
+  setting: SettingThemeSchema,
+  address: AddressSchema,
+
+  organizationId: z.string().optional().nullable(),
+});
+
+/* ---------- Type ---------- */
+
+export type BranchesOrganization = z.infer<typeof OrganizationSchema>;
+export type Address = z.infer<typeof AddressSchema>;
+// ------------------------------------------
+
 export const ReplySchema = z.object({
   name: z.string().min(1, "กรุณากรอกชื่อ").max(30),
   description: z.string().optional(),
