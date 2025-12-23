@@ -165,7 +165,7 @@ export const fetchSearchUserBranches = async (
 ) => {
   try {
     const { data } = await ApiConfig.get(
-      `/crud/users/search/${groupId}/branch`,
+      `/crud/users/search/${groupId}/branches`,
       {
         params: search,
       }

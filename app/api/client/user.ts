@@ -170,7 +170,7 @@ export const useSearchUserOrgs = (search?: string) => {
 
 export const useGetUserBranches = (groupId: string, search?: string) => {
   return useQuery({
-    queryKey: ["get-org-branches", search],
+    queryKey: ["get-org-branches", search, groupId],
     queryFn: () => fetchSearchUserBranches(groupId, search),
     enabled: !!groupId,
   });
