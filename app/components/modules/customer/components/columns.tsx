@@ -149,7 +149,7 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
     // Codes
     {
       accessorKey: "customerCode",
-      header: "Code",
+      header: "โค้ด",
       enableSorting: true,
       cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
     },
@@ -170,7 +170,7 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
     },
     {
       accessorKey: "customerPlatform",
-      header: "Channel",
+      header: "ชื่อช่องทาง",
       enableSorting: true,
       cell: (info) => {
         const url = info.getValue() as string;
@@ -217,22 +217,22 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
     // Tags (badges)
     {
       accessorKey: "tags",
-      header: "Tags",
+      header: "แท็ก",
       minSize: 300,
       enableSorting: false,
       cell: (info) => {
         const tags = (info.getValue() as { name: string }[]) ?? [];
         if (!tags.length) return <span>ไม่มีข้อมูล</span>;
-        const maxShow = 3;
+        const maxShow = 2;
         return (
-          <div className="flex flex-wrap gap-1.5">
-            {tags.slice(0, maxShow).map((t) => (
-              <GlobalTagsBadge key={t.name} value={t.name} />
+          <div className="flex flex-wrap gap-1.5 w-30">
+            {tags.slice(0, maxShow).map((t) => ( 
+                <GlobalTagsBadge key={t.name} value={t.name}/>
             ))}
 
             {tags.length > maxShow && (
               <span
-                className="flex items-center justify-center rounded-xl border border-gray-300
+                className="flex items-center justify-center w-full rounded-xl border border-gray-300
                      px-3 py-1 text-sm font-medium bg-gray-100 text-gray-700"
               >
                 +{tags.length - maxShow}

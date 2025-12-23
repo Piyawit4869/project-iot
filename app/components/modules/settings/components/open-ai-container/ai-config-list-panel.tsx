@@ -5,6 +5,10 @@ import { useRouteLoaderData, useSearchParams } from "react-router";
 import { Input } from "~/components/ui/input";
 import { cn } from "~/lib/utils";
 import { useGetConnectionAiByBranch } from "~/api/client/settings";
+import { Separator } from "~/components/ui/separator";
+import { CardContent } from "~/components/ui/card";
+import { SkeletonLoading } from "~/components/shared/skeleton-loading";
+import { ChatbotSideBarSettingsSkeleton } from "../Skeleton/chatbot-sidebar-setting-skeleton";
 
 type AiConfigItem = {
   id: string;
@@ -63,12 +67,12 @@ export function AiConfigListPanel() {
   };
 
   return (
-    <div className="h-full bg-background rounded-md border overflow-hidden flex flex-col">
-      <div className="p-3 border-b">
-        <div className="font-semibold">รายการ Assistant</div>
+    <div className="h-full bg-background overflow-hidden flex flex-col p-3">
+      {/* <div className="p-3 border-b"> */}
+        {/* <div className="font-semibold">รายการ Assistant</div>
         <div className="text-xs text-muted-foreground">
           เลือก config เพื่อแก้ไข
-        </div>
+        </div> */}
 
         <Input
           className="mt-2"
@@ -76,13 +80,21 @@ export function AiConfigListPanel() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
-      </div>
+      {/* </div> */}
 
       <div className="flex-1 overflow-y-auto">
         {isLoading ? (
-          <div className="p-3 text-sm text-muted-foreground">กำลังโหลด...</div>
+            <CardContent className="space-y-4 mt-2">
+              <SkeletonLoading />
+              <SkeletonLoading />
+              <SkeletonLoading />
+            </CardContent>
         ) : filtered.length === 0 ? (
-          <div className="p-3 text-sm text-muted-foreground">ไม่พบข้อมูล</div>
+          <div className="p-3 text-sm text-muted-foreground text-center">
+            <Separator className="mb-2"/>
+            ไม่พบข้อมูล
+            <Separator className="mt-2"/>
+          </div>
         ) : (
           <div className="p-2 space-y-1">
             {filtered.map((it) => {

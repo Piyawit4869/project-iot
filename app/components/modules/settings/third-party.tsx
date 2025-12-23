@@ -68,9 +68,25 @@ function buildColumns(
       },
     },
     {
-      accessorKey: "name",
+      id: "actions",
       header: "ชื่อ",
-      cell: (info) => <span>{info.getValue() as string}</span>,
+      cell: ({ row }) => {
+        const task = row.original;
+        const status = row.original?.status;
+
+        return (
+          <div className="ml-7">
+            <Button
+              className="bg-transparent border-none shadow-none p-0 h-auto text-muted-foreground hover:text-blue-400 hover:underline hover:bg-transparent disabled:text-gray-400"
+              type="button"
+              onClick={() => onEdit(task)}
+              disabled={status === "inactive"}
+            >
+              <span>{task.name}</span>
+            </Button>
+          </div>
+        );
+      },
     },
     {
       accessorKey: "isConnected",
