@@ -46,6 +46,13 @@ const emptyQuestion = (id: number): Question => ({
   correctIndex: null,
 });
 
+type CardFieldBlockProps = {
+    title: string;
+    description?: string;
+    control?: ReactNode;
+    children: ReactNode;
+  };
+
 export const QuestionBuilder = () => {
   const [questions, setQuestions] = useState<Question[]>([emptyQuestion(1)]);
   const [answers, setAnswers] = useState<AnswerMap>({});
@@ -107,13 +114,6 @@ export const QuestionBuilder = () => {
     },
   });
 
-  type CardFieldBlockProps = {
-    title: string;
-    description?: string;
-    control?: ReactNode;
-    children: ReactNode;
-  };
-
   function CardFieldBlock({ title, description }: CardFieldBlockProps) {
     return (
       <section>
@@ -131,7 +131,7 @@ export const QuestionBuilder = () => {
 
   return (
     <Form {...formExam}>
-      <form id="exam" onSubmit={formExam.handleSubmit(onCreate)}>
+      <form id="question" onSubmit={formExam.handleSubmit(onCreate)}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 bg-gray-100">
           <div className="bg-white rounded-xl p-6 shadow space-y-6">
             <h2 className="font-semibold text-lg">คำถาม</h2>

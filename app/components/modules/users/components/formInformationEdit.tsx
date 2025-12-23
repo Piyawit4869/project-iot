@@ -57,12 +57,10 @@ export interface UserFormProfileProps {
   data?: Partial<UsersFormValues>;
   loading?: boolean;
   roles: any;
-  // departments: any;
 }
 
 export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
   form,
-  // departments,
   roles,
   loading = false,
 }) => {
@@ -71,7 +69,6 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
   const [search, setSearch] = React.useState("");
   const [openSub, setOpenSub] = React.useState(false);
 
-  // const userDepartments = Array.isArray(departments) ? departments : [];
   const userRoles = Array.isArray(roles) ? roles : [];
 
   const filtered = userRoles.filter((item: any) => {
