@@ -246,7 +246,13 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <RequiredLabel>เพศ</RequiredLabel>
-                  <Select
+                  <RadioCardGroup
+                    options={gender}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    columns={3}
+                  />
+                  {/* <Select
                     value={field.value || ""}
                     onValueChange={field.onChange}
                   >
@@ -264,7 +270,7 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
                         );
                       })}
                     </SelectContent>
-                  </Select>
+                  </Select> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -305,7 +311,8 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
                 </FormItem>
               )}
             />
-
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
             <FormField
               control={form.control}
               name="consentPii"
@@ -322,6 +329,8 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
                 </FormItem>
               )}
             />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-5">
             <FormField
               control={form.control}
               name="profile.taxId"
@@ -334,13 +343,16 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
                     <InputNumberBox
                       value={field.value || ""}
                       onChange={field.onChange}
-                      length={13}
+                      groups={[1, 4, 5, 2, 1]}
+                      format="-"
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="customerType"
@@ -415,11 +427,11 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
                 <FormItem>
                   <RequiredLabel>เบอร์โทรศัพท์ (ตัวเลขเท่านั้น)</RequiredLabel>
                   <FormControl className="w-full">
-                    <Input
+                    <InputNumberBox
                       value={field.value || ""}
-                      placeholder="กรอกเบอร์โทรศัพท์ เช่น 0912345678"
-                      onChange={onlyNumber(field)}
-                      maxLength={10}
+                      onChange={field.onChange}
+                      groups={[3, 3, 4]}
+                      format="-"
                     />
                   </FormControl>
                   <FormMessage />

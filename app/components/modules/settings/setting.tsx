@@ -397,7 +397,10 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                   disabled={!isEditing}
                   className={!isEditing ? "opacity-70" : ""}
                 >
-                  <SettingOrganizationForm form={orgForm} />
+                  <SettingOrganizationForm
+                    form={orgForm}
+                    isLoading={isRefetching}
+                  />
                 </fieldset>
               </form>
             </TabsContent>
@@ -411,7 +414,10 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                   disabled={!isEditing}
                   className={!isEditing ? "opacity-70" : ""}
                 >
-                  <SettingAddressForm form={addressForm} />
+                  <SettingAddressForm
+                    form={addressForm}
+                    // isLoading={isRefetching}
+                  />
                 </fieldset>
               </form>
             </TabsContent>

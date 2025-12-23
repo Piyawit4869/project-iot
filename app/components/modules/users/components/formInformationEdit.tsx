@@ -46,6 +46,9 @@ import { getRequiredPaths } from "~/utils/form-adapter";
 import { nationalityMap, religionMap } from "~/initData/user-initData";
 import ChangePassword from "~/components/shared/change-password";
 import { OrganizationSelector } from "./formSelectOrganization";
+import { RadioCardGroup } from "~/components/shared/global-radio-card";
+import { gender, prefix } from "~/initData/customer-initData";
+import { InputNumberBox } from "~/components/shared/input-number-box";
 
 type OptionItem = { id: string; name: string; active?: boolean };
 
@@ -341,39 +344,26 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
               </div>
 
               <h1 className="font-bold">ข้อมูลส่วนตัว</h1>
-              <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className=" grid grid-cols-1 md:grid-cols-1 gap-5">
                 <FormField
                   control={form.control}
-                  name="profile.nickName"
+                  name="profile.prefix"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>ชื่อเล่น</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="กรอกชื่อเล่น"
-                          {...field}
-                          value={field.value ?? undefined}
-                        />
-                      </FormControl>
+                      <RequiredLabel>คำนำหน้า</RequiredLabel>
 
+                      <RadioCardGroup
+                        options={prefix}
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                        columns={3}
+                      />
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <GlobalFormField
-                  control={form.control}
-                  name="profile.prefix"
-                  label="คำนำหน้า"
-                  type="select"
-                  placeholder="นาย, นาง, นางสาว"
-                  checkFields={checkFields}
-                  selectOptions={[
-                    { label: "นาย", value: "mr" },
-                    { label: "นาง", value: "mrs" },
-                    { label: "นางสาว", value: "ms" },
-                  ]}
-                />
-
+              </div>
+              <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
                 <FormField
                   control={form.control}
                   name="profile.firstName"
@@ -461,19 +451,25 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 /> */}
-                <GlobalFormField
+                <FormField
                   control={form.control}
-                  name="profile.gender"
-                  label="เพศ"
-                  type="select"
-                  placeholder="ชาย / หญิง"
-                  checkFields={checkFields}
-                  selectOptions={[
-                    { label: "ชาย", value: "male" },
-                    { label: "หญิง", value: "female" },
-                    { label: "ไม่ระบุ", value: "not_specified" },
-                  ]}
+                  name="profile.nickName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ชื่อเล่น</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="กรอกชื่อเล่น"
+                          {...field}
+                          value={field.value ?? undefined}
+                        />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
+
                 <FormField
                   control={form.control}
                   name="profile.birthDate"
@@ -490,6 +486,42 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
+              </div>
+              <div className=" grid grid-cols-1 md:grid-cols-1 gap-5 mt-4">
+                <FormField
+                  control={form.control}
+                  name="profile.gender"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>เพศ</FormLabel>
+                      <FormControl>
+                        <RadioCardGroup
+                          options={gender}
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          columns={3}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* <GlobalFormField
+                  control={form.control}
+                  name="profile.gender"
+                  label="เพศ"
+                  type="select"
+                  placeholder="ชาย / หญิง"
+                  checkFields={checkFields}
+                  selectOptions={[
+                    { label: "ชาย", value: "male" },
+                    { label: "หญิง", value: "female" },
+                    { label: "ไม่ระบุ", value: "not_specified" },
+                  ]}
+                /> */}
+              </div>
+              <div className=" grid grid-cols-1 md:grid-cols-1 gap-5 mt-4">
                 <FormField
                   control={form.control}
                   name="profile.phone"
@@ -497,16 +529,19 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                     <FormItem>
                       <FormLabel>เบอร์โทรศัพท์</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="กรอกเบอร์โทร"
-                          {...field}
-                          value={field.value ?? undefined}
+                        <InputNumberBox
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          groups={[3, 3, 4]}
+                          format="-"
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+              </div>
+              <div className=" grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
                 <FormField
                   control={form.control}
                   name="profile.age"
@@ -596,6 +631,7 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="profile.startWorkDate"
@@ -628,6 +664,8 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
+              </div>
+              <div className=" grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
                 <FormField
                   control={form.control}
                   name="profile.taxId"
@@ -635,10 +673,11 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                     <FormItem>
                       <FormLabel>เลขประจำตัวผู้เสียภาษี</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="กรอกเลขประจำตัวผู้เสียภาษี"
-                          {...field}
-                          value={field.value ?? undefined}
+                        <InputNumberBox
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          groups={[1, 4, 5, 2, 1]}
+                          format="-"
                         />
                       </FormControl>
                       <FormMessage />

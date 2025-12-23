@@ -70,7 +70,7 @@ export const useGetOrganizations = () =>
 
 export const useGetOrganization = (id: string) =>
   useQuery({
-    queryKey: ["organization-detail"],
+    queryKey: ["organization-detail", id],
     queryFn: () => fetchGetOrganizationDetail(id),
     enabled: !!id,
   });

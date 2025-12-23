@@ -47,6 +47,7 @@ export type ChatRoom = {
   latestMessage?: LatestMessage | null;
   done: boolean;
   isProcess: boolean;
+  isSpam: boolean;
   updatedAt?: string | null;
 };
 
@@ -67,6 +68,7 @@ type IncomingRoomPayload = {
   updatedAt?: string;
   done: boolean;
   isProcess: boolean;
+  isSpam: boolean;
   isUpdateRoomDetails?: boolean;
   isAiReply?: boolean;
 };
@@ -79,6 +81,9 @@ export const mergeRoomImmutable = (
   if (!incomingId) {
     return sortingChatRoomByLatestTime(allRooms);
   }
+
+  console.log({ incoming });
+
   //Check new room not update when message is incomming wrong body
   if (incoming.hasOwnProperty("isAiReply")) {
     return sortingChatRoomByLatestTime(allRooms);
@@ -112,6 +117,7 @@ export const mergeRoomImmutable = (
         updatedAt: pick(incoming.updatedAt, prev.updatedAt ?? null),
         done: pick(incoming.done, prev.done),
         isProcess: pick(incoming.isProcess, prev.isProcess),
+        isSpam: pick(incoming.isSpam, prev.isSpam),
         customer: incoming.customer
           ? { ...(prev.customer ?? null), ...incoming.customer }
           : (prev.customer ?? null),
@@ -120,7 +126,11 @@ export const mergeRoomImmutable = (
       const next = allRooms.slice();
       next[idx] = merged;
 
-      return sortingChatRoomByLatestTime(next);
+      console.log({ next });
+      const result = sortingChatRoomByLatestTime(next);
+
+      console.log({ result });
+      return result;
     }
 
     const merged: ChatRoom = {
@@ -141,6 +151,7 @@ export const mergeRoomImmutable = (
       updatedAt: pick(incoming.updatedAt, prev.updatedAt ?? null),
       done: pick(incoming.done, prev.done ?? null),
       isProcess: pick(incoming.isProcess, prev.isProcess ?? null),
+      isSpam: pick(incoming.isSpam, prev.isSpam ?? null),
       customer: incoming.customer
         ? { ...(prev.customer ?? null), ...incoming.customer }
         : (prev.customer ?? null),
@@ -148,6 +159,7 @@ export const mergeRoomImmutable = (
 
     const without = allRooms.slice(0, idx).concat(allRooms.slice(idx + 1));
     const finalItems = [merged, ...without];
+    console.log({ merged });
 
     return sortingChatRoomByLatestTime(finalItems);
   }
@@ -167,6 +179,7 @@ export const mergeRoomImmutable = (
     latestMessage: incoming.latestMessage ?? null,
     done: incoming.done ?? false,
     isProcess: incoming.isProcess ?? false,
+    isSpam: incoming.isSpam ?? false,
     updatedAt: incoming.updatedAt ?? new Date().toISOString(),
   };
 
@@ -321,6 +334,8 @@ export const ChatRoomProvider = ({
   const [search, setSearch] = React.useState<string>("");
   const [select, setSelect] = React.useState<string>("all");
 
+  console.log({ select });
+
   const debouncedSearch = useDebounce(search);
   const debouncedSearchSelectKey = useDebounce(select);
 
@@ -350,6 +365,8 @@ export const ChatRoomProvider = ({
   const [customerInfoOpen, setCustomerInfoOpen] = React.useState(true);
   const [onSelectRoom, setOnSelectRoom] = React.useState<boolean>(false);
   const [autoReadMsg, setAutoReadMsg] = React.useState<boolean>(false);
+
+  console.log({ chatRooms });
 
   const filterRoom = React.useMemo(() => {
     if ((select === "" && search === "") || !chatRooms) return [];
