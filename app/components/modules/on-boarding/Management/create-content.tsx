@@ -1,5 +1,3 @@
-"use client";
-
 import { TabControl } from "~/components/shared/tab-control";
 import { Plus, Save, Settings } from "lucide-react";
 import { DataTable } from "~/components/shared/data-table";
