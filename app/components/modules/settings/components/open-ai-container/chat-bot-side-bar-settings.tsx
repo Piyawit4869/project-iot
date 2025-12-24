@@ -38,6 +38,7 @@ export const ChatbotSideBarSettings: React.FC<ChatbotSideBarSettingsProps> = (
               <FormLabel>การใช้งาน เปิด/ปิด</FormLabel>
               <FormControl>
                 <Switch
+                  defaultChecked
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
@@ -74,11 +75,62 @@ export const ChatbotSideBarSettings: React.FC<ChatbotSideBarSettingsProps> = (
               <FormControl>
                 <Textarea
                   placeholder="Style, tone, context, etc."
-                  className="min-h-[200px] bg-white dark:bg-background"
+                  className="min-h-[100px] bg-white dark:bg-background"
                   {...field}
+                  value={field.value ?? ""}
                 />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="note"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>โน้ต</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Style, tone, context, etc."
+                  className="min-h-[100px] bg-white dark:bg-background"
+                  {...field}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="remark"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>หมายเหตุ</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Style, tone, context, etc."
+                  className="min-h-[100px] bg-white dark:bg-background"
+                  {...field}
+                  value={field.value ?? ""}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="defaultIsAiReply"
+          render={({ field }) => (
+            <FormItem className="flex items-center justify-between">
+              <FormLabel className="mb-0">File Search</FormLabel>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
             </FormItem>
           )}
         />

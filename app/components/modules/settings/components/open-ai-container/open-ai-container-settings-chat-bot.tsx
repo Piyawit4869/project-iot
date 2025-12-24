@@ -42,13 +42,14 @@ export const OpenAiContainerSettingsChatBot: React.FC<
   const id = sp.get("id") ?? "";
 
   const [showList, setShowList] = useState(true);
-
+  const [isAdding, setIsAdding] = React.useState(false);
 
   const { mutate: UpdateConnectionAi } = useUpdateConnectionAi(String(id));
   const { refetch: refetchChatAI } = useGetConnectionAi(String(id));
   const { user } = useRouteLoaderData("root") as any;
 
   const { data } = useGetConnectionAi(id ?? "");
+
   const chatroomConfigId = data?.chatroomConfigId;
 
   const { addMessageAI } = useChat();
@@ -57,6 +58,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
 
   const form = useForm<ConnectAiValues>({
     resolver: zodResolver(ConnectAiSchema) as Resolver<ConnectAiValues>,
+    defaultValues: {},
   });
 
   const onSubmit = (formData: ConnectAiValues) => {
@@ -239,90 +241,92 @@ export const OpenAiContainerSettingsChatBot: React.FC<
         </div>
       </div> */}
 
-    <div className="flex h-full w-full gap-2">
-          <div
-            className={cn(
-              "bg-background rounded-md border overflow-hidden transition-all duration-300 flex",
-              showList ? "w-[25%] min-w-[240px] flex-col" : "w-[44px] items-center justify-center"
-            )}
-          >
-            {showList ? (
-              <>
-                {/* HEADER */}
-                <div className="p-3 border-b flex items-center justify-between">
-                  <div>
-                    <div className="font-semibold">รายการ Thread</div>
-                    <div className="text-xs text-muted-foreground">
-                      เลือก config เพื่อแก้ไข
-                    </div>
-                  </div>
-
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={() => setShowList(false)}
-                  >
-                    <ChevronLeft />
-                  </Button>
-                </div>
-
-                {/* CONTENT */}
-                <div className="flex-1 overflow-y-auto">
-                  <AiConfigListPanel />
-                </div>
-              </>
-            ) : (
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() => setShowList(true)}
-                className="h-full flex items-start pt-6"
-              >
-                <ChevronRight />
-              </Button>
-            )}
-          </div>
-
-          {/* MIDDLE : ROME Assistant */}
-          <div
-            className={`${
-              showList ? "w-[45%]" : "w-[70%]"
-            } transition-all duration-500`}
-          >
-            <div className="h-full bg-background rounded-md border flex flex-col">
+      <div className="flex h-full w-full gap-2">
+        <div
+          className={cn(
+            "bg-background rounded-md border overflow-hidden transition-all duration-300 flex",
+            showList
+              ? "w-[25%] min-w-[240px] flex-col"
+              : "w-[44px] items-center justify-center"
+          )}
+        >
+          {showList ? (
+            <>
+              {/* HEADER */}
               <div className="p-3 border-b flex items-center justify-between">
                 <div>
-                  <div className="font-semibold">ROME Assistant</div>
+                  <div className="font-semibold">รายการ Thread</div>
                   <div className="text-xs text-muted-foreground">
-                    ทดสอบการคุยและดู output
+                    เลือก config เพื่อแก้ไข
                   </div>
                 </div>
+
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => setShowList(false)}
+                >
+                  <ChevronLeft />
+                </Button>
               </div>
 
-              <div className="h-full flex-1 overflow-y-auto p-3">
-                <ChatBotChatMessagesAndConfig
-                  chatRoomId={chatroomConfigId}
-                  searchPrompt={firstTimeMessage}
-                  data={data}
-                  autoScroll={autoScroll}
-                  setAutoScroll={setAutoScroll}
-                />
+              {/* CONTENT */}
+              <div className="flex-1 overflow-y-auto">
+                <AiConfigListPanel />
               </div>
-            </div>
-          </div>
+            </>
+          ) : (
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => setShowList(true)}
+              className="h-full flex items-start pt-6"
+            >
+              <ChevronRight />
+            </Button>
+          )}
+        </div>
 
-          {/* RIGHT : การตั้งค่าผู้ช่วย */}
-          <div className="w-[30%] min-w-[300px]">
-            <div className="h-full bg-background rounded-md border flex flex-col">
-              <div className="p-3 border-b">
-                <div className="font-semibold">การตั้งค่าผู้ช่วย</div>
+        {/* MIDDLE : ROME Assistant */}
+        <div
+          className={`${
+            showList ? "w-[45%]" : "w-[70%]"
+          } transition-all duration-500`}
+        >
+          <div className="h-full bg-background rounded-md border flex flex-col">
+            <div className="p-3 border-b flex items-center justify-between">
+              <div>
+                <div className="font-semibold">ROME Assistant</div>
                 <div className="text-xs text-muted-foreground">
-                  ตั้งค่า model, policy, และ system instructions
+                  ทดสอบการคุยและดู output
                 </div>
               </div>
+            </div>
 
-              <div className="flex-1 overflow-y-auto p-3">
-                <FormProvider {...form}>
+            <div className="h-full flex-1 overflow-y-auto p-3">
+              <ChatBotChatMessagesAndConfig
+                chatRoomId={chatroomConfigId}
+                searchPrompt={firstTimeMessage}
+                data={data}
+                autoScroll={autoScroll}
+                setAutoScroll={setAutoScroll}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT : การตั้งค่าผู้ช่วย */}
+        <div className="w-[30%] min-w-[300px]">
+          <div className="h-full bg-background rounded-md border flex flex-col">
+            <div className="p-3 border-b">
+              <div className="font-semibold">การตั้งค่าผู้ช่วย</div>
+              <div className="text-xs text-muted-foreground">
+                ตั้งค่า model, policy, และ system instructions
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-3">
+              <FormProvider {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
                   id="config-ai"
@@ -331,10 +335,10 @@ export const OpenAiContainerSettingsChatBot: React.FC<
                   <ChatbotSideBarSettings form={form} id={id} />
                 </form>
               </FormProvider>
-              </div>
             </div>
           </div>
         </div>
+      </div>
     </div>
   );
 };
