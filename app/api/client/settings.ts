@@ -320,7 +320,7 @@ export const useLineCardContentPaginate = ({
 
 export const useLineSendCardContent = (id: string) => {
   return useMutation({
-    mutationFn: async (payload: { to?: string }) =>
+    mutationFn: async (payload: { to?: string; chatRoomId?: string }) =>
       sendCardContent(id, payload),
   });
 };

@@ -758,9 +758,11 @@ function PreviewPane({ item }: { item?: any }) {
 export default function LineTemplatePickerModal({
   handleSelectChange,
   subId,
+  chatRoomId,
 }: {
   handleSelectChange: React.Dispatch<React.SetStateAction<any>>;
   subId?: string;
+  chatRoomId: string;
 }) {
   const { data, refetch, isLoading } = useLineMassagePaginate({
     pageIndex: 1,
@@ -861,7 +863,7 @@ export default function LineTemplatePickerModal({
 
   const sendCardApi = async (id: string) => {
     lineSendCard(
-      { to: subId },
+      { to: subId, chatRoomId },
       {
         onSuccess: () => {
           setOpen(false);

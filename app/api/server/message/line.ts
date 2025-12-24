@@ -43,7 +43,10 @@ export const createReplyMessage = async (payload: TeamMessageCreateDTO) => {
   }
 };
 
-export const sendCardContent = async (id: string, payload: { to?: string }) => {
+export const sendCardContent = async (
+  id: string,
+  payload: { to?: string; chatRoomId?: string }
+) => {
   try {
     const res = await ApiConfig.post(
       `/thirdparty/line/contents/push-to-line/${id}`,
