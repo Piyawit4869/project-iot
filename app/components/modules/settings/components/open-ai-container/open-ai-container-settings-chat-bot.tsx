@@ -21,20 +21,22 @@ import { ChatBotChatMessagesAndConfig } from "./chat-bot-chat-messages-and-confi
 import { useChat } from "~/providers/chat/useChat";
 import { socketConfig } from "~/lib/sockets";
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
-import { ChevronLeft, ChevronRight, Save, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, Save, X } from "lucide-react";
 
 // ✅ NEW
 import { AiConfigListPanel } from "./ai-config-list-panel"; // <- ปรับ path ให้ตรงไฟล์ที่คุณสร้าง
 import { cn } from "~/lib/utils";
+import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 
 interface OpenAiContainerSettingsChatBotProps {
   api: string;
+  isLoading: boolean;
 }
 
 export const OpenAiContainerSettingsChatBot: React.FC<
   OpenAiContainerSettingsChatBotProps
 > = (props) => {
-  const { api } = props;
+  const { api, isLoading } = props;
 
   const [sp] = useSearchParams();
   const id = sp.get("id") ?? "";
@@ -148,19 +150,19 @@ export const OpenAiContainerSettingsChatBot: React.FC<
         title="ROME Assistant"
         noneSticky={true}
         backpath="/setting-organization/third-party"
-        // buttons={[
-        //   <Button
-        //     key="save-btn"
-        //     type="submit"
-        //     form="config-ai"
-        //     className="w-full"
-        //     disabled={!id} // กันเคสยังไม่ได้เลือก config
-        //   >
-        //     <>
-        //       <Save /> บันทึก
-        //     </>
-        //   </Button>,
-        // ]}
+        buttons={[
+          <Button
+            key="save-btn"
+            type="reset"
+            form="config-ai"
+            className="w-full"
+            disabled={!id} // กันเคสยังไม่ได้เลือก config
+          >
+            <>
+              <Save /> บันทึก
+            </>
+          </Button>,
+        ]}
       />
 
       {/* ✅ 3 Panels Layout */}
@@ -274,7 +276,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
                 size="icon"
                 variant="ghost"
                 onClick={() => setShowList(true)}
-                className="h-full flex items-start mt-10"
+                className="h-full flex items-start pt-6"
               >
                 <ChevronRight />
               </Button>
@@ -299,12 +301,12 @@ export const OpenAiContainerSettingsChatBot: React.FC<
 
               <div className="h-full flex-1 overflow-y-auto p-3">
                 <ChatBotChatMessagesAndConfig
-                chatRoomId={chatroomConfigId}
-                searchPrompt={firstTimeMessage}
-                data={data}
-                autoScroll={autoScroll}
-                setAutoScroll={setAutoScroll}
-              />
+                  chatRoomId={chatroomConfigId}
+                  searchPrompt={firstTimeMessage}
+                  data={data}
+                  autoScroll={autoScroll}
+                  setAutoScroll={setAutoScroll}
+                />
               </div>
             </div>
           </div>
