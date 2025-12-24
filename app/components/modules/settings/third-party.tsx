@@ -68,7 +68,7 @@ function buildColumns(
       },
     },
     {
-      id: "actions",
+      id: "name",
       header: "ชื่อ",
       cell: ({ row }) => {
         const task = row.original;
