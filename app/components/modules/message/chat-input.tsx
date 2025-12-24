@@ -14,6 +14,7 @@ import LineTemplatePickerModal from "./line-template-picker-modal";
 import { GlobalImage } from "~/components/shared/global-image";
 import { StickerSelectorBar } from "./line-sticker";
 import { ReplyContentBar } from "./reply-content-bar";
+import { ChatSelectLocation } from "./chat-select-location";
 
 const getLabelFromType = (type: string): MessageLabelType => {
   switch (type) {
@@ -99,6 +100,11 @@ type PendingImage = {
   type: "image" | "video" | "audio" | "file";
 };
 
+export interface LatLong {
+  lat: number;
+  lng: number;
+}
+
 export default function ChatInput({
   selectedRoom,
   customer,
@@ -120,6 +126,9 @@ export default function ChatInput({
   const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const [mapAddress, setMapAddress] = React.useState<string>("");
+  const [latlng, setLatLng] = React.useState<LatLong | undefined>(undefined);
 
   const { chatRoomId: customerChatRoomId } =
     (customer && customer.chatRoomDetail) || {};
@@ -344,6 +353,32 @@ export default function ChatInput({
     });
   };
 
+  const handleSendLocation = React.useCallback(() => {
+    try {
+      const [topMessage, ...rest] = mapAddress.split(",");
+
+      const message = topMessage.trim();
+      const longAddress = rest.join(",").trim();
+
+      send({
+        chatRoomId: selectedRoom.id,
+        lineSubId: customer?.lineSubId ?? "",
+        message,
+        messageType: "location",
+        isAiReply: false,
+        recipient: customer?.name ?? "Unknown",
+        platform: "backoffice",
+        messageLabel: MessageLabelType.SENDLOCATION,
+        quoteToken: replyRefMessage?.quoteToken || "",
+        address: longAddress,
+        latitude: `${(latlng && latlng.lat) || ""}`,
+        longitude: `${(latlng && latlng.lng) || ""}`,
+      });
+    } catch (error) {
+      console.error("error form send location [handleSendLocation]", error);
+    }
+  }, [mapAddress]);
+
   if (!selectedRoom?.id) return <div />;
 
   return (
@@ -424,6 +459,14 @@ export default function ChatInput({
       />
 
       <div className="flex justify-end gap-2 pt-1">
+        <ChatSelectLocation
+          address={mapAddress}
+          latlng={latlng}
+          setAddress={setMapAddress}
+          setLatLng={setLatLng}
+          handleSendLocation={handleSendLocation}
+        />
+
         <Button
           variant="ghost"
           size="icon"
@@ -433,6 +476,7 @@ export default function ChatInput({
         >
           <Smile className="w-4 h-4" />
         </Button>
+
         <LineTemplatePickerModal
           handleSelectChange={setInput}
           subId={subId}
