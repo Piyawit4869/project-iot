@@ -48,7 +48,7 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
       </CardHeader> */}
 
       {loading ? (
-        <CardContent className="space-y-4 ">
+        <CardContent className="space-y-4">
           <SkeletonLoading />
           <SkeletonLoading />
           <SkeletonLoading />

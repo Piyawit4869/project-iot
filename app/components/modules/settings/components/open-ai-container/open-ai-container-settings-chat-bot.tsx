@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FormProvider, useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouteLoaderData, useSearchParams } from "react-router";
@@ -21,10 +21,11 @@ import { ChatBotChatMessagesAndConfig } from "./chat-bot-chat-messages-and-confi
 import { useChat } from "~/providers/chat/useChat";
 import { socketConfig } from "~/lib/sockets";
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
-import { Save } from "lucide-react";
+import { ChevronLeft, ChevronRight, Save, X } from "lucide-react";
 
 // ✅ NEW
 import { AiConfigListPanel } from "./ai-config-list-panel"; // <- ปรับ path ให้ตรงไฟล์ที่คุณสร้าง
+import { cn } from "~/lib/utils";
 
 interface OpenAiContainerSettingsChatBotProps {
   api: string;
@@ -37,6 +38,9 @@ export const OpenAiContainerSettingsChatBot: React.FC<
 
   const [sp] = useSearchParams();
   const id = sp.get("id") ?? "";
+
+  const [showList, setShowList] = useState(true);
+
 
   const { mutate: UpdateConnectionAi } = useUpdateConnectionAi(String(id));
   const { refetch: refetchChatAI } = useGetConnectionAi(String(id));
@@ -160,98 +164,175 @@ export const OpenAiContainerSettingsChatBot: React.FC<
       />
 
       {/* ✅ 3 Panels Layout */}
-      <div className="h-[calc(100vh-theme(spacing.32))] w-full px-2">
-        {/* container */}
+      {/* ✅ 3 Panels Layout (NO Resizable) */}
+      {/* <div className="h-[calc(100vh-theme(spacing.32))] w-full px-2">
         <div className="h-full w-full rounded-xl border bg-muted/40 overflow-hidden">
-          <ResizablePanelGroup direction="horizontal" className="h-full">
-            {/* LEFT */}
-            <ResizablePanel minSize={16} defaultSize={22} maxSize={28}>
-              <div className="h-full bg-background">
-                {/* sticky header */}
-                <div className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur px-4 py-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-sm font-semibold">
-                        รายการ Assistant
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        เลือก config เพื่อแก้ไข
-                      </div>
-                    </div>
+          <div className="flex h-full w-full">
+
+            LEFT
+            <div className="w-[22%] min-w-[16%] max-w-[28%] h-full bg-background border-r">
+              <div className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur px-4 py-3">
+                <div>
+                  <div className="text-sm font-semibold">รายการ Assistant</div>
+                  <div className="text-xs text-muted-foreground">
+                    เลือก config เพื่อแก้ไข
                   </div>
                 </div>
+              </div>
 
-                {/* content (scroll) */}
-                <div className="h-[calc(100%-56px)] overflow-y-auto p-3">
+              <div className="h-[calc(100%-56px)] overflow-y-auto p-3">
+                <AiConfigListPanel />
+              </div>
+            </div>
+
+            MIDDLE
+            <div className="w-[45%] min-w-[38%] h-full bg-background border-r">
+              <div className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur px-4 py-3">
+                <div>
+                  <div className="text-sm font-semibold">การตั้งค่าผู้ช่วย</div>
+                  <div className="text-xs text-muted-foreground">
+                    ตั้งค่า model, policy, และ system instructions
+                  </div>
+                </div>
+              </div>
+
+              <div className="h-[calc(100%-56px)] overflow-y-auto p-3">
+                <FormProvider {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    id="config-ai"
+                    className="h-full"
+                  >
+                    <ChatbotSideBarSettings form={form} id={id} />
+                  </form>
+                </FormProvider>
+              </div>
+            </div>
+
+            RIGHT
+            <div className="flex-1 h-full bg-background flex flex-col">
+              <div className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur px-4 py-3">
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold truncate">
+                    {assistantName || "ROME Assistant"}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    ทดสอบการคุยและดู output
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex-1 overflow-y-auto">
+                <ChatBotChatMessagesAndConfig
+                  chatRoomId={chatroomConfigId}
+                  searchPrompt={firstTimeMessage}
+                  data={data}
+                  autoScroll={autoScroll}
+                  setAutoScroll={setAutoScroll}
+                />
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div> */}
+
+    <div className="flex h-full w-full gap-2">
+          <div
+            className={cn(
+              "bg-background rounded-md border overflow-hidden transition-all duration-300 flex",
+              showList ? "w-[25%] min-w-[240px] flex-col" : "w-[44px] items-center justify-center"
+            )}
+          >
+            {showList ? (
+              <>
+                {/* HEADER */}
+                <div className="p-3 border-b flex items-center justify-between">
+                  <div>
+                    <div className="font-semibold">รายการ Thread</div>
+                    <div className="text-xs text-muted-foreground">
+                      เลือก config เพื่อแก้ไข
+                    </div>
+                  </div>
+
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => setShowList(false)}
+                  >
+                    <ChevronLeft />
+                  </Button>
+                </div>
+
+                {/* CONTENT */}
+                <div className="flex-1 overflow-y-auto">
                   <AiConfigListPanel />
                 </div>
-              </div>
-            </ResizablePanel>
+              </>
+            ) : (
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => setShowList(true)}
+                className="h-full flex items-start mt-10"
+              >
+                <ChevronRight />
+              </Button>
+            )}
+          </div>
 
-            <ResizableHandle withHandle className="bg-border" />
-
-            {/* MIDDLE */}
-            <ResizablePanel minSize={38} defaultSize={45}>
-              <div className="h-full bg-background">
-                <div className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur px-4 py-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-sm font-semibold">
-                        การตั้งค่าผู้ช่วย
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        ตั้งค่า model, policy, และ system instructions
-                      </div>
-                    </div>
+          {/* MIDDLE : ROME Assistant */}
+          <div
+            className={`${
+              showList ? "w-[45%]" : "w-[70%]"
+            } transition-all duration-500`}
+          >
+            <div className="h-full bg-background rounded-md border flex flex-col">
+              <div className="p-3 border-b flex items-center justify-between">
+                <div>
+                  <div className="font-semibold">ROME Assistant</div>
+                  <div className="text-xs text-muted-foreground">
+                    ทดสอบการคุยและดู output
                   </div>
                 </div>
+              </div>
 
-                <div className="h-[calc(100%-56px)] overflow-y-auto p-3">
-                  <FormProvider {...form}>
-                    <form
-                      onSubmit={form.handleSubmit(onSubmit)}
-                      id="config-ai"
-                      className="h-full"
-                    >
-                      <ChatbotSideBarSettings form={form} id={id} />
-                    </form>
-                  </FormProvider>
+              <div className="h-full flex-1 overflow-y-auto p-3">
+                <ChatBotChatMessagesAndConfig
+                chatRoomId={chatroomConfigId}
+                searchPrompt={firstTimeMessage}
+                data={data}
+                autoScroll={autoScroll}
+                setAutoScroll={setAutoScroll}
+              />
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT : การตั้งค่าผู้ช่วย */}
+          <div className="w-[30%] min-w-[300px]">
+            <div className="h-full bg-background rounded-md border flex flex-col">
+              <div className="p-3 border-b">
+                <div className="font-semibold">การตั้งค่าผู้ช่วย</div>
+                <div className="text-xs text-muted-foreground">
+                  ตั้งค่า model, policy, และ system instructions
                 </div>
               </div>
-            </ResizablePanel>
 
-            <ResizableHandle withHandle className="bg-border" />
-
-            {/* RIGHT */}
-            <ResizablePanel minSize={26} defaultSize={33}>
-              <div className="h-full bg-background flex flex-col">
-                <div className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur px-4 py-3">
-                  <div className="flex items-center justify-between">
-                    <div className="min-w-0">
-                      <div className="text-sm font-semibold truncate">
-                        {assistantName || "ROME Assistant"}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        ทดสอบการคุยและดู output
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex-1 overflow-y-auto">
-                  <ChatBotChatMessagesAndConfig
-                    chatRoomId={chatroomConfigId}
-                    searchPrompt={firstTimeMessage}
-                    data={data}
-                    autoScroll={autoScroll}
-                    setAutoScroll={setAutoScroll}
-                  />
-                </div>
+              <div className="flex-1 overflow-y-auto p-3">
+                <FormProvider {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  id="config-ai"
+                  className="h-full"
+                >
+                  <ChatbotSideBarSettings form={form} id={id} />
+                </form>
+              </FormProvider>
               </div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
+            </div>
+          </div>
         </div>
-      </div>
     </div>
   );
 };

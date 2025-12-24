@@ -8,6 +8,7 @@ import {
   CalendarDays,
   FileText,
   icons,
+  Laugh,
   Link,
   Mail,
   MessageSquare,
@@ -197,6 +198,14 @@ export function AiGetDataFromChat({
     },
   ];
 
+  const personalityItems = [
+    {
+      label: "บุคลิกของลูกค้า",
+      value: data?.personality,
+      icon: <Laugh />,
+    },
+  ];
+
   // React.useEffect(() => {
   //   if (value) setState(value);
   // }, [value]);
@@ -219,9 +228,11 @@ export function AiGetDataFromChat({
   // };
 
   return (
-    <Card>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div>
+      <Card>
       <CardHeader>
-        <div className="flex  items-center ">
+        <div className="flex items-center lg:col-span-2">
           <CardTitle className="text-2xl font-extrabold">
             ข้อมูลจาก AI
           </CardTitle>
@@ -254,5 +265,45 @@ export function AiGetDataFromChat({
         </div>
       </CardContent>
     </Card>
+    </div>
+    <div>
+      <Card>
+      <CardHeader>
+        <div className="flex  items-center ">
+          <CardTitle className="text-2xl font-extrabold">
+            บุคลิกของลูกค้า
+          </CardTitle>
+        </div>
+      </CardHeader>
+
+      <CardContent>
+        <div className="space-y-3">
+          <div className="space-y-2">
+            {personalityItems.map((item, index) => (
+              <div key={index} className="flex  flex-col flex-wrap gap-2 py-1">
+                <div className="flex flex-row gap-3">
+                  {" "}
+                  <span className="flex items-center justify-center w-5 h-5 text-muted-foreground">
+                    {item.icon}
+                  </span>
+                  <span className="text-md font-semibold text-foreground min-w-[120px]">
+                    {item.label}
+                  </span>
+                </div>
+
+                <div className="ml-10">
+                  <span className="text-md text-muted-foreground flex-1">
+                    {item.value || "ตอนนี้ยังไม่สามารถบอกบุคลิกได้ พอดียังไม่มีโอกาสได้คุยกับเขาเลย ขอทำความรู้จักเขาก่อนดีกว่านะ"}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+    </div>
+    </div>
+    
   );
 }
