@@ -12,6 +12,7 @@ import {
   PlayIcon,
   Check,
 } from "lucide-react";
+import { ChatItem } from "~/types/chat/chat-items";
 
 const formatTime = (sec: number) => {
   const m = Math.floor(sec / 60);
@@ -166,7 +167,7 @@ export function MessageRenderer({
   };
 
   // TEXT
-  if (type === "text" || type === null) {
+  if (type === ChatItem.TEXT || type === null) {
     return (
       <Wrapper>
         <MessageText text={String(message)} />
@@ -175,7 +176,7 @@ export function MessageRenderer({
   }
 
   // STICKER
-  if (type === "sticker") {
+  if (type === ChatItem.STICKER) {
     return (
       <Wrapper>
         <img
@@ -187,7 +188,7 @@ export function MessageRenderer({
   }
 
   // FILE
-  if (type === "file") {
+  if (type === ChatItem.FILE) {
     const filename = message.split("/").pop() ?? "ไฟล์แนบ";
     return (
       <Wrapper>
@@ -208,7 +209,7 @@ export function MessageRenderer({
   }
 
   // IMAGE
-  if (type === "image") {
+  if (type === ChatItem.IMAGE) {
     return (
       <Wrapper>
         <div
@@ -229,7 +230,7 @@ export function MessageRenderer({
   }
 
   // VIDEO
-  if (type === "video") {
+  if (type === ChatItem.VIDEO) {
     return (
       <Wrapper>
         <div
@@ -281,7 +282,7 @@ export function MessageRenderer({
   }
 
   // AUDIO
-  if (type === "audio") {
+  if (type === ChatItem.AUDIO) {
     return (
       <Wrapper>
         <div
@@ -318,7 +319,7 @@ export function MessageRenderer({
     );
   }
 
-  if (type === "location") {
+  if (type === ChatItem.LOCATION) {
     const mapUrl = `https://www.google.com/maps?q=${latitude ?? ""},${longitude ?? ""}&z=17`;
 
     return (
