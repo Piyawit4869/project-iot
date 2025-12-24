@@ -6,8 +6,12 @@ import { Input } from "~/components/ui/input";
 import { cn } from "~/lib/utils";
 import { useGetConnectionAiByBranch } from "~/api/client/settings";
 import { Separator } from "~/components/ui/separator";
-import { CardContent } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
+import { Button } from "~/components/ui/button";
+import { Plus } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "~/components/ui/dialog";
+import ModalCreateConfig from "./modal-create-config";
 
 type AiConfigItem = {
   id: string;
@@ -25,7 +29,9 @@ export function AiConfigListPanel() {
 
   const [q, setQ] = React.useState("");
 
-  const { data, isLoading } = useGetConnectionAiByBranch(branchId);
+  const [open, setOpen] = React.useState(false);
+  const [isFinish, setIsFinish] = React.useState(false);
+  const { data, isLoading, refetch } = useGetConnectionAiByBranch(branchId);
 
   const items: AiConfigItem[] = React.useMemo(() => {
     const arr = Array.isArray(data) ? data : [];
@@ -64,35 +70,40 @@ export function AiConfigListPanel() {
     next.set("id", id);
     setSp(next);
   };
+  React.useEffect(() => {
+    if (isFinish) {
+      refetch();
+    }
+  }, [isFinish, refetch]);
 
   return (
     <div className="h-full bg-background overflow-hidden flex flex-col p-3">
       {/* <div className="p-3 border-b"> */}
-        {/* <div className="font-semibold">รายการ Assistant</div>
+      {/* <div className="font-semibold">รายการ Assistant</div>
         <div className="text-xs text-muted-foreground">
           เลือก config เพื่อแก้ไข
         </div> */}
 
-        <Input
-          className="mt-2"
-          placeholder="ค้นหา name / assistantId..."
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
+      <Input
+        className="mt-2"
+        placeholder="ค้นหา name / assistantId..."
+        value={q}
+        onChange={(e) => setQ(e.target.value)}
+      />
       {/* </div> */}
 
       <div className="flex-1 overflow-y-auto">
         {isLoading ? (
-            <CardContent className="space-y-4 mt-2">
-              <SkeletonLoading />
-              <SkeletonLoading />
-              <SkeletonLoading />
-            </CardContent>
+          <CardContent className="space-y-4 mt-2">
+            <SkeletonLoading />
+            <SkeletonLoading />
+            <SkeletonLoading />
+          </CardContent>
         ) : filtered.length === 0 ? (
           <div className="p-3 text-sm text-muted-foreground text-center">
-            <Separator className="mb-2"/>
+            <Separator className="mb-2" />
             ไม่พบข้อมูล
-            <Separator className="mt-2"/>
+            <Separator className="mt-2" />
           </div>
         ) : (
           <div className="p-2 space-y-1">
@@ -105,7 +116,7 @@ export function AiConfigListPanel() {
                   type="button"
                   onClick={() => onSelect(it.id)}
                   className={cn(
-                    "w-full text-left rounded-md border p-3 hover:bg-muted transition",
+                    "w-full text-left rounded-md border p-3 cursor-pointer hover:bg-muted transition",
                     active && "border-primary bg-muted"
                   )}
                 >
@@ -126,6 +137,21 @@ export function AiConfigListPanel() {
             })}
           </div>
         )}
+        <div className="flex justify-end p-2">
+          <Button
+            variant="secondary"
+            className="border-1 bg-white"
+            onClick={() => setOpen(true)}
+          >
+            <Plus />
+          </Button>
+        </div>
+        <ModalCreateConfig
+          openWeb={open}
+          setOpen={setOpen}
+          setIsFinish={setIsFinish}
+        />
+        |
       </div>
     </div>
   );

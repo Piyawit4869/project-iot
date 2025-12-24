@@ -268,6 +268,19 @@ export const fetchGetConnectionLine = async (id: string) => {
   }
 };
 
+export const fetchCreateConfigAi = async (payload: ConnectAiValues) => {
+  try {
+    const res = await ApiConfig.post(
+      `/thridparty/openai/config/created`,
+      payload
+    );
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const fetchUpdateConnectionAi = async (
   id: string,
   payload: ConnectAiValues

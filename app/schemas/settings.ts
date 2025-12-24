@@ -214,7 +214,7 @@ export const ReplySchema = z.object({
 export type ReplyValues = z.infer<typeof ReplySchema>;
 
 export const ConnectAiSchema = z.object({
-  id: z.string().uuid().optional(),
+  id: z.string().nullable().optional(),
   name: z.string().min(1, "กรุณากรอก"),
   systemInstructions: z.string().optional(),
   useStock: z.boolean().optional(),
@@ -240,7 +240,7 @@ export const ConnectAiSchema = z.object({
   // remark: z.string().min(1, "กรุณากรอก"),
   remark: z.string().nullable(),
   defaultIsAiReply: z.boolean(),
-  branchId: z.string().uuid(),
+  branchId: z.string().nullable().optional(),
   model: z.string().optional(),
   // organizationId: z.string().uuid(),
   // createdAt: z.string().refine((value) => !isNaN(Date.parse(value)), {

@@ -8,6 +8,7 @@ import {
   fetchBranchPagination,
   fetchChatBotPagination,
   fetchCreateBranchesOrganizations,
+  fetchCreateConfigAi,
   fetchDetailAddressBranches,
   fetchDetailBranchesOrganization,
   fetchDetailSettingBranches,
@@ -201,6 +202,12 @@ export const useGetConnectionLine = (id: string) =>
     queryFn: () => fetchGetConnectionLine(id),
     enabled: !!id,
   });
+
+export const useCreateConfigAi = () => {
+  return useMutation({
+    mutationFn: (values: ConnectAiValues) => fetchCreateConfigAi(values),
+  });
+};
 
 export const useUpdateConnectionAi = (id: string) => {
   return useMutation({
