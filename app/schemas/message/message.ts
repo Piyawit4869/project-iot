@@ -21,6 +21,9 @@ export const pushMessageSchema = z.object({
   quoteToken: z.string().optional(),
   packageId: z.string().optional(),
   stickerId: z.string().optional(),
+  address: z.string().optional(),
+  latitude: z.string().optional(),
+  longitude: z.string().optional(),
 });
 
 export type PushMessageValues = z.infer<typeof pushMessageSchema>;

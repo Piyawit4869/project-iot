@@ -120,6 +120,13 @@ export function MessageRenderer({
   const isLabel = msg?.isLabel;
   const reference = msg?.messageReference;
 
+  const {
+    address = "",
+    latitude = "",
+    longitude = "",
+    title = "",
+  } = (msg && msg.contents) || {};
+
   // LABEL
   if (isLabel) {
     const formattedTime = formatShowTime(
@@ -140,7 +147,7 @@ export function MessageRenderer({
 
   // WRAPPER (รองรับ Reply Reference)
   // WRAPPER: เพิ่ม max-width และลบพื้นหลังเวลาเป็น image/sticker
-  const Wrapper = ({ children }: any) => {
+  const Wrapper = ({ children, maxWidth }: any) => {
     const isMedia = ["image", "sticker"].includes(msg?.messageType);
     const hasRef = !!reference;
 
@@ -149,7 +156,7 @@ export function MessageRenderer({
         className={`
         rounded-xl overflow-hidden 
         ${onlyShow ? "" : isMedia ? "" : isBackoffice ? "bg-blue-500/10" : "bg-muted-foreground/10"}
-        ${hasRef ? "max-w-[260px]" : ""} 
+        ${maxWidth ? maxWidth : hasRef ? "max-w-[260px]" : ""}
       `}
       >
         {reference && <ReplyReference refMsg={reference} />}
@@ -307,6 +314,36 @@ export function MessageRenderer({
             }}
           />
         </div>
+      </Wrapper>
+    );
+  }
+
+  if (type === "location") {
+    const mapUrl = `https://www.google.com/maps?q=${latitude ?? ""},${longitude ?? ""}&z=17`;
+
+    return (
+      <Wrapper maxWidth="max-w-[330px]">
+        <a
+          href={mapUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block cursor-pointer"
+        >
+          <div className="h-[150px] w-full rounded-xl overflow-hidden border border-border shadow-sm">
+            <iframe
+              src={`${mapUrl}&output=embed`}
+              className="h-full w-full"
+              style={{ pointerEvents: "none" }}
+            />
+          </div>
+
+          <div className="py-2 mt-0.5">
+            <div className="truncate text-sm font-semibold">{title ?? ""}</div>
+            <div className="mt-1 text-xs leading-snug text-neutral-400">
+              <span className="truncate block w-full">{address ?? ""}</span>
+            </div>
+          </div>
+        </a>
       </Wrapper>
     );
   }
