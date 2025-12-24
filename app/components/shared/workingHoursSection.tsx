@@ -143,6 +143,7 @@ export default function WorkingHoursSection({
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">{DAY_LABEL[day]}</span>
               <button
+                type="button"
                 onClick={() => openModal([day])}
                 className="flex items-center gap-2 text-sm"
               >

@@ -28,6 +28,8 @@ import {
 import { Switch } from "~/components/ui/switch";
 import type { OrganizationFormValues } from "~/schemas/settings";
 import type { OptionStatus } from "~/types/settings";
+import { OrganizationContactCard } from "./create-organization/organization-contact-card";
+import { GlobalFormField } from "~/components/shared/global-formField";
 
 interface SettingOrganizationFormProps {
   form: UseFormReturn<OrganizationFormValues>;
@@ -89,7 +91,7 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
             </div>
             {isLoading ? (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {Array.from({ length: 12 }).map((_, i) => (
                     <SkeletonLoading
                       key={i}
@@ -99,7 +101,7 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                 </div>
               </>
             ) : (
-              <div className="flex-4 gap-7">
+              <div className="flex-4 gap-4">
                 <FormField
                   control={form.control}
                   name="logoUrl"
@@ -118,7 +120,7 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                   )}
                 />
 
-                <div className="grid grid-cols-2 gap-7 mt-3">
+                <div className="grid grid-cols-2 gap-4 mt-3">
                   <FormField
                     control={form.control}
                     name="nameTh"
@@ -229,10 +231,10 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
             <div className="mb-5">
               <h2 className="text-xl font-bold">ข้อมูลการลงทะเบียน</h2>
             </div>
-            <div className="flex-4 gap-7">
+            <div className="flex-4 gap-4">
               {isLoading ? (
                 <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {Array.from({ length: 12 }).map((_, i) => (
                       <SkeletonLoading
                         key={i}
@@ -242,7 +244,7 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                   </div>
                 </>
               ) : (
-                <div className="grid grid-cols-2 gap-7">
+                <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
                     name="fromType"
@@ -324,7 +326,7 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
             </div>
             {isLoading ? (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {Array.from({ length: 12 }).map((_, i) => (
                     <SkeletonLoading
                       key={i}
@@ -334,8 +336,8 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                 </div>
               </>
             ) : (
-              <div className="flex-4 gap-7">
-                <div className="grid grid-cols-2 gap-7">
+              <div className="flex-4 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
                     name="status"
@@ -424,7 +426,7 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
             </div>
             {isLoading ? (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {Array.from({ length: 12 }).map((_, i) => (
                     <SkeletonLoading
                       key={i}
@@ -434,8 +436,8 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                 </div>
               </>
             ) : (
-              <div className="flex-4 gap-7">
-                <div className="grid grid-cols-2 gap-7">
+              <div className="flex-4 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
                     name="websiteUrl"
@@ -471,141 +473,83 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
             )}
           </div>
 
-          <div className="gap-4 mb-6">
-            <div className="mb-5">
-              <h2 className="text-xl font-bold">ข้อมูลติดต่อ</h2>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2  gap-4">
+              <GlobalFormField
+                control={form.control}
+                name="contactName"
+                label="ชื่อผู้ติดต่อ"
+                placeholder="เช่น นายสมชาย ใจดี"
+                type="input"
+                //  view={isEdit ? "edit" : "view"}
+              />
+
+              <GlobalFormField
+                control={form.control}
+                name="contactEmail"
+                label="อีเมลผู้ติดต่อ"
+                placeholder="เช่น example@email.com"
+                type="input"
+                //  view={isEdit ? "edit" : "view"}
+              />
             </div>
-            {isLoading ? (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {Array.from({ length: 12 }).map((_, i) => (
-                    <SkeletonLoading
-                      key={i}
-                      className={`h-7 ${i % 4 < 2 ? "w-30" : ""}`}
-                    />
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div className="flex-4 gap-7">
-                <div className="grid grid-cols-2 gap-7">
-                  <FormField
-                    control={form.control}
-                    name="contactName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>ชื่อผู้ติดต่อ</FormLabel>
-                        <FormControl>
-                          <Input placeholder="กรอกชื่อผู้ติดต่อ" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
 
-                  <FormField
-                    control={form.control}
-                    name="contactEmail"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>อีเมลผู้ติดต่อ</FormLabel>
-                        <FormControl>
-                          <Input placeholder="กรอกอีเมลผู้ติดต่อ" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <GlobalFormField
+                control={form.control}
+                name="contactPhone"
+                label="เบอร์โทรผู้ติดต่อ"
+                placeholder="เช่น 0812345678"
+                type="number-box"
+                //  view={isEdit ? "edit" : "view"}
+              />
+              <GlobalFormField
+                control={form.control}
+                name="contactLine"
+                label="Line ผู้ติดต่อ"
+                placeholder="เช่น line id หรือเบอร์โทร"
+                type="input"
+                //  view={isEdit ? "edit" : "view"}
+              />
+            </div>
 
-                  <FormField
-                    control={form.control}
-                    name="contactPhone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>เบอร์โทรผู้ติดต่อ</FormLabel>
-                        <FormControl>
-                          <Input placeholder="กรอกเบอร์โทรศัพท์" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="contactLine"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>ไอดีไลน์ผู้ติดต่อ</FormLabel>
-                        <FormControl>
-                          <Input placeholder="กรอกไอดีไลน์" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="contactFacebook"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>เฟสบุ๊คผู้ติดต่อ</FormLabel>
-                        <FormControl>
-                          <Input placeholder="กรอกเฟสบุ๊ค" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="contactWhatsapp"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>WhatsApp ผู้ติดต่อ</FormLabel>
-                        <FormControl>
-                          <Input placeholder="กรอกWhatsApp" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="contactWebsite"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>เว็บไซต์ผู้ติดต่อ</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="https://utotech.co.th"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="contactNote"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>หมายเหตุเพิ่มเติม</FormLabel>
-                        <FormControl>
-                          <Input placeholder="หมายเหตุ" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <GlobalFormField
+                control={form.control}
+                name="contactFacebook"
+                label="Facebook ผู้ติดต่อ"
+                placeholder="เช่น facebook.com/yourpage หรือชื่อโปรไฟล์"
+                type="input"
+                //  view={isEdit ? "edit" : "view"}
+              />
+              <GlobalFormField
+                control={form.control}
+                name="contactWhatsapp"
+                label="Whatsapp ผู้ติดต่อ"
+                placeholder="เช่น +66812345678"
+                type="input"
+                //  view={isEdit ? "edit" : "view"}
+              />
+              <GlobalFormField
+                control={form.control}
+                name="contactWebsite"
+                label="เว็บไซต์ผู้ติดต่อ"
+                placeholder="เช่น https://www.example.com"
+                type="input"
+                canCopy
+                //  view={isEdit ? "edit" : "view"}
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <GlobalFormField
+                control={form.control}
+                name="contactNote"
+                label="หมายเหตุ"
+                placeholder="ข้อมูลเพิ่มเติมเกี่ยวกับผู้ติดต่อ (ถ้ามี)"
+                type="textArea"
+                //  view={isEdit ? "edit" : "view"}
+              />
+            </div>
           </div>
         </div>
       </div>

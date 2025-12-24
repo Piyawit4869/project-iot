@@ -4,6 +4,7 @@ import React from "react";
 
 import { Card, CardTitle } from "../ui/card";
 import { Link } from "react-router";
+import { cn } from "~/lib/utils";
 
 interface TagProps {
   label: string;
@@ -14,6 +15,7 @@ interface CardWithFormProps {
   title: string | React.ReactElement;
   backpath?: string | (() => void);
   subtitle?: string;
+  titleStyle?: string;
   buttons?: React.ReactNode[];
   admin?: boolean;
   tag?: TagProps;
@@ -25,6 +27,7 @@ export function TabControl({
   backpath,
   subtitle,
   buttons,
+  titleStyle = "flex items-center justify-between text-wrap",
   // admin,
   tag,
   noneSticky = false,
@@ -34,7 +37,7 @@ export function TabControl({
       {/* <Card className={`p-4 ${!admin ? "mt-4" : "mt-2"}`}> */}
       <Card className={"p-4"}>
         <div className="flex flex-row flex-wrap justify-between">
-          <div className="flex items-center justify-between text-wrap">
+          <div className={cn(titleStyle)}>
             {backpath ? (
               <div className="flex text-headFont gap-2 items-center">
                 {typeof backpath === "string" ? (
@@ -57,8 +60,8 @@ export function TabControl({
                       tag.variant === "success"
                         ? "bg-green-100 text-green-700"
                         : tag.variant === "warning"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : "bg-red-100 text-red-700"
+                          ? "bg-yellow-100 text-yellow-700"
+                          : "bg-red-100 text-red-700"
                     }`}
                   >
                     {tag.label}

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { GlobalFormField } from "~/components/shared/global-form";
+import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import WorkingHoursSection from "~/components/shared/workingHoursSection";
 import {
   Form,
@@ -16,10 +17,11 @@ interface SettingFormProps {
   form: UseFormReturn<any>;
   organization?: any;
   isEditing: boolean;
+  isLoading?: boolean;
 }
 
 export const SettingForm: React.FC<SettingFormProps> = (props) => {
-  const { form, organization, isEditing } = props;
+  const { form, organization, isEditing, isLoading } = props;
 
   const checkFields = React.useMemo(
     () => new Set(getRequiredPaths(SettingSchema as any)),
@@ -54,52 +56,61 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
           <div className="mb-5">
             <h2 className="text-xl font-bold">ทั่วไป</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <GlobalFormField
-              control={form.control}
-              name="theme"
-              label="ธีม"
-              type="select"
-              checkFields={checkFields}
-              placeholder="สว่าง"
-              disable={!isEditing}
-              selectOptions={[
-                { label: "สว่าง", value: "light" },
-                { label: "มืด", value: "dark" },
-              ]}
-            />
-            <GlobalFormField
-              control={form.control}
-              name="textDisplay"
-              label="ขนาดข้อความ"
-              type="select"
-              checkFields={checkFields}
-              placeholder="xs (12px)"
-              disable={!isEditing}
-              // disable={pointer-events-none opacity-60 select-none}
-              selectOptions={[
-                { label: "เล็กที่สุด", value: "extraSmall" },
-                { label: "เล็ก", value: "small" },
-                { label: "ปกติ", value: "normal" },
-                { label: "ใหญ่", value: "large" },
-                { label: "ใหญ่ที่สุด", value: "extraLarge" },
-              ]}
-            />
-            <GlobalFormField
-              control={form.control}
-              name="defaultLanguage"
-              label="ภาษาตั้งต้น"
-              type="select"
-              checkFields={checkFields}
-              placeholder="ไทย, อังกฤษ"
-              disable={!isEditing}
-              selectOptions={[
-                { label: "ไทย", value: "TH" },
-                { label: "อังกฤษ", value: "EN" },
-                // { label: "JP", value: "JP" },
-              ]}
-            />
-            {/* <FormField
+          {isLoading ? (
+            <div className="space-y-4 ">
+              <SkeletonLoading />
+              <SkeletonLoading />
+              <SkeletonLoading />
+              <SkeletonLoading />
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <GlobalFormField
+                  control={form.control}
+                  name="theme"
+                  label="ธีม"
+                  type="select"
+                  checkFields={checkFields}
+                  placeholder="สว่าง"
+                  disable={!isEditing}
+                  selectOptions={[
+                    { label: "สว่าง", value: "light" },
+                    { label: "มืด", value: "dark" },
+                  ]}
+                />
+                <GlobalFormField
+                  control={form.control}
+                  name="textDisplay"
+                  label="ขนาดข้อความ"
+                  type="select"
+                  checkFields={checkFields}
+                  placeholder="xs (12px)"
+                  disable={!isEditing}
+                  // disable={pointer-events-none opacity-60 select-none}
+                  selectOptions={[
+                    { label: "เล็กที่สุด", value: "extraSmall" },
+                    { label: "เล็ก", value: "small" },
+                    { label: "ปกติ", value: "normal" },
+                    { label: "ใหญ่", value: "large" },
+                    { label: "ใหญ่ที่สุด", value: "extraLarge" },
+                  ]}
+                />
+                <GlobalFormField
+                  control={form.control}
+                  name="defaultLanguage"
+                  label="ภาษาตั้งต้น"
+                  type="select"
+                  checkFields={checkFields}
+                  placeholder="ไทย, อังกฤษ"
+                  disable={!isEditing}
+                  selectOptions={[
+                    { label: "ไทย", value: "TH" },
+                    { label: "อังกฤษ", value: "EN" },
+                    // { label: "JP", value: "JP" },
+                  ]}
+                />
+                {/* <FormField
               control={form.control}
               name={"active" as FieldPath<SettingSchemaValues>}
               render={({ field }) => (
@@ -114,32 +125,36 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
                 </FormItem>
               )}
             /> */}
-          </div>
-          <div className="mt-5">
-            <fieldset
-              // disabled={isEditing}
-              className={
-                isEditing ? "" : "pointer-events-none opacity-60 select-none"
-              }
-            >
-              <FormField
-                control={form.control}
-                name={"setting.openDays"}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>เปิดใช้งานการตั้งค่า</FormLabel>
-                    <FormControl className="ml-4">
-                      <WorkingHoursSection
-                        form={form}
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </fieldset>
-          </div>
+              </div>
+              <div className="mt-5">
+                <fieldset
+                  // disabled={isEditing}
+                  className={
+                    isEditing
+                      ? ""
+                      : "pointer-events-none opacity-60 select-none"
+                  }
+                >
+                  <FormField
+                    control={form.control}
+                    name={isEditing ? "openDays" : "setting.openDays"}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>เปิดใช้งานการตั้งค่า</FormLabel>
+                        <FormControl className="ml-4">
+                          <WorkingHoursSection
+                            form={form}
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </fieldset>
+              </div>
+            </>
+          )}
         </div>
       </Form>
     </div>
