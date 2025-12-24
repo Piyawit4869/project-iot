@@ -29,6 +29,7 @@ import {
   getAllTags,
   getChatRoomPartipants,
   fetchGetAiSettings,
+  getChatRoomAssistantId,
 } from "../../server/customer/customer";
 import type {
   ContactValues,
@@ -170,7 +171,7 @@ export const useCustomer = (id: string) => {
   return useQuery({
     queryKey: ["customer-single", id],
     queryFn: () => fetchCustomerById(id),
-    enabled: !!id,
+    // enabled: !!id,
   });
 };
 
@@ -339,6 +340,14 @@ export const useChatRoomParticipants = (id: string) => {
   return useQuery({
     queryKey: ["room-participant", id],
     queryFn: () => getChatRoomPartipants(id),
+    enabled: !!id,
+  });
+};
+
+export const useGetChatRoomAssistantId = (id: string) => {
+  return useQuery({
+    queryKey: ["room-assistant-id", id],
+    queryFn: () => getChatRoomAssistantId(id),
     enabled: !!id,
   });
 };
