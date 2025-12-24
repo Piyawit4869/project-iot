@@ -30,7 +30,9 @@ type Org = {
 
 type OrgSwitcherProps = {
   currentOrganization: Org;
-  currentOrgId: string;
+  currentOrgId?: string;
+  currentBranchId?: string;
+  currentBranch?: string;
   onChangeOrg: (orgId: string) => void;
   onOpenManage?: () => void;
   onOpenCreate?: () => void;
@@ -39,6 +41,7 @@ type OrgSwitcherProps = {
   branches?: any;
   setSearch?: any;
   backIcon?: boolean;
+  topic?: string;
 };
 
 export function OrgSelectorDropdown({
@@ -46,9 +49,12 @@ export function OrgSelectorDropdown({
   currentOrganization,
   onChangeOrg,
   onOpenManage,
+  currentBranchId,
   onOpenCreate,
   refetch,
   data,
+  currentBranch,
+  topic,
   branches,
   backIcon,
 }: OrgSwitcherProps) {
@@ -68,13 +74,20 @@ export function OrgSelectorDropdown({
     );
   }, [orgs, search]);
 
-  const showData = branches ? branches : filteredOrgs;
-
-  const current = React.useMemo(() => {
+  const currentOrg = React.useMemo(() => {
     return orgs.length
       ? (orgs.find((o: any) => o.id === currentOrgId) ?? orgs[0])
       : currentOrganization;
   }, [orgs, currentOrgId, currentOrganization]);
+
+  const currentBranchData = React.useMemo(() => {
+    return branches?.length
+      ? (branches?.find((o: any) => o.id === currentBranchId) ?? branches[0])
+      : currentBranch;
+  }, [branches, currentBranchId, currentBranch]);
+
+  const showData = branches ? branches : filteredOrgs;
+  const showName = branches ? currentBranchData : currentOrg;
 
   const initials = (name?: string) =>
     (name ?? "")
@@ -95,9 +108,10 @@ export function OrgSelectorDropdown({
               </Link>
             )}
 
-            <div className="min-w-0">
+            <div className="min-w-45">
+              <span className="truncate text-base font-medium">{topic}</span>
               <div className="truncate text-md font-medium">
-                {current?.nameTh ?? "-"}
+                {showName?.nameTh ?? "-"}
               </div>
             </div>
           </div>

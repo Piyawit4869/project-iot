@@ -132,6 +132,7 @@ const WorkingHoursSchema = z.record(
 );
 /* ---------- Setting ---------- */
 export const SettingThemeSchema = z.object({
+  id: z.string().optional().nullable(),
   active: z.boolean(),
   theme: z.enum(["light", "dark"]).optional(),
   textDisplay: z.string().optional().nullable(),
@@ -183,6 +184,15 @@ export const OrganizationSchema = z.object({
 
   logoUrl: z.string().optional().nullable(),
 
+  contactName: z.string().optional().nullable(),
+  contactEmail: z.string().optional().nullable(),
+  contactPhone: z.string().optional().nullable(),
+  contactLine: z.string().optional().nullable(),
+  contactFacebook: z.string().optional().nullable(),
+  contactWhatsapp: z.string().optional().nullable(),
+  contactWebsite: z.string().optional().nullable(),
+  contactNote: z.string().optional().nullable(),
+
   setting: SettingThemeSchema,
   address: AddressSchema,
 
@@ -193,6 +203,7 @@ export const OrganizationSchema = z.object({
 
 export type BranchesOrganization = z.infer<typeof OrganizationSchema>;
 export type Address = z.infer<typeof AddressSchema>;
+export type settingTheme = z.infer<typeof SettingThemeSchema>;
 // ------------------------------------------
 
 export const ReplySchema = z.object({

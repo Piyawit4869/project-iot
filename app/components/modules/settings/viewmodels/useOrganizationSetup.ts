@@ -37,6 +37,15 @@ export const useOrganizationSetup = () => {
 
       logoUrl: null,
 
+      contactName: null,
+      contactEmail: null,
+      contactPhone: null,
+      contactLine: null,
+      contactFacebook: null,
+      contactWhatsapp: null,
+      contactWebsite: null,
+      contactNote: null,
+
       setting: {
         active: true,
         theme: "light",
