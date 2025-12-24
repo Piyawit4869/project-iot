@@ -6,4 +6,12 @@ export enum ChatItem {
   VIDEO = "video",
   AUDIO = "audio",
   LOCATION = "location",
+  CAROUSEL = "carousel",
+}
+
+export enum FlexMessageType {
+  PRODUCT = "product",
+  PLACE = "place",
+  PERSON = "person",
+  IMAGE = "image",
 }
