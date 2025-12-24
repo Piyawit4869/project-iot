@@ -387,15 +387,11 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
   React.useEffect(() => {
     if (!cards[activeIndex]) return;
 
-    console.log("cards[activeIndex]", cards[activeIndex]);
-
     form.reset(cards[activeIndex]);
   }, [activeIndex, cards, form]);
 
   React.useEffect(() => {
     if (!data) return;
-
-    console.log({ data });
 
     const mappedCards: MessageCardFormValues[] = (data.meta?.items ?? []).map(
       (item: any) => ({
@@ -412,8 +408,6 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
         category: (data && data.meta && data.meta.category) || "",
       });
     }
-
-    console.log("mappedCards", mappedCards);
 
     setSelectedCategoryId(data.meta.category);
     setCards(mappedCards);
