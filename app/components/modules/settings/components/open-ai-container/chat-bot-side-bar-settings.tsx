@@ -17,27 +17,18 @@ import { Slider } from "~/components/ui/slider";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
 import type { ConnectAiValues } from "~/schemas/settings";
-import { ChatbotSideBarSettingsSkeleton } from "../Skeleton/chatbot-sidebar-setting-skeleton";
 
 interface ChatbotSideBarSettingsProps {
   form: UseFormReturn<ConnectAiValues>;
   id: string;
-  isLoading: boolean;
 }
 
 export const ChatbotSideBarSettings: React.FC<ChatbotSideBarSettingsProps> = (
   props
 ) => {
-  const { form, id, isLoading } = props;
+  const { form, id } = props;
   return (
     <div className="w-full">
-      {isLoading ? (
-        <ChatbotSideBarSettings
-          form={form}
-          id={id}
-          isLoading={isLoading}
-        />
-      ) : (
       <div className="space-y-4 pr-6 pt-4">
         <FormField
           control={form.control}
@@ -174,7 +165,6 @@ export const ChatbotSideBarSettings: React.FC<ChatbotSideBarSettingsProps> = (
           )}
         />
       </div>
-      )}
     </div>
   );
 };

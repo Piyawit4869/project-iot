@@ -326,7 +326,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
                   id="config-ai"
                   className="h-full"
                 >
-                  <ChatbotSideBarSettings form={form} id={id} isLoading={false} />
+                  <ChatbotSideBarSettings form={form} id={id} />
                 </form>
               </FormProvider>
               </div>

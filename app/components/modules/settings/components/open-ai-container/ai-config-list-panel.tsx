@@ -8,7 +8,6 @@ import { useGetConnectionAiByBranch } from "~/api/client/settings";
 import { Separator } from "~/components/ui/separator";
 import { CardContent } from "~/components/ui/card";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
-import { ChatbotSideBarSettingsSkeleton } from "../Skeleton/chatbot-sidebar-setting-skeleton";
 
 type AiConfigItem = {
   id: string;
