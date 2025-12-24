@@ -7,6 +7,7 @@ import { getRequiredPaths } from "~/utils/form-adapter";
 
 interface SettingAddressFormProps {
   form: UseFormReturn<AddressSchemaValues>;
+  // isLoading: boolean;
 }
 
 export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
@@ -17,7 +18,7 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
   const checkFields = new Set(getRequiredPaths(addressSchema as any));
   return (
     <Form {...form}>
-      <div className="flex flex-col w-full space-y-8 p-8">
+      <div className="flex flex-col w-full space-y-8 px-8 py-4">
         {/* <TabControl
         title="ที่อยู่ติดต่อ"
         buttons={[

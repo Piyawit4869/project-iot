@@ -15,7 +15,6 @@ import {
   Clock,
   FileUp,
   Inbox,
-  MailWarning,
   Menu,
   MessagesSquare,
   MoreVertical,
@@ -39,6 +38,16 @@ import {
 import { useIsMobile } from "~/hooks/use-mobile";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { useMarkAsSpam } from "~/api/client/message/useMessage";
+import { GlobalModal } from "~/components/shared/modal/modal";
+import { toast } from "sonner";
+import { Avatar } from "~/components/ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
+
+type StatusKey = "unread" | "done" | "isProcess" | "isSpam" | "all";
 
 interface Props {
   handleChangeSelectedRoom: (room: any) => void;
@@ -81,8 +90,6 @@ export default function ChatlistSidebar({
 
   const { currentRoomId, addMessageAI, removeMessage } = useChat();
   const scrollRef = React.useRef<HTMLDivElement>(null);
-
-  type StatusKey = "unread" | "done" | "isProcess" | "spam" | "all";
 
   const handleScroll = () => {
     const el = scrollRef.current;
@@ -167,7 +174,15 @@ export default function ChatlistSidebar({
     socket.on("rooms", (room: any) => {
       console.log("rooms in", room);
 
-      setAllRooms((prev) => mergeRoomImmutable(prev, room));
+      // if (room && room?.latestMessage?.createdAt) {
+      //   new Audio("/sounds/level-up.mp3").play();
+      // }
+
+      setAllRooms((prev) => {
+        const merged = mergeRoomImmutable(prev, room);
+
+        return merged;
+      });
 
       if (room.chatRoomType === "assistant") {
         addMessageAI({
@@ -194,7 +209,7 @@ export default function ChatlistSidebar({
     unread: "ยังไม่อ่าน",
     done: "ดำเนินการแล้ว",
     isProcess: "ต้องดำเนินการ",
-    spam: "ต้องดำเนินการ",
+    isSpam: "สแปม",
     all: "ทั้งหมด",
   };
 
@@ -203,22 +218,24 @@ export default function ChatlistSidebar({
   return (
     <aside className="h-full border-r dark:bg-background flex flex-col border-l">
       <div className="p-3 border-b flex flex-col">
-        <div className="flex justify-between px-0">
+        <div className="flex justify-between items-center px-0">
           <h2 className="text-lg font-semibold">แชท</h2>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Avatar className="w-[25px] h-[25px]">
+                <GlobalImage
+                  src="https://img.freepik.com/premium-vector/line-icon-vector-logo-set_1097694-1650.jpg"
+                  alt="avatar"
+                  className="rounded-full object-cover"
+                  notShowPreview
+                />
+              </Avatar>
+            </TooltipTrigger>
+            <TooltipContent>เชื่อมต่อกับแอพพลิเคขั่น LINE</TooltipContent>
+          </Tooltip>
         </div>
       </div>
-
-      {/* <GlobalButton // !! for tesing Audio form local path
-        key="save"
-        type="submit"
-        form="customer"
-        icon={<AudioLines />}
-        label={<span className="hidden sm:inline">ทดสอบเสียง</span>}
-        onClick={() => {
-          const audio = new Audio("/sounds/level-up-191997.mp3");
-          audio.play();
-        }}
-      /> */}
 
       <div ref={containerRef} className="relative min-w-[308px]">
         <Popover open={open} onOpenChange={setOpen}>
@@ -284,9 +301,7 @@ export default function ChatlistSidebar({
                       {isLoading ? (
                         <SkeletonLoading />
                       ) : (
-                        meta?.statusSummary?.totalUnread +
-                        meta?.statusSummary?.totalProcess +
-                        meta?.statusSummary?.totalDone
+                        meta?.statusSummary?.total
                       )}
                     </span>
                   </CommandItem>
@@ -397,32 +412,38 @@ export default function ChatlistSidebar({
 
         {inputOpen &&
           (search !== "" ? (
-            filterRoom &&
-            filterRoom.length > 0 &&
-            filterRoom.map((room: any, i: number) => {
-              return (
-                <ChatItem
-                  key={room?.id + i}
-                  roomId={room?.id ?? ""}
-                  selectedRoom={currentRoomId}
-                  name={room?.name}
-                  message={room?.latestMessage?.message ?? ""}
-                  time={room?.latestMessage?.createdAt ?? ""}
-                  image={room?.imageUrl || ""}
-                  unread={room?.unreadMessageCount > 0}
-                  countUnreadMessage={room?.unreadMessageCount || 0}
-                  roomDetail={room}
-                  currentCustomer={currentCustomer}
-                  onChatClick={() => {
-                    handleChangeSelectedRoom(room);
-                    setSidebarOpen(false);
-                    setOnSelectRoom(true);
-                    removeMessage();
-                    addRecentSearch();
-                  }}
-                />
-              );
-            })
+            allRooms &&
+            allRooms.length > 0 &&
+            allRooms
+              .filter((r: any) => (select === "isSpam" ? r.isSpam : !r.isSpam))
+              .filter(
+                (r: any) =>
+                  !search || r.name.toLowerCase().includes(search.toLowerCase())
+              )
+              .map((room: any, i: number) => {
+                return (
+                  <ChatItem
+                    key={room?.id + i}
+                    roomId={room?.id ?? ""}
+                    selectedRoom={currentRoomId}
+                    name={room?.name}
+                    message={room?.latestMessage?.message ?? ""}
+                    time={room?.latestMessage?.createdAt ?? ""}
+                    image={room?.imageUrl || ""}
+                    unread={room?.unreadMessageCount > 0}
+                    countUnreadMessage={room?.unreadMessageCount || 0}
+                    roomDetail={room}
+                    currentCustomer={currentCustomer}
+                    onChatClick={() => {
+                      handleChangeSelectedRoom(room);
+                      setSidebarOpen(false);
+                      setOnSelectRoom(true);
+                      removeMessage();
+                      addRecentSearch();
+                    }}
+                  />
+                );
+              })
           ) : (
             <React.Fragment>
               <div className="flex flex-col gap-3 w-full mt-2 px-3 pb-2">
@@ -514,14 +535,54 @@ export default function ChatlistSidebar({
           {isLoading ? (
             <LoadingSkeleton />
           ) : select !== "all" ? (
-            filterRoom.length > 0 ? (
-              filterRoom.map((room: any, i: number) => (
+            allRooms.length > 0 ? (
+              allRooms
+                .filter((r: any) =>
+                  select === "isSpam" ? r.isSpam : !r.isSpam
+                )
+                .filter(
+                  (r: any) =>
+                    !search ||
+                    r.name.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((room: any, i: number) => (
+                  <ChatItem
+                    key={room?.id + i}
+                    roomId={room?.id ?? ""}
+                    selectedRoom={currentRoomId}
+                    name={room?.name}
+                    message={room?.latestMessage?.message ?? ""}
+                    time={room?.latestMessage?.createdAt ?? ""}
+                    image={room?.imageUrl || ""}
+                    unread={room?.unreadMessageCount > 0}
+                    countUnreadMessage={room?.unreadMessageCount || 0}
+                    currentCustomer={currentCustomer}
+                    roomDetail={room}
+                    onChatClick={() => {
+                      handleChangeSelectedRoom(room);
+                      setSidebarOpen(false);
+                      setOnSelectRoom(true);
+                      removeMessage();
+                    }}
+                  />
+                ))
+            ) : (
+              <EmptyChat />
+            )
+          ) : allRooms.length > 0 ? (
+            allRooms
+              .filter((r: any) => !r.isSpam)
+              .filter(
+                (r: any) =>
+                  !search || r.name.toLowerCase().includes(search.toLowerCase())
+              )
+              .map((room: any, i: number) => (
                 <ChatItem
                   key={room?.id + i}
                   roomId={room?.id ?? ""}
                   selectedRoom={currentRoomId}
                   name={room?.name}
-                  message={room?.latestMessage?.message ?? ""}
+                  message={room?.latestMessage?.messageLabel ?? ""}
                   time={room?.latestMessage?.createdAt ?? ""}
                   image={room?.imageUrl || ""}
                   unread={room?.unreadMessageCount > 0}
@@ -536,31 +597,6 @@ export default function ChatlistSidebar({
                   }}
                 />
               ))
-            ) : (
-              <EmptyChat />
-            )
-          ) : allRooms.length > 0 ? (
-            allRooms.map((room: any, i: number) => (
-              <ChatItem
-                key={room?.id + i}
-                roomId={room?.id ?? ""}
-                selectedRoom={currentRoomId}
-                name={room?.name}
-                message={room?.latestMessage?.messageLabel ?? ""}
-                time={room?.latestMessage?.createdAt ?? ""}
-                image={room?.imageUrl || ""}
-                unread={room?.unreadMessageCount > 0}
-                countUnreadMessage={room?.unreadMessageCount || 0}
-                currentCustomer={currentCustomer}
-                roomDetail={room}
-                onChatClick={() => {
-                  handleChangeSelectedRoom(room);
-                  setSidebarOpen(false);
-                  setOnSelectRoom(true);
-                  removeMessage();
-                }}
-              />
-            ))
           ) : (
             <EmptyChat />
           )}
@@ -632,6 +668,59 @@ function ChatItem({
   const { setCurrentRoomId, currentRoomId } = useChat();
   const [openOption, setOpenOption] = React.useState<boolean>(false);
 
+  const makeSpam = () => {
+    GlobalModal.delete({
+      title: "ทำเครื่องหมายลูกค้ารายนี้เป็นสแปม",
+      description: "คุณต้องการทำเครื่องหมายลูกค้ารายนี้เป็นสแปม ใช่หรือไม่?",
+      confirmText: "ยืนยัน",
+      cancelText: "ยกเลิก",
+      onConfirm: () => {
+        const toastId = toast.loading("กำลังทำเครื่องหมายเป็นสแปม...");
+
+        markAsSpam(true, {
+          onSuccess: () => {
+            toast.success("ทำเครื่องหมายเป็นสแปมเรียบร้อยแล้ว", {
+              id: toastId,
+            });
+          },
+          onError: () => {
+            toast.error(
+              "ไม่สามารถทำเครื่องหมายเป็นสแปมได้ กรุณาลองใหม่อีกครั้ง",
+              { id: toastId }
+            );
+          },
+        });
+      },
+    });
+  };
+
+  const cancelSpam = () => {
+    GlobalModal.delete({
+      title: "ยกเลิกการทำเครื่องหมายลูกค้ารายนี้เป็นสแปม",
+      description:
+        "คุณต้องการยกเลิกการทำเครื่องหมายลูกค้ารายนี้เป็นสแปม ใช่หรือไม่?",
+      confirmText: "ยืนยัน",
+      cancelText: "ยกเลิก",
+      onConfirm: () => {
+        const toastId = toast.loading("กำลังยกเลิกการทำเครื่องหมายเป็นสแปม...");
+
+        markAsSpam(false, {
+          onSuccess: () => {
+            toast.success("ยกเลิกการทำเครื่องหมายเป็นสแปมเรียบร้อยแล้ว", {
+              id: toastId,
+            });
+          },
+          onError: () => {
+            toast.error(
+              "ไม่สามารถยกเลิกการทำเครื่องหมายเป็นสแปมได้ กรุณาลองใหม่อีกครั้ง",
+              { id: toastId }
+            );
+          },
+        });
+      },
+    });
+  };
+
   return (
     <div
       className={cn(
@@ -651,6 +740,13 @@ function ChatItem({
           alt={name}
           className="w-[40px] h-[40px] rounded-full object-cover"
         />
+        <Avatar className="w-[20px] h-[20px] absolute top-[-5px] right-0">
+          <GlobalImage
+            src="https://img.freepik.com/premium-vector/line-icon-vector-logo-set_1097694-1650.jpg"
+            alt="avatar"
+            className="rounded-full object-cover"
+          />
+        </Avatar>
 
         {!autoReadMsg && countUnreadMessage > 0 && (
           <span
@@ -677,14 +773,7 @@ function ChatItem({
                     <PopoverTrigger asChild>
                       <button
                         onClick={(e) => e.stopPropagation()}
-                        className="
-          opacity-0
-          group-hover:opacity-100
-          transition
-         cursor-pointer
-         hover:text-black
-
-        "
+                        className="opacity-0 group-hover:opacity-100 transition cursor-pointer hover:text-black"
                       >
                         <MoreVertical className="w-4 h-4 text-muted-foreground" />
                       </button>
@@ -698,16 +787,7 @@ function ChatItem({
                               <CommandItem
                                 className="flex items-center gap-2 cursor-pointer"
                                 disabled={isPending}
-                                onSelect={() => {
-                                  markAsSpam(false, {
-                                    onSuccess: () => {
-                                      setOpenOption(false);
-                                    },
-                                    onError: (err) => {
-                                      console.error("unmark spam error", err);
-                                    },
-                                  });
-                                }}
+                                onSelect={cancelSpam}
                               >
                                 <OctagonAlert className="w-4 h-4" />
                                 ยกเลิกสแปม
@@ -716,16 +796,7 @@ function ChatItem({
                               <CommandItem
                                 className="flex items-center gap-2 text-red-500 cursor-pointer"
                                 disabled={isPending}
-                                onSelect={() => {
-                                  markAsSpam(true, {
-                                    onSuccess: () => {
-                                      setOpenOption(false);
-                                    },
-                                    onError: (err) => {
-                                      console.error("mark as spam error", err);
-                                    },
-                                  });
-                                }}
+                                onSelect={makeSpam}
                               >
                                 <OctagonAlert className="w-4 h-4" />
                                 กำหนดเป็นสแปม

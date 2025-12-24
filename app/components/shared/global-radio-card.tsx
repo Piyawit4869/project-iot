@@ -26,7 +26,7 @@ export function RadioCardGroup({
             key={opt.value}
             htmlFor={opt.value}
             className={cn(
-              "min-w-20 flex items-center gap-3 p-3.5 border rounded-xl cursor-pointer shadow-sm bg-white",
+              "min-w-20 flex items-center gap-3 p-3 border rounded-xl cursor-pointer shadow-sm bg-white",
               "transition-all hover:shadow-md flex-wrap",
               value === opt.value && "border-black shadow-md"
             )}

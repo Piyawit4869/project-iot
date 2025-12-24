@@ -127,7 +127,8 @@ export const TagsSelectorModal: React.FC<TagsSelectorModalProps> = ({
     );
     setOpen(false);
   };
-  const handleSubmit = () => {
+
+  const handleSubmitTags = () => {
     GlobalModal.info({
       title: "เพิ่มแท็กของลูกค้า",
       description: "คุณต้องการเพิ่มแท็กของลูกค้า ใช่หรือไม่?",
@@ -136,10 +137,11 @@ export const TagsSelectorModal: React.FC<TagsSelectorModalProps> = ({
       onConfirm: () => {
         const toastId = toast.loading("กำลังเพิ่มผู้แท็กของลูกค้า...");
 
-        const result = selectedTags.map((tag: any) => {
+        const result = selectedTags.map((name) => {
+          const tag = allTags?.find((t: any) => t.name === name);
           return {
-            id: tag.id,
-            name: tag,
+            id: tag?.id,
+            name,
             active: true,
           };
         });
@@ -164,6 +166,15 @@ export const TagsSelectorModal: React.FC<TagsSelectorModalProps> = ({
         setShowTagManager(false);
       },
     });
+  };
+
+  /** กด Enter เพื่อเพิ่มแท็กใหม่ */
+  const handleInputKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && inputValue.trim()) {
+      e.preventDefault();
+      handleAddTag(inputValue.trim());
+      setInputValue("");
+    }
   };
 
   const selectedTagObjects = selectedTags.map((tag) => ({
@@ -225,6 +236,7 @@ export const TagsSelectorModal: React.FC<TagsSelectorModalProps> = ({
           inputValue={inputValue}
           onInputChange={setInputValue}
           selectedTags={selectedTagObjects}
+          handleInputKeyDown={handleInputKeyDown}
           availableTags={availableTagObjects}
           loading={isPending}
           onAddTag={(tag) => handleToggleTag(tag.name)}
@@ -234,13 +246,14 @@ export const TagsSelectorModal: React.FC<TagsSelectorModalProps> = ({
             setInputValue("");
           }}
           onClose={() => setOpen(false)}
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmitTags}
         />
       ) : (
         <TagManagerModal
           open={open}
           title="เลือกหรือสร้างแท็ก"
           inputValue={search}
+          handleInputKeyDown={handleInputKeyDown}
           onInputChange={setSearch}
           selectedTags={selectedTagObjects}
           availableTags={availableTagObjects}

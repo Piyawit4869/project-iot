@@ -17,6 +17,10 @@ import ImageUpload from "./image-upload";
 import { GlobalImage } from "./global-image";
 import { copyTextToClipboard } from "~/lib/utils";
 import React from "react";
+import { InputNumberBox } from "./input-number-box";
+import { RadioCardGroup } from "./global-radio-card";
+import { Switch } from "../ui/switch";
+import { Checkbox } from "../ui/checkbox";
 
 interface GlobalFormFieldProps {
   control: any;
@@ -24,20 +28,27 @@ interface GlobalFormFieldProps {
   label: string | ReactElement;
   disabledItem?: any;
   disabled?: any;
+  groups?: number[];
+  format?: string;
   defaultValueLabel?: any;
   type?:
     | "input"
+    | "select-radio-card"
     | "number"
+    | "number-box"
     | "file"
     | "select"
     | "date"
     | "textArea"
     | "signature"
     | "custom"
-    | "image";
+    | "image"
+    | "switch"
+    | "checkbox";
   placeholder?: any;
   options?: { label: string; value: string }[];
   view?: string; // true = view mode
+  columns?: number;
   customeOnValue?: any;
   heightTextRow?: any;
   customControl?: any;
@@ -46,6 +57,7 @@ interface GlobalFormFieldProps {
   heightImage?: number;
   iconBack?: ReactElement;
   canCopy?: boolean;
+  labelCheckbox?: string;
 }
 
 export function GlobalFormField({
@@ -53,8 +65,8 @@ export function GlobalFormField({
   // ref,
   name,
   label,
-  defaultValueLabel,
-  customeOnValue,
+  groups = [3, 3, 4],
+  format = "-",
   type = "input",
   placeholder,
   options = [],
@@ -63,10 +75,12 @@ export function GlobalFormField({
   iconFront,
   iconBack,
   heightTextRow = 2,
-  widthImage = 140,
-  heightImage = 140,
+  widthImage = 120,
+  heightImage = 120,
   view = "create",
+  columns,
   customControl,
+  labelCheckbox,
   canCopy,
 }: GlobalFormFieldProps) {
   const [copied, setCopied] = React.useState(false);
@@ -100,9 +114,9 @@ export function GlobalFormField({
       return (
         <GlobalImage
           src={field.value}
-          width={widthImage}
-          height={heightImage}
-          className="rounded-xl object-contain object-center"
+          width={widthImage || 110}
+          height={heightImage || 110}
+          className=" object-cover rounded-md object-center"
           fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${field.value}`}
         />
       );
@@ -126,12 +140,32 @@ export function GlobalFormField({
           />
         );
 
+      case "number-box":
+        return (
+          <InputNumberBox
+            value={field.value || ""}
+            onChange={field.onChange}
+            groups={groups}
+            format={format}
+          />
+        );
+
+      case "switch":
+        return (
+          <Switch
+            checked={field.value || ""}
+            onCheckedChange={field.onChange}
+            defaultChecked
+          />
+        );
+
       case "textArea":
         return (
           <Textarea
-            placeholder="ระบุหมายเหตุ..."
+            placeholder={placeholder}
             className="w-full"
             rows={heightTextRow}
+            onChange={field.onChange}
             disabled={disabled}
             value={field.value || ""}
           />
@@ -153,8 +187,8 @@ export function GlobalFormField({
           <ImageUpload
             value={field.value || ""}
             onChange={field.onChange}
-            width={widthImage}
-            height={heightImage}
+            width={widthImage || 110}
+            height={heightImage || 110}
           />
         );
 
@@ -188,6 +222,34 @@ export function GlobalFormField({
           </Select>
         );
 
+      case "select-radio-card":
+        return (
+          <RadioCardGroup
+            options={options}
+            value={field.value || ""}
+            onChange={field.onChange}
+            columns={columns}
+          />
+        );
+
+      case "checkbox":
+        return (
+          <div className="flex items-center gap-2 ">
+            <Checkbox
+              checked={!!field.value}
+              onCheckedChange={field.onChange}
+              disabled={disabled}
+              id={name}
+            />
+            <label
+              htmlFor={name}
+              className="text-sm font-normal leading-none cursor-pointer "
+            >
+              {labelCheckbox}
+            </label>
+          </div>
+        );
+
       case "custom":
         return customControl(field);
 
@@ -208,7 +270,7 @@ export function GlobalFormField({
               <button
                 type="button"
                 onClick={() => handleCopy(field.value)}
-                className="text-gray-400 hover:text-gray-600 transition"
+                className="text-gray-400 hover:text-gray-600 transition cursor-pointer"
               >
                 {copied ? (
                   <span className="text-[#b4b4c5] text-xs">คัดลอกแล้ว</span>

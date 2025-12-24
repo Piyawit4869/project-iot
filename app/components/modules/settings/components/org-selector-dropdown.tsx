@@ -1,14 +1,6 @@
 import * as React from "react";
-import {
-  Check,
-  ChevronsUpDown,
-  Settings,
-  Plus,
-  ChevronDown,
-  ChevronLeft,
-} from "lucide-react";
+import { Settings, Plus, ChevronDown, ChevronLeft } from "lucide-react";
 
-import { Button } from "~/components/ui/button";
 import {
   Popover,
   PopoverContent,
@@ -24,7 +16,6 @@ import {
   CommandSeparator,
 } from "~/components/ui/command";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { cn } from "~/lib/utils";
 import { useSearchUserOrgs } from "~/api/client/user";
 import { useDebounce } from "~/hooks/use-debounce";
 import { Link } from "react-router";
@@ -44,6 +35,10 @@ type OrgSwitcherProps = {
   onOpenManage?: () => void;
   onOpenCreate?: () => void;
   refetch?: () => void;
+  data?: any;
+  branches?: any;
+  setSearch?: any;
+  backIcon?: boolean;
 };
 
 export function OrgSelectorDropdown({
@@ -53,24 +48,33 @@ export function OrgSelectorDropdown({
   onOpenManage,
   onOpenCreate,
   refetch,
+  data,
+  branches,
+  backIcon,
 }: OrgSwitcherProps) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
 
-  const debouncedSearch = useDebounce(search);
-  const { data } = useSearchUserOrgs(debouncedSearch);
-
-  const orgs = data?.organizations;
+  const orgs = data?.organizations ?? [];
 
   React.useEffect(() => {
     if (!open) setSearch("");
   }, [open]);
 
+  const filteredOrgs = React.useMemo(() => {
+    if (!search) return orgs;
+    return orgs.filter((o: any) =>
+      o.nameTh?.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [orgs, search]);
+
+  const showData = branches ? branches : filteredOrgs;
+
   const current = React.useMemo(() => {
-    return orgs && orgs.length
-      ? (orgs.find((o: Org) => o.id === currentOrgId) ?? orgs[0])
+    return orgs.length
+      ? (orgs.find((o: any) => o.id === currentOrgId) ?? orgs[0])
       : currentOrganization;
-  }, [orgs, currentOrgId]);
+  }, [orgs, currentOrgId, currentOrganization]);
 
   const initials = (name?: string) =>
     (name ?? "")
@@ -83,130 +87,95 @@ export function OrgSelectorDropdown({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <div className="flex flex-row gap-3 items-center">
+        <div className="flex flex-row gap-3 items-center cursor-pointer">
           <div className="flex items-center gap-2 min-w-0">
-            {/* <Avatar className="h-10 w-10">
-              <AvatarImage
-                src={current?.logoUrl}
-                alt={current?.nameTh ?? "Organization"}
-              />
-              <AvatarFallback>{initials(current?.nameTh)}</AvatarFallback>
-            </Avatar> */}
+            {backIcon && (
+              <Link to="/setting-organization">
+                <ChevronLeft className="h-6 w-6" />
+              </Link>
+            )}
 
-            <Link to="/setting-organization">
-              <ChevronLeft className="h-6 w-6" />
-            </Link>
-
-            <div className="min-w-0 text-left">
-              <div className="truncate text-md font-medium text-black">
+            <div className="min-w-0">
+              <div className="truncate text-md font-medium">
                 {current?.nameTh ?? "-"}
               </div>
-              {/* <div className="text-xs text-muted-foreground">เปลี่ยนองค์กร</div> */}
             </div>
           </div>
 
-          <div className="flex flex-row gap-2 cursor-pointer">
-            {/* <div className="text-xs text-muted-foreground">เปลี่ยน</div> */}
-            <ChevronDown className="h-4 w-4 opacity-60" />
-          </div>
+          <ChevronDown className="h-4 w-4 opacity-60" />
         </div>
       </PopoverTrigger>
 
-      <PopoverContent className="w-full min-w-[200px] p-0" align="start">
+      <PopoverContent className="w-[280px] p-0" align="start">
         <Command className="w-full">
-          {/* <CommandInput
-            placeholder="ค้นหารายชื่อ เช่น องค์กร A"
-            value={search}
-            onValueChange={(val) => setSearch(val)}
-          /> */}
+          {/* 🔍 Search */}
+          <div className=" px-2">
+            <CommandInput
+              placeholder="ค้นหาองค์กร..."
+              value={search}
+              onValueChange={setSearch}
+            />
+          </div>
 
-          <CommandList className="max-h-[320px]">
+          {/* 📋 List */}
+          <CommandList className="max-h-[260px] overflow-y-auto">
             <CommandEmpty>ไม่พบองค์กร</CommandEmpty>
 
             <CommandGroup>
-              {orgs && orgs.length ? (
-                orgs.map((org: Org) => {
-                  const selected = org.id === currentOrgId;
+              {showData.map((org: Org) => {
+                const selected = org.id === currentOrgId;
 
-                  return (
-                    <Link
-                      key={org.id}
-                      to={`/setting-organization?organizationId=${org.id}`}
-                      onClick={() => refetch?.()}
-                    >
-                      <CommandItem
-                        key={org.id}
-                        value={org.nameTh}
-                        onSelect={() => {
-                          // !selected && onChangeOrg(org.id);
-                          setOpen(false);
-                        }}
-                        className="rounded-lg"
-                      >
-                        <div className="flex items-center gap-2 min-w-0 flex-1">
-                          <Avatar className="h-6 w-6">
-                            <AvatarImage src={org.logoUrl} alt={org.nameTh} />
-                            <AvatarFallback>
-                              {initials(org.nameTh)}
-                            </AvatarFallback>
-                          </Avatar>
+                return (
+                  <CommandItem
+                    key={org.id}
+                    value={org.nameTh}
+                    onSelect={() => {
+                      if (!selected) {
+                        onChangeOrg(org.id);
+                        refetch?.();
+                      }
+                      setOpen(false);
+                    }}
+                    className="rounded-lg"
+                  >
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      <Avatar className="h-6 w-6">
+                        <AvatarImage src={org.logoUrl} alt={org.nameTh} />
+                        <AvatarFallback>{initials(org.nameTh)}</AvatarFallback>
+                      </Avatar>
 
-                          <div className="min-w-0">
-                            <div className="truncate text-sm">{org.nameTh}</div>
-                            <div className="text-xs text-muted-foreground">
-                              {selected ? "เลือกอยู่" : ""}
-                            </div>
+                      <div className="min-w-0">
+                        <div className="truncate text-sm">{org.nameTh}</div>
+                        {selected && (
+                          <div className="text-xs text-muted-foreground">
+                            เลือกอยู่
                           </div>
-                        </div>
-
-                        {/* <Check
-                          className={cn(
-                            "h-4 w-4",
-                            selected ? "opacity-100" : "opacity-0"
-                          )}
-                        /> */}
-                      </CommandItem>
-                    </Link>
-                  );
-                })
-              ) : (
-                <></>
-              )}
+                        )}
+                      </div>
+                    </div>
+                  </CommandItem>
+                );
+              })}
             </CommandGroup>
-
-            {(onOpenManage || onOpenCreate) && (
-              <>
-                <CommandSeparator />
-                <CommandGroup heading="Actions">
-                  {onOpenManage && (
-                    <CommandItem
-                      onSelect={() => {
-                        onOpenManage();
-                        setOpen(false);
-                      }}
-                      className="rounded-lg"
-                    >
-                      <Settings className="mr-2 h-4 w-4" />
-                      Manage organizations
-                    </CommandItem>
-                  )}
-
-                  {onOpenCreate && (
-                    <CommandItem
-                      onSelect={() => {
-                        onOpenCreate();
-                        setOpen(false);
-                      }}
-                      className="rounded-lg"
-                    >
-                      <Plus className="mr-2 h-4 w-4" />
-                      Create new organization
-                    </CommandItem>
-                  )}
-                </CommandGroup>
-              </>
-            )}
           </CommandList>
+
+          {/* ➕ Footer */}
+          {(onOpenManage || onOpenCreate) && (
+            <div className="border-t p-2 space-y-1">
+              {onOpenCreate && (
+                <button
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent"
+                  onClick={() => {
+                    onOpenCreate();
+                    setOpen(false);
+                  }}
+                >
+                  <Plus className="h-4 w-4" />
+                  เพิ่มองค์กรใหม่
+                </button>
+              )}
+            </div>
+          )}
         </Command>
       </PopoverContent>
     </Popover>

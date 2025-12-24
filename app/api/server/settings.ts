@@ -2,6 +2,7 @@ import type {
   AddressSchemaValues,
   ConnectAiValues,
   ConnectLineValues,
+  BranchesOrganization,
   OrganizationFormValues,
   PushMessageValues,
   SettingSchemaValues,
@@ -27,9 +28,30 @@ export const fetchGetOrganizationsPaginate = async (params: {
   }
 };
 
+export const fetchCreateBranchesOrganizations = async (
+  value: BranchesOrganization
+) => {
+  try {
+    const res = await ApiConfig.post(`/crud/branches/create`, value);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const fetchGetOrganizations = async () => {
   try {
     const res = await ApiConfig.get(`/configurations/organizations/details`);
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchGetBranchesOrganization = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(`/crud/branches/organizations/${id}`);
 
     return res.data;
   } catch (error) {

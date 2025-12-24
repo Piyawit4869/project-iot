@@ -47,7 +47,9 @@ export type ChatRoom = {
   latestMessage?: LatestMessage | null;
   done: boolean;
   isProcess: boolean;
+  isSpam: boolean;
   updatedAt?: string | null;
+  lineSubId?: string;
 };
 
 type IncomingRoomPayload = {
@@ -67,8 +69,10 @@ type IncomingRoomPayload = {
   updatedAt?: string;
   done: boolean;
   isProcess: boolean;
+  isSpam: boolean;
   isUpdateRoomDetails?: boolean;
   isAiReply?: boolean;
+  lineSubId?: string;
 };
 
 export const mergeRoomImmutable = (
@@ -79,6 +83,7 @@ export const mergeRoomImmutable = (
   if (!incomingId) {
     return sortingChatRoomByLatestTime(allRooms);
   }
+
   //Check new room not update when message is incomming wrong body
   if (incoming.hasOwnProperty("isAiReply")) {
     return sortingChatRoomByLatestTime(allRooms);
@@ -112,6 +117,8 @@ export const mergeRoomImmutable = (
         updatedAt: pick(incoming.updatedAt, prev.updatedAt ?? null),
         done: pick(incoming.done, prev.done),
         isProcess: pick(incoming.isProcess, prev.isProcess),
+        isSpam: pick(incoming.isSpam, prev.isSpam),
+        lineSubId: pick(incoming.lineSubId, prev.lineSubId),
         customer: incoming.customer
           ? { ...(prev.customer ?? null), ...incoming.customer }
           : (prev.customer ?? null),
@@ -120,7 +127,9 @@ export const mergeRoomImmutable = (
       const next = allRooms.slice();
       next[idx] = merged;
 
-      return sortingChatRoomByLatestTime(next);
+      const result = sortingChatRoomByLatestTime(next);
+
+      return result;
     }
 
     const merged: ChatRoom = {
@@ -141,6 +150,8 @@ export const mergeRoomImmutable = (
       updatedAt: pick(incoming.updatedAt, prev.updatedAt ?? null),
       done: pick(incoming.done, prev.done ?? null),
       isProcess: pick(incoming.isProcess, prev.isProcess ?? null),
+      isSpam: pick(incoming.isSpam, prev.isSpam ?? null),
+      lineSubId: pick(incoming.lineSubId, prev.lineSubId),
       customer: incoming.customer
         ? { ...(prev.customer ?? null), ...incoming.customer }
         : (prev.customer ?? null),
@@ -167,6 +178,8 @@ export const mergeRoomImmutable = (
     latestMessage: incoming.latestMessage ?? null,
     done: incoming.done ?? false,
     isProcess: incoming.isProcess ?? false,
+    isSpam: incoming.isSpam ?? false,
+    lineSubId: incoming.lineSubId ?? "",
     updatedAt: incoming.updatedAt ?? new Date().toISOString(),
   };
 

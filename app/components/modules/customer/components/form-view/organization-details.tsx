@@ -35,6 +35,7 @@ export const OrganizationDetails: React.FC<CustomerFormCreateProps> = ({
             </div>
           ) : (
             <EditActionButtons
+              form={form}
               isEdit={isEdit}
               disabled={disabled}
               onSave={onClick}
@@ -121,7 +122,8 @@ export const OrganizationDetails: React.FC<CustomerFormCreateProps> = ({
               control={form.control}
               name="organizationDetails.businessPhone"
               label="เบอร์โทรสำนักงาน/บริษัท (ตัวเลขเท่านั้น)"
-              type="input"
+              type="number-box"
+              groups={[3, 3, 3]}
               placeholder="กรอกเบอร์โทรสำนักงาน/บริษัท"
               view={isEdit ? "edit" : "view"}
             />
@@ -130,7 +132,7 @@ export const OrganizationDetails: React.FC<CustomerFormCreateProps> = ({
               control={form.control}
               name="organizationDetails.businessFax"
               label="เบอร์โทรสาร (ตัวเลขเท่านั้น)"
-              type="input"
+              type="number-box"
               placeholder="กรอกเบอร์โทรสาร"
               view={isEdit ? "edit" : "view"}
             />

@@ -161,7 +161,7 @@ function SlideContent({ children, direction }: any) {
       animate="center"
       exit="exit"
       variants={slideVariants}
-      transition={{ duration: 0.75 }}
+      transition={{ duration: 0.2 }}
     >
       {children}
     </motion.div>
