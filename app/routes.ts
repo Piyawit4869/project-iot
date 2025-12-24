@@ -86,20 +86,20 @@ export default [
       index("routes/backoffice/on-boarding/index.tsx"),
       ...prefix("management", [
         index("routes/backoffice/on-boarding/management/index.tsx"),
-        route(
-          "create",
-          "routes/backoffice/on-boarding/management/create.tsx"
-        ),
-        route(
-          "single",
-          "routes/backoffice/on-boarding/management/single.tsx"
-        ),
-        ]),
+        route("create", "routes/backoffice/on-boarding/management/create.tsx"),
+        route("single", "routes/backoffice/on-boarding/management/single.tsx"),
+      ]),
       ...prefix("team", [
         index("routes/backoffice/on-boarding/team/index.tsx"),
         route("single", "routes/backoffice/on-boarding/team/single.tsx"),
-        ]),
+      ]),
       route("setting", "routes/backoffice/on-boarding/setting.tsx"),
+    ]),
+
+    ...prefix("notation", [
+      index("routes/backoffice/notation/index.tsx"),
+      route("create", "routes/backoffice/notation/create.tsx"),
+      route("single", "routes/backoffice/notation/single.tsx"),
     ]),
 
     //onboarding

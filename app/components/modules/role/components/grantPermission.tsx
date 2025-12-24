@@ -38,7 +38,8 @@ const FEATURE_LABEL: Record<string, string> = {
   product: "สินค้า",
   user: "พนักงาน",
   login_log: "ประวัติการเข้าสู่ระบบ",
-  on_boarding: "On Boarding",
+  on_boarding: "ออนบอร์ด",
+  notation: "เอกสาร",
   organization: "องค์กร",
   roles: "บทบาท",
   branch: "สาขา",
@@ -109,6 +110,7 @@ export const GrantPermission: React.FC = () => {
 
     return arr;
   }, [permissions]);
+  console.log(actions);
 
   // ------- group by feature: feature -> (action -> permission) -------
   const featureRows = React.useMemo(() => {

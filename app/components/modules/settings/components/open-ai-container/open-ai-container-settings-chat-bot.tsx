@@ -171,7 +171,8 @@ export const OpenAiContainerSettingsChatBot: React.FC<
         <div className="h-full w-full rounded-xl border bg-muted/40 overflow-hidden">
           <div className="flex h-full w-full">
 
-            LEFT
+            LEFTppnpm dev
+            
             <div className="w-[22%] min-w-[16%] max-w-[28%] h-full bg-background border-r">
               <div className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur px-4 py-3">
                 <div>

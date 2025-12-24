@@ -1,5 +1,3 @@
-"use client";
-
 import { Hourglass, ImageUp, RefreshCcw, User } from "lucide-react";
 import React from "react";
 import { DatePicker } from "~/components/shared/date-picker";
@@ -26,22 +24,23 @@ import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
 import { currencyType, notationType } from "~/initData/order-initData";
 import type { OrderFormProps } from "~/schemas/order/type";
-import { calculateTotals, useDebounce } from "../order-function";
 import { useCustomerPaginate } from "~/api/client/customer/useCustomer";
-import { ListProduct } from "../product-select";
 import { OrderProvider } from "~/hooks/order/order";
-import { SignatureDocument } from "../signature";
 import { formatNumber } from "~/components/shared/global-format";
 import type { ProductType } from "~/schemas/order/order";
 import { statusOptions } from "~/initData/product-init-data";
 import { GlobalFormField } from "~/components/shared/global-formField";
-
-import { CustomerSection } from "../customerSection";
 import { cn } from "~/lib/utils";
 import { useGetAllUsers } from "~/api/client/user";
+import {
+  calculateTotals,
+  useDebounce,
+} from "~/components/modules/order/components/order-function";
+import { CustomerSection } from "~/components/modules/order/components/customerSection";
+import { ListProduct } from "~/components/modules/order/components/product-select";
 import { companyList } from "~/components/modules/inventories/indata/inData";
 
-export const OrderForm: React.FC<OrderFormProps> = ({
+export const NotationForm: React.FC<OrderFormProps> = ({
   form,
   Price,
   order,
@@ -144,8 +143,8 @@ export const OrderForm: React.FC<OrderFormProps> = ({
             "p-6 bg-card text-card-foreground rounded-xl border shadow-sm")
       )}
     >
-      <h3 className="font-semibold text-xl">ข้อมูลออเดอร์</h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <h3 className="font-semibold text-xl">ข้อมูล typedoc</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <GlobalFormField
           control={form.control}
           name="docName"
@@ -155,15 +154,17 @@ export const OrderForm: React.FC<OrderFormProps> = ({
           placeholder="กรอกชื่อออเดอร์"
         />
 
-        <GlobalFormField
-          control={form.control}
-          name="company"
-          label="บริษัท (Company)"
-          type="select"
-          view={view}
-          placeholder="เลือกบริษัท"
-          options={companyList}
-        />
+        <div>
+          <GlobalFormField
+            control={form.control}
+            name="company"
+            label="บริษัท (Company)"
+            type="select"
+            view={view}
+            placeholder="เลือกบริษัท"
+            options={companyList}
+          />
+        </div>
 
         <GlobalFormField
           control={form.control}
@@ -177,7 +178,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
           disabledItem={(item: any) => item.value !== "quotation"}
         />
 
-        <div className="col-span-3">
+        <div>
           <GlobalFormField
             control={form.control}
             name="saler"

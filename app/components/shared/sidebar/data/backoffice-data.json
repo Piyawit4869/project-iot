@@ -49,7 +49,6 @@
       "isActive": false,
       "path": "/products"
     },
-
     {
       "name": "พนักงาน",
       "key": "employee",
@@ -64,14 +63,20 @@
       "icon": "Users",
       "isActive": false
     },
-    { 
+    {
       "name": "ออนบอร์ด",
       "key": "on_boarding",
       "path": "/on-boarding",
       "icon": "BookOpen",
       "isActive": false
     },
-
+    {
+      "name": "เอกสาร",
+      "key": "notation",
+      "path": "/notation",
+      "icon": "FileText",
+      "isActive": false
+    },
     {
       "name": "การตั้งค่า",
       "key": "setting-organization",
