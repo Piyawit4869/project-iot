@@ -7,6 +7,8 @@ import {
 import {
   fetchBranchPagination,
   fetchChatBotPagination,
+  fetchCreateBranchesOrganizations,
+  fetchGetBranchesOrganization,
   fetchGetConnectionAi,
   fetchGetConnectionAiByBranch,
   fetchGetConnectionLine,
@@ -31,6 +33,7 @@ import type {
   AddressSchemaValues,
   ConnectAiValues,
   ConnectLineValues,
+  BranchesOrganization,
   OrganizationFormValues,
   PushMessageValues,
   SettingSchemaValues,
@@ -62,6 +65,12 @@ export const useGetOrganizationsPaginate = ({
   });
 };
 
+export const useCreateBranchesOrganization = () => {
+  return useMutation({
+    mutationFn: (values: any) => fetchCreateBranchesOrganizations(values),
+  });
+};
+
 export const useGetOrganizations = () =>
   useQuery({
     queryKey: ["organization"],
@@ -72,6 +81,13 @@ export const useGetOrganization = (id: string) =>
   useQuery({
     queryKey: ["organization-detail", id],
     queryFn: () => fetchGetOrganizationDetail(id),
+    enabled: !!id,
+  });
+
+export const useGetBranchesOrganization = (id: string) =>
+  useQuery({
+    queryKey: ["branches-organization", id],
+    queryFn: () => fetchGetBranchesOrganization(id),
     enabled: !!id,
   });
 

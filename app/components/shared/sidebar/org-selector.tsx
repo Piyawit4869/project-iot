@@ -46,7 +46,6 @@ export function OrgSelector({
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
 
-  // const debouncedSearch = useDebounce(search);
   const { data } = useSearchUserOrgs();
 
   const orgs = data?.organizations;
@@ -76,7 +75,7 @@ export function OrgSelector({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="h-10 w-full justify-between rounded-md"
+          className="group h-10 w-full justify-between rounded-md"
           aria-label="Switch organization"
         >
           <div className="flex items-center gap-2 min-w-0">
@@ -85,14 +84,27 @@ export function OrgSelector({
                 src={current?.logoUrl}
                 alt={current?.nameTh ?? "Organization"}
               />
-              <AvatarFallback>{initials(current?.nameTh)}</AvatarFallback>
+              <AvatarFallback className="text-black">
+                {initials(current?.nameTh)}
+              </AvatarFallback>
             </Avatar>
 
             <div className="min-w-0 text-left">
               <div className="truncate text-sm font-medium text-black">
                 {current?.nameTh ?? "-"}
               </div>
-              <div className="text-xs text-muted-foreground">เปลี่ยนองค์กร</div>
+
+              {/* <div
+                className="
+        text-xs text-muted-foreground
+        opacity-0 translate-y-1
+        transition-all duration-200
+        group-hover:opacity-100
+        group-hover:translate-y-0
+      "
+              >
+                เปลี่ยนองค์กร
+              </div> */}
             </div>
           </div>
 

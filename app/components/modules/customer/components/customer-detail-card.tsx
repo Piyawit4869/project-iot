@@ -204,7 +204,7 @@ export const CustomerDeatailCard: React.FC<CustomerFormCreateProps> = ({
             />
           </div>
 
-          <CustomerSupportSelector form={form} />
+          {/* <CustomerSupportSelector form={form} /> */}
         </CardContent>
       )}
     </Card>

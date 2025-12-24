@@ -9,40 +9,52 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import type { UseFormReturn } from "react-hook-form";
 
-export type DayKey = "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun";
-
-type DayWithTime = {
-  days: DayKey[];
-  time?: string;
-};
+//To FIX
+export type DayKey =
+  | "Monday"
+  | "Tuesday"
+  | "Wednesday"
+  | "Thursday"
+  | "Friday"
+  | "Saturday"
+  | "Sunday";
 
 export type WorkingHours = {
-  time: string;
+  open: string;
+  close: string;
 };
 
+export type WorkingHoursFormValue = Record<
+  DayKey,
+  {
+    open?: string;
+    close?: string;
+  }
+>;
 export type WorkingHoursRecord = Record<DayKey, WorkingHours>;
 
 type WorkingHoursInput = Partial<Record<DayKey, Partial<WorkingHours>>>;
 
 const DAY_LABEL: Record<DayKey, string> = {
-  mon: "วันจันทร์",
-  tue: "วันอังคาร",
-  wed: "วันพุธ",
-  thu: "วันพฤหัสบดี",
-  fri: "วันศุกร์",
-  sat: "วันเสาร์",
-  sun: "วันอาทิตย์",
+  Monday: "วันจันทร์",
+  Tuesday: "วันอังคาร",
+  Wednesday: "วันพุธ",
+  Thursday: "วันพฤหัสบดี",
+  Friday: "วันศุกร์",
+  Saturday: "วันเสาร์",
+  Sunday: "วันอาทิตย์",
 };
 
 export const createEmptyWorkingHours = (): WorkingHoursRecord => ({
-  mon: { time: "" },
-  tue: { time: "" },
-  wed: { time: "" },
-  thu: { time: "" },
-  fri: { time: "" },
-  sat: { time: "" },
-  sun: { time: "" },
+  Monday: { open: "", close: "" },
+  Tuesday: { open: "", close: "" },
+  Wednesday: { open: "", close: "" },
+  Thursday: { open: "", close: "" },
+  Friday: { open: "", close: "" },
+  Saturday: { open: "", close: "" },
+  Sunday: { open: "", close: "" },
 });
 
 function normalizeHours(input?: WorkingHoursInput): WorkingHoursRecord {
@@ -50,13 +62,12 @@ function normalizeHours(input?: WorkingHoursInput): WorkingHoursRecord {
   if (!input) return base;
 
   (Object.keys(base) as DayKey[]).forEach((k) => {
-    const day = input[k];
-    if (day) {
-      base[k] = {
-        time: day.time ?? base[k].time,
-      };
-    }
+    base[k] = {
+      open: input[k]?.open ?? "",
+      close: input[k]?.close ?? "",
+    };
   });
+
   return base;
 }
 
@@ -71,15 +82,18 @@ function parseTimeRange(range: string): { start: string; end: string } {
 }
 
 type WorkingHoursSectionProps = {
-  value?: WorkingHoursInput; // controlled mode
-  onChange?: (next: WorkingHoursRecord) => void;
-  defaultValue?: WorkingHoursInput; // uncontrolled mode
+  value?: WorkingHoursInput;
+  onChange?: (next: WorkingHoursInput) => void;
+  form: UseFormReturn<any>;
+  defaultValue?: WorkingHoursInput;
   title?: string;
 };
 
 export default function WorkingHoursSection({
   value,
+  form,
   defaultValue,
+  onChange,
   title = "เวลาการทำงาน",
 }: WorkingHoursSectionProps) {
   const isControlled = typeof value !== "undefined";
@@ -88,141 +102,104 @@ export default function WorkingHoursSection({
     normalizeHours(defaultValue)
   );
 
-  const hours: WorkingHoursRecord = React.useMemo(() => {
+  const hours = React.useMemo(() => {
     return isControlled ? normalizeHours(value) : internal;
   }, [isControlled, value, internal]);
 
   const [open, setOpen] = React.useState(false);
-  const [selectedDays, setSelectedDays] = React.useState<DayWithTime | null>(
-    null
-  );
-  const [startTime, setStartTime] = React.useState<string>("09:00");
-  const [endTime, setEndTime] = React.useState<string>("18:00");
+  const [selectedDays, setSelectedDays] = React.useState<DayKey[]>([]);
+  const [startTime, setStartTime] = React.useState("09:00");
+  const [endTime, setEndTime] = React.useState("18:00");
 
-  const openModal = (day: DayKey) => {
-    const { start, end } = parseTimeRange(hours[day]?.time ?? "");
-    setSelectedDays({ days: [day], time: `${start} - ${end}` });
-    setStartTime(start);
-    setEndTime(end);
-    setOpen(true);
-  };
-
-  const openModalForMulity = (days: DayKey[]) => {
-    const firstDay = days[0];
-    if (!firstDay) return;
-    const { start, end } = parseTimeRange(hours[firstDay]?.time ?? "");
-    setSelectedDays({ days, time: `${start} - ${end}` });
-    setStartTime(start);
-    setEndTime(end);
+  const openModal = (days: DayKey[]) => {
+    const first = days[0];
+    if (first) {
+      setStartTime(hours[first].open || "09:00");
+      setEndTime(hours[first].close || "18:00");
+    }
+    setSelectedDays(days);
     setOpen(true);
   };
 
   const confirmTime = () => {
-    if (!selectedDays) return;
-    const timeSelect = `${startTime} - ${endTime} น.`;
-
     setInternal((prev) => {
       const next = { ...prev };
-      selectedDays.days.forEach((day) => {
-        next[day] = { ...next[day], time: timeSelect };
+      selectedDays.forEach((day) => {
+        next[day] = { open: startTime, close: endTime };
       });
+      onChange?.(next);
       return next;
     });
-
-    setSelectedDays({ ...selectedDays, time: timeSelect });
     setOpen(false);
   };
 
   return (
     <div className="gap-4 mb-6">
-      <div className="mb-5 flex items-center justify-between gap-3">
-        <h2 className="text-xl font-bold">{title}</h2>
-      </div>
+      <h2 className="text-xl font-bold mb-4">{title}</h2>
 
-      <div className="grid grid-row-1 md:grid-row-2 w-[50%] gap-2">
-        {(Object.keys(DAY_LABEL) as DayKey[]).map((key) => {
-          const day = internal[key];
-          return (
-            <div key={key} className="rounded-xl p-3 bg-card ">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">{DAY_LABEL[key]}</span>
-                <label
-                  className="flex items-center gap-2 text-sm font-medium cursor-pointer select-none"
-                  onClick={() => openModal(key)}
-                >
-                  <span className="text-sm">
-                    {day?.time ? day.time : "ตั้งเวลา (กดเพื่อเลือก)"}
-                  </span>
-                  <Pencil className="h-4 w-4" />
-                </label>
-              </div>
+      <div className="grid gap-2 w-[50%]">
+        {(Object.keys(DAY_LABEL) as DayKey[]).map((day) => (
+          <div key={day} className="rounded-xl p-3 bg-card">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">{DAY_LABEL[day]}</span>
+              <button
+                onClick={() => openModal([day])}
+                className="flex items-center gap-2 text-sm"
+              >
+                {hours[day].open && hours[day].close
+                  ? `${hours[day].open} - ${hours[day].close}`
+                  : "ตั้งเวลา"}
+                <Pencil className="h-4 w-4" />
+              </button>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
 
-      <div className="flex flex-row gap-5 mt-5 w-[100%]">
-        <button
+      <div className="flex gap-4 mt-5">
+        <Button
           type="button"
-          onClick={() => openModalForMulity(Object.keys(DAY_LABEL) as DayKey[])}
-          className="flex items-center justify-start gap-2 rounded-md border px-3 py-2 text-left hover:bg-gray-100"
+          variant="outline"
+          onClick={() => openModal(Object.keys(DAY_LABEL) as DayKey[])}
         >
           แก้ไขทั้งหมด
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="outline"
           onClick={() =>
-            openModalForMulity(["mon", "tue", "wed", "thu", "fri"])
+            openModal(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
           }
-          className="flex items-center justify-start gap-2 rounded-md border px-3 py-2 text-left hover:bg-gray-100"
         >
           แก้ไขจันทร์ - ศุกร์
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
-          onClick={() => openModalForMulity(["sat", "sun"])}
-          className="flex items-center justify-start gap-2 rounded-md border px-3 py-2 text-left hover:bg-gray-100"
+          variant="outline"
+          onClick={() => openModal(["Saturday", "Sunday"])}
         >
           แก้ไขเสาร์ - อาทิตย์
-        </button>
+        </Button>
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="w-[92vw] sm:max-w-[420px]">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              ตั้งเวลา
-              {selectedDays
-                ? selectedDays.days.length === 7
-                  ? "ทั้งหมด"
-                  : selectedDays.days.length > 1
-                    ? `${DAY_LABEL[selectedDays.days[0] ?? "mon"]} - ${
-                        DAY_LABEL[
-                          selectedDays.days[selectedDays.days.length - 1] ??
-                            "mon"
-                        ]
-                      }`
-                    : DAY_LABEL[selectedDays.days[0] ?? "mon"]
-                : ""}
-            </DialogTitle>
+            <DialogTitle>ตั้งเวลา </DialogTitle>
           </DialogHeader>
 
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <Input
-                type="time"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                className="w-[130px]"
-              />
-              <span className="text-sm">ถึง</span>
-              <Input
-                type="time"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-                className="w-[130px]"
-              />
-            </div>
+          <div className="flex items-center gap-2">
+            <Input
+              type="time"
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+            />
+            <span>ถึง</span>
+            <Input
+              type="time"
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
+            />
           </div>
 
           <DialogFooter>
