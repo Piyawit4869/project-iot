@@ -53,6 +53,7 @@ import {
   useGetAiNote,
   useGetAiReplySettings,
   useGetAllTags,
+  useGetChatRoomAssistantId,
   useGetSummaryAINote,
   useUpdateCustomerTags,
 } from "~/api/client/customer/useCustomer";
@@ -172,7 +173,11 @@ export default function ChatCustomerInfo({
 }) {
   const { data: allTags } = useGetAllTags();
 
-  const assistantId = selectedRoom?.assistantId;
+  const { data: roomDetail } = useGetChatRoomAssistantId(
+    selectedRoom?.id || ""
+  );
+
+  const assistantId = roomDetail?.assistantId;
 
   const { data: participantData, refetch: refetchParicipant } =
     useChatRoomParticipants(selectedRoom?.id);
@@ -216,7 +221,7 @@ export default function ChatCustomerInfo({
 
   const { data, refetch } = useGetAllOrders();
   const [chatRoomAssistantId, setChatRoomAssistantId] =
-    React.useState<string>(assistantId);
+    React.useState<string>();
 
   const { mutateAsync: connectedChatRoomAI, isPending: isPendingAI } =
     useConnectedChatRoomAssistant();
@@ -613,14 +618,16 @@ export default function ChatCustomerInfo({
   }, [data, currentCustomer]);
 
   React.useEffect(() => {
-    if (assistantId) {
-      setChatRoomAssistantId(assistantId || "");
-    }
-
     if (currentCustomer && currentCustomer?.tags) {
       setSelectedTags(currentCustomer?.tags as []);
     }
   }, [currentCustomer, selectedRoom]);
+
+  React.useEffect(() => {
+    if (roomDetail?.assistantId) {
+      setChatRoomAssistantId(roomDetail?.assistantId || "");
+    }
+  }, [roomDetail]);
 
   React.useEffect(() => {
     if (!aiSettingLoading && aiSettingData) {
@@ -1366,12 +1373,12 @@ export default function ChatCustomerInfo({
                     </Button>
                   </div>
 
-                  {isFirstTimeAI && !chatRoomAssistantId ? (
+                  {isFirstTimeAI && !assistantId ? (
                     <HeroSearch onInputChange={handleFirstTimeAISearch} />
                   ) : (
                     <ChatMessagesWithAI
                       customerId={customer?.id}
-                      chatRoomId={chatRoomAssistantId}
+                      chatRoomId={assistantId || chatRoomAssistantId}
                       autoScroll={autoScroll}
                       setAutoScroll={setAutoScroll}
                       searchPrompt={firstTimeMessage}
@@ -1384,25 +1391,6 @@ export default function ChatCustomerInfo({
           </div>
         </div>
       </aside>
-
-      {/* {isFirstTimeAI ? ( */}
-      {/* {isFirstTimeAI &&
-                  currentCustomer &&
-                  !currentCustomer.chatRoomAssistantId ? (
-                    <AIInsightExampleRender
-                      customerName={currentCustomer.name}
-                    />
-                  ) : (
-                    // <HeroSearch onInputChange={handleFirstTimeAISearch} /> // !! old code for p'aon
-                    <ChatMessagesWithAI
-                      customerId={customer.id}
-                      chatRoomId={chatRoomAssistantId}
-                      autoScroll={autoScroll}
-                      setAutoScroll={setAutoScroll}
-                      searchPrompt={firstTimeMessage}
-                      isAILoading={isPendingAI}
-                    />
-                  )} */}
 
       {showTagManager && (
         <ChatCustomerTags

@@ -6,6 +6,7 @@ import {
   Navigation,
   Package,
   Phone,
+  Smile,
   Tag,
   User,
   Wallet,
@@ -15,6 +16,7 @@ import { useNavigate } from "react-router";
 import { formatDateAndTime } from "~/components/shared/global-format";
 import type { CustomerRequestResponse } from "../customer/types/customer";
 import GlobalButton from "~/components/shared/global-button";
+import { Separator } from "~/components/ui/separator";
 
 type CustomerStatusValue =
   | "newly_registered"
@@ -95,8 +97,8 @@ export function AiCustomerFields({
         ))}
       </div> */}
 
-      <div className="px-6 py-6 max-h-[60vh] overflow-y-auto">
-        <div className="space-y-4">
+      <div className="flex flex-row w-full px-6 py-6 max-h-[95vh] overflow-y-auto">
+        <div className="space-y-4 w-1/2">
           {infoItems.map((item, index) => {
             const isPopulated = !!item.value;
             return (
@@ -140,6 +142,29 @@ export function AiCustomerFields({
               </div>
             );
           })}
+        </div>
+        <Separator orientation="vertical" />
+        <div className="w-1/2">
+          <div className="flex items-center ">บุคลิกของลูกค้า</div>
+          <div className="space-y-3">
+            <div className="flex  flex-col flex-wrap gap-2 py-1">
+              <div className="flex flex-row gap-3">
+                <span className="flex items-center justify-center w-5 h-5 text-muted-foreground">
+                  <Smile />
+                </span>
+                <span className="text-md font-semibold text-foreground min-w-[120px]">
+                  ลักษณะการคุยของลูกค้า (อุปนิสัย)
+                </span>
+              </div>
+
+              <div className="ml-10">
+                <span className="text-md text-muted-foreground flex-1">
+                  {data?.personality ||
+                    "ตอนนี้ยังไม่สามารถบอกบุคลิกได้ พอดียังไม่มีโอกาสได้คุยกับเขาเลย ขอทำความรู้จักเขาก่อนดีกว่านะ"}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
