@@ -32,6 +32,9 @@ import EditReplyMessageForm from "../connect-line/edit-reply-message-form";
 import TableCardMassage from "../connect-line/table-card-massage";
 import EditMessageCardForm from "../connect-line/edit-card-massage";
 
+type LineTab = "config-line" | "massage-line" | "config-card";
+type LineView = "list" | "create" | "edit";
+
 export const LineContainerSettings: React.FC = () => {
   const [sp] = useSearchParams();
   const navigate = useNavigate();
@@ -43,8 +46,9 @@ export const LineContainerSettings: React.FC = () => {
   const { mutate: UpdateConnectionLine } = useUpdateConnectionLine(id);
   const { data } = useGetConnectionLine(id ?? "");
 
-  const tabFromUrl = sp.get("tab") ?? "config-line";
-  const viewFromUrl = sp.get("view") ?? "list";
+  const tabFromUrl = (sp.get("tab") as LineTab) ?? "config-line";
+  const viewFromUrl = (sp.get("view") as LineView) ?? "list";
+  const subIdFromUrl = sp.get("subId") ?? "";
 
   const setSearch = (partial: Record<string, string | null | undefined>) => {
     const curr = new URLSearchParams(sp);
@@ -66,12 +70,18 @@ export const LineContainerSettings: React.FC = () => {
     },
   });
 
-  const [tab, setTab] = React.useState(tabFromUrl);
-  React.useEffect(() => setTab(tabFromUrl), [tabFromUrl]);
+  const [tab, setTab] = React.useState<LineTab>(tabFromUrl);
+
+  React.useEffect(() => {
+    setTab(tabFromUrl);
+  }, [tabFromUrl]);
 
   const handleChangeTab = (v: string) => {
-    setTab(v);
-    setSearch({ tab: v, view: v === "massage-line" ? viewFromUrl : null });
+    const nextTab = v as LineTab;
+    setTab(nextTab);
+
+    // reset view when changing tab
+    goView(nextTab, "list");
   };
 
   const handleOnSubmit = (values: ConnectLineValues) => {
@@ -119,8 +129,10 @@ export const LineContainerSettings: React.FC = () => {
 
   const goList = (tab: string) =>
     setSearch({ tab: tab, view: "list", replyId: null });
+
   const goCreate = (tab: string) =>
     setSearch({ tab: tab, view: "create", replyId: null });
+
   const goEdit = (replyId: string) =>
     setSearch({ tab: "massage-line", view: "edit", replyId });
 
@@ -149,6 +161,14 @@ export const LineContainerSettings: React.FC = () => {
           </Button>,
         ]
       : [];
+
+  const goView = (tab: LineTab, view: LineView, subId?: string) => {
+    setSearch({
+      tab,
+      view,
+      subId: view === "edit" ? subId : null,
+    });
+  };
 
   return (
     <div className="flex flex-col w-full">
@@ -278,44 +298,49 @@ export const LineContainerSettings: React.FC = () => {
         <TabsContent value="massage-line">
           {viewFromUrl === "list" && (
             <TableMassage
-              onCreate={() => goCreate("massage-line")}
-              onEdit={goEdit}
+              onCreate={() => goView("massage-line", "create")}
+              onEdit={(id) => goView("massage-line", "edit", id)}
             />
           )}
 
           {viewFromUrl === "create" && (
             <ReplyMessageForm
               mode="create"
-              onCancel={() => goList("massage-line")}
-              onSaved={() => goList("massage-line")}
+              onCancel={() => goView("massage-line", "list")}
+              onSaved={() => goView("massage-line", "list")}
             />
           )}
 
-          {viewFromUrl === "edit" && (
+          {viewFromUrl === "edit" && subIdFromUrl && (
             <EditReplyMessageForm
               mode="edit"
-              replyId={sp.get("subId") ?? ""}
-              onCancel={() => goList("massage-line")}
-              onSaved={() => goList("massage-line")}
+              replyId={subIdFromUrl}
+              onCancel={() => goView("massage-line", "list")}
+              onSaved={() => goView("massage-line", "list")}
             />
           )}
         </TabsContent>
 
         <TabsContent value="config-card">
           {viewFromUrl === "list" && (
-            <TableCardMassage onCreate={() => goCreate("config-card")} />
-          )}
-          {viewFromUrl === "create" && (
-            <MessageCardForm
-              onCancel={() => goList("config-card")}
-              onSaved={() => goList("config-card")}
+            <TableCardMassage
+              onCreate={() => goView("config-card", "create")}
+              onEdit={(id) => goView("config-card", "edit", id)}
             />
           )}
-          {viewFromUrl === "edit" && (
+
+          {viewFromUrl === "create" && (
+            <MessageCardForm
+              onCancel={() => goView("config-card", "list")}
+              onSaved={() => goView("config-card", "list")}
+            />
+          )}
+
+          {viewFromUrl === "edit" && subIdFromUrl && (
             <EditMessageCardForm
-              id={sp.get("subId") || ""}
-              onCancel={() => goList("config-card")}
-              onSaved={() => goList("config-card")}
+              id={subIdFromUrl}
+              onCancel={() => goView("config-card", "list")}
+              onSaved={() => goView("config-card", "list")}
             />
           )}
         </TabsContent>

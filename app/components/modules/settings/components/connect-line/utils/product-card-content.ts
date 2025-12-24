@@ -1,6 +1,9 @@
+import { hasText } from "~/utils/line-card-content-check-text";
+
 type LineFlex = any;
 
 function buildCurrencyText(currency: string, price: string): string {
+  if (!hasText(price)) return "";
   switch (currency) {
     case "THB":
       return `฿${price}`;
@@ -11,17 +14,20 @@ function buildCurrencyText(currency: string, price: string): string {
 
 export function buildProductCardBody(input: any): LineFlex {
   const p = input.product;
-  const heroContents: any[] = [
-    {
+
+  const heroContents: any[] = [];
+
+  if (hasText(p.imageUrl)) {
+    heroContents.push({
       type: "image",
       url: p.imageUrl,
       size: "full",
       aspectMode: "cover",
-      aspectRatio: "20:13",
-    },
-  ];
+      aspectRatio: "1:1",
+    });
+  }
 
-  if (p.tagEnabled && p.tagText) {
+  if (p.tagEnabled && hasText(p.tagText)) {
     heroContents.push({
       type: "box",
       layout: "vertical",
@@ -30,22 +36,56 @@ export function buildProductCardBody(input: any): LineFlex {
       offsetStart: "10px",
       paddingAll: "4px",
       cornerRadius: "999px",
-      backgroundColor: p.tagColor || "#444444",
+      backgroundColor: p.tagColor || "#4B5D73",
       contents: [
         {
           type: "text",
           text: p.tagText,
           size: "xxs",
-          align: "center",
           color: "#ffffff",
+          align: "center",
         },
       ],
     });
   }
 
-  // footer buttons
+  const bodyContents: any[] = [];
+
+  if (hasText(p.title)) {
+    bodyContents.push({
+      type: "text",
+      text: p.title,
+      weight: "bold",
+      size: "xl",
+      wrap: true,
+    });
+  }
+
+  if (hasText(p.description)) {
+    bodyContents.push({
+      type: "text",
+      text: p.description,
+      size: "sm",
+      color: "#aaaaaa",
+      wrap: true,
+      margin: "sm",
+    });
+  }
+
+  if (p.priceEnabled && hasText(p.price)) {
+    bodyContents.push({
+      type: "text",
+      text: buildCurrencyText(p.currency, p.price),
+      weight: "bold",
+      size: "sm",
+      align: "end",
+      margin: "md",
+    });
+  }
+
   const footerContents: any[] = [];
-  if (p.ctaPrimaryEnabled && p.ctaPrimaryText) {
+
+  if (p.ctaPrimaryEnabled && hasText(p.ctaPrimaryText)) {
     footerContents.push({
       type: "button",
       style: "link",
@@ -57,7 +97,8 @@ export function buildProductCardBody(input: any): LineFlex {
       },
     });
   }
-  if (p.ctaSecondaryEnabled && p.ctaSecondaryText) {
+
+  if (p.ctaSecondaryEnabled && hasText(p.ctaSecondaryText)) {
     footerContents.push({
       type: "button",
       style: "link",
@@ -70,13 +111,10 @@ export function buildProductCardBody(input: any): LineFlex {
     });
   }
 
-  const priceText =
-    p.priceEnabled && p.price ? buildCurrencyText(p.currency, p.price) : "";
-
   const card: LineFlex = {
     active: true,
     name: input.name,
-    description: p.description || "",
+    description: hasText(p.description) ? p.description : "",
     type: "card",
     isFavorite: false,
     content: {
@@ -84,46 +122,22 @@ export function buildProductCardBody(input: any): LineFlex {
       contents: [
         {
           type: "bubble",
-          hero: {
-            type: "box",
-            layout: "vertical",
-            paddingAll: "0px",
-            contents: heroContents,
-          },
+
+          ...(heroContents.length > 0 && {
+            hero: {
+              type: "box",
+              layout: "vertical",
+              paddingAll: "0px",
+              contents: heroContents,
+            },
+          }),
+
           body: {
             type: "box",
             layout: "vertical",
-            contents: [
-              {
-                type: "text",
-                text: p.title,
-                weight: "bold",
-                size: "xl",
-                align: "start",
-              },
-              ...(p.description
-                ? [
-                    {
-                      type: "text",
-                      text: p.description,
-                      size: "sm",
-                      color: "#aaaaaa",
-                    },
-                  ]
-                : []),
-              ...(priceText
-                ? [
-                    {
-                      type: "text",
-                      text: priceText,
-                      weight: "bold",
-                      size: "sm",
-                      align: "end",
-                    },
-                  ]
-                : []),
-            ],
+            contents: bodyContents,
           },
+
           footer: {
             type: "box",
             layout: "vertical",

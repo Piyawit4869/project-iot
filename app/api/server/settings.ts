@@ -293,6 +293,7 @@ export const fetchGetConnectionAi = async (id: string) => {
     return error;
   }
 };
+
 export const fetchGetConnectionAiByBranch = async (branchId: string) => {
   try {
     const res = await ApiConfig.get(
