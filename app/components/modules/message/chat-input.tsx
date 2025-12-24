@@ -121,6 +121,9 @@ export default function ChatInput({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const { chatRoomId: customerChatRoomId } =
+    (customer && customer.chatRoomDetail) || {};
+
   const { mutate: uploadMutate, isPending } = useUpload();
   const { mutate: send } = useSendMessage();
 
@@ -430,7 +433,11 @@ export default function ChatInput({
         >
           <Smile className="w-4 h-4" />
         </Button>
-        <LineTemplatePickerModal handleSelectChange={setInput} subId={subId} />
+        <LineTemplatePickerModal
+          handleSelectChange={setInput}
+          subId={subId}
+          chatRoomId={customerChatRoomId}
+        />
 
         <Button
           variant="ghost"

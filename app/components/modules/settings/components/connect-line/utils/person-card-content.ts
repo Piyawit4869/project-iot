@@ -1,103 +1,102 @@
+import { hasText } from "~/utils/line-card-content-check-text";
+
 type LineFlex = any;
 
 function buildTags(tags: any[]) {
-  const result = {
+  const enabledTags = (tags ?? []).filter(
+    (t) => t.enabled === true && hasText(t.text)
+  );
+
+  if (enabledTags.length === 0) return null;
+
+  return {
     type: "box",
     layout: "horizontal",
-    spacing: "sm", // space between the two pills
-    margin: "md", // space above this whole group
-    contents: [
-      {
-        type: "box",
-        layout: "horizontal",
-        paddingAll: "4px",
-        cornerRadius: "999px",
-        backgroundColor: "#444444",
-        width: "60px",
-        contents: tags.map((p) => {
-          return {
-            type: "box",
-            layout: "horizontal",
-            paddingAll: "4px",
-            cornerRadius: "999px",
-            backgroundColor: p.color,
-            width: "60px",
-            contents: [
-              {
-                type: "text",
-                text: p.text,
-                size: "xxs",
-                align: "center",
-                color: "#ffffff",
-              },
-            ],
-          };
-        }),
-      },
-    ],
+    spacing: "sm",
+    margin: "md",
+    contents: enabledTags.map((t) => ({
+      type: "box",
+      layout: "horizontal",
+      paddingAll: "4px",
+      cornerRadius: "999px",
+      backgroundColor: t.color || "#444444",
+      contents: [
+        {
+          type: "text",
+          text: t.text,
+          size: "xxs",
+          color: "#ffffff",
+        },
+      ],
+    })),
   };
-
-  return result;
 }
 
 export function buildPersonCardBody(input: any): LineFlex {
   const p = input.person;
 
-  // footer buttons
-  let footerContents: any[] = [];
-  if (p.actions) {
-    footerContents = p.actions
-      .filter((d: any) => d.enabled === true)
-      .map((dd: any) => {
-        return {
-          type: "button",
-          style: "link",
-          height: "sm",
-          action: {
-            type: "uri",
-            label: dd.text,
-            uri: "https://line.me/",
-          },
-        };
-      });
-  }
+  const bodyContents: any[] = [];
 
-  const heroContents: any[] = [
-    {
-      type: "image",
-      url: p.imageUrl,
-      size: "full",
-      aspectMode: "cover",
-      aspectRatio: "20:13",
-    },
-  ];
-
-  if (p.tagEnabled && p.tagText) {
-    heroContents.push({
+  if (hasText(p.imageUrl)) {
+    bodyContents.push({
       type: "box",
       layout: "vertical",
-      position: "absolute",
-      offsetTop: "10px",
-      offsetStart: "10px",
-      paddingAll: "4px",
-      cornerRadius: "999px",
-      backgroundColor: p.tagColor || "#444444",
+      cornerRadius: "18px",
       contents: [
         {
-          type: "text",
-          text: p.tagText,
-          size: "xxs",
-          align: "center",
-          color: "#ffffff",
+          type: "image",
+          url: p.imageUrl,
+          size: "full",
+          aspectMode: "cover",
+          aspectRatio: "20:13",
         },
       ],
     });
   }
 
+  if (hasText(p.name)) {
+    bodyContents.push({
+      type: "text",
+      text: p.name,
+      size: "xl",
+      weight: "bold",
+      margin: "md",
+    });
+  }
+
+  if (p.descriptionEnabled && hasText(p.description)) {
+    bodyContents.push({
+      type: "text",
+      text: p.description,
+      size: "sm",
+      wrap: true,
+      margin: "sm",
+    });
+  }
+
+  const tagsBox = buildTags(p.tags);
+  if (tagsBox) {
+    bodyContents.push(tagsBox);
+  }
+
+  const footerContents =
+    p.actions
+      ?.filter((a: any) => a.enabled === true && hasText(a.text))
+      .map((a: any) => ({
+        type: "button",
+        style: "link",
+        height: "sm",
+        action: {
+          type: "uri",
+          label: a.text,
+          uri: "https://line.me/",
+        },
+      })) ?? [];
+
   const card: LineFlex = {
     active: true,
     name: input.name,
-    description: p.description || "",
+    description: hasText(p.description) ? p.description : "",
     type: "card",
     isFavorite: false,
     content: {
@@ -108,109 +107,17 @@ export function buildPersonCardBody(input: any): LineFlex {
           body: {
             type: "box",
             layout: "vertical",
-            contents: [
-              {
-                type: "box",
-                layout: "vertical",
-                contents: [
-                  {
-                    type: "image",
-                    url: p.imageUrl,
-                    size: "full",
-                    aspectMode: "cover",
-                    aspectRatio: "1:1",
-                  },
-                ],
-                cornerRadius: "xxl",
-              },
-              {
-                size: "xl",
-                text: "ddd", //!! FIXME: SEND IT
-                type: "text",
-                align: "start",
-                weight: "bold",
-              },
-              {
-                type: "box",
-                layout: "horizontal",
-                margin: "md",
-                spacing: "sm",
-                contents: [
-                  {
-                    type: "box",
-                    width: "60px",
-                    layout: "horizontal",
-                    contents: [
-                      {
-                        size: "xxs",
-                        text: "p.text",
-                        type: "text",
-                        align: "center",
-                        color: "#ffffff",
-                      },
-                    ],
-                    paddingAll: "4px",
-                    cornerRadius: "999px",
-                    backgroundColor: "#444444",
-                  },
-                  {
-                    type: "box",
-                    width: "60px",
-                    layout: "horizontal",
-                    contents: [
-                      {
-                        size: "xxs",
-                        text: p.description, //FIXME: SEND IT
-                        type: "text",
-                        align: "center",
-                        color: "#ffffff",
-                      },
-                    ],
-                    paddingAll: "4px",
-                    cornerRadius: "999px",
-                    backgroundColor: "#444444",
-                  },
-                ],
-                justifyContent: "center",
-              },
-            ],
+            contents: bodyContents,
             alignItems: "center",
           },
-
-          footer: {
-            type: "box",
-            layout: "vertical",
-            spacing: "sm",
-            contents: [
-              {
-                type: "box",
-                layout: "vertical",
-                contents: [
-                  {
-                    type: "button",
-                    style: "link",
-                    action: {
-                      uri: "https://line.me/",
-                      type: "uri",
-                      label: "โทรหาคุณ{ชื่อ}",
-                    },
-                    height: "sm",
-                  },
-                  {
-                    type: "button",
-                    style: "link",
-                    action: {
-                      uri: "https://line.me/",
-                      type: "uri",
-                      label: "ส่งอีเมลล์",
-                    },
-                    height: "sm",
-                  },
-                ],
-                alignItems: "center",
-              },
-            ],
-          },
+          ...(footerContents.length > 0 && {
+            footer: {
+              type: "box",
+              layout: "vertical",
+              spacing: "sm",
+              contents: footerContents,
+            },
+          }),
         },
       ],
     },
