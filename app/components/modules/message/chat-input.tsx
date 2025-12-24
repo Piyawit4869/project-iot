@@ -15,6 +15,7 @@ import { GlobalImage } from "~/components/shared/global-image";
 import { StickerSelectorBar } from "./line-sticker";
 import { ReplyContentBar } from "./reply-content-bar";
 import { ChatSelectLocation } from "./chat-select-location";
+import { handleSplitThaiAddress } from "~/utils/chats";
 
 const getLabelFromType = (type: string): MessageLabelType => {
   switch (type) {
@@ -355,10 +356,8 @@ export default function ChatInput({
 
   const handleSendLocation = React.useCallback(() => {
     try {
-      const [topMessage, ...rest] = mapAddress.split(",");
-
-      const message = topMessage.trim();
-      const longAddress = rest.join(",").trim();
+      const { line1: message, line2: longAddress } =
+        handleSplitThaiAddress(mapAddress);
 
       send({
         chatRoomId: selectedRoom.id,
