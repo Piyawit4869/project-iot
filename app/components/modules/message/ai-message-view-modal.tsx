@@ -26,7 +26,7 @@ export function AIMessageView({
 }: ChecklistDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg w-full max-h-[95vh] min-w-[35%] overflow-auto p-6 rounded-lg">
+      <DialogContent className="sm:max-w-lg w-full max-h-[95vh] min-w-[60%] overflow-auto p-6 rounded-lg">
         <DialogHeader>
           <DialogTitle>ข้อมูลลูกค้าผ่าน AI</DialogTitle>
         </DialogHeader>

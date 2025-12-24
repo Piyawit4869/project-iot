@@ -396,3 +396,13 @@ export const getChatRoomPartipants = async (id: string) => {
     throw error;
   }
 };
+
+export const getChatRoomAssistantId = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(`/crud/chats/rooms/details/${id}`);
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
