@@ -25,7 +25,7 @@ type DayKey =
   | "Saturday";
 
 //TO FIX
-function mapOpenDaysToApi(
+export function mapOpenDaysToApi(
   openDays: Record<DayKey, { open?: string; close?: string }>
 ) {
   return (Object.keys(openDays) as DayKey[])

@@ -34,10 +34,10 @@ export type ProgressConfig = {
 
 export interface CreateOrganizationFormCreateProps {
   form: UseFormReturn<BranchesOrganization>;
-  loading?: boolean;
+  isLoading?: boolean;
   // dataFromAI?: any;
   // disabled?: boolean;
-  // isEdit?: boolean;
+  isEdit?: boolean;
   // setIsEdit?: React.Dispatch<React.SetStateAction<boolean>>;
   // mode?: string;
 
@@ -182,7 +182,16 @@ export default function CreateOrganization() {
                     title: "ข้อมูลผู้ติดต่อ (ไม่บังคับ)",
                     descriptions:
                       "กรอกผู้ติดต่อเพิ่มเติมหากมี ในกรณีที่ผู้ที่ต้องติดต่อไม่ใช่สาขาขององค์กรโดยตรง",
-                    content: <OrganizationContactCard form={formCreate} />,
+                    content: (
+                      <Card>
+                        <CardContent className="p-0">
+                          <OrganizationContactCard
+                            form={formCreate}
+                            isEdit={true}
+                          />
+                        </CardContent>
+                      </Card>
+                    ),
                   },
                 ]}
                 buttonBottom={
