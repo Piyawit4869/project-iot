@@ -11,8 +11,14 @@ import {
   File,
   PlayIcon,
   Check,
+  UserRound,
 } from "lucide-react";
-import { ChatItem } from "~/types/chat/chat-items";
+import { ChatItem, FlexMessageType } from "~/types/chat/chat-items";
+import { GlobalImage } from "~/components/shared/global-image";
+import { FlexMessagePersonRender } from "./flex-message-person-render";
+import { FlexMessageProductRender } from "./flex-message-product-render";
+import { FlexMessagePlaceRender } from "./flex-message-place-render";
+import { FlexMessageImageRender } from "./flex-message-image-render";
 
 const formatTime = (sec: number) => {
   const m = Math.floor(sec / 60);
@@ -127,6 +133,10 @@ export function MessageRenderer({
     longitude = "",
     title = "",
   } = (msg && msg.contents) || {};
+
+  const { category = "", items = {}, name = "" } = (msg && msg.contents) || {};
+
+  console.log({ msg });
 
   // LABEL
   if (isLabel) {
@@ -347,6 +357,65 @@ export function MessageRenderer({
         </a>
       </Wrapper>
     );
+  }
+
+  if (type === ChatItem.CAROUSEL) {
+    switch (category) {
+      case FlexMessageType.PRODUCT:
+        return (
+          <Wrapper maxWidth="max-w-[400px]">
+            <div className="max-w-full px-4">
+              <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory p-3">
+                {items.map((items: any, index: string) => (
+                  <FlexMessageProductRender key={index} items={items} />
+                ))}
+              </div>
+            </div>
+          </Wrapper>
+        );
+
+      case FlexMessageType.PLACE:
+        return (
+          <Wrapper maxWidth="max-w-[400px]">
+            <div className="max-w-full px-4">
+              <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory p-3">
+                {items.map((items: any, index: string) => (
+                  <FlexMessagePlaceRender key={index} items={items} />
+                ))}
+              </div>
+            </div>
+          </Wrapper>
+        );
+
+      case FlexMessageType.PERSON:
+        return (
+          <Wrapper maxWidth="max-w-[400px]">
+            <div className="max-w-full px-4">
+              <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory p-3">
+                {items.map((items: any, index: string) => (
+                  <FlexMessagePersonRender key={index} items={items} />
+                ))}
+              </div>
+            </div>
+          </Wrapper>
+        );
+
+      case FlexMessageType.IMAGE:
+        return (
+          <Wrapper maxWidth="max-w-[400px]">
+            <div className="max-w-full px-4">
+              <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory p-3">
+                {items.map((items: any, index: string) => (
+                  <FlexMessageImageRender key={index} items={items} />
+                ))}
+              </div>
+            </div>
+          </Wrapper>
+        );
+
+      default:
+        break;
+    }
   }
 
   // FALLBACK

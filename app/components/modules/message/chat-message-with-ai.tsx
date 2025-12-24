@@ -9,8 +9,6 @@ import { flushSync } from "react-dom";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { CustomerChatSkeleton } from "./noData/customer-chat-skeleton";
 import ChatInputAIAssistant from "./chat-input-ai-assistant";
-import { useRouteLoaderData } from "react-router";
-import { usePaginatedChatRoomAI } from "~/api/client/message/useMessage";
 import { useChat } from "~/providers/chat/useChat";
 import { StreamingText } from "./streaming-text";
 import { useConnectedChatRoomAssistant } from "~/api/client/customer/useCustomer";
@@ -32,10 +30,6 @@ export default function ChatMessagesWithAI({
   searchPrompt?: string;
   isAILoading: boolean;
 }) {
-  const { me } = useRouteLoaderData("root");
-
-  const profile = me?.profile;
-
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const newestSeenId = React.useRef<string | null>(null);
@@ -56,6 +50,8 @@ export default function ChatMessagesWithAI({
     // refetch,
   } = usePaginatedChatRoomAIAssistant(chatRoomId || "");
 
+  console.log({ chatRoomId });
+
   const { mutateAsync: connectedChatRoomAIAssistant, isPending: isPendingAI } =
     useConnectedChatRoomAssistant();
 
@@ -64,13 +60,13 @@ export default function ChatMessagesWithAI({
   const combinedMessages = React.useMemo(() => {
     const paginated = paginatedMessages?.flatMap((m) => m.items || []);
     return [...paginated, ...socketMessages.flatMap((m) => m || [])]
-      .filter((c) => c.chatRoomId)
+      .filter((c) => c.chatRoomId === chatRoomId)
       .sort(
         (a, b) =>
           dayjs(a.createdAt ?? a.timestamp).valueOf() -
           dayjs(b.createdAt ?? b.timestamp).valueOf()
       );
-  }, [paginatedMessages, socketMessages]);
+  }, [paginatedMessages, socketMessages, chatRoomId]);
 
   // const isNoMessageData = !messagesData || messagesData.pages.length === 0;
 

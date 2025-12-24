@@ -73,7 +73,7 @@ export default function ChatbotSpaceNew({
         )}
 
         <div className={cn("flex-1 flex flex-col")}>
-          {selectedRoom && selectedRoom?.id ? (
+          {selectedRoom && selectedRoom?.id && !isLoading ? (
             <ChatMessageRender
               api={api}
               selectedRoom={selectedRoom}
@@ -111,7 +111,7 @@ export default function ChatbotSpaceNew({
 
         {customerInfoOpen && !isMobile && (
           <div className="w-96">
-            {selectedRoom && selectedRoom?.id && subId ? (
+            {selectedRoom && selectedRoom?.id && subId && !isLoading ? (
               <ChatCustomerInfo
                 isLineGroup={isLineGroup}
                 selectedRoom={selectedRoom}
