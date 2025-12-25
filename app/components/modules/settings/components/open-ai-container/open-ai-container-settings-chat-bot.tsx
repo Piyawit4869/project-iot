@@ -158,9 +158,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
             type="reset"
             form="config-ai"
             className="w-full"
-            onClick={form.handleSubmit(onSubmit, (errors) => {
-              console.log("❌ Form errors:", errors);
-            })}
+            onClick={form.handleSubmit(onSubmit)}
             disabled={!id} // กันเคสยังไม่ได้เลือก config
           >
             <>
