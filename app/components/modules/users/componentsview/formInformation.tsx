@@ -1,5 +1,3 @@
-"use client";
-
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import React from "react";
 import { User } from "lucide-react";

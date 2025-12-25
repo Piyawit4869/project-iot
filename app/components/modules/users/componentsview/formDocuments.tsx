@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
@@ -92,7 +90,7 @@ export const UserDocuments: React.FC<UserDocumentsViewProps> = ({
                     );
                   return (
                     <div key={index} className="rounded-xl space-y-4">
-                      <Card className="p-4">
+                      <div className="p-4">
                         <div className="flex items-center justify-between">
                           <h4 className="font-semibold">
                             เอกสารแนบ {index + 1}
@@ -170,7 +168,7 @@ export const UserDocuments: React.FC<UserDocumentsViewProps> = ({
                             }
                           /> */}
                         </div>
-                      </Card>
+                      </div>
                     </div>
                   );
                 })}

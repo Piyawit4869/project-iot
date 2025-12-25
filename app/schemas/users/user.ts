@@ -160,7 +160,7 @@ export const UsersFormSchema = z.object({
     .default([]),
   organizationId: z.string().optional(),
   branchId: z.string().optional(),
-  rolesId: z.string().optional(),
+  organizationRoleId: z.string().optional(),
   permissions: z.array(z.string()).default([]),
   activate: z.boolean().default(true),
 });
