@@ -30,6 +30,7 @@ import type { OrganizationFormValues } from "~/schemas/settings";
 import type { OptionStatus } from "~/types/settings";
 import { OrganizationContactCard } from "./create-organization/organization-contact-card";
 import { GlobalFormField } from "~/components/shared/global-formField";
+import { customerType } from "~/initData/customer-initData";
 
 interface SettingOrganizationFormProps {
   form: UseFormReturn<OrganizationFormValues>;
@@ -177,6 +178,15 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                     type="textArea"
                   />
 
+                  <GlobalFormField
+                    control={form.control}
+                    name="fromType"
+                    label="ประเภทสาขา"
+                    placeholder="เลือกประเภทสาขา"
+                    options={customerType}
+                    type="select"
+                    required
+                  />
                   <FormField
                     control={form.control}
                     name="openingDate"

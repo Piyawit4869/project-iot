@@ -27,7 +27,7 @@ export function TabControl({
   backpath,
   subtitle,
   buttons,
-  titleStyle = "flex items-center justify-between text-wrap",
+  titleStyle = "flex flex-row flex-wrap justify-between",
   // admin,
   tag,
   noneSticky = false,
@@ -36,8 +36,8 @@ export function TabControl({
     <div className={noneSticky ? "mb-4 z-0" : "sticky top-[52px] z-9 mb-4"}>
       {/* <Card className={`p-4 ${!admin ? "mt-4" : "mt-2"}`}> */}
       <Card className={"p-4"}>
-        <div className="flex flex-row flex-wrap justify-between">
-          <div className={cn(titleStyle)}>
+        <div className={cn(titleStyle)}>
+          <div className="flex items-center md:w-1/2 justify-between text-wrap">
             {backpath ? (
               <div className="flex text-headFont gap-2 items-center">
                 {typeof backpath === "string" ? (
@@ -75,7 +75,7 @@ export function TabControl({
             {subtitle && <CardTitle className="text-xl">{subtitle}</CardTitle>}
           </div>
 
-          <div className="w-full md:w-1/2 flex justify-end gap-3 mt-2 sm:mt-0 ">
+          <div className="w-full md:w-1/2 flex justify-end gap-3 mt-2 sm:mt-0">
             {buttons?.map((button: React.ReactNode, index: number) => (
               <div key={index}>{button}</div>
             ))}

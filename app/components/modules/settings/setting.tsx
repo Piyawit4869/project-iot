@@ -105,7 +105,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     isLoading: isLoadingOrganization,
     isRefetching,
     refetch,
-  } = useGetOrganization(orgId);
+  } = useGetOrganization(selectedOrgId ?? orgId);
 
   // branches
   const { data: branches } = useGetBranchesOrganization(orgId);
@@ -131,19 +131,23 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
 
   const userId = user_data?.profile?.id ?? "";
 
-  const orgSource = React.useMemo(() => {
-    if (branchId) return branchesDetail;
-    if (organizationId) return org;
-    return organization;
-  }, [branchId, branchesDetail, organizationId, org, organization]);
+  const orgSource = selectedBranchId
+    ? branchesDetail
+    : selectedOrgId
+      ? org
+      : organization;
 
-  const mainAddress =
-    getMainItem(org?.address, org?.addresses) ??
-    getMainItem(organization?.address, organization?.addresses);
+  const mainAddress = selectedBranchId
+    ? getMainItem(branchesDetail?.address)
+    : selectedOrgId
+      ? getMainItem(org?.address, org?.addresses)
+      : getMainItem(organization?.address, organization?.addresses);
 
-  const mainSetting =
-    getMainItem(org?.setting, org?.settings) ??
-    getMainItem(organization?.setting, organization?.settings);
+  const mainSetting = selectedBranchId
+    ? getMainItem(branchesDetail?.setting, branchesDetail?.settings)
+    : selectedOrgId
+      ? getMainItem(org?.address, org?.addresses)
+      : getMainItem(organization?.address, organization?.addresses);
 
   const settingAddressId = mainAddress?.id ?? "";
   const settingId = mainSetting?.id ?? "";
@@ -398,20 +402,20 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
         <TabControl
           title={
             selectedOrgId ? (
-              <div className="flex w-full items-center gap-7">
+              <div className="flex flex-row gap-2">
                 <OrgSelectorDropdown
                   topic="บริษัท/องค์กร"
-                  currentOrgId={organizationId}
+                  currentOrgId={selectedOrgId ?? organizationId}
                   currentOrganization={user?.organization}
                   onChangeOrg={handleChangeActiveOrg}
                   refetch={refetch}
                   setSearch={setSearch}
                   data={data}
                   backIcon={true}
-                />{" "}
+                />
                 <OrgSelectorDropdown
                   topic="สาขา"
-                  currentBranchId={branchId}
+                  currentBranchId={selectedBranchId ?? branchId}
                   currentOrganization={user?.organization}
                   onChangeOrg={handleChangeBranch}
                   branches={branchesData}
@@ -506,7 +510,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                 >
                   <SettingOrganizationForm
                     form={orgForm}
-                    isLoading={isLoadingOrganization && isLoadingBranch}
+                    isLoading={isLoadingOrganization || isLoadingBranch}
                   />
                 </fieldset>
               </form>
@@ -545,7 +549,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                 >
                   <SettingAddressForm
                     form={addressForm}
-                    isLoading={isLoadingOrganization && isLoadingBranch}
+                    isLoading={isLoadingOrganization || isLoadingBranch}
                     // isLoading={isRefetching}
                   />
                 </fieldset>
@@ -560,7 +564,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                 <SettingForm
                   form={settingForm}
                   isEditing={isEditing}
-                  isLoading={isLoadingOrganization && isLoadingBranch}
+                  isLoading={isLoadingOrganization || isLoadingBranch}
                 />
               </form>
             </TabsContent>

@@ -108,7 +108,9 @@ export const useOrganizationAction = () => {
               duration: 2500,
               position: "bottom-right",
             });
-            navigate(`/setting-organization?organizationId=${data.id}`);
+            navigate(
+              `/setting-organization?organizationId=${id}&branchId=${data.id}`
+            );
           },
           onError: () => {
             toast.error("เกิดข้อผิดพลาดในการสร้างองค์กร", {

@@ -151,7 +151,6 @@ export function AiConfigListPanel() {
           setOpen={setOpen}
           setIsFinish={setIsFinish}
         />
-        |
       </div>
     </div>
   );
