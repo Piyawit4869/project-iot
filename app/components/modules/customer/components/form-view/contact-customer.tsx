@@ -331,7 +331,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
             control={form.control}
             name="contacts.0.department"
             label="ตำแหน่งผู้ติดต่อ"
-            type="number"
+            type="input"
             view={isEdit ? "edit" : "view"}
             placeholder="กรอกตำแหน่งของผู้ติดต่อ เช่น ที่ปรึกษาด้านการตลาด"
           />

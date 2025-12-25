@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import GlobalButton from "~/components/shared/global-button";
 import { Form } from "~/components/ui/form";
@@ -71,7 +69,7 @@ export default function CreateUsers() {
         compensationConfigs: [],
         documents: [],
       },
-
+      organizationRoleId: "",
       permissions: [],
     },
   });

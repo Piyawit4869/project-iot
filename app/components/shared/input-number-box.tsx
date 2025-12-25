@@ -60,7 +60,7 @@ export function InputNumberBox({
   let globalIndex = 0;
 
   return (
-    <div className={cn("flex items-center", gap)}>
+    <div className={cn("flex items-center flex-wrap", gap)}>
       {groups.map((groupLen, groupIdx) => (
         <div key={groupIdx} className="flex items-center gap-1">
           {Array.from({ length: groupLen }).map(() => {

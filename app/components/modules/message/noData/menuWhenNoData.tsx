@@ -1,42 +1,23 @@
 import { GlobalImage } from "~/components/shared/global-image";
 
+import LogoImage from "/assets/images/rome.svg";
+
 import {
-  Bot,
-  Box,
   CirclePlus,
   FileImage,
-  Notebook,
   PlusIcon,
   Send,
-  SendHorizonal,
   Settings,
   X,
 } from "lucide-react";
 import { useRouteLoaderData } from "react-router";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "~/components/ui/tooltip";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Button } from "~/components/ui/button";
-import { Textarea } from "~/components/ui/textarea";
-import { Avatar } from "~/components/ui/avatar";
-import { Card } from "~/components/ui/card";
-import { AIInsightExampleRender } from "../ai-insight-example-render";
 import { Separator } from "~/components/ui/separator";
 import GlobalButton from "~/components/shared/global-button";
 import { NoteLists } from "../note-lists";
 import { Input } from "~/components/ui/input";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import HeroSearch from "../hero-search";
-import ChatInputAIAssistant from "../chat-input-ai-assistant";
 import { classForTaps, dataInTaps } from "../chat-customer";
 
 export const MOCK_PRODUCTS = [
@@ -96,7 +77,7 @@ export default function MenuWhenNoData({
           <button className="flex w-full items-center justify-between gap-2 h-[60px] rounded-b-2xl px-2 py-4 bg-background sticky top-0 z-30 transition-colors">
             <div className="flex gap-2 ">
               <GlobalImage
-                src={logoUrl || ""}
+                src={LogoImage || ""}
                 alt="profile-image"
                 width={30}
                 height={30}
