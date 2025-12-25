@@ -133,21 +133,20 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
               <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
                 <GlobalFormField
                   control={form.control}
-                  name="userName"
-                  label="ชื่อพนักงาน"
-                  type="input"
-                  checkFields={checkFields}
-                  placeholder="กรอกชื่อพนักงาน"
-                />
-                <GlobalFormField
-                  control={form.control}
                   name="email"
                   label="อีเมล"
                   type="input"
                   checkFields={checkFields}
                   placeholder="กรอกอีเมล"
                 />
-
+                <GlobalFormField
+                  control={form.control}
+                  name="userName"
+                  label="User Name"
+                  type="input"
+                  checkFields={checkFields}
+                  placeholder="กรอกชื่อพนักงาน"
+                />
                 <FormField
                   control={form.control}
                   name="password"

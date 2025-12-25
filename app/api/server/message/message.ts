@@ -41,6 +41,16 @@ export const fetchAllRoomChat = async () => {
   }
 };
 
+export const fetchRoomChatSummary = async () => {
+  try {
+    const res = await ApiConfig.get(`/crud/chats/rooms/summary`);
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const fetchSendMessage = async (payload: PushMessageValues) => {
   try {
     const res = await ApiConfig.post(`/chats/push-message`, payload);

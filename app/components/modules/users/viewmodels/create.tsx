@@ -34,7 +34,6 @@ export default function CreateUsers() {
   const form = useForm<UsersFormValues>({
     resolver: zodResolver(UsersFormSchema as any),
     defaultValues: {
-      id: "",
       userName: "",
       email: "",
       password: "",
@@ -72,10 +71,7 @@ export default function CreateUsers() {
         compensationConfigs: [],
         documents: [],
       },
-      userDepartments: [],
-      rolesId: "",
-      organizationId: "",
-      branchId: "",
+
       permissions: [],
     },
   });
@@ -223,7 +219,7 @@ export default function CreateUsers() {
             buttonBottom={
               <div className="flex gap-3 justify-end w-full">
                 <Button
-                  className="w-25 bg-white border border-gray-300 text-black hover:bg-gray-100 
+                  className="w-25 bg-white border border-gray-300 text-black hover:bg-gray-100
                                   group transition-all duration-200 hover:shadow-md"
                   onClick={prev}
                   type="button"
