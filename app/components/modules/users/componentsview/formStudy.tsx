@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
@@ -71,7 +69,7 @@ export const UserStudy: React.FC<UserStudyViewProps> = ({
               <div className="grid grid-cols-1 ">
                 {edus.map((row, index) => (
                   <div key={index} className="rounded-xl space-y-2">
-                    <Card className="p-4">
+                    <div className="p-4">
                       <div className="flex items-center justify-between">
                         <h4 className="font-semibold">
                           ประวัติการศึกษา {index + 1}
@@ -129,7 +127,7 @@ export const UserStudy: React.FC<UserStudyViewProps> = ({
                       </div>
 
                       {/* <div className="h-px w-full bg-gray-200 mt-5"></div> */}
-                    </Card>
+                    </div>
                   </div>
                 ))}
               </div>

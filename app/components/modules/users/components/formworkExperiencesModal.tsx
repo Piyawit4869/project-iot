@@ -51,20 +51,17 @@ export const WorkExperienceModal: React.FC<Props> = ({
         <Form {...form}>
           <form
             id="workexp-form"
-            onSubmit={form.handleSubmit(onSubmit)}
-
-            // onSubmit={async (e) => {
-            //   e.preventDefault();
-            //   const ok = await form
-            //     .trigger
-            //     // `profile.workExperiences.${indexPath}`,
-            //     // {
-            //     //   shouldFocus: true,
-            //     // }
-            //     ();
-            //   // if (!ok) return;
-            //   // onSubmit();
-            // }}
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const ok = await form.trigger(
+                `profile.workExperiences.${indexPath}`,
+                {
+                  shouldFocus: true,
+                }
+              );
+              if (!ok) return;
+              onSubmit();
+            }}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <FormField

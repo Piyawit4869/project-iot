@@ -97,6 +97,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
             `profile.workExperiences.${editingIndex}`
           );
           updateWe(editingIndex, {
+            ...current,
             company: current?.company ?? "",
             position: current?.position ?? "",
             employmentType: current?.employmentType ?? "",
@@ -109,7 +110,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
           toast.success("บันทึกเรียบร้อยแล้ว!", { id: toastId });
           setOpen(false);
           setEditingIndex(null);
-        } catch {
+        } catch (e) {
           toast.error("ดำเนินการไม่สำเร็จ กรุณาลองใหม่ภายหลัง", {
             id: toastId,
           });
