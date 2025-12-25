@@ -98,6 +98,7 @@ export default function CreateOrganization() {
   ];
 
   const requiredAddressFields = [
+    "address.name",
     "address.houseNo",
     "address.subDistrict",
     "address.city",
@@ -107,10 +108,10 @@ export default function CreateOrganization() {
   ];
 
   const requiredSettingFields = [
+    "setting.openDays",
     "theme",
     "textDisplay",
     "defaultLanguage",
-    "openDays",
     "branchType",
   ];
 
@@ -169,7 +170,11 @@ export default function CreateOrganization() {
                     content: (
                       <Card>
                         <CardContent className="p-0">
-                          <SettingForm form={formCreate} isEditing={true} />
+                          <SettingForm
+                            form={formCreate}
+                            isCreate={true}
+                            isEditing={true}
+                          />
                         </CardContent>
                       </Card>
                     ),

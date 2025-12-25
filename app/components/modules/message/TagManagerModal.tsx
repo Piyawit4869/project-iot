@@ -139,7 +139,7 @@ export const TagManagerModal: React.FC<TagManagerModalProps> = ({
             <div className="flex flex-wrap gap-2">
               {availableTags?.map((tag) => (
                 <GlobalTagsBadge
-                  key={tag.id ?? tag.name}
+                  key={tag.id}
                   value={tag.name}
                   showIcon={false}
                   onClick={() => onAddTag(tag)}
@@ -163,7 +163,7 @@ export const TagManagerModal: React.FC<TagManagerModalProps> = ({
             ยกเลิก
           </Button>
 
-          <Button className="w-1/2" onClick={onSubmit}>
+          <Button className="w-1/2" type="submit" onClick={onSubmit}>
             บันทึก
           </Button>
         </div>

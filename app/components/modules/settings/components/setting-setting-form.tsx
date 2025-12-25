@@ -17,11 +17,12 @@ interface SettingFormProps {
   form: UseFormReturn<any>;
   organization?: any;
   isEditing: boolean;
+  isCreate?: boolean;
   isLoading?: boolean;
 }
 
 export const SettingForm: React.FC<SettingFormProps> = (props) => {
-  const { form, organization, isEditing, isLoading } = props;
+  const { form, organization, isCreate, isEditing, isLoading } = props;
 
   const checkFields = React.useMemo(
     () => new Set(getRequiredPaths(SettingSchema as any)),
@@ -137,7 +138,7 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
                 >
                   <FormField
                     control={form.control}
-                    name={isEditing ? "openDays" : "setting.openDays"}
+                    name={isCreate ? "setting.openDays" : "openDays"}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>เปิดใช้งานการตั้งค่า</FormLabel>

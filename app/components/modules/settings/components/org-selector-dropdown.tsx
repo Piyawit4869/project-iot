@@ -18,7 +18,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useSearchUserOrgs } from "~/api/client/user";
 import { useDebounce } from "~/hooks/use-debounce";
-import { Link } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 
 type Org = {
   id: string;
@@ -58,6 +58,9 @@ export function OrgSelectorDropdown({
   branches,
   backIcon,
 }: OrgSwitcherProps) {
+  const [searchParams] = useSearchParams();
+
+  const selectedOrgId = searchParams.get("organizationId") || "";
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
 
@@ -72,9 +75,9 @@ export function OrgSelectorDropdown({
 
   const currentOrg = React.useMemo(() => {
     return orgs.length
-      ? (orgs.find((o: any) => o.id === currentOrgId) ?? orgs[0])
+      ? (orgs.find((o: any) => o.id === selectedOrgId) ?? selectedOrgId)
       : currentOrganization;
-  }, [orgs, currentOrgId, currentOrganization]);
+  }, [orgs, selectedOrgId, currentOrganization]);
 
   const currentBranchData = React.useMemo(() => {
     if (!currentBranchId) return null;
@@ -140,7 +143,7 @@ export function OrgSelectorDropdown({
 
             <CommandGroup>
               {showData.map((org: Org) => {
-                const selected = org.id === currentOrgId;
+                const selected = org.id === selectedOrgId;
 
                 return (
                   <CommandItem

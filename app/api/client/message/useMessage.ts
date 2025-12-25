@@ -14,6 +14,7 @@ import {
   markAsDone,
   markAsSpam,
   markAsProcess,
+  fetchRoomChatSummary,
 } from "~/api/server/message/message";
 
 import type {
@@ -64,6 +65,14 @@ export const useAllRoomChat = () => {
   return useQuery({
     queryKey: ["roomChat"],
     queryFn: () => fetchAllRoomChat(),
+    enabled: true,
+  });
+};
+
+export const useRoomChatSummary = () => {
+  return useQuery({
+    queryKey: ["roomChatSummary"],
+    queryFn: () => fetchRoomChatSummary(),
     enabled: true,
   });
 };

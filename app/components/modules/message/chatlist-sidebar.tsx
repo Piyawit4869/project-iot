@@ -39,6 +39,7 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { ChatItem } from "./chat-item";
+import { useRoomChatSummary } from "~/api/client/message/useMessage";
 
 type StatusKey = "unread" | "done" | "isProcess" | "isSpam" | "all";
 
@@ -76,6 +77,11 @@ export default function ChatlistSidebar({
   const { search, setSearch, select, setSelect, filterRoom, meta } =
     useChatRoom();
 
+  const {
+    data: roomSummary,
+    refetch: refetchSummary,
+    isFetching: isSummaryFetching,
+  } = useRoomChatSummary();
   const [allRooms, setAllRooms] = React.useState<ChatRoom[]>([]);
 
   const RECENT_KEY = "recent-searches";
@@ -278,28 +284,35 @@ export default function ChatlistSidebar({
           <PopoverContent
             align="start"
             className="p-0 w-64 max-h-none overflow-visible"
+            onOpenAutoFocus={() => refetchSummary?.()}
           >
             <Command className="max-h-none overflow-visible">
               <CommandList className="max-h-none overflow-visible">
                 <CommandGroup heading="">
-                  <CommandItem
-                    className={`
+                  {isSummaryFetching ? (
+                    <div className="flex flex-col ">
+                      <SkeletonLoading width="w-full" height="h-[30px]" />
+                    </div>
+                  ) : (
+                    <CommandItem
+                      className={`
     flex justify-between items-center cursor-pointer
     ${select === "all" ? "bg-orange-50 font-semibold" : ""}
   `}
-                    onSelect={() => handleClickMenu("all")}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Inbox className="w-4 h-4 text-gray-500" /> ทั้งหมด
-                    </div>
-                    <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
-                      {isLoading ? (
-                        <SkeletonLoading />
-                      ) : (
-                        meta?.statusSummary?.total
-                      )}
-                    </span>
-                  </CommandItem>
+                      onSelect={() => handleClickMenu("all")}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Inbox className="w-4 h-4 text-gray-500" /> ทั้งหมด
+                      </div>
+                      <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
+                        {isSummaryFetching ? (
+                          <SkeletonLoading />
+                        ) : (
+                          (roomSummary?.total ?? 0)
+                        )}
+                      </span>
+                    </CommandItem>
+                  )}
                   <CommandSeparator />
                   {/* <CommandItem className="flex justify-between items-center cursor-pointer">
                     <div className="flex items-center gap-2">
@@ -309,89 +322,118 @@ export default function ChatlistSidebar({
                       3
                     </span>
                   </CommandItem> */}
-                  <CommandItem
-                    className={`
+                  {isSummaryFetching ? (
+                    <div className="flex flex-col ">
+                      <SkeletonLoading width="w-full" height="h-[30px]" />
+                    </div>
+                  ) : (
+                    <CommandItem
+                      className={`
     flex justify-between items-center cursor-pointer
     ${select === "unread" ? "bg-orange-50 font-semibold" : ""}
   `}
-                    onSelect={() => handleClickMenu("unread")}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-gray-500" /> ยังไม่อ่าน
+                      onSelect={() => handleClickMenu("unread")}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-gray-500" /> ยังไม่อ่าน
+                      </div>
+                      <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
+                        {isSummaryFetching ? (
+                          <SkeletonLoading />
+                        ) : (
+                          (roomSummary?.totalUnread ?? 0)
+                        )}
+                      </span>
+                    </CommandItem>
+                  )}
+                  {isSummaryFetching ? (
+                    <div className="flex flex-col ">
+                      <SkeletonLoading width="w-full" height="h-[30px]" />
                     </div>
-                    <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
-                      {isLoading ? (
-                        <SkeletonLoading />
-                      ) : (
-                        meta?.statusSummary?.totalUnread
-                      )}
-                    </span>
-                  </CommandItem>
-                  <CommandItem
-                    className={`
+                  ) : (
+                    <CommandItem
+                      className={`
     flex justify-between items-center cursor-pointer
     ${select === "isProcess" ? "bg-orange-50 font-semibold" : ""}
   `}
-                    onSelect={() => handleClickMenu("isProcess")}
-                  >
-                    <div className="flex items-center gap-2">
-                      <MessagesSquare className="w-4 h-4 text-gray-500" />
-                      ต้องดำเนินการ
+                      onSelect={() => handleClickMenu("isProcess")}
+                    >
+                      <div className="flex items-center gap-2">
+                        <MessagesSquare className="w-4 h-4 text-gray-500" />
+                        ต้องดำเนินการ
+                      </div>
+                      <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
+                        {isSummaryFetching ? (
+                          <SkeletonLoading />
+                        ) : (
+                          (roomSummary?.totalProcess ?? 0)
+                        )}
+                      </span>
+                    </CommandItem>
+                  )}
+                  {isSummaryFetching ? (
+                    <div className="flex flex-col ">
+                      <SkeletonLoading width="w-full" height="h-[30px]" />
                     </div>
-                    <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
-                      {isLoading ? (
-                        <SkeletonLoading />
-                      ) : (
-                        meta?.statusSummary?.totalProcess
-                      )}
-                    </span>
-                  </CommandItem>
-
-                  <CommandItem
-                    className={`
+                  ) : (
+                    <CommandItem
+                      className={`
     flex justify-between items-center cursor-pointer
     ${select === "done" ? "bg-orange-50 font-semibold" : ""}
   `}
-                    onSelect={() => handleClickMenu("done")}
-                  >
-                    <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-gray-500" />{" "}
-                      ดำเนินการแล้ว
-                    </div>
-                    <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
-                      {isLoading ? (
-                        <SkeletonLoading />
-                      ) : (
-                        meta?.statusSummary?.totalDone
-                      )}
-                    </span>
-                  </CommandItem>
+                      onSelect={() => handleClickMenu("done")}
+                    >
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-gray-500" />{" "}
+                        ดำเนินการแล้ว
+                      </div>
+                      <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
+                        {isSummaryFetching ? (
+                          <SkeletonLoading />
+                        ) : (
+                          (roomSummary?.totalProcess ?? 0)
+                        )}
+                      </span>
+                    </CommandItem>
+                  )}
                 </CommandGroup>
                 <CommandSeparator />
 
                 <CommandGroup>
-                  <CommandItem className="flex items-center gap-2 cursor-pointer">
-                    <FileUp className="w-4 h-4 text-gray-500" /> นำออกข้อมูล
-                  </CommandItem>
+                  {isSummaryFetching ? (
+                    <div className="flex flex-col ">
+                      <SkeletonLoading width="w-full" height="h-[30px]" />
+                    </div>
+                  ) : (
+                    <CommandItem className="flex items-center gap-2 cursor-pointer">
+                      <FileUp className="w-4 h-4 text-gray-500" /> นำออกข้อมูล
+                    </CommandItem>
+                  )}
                   <CommandSeparator />
-                  <CommandItem
-                    className={`
+                  {isSummaryFetching ? (
+                    <div className="flex flex-col ">
+                      <SkeletonLoading width="w-full" height="h-[30px]" />
+                    </div>
+                  ) : (
+                    <CommandItem
+                      className={`
     flex justify-between items-center cursor-pointer
     ${select === "isSpam" ? "bg-orange-50 font-semibold" : ""}
   `}
-                    onSelect={() => handleClickMenu("isSpam")}
-                  >
-                    <div className="flex items-center gap-2">
-                      <OctagonAlert className="w-4 h-4 text-gray-500" /> สแปม
-                    </div>
-                    <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
-                      {isLoading ? (
-                        <SkeletonLoading />
-                      ) : (
-                        meta?.statusSummary?.totalSpam
-                      )}
-                    </span>
-                  </CommandItem>
+                      onSelect={() => handleClickMenu("isSpam")}
+                    >
+                      <div className="flex items-center gap-2">
+                        <OctagonAlert className="w-4 h-4 text-gray-500" /> สแปม
+                      </div>
+                      <span className="bg-orange-100 text-gray-500 text-xs font-semibold rounded-full px-2 py-0.5">
+                        {isSummaryFetching ? (
+                          <SkeletonLoading />
+                        ) : (
+                          (roomSummary?.totalSpam ?? 0)
+                        )}
+                      </span>
+                    </CommandItem>
+                  )}
                   {/* <CommandItem className="flex items-center gap-2 cursor-pointer">
                     <User className="w-4 h-4 text-gray-500" /> รับผิดชอบ
                   </CommandItem>

@@ -5,7 +5,7 @@ import { branchSchema } from "../order/order";
 export const UsersFormSchema = z.object({
   id: z.string().optional(),
   email: z.string().email({ message: "รูปแบบอีเมลไม่ถูกต้อง @gmail.com" }),
-  userName: z.string().min(1, "กรุณาระบุชื่อผู้ใช้"),
+  userName: z.string().min(1, "กรุณาระบุชื่อผู้ใช้").optional(),
   password: z.string().min(1, "กรุณาระบุรหัสผ่าน").optional(),
   confirmPassword: z
     .string()

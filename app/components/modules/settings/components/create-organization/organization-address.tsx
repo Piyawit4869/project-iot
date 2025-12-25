@@ -43,6 +43,7 @@ export const OrganizationAddressCard: React.FC<
               label="ชื่อสถานที่ตั้ง"
               placeholder="กรอกชื่อสถานที่ เช่น ตึกกิ่งทอง"
               type="input"
+              required
             />
             <GlobalFormField
               control={form.control}
