@@ -150,7 +150,7 @@ export type CustomerUpdateChatDetails = {
 };
 
 export type CustomerUpdateTags = {
-  tags: { name: string; active: boolean }[];
+  tags: { id?: string; active: boolean }[];
 };
 
 export type CustomerUpdateChatDetailsAndTags = {

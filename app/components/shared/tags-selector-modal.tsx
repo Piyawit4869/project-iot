@@ -22,108 +22,104 @@ interface TagsSelectorModalProps {
   form: any;
 }
 
+type Tag = {
+  id: string;
+  name: string;
+};
+
 export const TagsSelectorModal: React.FC<TagsSelectorModalProps> = ({
   form,
 }) => {
   const initialTags = form.getValues("tags") ?? [];
   const customerId = useParams<{ id: string }>();
+  const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = React.useState("");
 
-  const {
-    data: customerSingle,
-    isLoading,
-    refetch,
-  } = useCustomer(customerId.id ?? "");
+  const [selectedTags, setSelectedTags] = React.useState<Tag[]>([]);
+  const { data: customerSingle, refetch } = useCustomer(customerId.id ?? "");
   const { mutate: updateTags } = useUpdateCustomerTags(customerSingle?.id);
 
-  const { data: allTags } = useGetAllTags();
-  const { mutate, isPending } = useCreateTag();
+  const { data: allTags = [] } = useGetAllTags();
+  const { mutate: createTag, isPending } = useCreateTag();
 
-  const [open, setOpen] = React.useState(false);
-  const [search, setSearch] = React.useState("");
-  const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
-  const [showTagManager, setShowTagManager] = React.useState(false);
-
-  const availableTags =
-    allTags && allTags.length
-      ? allTags
-          // .filter((a: any, index: number) => index < 20)
-          .map((b: any) => {
-            return { name: b.name, id: b.id };
-          })
-      : [];
-  const remainingTags = availableTags?.filter(
-    (tag: any) => !selectedTags?.includes(tag.id)
-  );
   /* =========================
-   * HANDLERS (string-based)
+   * DERIVED DATA
    ========================= */
-  const handleToggleTag = (tagName: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(tagName)
-        ? prev.filter((t) => t !== tagName)
-        : [...prev, tagName]
-    );
+  const availableTags: Tag[] = allTags.map((t: any) => ({
+    id: t.id,
+    name: t.name,
+  }));
+
+  const availableTagObjects = availableTags.filter(
+    (t) => !selectedTags.some((s) => s.id === t.id)
+  );
+
+  /* =========================
+   * HANDLERS
+   ========================= */
+
+  const handleToggleTag = (tag: Tag) => {
+    setSelectedTags((prev) => {
+      const exists = prev.some((t) => t.id === tag.id);
+      return exists ? prev.filter((t) => t.id !== tag.id) : [...prev, tag];
+    });
   };
 
   const handleRemoveTag = (tagId: string) => {
-    const updated = selectedTags?.filter((t) => t !== tagId);
-    setSelectedTags?.(updated || []);
+    setSelectedTags((prev) => prev.filter((t) => t.id !== tagId));
   };
 
-  const handleDeleteTag = (tagName: string) => {
-    const updated = selectedTags.filter((t) => t !== tagName);
+  const handleDeleteTag = (tagId: string) => {
+    const updated = selectedTags.filter((t) => t.id !== tagId);
     setSelectedTags(updated);
 
     form.setValue(
       "tags",
-      updated.map((t) => ({ name: t, active: true }))
+      updated.map((t) => ({
+        id: t.id,
+        name: t.name,
+        active: true,
+      }))
     );
   };
 
   const handleCreateTag = (name: string) => {
-    if (!name) return;
-    handleToggleTag(name);
-    setSearch("");
-    mutate(
-      { active: true, name: name },
+    if (!name.trim()) return;
+    createTag(
+      { active: true, name },
       {
-        onSuccess: (values) => {
-          setSelectedTags?.([...(selectedTags || []), values.name]);
+        onSuccess: (created) => {
+          setSelectedTags((prev) => [
+            ...prev,
+            { id: created.id, name: created.name },
+          ]);
+          setInputValue("");
         },
-        onError: () => {},
       }
     );
   };
 
-  const handleAddTag = (tagNameOrId: string) => {
-    const existingTag =
-      availableTags?.find((t: any) => t.id === tagNameOrId) ||
-      availableTags?.find((t: any) => t.name === tagNameOrId);
+  const handleAddTag = (nameOrId: string) => {
+    const existing =
+      availableTags.find((t) => t.id === nameOrId) ||
+      availableTags.find((t) => t.name === nameOrId);
 
-    if (existingTag) {
-      if (!selectedTags?.includes(existingTag.id)) {
-        setSelectedTags?.([...(selectedTags || []), existingTag]);
-      }
+    if (existing) {
+      handleToggleTag(existing);
       return;
     }
 
-    mutate(
-      { active: true, name: tagNameOrId },
-      {
-        onSuccess: (values) => {
-          setSelectedTags?.([...(selectedTags || []), values.name]);
-          setOpen(false);
-        },
-        onError: () => {},
-      }
-    );
+    handleCreateTag(nameOrId);
   };
 
   const handleSave = () => {
     form.setValue(
       "tags",
-      selectedTags.map((t) => ({ name: t, active: true }))
+      selectedTags.map((t) => ({
+        id: t.id,
+        name: t.name,
+        active: true,
+      }))
     );
     setOpen(false);
   };
@@ -135,40 +131,32 @@ export const TagsSelectorModal: React.FC<TagsSelectorModalProps> = ({
       confirmText: "ยืนยัน",
       cancelText: "ยกเลิก",
       onConfirm: () => {
-        const toastId = toast.loading("กำลังเพิ่มผู้แท็กของลูกค้า...");
-
-        const result = selectedTags.map((name) => {
-          const tag = allTags?.find((t: any) => t.name === name);
-          return {
-            id: tag?.id,
-            name,
-            active: true,
-          };
-        });
+        const toastId = toast.loading("กำลังเพิ่มแท็กของลูกค้า...");
 
         updateTags(
-          { tags: result },
+          {
+            tags: selectedTags.map((t) => ({
+              id: t.id,
+              active: true,
+            })),
+          },
           {
             onSuccess: () => {
-              toast.success("เพิ่มผู้แท็กของลูกค้าเรียบร้อยแล้ว!", {
+              toast.success("เพิ่มแท็กของลูกค้าเรียบร้อยแล้ว!", {
                 id: toastId,
               });
               refetch();
               setOpen(false);
             },
             onError: () => {
-              toast.error("ไม่สามารถเพิ่มผู้แท็กของลูกค้า", { id: toastId });
-              refetch();
+              toast.error("ไม่สามารถเพิ่มแท็กของลูกค้า", { id: toastId });
             },
           }
         );
-
-        setShowTagManager(false);
       },
     });
   };
 
-  /** กด Enter เพื่อเพิ่มแท็กใหม่ */
   const handleInputKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && inputValue.trim()) {
       e.preventDefault();
@@ -177,21 +165,21 @@ export const TagsSelectorModal: React.FC<TagsSelectorModalProps> = ({
     }
   };
 
-  const selectedTagObjects = selectedTags.map((tag) => ({
-    id: tag,
-    name: tag,
-  }));
-
-  const availableTagObjects =
-    allTags?.filter((t: any) => !selectedTags.includes(t.name)) ?? [];
-
   /* =========================
    * INIT
    ========================= */
   React.useEffect(() => {
-    setSelectedTags(initialTags.map((t: any) => t.name));
+    setSelectedTags(
+      initialTags.map((t: any) => ({
+        id: t.id,
+        name: t.name,
+      }))
+    );
   }, [initialTags]);
 
+  /* =========================
+   * RENDER
+   ========================= */
   return (
     <>
       <FormField
@@ -201,18 +189,13 @@ export const TagsSelectorModal: React.FC<TagsSelectorModalProps> = ({
           <FormItem>
             <FormControl>
               <div className="flex flex-wrap gap-2">
-                {selectedTags.length === 0 ? (
-                  <></>
-                ) : (
-                  selectedTags.map((tag) => (
-                    <GlobalTagsBadge
-                      key={tag}
-                      value={tag}
-                      // showIcon
-                      onClick={() => handleDeleteTag(tag)}
-                    />
-                  ))
-                )}
+                {selectedTags.map((tag) => (
+                  <GlobalTagsBadge
+                    key={tag.id}
+                    value={tag.name}
+                    onClick={() => handleDeleteTag(tag.id)}
+                  />
+                ))}
 
                 <Button
                   type="button"
@@ -229,41 +212,21 @@ export const TagsSelectorModal: React.FC<TagsSelectorModalProps> = ({
         )}
       />
 
-      {customerSingle ? (
-        <TagManagerModal
-          open={open}
-          title="เลือกหรือสร้างแท็ก"
-          inputValue={inputValue}
-          onInputChange={setInputValue}
-          selectedTags={selectedTagObjects}
-          handleInputKeyDown={handleInputKeyDown}
-          availableTags={availableTagObjects}
-          loading={isPending}
-          onAddTag={(tag) => handleToggleTag(tag.name)}
-          onRemoveTag={(tag) => handleRemoveTag(tag.id)}
-          onCreateTag={(name) => {
-            handleAddTag(name);
-            setInputValue("");
-          }}
-          onClose={() => setOpen(false)}
-          onSubmit={handleSubmitTags}
-        />
-      ) : (
-        <TagManagerModal
-          open={open}
-          title="เลือกหรือสร้างแท็ก"
-          inputValue={search}
-          handleInputKeyDown={handleInputKeyDown}
-          onInputChange={setSearch}
-          selectedTags={selectedTagObjects}
-          availableTags={availableTagObjects}
-          onAddTag={(tag) => handleToggleTag(tag.name)}
-          onRemoveTag={(tag) => handleDeleteTag(tag.name)}
-          onCreateTag={handleCreateTag}
-          onClose={() => setOpen(false)}
-          onSubmit={handleSave}
-        />
-      )}
+      <TagManagerModal
+        open={open}
+        title="เลือกหรือสร้างแท็ก"
+        inputValue={inputValue}
+        onInputChange={setInputValue}
+        handleInputKeyDown={handleInputKeyDown}
+        selectedTags={selectedTags}
+        availableTags={availableTagObjects}
+        loading={isPending}
+        onAddTag={(tag) => handleToggleTag(tag)}
+        onRemoveTag={(tag) => handleRemoveTag(tag.id)}
+        onCreateTag={handleCreateTag}
+        onClose={() => setOpen(false)}
+        onSubmit={customerId.id ? handleSubmitTags : handleSave}
+      />
     </>
   );
 };

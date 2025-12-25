@@ -130,6 +130,7 @@ const ContactSchema = z.object({
 
 // Tag
 const TagSchema = z.object({
+  id: z.string().optional(),
   name: z.string().optional(),
   active: z.boolean().optional(),
 });
