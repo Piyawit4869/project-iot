@@ -17,7 +17,7 @@ export const FlexMessagePersonRender: React.FC<FlexMessagePersonRenderProps> = (
         snap-center
         shrink-0
         w-[330px]
-        h-[460px]
+        h-[480px]
         rounded-[24px]
         bg-white
         p-6
@@ -29,7 +29,7 @@ export const FlexMessagePersonRender: React.FC<FlexMessagePersonRenderProps> = (
           <GlobalImage
             src={items.imageUrl}
             alt={items.name}
-            className="h-full w-full object-cover"
+            className="h-[220px] w-full object-cover"
             width={330}
             notShowPreview
           />
