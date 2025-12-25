@@ -47,24 +47,14 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
   const { data } = useLineGetCardContent(id);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  // const [cards, setCards] = useState<MessageCardFormValues[]>([
-  //   {
-  //     ...data?.meta?.items?.[0],
-  //     name: data?.name,
-  //     category: data?.type,
-  //   },
-  // ]);
 
-  const [cards, setCards] = useState<MessageCardFormValues[]>([]);
-
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [cards, setCards] = React.useState<MessageCardFormValues[]>([]);
+  const [activeIndex, setActiveIndex] = React.useState<number>(0);
 
   const form = useForm<MessageCardFormValues>({
     defaultValues: MESSAGE_CARD_DEFAULT_VALUES,
     mode: "onChange",
   });
-
-  const values = form.watch();
 
   const [isCategoryDialogOpen, setCategoryDialogOpen] = useState(false);
 
@@ -105,18 +95,17 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
   };
 
   const handleSubmit = async (values: MessageCardFormValues) => {
-    const updatedCards = [...cards];
-    updatedCards[activeIndex] = values;
+    persistActiveCard();
 
     const toastId = toast.loading("กำลังบันทึกการ์ด...");
 
-    let items = [] as any;
+    const items = cards.map((c) => buildCategoryPayload(c)).filter(Boolean);
+
+    const itemsNoKey = items.map((item) => Object.values(item!)[0]);
 
     const categoryPayload = cards.map((c) =>
       items.push(buildCategoryPayload(c))
     );
-
-    const itemsNoKey = items.map((item: any) => Object.values(item)[0]);
 
     if (!values.category || !categoryPayload) {
       toast.error("กรุณาเลือกประเภทการ์ด", { id: toastId });
@@ -342,6 +331,8 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
   ]);
 
   const addCard = () => {
+    persistActiveCard();
+
     setCards((prev) => [
       ...prev,
       {
@@ -350,72 +341,79 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
         category: prev[activeIndex]?.category ?? "",
       },
     ]);
+
     setActiveIndex(cards.length);
   };
 
+  const persistActiveCard = React.useCallback(() => {
+    setCards((prev) => {
+      const next = [...prev];
+      next[activeIndex] = form.getValues();
+      return next;
+    });
+  }, [activeIndex, form]);
+
   const duplicateCard = React.useCallback(() => {
+    persistActiveCard();
+
     setCards((prev) => [...prev, { ...prev[activeIndex] }]);
     setActiveIndex(cards.length);
   }, [setCards, setActiveIndex]);
 
   const removeCard = React.useCallback(() => {
     if (cards.length === 1) return;
-    const newList = cards.filter((_, i) => i !== activeIndex);
-    setCards(newList);
-    setActiveIndex((prev) => Math.max(0, prev - 1));
-  }, [setCards, setActiveIndex]);
 
-  const movePrev = React.useCallback(() => {
-    setCards((prev) => {
-      const next = [...prev];
-      next[activeIndex] = form.getValues();
-      return next;
-    });
+    const newCards = cards.filter((_, i) => i !== activeIndex);
+    setCards(newCards);
     setActiveIndex((i) => Math.max(0, i - 1));
   }, [setCards, setActiveIndex]);
 
+  const movePrev = React.useCallback(() => {
+    if (activeIndex === 0) return;
+
+    persistActiveCard();
+    setActiveIndex((i) => i - 1);
+  }, [activeIndex, persistActiveCard]);
+
   const moveNext = React.useCallback(() => {
-    setCards((prev) => {
-      const next = [...prev];
-      next[activeIndex] = form.getValues();
-      return next;
-    });
-    setActiveIndex((i) => Math.min(cards.length - 1, i + 1));
-  }, [setCards, setActiveIndex]);
+    if (activeIndex === cards.length - 1) return;
+
+    persistActiveCard();
+    setActiveIndex((i) => i + 1);
+  }, [activeIndex, cards.length, persistActiveCard]);
 
   // Sync ค่า form กับ cards เมื่อเปลี่ยน active card
   React.useEffect(() => {
     if (!cards[activeIndex]) return;
 
     form.reset(cards[activeIndex]);
-  }, [activeIndex, cards, form]);
+  }, [activeIndex, cards]);
 
   React.useEffect(() => {
     if (!data) return;
 
-    const mappedCards: MessageCardFormValues[] = (data.meta?.items ?? []).map(
-      (item: any) => ({
-        [data.meta.category]: item,
+    const category = data.meta?.category;
+
+    const mappedCards: MessageCardFormValues[] =
+      data.meta?.items?.map((item: any) => ({
         name: data.name,
-        category: data.meta.category,
-      })
-    );
+        category,
+        [category]: item,
+      })) ?? [];
 
     if (mappedCards.length === 0) {
       mappedCards.push({
         ...MESSAGE_CARD_DEFAULT_VALUES,
-        name: (data && data.name) || "",
-        category: (data && data.meta && data.meta.category) || "",
+        name: data.name,
+        category,
       });
     }
 
-    setSelectedCategoryId(data.meta.category);
+    setSelectedCategoryId(category);
     setCards(mappedCards);
-
     setActiveIndex(0);
-
     form.reset(mappedCards[0]);
-  }, [data, form]);
+  }, [data]);
 
   return (
     <Form {...form}>
@@ -472,6 +470,7 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
                 />
               </CardContent>
             </div>
+
             <CardHeader className="mt-5 max-w-[800px]">
               <CardTitle>ตั้งค่าการ์ด</CardTitle>
               <FormField
@@ -481,17 +480,19 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
                   <FormItem>
                     <FormLabel>ประเภทการ์ด</FormLabel>
                     <FormControl>
-                      <>
+                      <div className="w-full">
                         <input type="hidden" {...field} />
                         <Button
                           type="button"
                           variant="outline"
+                          className="w-full"
                           onClick={() => setCategoryDialogOpen(true)}
                         >
                           {selectedCategory?.label || "เลือก"}
                         </Button>
-                      </>
+                      </div>
                     </FormControl>
+
                     <CardCategoryDialog
                       open={isCategoryDialogOpen}
                       onOpenChange={setCategoryDialogOpen}

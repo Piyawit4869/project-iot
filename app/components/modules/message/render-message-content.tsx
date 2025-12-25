@@ -19,6 +19,7 @@ import { FlexMessagePersonRender } from "./flex-message-person-render";
 import { FlexMessageProductRender } from "./flex-message-product-render";
 import { FlexMessagePlaceRender } from "./flex-message-place-render";
 import { FlexMessageImageRender } from "./flex-message-image-render";
+import React from "react";
 
 const formatTime = (sec: number) => {
   const m = Math.floor(sec / 60);
@@ -135,8 +136,6 @@ export function MessageRenderer({
   } = (msg && msg.contents) || {};
 
   const { category = "", items = {}, name = "" } = (msg && msg.contents) || {};
-
-  console.log({ msg });
 
   // LABEL
   if (isLabel) {
@@ -340,13 +339,7 @@ export function MessageRenderer({
           rel="noopener noreferrer"
           className="block cursor-pointer"
         >
-          <div className="h-[150px] w-full rounded-xl overflow-hidden border border-border shadow-sm">
-            <iframe
-              src={`${mapUrl}&output=embed`}
-              className="h-full w-full"
-              style={{ pointerEvents: "none" }}
-            />
-          </div>
+          <LocationMap latitude={latitude} longitude={longitude} />
 
           <div className="py-2 mt-0.5">
             <div className="truncate text-sm font-semibold">{title ?? ""}</div>
@@ -427,3 +420,21 @@ export function MessageRenderer({
     </Wrapper>
   );
 }
+
+const LocationMap = React.memo(
+  ({ latitude, longitude }: { latitude?: number; longitude?: number }) => {
+    const mapUrl = `https://www.google.com/maps?q=${latitude ?? ""},${longitude ?? ""}&z=17`;
+
+    return (
+      <div className="h-[150px] w-full rounded-xl overflow-hidden border border-border shadow-sm">
+        <iframe
+          src={`${mapUrl}&output=embed`}
+          className="h-full w-full"
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          style={{ pointerEvents: "none" }}
+        />
+      </div>
+    );
+  }
+);
