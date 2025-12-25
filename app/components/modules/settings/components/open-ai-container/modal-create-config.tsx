@@ -94,7 +94,7 @@ export default function ModalCreateConfig({
           </DialogHeader>
 
           <FormProvider {...form}>
-            <form id="config-ai" className="h-full">
+            <form id="create-config-ai" className="h-full">
               <ChatbotSideBarSettings form={form} id={""} />
             </form>
           </FormProvider>

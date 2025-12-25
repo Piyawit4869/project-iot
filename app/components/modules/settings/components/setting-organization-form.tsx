@@ -101,26 +101,38 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                 </div>
               </>
             ) : (
-              <div className="flex-4 gap-4">
-                <FormField
-                  control={form.control}
-                  name="logoUrl"
-                  render={({ field }) => (
-                    <FormItem className="mt-4">
-                      <FormLabel>โลโก้องค์กร</FormLabel>
-                      <FormControl>
-                        <ImageUpload
-                          value={field.value || ""}
-                          onChange={field.onChange}
-                          className="object-contain"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <div className="space-y-4  ">
+                {/* Activity Name */}{" "}
+                <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+                  <GlobalFormField
+                    control={form.control}
+                    name="logoUrl"
+                    label="โลโก้ของสาขา"
+                    type="image"
+                  />
 
+                  <GlobalFormField
+                    control={form.control}
+                    name="active"
+                    label="เปิดใช้งาน"
+                    type="switch"
+                  />
+                </div>
                 <div className="grid grid-cols-2 gap-4 mt-3">
+                  <GlobalFormField
+                    control={form.control}
+                    name="code"
+                    label="รหัสสาขา"
+                    placeholder="กรอกชื่อสาขาภาษาไทย เช่น สาขาสามร้อยสิบห้าโปรดักชั่น"
+                    type="input"
+                  />
+                  <GlobalFormField
+                    control={form.control}
+                    name="isMain"
+                    label="สาขาหลัก"
+                    labelCheckbox="กำหนดสาขานี้เป็นสาขาหลักขององค์กร"
+                    type="checkbox"
+                  />
                   <FormField
                     control={form.control}
                     name="nameTh"
@@ -149,35 +161,20 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                     )}
                   />
 
-                  <FormField
+                  <GlobalFormField
                     control={form.control}
                     name="descriptionsTh"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>คำอธิบาย (ไทย)</FormLabel>
-                        <FormControl>
-                          <Input placeholder="กรอกคำอธิบาย (ไทย)" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    label="คำอธิบายสาขา (ภาษาไทย)"
+                    placeholder="กรอกคำอธิบายภาษาไทย เช่น สาขาหลักขององค์กร"
+                    type="textArea"
                   />
 
-                  <FormField
+                  <GlobalFormField
                     control={form.control}
                     name="descriptionsEn"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>คำอธิบาย (อังกฤษ)</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="กรอกคำอธิบาย (อังกฤษ)"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    label="คำอธิบายสาขา (ภาษาอังกฤษ)"
+                    placeholder="กรอกคำอธิบายอังกฤษ เช่น Main branch of the organization"
+                    type="textArea"
                   />
 
                   <FormField
@@ -199,7 +196,7 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                     )}
                   />
 
-                  <div className="flex items-center space-x-4 p-3 ">
+                  {/* <div className="flex items-center space-x-4 p-3 ">
                     <FormField
                       control={form.control}
                       name="active"
@@ -219,7 +216,7 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                         </FormItem>
                       )}
                     />
-                  </div>
+                  </div> */}
                 </div>
               </div>
             )}
@@ -295,7 +292,15 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                     )}
                   />
                   <div className="flex items-center space-x-4 p-3">
-                    <FormField
+                    <GlobalFormField
+                      control={form.control}
+                      name="registerVat"
+                      label="ภาษีมูลค่าเพิ่ม"
+                      labelCheckbox="สาขามีการจดภาษีมูลค่าเพิ่ม"
+                      type="checkbox"
+                    />
+
+                    {/* <FormField
                       control={form.control}
                       name="registerVat"
                       render={({ field }) => (
@@ -313,7 +318,7 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                           <FormMessage />
                         </FormItem>
                       )}
-                    />
+                    /> */}
                   </div>
                 </div>
               )}
@@ -473,83 +478,101 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
             )}
           </div>
 
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2  gap-4">
-              <GlobalFormField
-                control={form.control}
-                name="contactName"
-                label="ชื่อผู้ติดต่อ"
-                placeholder="เช่น นายสมชาย ใจดี"
-                type="input"
-                //  view={isEdit ? "edit" : "view"}
-              />
+          <div className="gap-4 mb-6">
+            <div className="mb-5">
+              <h2 className="text-xl font-bold">ผู้ติดต่อ</h2>
+            </div>
+            {isLoading ? (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {Array.from({ length: 12 }).map((_, i) => (
+                    <SkeletonLoading
+                      key={i}
+                      className={`h-7 ${i % 4 < 2 ? "w-30" : ""}`}
+                    />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2  gap-4">
+                  <GlobalFormField
+                    control={form.control}
+                    name="contactName"
+                    label="ชื่อผู้ติดต่อ"
+                    placeholder="เช่น นายสมชาย ใจดี"
+                    type="input"
+                    //  view={isEdit ? "edit" : "view"}
+                  />
 
-              <GlobalFormField
-                control={form.control}
-                name="contactEmail"
-                label="อีเมลผู้ติดต่อ"
-                placeholder="เช่น example@email.com"
-                type="input"
-                //  view={isEdit ? "edit" : "view"}
-              />
-            </div>
+                  <GlobalFormField
+                    control={form.control}
+                    name="contactEmail"
+                    label="อีเมลผู้ติดต่อ"
+                    placeholder="เช่น example@email.com"
+                    type="input"
+                    //  view={isEdit ? "edit" : "view"}
+                  />
+                </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <GlobalFormField
-                control={form.control}
-                name="contactPhone"
-                label="เบอร์โทรผู้ติดต่อ"
-                placeholder="เช่น 0812345678"
-                type="number-box"
-                //  view={isEdit ? "edit" : "view"}
-              />
-              <GlobalFormField
-                control={form.control}
-                name="contactLine"
-                label="Line ผู้ติดต่อ"
-                placeholder="เช่น line id หรือเบอร์โทร"
-                type="input"
-                //  view={isEdit ? "edit" : "view"}
-              />
-            </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <GlobalFormField
+                    control={form.control}
+                    name="contactPhone"
+                    label="เบอร์โทรผู้ติดต่อ"
+                    placeholder="เช่น 0812345678"
+                    type="number-box"
+                    //  view={isEdit ? "edit" : "view"}
+                  />
+                  <GlobalFormField
+                    control={form.control}
+                    name="contactLine"
+                    label="Line ผู้ติดต่อ"
+                    placeholder="เช่น line id หรือเบอร์โทร"
+                    type="input"
+                    //  view={isEdit ? "edit" : "view"}
+                  />
+                </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <GlobalFormField
-                control={form.control}
-                name="contactFacebook"
-                label="Facebook ผู้ติดต่อ"
-                placeholder="เช่น facebook.com/yourpage หรือชื่อโปรไฟล์"
-                type="input"
-                //  view={isEdit ? "edit" : "view"}
-              />
-              <GlobalFormField
-                control={form.control}
-                name="contactWhatsapp"
-                label="Whatsapp ผู้ติดต่อ"
-                placeholder="เช่น +66812345678"
-                type="input"
-                //  view={isEdit ? "edit" : "view"}
-              />
-              <GlobalFormField
-                control={form.control}
-                name="contactWebsite"
-                label="เว็บไซต์ผู้ติดต่อ"
-                placeholder="เช่น https://www.example.com"
-                type="input"
-                canCopy
-                //  view={isEdit ? "edit" : "view"}
-              />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <GlobalFormField
-                control={form.control}
-                name="contactNote"
-                label="หมายเหตุ"
-                placeholder="ข้อมูลเพิ่มเติมเกี่ยวกับผู้ติดต่อ (ถ้ามี)"
-                type="textArea"
-                //  view={isEdit ? "edit" : "view"}
-              />
-            </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <GlobalFormField
+                    control={form.control}
+                    name="contactFacebook"
+                    label="Facebook ผู้ติดต่อ"
+                    placeholder="เช่น facebook.com/yourpage หรือชื่อโปรไฟล์"
+                    type="input"
+                    //  view={isEdit ? "edit" : "view"}
+                  />
+                  <GlobalFormField
+                    control={form.control}
+                    name="contactWhatsapp"
+                    label="Whatsapp ผู้ติดต่อ"
+                    placeholder="เช่น +66812345678"
+                    type="input"
+                    //  view={isEdit ? "edit" : "view"}
+                  />
+                  <GlobalFormField
+                    control={form.control}
+                    name="contactWebsite"
+                    label="เว็บไซต์ผู้ติดต่อ"
+                    placeholder="เช่น https://www.example.com"
+                    type="input"
+                    canCopy
+                    //  view={isEdit ? "edit" : "view"}
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <GlobalFormField
+                    control={form.control}
+                    name="contactNote"
+                    label="หมายเหตุ"
+                    placeholder="ข้อมูลเพิ่มเติมเกี่ยวกับผู้ติดต่อ (ถ้ามี)"
+                    type="textArea"
+                    //  view={isEdit ? "edit" : "view"}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
