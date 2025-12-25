@@ -204,12 +204,7 @@ export const ChatBotChatMessagesAndConfig: React.FC<
 
   return (
     <div className="flex flex-col h-[calc(100vh-400px)] bg-white dark:bg-secondary">
-      <div
-        className="flex flex-1 flex-col"
-        style={{
-          height: 350,
-        }}
-      >
+      <div className="flex flex-1 flex-col" style={{ height: "75vh" }}>
         <div
           ref={scrollAreaRef}
           className="flex h-full flex-col space-y-6 overflow-y-auto px-4 z-0 relative dark:bg-background"

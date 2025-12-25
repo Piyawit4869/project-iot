@@ -53,7 +53,7 @@ export function OrgSelectorDropdown({
   onOpenCreate,
   refetch,
   data,
-  currentBranch,
+
   topic,
   branches,
   backIcon,
@@ -62,10 +62,6 @@ export function OrgSelectorDropdown({
   const [search, setSearch] = React.useState("");
 
   const orgs = data?.organizations ?? [];
-
-  React.useEffect(() => {
-    if (!open) setSearch("");
-  }, [open]);
 
   const filteredOrgs = React.useMemo(() => {
     if (!search) return orgs;
@@ -81,10 +77,9 @@ export function OrgSelectorDropdown({
   }, [orgs, currentOrgId, currentOrganization]);
 
   const currentBranchData = React.useMemo(() => {
-    return branches?.length
-      ? (branches?.find((o: any) => o.id === currentBranchId) ?? branches[0])
-      : currentBranch;
-  }, [branches, currentBranchId, currentBranch]);
+    if (!currentBranchId) return null;
+    return branches?.find((b: any) => b.id === currentBranchId) ?? null;
+  }, [branches, currentBranchId]);
 
   const showData = branches ? branches : filteredOrgs;
   const showName = branches ? currentBranchData : currentOrg;
@@ -96,6 +91,10 @@ export function OrgSelectorDropdown({
       .slice(0, 2)
       .map((s) => s[0]?.toUpperCase())
       .join("") || "OR";
+
+  React.useEffect(() => {
+    if (!open) setSearch("");
+  }, [open]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -111,7 +110,9 @@ export function OrgSelectorDropdown({
             <div className="min-w-45">
               <span className="truncate text-base font-medium">{topic}</span>
               <div className="truncate text-md font-medium">
-                {showName?.nameTh ?? "-"}
+                {showName?.nameTh ?? (
+                  <span className="text-muted-foreground">กรุณาเลือกสาขา</span>
+                )}
               </div>
             </div>
           </div>
@@ -133,7 +134,7 @@ export function OrgSelectorDropdown({
 
           {/* 📋 List */}
           <CommandList className="max-h-[260px] overflow-y-auto">
-            <CommandEmpty>ไม่พบองค์กร</CommandEmpty>
+            <CommandEmpty>ไม่พบสาขา</CommandEmpty>
 
             <CommandGroup>
               {showData.map((org: Org) => {
@@ -185,7 +186,7 @@ export function OrgSelectorDropdown({
                   }}
                 >
                   <Plus className="h-4 w-4" />
-                  เพิ่มองค์กรใหม่
+                  เพิ่มสาขาใหม่
                 </button>
               )}
             </div>

@@ -89,39 +89,36 @@ export default function CreateOrganization() {
     }
   };
 
-  // const requiredCustomerFields = [
-  //   // "profile.imageUrl",
-  //   "status",
-  //   "profile.firstName",
-  //   // "profile.lastName",
-  //   // "profile.gender",
-  //   // "profile.birthDate",
-  //   // "profile.age",
-  //   // "customerType",
-  //   // "profile.phone",
-  // ];
+  const requiredDetailFields = [
+    "nameTh",
+    "taxId",
+    "status",
+    "fromType",
+    "branchType",
+  ];
 
-  // const requiredOrganizationFields = [
-  //   "organizationDetails.businessName",
-  //   "organizationDetails.fromType",
-  //   // "organizationDetails.branchCode",
-  //   // "organizationDetails.businessPhone",
-  //   // "organizationDetails.businessFax",
-  //   // "organizationDetails.businessEmail",
-  //   // "organizationDetails.importantDate",
-  //   // "organizationDetails.openingDate",
-  //   // "organizationDetails.orgType",
-  //   // "organizationDetails.websiteUrl",
-  //   // "organizationDetails.note",
-  //   // "organizationDetails.descriptions",
-  // ];
+  const requiredAddressFields = [
+    "address.houseNo",
+    "address.subDistrict",
+    "address.city",
+    "address.province",
+    "address.nation",
+    "address.postalCode",
+  ];
+
+  const requiredSettingFields = [
+    "theme",
+    "textDisplay",
+    "defaultLanguage",
+    "openDays",
+    "branchType",
+  ];
 
   const values = formCreate.getValues();
-  // const progressCustomerData = calculateProgress(
-  //   values,
-  //   requiredCustomerFields
-  // );
+  const progressDetailData = calculateProgress(values, requiredDetailFields);
+  const progressAddressData = calculateProgress(values, requiredAddressFields);
 
+  const progressSettingData = calculateProgress(values, requiredSettingFields);
   // const progressOrganizationData = calculateProgress(
   //   values,
   //   requiredOrganizationFields
@@ -152,7 +149,7 @@ export default function CreateOrganization() {
                     title: "ข้อมูลสาขาขององค์กร",
                     descriptions:
                       "กรุณากรอกข้อมูลสาขาขององค์กรให้ครบถ้วนเพื่อใช้ในการดำเนินงาน",
-                    // progress: progressCustomerData,
+                    progress: progressDetailData,
                     content: <OrganizationDetailCard form={formCreate} />,
                   },
 
@@ -160,7 +157,7 @@ export default function CreateOrganization() {
                     title: "ข้อมูลที่อยู่สาขา",
                     descriptions:
                       "กรอกข้อมูลที่อยู่สาขาเพื่อใช้ในการติดต่อและดำเนินงาน",
-                    // progress: progressOrganizationData,
+                    progress: progressAddressData,
                     content: <OrganizationAddressCard form={formCreate} />,
                   },
 
@@ -168,7 +165,7 @@ export default function CreateOrganization() {
                     title: "ตั้งค่าสาขา",
                     descriptions:
                       "กรอกข้อมูลที่อยู่สาขาเพื่อใช้ในการติดต่อและดำเนินงาน",
-                    // progress: progressOrganizationData,
+                    progress: progressSettingData,
                     content: (
                       <Card>
                         <CardContent className="p-0">
