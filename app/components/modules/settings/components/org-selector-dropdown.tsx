@@ -78,7 +78,9 @@ export function OrgSelectorDropdown({
 
   const currentBranchData = React.useMemo(() => {
     if (!currentBranchId) return null;
-    return branches?.find((b: any) => b.id === currentBranchId) ?? null;
+    return (
+      (branches && branches?.find((b: any) => b.id === currentBranchId)) ?? null
+    );
   }, [branches, currentBranchId]);
 
   const showData = branches ? branches : filteredOrgs;
