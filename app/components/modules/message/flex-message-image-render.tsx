@@ -19,7 +19,7 @@ export const FlexMessageImageRender: React.FC<FlexMessageImageRenderProps> = (
           <GlobalImage
             src={items?.imageUrl}
             alt="ภาพตัวอย่างการ์ด"
-            className="h-full w-full object-cover "
+            className="h-[270px] w-full object-cover "
             notShowPreview
           />
         ) : (

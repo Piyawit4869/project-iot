@@ -158,6 +158,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
             type="reset"
             form="config-ai"
             className="w-full"
+            onClick={form.handleSubmit(onSubmit)}
             disabled={!id} // กันเคสยังไม่ได้เลือก config
           >
             <>
@@ -327,11 +328,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
 
             <div className="flex-1 overflow-y-auto p-3">
               <FormProvider {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  id="config-ai"
-                  className="h-full"
-                >
+                <form id="config-ai" className="h-full">
                   <ChatbotSideBarSettings form={form} id={id} />
                 </form>
               </FormProvider>

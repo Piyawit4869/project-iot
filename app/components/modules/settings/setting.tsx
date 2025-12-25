@@ -327,6 +327,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     if (!orgSource) return;
 
     orgForm.reset({
+      code: orgSource?.code ?? "",
       nameTh: orgSource?.nameTh ?? "",
       nameEn: orgSource?.nameEn ?? "",
       contactEmail: orgSource?.contactEmail ?? "",
@@ -408,26 +409,21 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                   data={data}
                   backIcon={true}
                 />{" "}
-                {branchesData && (
-                  <>
-                    {" "}
-                    <OrgSelectorDropdown
-                      topic="สาขา"
-                      currentBranchId={branchId}
-                      currentOrganization={user?.organization}
-                      onChangeOrg={handleChangeBranch}
-                      branches={branchesData}
-                      onOpenCreate={() => handleOpenCreate(orgId)}
-                    />
-                    <Button
-                      onClick={clearSearch}
-                      variant="secondary"
-                      className=" flex flex-row items-center gap-2 text-sm"
-                    >
-                      <BrushCleaning className="w-4" /> ล้างค่า
-                    </Button>
-                  </>
-                )}
+                <OrgSelectorDropdown
+                  topic="สาขา"
+                  currentBranchId={branchId}
+                  currentOrganization={user?.organization}
+                  onChangeOrg={handleChangeBranch}
+                  branches={branchesData}
+                  onOpenCreate={() => handleOpenCreate(selectedOrgId)}
+                />
+                <Button
+                  onClick={clearSearch}
+                  variant="secondary"
+                  className=" flex flex-row items-center gap-2 text-sm"
+                >
+                  <BrushCleaning className="w-4" /> ล้างค่า
+                </Button>
               </div>
             ) : (
               "องค์กรทั้งหมด"

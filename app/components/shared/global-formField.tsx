@@ -49,6 +49,7 @@ interface GlobalFormFieldProps {
   options?: { label: string; value: string }[];
   view?: string; // true = view mode
   columns?: number;
+  required?: boolean;
   customeOnValue?: any;
   heightTextRow?: any;
   customControl?: any;
@@ -71,6 +72,7 @@ export function GlobalFormField({
   placeholder,
   options = [],
   disabled,
+  required,
   disabledItem,
   iconFront,
   iconBack,
@@ -265,7 +267,12 @@ export function GlobalFormField({
       render={({ field }) => (
         <FormItem className="w-full">
           <FormLabel>
-            {iconFront} {label} {iconBack}
+            {iconFront}{" "}
+            <span>
+              {label}
+              {required && <span className="text-red-500 ml-1">*</span>}
+            </span>
+            {iconBack}
             {type === "input" && canCopy ? (
               <button
                 type="button"

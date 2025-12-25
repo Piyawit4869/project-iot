@@ -5,6 +5,7 @@ import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { Form } from "~/components/ui/form";
 import { addressSchema, type AddressSchemaValues } from "~/schemas/settings";
 import { getRequiredPaths } from "~/utils/form-adapter";
+import { GlobalFormField as GlobalFormFieldNew } from "~/components/shared/global-formField";
 
 interface SettingAddressFormProps {
   form: UseFormReturn<AddressSchemaValues>;
@@ -59,12 +60,28 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
               <GlobalFormField
                 control={form.control}
                 name="building"
-                label="ชื่ออาคาร"
+                label="ชื่อตึก/อาคาร"
                 type="input"
                 checkFields={checkFields}
                 placeholder="Building 1"
               />
+              <GlobalFormField
+                control={form.control}
+                name="roomNo"
+                label="ห้องหมายเลข"
+                placeholder="กรอกห้อง เช่น ห้อง 315"
+                type="input"
+                checkFields={checkFields}
+              />
 
+              <GlobalFormField
+                control={form.control}
+                name="floorNo"
+                label="ชั้นที่อยู่"
+                placeholder="กรอกชั้น เช่น ชั้น 3"
+                type="input"
+                checkFields={checkFields}
+              />
               <GlobalFormField
                 control={form.control}
                 name="village"
@@ -130,17 +147,8 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
 
               <GlobalFormField
                 control={form.control}
-                name="nation"
-                label="ประเทศ"
-                type="input"
-                checkFields={checkFields}
-                placeholder="Country"
-              />
-
-              <GlobalFormField
-                control={form.control}
                 name="subDistrict"
-                label="ตำบล"
+                label="ตำบล/แขวง"
                 type="input"
                 checkFields={checkFields}
                 placeholder="Taling Chan"
@@ -149,12 +157,11 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
               <GlobalFormField
                 control={form.control}
                 name="city"
-                label="อำเภอ"
+                label="เขต/อำเภอ/เมือง"
                 type="input"
                 checkFields={checkFields}
                 placeholder="Taling Chan"
               />
-
               <GlobalFormField
                 control={form.control}
                 name="province"
@@ -163,21 +170,29 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
                 checkFields={checkFields}
                 placeholder="Bangkok"
               />
-
               <GlobalFormField
                 control={form.control}
-                name="postalCode"
-                label="รหัสไปรษณีย์"
+                name="nation"
+                label="ประเทศ"
                 type="input"
                 checkFields={checkFields}
-                placeholder="10170"
+                placeholder="Country"
+              />
+
+              <GlobalFormFieldNew
+                control={form.control}
+                name="address.postalCode"
+                label="รหัสไปรณีย์"
+                placeholder="กรอกรหัสไปรณีย์ เช่น 10310"
+                type="number-box"
+                groups={[5]}
               />
 
               <GlobalFormField
                 control={form.control}
                 name="note"
                 label="หมายเหตุ"
-                type="input"
+                type="textarea"
                 checkFields={checkFields}
                 placeholder="note here"
               />
