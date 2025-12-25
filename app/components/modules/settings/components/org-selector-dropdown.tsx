@@ -148,7 +148,7 @@ export function OrgSelectorDropdown({
                 return (
                   <CommandItem
                     key={org.id}
-                    value={org.nameTh}
+                    value={org.id}
                     onSelect={() => {
                       if (!selected) {
                         onChangeOrg(org.id);

@@ -112,7 +112,7 @@ export function OrgSelector({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-full p-2" align="end">
+      <PopoverContent className="w-full" align="end">
         <Command className="w-full">
           <CommandInput
             placeholder="ค้นหารายชื่อ เช่น องค์กร A"
