@@ -402,7 +402,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
         <TabControl
           title={
             selectedOrgId ? (
-              <div className="flex w-full items-center gap-7">
+              <div className="flex flex-row gap-2">
                 <OrgSelectorDropdown
                   topic="บริษัท/องค์กร"
                   currentOrgId={selectedOrgId ?? organizationId}
@@ -412,7 +412,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                   setSearch={setSearch}
                   data={data}
                   backIcon={true}
-                />{" "}
+                />
                 <OrgSelectorDropdown
                   topic="สาขา"
                   currentBranchId={selectedBranchId ?? branchId}
