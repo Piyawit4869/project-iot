@@ -82,9 +82,13 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
     if (!users || users.length === 0) return [];
 
     const key = search.toLowerCase();
-    return users?.filter(
-      (item: any) =>
-        item && item.userName && item.userName.toLowerCase().includes(key)
+    return (
+      (users &&
+        users.filter(
+          (item: any) =>
+            item && item.userName && item.userName.toLowerCase().includes(key)
+        )) ||
+      []
     );
   }, [users, search]);
 
