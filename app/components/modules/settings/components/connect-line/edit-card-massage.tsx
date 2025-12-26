@@ -95,59 +95,45 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
   };
 
   const handleSubmit = async (values: MessageCardFormValues) => {
-    persistActiveCard();
-
     const toastId = toast.loading("กำลังบันทึกการ์ด...");
 
-    const items = cards.map((c) => buildCategoryPayload(c)).filter(Boolean);
+    const finalCards = cards.map((c, i) => (i === activeIndex ? values : c));
 
-    const itemsNoKey = items.map((item) => Object.values(item!)[0]);
+    const items = finalCards.map((card) => buildCategoryPayload(card));
 
-    const categoryPayload = cards.map((c) =>
-      items.push(buildCategoryPayload(c))
-    );
+    const itemsNoKey = items.map((item: any) => Object.values(item)[0]);
 
-    if (!values.category || !categoryPayload) {
+    if (!values.category || !items.length) {
       toast.error("กรุณาเลือกประเภทการ์ด", { id: toastId });
       return;
     }
 
     try {
-      let payload = {
-        name: values.name.trim(),
-        category: values.category,
-        items,
-      };
-
-      const newPayload = payload.items.map((c: any) => {
-        switch (values.category) {
-          case "product":
-            return buildProductCardBody(c);
-          case "place":
-            return buildPlaceCardBody(c);
-          case "person":
-            return buildPersonCardBody(c);
-          case "image":
-            return buildImageCardBody(c);
-          default:
-            break;
-        }
-
-        return;
-      });
+      const newPayload = items
+        .map((c: any) => {
+          switch (values.category) {
+            case "product":
+              return buildProductCardBody(c);
+            case "place":
+              return buildPlaceCardBody(c);
+            case "person":
+              return buildPersonCardBody(c);
+            case "image":
+              return buildImageCardBody(c);
+            default:
+              return null;
+          }
+        })
+        .filter(Boolean);
 
       const merged = newPayload.flatMap((item: any) => item.content.contents);
 
-      const mergedCarousel = {
+      const finalPayload = {
+        ...newPayload[0],
         content: {
           type: "carousel",
           contents: merged,
         },
-      };
-
-      const finalPayload = {
-        ...newPayload[0],
-        ...mergedCarousel,
         name: values.name.trim(),
         meta: {
           name: values.name.trim(),
@@ -165,6 +151,7 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
         duration: 2000,
         position: "bottom-right",
       });
+
       form.reset(MESSAGE_CARD_DEFAULT_VALUES);
       setCategoryDialogOpen(false);
       onSaved?.();
@@ -330,57 +317,72 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
     selectedCategoryId,
   ]);
 
-  const addCard = () => {
-    persistActiveCard();
-
-    setCards((prev) => [
-      ...prev,
-      {
-        ...MESSAGE_CARD_DEFAULT_VALUES,
-        name: prev[activeIndex]?.name ?? "",
-        category: prev[activeIndex]?.category ?? "",
-      },
-    ]);
-
-    setActiveIndex(cards.length);
-  };
-
   const persistActiveCard = React.useCallback(() => {
+    // !! FIXME: PECH HANDLE NEW LOGIC FOR DON'T SET NEXT PURE INDEX "activeIndex"
     setCards((prev) => {
+      if (!prev.length) return prev;
       const next = [...prev];
       next[activeIndex] = form.getValues();
       return next;
     });
-  }, [activeIndex, form]);
+  }, [activeIndex, form, setCards]);
+
+  const addCard = React.useCallback(() => {
+    persistActiveCard();
+
+    setCards((prev) => {
+      const next = [
+        ...prev,
+        {
+          ...MESSAGE_CARD_DEFAULT_VALUES,
+          name: form.getValues("name") ?? "",
+          category: form.getValues("category") ?? "",
+        },
+      ];
+      setActiveIndex(next.length - 1);
+      return next;
+    });
+  }, [form, persistActiveCard, setCards, setActiveIndex]);
 
   const duplicateCard = React.useCallback(() => {
     persistActiveCard();
 
-    setCards((prev) => [...prev, { ...prev[activeIndex] }]);
-    setActiveIndex(cards.length);
-  }, [setCards, setActiveIndex]);
+    setCards((prev) => {
+      const current = form.getValues();
+      const next = [...prev, current];
+      setActiveIndex(next.length - 1);
+      return next;
+    });
+  }, [form, persistActiveCard, setCards, setActiveIndex]);
 
   const removeCard = React.useCallback(() => {
-    if (cards.length === 1) return;
+    setCards((prev) => {
+      if (prev.length <= 1) return prev;
 
-    const newCards = cards.filter((_, i) => i !== activeIndex);
-    setCards(newCards);
-    setActiveIndex((i) => Math.max(0, i - 1));
-  }, [setCards, setActiveIndex]);
+      const next = prev.filter((_, idx) => idx !== activeIndex);
+
+      const nextIndex = Math.min(activeIndex, next.length - 1);
+      setActiveIndex(nextIndex);
+
+      form.reset(next[nextIndex]);
+
+      return next;
+    });
+  }, [activeIndex, form, setCards, setActiveIndex]);
 
   const movePrev = React.useCallback(() => {
     if (activeIndex === 0) return;
 
     persistActiveCard();
     setActiveIndex((i) => i - 1);
-  }, [activeIndex, persistActiveCard]);
+  }, [activeIndex, persistActiveCard, setActiveIndex]);
 
   const moveNext = React.useCallback(() => {
-    if (activeIndex === cards.length - 1) return;
+    if (activeIndex >= cards.length - 1) return;
 
     persistActiveCard();
     setActiveIndex((i) => i + 1);
-  }, [activeIndex, cards.length, persistActiveCard]);
+  }, [activeIndex, cards.length, persistActiveCard, setActiveIndex]);
 
   // Sync ค่า form กับ cards เมื่อเปลี่ยน active card
   React.useEffect(() => {
@@ -414,6 +416,18 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
     setActiveIndex(0);
     form.reset(mappedCards[0]);
   }, [data]);
+
+  // React.useEffect(() => {
+  //   const subscription = form.watch((value) => {
+  //     setCards((prev) => {
+  //       const next = [...prev];
+  //       next[activeIndex] = value as MessageCardFormValues;
+  //       return next;
+  //     });
+  //   });
+
+  //   return () => subscription.unsubscribe();
+  // }, [form, activeIndex]);
 
   return (
     <Form {...form}>
