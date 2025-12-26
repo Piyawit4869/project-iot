@@ -1,9 +1,11 @@
 import React, { useRef, useLayoutEffect, useState } from "react";
-import { Check } from "lucide-react";
+import { ArrowBigLeftDash, ArrowBigRightDash, Check, Save } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
 import { Card } from "../ui/card";
 import { CircularProgress } from "./circular-progress";
+import GlobalButton from "./global-button";
+import { Button } from "../ui/button";
 
 export function StepsVertical({
   steps,
@@ -12,7 +14,19 @@ export function StepsVertical({
   classNameContent,
   buttonBottom,
   card,
+  prev,
+  next,
+  stepProgressMap,
+  isDisabled,
+  isCreating,
+  finalButtonText,
 }: {
+  prev: any;
+  next: any;
+  stepProgressMap: any;
+  isDisabled?: boolean;
+  isCreating: boolean;
+  finalButtonText: string;
   steps: {
     title: string;
     content: React.ReactNode;
@@ -141,7 +155,47 @@ export function StepsVertical({
       </div>
 
       {/* FOOTER */}
-      <div className="flex py-5 w-full">{buttonBottom}</div>
+      <div className="flex gap-3 justify-end w-full py-5 ">
+        <div className="flex  gap-4 flex-row">
+          <GlobalButton
+            width="100px"
+            className="  bg-white border border-gray-300 text-black hover:bg-gray-100 
+    group transition-all duration-200 hover:shadow-md"
+            onClick={prev}
+            type="button"
+            label="ย้อนกลับ"
+            disabled={current === 0}
+            icon={
+              <ArrowBigLeftDash className="transition-all duration-200 group-hover:-translate-x-1" />
+            }
+          />
+          {current < 3 && (
+            <GlobalButton
+              width="100px"
+              className="  group transition-all duration-200 hover:shadow-md"
+              type="button"
+              onClick={next}
+              disabled={stepProgressMap[current] < 100}
+              label="ถัดไป"
+              icon={
+                <ArrowBigRightDash className=" transition-all duration-200 group-hover:translate-x-1" />
+              }
+            />
+          )}
+
+          {current === 3 && (
+            <GlobalButton
+              type="submit"
+              width="125px"
+              disabled={isDisabled || isCreating}
+              form="customer"
+              className="  transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
+              label={finalButtonText}
+              icon={<Save />}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }
