@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useCallback, useMemo, useState } from "react";
 
 import { DataTable } from "~/components/shared/data-table";

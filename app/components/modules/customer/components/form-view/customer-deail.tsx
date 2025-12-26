@@ -226,6 +226,15 @@ export const CustomerDeail: React.FC<CustomerFormCreateProps> = ({
               format="-"
               view={isEdit ? "edit" : "view"}
             />
+
+            <GlobalFormField
+              control={form.control}
+              name="profile.phone"
+              label="เบอร์โทรศัพท์ (ตัวเลขเท่านั้น)"
+              type="number-box"
+              view={isEdit ? "edit" : "view"}
+              placeholder="กรอกเบอร์โทรศัพท์ เช่น 0912345678"
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
@@ -255,15 +264,6 @@ export const CustomerDeail: React.FC<CustomerFormCreateProps> = ({
               type="input"
               view={isEdit ? "edit" : "view"}
               placeholder="กรอกรหัสลูกค้า เช่น CUT-001"
-            />
-
-            <GlobalFormField
-              control={form.control}
-              name="profile.phone"
-              label="เบอร์โทรศัพท์ (ตัวเลขเท่านั้น)"
-              type="number-box"
-              view={isEdit ? "edit" : "view"}
-              placeholder="กรอกเบอร์โทรศัพท์ เช่น 0912345678"
             />
 
             <GlobalFormField

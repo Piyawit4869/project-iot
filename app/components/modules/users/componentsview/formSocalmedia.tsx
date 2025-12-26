@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
@@ -24,8 +22,8 @@ const toLink = (url?: string) =>
   url?.startsWith("http://") || url?.startsWith("https://")
     ? url
     : url
-    ? `https://${url}`
-    : undefined;
+      ? `https://${url}`
+      : undefined;
 
 export const UserSocalmedias: React.FC<UserSocialMediasViewProps> = ({
   data,
@@ -76,7 +74,7 @@ export const UserSocalmedias: React.FC<UserSocialMediasViewProps> = ({
 
                   return (
                     <div key={index} className="rounded-xl space-y-4">
-                      <Card className="p-4">
+                      <div className="p-4">
                         <div className="flex items-center justify-between">
                           <h4 className="font-semibold">
                             โซเชียลมีเดีย {index + 1}
@@ -133,7 +131,7 @@ export const UserSocalmedias: React.FC<UserSocialMediasViewProps> = ({
                             }
                           />
                         </div>
-                      </Card>
+                      </div>
                     </div>
                   );
                 })}

@@ -196,7 +196,6 @@ export const AboutCustomer: React.FC<ChecklistDialogProps> = (props) => {
                 </FormItem>
               )}
             />
-            <TagsSelectorModal form={form} />
             {/* สถานะลูกค้า */}
             <FormField
               control={form.control}
