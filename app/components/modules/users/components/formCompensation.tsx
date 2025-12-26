@@ -372,7 +372,7 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
         </CardContent>
       )}
 
-      {editingIndex !== null && (
+      {editingIndex !== null && open && (
         <CompensationModal
           open={open}
           title={
