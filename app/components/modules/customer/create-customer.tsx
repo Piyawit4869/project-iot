@@ -175,8 +175,8 @@ export default function CreateCustomer() {
   const stepProgressMap = [
     progressCustomerData,
     progressOrganizationData,
-    100, // step 2 (tags ไม่บังคับ)
-    100, // step 3 (contact ไม่บังคับ)
+    100,
+    100,
   ];
 
   return (

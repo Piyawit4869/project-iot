@@ -129,7 +129,7 @@ export default function CreateOrganization() {
     progressDetailData,
     progressAddressData,
     progressSettingData,
-    100, // step 2 (tags ไม่บังคับ)
+    100,
   ];
 
   return (
