@@ -162,6 +162,7 @@ export default function CreateUsers() {
             prev={prev}
             next={next}
             formName="users"
+            disableBtn={stepProgressMap[current] < 100}
             finalButtonText="สร้างผู้ใช้งาน"
             classNameContent="w-full"
             totalSteps={totalSteps}
@@ -184,7 +185,11 @@ export default function CreateUsers() {
                 title: "ข้อมูลด้านค่าตอบแทน",
                 descriptions:
                   "กรอกรายละเอียดเกี่ยวกับเงินเดือน สวัสดิการ และรูปแบบค่าตอบแทน",
-                content: <UserCompensation form={formCreate} />,
+                content: (
+                  <div>
+                    <UserCompensation form={formCreate} />,
+                  </div>
+                ),
               },
 
               {
