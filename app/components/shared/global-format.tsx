@@ -66,7 +66,7 @@ export const formatShowTime = (date?: string | Date | null): string => {
   return dayjs(date).tz("Asia/Bangkok").locale("th").format("HH:mm น.");
 };
 
-export function formatPhoneNumber(phone?: string) {
+export function formatPhoneNumber(phone?: string | any) {
   const digits = phone?.replace(/\D/g, "");
   if (digits?.length === 9 || digits?.length === 10) {
     return `${digits?.slice(0, 3)}-${digits?.slice(3, 6)}-${digits?.slice(6)}`;

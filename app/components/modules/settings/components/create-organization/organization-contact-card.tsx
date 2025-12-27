@@ -8,7 +8,6 @@ import { customerStatus } from "~/initData/customer-initData";
 
 import type { CreateOrganizationFormCreateProps } from "../../create-organization";
 import { GlobalFormField } from "~/components/shared/global-formField";
-import { typeOptions } from "../setting-organization-form";
 
 export const OrganizationContactCard: React.FC<
   CreateOrganizationFormCreateProps
