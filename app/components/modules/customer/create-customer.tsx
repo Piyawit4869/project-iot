@@ -201,6 +201,8 @@ export default function CreateCustomer() {
                   onChange={setCurrent}
                   prev={prev}
                   next={next}
+                  formName="customer"
+                  disableBtn={stepProgressMap[current] < 100}
                   stepProgressMap={stepProgressMap}
                   isDisabled={isDisabled}
                   isCreating={isCreating}

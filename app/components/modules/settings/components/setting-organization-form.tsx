@@ -65,23 +65,6 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
 ) => {
   const { form, isLoading } = props;
 
-  const [statusSearchTerm, setStatusSearchTerm] = React.useState<string>("");
-  const [typeSearchTerm, setTypeSearchTerm] = React.useState<string>("");
-  const [debouncedStatusSearch] = React.useState<string>("");
-  const [debouncedTypeSearch] = React.useState<string>("");
-
-  const fromTypeOptions: typeof statusOptions = [
-    { label: "บุคคลธรรมดา", value: "ordinary_person" },
-    { label: "นิติบุคคล", value: "juristic_person" },
-  ];
-
-  const filteredStatusOptions = statusOptions.filter((o) =>
-    o.label.toLowerCase().includes(debouncedStatusSearch.toLowerCase())
-  );
-  const filteredTypeOptions = typeOptions.filter((o) =>
-    o.label.toLowerCase().includes(debouncedTypeSearch.toLowerCase())
-  );
-
   return (
     <Form {...form}>
       <div className="flex flex-col w-full space-y-8 px-8 py-4">
@@ -127,13 +110,15 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                     placeholder="กรอกชื่อสาขาภาษาไทย เช่น สาขาสามร้อยสิบห้าโปรดักชั่น"
                     type="input"
                   />
-                  <GlobalFormField
+                </div>
+                <div className="grid grid-cols-2 gap-4 mt-3">
+                  {/* <GlobalFormField
                     control={form.control}
                     name="isMain"
                     label="สาขาหลัก"
                     labelCheckbox="กำหนดสาขานี้เป็นสาขาหลักขององค์กร"
                     type="checkbox"
-                  />
+                  /> */}
                   <FormField
                     control={form.control}
                     name="nameTh"
@@ -178,15 +163,15 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                     type="textArea"
                   />
 
-                  <GlobalFormField
+                  {/* <GlobalFormField
                     control={form.control}
-                    name="fromType"
-                    label="ประเภทสาขา"
+                    name="orgType"
+                    label="ประเภทองค์กร"
                     placeholder="เลือกประเภทสาขา"
-                    options={customerType}
+                    options={typeOptions}
                     type="select"
                     required
-                  />
+                  /> */}
                   <FormField
                     control={form.control}
                     name="openingDate"
@@ -252,35 +237,13 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                 </>
               ) : (
                 <div className="grid grid-cols-2 gap-4">
-                  <FormField
+                  <GlobalFormField
                     control={form.control}
-                    name="fromType"
-                    render={({ field }) => (
-                      <FormItem className="w-full">
-                        <RequiredLabel required>รูปการลงทะเบียน</RequiredLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="เลือกประเภทธุรกิจ" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {fromTypeOptions.map((option) => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    name="orgType"
+                    label="รูปแบบองค์กร"
+                    placeholder="เลือกประเภทรูปแบบองค์กร"
+                    type="select"
+                    options={typeOptions}
                   />
 
                   <FormField
@@ -353,82 +316,21 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
             ) : (
               <div className="flex-4 gap-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <FormField
+                  <GlobalFormField
+                    control={form.control}
+                    name="fromType"
+                    label="ประเภทธุรกิจ"
+                    placeholder="เลือกประเภทธุรกิจ"
+                    type="select"
+                    options={customerType}
+                  />
+                  <GlobalFormField
                     control={form.control}
                     name="status"
-                    render={({ field }) => (
-                      <FormItem className="min-w-[300px]">
-                        <FormLabel>สถานะขององค์กร</FormLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="เลือกสถานะองค์กร" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <Input
-                                placeholder="Search สถานะ"
-                                value={statusSearchTerm}
-                                onChange={(e) =>
-                                  setStatusSearchTerm(e.target.value)
-                                }
-                                className="mb-2"
-                              />
-                              {filteredStatusOptions.map((option) => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="branchType"
-                    render={({ field }) => (
-                      <FormItem className="min-w-[300px]">
-                        <FormLabel>ประเภทธุรกิจ</FormLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="เลือกประเภทองค์กร" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <Input
-                                placeholder="Search ประเภท"
-                                value={typeSearchTerm}
-                                onChange={(e) =>
-                                  setTypeSearchTerm(e.target.value)
-                                }
-                                className="mb-2"
-                              />
-                              {filteredTypeOptions.map((option) => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    label="สถานะองค์กร"
+                    placeholder="เลือกสถานะองค์กร"
+                    type="select"
+                    options={statusOptions}
                   />
                 </div>
               </div>

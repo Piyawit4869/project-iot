@@ -26,21 +26,23 @@ export const organizationSchema = z.object({
   active: z.boolean().optional(),
   status: statusEnum.optional(),
   isMain: z.boolean().optional(),
-  fromType: z.string().default("ordinary_person"),
+  fromType: z.string().optional(),
   taxId: z
     .string()
     .length(13, { message: "Tax ID must be exactly 13 digits." })
     .optional(),
-  branchType: typeEnum.optional(),
+  branchType: z.string().optional().nullable(),
+  orgType: z.string().optional(),
   code: z.string().min(1, "รหัสไม่ควรเป็นค่าว่าง").optional(),
   openingDate: z.string().optional(),
   nameTh: z.string().min(1, "กรุณากรอกขื่อ"),
   nameEn: z.string().min(1, "กรุณากรอกขื่อ"),
   descriptionsTh: z.string().optional(),
   descriptionsEn: z.string().optional(),
-  websiteUrl: z.url().optional(),
+  websiteUrl: z.string().optional(),
   registerVat: z.boolean().optional(),
   contactName: z.string().optional(),
+
   contactEmail: z.email().optional(),
   contactPhone: z.string().optional(),
   contactLine: z.string().optional(),
@@ -132,6 +134,7 @@ const WorkingHoursSchema = z.record(
 );
 /* ---------- Setting ---------- */
 export const SettingThemeSchema = z.object({
+  isMain: z.boolean(),
   id: z.string().optional().nullable(),
   active: z.boolean(),
   theme: z.enum(["light", "dark"]).optional(),
@@ -143,6 +146,7 @@ export const SettingThemeSchema = z.object({
 /* ---------- Address ---------- */
 
 export const AddressSchema = z.object({
+  isMain: z.boolean(),
   active: z.boolean(),
   name: z.string().optional().nullable(),
   building: z.string().optional().nullable(),

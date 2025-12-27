@@ -18,7 +18,7 @@ export const useOrganizationSetup = () => {
     defaultValues: {
       code: null,
       active: true,
-      isMain: false,
+      isMain: true,
 
       status: "newly_registered",
       fromType: "ordinary_person",
@@ -47,6 +47,7 @@ export const useOrganizationSetup = () => {
       contactNote: null,
 
       setting: {
+        isMain: true,
         active: true,
         theme: "light",
         textDisplay: null,
@@ -63,6 +64,7 @@ export const useOrganizationSetup = () => {
       },
 
       address: {
+        isMain: true,
         active: true,
         building: null,
         roomNo: null,
@@ -86,6 +88,8 @@ export const useOrganizationSetup = () => {
     isDirty: isDirtyCreate,
     errors,
   } = formCreate.formState;
+
+  console.log({ errors });
 
   return {
     formCreate,
