@@ -21,6 +21,7 @@ import { StepsVertical } from "~/components/shared/global-step";
 import { calculateProgress } from "../../customer/create-customer";
 import { Button } from "~/components/ui/button";
 import { useGetAllRoles } from "~/api/client/role/useGetRole";
+import { Card } from "~/components/ui/card";
 
 export default function CreateUsers() {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ export default function CreateUsers() {
   const formCreate = useForm<UsersFormValues>({
     resolver: zodResolver(UsersFormSchema as any),
     defaultValues: {
+      userName: null,
       email: "",
       password: "",
       confirmPassword: "",
@@ -186,9 +188,9 @@ export default function CreateUsers() {
                 descriptions:
                   "กรอกรายละเอียดเกี่ยวกับเงินเดือน สวัสดิการ และรูปแบบค่าตอบแทน",
                 content: (
-                  <div>
-                    <UserCompensation form={formCreate} />,
-                  </div>
+                  <Card>
+                    <UserCompensation form={formCreate} />
+                  </Card>
                 ),
               },
 
@@ -196,10 +198,10 @@ export default function CreateUsers() {
                 title: "คุณสมบัติ & ความสามารถ",
                 descriptions: "กรอกทักษะ ความสามารถ และข้อมูลด้านการศึกษา",
                 content: (
-                  <div className="flex flex-col gap-2">
+                  <Card className="flex flex-col gap-2">
                     <UserSkills form={formCreate} />
                     <UserStudy form={formCreate} />
-                  </div>
+                  </Card>
                 ),
               },
 
@@ -208,9 +210,9 @@ export default function CreateUsers() {
                 descriptions:
                   "กรอกประวัติการทำงานก่อนหน้า รวมถึงหน้าที่และระยะเวลา",
                 content: (
-                  <>
+                  <Card>
                     <UserWorkExperience form={formCreate} />
-                  </>
+                  </Card>
                 ),
               },
 
@@ -218,14 +220,22 @@ export default function CreateUsers() {
                 title: "โซเชียลมีเดีย",
                 descriptions:
                   "กรอกช่องทางติดต่อต่าง ๆ ผ่านโซเชียลมีเดียหรือโปรไฟล์ออนไลน์",
-                content: <UserSocalmedias form={formCreate} />,
+                content: (
+                  <Card>
+                    <UserSocalmedias form={formCreate} />
+                  </Card>
+                ),
               },
 
               {
                 title: "เอกสารแนบ",
                 descriptions:
                   "อัปโหลดเอกสารที่เกี่ยวข้อง เช่น สำเนาบัตร Resume หรือใบรับรองต่าง ๆ",
-                content: <UserDocuments form={formCreate} />,
+                content: (
+                  <Card>
+                    <UserDocuments form={formCreate} />
+                  </Card>
+                ),
               },
             ]}
             // buttonBottom={

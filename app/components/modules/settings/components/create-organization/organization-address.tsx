@@ -12,7 +12,6 @@ import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 
 import type { CreateOrganizationFormCreateProps } from "../../create-organization";
 import { GlobalFormField } from "~/components/shared/global-formField";
-import { typeOptions } from "../setting-organization-form";
 
 export const OrganizationAddressCard: React.FC<
   CreateOrganizationFormCreateProps
@@ -152,7 +151,7 @@ export const OrganizationAddressCard: React.FC<
               label="ประเทศ"
               placeholder="กรอกประเทศ เช่น ประเทศไทย"
               type="input"
-              required
+              view="view"
             />
           </div>
 

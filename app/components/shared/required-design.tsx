@@ -6,7 +6,7 @@ export const RequiredLabel = ({
   required?: boolean;
 }) => (
   <span className="text-sm gap-1 flex pb-0">
-    {required ? <span className="text-red-500">*</span> : null}
     {children}
+    {required ? <span className="text-red-500">*</span> : null}
   </span>
 );

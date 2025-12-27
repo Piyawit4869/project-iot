@@ -87,6 +87,7 @@ type WorkingHoursSectionProps = {
   form: UseFormReturn<any>;
   defaultValue?: WorkingHoursInput;
   title?: string;
+  subTitle?: string;
 };
 
 export default function WorkingHoursSection({
@@ -94,7 +95,8 @@ export default function WorkingHoursSection({
   form,
   defaultValue,
   onChange,
-  title = "เวลาการทำงาน",
+  // title = "เวลาการทำงาน",
+  subTitle = "เปิดใช้งานการตั้งค่า",
 }: WorkingHoursSectionProps) {
   const isControlled = typeof value !== "undefined";
 
@@ -135,8 +137,6 @@ export default function WorkingHoursSection({
 
   return (
     <div className="gap-4 mb-6">
-      <h2 className="text-xl font-bold mb-4">{title}</h2>
-
       <div className="grid gap-2 w-[50%]">
         {(Object.keys(DAY_LABEL) as DayKey[]).map((day) => (
           <div key={day} className="rounded-xl p-3 bg-card">

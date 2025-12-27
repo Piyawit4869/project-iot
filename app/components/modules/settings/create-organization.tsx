@@ -91,6 +91,7 @@ export default function CreateOrganization() {
 
   const requiredDetailFields = [
     "nameTh",
+    "nameEn",
     "taxId",
     "status",
     "fromType",
@@ -103,7 +104,7 @@ export default function CreateOrganization() {
     "address.subDistrict",
     "address.city",
     "address.province",
-    "address.nation",
+
     "address.postalCode",
   ];
 
@@ -153,7 +154,7 @@ export default function CreateOrganization() {
                 onChange={setCurrent}
                 prev={prev}
                 next={next}
-                disableBtn={stepProgressMap[current] < 100}
+                // disableBtn={stepProgressMap[current] < 100}
                 formName="braches"
                 stepProgressMap={stepProgressMap}
                 isCreating={isCreating}
@@ -163,7 +164,7 @@ export default function CreateOrganization() {
                   {
                     title: "ข้อมูลสาขาขององค์กร",
                     descriptions:
-                      "กรุณากรอกข้อมูลสาขาขององค์กรให้ครบถ้วนเพื่อใช้ในการดำเนินงาน",
+                      "กรอกข้อมูลทั่วไปของสาขาให้ครบถ้วน โดยกรอกข้อมูลในช่องที่มีเครื่องหมายดอกจันทร์สีแดง (*) ให้ครบถ้วนเพื่อดำเนินการต่อ",
                     progress: progressDetailData,
                     content: <OrganizationDetailCard form={formCreate} />,
                   },
@@ -171,7 +172,7 @@ export default function CreateOrganization() {
                   {
                     title: "ข้อมูลที่อยู่สาขา",
                     descriptions:
-                      "กรอกข้อมูลที่อยู่สาขาเพื่อใช้ในการติดต่อและดำเนินงาน",
+                      "กรอกข้อมูลที่อยู่สาขา โดยกรอกข้อมูลในช่องที่มีเครื่องหมายดอกจันทร์สีแดง (*) ให้ครบถ้วนเพื่อดำเนินการต่อ",
                     progress: progressAddressData,
                     content: <OrganizationAddressCard form={formCreate} />,
                   },
@@ -179,7 +180,7 @@ export default function CreateOrganization() {
                   {
                     title: "ตั้งค่าสาขา",
                     descriptions:
-                      "กรอกข้อมูลที่อยู่สาขาเพื่อใช้ในการติดต่อและดำเนินงาน",
+                      "เลือกการตั้งค่าเริ่มต้นของระบบ โดยกรอกข้อมูลในช่องที่มีเครื่องหมายดอกจันทร์สีแดง (*) ให้ครบถ้วนเพื่อดำเนินการต่อ",
                     progress: progressSettingData,
                     content: (
                       <Card>
@@ -197,7 +198,7 @@ export default function CreateOrganization() {
                   {
                     title: "ข้อมูลผู้ติดต่อ (ไม่บังคับ)",
                     descriptions:
-                      "กรอกผู้ติดต่อเพิ่มเติมหากมี ในกรณีที่ผู้ที่ต้องติดต่อไม่ใช่สาขาขององค์กรโดยตรง",
+                      "สามารถกรอกข้อมูลผู้ติดต่อเพิ่มเติมได้ในกรณีที่ผู้ที่ต้องติดต่อไม่ใช่สาขาขององค์กรโดยตรง",
                     content: (
                       <Card>
                         <CardContent className="p-0">

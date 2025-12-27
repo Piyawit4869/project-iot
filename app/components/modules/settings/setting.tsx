@@ -146,11 +146,11 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
   const mainSetting = selectedBranchId
     ? getMainItem(branchesDetail?.setting, branchesDetail?.settings)
     : selectedOrgId
-      ? getMainItem(org?.address, org?.addresses)
-      : getMainItem(organization?.address, organization?.addresses);
+      ? getMainItem(org?.setting, org?.settings)
+      : getMainItem(organization?.setting, organization?.settings);
 
   const settingAddressId = mainAddress?.id ?? "";
-  const settingId = mainSetting?.id ?? "";
+  const settingId = mainSetting?.id ?? mainSetting?.id ?? "";
 
   // main org
   const { mutate: updateOrganization } = useUpdateOrganization(
@@ -200,7 +200,9 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
 
   const addressForm = useForm<AddressSchemaValues>({
     resolver: zodResolver(addressSchema) as Resolver<AddressSchemaValues>,
-    defaultValues: {},
+    defaultValues: {
+      villageNo: undefined,
+    },
   });
 
   const settingForm = useForm<settingTheme>({
@@ -227,8 +229,6 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
   const handleClickEditButton = () => setIsEditing(true);
 
   const handleOrgOnSubmit = (values: any) => {
-    console.log({ values });
-
     GlobalModal.info({
       title: "แก้ไขข้อมูลองค์กร",
       description: "คุณต้องการบันทึกการแก้ไขข้อมูลองค์กรใช่หรือไม่",
@@ -395,8 +395,6 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     });
   }, [orgId, isLoadingOrganization, isLoadingBranch, orgSource?.id]);
 
-  console.log({ orgSource });
-
   React.useEffect(() => {
     if (!selectedBranchId) return;
     refetchBranch();
@@ -516,14 +514,15 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
             <TabsContent value="SettingOrganization">
               <form
                 id="SettingOrganization"
-                onSubmit={orgForm.handleSubmit(handleOrgOnSubmit, onError)}
+                onSubmit={orgForm.handleSubmit(handleOrgOnSubmit)}
               >
                 <fieldset
                   disabled={!isEditing}
-                  className={!isEditing ? "opacity-70" : ""}
+                  className={!isEditing ? "opacity-80 pointer-events-none" : ""}
                 >
                   <SettingOrganizationForm
                     form={orgForm}
+                    editable={isEditing}
                     isLoading={isLoadingOrganization || isLoadingBranch}
                   />
                 </fieldset>
@@ -555,14 +554,18 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
             <TabsContent value="SettingAddress">
               <form
                 id="SettingAddress"
-                onSubmit={addressForm.handleSubmit(handleAddressOnSubmit)}
+                onSubmit={addressForm.handleSubmit(
+                  handleAddressOnSubmit,
+                  onError
+                )}
               >
                 <fieldset
                   disabled={!isEditing}
-                  className={!isEditing ? "opacity-70" : ""}
+                  className={!isEditing ? "opacity-80" : ""}
                 >
                   <SettingAddressForm
                     form={addressForm}
+                    editable={isEditing}
                     isLoading={isLoadingOrganization || isLoadingBranch}
                     // isLoading={isRefetching}
                   />
@@ -571,16 +574,21 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
             </TabsContent>
 
             <TabsContent value="Setting">
-              <form
-                id="Setting"
-                onSubmit={settingForm.handleSubmit(handleSettingOnSubmit)}
+              <fieldset
+                disabled={!isEditing}
+                className={!isEditing ? "opacity-80" : ""}
               >
-                <SettingForm
-                  form={settingForm}
-                  isEditing={isEditing}
-                  isLoading={isLoadingOrganization || isLoadingBranch}
-                />
-              </form>
+                <form
+                  id="Setting"
+                  onSubmit={settingForm.handleSubmit(handleSettingOnSubmit)}
+                >
+                  <SettingForm
+                    form={settingForm}
+                    isEditing={isEditing}
+                    isLoading={isLoadingOrganization || isLoadingBranch}
+                  />
+                </form>
+              </fieldset>
             </TabsContent>
           </Card>
         </div>
