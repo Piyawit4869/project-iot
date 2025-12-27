@@ -617,7 +617,7 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                   )}
                 />
               </div>
-              <div className=" grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
+              <div className=" grid grid-cols-1 md:grid-cols-1 gap-5 mt-4">
                 <FormField
                   control={form.control}
                   name="profile.taxId"

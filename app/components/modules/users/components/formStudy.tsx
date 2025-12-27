@@ -80,9 +80,7 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
         !v?.endDate &&
         !v?.isGraduated;
 
-      if (blank) {
-        removeEdu(editingIndex);
-      }
+      removeEdu(editingIndex);
     }
     setOpen(false);
     setEditingIndex(null);

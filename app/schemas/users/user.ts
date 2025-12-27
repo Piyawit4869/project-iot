@@ -4,23 +4,30 @@ import { branchSchema } from "../order/order";
 
 export const UsersFormSchema = z.object({
   id: z.string().optional(),
-  email: z.string().email({ message: "รูปแบบอีเมลไม่ถูกต้อง @gmail.com" }),
+  email: z.preprocess(
+    (v) => v ?? "",
+    z.string().email("รูปแบบอีเมลไม่ถูกต้อง")
+  ),
   userName: z.string().optional().nullable().default(null),
-  password: z.string().min(1, "กรุณาระบุรหัสผ่าน").optional(),
+  password: z
+    .preprocess((v) => v ?? "", z.string().min(1, "กรุณาระบุรหัสผ่าน"))
+    .optional(),
   confirmPassword: z
-    .string()
-    .min(1, "รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน")
+    .preprocess((v) => v ?? "", z.string().min(1, "กรุณาระบุยืนยันรหัสผ่าน"))
     .optional(),
   status: z.string().default("active"),
   active: z.boolean().default(true),
 
   profile: z.object({
-    prefix: z.string().default(""),
-    firstName: z.string().min(1, "กรุณาระบุชื่อ"),
-    lastName: z.string().min(1, "กรุณาระบุนามสกุล"),
+    prefix: z.string().default("").nullable(),
+    firstName: z.preprocess((v) => v ?? "", z.string().min(1, "กรุณาระบุชื่อ")),
+    lastName: z.preprocess(
+      (v) => v ?? "",
+      z.string().min(1, "กรุณาระบุนามสกุล")
+    ),
     firstNameTh: z.string().nullable(),
     lastNameTh: z.string().nullable(),
-    gender: z.string().default(""),
+    gender: z.string().default("").nullable(),
     birthDate: z.string().nullable().default(null),
     phone: z.string().nullable(),
     age: z.coerce.number().nullable(),
@@ -41,15 +48,26 @@ export const UsersFormSchema = z.object({
       .array(
         z.object({
           id: z.string().optional(),
-          institution: z.string().min(1, "กรุณากรอกสถาบันการศึกษา"),
-          degree: z.string().min(1, "กรุณากรอกระดับการศึกษา"),
-          major: z.string().min(1, "กรุณากรอกสาขา"),
-          faculty: z.string().nullable(),
+          institution: z.preprocess(
+            (v) => v ?? "",
+            z.string().min(1, "กรุณากรอกสถาบันการศึกษา")
+          ),
+
+          degree: z.preprocess(
+            (v) => v ?? "",
+            z.string().min(1, "กรุณากรอกระดับการศึกษา")
+          ),
+
+          major: z.preprocess(
+            (v) => v ?? "",
+            z.string().min(1, "กรุณากรอกสาขา")
+          ),
+          faculty: z.string().nullable().optional(),
           gpa: z.number().optional(),
           startDate: z.string().nullable().default(null),
           endDate: z.string().nullable().default(null),
           isGraduated: z.boolean().optional(),
-          description: z.string().nullable(),
+          description: z.string().nullable().optional(),
         })
       )
       .default([]),
@@ -58,14 +76,27 @@ export const UsersFormSchema = z.object({
       .array(
         z.object({
           id: z.string().optional(),
-          platform: z.string().min(1, "กรุณากรอกชื่อแพลตฟอร์ม"),
-          username: z.string().min(1, "กรุณากรอกชื่อบัญชี"),
-          url: z
-            .string()
-            .url("กรุณากรอกลิงก์ที่ถูกต้อง (ต้องขึ้นต้นด้วย http/https)")
-            .optional(),
+          platform: z.preprocess(
+            (v) => v ?? "",
+            z.string().min(1, "กรุณากรอกชื่อแพลตฟอร์ม")
+          ),
+
+          username: z.preprocess(
+            (v) => v ?? "",
+            z.string().min(1, "กรุณากรอกชื่อบัญชี")
+          ),
+
+          url: z.preprocess(
+            (v) => v ?? "",
+            z
+              .string()
+              .min(1, "กรุณากรอกลิงก์")
+              .url(
+                "กรุณากรอกลิงก์ที่ถูกต้อง (ต้องขึ้นต้นด้วย http://,https://)"
+              )
+          ),
           isPrimary: z.boolean().default(false).nullable(),
-          description: z.string().nullable(),
+          description: z.string().nullable().optional(),
         })
       )
       .default([]),
@@ -74,11 +105,14 @@ export const UsersFormSchema = z.object({
       .array(
         z.object({
           id: z.string().optional(),
-          name: z.string().min(1, "กรุณากรอก"),
-          level: z.string().min(1, "กรุณากรอก"),
+          name: z.preprocess(
+            (v) => v ?? "",
+            z.string().min(1, "กรุณากรอกชื่อทักษะ")
+          ),
+          level: z.string().optional().default("").nullable(),
           yearsOfExperience: z.number().optional(),
           isPrimary: z.boolean().default(false),
-          description: z.string().nullable(),
+          description: z.string().nullable().optional(),
         })
       )
       .default([]),
@@ -87,14 +121,24 @@ export const UsersFormSchema = z.object({
       .array(
         z.object({
           id: z.string().optional(),
-          company: z.string().min(1, "กรุณากรอกชื่อบริษัท"),
-          position: z.string().min(1, "กรุณากรอกตำแหน่งงาน"),
-          employmentType: z.string().nullable(),
-          startDate: z.string().min(1, "กรุณากรอก"),
+          company: z.preprocess(
+            (v) => v ?? "",
+            z.string().min(1, "กรุณากรอกชื่อบริษัท")
+          ),
+
+          position: z.preprocess(
+            (v) => v ?? "",
+            z.string().min(1, "กรุณากรอกตำแหน่งงาน")
+          ),
+          employmentType: z.string().nullable().optional(),
+          startDate: z.preprocess(
+            (v) => v ?? "",
+            z.string().min(1, "กรุณากรอกวันที่เริ่มงาน")
+          ),
           endDate: z.string().nullable().default(null),
           isCurrent: z.boolean().default(false),
-          location: z.string().nullable(),
-          description: z.string().nullable(),
+          location: z.string().nullable().optional(),
+          description: z.string().nullable().optional(),
         })
       )
       .default([]),
@@ -103,13 +147,18 @@ export const UsersFormSchema = z.object({
       .array(
         z.object({
           id: z.string().optional(),
-          baseSalary: z.coerce.number().min(1, "กรุณากรอก"),
+          baseSalary: z.preprocess(
+            (v) =>
+              v === "" || v === null || v === undefined ? undefined : Number(v),
+            z.number().min(1, "กรุณากรอกเงินเดือนพื้นฐาน")
+          ),
           currency: z.string().min(1, "กรุณากรอกสกุลเงิน"),
           bonusEligible: z.boolean().default(false),
           bonusRate: z.number().optional(),
           allowance: z.number().optional(),
           insurance: z.string().optional().nullable(),
           providentFund: z.boolean().default(false),
+          // contractType: z.string().optional().nullable(),
           contractType: z.string().min(1, "กรุณากรอก"),
           effectiveDate: z.string().nullable().default(null),
           expireDate: z.string().nullable().default(null),
@@ -122,12 +171,22 @@ export const UsersFormSchema = z.object({
       .array(
         z.object({
           id: z.string().optional(),
-          type: z.string(),
-          fileName: z.string().min(1, "กรุณากรอกชื่อ"),
-          mimeType: z.string(),
+          type: z.preprocess(
+            (v) => v ?? "",
+            z.string().min(1, "กรุณาเลือกประเภทเอกสาร")
+          ),
+          fileName: z.preprocess(
+            (v) => v ?? "",
+            z.string().min(1, "กรุณากรอกชื่อไฟล์เอกสาร")
+          ),
+          mimeType: z.string().optional(),
           size: z.number().optional(),
-          url: z.string().url().default(""),
-          storageProvider: z.string().min(1, "กรุณากรอก"),
+          url: z.preprocess(
+            (v) => v ?? "",
+            z.string().url("กรุณาอัพโหลดเอกสาร")
+          ),
+          storageProvider: z.string().optional(),
+          // storageProvider: z.string().min(1, "กรุณากรอก"),
           checksum: z.string().optional().default(""),
           tags: z.array(z.string()).default([]),
           isPrimary: z.boolean().default(false),
