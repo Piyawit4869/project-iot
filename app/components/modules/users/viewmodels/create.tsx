@@ -29,10 +29,9 @@ export default function CreateUsers() {
 
   const [current, setCurrent] = React.useState(0);
 
-  const form = useForm<UsersFormValues>({
+  const formCreate = useForm<UsersFormValues>({
     resolver: zodResolver(UsersFormSchema as any),
     defaultValues: {
-      userName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -74,8 +73,8 @@ export default function CreateUsers() {
     },
   });
 
-  const { isSubmitting } = form.formState;
-  const { mutate } = useCreateUsers();
+  const { isSubmitting } = formCreate.formState;
+  const { mutate, isPending } = useCreateUsers();
 
   const onSubmit = (values: UsersFormValues) => {
     GlobalModal.info({
@@ -102,19 +101,21 @@ export default function CreateUsers() {
   };
 
   const requiredUserFields = [
-    "userName",
     "email",
     "password",
     "confirmPassword",
-    "userDepartments",
+    "organizationRoleId",
+    "active",
     "profile.firstName",
     "profile.lastName",
   ];
 
-  const values = form.getValues();
-  const progressCustomer = calculateProgress(values, requiredUserFields);
-
+  // const values = formCreate.getValues();
+  const values = formCreate.watch();
   const totalSteps = 6;
+
+  const progressUserData = calculateProgress(values, requiredUserFields);
+  const stepProgressMap = [progressUserData, 100, 100];
 
   const next = () => {
     setCurrent((c) => Math.min(c + 1, totalSteps - 1));
@@ -144,19 +145,18 @@ export default function CreateUsers() {
         // ]}
       />
 
-      <Form {...form}>
+      <Form {...formCreate}>
         <form
           id="users"
-          onSubmit={form.handleSubmit(onSubmit, (errors) => {
-            const count = Object.keys(errors).length;
+          onSubmit={formCreate.handleSubmit(onSubmit, (Onerrors) => {
+            const count = Object.keys(Onerrors).length;
             if (count > 0) {
               toast.error(`กรอกข้อมูลไม่ครบหรือไม่ถูกต้อง (${count} จุด)`);
             }
-            console.log("errors", errors);
+            console.log("errors", Onerrors);
           })}
         >
           <StepsVertical
-            card={true}
             current={current}
             onChange={setCurrent}
             prev={prev}
@@ -164,14 +164,19 @@ export default function CreateUsers() {
             formName="users"
             finalButtonText="สร้างผู้ใช้งาน"
             classNameContent="w-full"
+            totalSteps={totalSteps}
             steps={[
               {
                 title: "ข้อมูลพนักงาน",
                 descriptions:
                   "กรอกข้อมูลพื้นฐานของพนักงาน เช่น ชื่อ ตำแหน่ง แผนก",
-                progress: progressCustomer,
+                progress: progressUserData,
                 content: (
-                  <UserProfileCreate form={form} data={data} roles={roles} />
+                  <UserProfileCreate
+                    form={formCreate}
+                    data={data}
+                    roles={roles}
+                  />
                 ),
               },
 
@@ -179,7 +184,7 @@ export default function CreateUsers() {
                 title: "ข้อมูลด้านค่าตอบแทน",
                 descriptions:
                   "กรอกรายละเอียดเกี่ยวกับเงินเดือน สวัสดิการ และรูปแบบค่าตอบแทน",
-                content: <UserCompensation form={form} />,
+                content: <UserCompensation form={formCreate} />,
               },
 
               {
@@ -187,8 +192,8 @@ export default function CreateUsers() {
                 descriptions: "กรอกทักษะ ความสามารถ และข้อมูลด้านการศึกษา",
                 content: (
                   <div className="flex flex-col gap-2">
-                    <UserSkills form={form} />
-                    <UserStudy form={form} />
+                    <UserSkills form={formCreate} />
+                    <UserStudy form={formCreate} />
                   </div>
                 ),
               },
@@ -199,7 +204,7 @@ export default function CreateUsers() {
                   "กรอกประวัติการทำงานก่อนหน้า รวมถึงหน้าที่และระยะเวลา",
                 content: (
                   <>
-                    <UserWorkExperience form={form} />
+                    <UserWorkExperience form={formCreate} />
                   </>
                 ),
               },
@@ -208,14 +213,14 @@ export default function CreateUsers() {
                 title: "โซเชียลมีเดีย",
                 descriptions:
                   "กรอกช่องทางติดต่อต่าง ๆ ผ่านโซเชียลมีเดียหรือโปรไฟล์ออนไลน์",
-                content: <UserSocalmedias form={form} />,
+                content: <UserSocalmedias form={formCreate} />,
               },
 
               {
                 title: "เอกสารแนบ",
                 descriptions:
                   "อัปโหลดเอกสารที่เกี่ยวข้อง เช่น สำเนาบัตร Resume หรือใบรับรองต่าง ๆ",
-                content: <UserDocuments form={form} />,
+                content: <UserDocuments form={formCreate} />,
               },
             ]}
             // buttonBottom={

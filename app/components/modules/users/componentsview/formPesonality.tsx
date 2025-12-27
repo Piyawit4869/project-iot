@@ -1,8 +1,10 @@
 import React from "react";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
-import { Heart, Pencil } from "lucide-react";
+import { Heart, Pencil, Sparkles } from "lucide-react";
 import type { UsersFormValues } from "~/schemas/users/user";
 import { Button } from "~/components/ui/button";
+import { useGetUsersPersonalSummary } from "~/api/client/user";
+import LoadingAnimation from "../../message/loading-animation";
 
 export interface UserPersonalityViewProps {
   data?: Partial<UsersFormValues>;
@@ -19,8 +21,20 @@ export const UserPersonality: React.FC<UserPersonalityViewProps> = ({
   data,
   loading = false,
 }) => {
-  const personality = MOCK_PERSONALITY;
+  const [enabled, setEnabled] = React.useState(false);
 
+  const userId = data?.id;
+
+  const {
+    data: personalityData,
+    isFetching,
+    refetch,
+  } = useGetUsersPersonalSummary(userId ?? "", enabled);
+
+  // const personality = MOCK_PERSONALITY;
+  const personality = personalityData?.summary || MOCK_PERSONALITY;
+  console.log("personalityData", personalityData);
+  console.log("personality", personality);
   return (
     <div className="h-full px-10">
       <div className="flex items-center justify-between mb-6">
@@ -28,21 +42,33 @@ export const UserPersonality: React.FC<UserPersonalityViewProps> = ({
           <Heart className="h-5 w-5" />
           ภาพรวมบุคลิก
         </h3>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={!userId || isFetching}
+          onClick={() => {
+            if (!userId) return;
+            setEnabled(true);
+            refetch();
+          }}
+        >
+          วิเคราะห์ข้อมูล
+        </Button>
       </div>
 
-      {loading ? (
-        <div className="space-y-2">
-          <SkeletonLoading className="h-4 w-full" />
-          <SkeletonLoading className="h-4 w-full" />
-          <SkeletonLoading className="h-4 w-3/4" />
+      {isFetching ? (
+        <div className="flex flex-col items-center justify-center h-48 w-full border rounded-lg bg-background/50">
+          <LoadingAnimation />
         </div>
       ) : (
-        <div className="text-base text-foreground leading-relaxed whitespace-pre-line">
-          {personality ? (
-            <div>{personality}</div>
+        <div className="text-base leading-relaxed whitespace-pre-line">
+          {personalityData?.summary ? (
+            <div className="animate-in fade-in duration-300">
+              {personalityData.summary}
+            </div>
           ) : (
-            <div className="text-sm text-muted-foreground">
-              - ไม่มีข้อมูลภาพรวมบุคลิก -
+            <div className="text-sm text-muted-foreground py-4 text-center border border-dashed rounded-md">
+              - กด “วิเคราะห์ข้อมูล” เพื่อดูภาพรวมบุคลิก -
             </div>
           )}
         </div>

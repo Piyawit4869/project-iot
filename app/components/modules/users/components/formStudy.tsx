@@ -186,7 +186,7 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
   }, [data, form, replaceEdu]);
 
   return (
-    <Card className="py-0 pb-5">
+    <div className="py-0 pb-5">
       {loading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
@@ -257,10 +257,7 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
                   ].filter((d) => d.value && String(d.value).trim().length > 0);
 
                   return (
-                    <div
-                      key={row.id}
-                      className="rounded-xl border p-4 space-y-4"
-                    >
+                    <div key={row.id} className=" p-4 space-y-4">
                       <div className="flex items-center justify-between">
                         <div className="min-w-0">
                           <h4 className="font-semibold truncate">
@@ -334,6 +331,6 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
           onSubmit={handleSubmitFromModal}
         />
       )}
-    </Card>
+    </div>
   );
 };
