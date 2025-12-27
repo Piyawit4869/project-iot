@@ -145,6 +145,7 @@ export const OrganizationSelector: React.FC<UserFormProfileProps> = ({
                               return (
                                 <CommandItem
                                   key={item.id}
+                                  value={item.id}
                                   onSelect={() => {
                                     field.onChange(item.id);
                                     form.setValue(
@@ -265,6 +266,7 @@ export const OrganizationSelector: React.FC<UserFormProfileProps> = ({
                             return (
                               <CommandItem
                                 key={item.id}
+                                value={item.id}
                                 onSelect={() => {
                                   field.onChange(item.id);
                                   form.setValue("branchId", String(item.id), {

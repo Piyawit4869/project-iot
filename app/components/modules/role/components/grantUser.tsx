@@ -145,7 +145,7 @@ export const GrantUser: React.FC<RolesFormProps> = ({
         </CardContent>
       ) : (
         <CardContent className="px-2">
-          <div className="max-w-325">
+          <div className="md:max-w-[calc(100vw-390px)] max-w-none">
             <DataTable
               data={roles?.users ?? []}
               columns={columns}

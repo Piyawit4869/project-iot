@@ -26,9 +26,10 @@ const ACTION_LABEL: Record<string, string> = {
   create: "เพิ่มข้อมูล",
   update: "แก้ไขข้อมูล",
   delete: "ลบข้อมูล",
+  get_menu: "อนุญาตฟีเจอร์",
 };
 
-const ACTION_ORDER = ["get_all", "get_single", "create", "update", "delete"];
+const ACTION_ORDER = ["get_menu", "get_single", "create", "update", "delete"];
 const FEATURE_LABEL: Record<string, string> = {
   home: "หน้าหลัก",
   chat: "แชท",

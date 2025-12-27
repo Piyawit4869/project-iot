@@ -74,22 +74,28 @@ export const FormRolesSingle: React.FC<RolesFormProps> = ({
         <CardContent className="space-y-4">
           <div className=" w-full">
             <div className="lg:col-span-2 flex flex-col gap-3">
-              <GlobalFormField
-                control={form.control}
-                name="name"
-                label="ชื่อตำแหน่ง"
-                type="input"
-                checkFields={checkFields}
-                placeholder="กรอกชื่อตำแหน่ง"
-              />
-              <GlobalFormField
-                control={form.control}
-                name="description"
-                label="รายละเอียด"
-                type="textarea"
-                checkFields={checkFields}
-                placeholder="กรอกรายละเอียด"
-              />
+              <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="md:col-span-1 md:col-start-1">
+                  <GlobalFormField
+                    control={form.control}
+                    name="name"
+                    label="ชื่อตำแหน่ง"
+                    type="input"
+                    checkFields={checkFields}
+                    placeholder="กรอกชื่อตำแหน่ง"
+                  />
+                </div>
+                <div className="md:col-span-1 md:col-start-1">
+                  <GlobalFormField
+                    control={form.control}
+                    name="description"
+                    label="รายละเอียด"
+                    type="textarea"
+                    checkFields={checkFields}
+                    placeholder="กรอกรายละเอียด"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </CardContent>
