@@ -518,7 +518,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
               >
                 <fieldset
                   disabled={!isEditing}
-                  className={!isEditing ? "opacity-80" : ""}
+                  className={!isEditing ? "opacity-80 pointer-events-none" : ""}
                 >
                   <SettingOrganizationForm
                     form={orgForm}
