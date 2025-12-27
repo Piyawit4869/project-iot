@@ -20,6 +20,8 @@ export function StepsVertical({
   isDisabled,
   isCreating,
   finalButtonText,
+  totalSteps = 4,
+  formselect = "customer",
 }: {
   prev: any;
   next: any;
@@ -27,6 +29,8 @@ export function StepsVertical({
   isDisabled?: boolean;
   isCreating: boolean;
   finalButtonText: string;
+  totalSteps?: number;
+  formselect?: string;
   steps: {
     title: string;
     content: React.ReactNode;
@@ -159,7 +163,7 @@ export function StepsVertical({
         <div className="flex  gap-4 flex-row">
           <GlobalButton
             width="100px"
-            className="  bg-white border border-gray-300 text-black hover:bg-gray-100 
+            className="  bg-white border border-gray-300 text-black hover:bg-gray-100
     group transition-all duration-200 hover:shadow-md"
             onClick={prev}
             type="button"
@@ -169,7 +173,7 @@ export function StepsVertical({
               <ArrowBigLeftDash className="transition-all duration-200 group-hover:-translate-x-1" />
             }
           />
-          {current < 3 && (
+          {current < totalSteps - 1 && (
             <GlobalButton
               width="100px"
               className="  group transition-all duration-200 hover:shadow-md"
@@ -183,12 +187,12 @@ export function StepsVertical({
             />
           )}
 
-          {current === 3 && (
+          {current === totalSteps - 1 && (
             <GlobalButton
               type="submit"
               width="125px"
               disabled={isDisabled || isCreating}
-              form="customer"
+              form={formselect}
               className="  transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
               label={finalButtonText}
               icon={<Save />}
@@ -201,7 +205,7 @@ export function StepsVertical({
 }
 
 /* ------------------------------
-   Slide Animation Component  
+   Slide Animation Component
    (ดึงมาจาก Stepper)
 -------------------------------- */
 function SlideContent({ children, direction }: any) {
