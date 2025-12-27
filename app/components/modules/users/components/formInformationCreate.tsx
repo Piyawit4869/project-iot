@@ -440,17 +440,15 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="profile.lastName"
+                  name="profile.firstNameTh"
                   render={({ field }) => (
                     <FormItem>
-                      <RequiredLabel>นามสกุล</RequiredLabel>
-                      <FormControl className="w-full">
+                      <FormLabel>ชื่อ (ไทย)</FormLabel>
+                      <FormControl>
                         <Input
-                          value={field.value || ""}
-                          placeholder="กรอกนามสกุลของลูกค้า เช่น หมายสุข "
-                          onChange={(e) => {
-                            field.onChange(e);
-                          }}
+                          placeholder="กรอกชื่อ"
+                          {...field}
+                          value={field.value ?? undefined}
                         />
                       </FormControl>
                       <FormMessage />
