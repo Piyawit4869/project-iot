@@ -208,131 +208,83 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                   control={form.control}
                   name="organizationRoleId"
                   render={({ field }) => {
-                    const selected = Array.isArray(field.value)
-                      ? (field.value as {
-                          id: string;
-                          name: string;
-                          active: boolean;
-                          department: any;
-                        }[])
-                      : [];
-
-                    const toRef = (item: any) => ({
-                      id: item.id,
-                      name: item.name,
-                      active: item.active ?? true,
-                      department: item,
-                    });
-
-                    const selectedIds = new Set(selected.map((s) => s.id));
-
-                    const toggle = (item: OptionItem) => {
-                      const exists = selectedIds.has(item.id);
-                      const next = exists
-                        ? selected.filter((s) => s.id !== item.id)
-                        : [...selected, toRef(item)];
-                      field.onChange(next);
-                      field.onBlur?.();
-                    };
-
-                    const removeId = (id: string) => {
-                      const next = selected.filter((s) => s.id !== id);
-                      field.onChange(next);
-                      field.onBlur?.();
-                    };
-
-                    const findDep = (id?: string) =>
-                      (userRoles ?? []).find((d) => d.id === id);
+                    const selectedId = field.value as string | undefined;
+                    const selectedRole = userRoles.find(
+                      (r: any) => r.id === selectedId
+                    );
 
                     return (
                       <FormItem>
                         <RequiredLabel required>ตำแหน่ง</RequiredLabel>
-                        <div className="flex flex-wrap gap-2">
-                          {selected.map((s) => {
-                            const dep = findDep(s.id);
-                            const depId = s.id;
-                            const depName =
-                              dep?.department?.name ??
-                              s.department?.name ??
-                              "-";
-                            return (
-                              <div
-                                key={depId}
-                                className="flex items-center gap-2 border-1 px-2 py-1.5 rounded-full"
-                              >
-                                <GlobalImage
-                                  src={`https://api.dicebear.com/9.x/initials/svg?seed=${depName}`}
-                                  alt={depName}
-                                  className="w-6 h-6 rounded-full"
-                                />
-                                <span>{depName}</span>
-                                <button
-                                  type="button"
-                                  onClick={() => removeId(depId)}
-                                  className="ml-1 text-gray-500 hover:text-red-500"
-                                >
-                                  <X className="h-3 w-3" />
-                                </button>
-                              </div>
-                            );
-                          })}
 
-                          <Popover
-                            open={openSub}
-                            onOpenChange={(v) => {
-                              setOpenSub(v);
-                              if (!v) field.onBlur?.();
-                            }}
-                          >
-                            <PopoverTrigger asChild>
-                              <Button
+                        <div className="flex flex-wrap gap-2">
+                          {/* แสดงค่าเมื่อมี */}
+                          {selectedRole && (
+                            <div className="flex items-center gap-2 px-2 py-1.5 rounded-full border">
+                              <GlobalImage
+                                src={`https://api.dicebear.com/9.x/initials/svg?seed=${selectedRole.name}`}
+                                alt={selectedRole.name}
+                                className="w-6 h-6 rounded-full"
+                              />
+                              <span className="text-sm">
+                                {selectedRole.name}
+                              </span>
+                              <button
                                 type="button"
-                                variant="outline"
-                                className="px-4 py-2 rounded-full"
-                                disabled={!!selected.length}
+                                onClick={() => field.onChange(undefined)}
+                                className="ml-1 text-muted-foreground hover:text-red-500"
                               >
-                                เพิ่มตำแหน่ง +
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-64">
-                              <Command>
-                                <CommandInput
-                                  placeholder="ค้นหา..."
-                                  value={search}
-                                  onValueChange={setSearch}
-                                />
-                                <CommandEmpty>ไม่มีข้อมูล</CommandEmpty>
-                                <CommandList>
-                                  {(filtered ?? []).map((item: OptionItem) => {
-                                    const checked = selectedIds.has(item.id);
-                                    return (
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          )}
+
+                          {/* ปุ่มเพิ่ม (แสดงเฉพาะตอนยังไม่มีค่า) */}
+                          {!selectedRole && (
+                            <Popover
+                              open={openSub}
+                              onOpenChange={(v) => {
+                                setOpenSub(v);
+                                if (!v) field.onBlur?.();
+                              }}
+                            >
+                              <PopoverTrigger asChild>
+                                <Button type="button" variant="outline">
+                                  เพิ่มตำแหน่ง +
+                                </Button>
+                              </PopoverTrigger>
+
+                              <PopoverContent className="w-64">
+                                <Command>
+                                  <CommandInput
+                                    placeholder="ค้นหา..."
+                                    value={search}
+                                    onValueChange={setSearch}
+                                  />
+                                  <CommandEmpty>ไม่มีข้อมูล</CommandEmpty>
+
+                                  <CommandList>
+                                    {filtered.map((item: OptionItem) => (
                                       <CommandItem
                                         key={item.id}
                                         onSelect={() => {
-                                          toggle(item);
+                                          field.onChange(item.id);
                                           setOpenSub(false);
                                         }}
                                       >
-                                        <Checkbox
-                                          checked={checked}
-                                          onCheckedChange={() => {
-                                            toggle(item);
-                                            setOpenSub(false);
-                                          }}
-                                          className="mr-2"
-                                        />
                                         {item.name}
-                                        {checked && (
+                                        {item.id === selectedId && (
                                           <Check className="ml-auto h-4 w-4" />
                                         )}
                                       </CommandItem>
-                                    );
-                                  })}
-                                </CommandList>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
+                                    ))}
+                                  </CommandList>
+                                </Command>
+                              </PopoverContent>
+                            </Popover>
+                          )}
                         </div>
+
                         <FormMessage />
                       </FormItem>
                     );

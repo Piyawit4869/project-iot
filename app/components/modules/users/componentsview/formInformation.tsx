@@ -43,7 +43,6 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
           </CardTitle>
         </div>
       </CardHeader>
-
       {loading ? (
         <CardContent className="space-y-4">
           <SkeletonLoading />

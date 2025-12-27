@@ -5,7 +5,7 @@ import { branchSchema } from "../order/order";
 export const UsersFormSchema = z.object({
   id: z.string().optional(),
   email: z.string().email({ message: "รูปแบบอีเมลไม่ถูกต้อง @gmail.com" }),
-  userName: z.string().min(1, "กรุณาระบุชื่อผู้ใช้").optional(),
+  userName: z.string().optional().nullable().default(null),
   password: z.string().min(1, "กรุณาระบุรหัสผ่าน").optional(),
   confirmPassword: z
     .string()
@@ -24,8 +24,8 @@ export const UsersFormSchema = z.object({
     birthDate: z.string().nullable().default(null),
     phone: z.string().nullable(),
     age: z.coerce.number().nullable(),
-    imageUrl: z.string().default(""),
-    photoUrl: z.string().default(""),
+    imageUrl: z.preprocess((v) => v ?? "", z.string()).default(""),
+    photoUrl: z.preprocess((v) => v ?? "", z.string()).default(""),
     taxId: z.string().nullable().optional(),
     nickName: z.string().nullable().optional(),
     nationality: z.string().nullable().optional(),
