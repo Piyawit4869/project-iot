@@ -165,7 +165,6 @@ export default function CreateUsers() {
             finalButtonText="สร้างผู้ใช้งาน"
             classNameContent="w-full"
             totalSteps={totalSteps}
-            formName="users"
             steps={[
               {
                 title: "ข้อมูลพนักงาน",
