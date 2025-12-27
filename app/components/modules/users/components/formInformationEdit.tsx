@@ -68,7 +68,6 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
   const [debouncedStatusSearch] = useState<string>("");
   const [search, setSearch] = React.useState("");
   const [openSub, setOpenSub] = React.useState(false);
-  console.log([...checkFields].filter((p) => p.includes("image")));
 
   const userRoles = Array.isArray(roles) ? roles : [];
 
@@ -77,7 +76,6 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
 
     return a;
   });
-  console.log("imageUrl:", form.watch("profile.imageUrl"));
 
   const statusOptions = [
     { label: "พนักงานงานใหม่", value: "new_user" },

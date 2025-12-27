@@ -31,10 +31,8 @@ export const UserPersonality: React.FC<UserPersonalityViewProps> = ({
     refetch,
   } = useGetUsersPersonalSummary(userId ?? "", enabled);
 
-  // const personality = MOCK_PERSONALITY;
-  const personality = personalityData?.summary || MOCK_PERSONALITY;
-  console.log("personalityData", personalityData);
-  console.log("personality", personality);
+  const personality = personalityData?.summary ?? "";
+
   return (
     <div className="h-full px-10">
       <div className="flex items-center justify-between mb-6">
@@ -62,10 +60,8 @@ export const UserPersonality: React.FC<UserPersonalityViewProps> = ({
         </div>
       ) : (
         <div className="text-base leading-relaxed whitespace-pre-line">
-          {personalityData?.summary ? (
-            <div className="animate-in fade-in duration-300">
-              {personalityData.summary}
-            </div>
+          {personality ? (
+            <div className="animate-in fade-in duration-300">{personality}</div>
           ) : (
             <div className="text-sm text-muted-foreground py-4 text-center border border-dashed rounded-md">
               - กด “วิเคราะห์ข้อมูล” เพื่อดูภาพรวมบุคลิก -
