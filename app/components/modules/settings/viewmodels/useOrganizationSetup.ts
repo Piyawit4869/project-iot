@@ -26,6 +26,7 @@ export const useOrganizationSetup = () => {
       branchType: "taxpayer",
 
       openingDate: null,
+      domainName: null,
 
       nameTh: null,
       nameEn: null,
@@ -88,8 +89,6 @@ export const useOrganizationSetup = () => {
     isDirty: isDirtyCreate,
     errors,
   } = formCreate.formState;
-
-  console.log({ errors });
 
   return {
     formCreate,

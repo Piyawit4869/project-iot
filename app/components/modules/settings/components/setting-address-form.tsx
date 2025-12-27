@@ -1,23 +1,24 @@
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
-import { GlobalFormField } from "~/components/shared/global-form";
+// import { GlobalFormField } from "~/components/shared/global-form";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { Form } from "~/components/ui/form";
 import { addressSchema, type AddressSchemaValues } from "~/schemas/settings";
 import { getRequiredPaths } from "~/utils/form-adapter";
-import { GlobalFormField as GlobalFormFieldNew } from "~/components/shared/global-formField";
+import { GlobalFormField } from "~/components/shared/global-formField";
 
 interface SettingAddressFormProps {
   form: UseFormReturn<AddressSchemaValues>;
   isLoading: boolean;
+  editable?: boolean;
 }
 
 export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
   props
 ) => {
-  const { form, isLoading } = props;
+  const { form, isLoading, editable } = props;
 
-  const checkFields = new Set(getRequiredPaths(addressSchema as any));
+  // const checkFields = new Set(getRequiredPaths(addressSchema as any));
   return (
     <Form {...form}>
       <div className="flex flex-col w-full space-y-8 px-8 py-4">
@@ -54,7 +55,9 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
                 name="name"
                 label="ชื่อสถานที่ตั้ง"
                 type="input"
-                checkFields={checkFields}
+                placeholder="กรอกชื่อสถานที่ เช่น ตึกกิ่งทอง"
+                view={editable ? "edit" : "view"}
+                required={editable}
               />
 
               <GlobalFormField
@@ -62,16 +65,17 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
                 name="building"
                 label="ชื่อตึก/อาคาร"
                 type="input"
-                checkFields={checkFields}
-                placeholder="Building 1"
+                placeholder="กรอกชื่อตึกของสาขา เช่น สาขา A"
+                view={editable ? "edit" : "view"}
               />
+
               <GlobalFormField
                 control={form.control}
                 name="roomNo"
                 label="ห้องหมายเลข"
                 placeholder="กรอกห้อง เช่น ห้อง 315"
                 type="input"
-                checkFields={checkFields}
+                view={editable ? "edit" : "view"}
               />
 
               <GlobalFormField
@@ -80,42 +84,26 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
                 label="ชั้นที่อยู่"
                 placeholder="กรอกชั้น เช่น ชั้น 3"
                 type="input"
-                checkFields={checkFields}
+                view={editable ? "edit" : "view"}
               />
-              <GlobalFormField
-                control={form.control}
-                name="village"
-                label="ชื่อหมู่บ้าน"
-                type="input"
-                checkFields={checkFields}
-                placeholder="Green Village"
-              />
-
-              {/* <GlobalFormField
-              control={form.control}
-              name="roomNo"
-              label="หมายเลขห้อง"
-              type="input"
-              checkFields={checkFields}
-              placeholder="101"
-            />
-
-            <GlobalFormField
-              control={form.control}
-              name="floorNo"
-              label="หมายเลขชั้น"
-              type="input"
-              checkFields={checkFields}
-              placeholder="1"
-            /> */}
 
               <GlobalFormField
                 control={form.control}
                 name="houseNo"
                 label="เลขที่บ้าน"
                 type="input"
-                checkFields={checkFields}
-                placeholder="5"
+                placeholder="กรอกบ้านเลขที่ เช่น 31/5"
+                view={editable ? "edit" : "view"}
+                required={editable}
+              />
+
+              <GlobalFormField
+                control={form.control}
+                name="village"
+                label="ชื่อหมู่บ้าน"
+                type="input"
+                placeholder="กรอกชื่อหมู่บ้าน เช่น หมู่บ้านสามร้อยสิบห้า"
+                view={editable ? "edit" : "view"}
               />
 
               <GlobalFormField
@@ -123,8 +111,8 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
                 name="villageNo"
                 label="หมู่ที่"
                 type="input"
-                checkFields={checkFields}
-                placeholder="2"
+                placeholder="กรอกหมู่ เช่น 13"
+                view={editable ? "edit" : "view"}
               />
 
               <GlobalFormField
@@ -132,8 +120,8 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
                 name="alley"
                 label="ซอย"
                 type="input"
-                checkFields={checkFields}
-                placeholder="Alleyway"
+                placeholder="กรอกซอย เช่น 48"
+                view={editable ? "edit" : "view"}
               />
 
               <GlobalFormField
@@ -141,8 +129,8 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
                 name="road"
                 label="ถนน"
                 type="input"
-                checkFields={checkFields}
-                placeholder="Road 51"
+                placeholder="กรอกถนน เช่น พหลโยธิน"
+                view={editable ? "edit" : "view"}
               />
 
               <GlobalFormField
@@ -150,8 +138,9 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
                 name="subDistrict"
                 label="ตำบล/แขวง"
                 type="input"
-                checkFields={checkFields}
-                placeholder="Taling Chan"
+                placeholder="กรอกตำบล/แขวง เช่น แขวงบางกะปิ"
+                view={editable ? "edit" : "view"}
+                required={editable}
               />
 
               <GlobalFormField
@@ -159,51 +148,49 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
                 name="city"
                 label="เขต/อำเภอ/เมือง"
                 type="input"
-                checkFields={checkFields}
-                placeholder="Taling Chan"
+                placeholder="กรอกเขต/อำเภอ/เมือง เช่น เขตห้วยขวาง"
+                view={editable ? "edit" : "view"}
+                required={editable}
               />
+
               <GlobalFormField
                 control={form.control}
                 name="province"
                 label="จังหวัด"
                 type="input"
-                checkFields={checkFields}
-                placeholder="Bangkok"
+                placeholder="กรอกจังหวัด เช่น กรุงเทพมหานคร"
+                view={editable ? "edit" : "view"}
+                required={editable}
               />
+
+              <GlobalFormField
+                control={form.control}
+                name="postalCode"
+                label="รหัสไปรษณีย์"
+                placeholder="กรอกรหัสไปรษณีย์ เช่น 10310"
+                type="number-box"
+                groups={[5]}
+                view={editable ? "edit" : "view"}
+                required={editable}
+              />
+
               <GlobalFormField
                 control={form.control}
                 name="nation"
                 label="ประเทศ"
                 type="input"
-                checkFields={checkFields}
-                placeholder="Country"
-              />
-
-              <GlobalFormFieldNew
-                control={form.control}
-                name="address.postalCode"
-                label="รหัสไปรณีย์"
-                placeholder="กรอกรหัสไปรณีย์ เช่น 10310"
-                type="number-box"
-                groups={[5]}
+                placeholder="กรอกประเทศ เช่น ประเทศไทย"
+                view="view"
               />
 
               <GlobalFormField
                 control={form.control}
                 name="note"
                 label="หมายเหตุ"
-                type="textarea"
-                checkFields={checkFields}
-                placeholder="note here"
+                type="textArea"
+                placeholder="กรอกหมายเหตุสาขา"
+                view={editable ? "edit" : "view"}
               />
-
-              {/* <GlobalFormField
-              control={formAddrass.control}
-              name="isMain"
-              label="เป็นรายการหลัก"
-              type="switch"
-              checkFields={checkFields}
-            /> */}
             </div>
           )}
         </div>
