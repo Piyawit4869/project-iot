@@ -76,7 +76,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
         !v?.location &&
         !v?.description;
 
-      if (blank) removeWe(editingIndex);
+      removeWe(editingIndex);
     }
     setOpen(false);
     setEditingIndex(null);

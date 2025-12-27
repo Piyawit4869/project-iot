@@ -74,7 +74,6 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
       const v = form.getValues(`profile.compensationConfigs.${editingIndex}`);
       const blank =
         !v?.baseSalary &&
-        !v?.currency &&
         !v?.bonusEligible &&
         !v?.bonusRate &&
         !v?.allowance &&
@@ -85,7 +84,7 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
         !v?.expireDate &&
         !v?.description;
 
-      if (blank) removeCf(editingIndex);
+      removeCf(editingIndex);
     }
     setOpen(false);
     setEditingIndex(null);
@@ -383,7 +382,6 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
           indexPath={editingIndex}
           onClose={handleClose}
           onSubmit={handleSubmitFromModal}
-          updateCf={updateCf}
         />
       )}
     </div>

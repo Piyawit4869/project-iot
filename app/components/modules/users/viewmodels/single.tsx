@@ -40,7 +40,12 @@ export default function SingleUsers() {
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
 
-  const { data, isLoading } = useGetUsers(params.id ?? "");
+  const {
+    data,
+    isLoading,
+    refetch: refetchUser,
+    isFetching: isUserFetching,
+  } = useGetUsers(params.id ?? "");
   const { mutate: DeleteUsers } = useDeleteUsers();
 
   const { data: roles } = useGetAllRoles();
@@ -252,6 +257,8 @@ export default function SingleUsers() {
         mutate(cleaned as UsersFormValues, {
           onSuccess: () => {
             toast.success("แก้ไขพนักงานเรียบร้อยแล้ว!", { id: toastId });
+            setIsEdit(false);
+            refetchUser?.();
           },
           onError: () => {
             toast.error("เกิดข้อผิดพลาดขณะแก้ไขพนักงาน", { id: toastId });
@@ -346,7 +353,7 @@ export default function SingleUsers() {
           ),
         ]}
       />
-      {isLoading ? (
+      {isLoading || isUserFetching ? (
         <div className="mt-2 flex flex-col md:flex-row gap-5">
           <div className="md:w-[35%] h-[50%] w-full">
             <SkeletonLoading className="w-full h-[calc(100vh-200px)]" />
