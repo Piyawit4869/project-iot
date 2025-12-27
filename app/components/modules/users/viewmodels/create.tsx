@@ -161,12 +161,11 @@ export default function CreateUsers() {
             onChange={setCurrent}
             prev={prev}
             next={next}
-            stepProgressMap={stepProgressMap}
-            isCreating={isPending}
-            finalButtonText="สร้างลูกค้า"
+            formName="users"
+            finalButtonText="สร้างผู้ใช้งาน"
             classNameContent="w-full"
             totalSteps={totalSteps}
-            formselect="users"
+            formName="users"
             steps={[
               {
                 title: "ข้อมูลพนักงาน",

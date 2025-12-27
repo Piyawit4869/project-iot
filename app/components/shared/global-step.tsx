@@ -16,21 +16,23 @@ export function StepsVertical({
   card,
   prev,
   next,
+  formName,
   stepProgressMap,
+  disableBtn,
   isDisabled,
   isCreating,
   finalButtonText,
   totalSteps = 4,
-  formselect = "customer",
 }: {
-  prev: any;
-  next: any;
-  stepProgressMap: any;
+  prev?: any;
+  next?: any;
+  formName?: string;
+  stepProgressMap?: any;
   isDisabled?: boolean;
-  isCreating: boolean;
-  finalButtonText: string;
+  isCreating?: boolean;
+  disableBtn?: any;
+  finalButtonText?: string;
   totalSteps?: number;
-  formselect?: string;
   steps: {
     title: string;
     content: React.ReactNode;
@@ -78,8 +80,14 @@ export function StepsVertical({
                 )}
 
                 <div
-                  onClick={() => onChange?.(index)}
-                  className="flex items-start gap-3 cursor-pointer"
+                  onClick={() => {
+                    if (disableBtn) return;
+                    onChange?.(index);
+                  }}
+                  className={cn(
+                    "flex items-start gap-3",
+                    disableBtn ? "" : "cursor-pointer  "
+                  )}
                 >
                   {/* Circle */}
                   <div
@@ -179,7 +187,7 @@ export function StepsVertical({
               className="  group transition-all duration-200 hover:shadow-md"
               type="button"
               onClick={next}
-              disabled={stepProgressMap[current] < 100}
+              disabled={disableBtn}
               label="ถัดไป"
               icon={
                 <ArrowBigRightDash className=" transition-all duration-200 group-hover:translate-x-1" />
@@ -192,7 +200,7 @@ export function StepsVertical({
               type="submit"
               width="125px"
               disabled={isDisabled || isCreating}
-              form={formselect}
+              form={formName}
               className="  transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
               label={finalButtonText}
               icon={<Save />}

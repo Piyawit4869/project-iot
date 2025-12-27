@@ -154,7 +154,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
 
   // main org
   const { mutate: updateOrganization } = useUpdateOrganization(
-    organizationId,
+    selectedOrgId,
     userId
   );
 
@@ -227,6 +227,8 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
   const handleClickEditButton = () => setIsEditing(true);
 
   const handleOrgOnSubmit = (values: any) => {
+    console.log({ values });
+
     GlobalModal.info({
       title: "แก้ไขข้อมูลองค์กร",
       description: "คุณต้องการบันทึกการแก้ไขข้อมูลองค์กรใช่หรือไม่",
@@ -331,21 +333,26 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     if (!orgSource) return;
 
     orgForm.reset({
+      isMain: true,
       code: orgSource?.code ?? "",
       nameTh: orgSource?.nameTh ?? "",
       nameEn: orgSource?.nameEn ?? "",
       contactEmail: orgSource?.contactEmail ?? "",
       websiteUrl: orgSource?.websiteUrl ?? "",
-      status: orgSource?.status ?? "",
+
       openingDate: orgSource?.openingDate ?? "",
+
+      orgType: orgSource?.orgType,
+      fromType: orgSource?.fromType,
+      status: orgSource?.status,
+
       descriptionsEn: orgSource?.descriptionsEn ?? "",
       descriptionsTh: orgSource?.descriptionsTh ?? "",
-      fromType: orgSource?.fromType ?? "ordinary_person",
+
       taxId: orgSource?.taxId ?? "",
       registerVat: orgSource?.registerVat ?? false,
       active: orgSource?.active ?? false,
-      isMain: orgSource?.isMain ?? false,
-      branchType: orgSource?.branchType ?? "taxpayer",
+      branchType: orgSource?.branchType ?? "",
       domainName: orgSource?.domainName ?? "",
       contactName: orgSource?.contactName ?? "",
       contactPhone: orgSource?.contactPhone ?? "",
@@ -358,6 +365,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     });
 
     addressForm.reset({
+      isMain: true,
       id: mainAddress?.id ?? "",
       name: mainAddress?.name ?? "",
       building: mainAddress?.building ?? "",
@@ -374,10 +382,10 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
       nation: mainAddress?.nation ?? "",
       postalCode: mainAddress?.postalCode ?? "",
       note: mainAddress?.note ?? "",
-      isMain: mainAddress?.isMain ?? false,
     });
 
     settingForm.reset({
+      isMain: true,
       id: mainSetting?.id ?? "",
       theme: mainSetting?.theme ?? "",
       textDisplay: mainSetting?.textDisplay ?? "",
@@ -387,10 +395,16 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     });
   }, [orgId, isLoadingOrganization, isLoadingBranch, orgSource?.id]);
 
+  console.log({ orgSource });
+
   React.useEffect(() => {
     if (!selectedBranchId) return;
     refetchBranch();
   }, [selectedBranchId]);
+
+  const onError = (errors: any) => {
+    console.log("❌ submit errors:", errors);
+  };
 
   return (
     <Tabs
@@ -502,7 +516,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
             <TabsContent value="SettingOrganization">
               <form
                 id="SettingOrganization"
-                onSubmit={orgForm.handleSubmit(handleOrgOnSubmit)}
+                onSubmit={orgForm.handleSubmit(handleOrgOnSubmit, onError)}
               >
                 <fieldset
                   disabled={!isEditing}
