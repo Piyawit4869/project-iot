@@ -16,17 +16,23 @@ export function StepsVertical({
   card,
   prev,
   next,
+  formName,
   stepProgressMap,
+  disableBtn,
   isDisabled,
   isCreating,
   finalButtonText,
+  totalSteps = 4,
 }: {
-  prev: any;
-  next: any;
-  stepProgressMap: any;
+  prev?: any;
+  next?: any;
+  formName?: string;
+  stepProgressMap?: any;
   isDisabled?: boolean;
-  isCreating: boolean;
-  finalButtonText: string;
+  isCreating?: boolean;
+  disableBtn?: any;
+  finalButtonText?: string;
+  totalSteps?: number;
   steps: {
     title: string;
     content: React.ReactNode;
@@ -74,8 +80,14 @@ export function StepsVertical({
                 )}
 
                 <div
-                  onClick={() => onChange?.(index)}
-                  className="flex items-start gap-3 cursor-pointer"
+                  onClick={() => {
+                    if (disableBtn) return;
+                    onChange?.(index);
+                  }}
+                  className={cn(
+                    "flex items-start gap-3",
+                    disableBtn ? "" : "cursor-pointer  "
+                  )}
                 >
                   {/* Circle */}
                   <div
@@ -159,7 +171,7 @@ export function StepsVertical({
         <div className="flex  gap-4 flex-row">
           <GlobalButton
             width="100px"
-            className="  bg-white border border-gray-300 text-black hover:bg-gray-100 
+            className="  bg-white border border-gray-300 text-black hover:bg-gray-100
     group transition-all duration-200 hover:shadow-md"
             onClick={prev}
             type="button"
@@ -169,13 +181,13 @@ export function StepsVertical({
               <ArrowBigLeftDash className="transition-all duration-200 group-hover:-translate-x-1" />
             }
           />
-          {current < 3 && (
+          {current < totalSteps - 1 && (
             <GlobalButton
               width="100px"
               className="  group transition-all duration-200 hover:shadow-md"
               type="button"
               onClick={next}
-              disabled={stepProgressMap[current] < 100}
+              disabled={disableBtn}
               label="ถัดไป"
               icon={
                 <ArrowBigRightDash className=" transition-all duration-200 group-hover:translate-x-1" />
@@ -183,12 +195,12 @@ export function StepsVertical({
             />
           )}
 
-          {current === 3 && (
+          {current === totalSteps - 1 && (
             <GlobalButton
               type="submit"
               width="125px"
               disabled={isDisabled || isCreating}
-              form="customer"
+              form={formName}
               className="  transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
               label={finalButtonText}
               icon={<Save />}
@@ -201,7 +213,7 @@ export function StepsVertical({
 }
 
 /* ------------------------------
-   Slide Animation Component  
+   Slide Animation Component
    (ดึงมาจาก Stepper)
 -------------------------------- */
 function SlideContent({ children, direction }: any) {

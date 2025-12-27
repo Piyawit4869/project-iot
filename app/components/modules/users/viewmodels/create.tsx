@@ -159,6 +159,10 @@ export default function CreateUsers() {
             card={true}
             current={current}
             onChange={setCurrent}
+            prev={prev}
+            next={next}
+            formName="users"
+            finalButtonText="สร้างผู้ใช้งาน"
             classNameContent="w-full"
             steps={[
               {
@@ -214,41 +218,41 @@ export default function CreateUsers() {
                 content: <UserDocuments form={form} />,
               },
             ]}
-            buttonBottom={
-              <div className="flex gap-3 justify-end w-full">
-                <Button
-                  className="w-25 bg-white border border-gray-300 text-black hover:bg-gray-100
-                                  group transition-all duration-200 hover:shadow-md"
-                  onClick={prev}
-                  type="button"
-                  disabled={current === 0}
-                >
-                  <ArrowBigLeftDash className="transition-all duration-200 group-hover:-translate-x-1" />
-                  กลับไป
-                </Button>
+            // buttonBottom={
+            //   <div className="flex gap-3 justify-end w-full">
+            //     <Button
+            //       className="w-25 bg-white border border-gray-300 text-black hover:bg-gray-100
+            //                       group transition-all duration-200 hover:shadow-md"
+            //       onClick={prev}
+            //       type="button"
+            //       disabled={current === 0}
+            //     >
+            //       <ArrowBigLeftDash className="transition-all duration-200 group-hover:-translate-x-1" />
+            //       กลับไป
+            //     </Button>
 
-                {current < 5 && (
-                  <Button
-                    type="button"
-                    onClick={next}
-                    className="w-25 group transition-all duration-200 hover:shadow-md"
-                  >
-                    ถัดไป
-                    <ArrowBigRightDash className=" transition-all duration-200 group-hover:translate-x-1" />
-                  </Button>
-                )}
+            //     {current < 5 && (
+            //       <Button
+            //         type="button"
+            //         onClick={next}
+            //         className="w-25 group transition-all duration-200 hover:shadow-md"
+            //       >
+            //         ถัดไป
+            //         <ArrowBigRightDash className=" transition-all duration-200 group-hover:translate-x-1" />
+            //       </Button>
+            //     )}
 
-                {current === 5 && (
-                  <Button
-                    type="submit"
-                    form="users"
-                    className="w-35 transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
-                  >
-                    <Save /> สร้างผู้ใช้งาน
-                  </Button>
-                )}
-              </div>
-            }
+            //     {current === 5 && (
+            //       <Button
+            //         type="submit"
+            //         form="users"
+            //         className="w-35 transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
+            //       >
+            //         <Save /> สร้างผู้ใช้งาน
+            //       </Button>
+            //     )}
+            //   </div>
+            // }
           />
 
           {/* <Stepper

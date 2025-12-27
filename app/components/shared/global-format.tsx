@@ -74,6 +74,14 @@ export function formatPhoneNumber(phone?: string) {
 
   return phone;
 }
+export function formatTaxId(taxId?: string) {
+  if (!taxId) return "";
+  const digits = taxId.replace(/\D/g, "");
+  return `${digits.slice(0, 1)}-${digits.slice(1, 5)}-${digits.slice(
+    5,
+    10
+  )}-${digits.slice(10, 12)}-${digits.slice(12)}`;
+}
 
 export const formatDateHHMM = (date: string | Date | null): string => {
   if (!date) return "";

@@ -145,7 +145,7 @@ export default function CreateOrganization() {
       />
 
       <Form {...formCreate}>
-        <form id="customer" onSubmit={formCreate.handleSubmit(onCreate)}>
+        <form id="braches" onSubmit={formCreate.handleSubmit(onCreate)}>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="  w-full">
               <StepsVertical
@@ -153,6 +153,8 @@ export default function CreateOrganization() {
                 onChange={setCurrent}
                 prev={prev}
                 next={next}
+                disableBtn={stepProgressMap[current] < 100}
+                formName="braches"
                 stepProgressMap={stepProgressMap}
                 isCreating={isCreating}
                 finalButtonText="สร้างสาขา"
