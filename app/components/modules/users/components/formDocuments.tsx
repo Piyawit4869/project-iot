@@ -144,7 +144,7 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
         !v?.verified &&
         !v?.remark;
 
-      if (blank) removeDm(editingIndex);
+      removeDm(editingIndex);
     }
     setOpen(false);
     setEditingIndex(null);

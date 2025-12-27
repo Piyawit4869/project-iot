@@ -113,7 +113,7 @@ export const DocumentModal: React.FC<Props> = ({
                 name={`${index}.url`}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>เอกสารแนบ</FormLabel>
+                    <RequiredLabel required>เอกสารแนบ</RequiredLabel>
                     <FormControl>
                       <FileUpload
                         value={file}
@@ -255,7 +255,7 @@ export const DocumentModal: React.FC<Props> = ({
                 render={({ field }) => {
                   const display = Array.isArray(field.value)
                     ? field.value.join(", ")
-                    : field.value ?? "";
+                    : (field.value ?? "");
                   return (
                     <FormItem>
                       <FormLabel>แท็กกำกับไฟล์ (คั่นด้วย ,)</FormLabel>

@@ -29,6 +29,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Switch } from "~/components/ui/switch";
 import type { UsersFormValues } from "~/schemas/users/user";
+import { GlobalFormField } from "~/components/shared/global-formField";
 
 type Props = {
   open: boolean;
@@ -37,7 +38,6 @@ type Props = {
   onSubmit: () => void;
   form: UseFormReturn<UsersFormValues>;
   indexPath: number;
-  updateCf: any;
 };
 
 const unitOptions = [
@@ -230,12 +230,12 @@ export const CompensationModal: React.FC<Props> = ({
                 )}
               />
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name={`${index}.contractType`}
                 render={({ field }) => (
                   <FormItem>
-                    <RequiredLabel required>ประเภทสัญญาจ้าง</RequiredLabel>
+                    <FormLabel>ประเภทสัญญาจ้าง</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -245,6 +245,14 @@ export const CompensationModal: React.FC<Props> = ({
                     <FormMessage />
                   </FormItem>
                 )}
+              /> */}
+              <GlobalFormField
+                control={form.control}
+                name={`${index}.contractType`}
+                label="ประเภทสัญญาจ้าง"
+                type="input"
+                placeholder="เช่น Permanent, Contract"
+                required
               />
 
               <FormField
