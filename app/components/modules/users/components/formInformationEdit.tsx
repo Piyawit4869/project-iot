@@ -231,7 +231,7 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                               </span>
                               <button
                                 type="button"
-                                onClick={() => field.onChange(undefined)}
+                                onClick={() => field.onChange(null)}
                                 className="ml-1 text-muted-foreground hover:text-red-500"
                               >
                                 <X className="h-3 w-3" />

@@ -26,7 +26,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         cell: (info) => {
           const url = info.getValue() as string;
           const userName = info.row.original?.userName;
-          
+
           return (
             <GlobalImage
               src={url}
@@ -34,7 +34,6 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
               width={60}
               height={60}
               className="rounded-xl w-[60px] h-[60px] object-cover object-center"
-              fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${userName}`}
             />
           );
         },
