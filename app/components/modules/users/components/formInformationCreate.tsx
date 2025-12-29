@@ -43,6 +43,7 @@ import { UsersFormSchema, type UsersFormValues } from "~/schemas/users/user";
 import { getRequiredPaths } from "~/utils/form-adapter";
 import { OrganizationSelector } from "./formSelectOrganization";
 import { formToJSON } from "axios";
+import { fetchUserPagination } from "~/api/server/user";
 
 export interface UserFormProfileProps {
   form: UseFormReturn<UsersFormValues>;
@@ -94,8 +95,26 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
   const filteredStatusOptions = statusOptions.filter((o) =>
     o.label.toLowerCase().includes(debouncedStatusSearch.toLowerCase())
   );
-
-  // types ที่ไม่ใช้ any
+  const handleBlur = async () => {
+    const email = form.getValues("email");
+    try {
+      const res = await fetchUserPagination({
+        page: 1,
+        limit: 1,
+        status: "",
+        email,
+      });
+      const hasDuplicate = Array.isArray(res?.items) && res.items.length > 0;
+      if (hasDuplicate) {
+        form.setError("email", {
+          type: "manual",
+          message: "อีเมลนี้ถูกใช้งานแล้ว",
+        });
+      } else {
+        form.clearErrors("email");
+      }
+    } catch {}
+  };
 
   type OptionItem = { id: string; name: string; active?: boolean }; // ของ list ที่ใช้เลือก
 
@@ -131,13 +150,23 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
               />
 
               <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
-                <GlobalFormField
+                <FormField
                   control={form.control}
                   name="email"
-                  label="อีเมล"
-                  type="input"
-                  checkFields={checkFields}
-                  placeholder="กรอกอีเมล"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>อีเมล</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="กรอกอีเมล"
+                          {...field}
+                          value={field.value ?? undefined}
+                          onBlur={handleBlur}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
                 <GlobalFormField
                   control={form.control}
@@ -279,95 +308,97 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     //   field.onBlur?.();
                     // };
 
-                    const findDep = (id?: string) =>
-                      (allRoles ?? []).find((d) => d.id === id);
+                    const selectedId = field.value as string | null;
+                    const selectedRole = (allRoles ?? []).find(
+                      (r) => r.id === selectedId
+                    );
 
                     return (
                       <FormItem>
                         <RequiredLabel required>ตำแหน่ง</RequiredLabel>
 
                         <div className="flex flex-wrap gap-2">
-                          {(() => {
-                            const depId = (field.value ?? "") as string;
-                            if (!depId) return null;
-
-                            const dep = findDep(depId);
-                            const depName = dep?.name ?? "-";
-
-                            return (
-                              <div className="flex items-center gap-2 border-1 px-2 py-1.5 rounded-full">
-                                <GlobalImage
-                                  src={`https://api.dicebear.com/9.x/initials/svg?seed=${depName}`}
-                                  alt={depName}
-                                  className="w-6 h-6 rounded-full"
-                                />
-                                <span>{depName}</span>
-
-                                <button
-                                  type="button"
-                                  onClick={() => field.onChange("")}
-                                  className="ml-1 text-gray-500 hover:text-red-500"
-                                >
-                                  <X className="h-3 w-3" />
-                                </button>
-                              </div>
-                            );
-                          })()}
-
-                          <Popover
-                            open={openSub}
-                            onOpenChange={(v) => {
-                              setOpenSub(v);
-                              if (!v) field.onBlur?.();
-                            }}
-                          >
-                            <PopoverTrigger asChild>
-                              <Button
+                          {/* แสดง role ที่มีอยู่แล้ว */}
+                          {selectedRole && (
+                            <div className="flex items-center gap-2 px-2 py-1.5 rounded-full border">
+                              <GlobalImage
+                                src={`https://api.dicebear.com/9.x/initials/svg?seed=${selectedRole.name}`}
+                                alt={selectedRole.name}
+                                className="w-6 h-6 rounded-full"
+                              />
+                              <span className="text-sm">
+                                {selectedRole.name}
+                              </span>
+                              <button
                                 type="button"
-                                variant="outline"
-                                className="px-4 py-2 rounded-full"
-                                disabled={!!field.value}
+                                onClick={() => {
+                                  field.onChange(null);
+                                  field.onBlur?.();
+                                }}
+                                className="ml-1 text-muted-foreground hover:text-red-500"
                               >
-                                เพิ่มตำแหน่ง +
-                              </Button>
-                            </PopoverTrigger>
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          )}
+                          {!selectedRole && (
+                            <Popover
+                              open={openSub}
+                              onOpenChange={(v) => {
+                                setOpenSub(v);
+                                if (!v) field.onBlur?.();
+                              }}
+                            >
+                              <PopoverTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  className="px-4 py-2 rounded-full"
+                                  disabled={!!field.value}
+                                >
+                                  เพิ่มตำแหน่ง +
+                                </Button>
+                              </PopoverTrigger>
 
-                            <PopoverContent className="w-64">
-                              <Command>
-                                <CommandInput
-                                  placeholder="ค้นหา..."
-                                  value={search}
-                                  onValueChange={setSearch}
-                                />
-                                <CommandEmpty>ไม่มีข้อมูล</CommandEmpty>
+                              <PopoverContent className="w-64">
+                                <Command>
+                                  <CommandInput
+                                    placeholder="ค้นหา..."
+                                    value={search}
+                                    onValueChange={setSearch}
+                                  />
+                                  <CommandEmpty>ไม่มีข้อมูล</CommandEmpty>
 
-                                <CommandList>
-                                  {(filtered ?? []).map((item: OptionItem) => {
-                                    const checked = field.value === item.id;
+                                  <CommandList>
+                                    {(filtered ?? []).map(
+                                      (item: OptionItem) => {
+                                        const checked = field.value === item.id;
 
-                                    return (
-                                      <CommandItem
-                                        key={item.id}
-                                        onSelect={() => {
-                                          field.onChange(item.id);
-                                          setOpenSub(false);
-                                        }}
-                                      >
-                                        <Checkbox
-                                          checked={checked}
-                                          className="mr-2"
-                                        />
-                                        {item.name}
-                                        {checked && (
-                                          <Check className="ml-auto h-4 w-4" />
-                                        )}
-                                      </CommandItem>
-                                    );
-                                  })}
-                                </CommandList>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
+                                        return (
+                                          <CommandItem
+                                            key={item.id}
+                                            onSelect={() => {
+                                              field.onChange(item.id);
+                                              setOpenSub(false);
+                                            }}
+                                          >
+                                            <Checkbox
+                                              checked={checked}
+                                              className="mr-2"
+                                            />
+                                            {item.name}
+                                            {checked && (
+                                              <Check className="ml-auto h-4 w-4" />
+                                            )}
+                                          </CommandItem>
+                                        );
+                                      }
+                                    )}
+                                  </CommandList>
+                                </Command>
+                              </PopoverContent>
+                            </Popover>
+                          )}
                         </div>
 
                         <FormMessage />
