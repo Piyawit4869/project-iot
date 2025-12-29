@@ -23,7 +23,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   const token = await getAccessToken(request);
   const user = await getUser(request);
 
-  const permission = getUserMapPermission(user);
+  const permission = user?.permissions;
 
   if (user?.id) {
     return { user, token, me: user, permission };
