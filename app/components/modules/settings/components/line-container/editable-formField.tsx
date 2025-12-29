@@ -24,12 +24,6 @@ type EditableFormFieldProps = {
   isEdit?: boolean;
 };
 
-const maskValue = (value?: string, show = 4) => {
-  if (!value) return "";
-  if (value.length <= show) return "*".repeat(value.length);
-  return value.slice(0, show) + "*".repeat(value.length - show);
-};
-
 export function EditableFormField({
   label,
   placeholder,
@@ -48,6 +42,12 @@ export function EditableFormField({
     const success = await copyTextToClipboard(value || "");
     setCopied(success);
     setTimeout(() => setCopied(false), 1500);
+  };
+
+  const maskValue = (value?: string, show = 4) => {
+    if (!value) return "";
+    if (value.length <= show) return "*".repeat(value.length);
+    return value.slice(0, show) + "*".repeat(value.length - show);
   };
 
   return (
