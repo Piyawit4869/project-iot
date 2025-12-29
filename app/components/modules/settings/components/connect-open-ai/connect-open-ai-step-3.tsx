@@ -190,7 +190,7 @@ export const ConnectOpenAiStep3: React.FC<ConnectOpenAiStep3Props> = (
                       <Input
                         placeholder="Text"
                         className="bg-white"
-                        {...field}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />

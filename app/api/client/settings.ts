@@ -8,6 +8,11 @@ import {
   fetchBranchPagination,
   fetchChatBotPagination,
   fetchCreateBranchesOrganizations,
+  fetchCreateConfigAi,
+  fetchDetailAddressBranches,
+  fetchDetailBranchesOrganization,
+  fetchDetailSettingBranches,
+  fetchGetBranchesDetail,
   fetchGetBranchesOrganization,
   fetchGetConnectionAi,
   fetchGetConnectionAiByBranch,
@@ -38,6 +43,7 @@ import type {
   PushMessageValues,
   SettingSchemaValues,
   TeamMessageCreateDTO,
+  settingTheme,
 } from "~/schemas/settings";
 import {
   createReplyMessage,
@@ -84,12 +90,43 @@ export const useGetOrganization = (id: string) =>
     enabled: !!id,
   });
 
+export const useGetBranchesDetail = (id: string) =>
+  useQuery({
+    queryKey: ["branches-organization-detail", id],
+    queryFn: () => fetchGetBranchesDetail(id),
+    enabled: !!id,
+  });
 export const useGetBranchesOrganization = (id: string) =>
   useQuery({
     queryKey: ["branches-organization", id],
     queryFn: () => fetchGetBranchesOrganization(id),
     enabled: !!id,
   });
+
+// ----------------------
+
+export const useUpdateBranchesOrganization = (branchesid: string) => {
+  return useMutation({
+    mutationFn: (values: BranchesOrganization) =>
+      fetchDetailBranchesOrganization(branchesid, values),
+  });
+};
+
+export const useUpdateAddressBranches = (branchesid: string) => {
+  return useMutation({
+    mutationFn: (values: BranchesOrganization) =>
+      fetchDetailAddressBranches(branchesid, values),
+  });
+};
+
+export const useUpdateSettingBranches = (branchesid: string) => {
+  return useMutation({
+    mutationFn: (values: BranchesOrganization) =>
+      fetchDetailSettingBranches(branchesid, values),
+  });
+};
+
+// ----------------------
 
 export const useUpdateOrganization = (
   organizationId: string,
@@ -101,16 +138,16 @@ export const useUpdateOrganization = (
   });
 };
 
-export const useUpdateAddress = (settingAddressId: string, userId: string) => {
+export const useUpdateAddress = (settingAddressId: string, orgId: string) => {
   return useMutation({
     mutationFn: (values: AddressSchemaValues) =>
-      fetchUpdateSettingAddress(values),
+      fetchUpdateSettingAddress(orgId, settingAddressId, values),
   });
 };
 
-export const useUpdateSettings = (settingId: string, userId: string) => {
+export const useUpdateSettings = (settingId: string, orgId: string) => {
   return useMutation({
-    mutationFn: (values: SettingSchemaValues) => fetchUpdateSetting(values),
+    mutationFn: (values: any) => fetchUpdateSetting(orgId, settingId, values),
   });
 };
 
@@ -166,6 +203,12 @@ export const useGetConnectionLine = (id: string) =>
     enabled: !!id,
   });
 
+export const useCreateConfigAi = () => {
+  return useMutation({
+    mutationFn: (values: ConnectAiValues) => fetchCreateConfigAi(values),
+  });
+};
+
 export const useUpdateConnectionAi = (id: string) => {
   return useMutation({
     mutationFn: (values: ConnectAiValues) =>
@@ -177,7 +220,7 @@ export const useGetConnectionAi = (id: string) =>
   useQuery({
     queryKey: ["OpenAi", id],
     queryFn: () => fetchGetConnectionAi(id),
-    enabled: !!id,
+    // enabled: !!id,
   });
 export const useGetConnectionAiByBranch = (branchId: string) =>
   useQuery({
@@ -205,7 +248,7 @@ export const usePaginatedChatRoomAIConfig = (chatRoomId: string) => {
 
       return meta?.hasMore ? meta.offset + meta.limit : undefined;
     },
-    enabled: !!chatRoomId,
+    // enabled: !!chatRoomId,
   });
 };
 
@@ -320,7 +363,7 @@ export const useLineCardContentPaginate = ({
 
 export const useLineSendCardContent = (id: string) => {
   return useMutation({
-    mutationFn: async (payload: { to?: string }) =>
+    mutationFn: async (payload: { to?: string; chatRoomId?: string }) =>
       sendCardContent(id, payload),
   });
 };

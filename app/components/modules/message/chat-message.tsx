@@ -56,7 +56,11 @@ export const ChatMessages = ({
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const newestSeenId = React.useRef<string | null>(null);
 
+  const isProgrammaticScroll = React.useRef(false);
+
   const [previewUrl, setPreviewUrl] = React.useState("");
+
+  const [isSearching, setIsSearching] = React.useState<boolean>(false);
 
   const [showTopLoading, setShowTopLoading] = useState(false);
   const [buttonScrollToBottom, setButtonScrollToBottom] = React.useState(false);
@@ -102,6 +106,7 @@ export const ChatMessages = ({
   };
 
   const handleSearchClick = (messageId: string) => {
+    setIsSearching(true);
     setTargetMessageId(messageId);
     setDirection("none");
     setHasScrolledToTarget(false);
@@ -172,27 +177,28 @@ export const ChatMessages = ({
   }, [bottomRef.current]);
 
   React.useEffect(() => {
-    // scroll top and down to load
-
     const el = scrollAreaRef.current;
     if (!el) return;
 
     const THRESHOLD = 5;
 
     const onScroll = () => {
+      if (isSearching || isProgrammaticScroll.current) return;
+
       if (!hasNextPage || isFetchingNextPage) return;
 
-      if (el.scrollTop <= THRESHOLD && meta.prev) {
+      const THRESHOLD = 5;
+
+      if (el.scrollTop <= THRESHOLD && meta?.prev) {
+        setDirection("prev");
         const prevScrollHeight = el.scrollHeight;
         setShowTopLoading(true);
-        setDirection("prev");
 
         fetchNextPage().finally(() => {
           setShowTopLoading(false);
           requestAnimationFrame(() => {
             const newScrollHeight = el.scrollHeight;
-            const heightDiff = newScrollHeight - prevScrollHeight;
-            el.scrollTop = heightDiff;
+            el.scrollTop = newScrollHeight - prevScrollHeight;
           });
         });
       }
@@ -200,7 +206,7 @@ export const ChatMessages = ({
       const isBottom =
         el.scrollTop + el.clientHeight >= el.scrollHeight - THRESHOLD;
 
-      if (isBottom && meta.next) {
+      if (isBottom && meta?.next) {
         setDirection("next");
         fetchNextPage();
       }
@@ -208,42 +214,38 @@ export const ChatMessages = ({
 
     el.addEventListener("scroll", onScroll);
     return () => el.removeEventListener("scroll", onScroll);
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [hasNextPage, isFetchingNextPage, meta, isSearching]);
 
   React.useEffect(() => {
-    // search and shaker
     if (!targetMessageId || hasScrolledToTarget) return;
 
     const el = messageRefs.current[targetMessageId];
-
     const container = scrollAreaRef.current;
     if (!el || !container) return;
 
+    isProgrammaticScroll.current = true;
+    setIsSearching(true);
+
     requestAnimationFrame(() => {
-      const elRect = el.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-
-      const elCenter = el.offsetTop + elRect.height / 2 - containerRect.top;
-
-      const scrollTop =
-        elCenter - container.clientHeight / 2 + container.scrollTop;
-
-      container.scrollTo({
-        top: scrollTop,
+      el.scrollIntoView({
         behavior: "smooth",
+        block: "center",
       });
 
       el.classList.add("shake");
-
-      const timer = setTimeout(() => {
-        el.classList.remove("shake");
-      }, 500);
+      setTimeout(() => el.classList.remove("shake"), 500);
 
       setHasScrolledToTarget(true);
 
-      return () => clearTimeout(timer);
+      // ⏳ รอ scroll จบจริง ๆ
+      setTimeout(() => {
+        isProgrammaticScroll.current = false;
+        setIsSearching(false);
+        setTargetMessageId("");
+        setDirection("prev");
+      }, 800); // ⬅️ สำคัญ
     });
-  }, [targetMessageId, messagesData, hasScrolledToTarget]);
+  }, [targetMessageId, messagesData]);
 
   React.useEffect(() => {
     //clear target on new select room
@@ -275,6 +277,7 @@ export const ChatMessages = ({
       />
 
       <MessageBody
+        api={api}
         ref={scrollAreaRef}
         messageRefs={messageRefs}
         showTopLoading={showTopLoading}

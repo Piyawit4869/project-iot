@@ -76,7 +76,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
         !v?.location &&
         !v?.description;
 
-      if (blank) removeWe(editingIndex);
+      removeWe(editingIndex);
     }
     setOpen(false);
     setEditingIndex(null);
@@ -97,6 +97,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
             `profile.workExperiences.${editingIndex}`
           );
           updateWe(editingIndex, {
+            ...current,
             company: current?.company ?? "",
             position: current?.position ?? "",
             employmentType: current?.employmentType ?? "",
@@ -109,7 +110,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
           toast.success("บันทึกเรียบร้อยแล้ว!", { id: toastId });
           setOpen(false);
           setEditingIndex(null);
-        } catch {
+        } catch (e) {
           toast.error("ดำเนินการไม่สำเร็จ กรุณาลองใหม่ภายหลัง", {
             id: toastId,
           });
@@ -144,7 +145,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
   };
 
   return (
-    <Card className="py-0 pb-5">
+    <div className="py-0 pb-5">
       {loading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
@@ -207,10 +208,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
                   ].filter((d) => d.value && String(d.value).trim().length > 0);
 
                   return (
-                    <div
-                      key={row.id}
-                      className="rounded-xl border p-4 space-y-4"
-                    >
+                    <div key={row.id} className="p-4 space-y-4">
                       <div className="flex items-center justify-between">
                         <div className="min-w-0">
                           <h4 className="font-semibold truncate">
@@ -284,6 +282,6 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
           onSubmit={handleSubmitFromModal}
         />
       )}
-    </Card>
+    </div>
   );
 };

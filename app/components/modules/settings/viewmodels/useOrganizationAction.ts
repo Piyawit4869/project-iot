@@ -25,15 +25,17 @@ type DayKey =
   | "Saturday";
 
 //TO FIX
-function mapOpenDaysToApi(
-  openDays: Record<DayKey, { open?: string; close?: string }>
+export function mapOpenDaysToApi(
+  openDays?: Partial<Record<DayKey, { open?: string; close?: string }>>
 ) {
+  if (!openDays) return [];
+
   return (Object.keys(openDays) as DayKey[])
     .filter((day) => openDays[day]?.open && openDays[day]?.close)
     .map((day) => ({
       day: [day],
-      open: openDays[day].open!,
-      close: openDays[day].close!,
+      open: openDays[day]!.open!,
+      close: openDays[day]!.close!,
     }));
 }
 
@@ -108,7 +110,9 @@ export const useOrganizationAction = () => {
               duration: 2500,
               position: "bottom-right",
             });
-            navigate(`/setting-organization?organizationId=${data.id}`);
+            navigate(
+              `/setting-organization?organizationId=${id}&branchId=${data.id}`
+            );
           },
           onError: () => {
             toast.error("เกิดข้อผิดพลาดในการสร้างองค์กร", {

@@ -8,20 +8,19 @@ import { customerStatus } from "~/initData/customer-initData";
 
 import type { CreateOrganizationFormCreateProps } from "../../create-organization";
 import { GlobalFormField } from "~/components/shared/global-formField";
-import { typeOptions } from "../setting-organization-form";
 
 export const OrganizationContactCard: React.FC<
   CreateOrganizationFormCreateProps
-> = ({ form, loading = false }) => {
+> = ({ form, isLoading = false, isEdit }) => {
   return (
-    <Card>
+    <>
       {/* <CardHeader>
         <div className="flex gap-2">
           <CardTitle className="text-base font-bold">ข้อมูลลูกค้า</CardTitle>
         </div>
       </CardHeader> */}
 
-      {loading ? (
+      {isLoading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
           <SkeletonLoading />
@@ -37,6 +36,7 @@ export const OrganizationContactCard: React.FC<
               label="ชื่อผู้ติดต่อ"
               placeholder="เช่น นายสมชาย ใจดี"
               type="input"
+              view={isEdit ? "edit" : "view"}
             />
 
             <GlobalFormField
@@ -45,6 +45,7 @@ export const OrganizationContactCard: React.FC<
               label="อีเมลผู้ติดต่อ"
               placeholder="เช่น example@email.com"
               type="input"
+              view={isEdit ? "edit" : "view"}
             />
           </div>
 
@@ -55,6 +56,7 @@ export const OrganizationContactCard: React.FC<
               label="เบอร์โทรผู้ติดต่อ"
               placeholder="เช่น 0812345678"
               type="number-box"
+              view={isEdit ? "edit" : "view"}
             />
             <GlobalFormField
               control={form.control}
@@ -62,6 +64,7 @@ export const OrganizationContactCard: React.FC<
               label="Line ผู้ติดต่อ"
               placeholder="เช่น line id หรือเบอร์โทร"
               type="input"
+              view={isEdit ? "edit" : "view"}
             />
           </div>
 
@@ -72,6 +75,7 @@ export const OrganizationContactCard: React.FC<
               label="Facebook ผู้ติดต่อ"
               placeholder="เช่น facebook.com/yourpage หรือชื่อโปรไฟล์"
               type="input"
+              view={isEdit ? "edit" : "view"}
             />
             <GlobalFormField
               control={form.control}
@@ -79,6 +83,7 @@ export const OrganizationContactCard: React.FC<
               label="Whatsapp ผู้ติดต่อ"
               placeholder="เช่น +66812345678"
               type="input"
+              view={isEdit ? "edit" : "view"}
             />
             <GlobalFormField
               control={form.control}
@@ -87,6 +92,7 @@ export const OrganizationContactCard: React.FC<
               placeholder="เช่น https://www.example.com"
               type="input"
               canCopy
+              view={isEdit ? "edit" : "view"}
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -96,10 +102,11 @@ export const OrganizationContactCard: React.FC<
               label="หมายเหตุ"
               placeholder="ข้อมูลเพิ่มเติมเกี่ยวกับผู้ติดต่อ (ถ้ามี)"
               type="textArea"
+              view={isEdit ? "edit" : "view"}
             />
           </div>
         </div>
       )}
-    </Card>
+    </>
   );
 };

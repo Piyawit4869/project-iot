@@ -21,6 +21,7 @@ import { RequiredLabel } from "~/components/shared/required-design";
 import type { UseFormReturn } from "react-hook-form";
 import { Input } from "~/components/ui/input";
 import { Switch } from "~/components/ui/switch";
+import { GlobalFormField } from "~/components/shared/global-formField";
 
 type Props = {
   open: boolean;
@@ -51,20 +52,17 @@ export const WorkExperienceModal: React.FC<Props> = ({
         <Form {...form}>
           <form
             id="workexp-form"
-            onSubmit={form.handleSubmit(onSubmit)}
-
-            // onSubmit={async (e) => {
-            //   e.preventDefault();
-            //   const ok = await form
-            //     .trigger
-            //     // `profile.workExperiences.${indexPath}`,
-            //     // {
-            //     //   shouldFocus: true,
-            //     // }
-            //     ();
-            //   // if (!ok) return;
-            //   // onSubmit();
-            // }}
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const ok = await form.trigger(
+                `profile.workExperiences.${indexPath}`,
+                {
+                  shouldFocus: true,
+                }
+              );
+              if (!ok) return;
+              onSubmit();
+            }}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <FormField
@@ -113,7 +111,7 @@ export const WorkExperienceModal: React.FC<Props> = ({
                 )}
               />
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name={`${index}.startDate`}
                 render={({ field }) => (
@@ -128,6 +126,15 @@ export const WorkExperienceModal: React.FC<Props> = ({
                     <FormMessage />
                   </FormItem>
                 )}
+              /> */}
+
+              <GlobalFormField
+                control={form.control}
+                name={`${index}.startDate`}
+                label="วันที่เริ่มงาน"
+                type="date"
+                placeholder="เช่น Permanent, Contract"
+                required
               />
               <FormField
                 control={form.control}

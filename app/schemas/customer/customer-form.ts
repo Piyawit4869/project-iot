@@ -104,7 +104,7 @@ const OrganizationDetailsSchema = z.object({
       return digits;
     }
     return "";
-  }, z.string().max(9, "หมายเลขโทรศัพท์ต้องไม่เกิน 9 หลัก").optional().nullable()),
+  }, z.string().optional().nullable()),
 
   businessFax: z.string().optional().nullable(),
   businessEmail: z.string().nullable().optional(),
@@ -130,6 +130,7 @@ const ContactSchema = z.object({
 
 // Tag
 const TagSchema = z.object({
+  id: z.string().optional(),
   name: z.string().optional(),
   active: z.boolean().optional(),
 });

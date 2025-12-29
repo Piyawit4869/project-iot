@@ -12,14 +12,12 @@ import {
 
 import type { CreateOrganizationFormCreateProps } from "../../create-organization";
 import { GlobalFormField } from "~/components/shared/global-formField";
-import { typeOptions } from "../setting-organization-form";
+
 import { Checkbox } from "~/components/ui/checkbox";
 
 export const OrganizationDetailCard: React.FC<
   CreateOrganizationFormCreateProps
-> = ({ form, loading = false }) => {
-  const [hasTaxId, setHasTaxId] = React.useState(false);
-
+> = ({ form, isLoading = false }) => {
   return (
     <Card>
       {/* <CardHeader>
@@ -28,7 +26,7 @@ export const OrganizationDetailCard: React.FC<
         </div>
       </CardHeader> */}
 
-      {loading ? (
+      {isLoading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
           <SkeletonLoading />
@@ -38,7 +36,7 @@ export const OrganizationDetailCard: React.FC<
       ) : (
         <div className="space-y-4 px-6">
           {/* Activity Name */}{" "}
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-5">
             <GlobalFormField
               control={form.control}
               name="logoUrl"
@@ -46,7 +44,7 @@ export const OrganizationDetailCard: React.FC<
               type="image"
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <GlobalFormField
               control={form.control}
               name="active"
@@ -54,7 +52,7 @@ export const OrganizationDetailCard: React.FC<
               type="switch"
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <GlobalFormField
               control={form.control}
               name="code"
@@ -62,21 +60,22 @@ export const OrganizationDetailCard: React.FC<
               placeholder="กรอกชื่อสาขาภาษาไทย เช่น สาขาสามร้อยสิบห้าโปรดักชั่น"
               type="input"
             />
-            <GlobalFormField
+            {/* <GlobalFormField
               control={form.control}
               name="isMain"
               label="สาขาหลัก"
               labelCheckbox="กำหนดสาขานี้เป็นสาขาหลักขององค์กร"
               type="checkbox"
-            />
+            /> */}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <GlobalFormField
               control={form.control}
               name="nameTh"
               label="ชื่อสาขา (ไทย)"
               placeholder="กรอกชื่อสาขาภาษาไทย เช่น สาขาสามร้อยสิบห้าโปรดักชั่น"
               type="input"
+              required
             />
             <GlobalFormField
               control={form.control}
@@ -84,6 +83,7 @@ export const OrganizationDetailCard: React.FC<
               label="ชื่อสาขา (อังกฤษ)"
               placeholder="กรอกชื่อสาขาภาษาอังกฤษ เช่น Samroi Sipha Production Branch"
               type="input"
+              required
             />
             <GlobalFormField
               control={form.control}
@@ -95,11 +95,21 @@ export const OrganizationDetailCard: React.FC<
             <GlobalFormField
               control={form.control}
               name="descriptionsEn"
-              label="คำอธิบายสาขา (ภาษาไทย)"
+              label="คำอธิบายสาขา (ภาษาอังกฤษ)"
               placeholder="กรอกคำอธิบายอังกฤษ เช่น Main branch of the organization"
               type="textArea"
             />
-
+            <GlobalFormField
+              control={form.control}
+              name="openingDate"
+              label="วันที่เปิดให้บริการ"
+              type="date"
+            />
+          </div>
+          <div className="my-6">
+            <h2 className="text-xl font-bold">ข้อมูลการลงทะเบียน</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 my-4 gap-5">
             <GlobalFormField
               control={form.control}
               name="taxId"
@@ -107,8 +117,48 @@ export const OrganizationDetailCard: React.FC<
               type="number-box"
               groups={[1, 4, 5, 2, 1]}
               format="-"
+              required
+            />
+            <GlobalFormField
+              control={form.control}
+              name="branchType"
+              label="ลักษณะสาขา"
+              placeholder="เลือกลักษณะสาขา"
+              options={organizationType}
+              type="select"
+              required
+            />
+            <GlobalFormField
+              control={form.control}
+              name="registerVat"
+              label="ภาษีมูลค่าเพิ่ม"
+              labelCheckbox="สาขามีการจดภาษีมูลค่าเพิ่ม"
+              type="checkbox"
+            />
+          </div>
+          <div className="my-6">
+            <h2 className="text-xl font-bold">ประเภทและสถานะ</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 my-4 gap-5">
+            <GlobalFormField
+              control={form.control}
+              name="fromType"
+              label="ประเภทสาขา"
+              placeholder="เลือกประเภทสาขา"
+              options={customerType}
+              type="select"
+              required
             />
 
+            <GlobalFormField
+              control={form.control}
+              name="status"
+              label="สถานะสาขา"
+              placeholder="เลือกสถานะสาขา"
+              options={customerStatus}
+              type="select"
+              required
+            />
             {/* <div className="flex items-center gap-2">
               <Checkbox
                 checked={hasTaxId}
@@ -138,7 +188,11 @@ export const OrganizationDetailCard: React.FC<
                 format="-"
               />
             )} */}
-
+          </div>
+          <div className="my-6">
+            <h2 className="text-xl font-bold">เว็บไซต์</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 my-4 gap-5">
             <GlobalFormField
               control={form.control}
               name="websiteUrl"
@@ -149,29 +203,11 @@ export const OrganizationDetailCard: React.FC<
             />
             <GlobalFormField
               control={form.control}
-              name="branchType"
-              label="ประเภทสาขา"
-              placeholder="เลือกประเภทสาขา"
-              options={organizationType}
-              type="select"
-            />
-
-            <GlobalFormField
-              control={form.control}
-              name="status"
-              label="สถานะสาขา"
-              placeholder="เลือกสถานะสาขา"
-              options={customerStatus}
-              type="select"
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 my-4 gap-4">
-            <GlobalFormField
-              control={form.control}
-              name="agree"
-              label="ภาษีมูลค่าเพิ่ม"
-              labelCheckbox="สาขามีการจดภาษีมูลค่าเพิ่ม"
-              type="checkbox"
+              name="domainName"
+              label="ชื่อโดเมน"
+              placeholder="เช่น utotech.co.th"
+              type="input"
+              canCopy
             />
           </div>
         </div>

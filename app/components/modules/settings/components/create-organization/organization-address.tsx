@@ -12,11 +12,10 @@ import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 
 import type { CreateOrganizationFormCreateProps } from "../../create-organization";
 import { GlobalFormField } from "~/components/shared/global-formField";
-import { typeOptions } from "../setting-organization-form";
 
 export const OrganizationAddressCard: React.FC<
   CreateOrganizationFormCreateProps
-> = ({ form, loading = false }) => {
+> = ({ form, isLoading = false }) => {
   return (
     <Card>
       {/* <CardHeader>
@@ -25,7 +24,7 @@ export const OrganizationAddressCard: React.FC<
         </div>
       </CardHeader> */}
 
-      {loading ? (
+      {isLoading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
           <SkeletonLoading />
@@ -40,12 +39,11 @@ export const OrganizationAddressCard: React.FC<
             <GlobalFormField
               control={form.control}
               name="address.name"
-              label="ชื่อสถานที่"
+              label="ชื่อสถานที่ตั้ง"
               placeholder="กรอกชื่อสถานที่ เช่น ตึกกิ่งทอง"
               type="input"
+              required
             />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <GlobalFormField
               control={form.control}
               name="address.building"
@@ -71,6 +69,15 @@ export const OrganizationAddressCard: React.FC<
           <div className="grid grid-cols-1 md:grid-cols-2 my-4 gap-4">
             <GlobalFormField
               control={form.control}
+              name="address.houseNo"
+              label="เลขที่บ้าน"
+              placeholder="กรอกบ้านเลขที่ เช่น 31/5"
+              type="input"
+              required
+            />
+
+            <GlobalFormField
+              control={form.control}
               name="address.village"
               label="ชื่อหมู่บ้าน"
               placeholder="กรอกชื่อหมู่บ้าน เช่น หมู่บ้านสามร้อยสิบห้า"
@@ -81,23 +88,15 @@ export const OrganizationAddressCard: React.FC<
               control={form.control}
               name="address.villageNo"
               label="หมู่ที่"
-              placeholder="กรอกหมู่ เช่น หมู่ 13"
+              placeholder="กรอกหมู่ เช่น 13"
               type="number"
-            />
-
-            <GlobalFormField
-              control={form.control}
-              name="address.houseNo"
-              label="บ้านเลขที่"
-              placeholder="กรอกบ้านเลขที่ เช่น บ้านเลขที่ 31/5"
-              type="input"
             />
 
             <GlobalFormField
               control={form.control}
               name="address.alley"
               label="ซอย"
-              placeholder="กรอกซอย เช่น ซอย 48"
+              placeholder="กรอกซอย เช่น 48"
               type="input"
             />
 
@@ -105,7 +104,7 @@ export const OrganizationAddressCard: React.FC<
               control={form.control}
               name="address.road"
               label="ถนน"
-              placeholder="กรอกถนน เช่น ซอย 48"
+              placeholder="กรอกถนน เช่น พหลโยธิน"
               type="input"
             />
 
@@ -115,14 +114,16 @@ export const OrganizationAddressCard: React.FC<
               label="ตำบล/แขวง"
               placeholder="กรอกตำบล/แขวง เช่น แขวงบางกะปิ"
               type="input"
+              required
             />
 
             <GlobalFormField
               control={form.control}
               name="address.city"
-              label="เขต/เมือง"
-              placeholder="กรอกเขต/เมือง เช่น เขตห้่วยขวาง"
+              label="เขต/อำเภอ/เมือง"
+              placeholder="กรอกเขต/อำเภอ/เมือง เช่น เขตห้วยขวาง"
               type="input"
+              required
             />
 
             <GlobalFormField
@@ -131,14 +132,26 @@ export const OrganizationAddressCard: React.FC<
               label="จังหวัด"
               placeholder="กรอกจังหวัด เช่น กรุงเทพมหานคร"
               type="input"
+              required
             />
+
             <GlobalFormField
               control={form.control}
               name="address.postalCode"
-              label="รหัสไปรณีย์"
-              placeholder="กรอกรหัสไปรณีย์ เช่น 10310"
+              label="รหัสไปรษณีย์"
+              placeholder="กรอกรหัสไปรษณีย์ เช่น 10310"
               type="number-box"
               groups={[5]}
+              required
+            />
+
+            <GlobalFormField
+              control={form.control}
+              name="address.nation"
+              label="ประเทศ"
+              placeholder="กรอกประเทศ เช่น ประเทศไทย"
+              type="input"
+              view="view"
             />
           </div>
 

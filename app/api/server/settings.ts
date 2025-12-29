@@ -6,6 +6,7 @@ import type {
   OrganizationFormValues,
   PushMessageValues,
   SettingSchemaValues,
+  settingTheme,
 } from "~/schemas/settings";
 import { ApiConfig } from "../config";
 import { generateOrganizationCode } from "~/utils/organization";
@@ -59,6 +60,77 @@ export const fetchGetBranchesOrganization = async (id: string) => {
   }
 };
 
+export const fetchGetBranchesDetail = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(`/configurations/branches/${id}/details`);
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// branches
+export const fetchDetailBranchesOrganization = async (
+  id: string,
+  payload: BranchesOrganization
+) => {
+  try {
+    const body = {
+      ...payload,
+    };
+
+    const res = await ApiConfig.put(
+      `/configurations/branches/${id}/details/edit`,
+      body
+    );
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchDetailAddressBranches = async (
+  id: string,
+  payload: BranchesOrganization
+) => {
+  try {
+    const body = {
+      ...payload,
+    };
+
+    const res = await ApiConfig.put(
+      `/configurations/branches/${id}/details/addresses/edit`,
+      body
+    );
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchDetailSettingBranches = async (
+  id: string,
+  payload: BranchesOrganization
+) => {
+  try {
+    const body = {
+      ...payload,
+    };
+
+    const res = await ApiConfig.put(
+      `/configurations/branches/${id}/details/settings/edit`,
+      body
+    );
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const fetchGetOrganizationDetail = async (id: string) => {
   try {
     const res = await ApiConfig.get(`/crud/organizations/${id}`);
@@ -84,7 +156,7 @@ export const fetchUpdateOrganization = async (
     };
 
     const res = await ApiConfig.put(
-      `/configurations/organizations/details/edit`,
+      `/configurations/organizations/${id}/details/edit`,
       body
     );
 
@@ -95,12 +167,20 @@ export const fetchUpdateOrganization = async (
 };
 
 export const fetchUpdateSettingAddress = async (
+  orgId: string,
+  id: string,
+
   payload: AddressSchemaValues
 ) => {
   try {
+    const body = {
+      ...payload,
+      id: id,
+    };
+
     const res = await ApiConfig.put(
-      `/configurations/organizations/details/addresses/edit`,
-      payload
+      `/configurations/organizations/${orgId}/details/addresses/edit`,
+      body
     );
 
     return res.data;
@@ -109,11 +189,19 @@ export const fetchUpdateSettingAddress = async (
   }
 };
 
-export const fetchUpdateSetting = async (payload: SettingSchemaValues) => {
+export const fetchUpdateSetting = async (
+  orgId: string,
+  id: string,
+  payload: settingTheme
+) => {
   try {
+    const body = {
+      ...payload,
+      id: id,
+    };
     const res = await ApiConfig.put(
-      `/configurations/organizations/details/settings/edit/`,
-      payload
+      `/configurations/organizations/${orgId}/details/settings/edit`,
+      body
     );
     return res.data;
   } catch (error) {
@@ -173,6 +261,19 @@ export const fetchUpdateConnectionLine = async (
 export const fetchGetConnectionLine = async (id: string) => {
   try {
     const res = await ApiConfig.get(`/thirdparty/line/config/${id}`);
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchCreateConfigAi = async (payload: ConnectAiValues) => {
+  try {
+    const res = await ApiConfig.post(
+      `/thridparty/openai/config/created`,
+      payload
+    );
 
     return res.data;
   } catch (error) {

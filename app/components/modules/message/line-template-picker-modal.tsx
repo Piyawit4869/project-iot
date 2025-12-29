@@ -49,6 +49,10 @@ import { Link } from "react-router";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 
 import { GlobalImage } from "~/components/shared/global-image";
+import { FlexMessagePersonRender } from "./flex-message-person-render";
+import { FlexMessageProductRender } from "./flex-message-product-render";
+import { FlexMessagePlaceRender } from "./flex-message-place-render";
+import { FlexMessageImageRender } from "./flex-message-image-render";
 
 // -----------------------------
 // Types
@@ -599,13 +603,15 @@ function ProfileCardCarousel({ items, category }: ProfileCardProps) {
 
   let CardComponent: any = null;
 
-  if (cardSimple?.category === "person") CardComponent = ProfileCard;
-  if (cardSimple?.category === "product") CardComponent = ProductCard;
-  if (cardSimple?.category === "place") CardComponent = PlaceCard;
-  if (cardSimple?.category === "image") CardComponent = ImageCard;
+  if (cardSimple?.category === "person")
+    CardComponent = FlexMessagePersonRender;
+  if (cardSimple?.category === "product")
+    CardComponent = FlexMessageProductRender;
+  if (cardSimple?.category === "place") CardComponent = FlexMessagePlaceRender;
+  if (cardSimple?.category === "image") CardComponent = FlexMessageImageRender;
 
   return (
-    <div className="w-full h-[85%]">
+    <div className="w-full flex flex-col h-full overflow-hidden">
       <div className="bg-[#2a5182] text-white rounded-t-xl px-4 py-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="size-8 rounded-full bg-black grid place-items-center text-xs font-semibold">
@@ -616,7 +622,7 @@ function ProfileCardCarousel({ items, category }: ProfileCardProps) {
         <div className="text-xs opacity-80">ตัวอย่างการแสดงผล</div>
       </div>
 
-      <div className="relative bg-[linear-gradient(180deg,#cfe3ff_0%,#d7e9ff_35%,#e7f0ff_100%)] h-full rounded-b-xl p-4">
+      <div className="relative flex-1 overflow-y-auto bg-[linear-gradient(180deg,#cfe3ff_0%,#d7e9ff_35%,#e7f0ff_100%)] rounded-b-xl p-4">
         <div className="pointer-events-none absolute left-4 w-6 bg-gradient-to-r from-[#e6eefb] to-transparent rounded-l-xl" />
         <div className="pointer-events-none absolute right-4 w-6 bg-gradient-to-l from-[#e6eefb] to-transparent rounded-r-xl" />
         <button
@@ -758,9 +764,11 @@ function PreviewPane({ item }: { item?: any }) {
 export default function LineTemplatePickerModal({
   handleSelectChange,
   subId,
+  chatRoomId,
 }: {
   handleSelectChange: React.Dispatch<React.SetStateAction<any>>;
   subId?: string;
+  chatRoomId: string;
 }) {
   const { data, refetch, isLoading } = useLineMassagePaginate({
     pageIndex: 1,
@@ -861,7 +869,7 @@ export default function LineTemplatePickerModal({
 
   const sendCardApi = async (id: string) => {
     lineSendCard(
-      { to: subId },
+      { to: subId, chatRoomId },
       {
         onSuccess: () => {
           setOpen(false);

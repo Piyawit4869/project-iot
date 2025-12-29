@@ -18,7 +18,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useSearchUserOrgs } from "~/api/client/user";
 import { useDebounce } from "~/hooks/use-debounce";
-import { Link } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 
 type Org = {
   id: string;
@@ -30,7 +30,9 @@ type Org = {
 
 type OrgSwitcherProps = {
   currentOrganization: Org;
-  currentOrgId: string;
+  currentOrgId?: string;
+  currentBranchId?: string;
+  currentBranch?: string;
   onChangeOrg: (orgId: string) => void;
   onOpenManage?: () => void;
   onOpenCreate?: () => void;
@@ -39,6 +41,7 @@ type OrgSwitcherProps = {
   branches?: any;
   setSearch?: any;
   backIcon?: boolean;
+  topic?: string;
 };
 
 export function OrgSelectorDropdown({
@@ -46,20 +49,22 @@ export function OrgSelectorDropdown({
   currentOrganization,
   onChangeOrg,
   onOpenManage,
+  currentBranchId,
   onOpenCreate,
   refetch,
   data,
+
+  topic,
   branches,
   backIcon,
 }: OrgSwitcherProps) {
+  const [searchParams] = useSearchParams();
+
+  const selectedOrgId = searchParams.get("organizationId") || "";
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
 
   const orgs = data?.organizations ?? [];
-
-  React.useEffect(() => {
-    if (!open) setSearch("");
-  }, [open]);
 
   const filteredOrgs = React.useMemo(() => {
     if (!search) return orgs;
@@ -68,13 +73,21 @@ export function OrgSelectorDropdown({
     );
   }, [orgs, search]);
 
-  const showData = branches ? branches : filteredOrgs;
-
-  const current = React.useMemo(() => {
+  const currentOrg = React.useMemo(() => {
     return orgs.length
-      ? (orgs.find((o: any) => o.id === currentOrgId) ?? orgs[0])
+      ? (orgs.find((o: any) => o.id === selectedOrgId) ?? selectedOrgId)
       : currentOrganization;
-  }, [orgs, currentOrgId, currentOrganization]);
+  }, [orgs, selectedOrgId, currentOrganization]);
+
+  const currentBranchData = React.useMemo(() => {
+    if (!currentBranchId) return null;
+    return (
+      (branches && branches.find((b: any) => b.id === currentBranchId)) ?? null
+    );
+  }, [branches, currentBranchId]);
+
+  const showData = branches ? branches : filteredOrgs;
+  const showName = branches ? currentBranchData : currentOrg;
 
   const initials = (name?: string) =>
     (name ?? "")
@@ -83,6 +96,10 @@ export function OrgSelectorDropdown({
       .slice(0, 2)
       .map((s) => s[0]?.toUpperCase())
       .join("") || "OR";
+
+  React.useEffect(() => {
+    if (!open) setSearch("");
+  }, [open]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -95,9 +112,12 @@ export function OrgSelectorDropdown({
               </Link>
             )}
 
-            <div className="min-w-0">
+            <div className="min-w-45">
+              <span className="truncate text-base font-medium">{topic}</span>
               <div className="truncate text-md font-medium">
-                {current?.nameTh ?? "-"}
+                {showName?.nameTh ?? (
+                  <span className="text-muted-foreground">กรุณาเลือกสาขา</span>
+                )}
               </div>
             </div>
           </div>
@@ -119,16 +139,16 @@ export function OrgSelectorDropdown({
 
           {/* 📋 List */}
           <CommandList className="max-h-[260px] overflow-y-auto">
-            <CommandEmpty>ไม่พบองค์กร</CommandEmpty>
+            <CommandEmpty>ไม่พบสาขา</CommandEmpty>
 
             <CommandGroup>
               {showData.map((org: Org) => {
-                const selected = org.id === currentOrgId;
+                const selected = org.id === selectedOrgId;
 
                 return (
                   <CommandItem
                     key={org.id}
-                    value={org.nameTh}
+                    value={org.id}
                     onSelect={() => {
                       if (!selected) {
                         onChangeOrg(org.id);
@@ -171,7 +191,7 @@ export function OrgSelectorDropdown({
                   }}
                 >
                   <Plus className="h-4 w-4" />
-                  เพิ่มองค์กรใหม่
+                  เพิ่มสาขาใหม่
                 </button>
               )}
             </div>

@@ -11,7 +11,15 @@ import {
   File,
   PlayIcon,
   Check,
+  UserRound,
 } from "lucide-react";
+import { ChatItem, FlexMessageType } from "~/types/chat/chat-items";
+import { GlobalImage } from "~/components/shared/global-image";
+import { FlexMessagePersonRender } from "./flex-message-person-render";
+import { FlexMessageProductRender } from "./flex-message-product-render";
+import { FlexMessagePlaceRender } from "./flex-message-place-render";
+import { FlexMessageImageRender } from "./flex-message-image-render";
+import React from "react";
 
 const formatTime = (sec: number) => {
   const m = Math.floor(sec / 60);
@@ -120,6 +128,15 @@ export function MessageRenderer({
   const isLabel = msg?.isLabel;
   const reference = msg?.messageReference;
 
+  const {
+    address = "",
+    latitude = "",
+    longitude = "",
+    title = "",
+  } = (msg && msg.contents) || {};
+
+  const { category = "", items = {}, name = "" } = (msg && msg.contents) || {};
+
   // LABEL
   if (isLabel) {
     const formattedTime = formatShowTime(
@@ -140,7 +157,7 @@ export function MessageRenderer({
 
   // WRAPPER (รองรับ Reply Reference)
   // WRAPPER: เพิ่ม max-width และลบพื้นหลังเวลาเป็น image/sticker
-  const Wrapper = ({ children }: any) => {
+  const Wrapper = ({ children, maxWidth }: any) => {
     const isMedia = ["image", "sticker"].includes(msg?.messageType);
     const hasRef = !!reference;
 
@@ -149,7 +166,7 @@ export function MessageRenderer({
         className={`
         rounded-xl overflow-hidden 
         ${onlyShow ? "" : isMedia ? "" : isBackoffice ? "bg-blue-500/10" : "bg-muted-foreground/10"}
-        ${hasRef ? "max-w-[260px]" : ""} 
+        ${maxWidth ? maxWidth : hasRef ? "max-w-[260px]" : ""}
       `}
       >
         {reference && <ReplyReference refMsg={reference} />}
@@ -159,7 +176,7 @@ export function MessageRenderer({
   };
 
   // TEXT
-  if (type === "text" || type === null) {
+  if (type === ChatItem.TEXT || type === null) {
     return (
       <Wrapper>
         <MessageText text={String(message)} />
@@ -168,7 +185,7 @@ export function MessageRenderer({
   }
 
   // STICKER
-  if (type === "sticker") {
+  if (type === ChatItem.STICKER) {
     return (
       <Wrapper>
         <img
@@ -180,7 +197,7 @@ export function MessageRenderer({
   }
 
   // FILE
-  if (type === "file") {
+  if (type === ChatItem.FILE) {
     const filename = message.split("/").pop() ?? "ไฟล์แนบ";
     return (
       <Wrapper>
@@ -201,7 +218,7 @@ export function MessageRenderer({
   }
 
   // IMAGE
-  if (type === "image") {
+  if (type === ChatItem.IMAGE) {
     return (
       <Wrapper>
         <div
@@ -222,7 +239,7 @@ export function MessageRenderer({
   }
 
   // VIDEO
-  if (type === "video") {
+  if (type === ChatItem.VIDEO) {
     return (
       <Wrapper>
         <div
@@ -274,7 +291,7 @@ export function MessageRenderer({
   }
 
   // AUDIO
-  if (type === "audio") {
+  if (type === ChatItem.AUDIO) {
     return (
       <Wrapper>
         <div
@@ -311,6 +328,89 @@ export function MessageRenderer({
     );
   }
 
+  if (type === ChatItem.LOCATION) {
+    const mapUrl = `https://www.google.com/maps?q=${latitude ?? ""},${longitude ?? ""}&z=17`;
+
+    return (
+      <Wrapper maxWidth="max-w-[330px]">
+        <a
+          href={mapUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block cursor-pointer"
+        >
+          <LocationMap latitude={latitude} longitude={longitude} />
+
+          <div className="py-2 mt-0.5">
+            <div className="truncate text-sm font-semibold">{title ?? ""}</div>
+            <div className="mt-1 text-xs leading-snug text-neutral-400">
+              <span className="truncate block w-full">{address ?? ""}</span>
+            </div>
+          </div>
+        </a>
+      </Wrapper>
+    );
+  }
+
+  if (type === ChatItem.CAROUSEL) {
+    switch (category) {
+      case FlexMessageType.PRODUCT:
+        return (
+          <Wrapper maxWidth="max-w-[400px]">
+            <div className="max-w-full px-4">
+              <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory p-3">
+                {items.map((items: any, index: string) => (
+                  <FlexMessageProductRender key={index} items={items} />
+                ))}
+              </div>
+            </div>
+          </Wrapper>
+        );
+
+      case FlexMessageType.PLACE:
+        return (
+          <Wrapper maxWidth="max-w-[400px]">
+            <div className="max-w-full px-4">
+              <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory p-3">
+                {items.map((items: any, index: string) => (
+                  <FlexMessagePlaceRender key={index} items={items} />
+                ))}
+              </div>
+            </div>
+          </Wrapper>
+        );
+
+      case FlexMessageType.PERSON:
+        return (
+          <Wrapper maxWidth="max-w-[400px]">
+            <div className="max-w-full px-4">
+              <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory p-3">
+                {items.map((items: any, index: string) => (
+                  <FlexMessagePersonRender key={index} items={items} />
+                ))}
+              </div>
+            </div>
+          </Wrapper>
+        );
+
+      case FlexMessageType.IMAGE:
+        return (
+          <Wrapper maxWidth="max-w-[400px]">
+            <div className="max-w-full px-4">
+              <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory p-3">
+                {items.map((items: any, index: string) => (
+                  <FlexMessageImageRender key={index} items={items} />
+                ))}
+              </div>
+            </div>
+          </Wrapper>
+        );
+
+      default:
+        break;
+    }
+  }
+
   // FALLBACK
   return (
     <Wrapper>
@@ -320,3 +420,21 @@ export function MessageRenderer({
     </Wrapper>
   );
 }
+
+const LocationMap = React.memo(
+  ({ latitude, longitude }: { latitude?: number; longitude?: number }) => {
+    const mapUrl = `https://www.google.com/maps?q=${latitude ?? ""},${longitude ?? ""}&z=17`;
+
+    return (
+      <div className="h-[150px] w-full rounded-xl overflow-hidden border border-border shadow-sm">
+        <iframe
+          src={`${mapUrl}&output=embed`}
+          className="h-full w-full"
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          style={{ pointerEvents: "none" }}
+        />
+      </div>
+    );
+  }
+);

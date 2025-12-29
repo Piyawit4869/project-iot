@@ -25,30 +25,33 @@ const typeEnum = z.enum([
 export const organizationSchema = z.object({
   active: z.boolean().optional(),
   status: statusEnum.optional(),
-  isMain: z.boolean().optional(),
-  fromType: z.string().default("ordinary_person"),
+  // isMain: z.boolean().optional(),
+  fromType: z.string().optional(),
   taxId: z
     .string()
-    .length(13, { message: "Tax ID must be exactly 13 digits." })
+    .length(13, { message: "เลขประจำตัวผู้เสียภาษีต้องมี 13 หลัก" })
     .optional(),
-  branchType: typeEnum.optional(),
+  branchType: z.string().optional().nullable(),
+  orgType: z.string().optional(),
+  // code: z.string().min(1, "รหัสไม่ควรเป็นค่าว่าง").optional(),
   code: z.string().min(1, "รหัสไม่ควรเป็นค่าว่าง").optional(),
-  openingDate: z.string().optional(),
-  nameTh: z.string().min(1, "กรุณากรอกขื่อ"),
-  nameEn: z.string().min(1, "กรุณากรอกขื่อ"),
+  openingDate: z.string().nullable().optional(),
+  nameTh: z.string().min(1, "กรุณากรอกขื่อภาษาไทย"),
+  nameEn: z.string().min(1, "กรุณากรอกขื่อภาษาอังกฤษ"),
   descriptionsTh: z.string().optional(),
   descriptionsEn: z.string().optional(),
-  websiteUrl: z.url().optional(),
+  websiteUrl: z.string().nullable().optional(),
   registerVat: z.boolean().optional(),
   contactName: z.string().optional(),
-  contactEmail: z.email().optional(),
+
+  contactEmail: z.string().nullable().optional(),
   contactPhone: z.string().optional(),
   contactLine: z.string().optional(),
   contactFacebook: z.string().optional(),
   contactWhatsapp: z.string().optional(),
-  contactWebsite: z.url().optional(),
+  contactWebsite: z.string().nullable().optional(),
   contactNote: z.string().optional(),
-  logoUrl: z.string().default(""),
+  logoUrl: z.string().nullable().optional(),
   domainName: z.string().optional(),
 });
 
@@ -62,10 +65,10 @@ export const addressSchema = z.object({
   roomNo: z.string().optional(),
   floorNo: z.string().optional(),
   villageNo: z.coerce.number().optional(),
-  houseNo: z.string().optional(),
+  houseNo: z.string().min(1, "กรุณากรอกเลขที่บ้าน"),
   alley: z.string().optional(),
   road: z.string().optional(),
-  subDistrict: z.string().optional(),
+  subDistrict: z.string().min(1, "กรุณากรอกชื่ออำเภอ"),
   city: z.string().min(1, "กรุณากรอกชื่ออำเภอ"),
   province: z.string().min(1, "กรุณากรอกชื่อจังหวัด"),
   nation: z.string().optional(),
@@ -132,16 +135,19 @@ const WorkingHoursSchema = z.record(
 );
 /* ---------- Setting ---------- */
 export const SettingThemeSchema = z.object({
+  isMain: z.boolean(),
+  id: z.string().optional().nullable(),
   active: z.boolean(),
   theme: z.enum(["light", "dark"]).optional(),
   textDisplay: z.string().optional().nullable(),
   defaultLanguage: z.enum(["TH", "EN"]).optional().nullable(),
-  openDays: WorkingHoursSchema,
+  openDays: WorkingHoursSchema.optional(),
 });
 
 /* ---------- Address ---------- */
 
 export const AddressSchema = z.object({
+  isMain: z.boolean(),
   active: z.boolean(),
   name: z.string().optional().nullable(),
   building: z.string().optional().nullable(),
@@ -175,13 +181,23 @@ export const OrganizationSchema = z.object({
   openingDate: z.string().optional().nullable(), // หรือ .date() ถ้าแปลงก่อน
   nameTh: z.string().optional().nullable(),
   nameEn: z.string().optional().nullable(),
-  descriptionsTh: z.string().optional().optional().nullable(),
-  descriptionsEn: z.string().optional().optional().nullable(),
-  websiteUrl: z.string().optional().optional().nullable(),
+  descriptionsTh: z.string().optional().nullable(),
+  descriptionsEn: z.string().optional().nullable(),
+  websiteUrl: z.string().optional().nullable(),
+  domainName: z.string().optional().nullable(),
 
   registerVat: z.boolean(),
 
   logoUrl: z.string().optional().nullable(),
+
+  contactName: z.string().optional().nullable(),
+  contactEmail: z.string().optional().nullable(),
+  contactPhone: z.string().optional().nullable(),
+  contactLine: z.string().optional().nullable(),
+  contactFacebook: z.string().optional().nullable(),
+  contactWhatsapp: z.string().optional().nullable(),
+  contactWebsite: z.string().optional().nullable(),
+  contactNote: z.string().optional().nullable(),
 
   setting: SettingThemeSchema,
   address: AddressSchema,
@@ -193,6 +209,7 @@ export const OrganizationSchema = z.object({
 
 export type BranchesOrganization = z.infer<typeof OrganizationSchema>;
 export type Address = z.infer<typeof AddressSchema>;
+export type settingTheme = z.infer<typeof SettingThemeSchema>;
 // ------------------------------------------
 
 export const ReplySchema = z.object({
@@ -203,7 +220,7 @@ export const ReplySchema = z.object({
 export type ReplyValues = z.infer<typeof ReplySchema>;
 
 export const ConnectAiSchema = z.object({
-  id: z.string().uuid().optional(),
+  id: z.string().nullable().optional(),
   name: z.string().min(1, "กรุณากรอก"),
   systemInstructions: z.string().optional(),
   useStock: z.boolean().optional(),
@@ -229,7 +246,7 @@ export const ConnectAiSchema = z.object({
   // remark: z.string().min(1, "กรุณากรอก"),
   remark: z.string().nullable(),
   defaultIsAiReply: z.boolean(),
-  branchId: z.string().uuid(),
+  branchId: z.string().nullable().optional(),
   model: z.string().optional(),
   // organizationId: z.string().uuid(),
   // createdAt: z.string().refine((value) => !isNaN(Date.parse(value)), {

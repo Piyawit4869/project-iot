@@ -10,6 +10,8 @@ import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import {
   formatDateAndTime,
   formatDateTH,
+  formatPhoneNumber,
+  formatTaxId,
 } from "~/components/shared/global-format";
 
 export type OrganizationColumn = {
@@ -52,6 +54,7 @@ const orgTypeLabel: Record<string, string> = {
   partnership: "ห้างหุ้นส่วน",
   foundation: "มูลนิธิ",
   association: "สมาคม",
+  taxpayer: "บุคคลธรรมดา",
 };
 
 const fromTypeLabel: Record<string, string> = {
@@ -74,6 +77,10 @@ const statusMap: Record<
   pending: {
     label: "รอดำเนินการ",
     className: "bg-yellow-50 text-yellow-700 border-yellow-200",
+  },
+  newly_registered: {
+    label: "ลงทะเบียนใหม่",
+    className: "bg-blue-50 text-blue-700 border-blue-200",
   },
 };
 
@@ -128,11 +135,10 @@ export const useOrganizationColumns = (): ColumnDef<OrganizationColumn>[] => {
       {
         accessorKey: "taxId",
         header: "เลขผู้เสียภาษี",
-        cell: (info) => (
-          <span className="text-muted-foreground">
-            {(info.getValue() as string) || "-"}
-          </span>
-        ),
+        cell: (info) => {
+          const v = info.getValue() as string;
+          return <span>{formatTaxId(v)}</span>;
+        },
       },
       {
         accessorKey: "fromType",
@@ -152,19 +158,22 @@ export const useOrganizationColumns = (): ColumnDef<OrganizationColumn>[] => {
       },
       {
         accessorKey: "registerVat",
-        header: "จด VAT",
+        header: "จดทะเบียนภาษีมูลค่าเพิ่ม (VAT)",
         cell: (info) => {
           const v = info.getValue() as boolean | null | undefined;
           return (
-            <span
-              className={`inline-flex items-center justify-center rounded-xl border py-1 px-3 text-sm font-medium w-fit whitespace-nowrap ${
-                v
-                  ? "bg-green-50 text-green-700 border-green-200"
-                  : "bg-slate-50 text-slate-700 border-slate-200"
-              }`}
-            >
-              {v ? "จด" : "ไม่จด"}
-            </span>
+            <div className="flex justify-center">
+              {" "}
+              <span
+                className={`inline-flex items-center justify-center rounded-xl border py-1 px-3 text-sm font-medium w-fit whitespace-nowrap ${
+                  v
+                    ? "bg-green-50 text-green-700 border-green-200"
+                    : "bg-slate-50 text-slate-700 border-slate-200"
+                }`}
+              >
+                {v ? "จดทะเบียน" : "ไม่จดจดทะเบียน"}
+              </span>
+            </div>
           );
         },
       },
@@ -212,7 +221,7 @@ export const useOrganizationColumns = (): ColumnDef<OrganizationColumn>[] => {
           return phone ? (
             <span className="inline-flex items-center gap-2">
               <Phone className="w-4 h-4" />
-              {phone}
+              {formatPhoneNumber(phone)}
             </span>
           ) : (
             <span className="text-muted-foreground">-</span>

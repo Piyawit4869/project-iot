@@ -1,5 +1,11 @@
 import type { ReactElement } from "react";
-import { FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Input } from "../ui/input";
 import {
   Select,
@@ -49,6 +55,7 @@ interface GlobalFormFieldProps {
   options?: { label: string; value: string }[];
   view?: string; // true = view mode
   columns?: number;
+  required?: boolean;
   customeOnValue?: any;
   heightTextRow?: any;
   customControl?: any;
@@ -57,6 +64,7 @@ interface GlobalFormFieldProps {
   heightImage?: number;
   iconBack?: ReactElement;
   canCopy?: boolean;
+  formatter?: (value: string) => string;
   labelCheckbox?: string;
 }
 
@@ -71,7 +79,9 @@ export function GlobalFormField({
   placeholder,
   options = [],
   disabled,
+  required,
   disabledItem,
+  formatter,
   iconFront,
   iconBack,
   heightTextRow = 2,
@@ -92,37 +102,72 @@ export function GlobalFormField({
   };
 
   const renderView = (field: any) => {
-    if (type === "input") {
-      return (
-        <span className="text-muted-foreground">{field.value || "-"}</span>
-      );
-    }
+    switch (type) {
+      case "input":
+      case "number-box":
+        return (
+          <span className="text-muted-foreground">
+            {formatter ? formatter(field.value) : field.value || "-"}
+          </span>
+        );
 
-    if (type === "select") {
-      return (
-        <span className="text-muted-foreground">
-          {options.find((opt) => opt.value === field.value)?.label || "-"}
-        </span>
-      );
-    }
+      case "select":
+        return (
+          <span className="text-muted-foreground">
+            {options.find((opt) => opt.value === field.value)?.label || "-"}
+          </span>
+        );
 
-    if (type === "date") {
-      return field.value ? formatDateFull(field.value) : "-";
-    }
+      case "switch":
+        return (
+          <Switch
+            checked={!!field.value}
+            onCheckedChange={field.onChange}
+            disabled
+          />
+        );
 
-    if (type === "image") {
-      return (
-        <GlobalImage
-          src={field.value}
-          width={widthImage || 110}
-          height={heightImage || 110}
-          className=" object-cover rounded-md object-center"
-          fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${field.value}`}
-        />
-      );
-    }
+      case "date":
+        return (
+          <span className="text-muted-foreground">
+            {field.value ? formatDateFull(field.value) : "-"}
+          </span>
+        );
 
-    return <span className="text-muted-foreground">{field.value || "-"}</span>;
+      case "image":
+        return (
+          <GlobalImage
+            src={field.value}
+            width={widthImage || 110}
+            height={heightImage || 110}
+            className="object-cover rounded-md object-center"
+            fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${field.value}`}
+          />
+        );
+
+      case "checkbox":
+        return (
+          <div className="flex items-center gap-2">
+            <Checkbox
+              checked={!!field.value}
+              onCheckedChange={field.onChange}
+              disabled
+              id={name}
+            />
+            <label
+              htmlFor={name}
+              className="text-sm font-normal text-muted-foreground leading-none"
+            >
+              {labelCheckbox}
+            </label>
+          </div>
+        );
+
+      default:
+        return (
+          <span className="text-muted-foreground">{field.value || "-"}</span>
+        );
+    }
   };
 
   const renderEdit = (field: any) => {
@@ -204,8 +249,8 @@ export function GlobalFormField({
       case "select":
         return (
           <Select
+            value={field.value ?? ""}
             onValueChange={field.onChange}
-            defaultValue={field.value}
             disabled={disabled}
           >
             <SelectTrigger className="w-full">
@@ -265,7 +310,13 @@ export function GlobalFormField({
       render={({ field }) => (
         <FormItem className="w-full">
           <FormLabel>
-            {iconFront} {label} {iconBack}
+            {iconFront}{" "}
+            <span>
+              {label}
+              {required && <span className="text-red-500 ml-1">*</span>}
+            </span>
+            <FormMessage />
+            {iconBack}
             {type === "input" && canCopy ? (
               <button
                 type="button"

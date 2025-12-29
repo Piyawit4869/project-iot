@@ -14,6 +14,7 @@ import {
   markAsDone,
   markAsSpam,
   markAsProcess,
+  fetchRoomChatSummary,
 } from "~/api/server/message/message";
 
 import type {
@@ -68,6 +69,14 @@ export const useAllRoomChat = () => {
   });
 };
 
+export const useRoomChatSummary = () => {
+  return useQuery({
+    queryKey: ["roomChatSummary"],
+    queryFn: () => fetchRoomChatSummary(),
+    enabled: true,
+  });
+};
+
 export const useSendMessage = () => {
   return useMutation({
     mutationFn: (payload: PushMessageValues) => {
@@ -104,29 +113,39 @@ export const usePaginatedMessages = (roomId: string, jumpOffset = 0) => {
 
 export const usePaginatedMessagesCursor = (
   roomId: string,
-  currentId = "",
-  direction?: string //"none" : "prev" : "next"
+  currentId?: string | null,
+  direction?: string | null
 ) => {
   const limit = 20;
 
+  const isSearchMode = !!currentId; // ⭐ ตัวตัดสิน
+
   return useInfiniteQuery({
     queryKey: ["messages-cursor", roomId, currentId],
-    queryFn: async ({ pageParam = currentId }) => {
+
+    queryFn: async ({ pageParam }) => {
       return fetchAllMessageCursorWithRoomId(
         roomId,
-        pageParam,
+        pageParam ?? currentId ?? "",
         limit,
         direction ? direction : "none"
       );
     },
-    initialPageParam: currentId ?? "",
-    getNextPageParam: (lastPage) => {
-      const meta = lastPage?.meta;
 
-      // if (!meta?.before) return undefined;
-      return direction === "prev" ? meta.prev : meta.next;
+    initialPageParam: currentId ?? "",
+
+    getNextPageParam: (lastPage) => {
+      if (isSearchMode) return undefined;
+
+      const meta = lastPage?.meta;
+      if (!meta) return undefined;
+
+      if (direction === "prev") return meta.prev ?? undefined;
+      if (direction === "next") return meta.next ?? undefined;
+
+      return undefined;
     },
-    // keepPreviousData: true,
+
     enabled: !!roomId,
   });
 };

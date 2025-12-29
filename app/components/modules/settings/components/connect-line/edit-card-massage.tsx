@@ -47,22 +47,14 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
   const { data } = useLineGetCardContent(id);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [cards, setCards] = useState<MessageCardFormValues[]>([
-    {
-      ...data?.meta?.items?.[0],
-      name: data?.name,
-      category: data?.type,
-    },
-  ]);
 
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [cards, setCards] = React.useState<MessageCardFormValues[]>([]);
+  const [activeIndex, setActiveIndex] = React.useState<number>(0);
 
   const form = useForm<MessageCardFormValues>({
     defaultValues: MESSAGE_CARD_DEFAULT_VALUES,
     mode: "onChange",
   });
-
-  const values = form.watch();
 
   const [isCategoryDialogOpen, setCategoryDialogOpen] = useState(false);
 
@@ -105,55 +97,43 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
   const handleSubmit = async (values: MessageCardFormValues) => {
     const toastId = toast.loading("กำลังบันทึกการ์ด...");
 
-    let items = [] as any;
+    const finalCards = cards.map((c, i) => (i === activeIndex ? values : c));
 
-    const categoryPayload = cards.map((c) =>
-      items.push(buildCategoryPayload(c))
-    );
+    const items = finalCards.map((card) => buildCategoryPayload(card));
 
     const itemsNoKey = items.map((item: any) => Object.values(item)[0]);
 
-    if (!values.category || !categoryPayload) {
+    if (!values.category || !items.length) {
       toast.error("กรุณาเลือกประเภทการ์ด", { id: toastId });
       return;
     }
 
     try {
-      let payload = {
-        name: values.name.trim(),
-        category: values.category,
-        items,
-      };
-
-      const newPayload = payload.items.map((c: any) => {
-        switch (values.category) {
-          case "product":
-            return buildProductCardBody(c);
-          case "place":
-            return buildPlaceCardBody(c);
-          case "person":
-            return buildPersonCardBody(c);
-          case "image":
-            return buildImageCardBody(c);
-          default:
-            break;
-        }
-
-        return;
-      });
+      const newPayload = items
+        .map((c: any) => {
+          switch (values.category) {
+            case "product":
+              return buildProductCardBody(c);
+            case "place":
+              return buildPlaceCardBody(c);
+            case "person":
+              return buildPersonCardBody(c);
+            case "image":
+              return buildImageCardBody(c);
+            default:
+              return null;
+          }
+        })
+        .filter(Boolean);
 
       const merged = newPayload.flatMap((item: any) => item.content.contents);
 
-      const mergedCarousel = {
+      const finalPayload = {
+        ...newPayload[0],
         content: {
           type: "carousel",
           contents: merged,
         },
-      };
-
-      const finalPayload = {
-        ...newPayload[0],
-        ...mergedCarousel,
         name: values.name.trim(),
         meta: {
           name: values.name.trim(),
@@ -171,6 +151,7 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
         duration: 2000,
         position: "bottom-right",
       });
+
       form.reset(MESSAGE_CARD_DEFAULT_VALUES);
       setCategoryDialogOpen(false);
       onSaved?.();
@@ -336,82 +317,117 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
     selectedCategoryId,
   ]);
 
-  const addCard = () => {
-    setCards((prev) => [
-      ...prev,
-      {
-        ...MESSAGE_CARD_DEFAULT_VALUES,
-        name: prev[activeIndex].name,
-        category: prev[activeIndex].category,
-      },
-    ]);
-    setActiveIndex(cards.length); // ไปใบใหม่ทันที
-  };
+  const persistActiveCard = React.useCallback(() => {
+    // !! FIXME: PECH HANDLE NEW LOGIC FOR DON'T SET NEXT PURE INDEX "activeIndex"
+    setCards((prev) => {
+      if (!prev.length) return prev;
+      const next = [...prev];
+      next[activeIndex] = form.getValues();
+      return next;
+    });
+  }, [activeIndex, form, setCards]);
 
-  const duplicateCard = () => {
-    const cloned = { ...cards[activeIndex] };
-    setCards([...cards, cloned]);
-  };
+  const addCard = React.useCallback(() => {
+    persistActiveCard();
 
-  const removeCard = () => {
-    if (cards.length === 1) return;
-    const newList = cards.filter((_, i) => i !== activeIndex);
-    setCards(newList);
-    setActiveIndex((prev) => Math.max(0, prev - 1));
-  };
+    setCards((prev) => {
+      const next = [
+        ...prev,
+        {
+          ...MESSAGE_CARD_DEFAULT_VALUES,
+          name: form.getValues("name") ?? "",
+          category: form.getValues("category") ?? "",
+        },
+      ];
+      setActiveIndex(next.length - 1);
+      return next;
+    });
+  }, [form, persistActiveCard, setCards, setActiveIndex]);
 
-  const movePrev = () => {
-    setActiveIndex((i) => Math.max(0, i - 1));
-  };
+  const duplicateCard = React.useCallback(() => {
+    persistActiveCard();
 
-  const moveNext = () => {
-    setActiveIndex((i) => Math.min(cards.length - 1, i + 1));
-  };
+    setCards((prev) => {
+      const current = form.getValues();
+      const next = [...prev, current];
+      setActiveIndex(next.length - 1);
+      return next;
+    });
+  }, [form, persistActiveCard, setCards, setActiveIndex]);
+
+  const removeCard = React.useCallback(() => {
+    setCards((prev) => {
+      if (prev.length <= 1) return prev;
+
+      const next = prev.filter((_, idx) => idx !== activeIndex);
+
+      const nextIndex = Math.min(activeIndex, next.length - 1);
+      setActiveIndex(nextIndex);
+
+      form.reset(next[nextIndex]);
+
+      return next;
+    });
+  }, [activeIndex, form, setCards, setActiveIndex]);
+
+  const movePrev = React.useCallback(() => {
+    if (activeIndex === 0) return;
+
+    persistActiveCard();
+    setActiveIndex((i) => i - 1);
+  }, [activeIndex, persistActiveCard, setActiveIndex]);
+
+  const moveNext = React.useCallback(() => {
+    if (activeIndex >= cards.length - 1) return;
+
+    persistActiveCard();
+    setActiveIndex((i) => i + 1);
+  }, [activeIndex, cards.length, persistActiveCard, setActiveIndex]);
 
   // Sync ค่า form กับ cards เมื่อเปลี่ยน active card
   React.useEffect(() => {
-    form.reset(cards[activeIndex]);
-  }, [activeIndex]);
+    if (!cards[activeIndex]) return;
 
-  // เมื่อ form เปลี่ยน → update card index ปัจจุบัน
-  React.useEffect(() => {
-    const subscription = form.watch((value) => {
-      setCards((prev) => {
-        const next = [...prev];
-        next[activeIndex] = value as MessageCardFormValues;
-        return next;
-      });
-    });
-    return () => subscription.unsubscribe();
-  }, [form, activeIndex]);
+    form.reset(cards[activeIndex]);
+  }, [activeIndex, cards]);
 
   React.useEffect(() => {
     if (!data) return;
 
-    // แปลง meta.items จาก API → array ของ MessageCardFormValues
-    const mappedCards = (data.meta?.items ?? []).map((item: any) => ({
-      [data?.meta?.category]: item,
+    const category = data.meta?.category;
 
-      name: data.name,
-      category: data?.meta?.category,
-    }));
+    const mappedCards: MessageCardFormValues[] =
+      data.meta?.items?.map((item: any) => ({
+        name: data.name,
+        category,
+        [category]: item,
+      })) ?? [];
 
-    // ป้องกันกรณีไม่มีการ์ด -> ให้มีใบว่างใบแรก
     if (mappedCards.length === 0) {
       mappedCards.push({
-        [data?.meta?.category]: MESSAGE_CARD_DEFAULT_VALUES,
+        ...MESSAGE_CARD_DEFAULT_VALUES,
         name: data.name,
-        category: data?.meta?.category,
+        category,
       });
     }
 
-    setSelectedCategoryId(data?.meta?.category);
+    setSelectedCategoryId(category);
     setCards(mappedCards);
-
-    // reset ค่า form ให้ตรงกับการ์ดใบแรก
-    form.reset(mappedCards[0]);
     setActiveIndex(0);
+    form.reset(mappedCards[0]);
   }, [data]);
+
+  // React.useEffect(() => {
+  //   const subscription = form.watch((value) => {
+  //     setCards((prev) => {
+  //       const next = [...prev];
+  //       next[activeIndex] = value as MessageCardFormValues;
+  //       return next;
+  //     });
+  //   });
+
+  //   return () => subscription.unsubscribe();
+  // }, [form, activeIndex]);
 
   return (
     <Form {...form}>
@@ -468,6 +484,7 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
                 />
               </CardContent>
             </div>
+
             <CardHeader className="mt-5 max-w-[800px]">
               <CardTitle>ตั้งค่าการ์ด</CardTitle>
               <FormField
@@ -477,17 +494,19 @@ export default function EditMessageCardForm({ id, onSaved, onCancel }: Props) {
                   <FormItem>
                     <FormLabel>ประเภทการ์ด</FormLabel>
                     <FormControl>
-                      <>
+                      <div className="w-full">
                         <input type="hidden" {...field} />
                         <Button
                           type="button"
                           variant="outline"
+                          className="w-full"
                           onClick={() => setCategoryDialogOpen(true)}
                         >
                           {selectedCategory?.label || "เลือก"}
                         </Button>
-                      </>
+                      </div>
                     </FormControl>
+
                     <CardCategoryDialog
                       open={isCategoryDialogOpen}
                       onOpenChange={setCategoryDialogOpen}

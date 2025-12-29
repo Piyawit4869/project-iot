@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
@@ -56,7 +54,7 @@ export const UserSkills: React.FC<UserSkillsViewProps> = ({
               <div className="grid grid-cols-1 gap-5">
                 {skills.map((row, index) => (
                   <div key={index} className="rounded-xl space-y-4">
-                    <Card className="p-4">
+                    <div className="p-4">
                       <div className="flex items-center justify-between">
                         <h4 className="font-semibold">
                           ประวัติทักษะ {index + 1}
@@ -95,7 +93,7 @@ export const UserSkills: React.FC<UserSkillsViewProps> = ({
                           }
                         />
                       </div>
-                    </Card>
+                    </div>
                   </div>
                 ))}
               </div>

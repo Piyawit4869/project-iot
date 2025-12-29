@@ -1,6 +1,6 @@
 type LineFlex = any;
 
-function buildIcon(extraInfoType: string): string {
+function buildIcon(extraInfoType?: string): string {
   switch (extraInfoType) {
     case "time":
       return "https://storage.googleapis.com/utotech-storage/clock-3-067aaa34a0134526a2972a4e3c7d9f6d/446673.svg";
@@ -15,17 +15,20 @@ function buildIcon(extraInfoType: string): string {
 
 export function buildPlaceCardBody(input: any): LineFlex {
   const p = input.place;
-  const heroContents: any[] = [
-    {
+
+  const heroContents: any[] = [];
+
+  if (p.imageUrl) {
+    heroContents.push({
       type: "image",
       url: p.imageUrl,
       size: "full",
       aspectMode: "cover",
-      aspectRatio: "20:13",
-    },
-  ];
+      aspectRatio: "1:1",
+    });
+  }
 
-  if (p.tagEnabled && p.tagText) {
+  if (p.tagEnabled && typeof p.tagText === "string" && p.tagText.trim()) {
     heroContents.push({
       type: "box",
       layout: "vertical",
@@ -34,21 +37,78 @@ export function buildPlaceCardBody(input: any): LineFlex {
       offsetStart: "10px",
       paddingAll: "4px",
       cornerRadius: "999px",
-      backgroundColor: p.tagColor || "#444444",
+      backgroundColor: p.tagColor || "#4B5D73",
       contents: [
         {
           type: "text",
-          text: p.tagText,
+          text: p.tagText.trim(),
           size: "xxs",
-          align: "center",
           color: "#ffffff",
+          align: "center",
         },
       ],
     });
   }
 
-  // footer buttons
+  const bodyContents: any[] = [];
+
+  if (p.title) {
+    bodyContents.push({
+      type: "text",
+      text: p.title,
+      weight: "bold",
+      size: "xl",
+      align: "start",
+    });
+  }
+
+  if (p.addressText) {
+    bodyContents.push({
+      type: "box",
+      layout: "baseline",
+      spacing: "sm",
+      contents: [
+        {
+          type: "icon",
+          url: "https://storage.googleapis.com/utotech-storage/map-pin-29bd8410a8a04546a61c7cec4ea25b59/516231.svg",
+          size: "sm",
+        },
+        {
+          type: "text",
+          text: p.addressText,
+          size: "sm",
+          color: "#aaaaaa",
+          wrap: true,
+        },
+      ],
+    });
+  }
+
+  const extraIcon = buildIcon(p.extraInfoType);
+  if (extraIcon && p.extraInfoValue) {
+    bodyContents.push({
+      type: "box",
+      layout: "baseline",
+      spacing: "sm",
+      contents: [
+        {
+          type: "icon",
+          url: extraIcon,
+          size: "sm",
+        },
+        {
+          type: "text",
+          text: p.extraInfoValue,
+          size: "sm",
+          color: "#aaaaaa",
+          wrap: true,
+        },
+      ],
+    });
+  }
+
   const footerContents: any[] = [];
+
   if (p.ctaPrimaryEnabled && p.ctaPrimaryText) {
     footerContents.push({
       type: "button",
@@ -61,6 +121,7 @@ export function buildPlaceCardBody(input: any): LineFlex {
       },
     });
   }
+
   if (p.ctaSecondaryEnabled && p.ctaSecondaryText) {
     footerContents.push({
       type: "button",
@@ -85,63 +146,22 @@ export function buildPlaceCardBody(input: any): LineFlex {
       contents: [
         {
           type: "bubble",
-          hero: {
-            type: "box",
-            layout: "vertical",
-            paddingAll: "0px",
-            contents: heroContents,
-          },
+
+          ...(heroContents.length > 0 && {
+            hero: {
+              type: "box",
+              layout: "vertical",
+              paddingAll: "0px",
+              contents: heroContents,
+            },
+          }),
+
           body: {
             type: "box",
             layout: "vertical",
-            contents: [
-              {
-                type: "text",
-                text: p.title,
-                weight: "bold",
-                size: "xl",
-                align: "start",
-              },
-              {
-                type: "box",
-                layout: "baseline",
-                spacing: "sm",
-                contents: [
-                  {
-                    type: "icon",
-                    url: "https://storage.googleapis.com/utotech-storage/map-pin-29bd8410a8a04546a61c7cec4ea25b59/516231.svg",
-                    size: "sm",
-                  },
-                  {
-                    type: "text",
-                    text: p.addressText,
-                    size: "sm",
-                    color: "#aaaaaa",
-                    wrap: true,
-                  },
-                ],
-              },
-              {
-                type: "box",
-                layout: "baseline",
-                spacing: "sm",
-                contents: [
-                  {
-                    type: "icon",
-                    url: buildIcon(p.extraInfoType),
-                    size: "sm",
-                  },
-                  {
-                    type: "text",
-                    text: p.extraInfoValue,
-                    size: "sm",
-                    color: "#aaaaaa",
-                    wrap: true,
-                  },
-                ],
-              },
-            ],
+            contents: bodyContents,
           },
+
           footer: {
             type: "box",
             layout: "vertical",

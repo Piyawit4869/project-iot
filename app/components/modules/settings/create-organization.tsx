@@ -34,10 +34,10 @@ export type ProgressConfig = {
 
 export interface CreateOrganizationFormCreateProps {
   form: UseFormReturn<BranchesOrganization>;
-  loading?: boolean;
+  isLoading?: boolean;
   // dataFromAI?: any;
   // disabled?: boolean;
-  // isEdit?: boolean;
+  isEdit?: boolean;
   // setIsEdit?: React.Dispatch<React.SetStateAction<boolean>>;
   // mode?: string;
 
@@ -89,43 +89,49 @@ export default function CreateOrganization() {
     }
   };
 
-  // const requiredCustomerFields = [
-  //   // "profile.imageUrl",
-  //   "status",
-  //   "profile.firstName",
-  //   // "profile.lastName",
-  //   // "profile.gender",
-  //   // "profile.birthDate",
-  //   // "profile.age",
-  //   // "customerType",
-  //   // "profile.phone",
-  // ];
+  const requiredDetailFields = [
+    "nameTh",
+    "nameEn",
+    "taxId",
+    "status",
+    "fromType",
+    "branchType",
+  ];
 
-  // const requiredOrganizationFields = [
-  //   "organizationDetails.businessName",
-  //   "organizationDetails.fromType",
-  //   // "organizationDetails.branchCode",
-  //   // "organizationDetails.businessPhone",
-  //   // "organizationDetails.businessFax",
-  //   // "organizationDetails.businessEmail",
-  //   // "organizationDetails.importantDate",
-  //   // "organizationDetails.openingDate",
-  //   // "organizationDetails.orgType",
-  //   // "organizationDetails.websiteUrl",
-  //   // "organizationDetails.note",
-  //   // "organizationDetails.descriptions",
-  // ];
+  const requiredAddressFields = [
+    "address.name",
+    "address.houseNo",
+    "address.subDistrict",
+    "address.city",
+    "address.province",
+
+    "address.postalCode",
+  ];
+
+  const requiredSettingFields = [
+    "setting.openDays",
+    "theme",
+    "textDisplay",
+    "defaultLanguage",
+    "branchType",
+  ];
 
   const values = formCreate.getValues();
-  // const progressCustomerData = calculateProgress(
-  //   values,
-  //   requiredCustomerFields
-  // );
+  const progressDetailData = calculateProgress(values, requiredDetailFields);
+  const progressAddressData = calculateProgress(values, requiredAddressFields);
 
+  const progressSettingData = calculateProgress(values, requiredSettingFields);
   // const progressOrganizationData = calculateProgress(
   //   values,
   //   requiredOrganizationFields
   // );
+
+  const stepProgressMap = [
+    progressDetailData,
+    progressAddressData,
+    progressSettingData,
+    100,
+  ];
 
   return (
     <div className="flex flex-col space-y-3 p-4    ">
@@ -140,39 +146,50 @@ export default function CreateOrganization() {
       />
 
       <Form {...formCreate}>
-        <form id="customer" onSubmit={formCreate.handleSubmit(onCreate)}>
+        <form id="braches" onSubmit={formCreate.handleSubmit(onCreate)}>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="  w-full">
               <StepsVertical
                 current={current}
                 onChange={setCurrent}
+                prev={prev}
+                next={next}
+                // disableBtn={stepProgressMap[current] < 100}
+                formName="braches"
+                stepProgressMap={stepProgressMap}
+                isCreating={isCreating}
+                finalButtonText="สร้างสาขา"
                 classNameContent="w-full"
                 steps={[
                   {
                     title: "ข้อมูลสาขาขององค์กร",
                     descriptions:
-                      "กรุณากรอกข้อมูลสาขาขององค์กรให้ครบถ้วนเพื่อใช้ในการดำเนินงาน",
-                    // progress: progressCustomerData,
+                      "กรอกข้อมูลทั่วไปของสาขาให้ครบถ้วน โดยกรอกข้อมูลในช่องที่มีเครื่องหมายดอกจันทร์สีแดง (*) ให้ครบถ้วนเพื่อดำเนินการต่อ",
+                    progress: progressDetailData,
                     content: <OrganizationDetailCard form={formCreate} />,
                   },
 
                   {
                     title: "ข้อมูลที่อยู่สาขา",
                     descriptions:
-                      "กรอกข้อมูลที่อยู่สาขาเพื่อใช้ในการติดต่อและดำเนินงาน",
-                    // progress: progressOrganizationData,
+                      "กรอกข้อมูลที่อยู่สาขา โดยกรอกข้อมูลในช่องที่มีเครื่องหมายดอกจันทร์สีแดง (*) ให้ครบถ้วนเพื่อดำเนินการต่อ",
+                    progress: progressAddressData,
                     content: <OrganizationAddressCard form={formCreate} />,
                   },
 
                   {
                     title: "ตั้งค่าสาขา",
                     descriptions:
-                      "กรอกข้อมูลที่อยู่สาขาเพื่อใช้ในการติดต่อและดำเนินงาน",
-                    // progress: progressOrganizationData,
+                      "เลือกการตั้งค่าเริ่มต้นของระบบ โดยกรอกข้อมูลในช่องที่มีเครื่องหมายดอกจันทร์สีแดง (*) ให้ครบถ้วนเพื่อดำเนินการต่อ",
+                    progress: progressSettingData,
                     content: (
                       <Card>
                         <CardContent className="p-0">
-                          <SettingForm form={formCreate} isEditing={true} />
+                          <SettingForm
+                            form={formCreate}
+                            isCreate={true}
+                            isEditing={true}
+                          />
                         </CardContent>
                       </Card>
                     ),
@@ -181,46 +198,19 @@ export default function CreateOrganization() {
                   {
                     title: "ข้อมูลผู้ติดต่อ (ไม่บังคับ)",
                     descriptions:
-                      "กรอกผู้ติดต่อเพิ่มเติมหากมี ในกรณีที่ผู้ที่ต้องติดต่อไม่ใช่สาขาขององค์กรโดยตรง",
-                    content: <OrganizationContactCard form={formCreate} />,
+                      "สามารถกรอกข้อมูลผู้ติดต่อเพิ่มเติมได้ในกรณีที่ผู้ที่ต้องติดต่อไม่ใช่สาขาขององค์กรโดยตรง",
+                    content: (
+                      <Card>
+                        <CardContent className="p-0">
+                          <OrganizationContactCard
+                            form={formCreate}
+                            isEdit={true}
+                          />
+                        </CardContent>
+                      </Card>
+                    ),
                   },
                 ]}
-                buttonBottom={
-                  <div className="flex gap-3 justify-end w-full">
-                    <Button
-                      className="w-25 bg-white border border-gray-300 text-black hover:bg-gray-100 
-                        group transition-all duration-200 hover:shadow-md"
-                      onClick={prev}
-                      type="button"
-                      disabled={current === 0}
-                    >
-                      <ArrowBigLeftDash className="transition-all duration-200 group-hover:-translate-x-1" />
-                      กลับไป
-                    </Button>
-
-                    {current < 3 && (
-                      <Button
-                        type="button"
-                        onClick={next}
-                        className="w-25 group transition-all duration-200 hover:shadow-md"
-                      >
-                        ถัดไป
-                        <ArrowBigRightDash className=" transition-all duration-200 group-hover:translate-x-1" />
-                      </Button>
-                    )}
-
-                    {current === 3 && (
-                      <Button
-                        type="submit"
-                        // disabled={isDisabled || isCreating}
-                        form="customer"
-                        className="w-30 transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
-                      >
-                        <Save /> สร้างสาขา
-                      </Button>
-                    )}
-                  </div>
-                }
               />
             </div>
           </div>
