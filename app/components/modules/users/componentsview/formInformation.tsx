@@ -43,7 +43,6 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
           </CardTitle>
         </div>
       </CardHeader>
-
       {loading ? (
         <CardContent className="space-y-4">
           <SkeletonLoading />
@@ -53,48 +52,20 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
         </CardContent>
       ) : (
         <CardContent className="space-y-6">
-          {profile.imageUrl ? (
-            <GlobalImage
-              src={profile.imageUrl}
-              alt="profile"
-              className="h-28 w-28 object-cover rounded-md border"
-            />
-          ) : (
-            <div className="h-28 w-28 rounded-md border bg-muted flex items-center justify-center text-sm text-muted-foreground">
-              ไม่มีรูป
-            </div>
-          )}
-          <div className="grid grid-cols-2 gap-5">
+          <GlobalImage
+            src={profile.imageUrl ?? ""}
+            alt="profile"
+            className="h-28 w-28 object-cover rounded-md border"
+          />
+
+          <div className="grid gird-col-1 lg:grid-cols-2 gap-5">
             <InfoRow label="ชื่อ" value={data?.userName ?? "-"} />
             <InfoRow label="อีเมล" value={data?.email ?? "-"} />
             <InfoRow
               label="สถานะพนักงาน"
               value={getLabel(data?.status, statusOptions)}
             />
-            <div className="flex flex-col w-full">
-              <span>แผนก</span>
-              <div className="flex flex-row flex-wrap mt-2 gap-4 text-sm text-[#71717A]">
-                {Departments && Departments.length > 0 ? (
-                  Departments.map((s: any) => {
-                    const deptName = s.department?.name || s.name || "-";
 
-                    return (
-                      <div key={s.id} className="flex items-center gap-2">
-                        <GlobalImage
-                          src={`https://api.dicebear.com/9.x/initials/svg?seed=${deptName}`}
-                          className="w-8 h-8 rounded-full"
-                        />
-                        <div className="flex flex-col">
-                          <span className="font-medium">{deptName}</span>
-                        </div>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <span>ยังไม่ได้เลือกแผนก</span>
-                )}
-              </div>
-            </div>
             <InfoRow
               label="เปิดใช้งาน"
               value={data?.active ? "เปิดใช้งาน" : "ปิดใช้งาน"}

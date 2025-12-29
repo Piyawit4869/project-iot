@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
 
 export type Message = {
   id: string;
@@ -26,6 +26,7 @@ type ChatContextType = {
   updateMessage: (id: string | number, updated: Partial<Message>) => void;
   removeMessage: () => void;
   setCurrentRoomId: (roomId: string) => void;
+  setMessagesAI: (value: any) => void;
 };
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -75,6 +76,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         removeMessage,
         addMessageAI,
         setCurrentRoomId,
+        setMessagesAI,
       }}
     >
       {children}

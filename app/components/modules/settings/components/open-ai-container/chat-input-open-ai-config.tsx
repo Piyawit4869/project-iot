@@ -5,12 +5,12 @@ import { useUpload } from "~/api/client/useGetUpload";
 import { Button } from "~/components/ui/button";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { useChatRoom } from "~/providers/chat/useChatRoom";
-import { useMessage, type Message } from "~/providers/chat/useMessage";
+import { useMessage } from "~/providers/chat/useMessage";
 import { MessageLabelType } from "~/types/global";
 
 interface ChatInputOpenAiConfigProps {
   data: any;
-  chatRoomId: string;
+  chatroomConfigId: string;
   isAILoading: boolean;
   isPendingAI: boolean;
   connectedChatRoomAI: (values: any) => void;
@@ -19,8 +19,13 @@ interface ChatInputOpenAiConfigProps {
 export const ChatInputOpenAiConfig: React.FC<ChatInputOpenAiConfigProps> = (
   props
 ) => {
-  const { data, chatRoomId, isAILoading, isPendingAI, connectedChatRoomAI } =
-    props;
+  const {
+    data,
+    chatroomConfigId,
+    isAILoading,
+    isPendingAI,
+    connectedChatRoomAI,
+  } = props;
 
   const { messagesAI } = useMessage();
 
@@ -35,58 +40,36 @@ export const ChatInputOpenAiConfig: React.FC<ChatInputOpenAiConfigProps> = (
   const handleInputChange = (e: any) => {
     const value = e.target.value;
 
-    setInput(e.target.value);
-    // setMessagesAI((prev) => {
-    //   const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
-
-    //   if (roomIndex > -1) {
-    //     const updatedMessages = [...prev];
-    //     updatedMessages[roomIndex] = {
-    //       ...updatedMessages[roomIndex],
-    //       lastestMessage: value,
-    //     } as Message;
-
-    //     return updatedMessages;
-    //   }
-
-    //   return [...prev, { roomId: selectedRoom.id, lastestMessage: value }];
-    // });
+    setInput(value);
   };
 
   const sendText = async (e: React.FormEvent) => {
-    // const socket = socketConfig(api);
+    console.log({ input });
 
     const textarea = e.target as HTMLTextAreaElement;
     textarea.style.height = "auto";
 
-    // setMessagesAI((prev) => {
-    //   const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
-
-    //   if (roomIndex > -1) {
-    //     const updatedMessages = [...prev];
-    //     updatedMessages[roomIndex] = {
-    //       ...updatedMessages[roomIndex],
-    //       lastestMessage: "",
-    //     } as Message;
-
-    //     return updatedMessages;
-    //   }
-
-    //   return prev;
-    // });
-
     e.preventDefault();
-    if (!input.trim() || !chatRoomId) return;
+
+    if (
+      !input.trim()
+      // || !chatroomConfigId
+    )
+      return;
 
     const messageText = input.trim();
+
     setInput("");
 
+    // if (chatroomConfigId) {
+    // } else {
     connectedChatRoomAI({
       message: messageText,
       messageType: "text",
-      chatroomConfigId: chatRoomId,
+      chatroomConfigId: chatroomConfigId,
       configAiId: data?.id,
     });
+    // }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -14,7 +14,7 @@ import LoadingAnimation from "~/components/modules/message/loading-animation";
 import { useConnectedChatRoomAIConfig } from "~/api/client/customer/useCustomer";
 
 interface ChatBotChatMessagesAndConfigProps {
-  chatRoomId: string;
+  chatroomConfigId: string;
   autoScroll: boolean;
   setAutoScroll: React.Dispatch<React.SetStateAction<boolean>>;
   selectedRoom?: ChatRoomSchemaType;
@@ -26,12 +26,12 @@ export const ChatBotChatMessagesAndConfig: React.FC<
   ChatBotChatMessagesAndConfigProps
 > = (props) => {
   const {
-    chatRoomId,
-    selectedRoom,
+    chatroomConfigId,
     autoScroll,
     setAutoScroll,
     data,
     searchPrompt,
+    selectedRoom,
   } = props;
 
   const scrollAreaRef = React.useRef<HTMLDivElement | null>(null);
@@ -43,10 +43,9 @@ export const ChatBotChatMessagesAndConfig: React.FC<
   const [hasScrolledOnce, setHasScrolledOnce] = React.useState(false);
   const [hasAutoScrolled, setHasAutoScrolled] = React.useState(false);
   const [isScrollReady, setIsScrollReady] = React.useState(false);
-  // const [isCheckStatusOpen, setCheckStatusOpen] = useState(false);
-  // const [AIOpen, setAIOpen] = useState(false);
+
   const [buttonScrollToBottom, setButtonScrollToBottom] = React.useState(false);
-  const { messagesAI: socketMessages } = useChat();
+  const { messagesAI: socketMessages, setMessagesAI } = useChat();
 
   const {
     data: messagesData,
@@ -54,8 +53,8 @@ export const ChatBotChatMessagesAndConfig: React.FC<
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    // refetch,
-  } = usePaginatedChatRoomAIConfig(chatRoomId || "");
+    isRefetching,
+  } = usePaginatedChatRoomAIConfig(chatroomConfigId || "");
 
   const { mutateAsync: connectedChatRoomAI, isPending: isPendingAI } =
     useConnectedChatRoomAIConfig();
@@ -181,7 +180,13 @@ export const ChatBotChatMessagesAndConfig: React.FC<
     }
   }, [combinedMessages]);
 
-  if (isLoading) {
+  React.useLayoutEffect(() => {
+    if (data) {
+      setMessagesAI([]);
+    }
+  }, [data]);
+
+  if (isLoading || isRefetching) {
     return (
       <div className="flex flex-col h-full items-center justify-center gap-4 px-4">
         {Array.from({ length: 5 }).map((_, i) => (
@@ -203,7 +208,7 @@ export const ChatBotChatMessagesAndConfig: React.FC<
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-400px)] bg-white dark:bg-secondary">
+    <div className="flex flex-col h-full bg-white dark:bg-secondary">
       <div className="flex flex-1 flex-col" style={{ height: "75vh" }}>
         <div
           ref={scrollAreaRef}
@@ -341,7 +346,7 @@ export const ChatBotChatMessagesAndConfig: React.FC<
         </div>
         <ChatInputOpenAiConfig
           data={data}
-          chatRoomId={chatRoomId}
+          chatroomConfigId={chatroomConfigId}
           isAILoading={false}
           isPendingAI={isPendingAI}
           connectedChatRoomAI={connectedChatRoomAI}

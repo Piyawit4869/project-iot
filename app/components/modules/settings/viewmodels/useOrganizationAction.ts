@@ -26,14 +26,16 @@ type DayKey =
 
 //TO FIX
 export function mapOpenDaysToApi(
-  openDays: Record<DayKey, { open?: string; close?: string }>
+  openDays?: Partial<Record<DayKey, { open?: string; close?: string }>>
 ) {
+  if (!openDays) return [];
+
   return (Object.keys(openDays) as DayKey[])
     .filter((day) => openDays[day]?.open && openDays[day]?.close)
     .map((day) => ({
       day: [day],
-      open: openDays[day].open!,
-      close: openDays[day].close!,
+      open: openDays[day]!.open!,
+      close: openDays[day]!.close!,
     }));
 }
 

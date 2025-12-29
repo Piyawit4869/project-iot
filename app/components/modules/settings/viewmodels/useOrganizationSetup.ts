@@ -18,7 +18,7 @@ export const useOrganizationSetup = () => {
     defaultValues: {
       code: null,
       active: true,
-      isMain: false,
+      isMain: true,
 
       status: "newly_registered",
       fromType: "ordinary_person",
@@ -26,6 +26,7 @@ export const useOrganizationSetup = () => {
       branchType: "taxpayer",
 
       openingDate: null,
+      domainName: null,
 
       nameTh: null,
       nameEn: null,
@@ -47,6 +48,7 @@ export const useOrganizationSetup = () => {
       contactNote: null,
 
       setting: {
+        isMain: true,
         active: true,
         theme: "light",
         textDisplay: null,
@@ -63,12 +65,13 @@ export const useOrganizationSetup = () => {
       },
 
       address: {
+        isMain: true,
         active: true,
         building: null,
         roomNo: null,
         floorNo: null,
         village: null,
-        villageNo: 0,
+        villageNo: undefined,
         houseNo: null,
         alley: null,
         road: null,

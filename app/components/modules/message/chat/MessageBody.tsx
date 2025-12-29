@@ -6,18 +6,16 @@ import { MessageAILoading } from "./MessageAILoading";
 import ChatInput from "../chat-input";
 import { MessageRenderer } from "../render-message-content";
 import { MessageMenu } from "../MessageMenu";
+import React from "react";
 
 interface MessageBodyProps {
-  ref: React.RefObject<HTMLDivElement | null>;
+  api: string;
   messageRefs: React.RefObject<{ [id: string]: HTMLDivElement | null }>;
+  bottomRef: React.RefObject<HTMLDivElement | null>;
 
   showTopLoading: boolean;
   combinedMessages: any[];
 
-  // NEW
-  bottomRef: React.RefObject<HTMLDivElement | null>;
-
-  // audio controls
   audioRef: React.RefObject<HTMLAudioElement | null>;
   playing: boolean;
   setPlaying: React.Dispatch<React.SetStateAction<boolean>>;
@@ -27,173 +25,171 @@ interface MessageBodyProps {
   setDuration: React.Dispatch<React.SetStateAction<number>>;
   togglePlay: () => void;
 
-  // preview
   setPreviewUrl?: (url: string) => void;
 
-  // scroll
   buttonScrollToBottom: boolean;
   scrollToBottom: () => void;
 
-  // reply feature
   onReply: (msg: any) => void;
   replyRefMessage: any;
   setReplyRefMessage: React.Dispatch<React.SetStateAction<any>>;
   copyMessage: (text: string) => void;
 
-  // chat data
   lastMessage: any;
   subId: string;
   selectedRoom: any;
   customer: any;
 }
 
-export const MessageBody = ({
-  ref,
-  messageRefs,
-  audioRef,
-  bottomRef,
-  showTopLoading,
-  combinedMessages,
-  playing,
-  setPlaying,
-  currentTime,
-  setCurrentTime,
-  duration,
-  setDuration,
-  togglePlay,
-  buttonScrollToBottom,
-  scrollToBottom,
-  replyRefMessage,
-  setReplyRefMessage,
-  copyMessage,
-  lastMessage,
-  subId,
-  selectedRoom,
-  customer,
-  onReply,
-  setPreviewUrl,
-}: MessageBodyProps) => {
-  return (
-    <div className="flex flex-1 flex-col max-h-[calc(100vh-175px)]">
-      <div
-        ref={ref}
-        className="flex h-full flex-col space-y-4 overflow-y-auto px-4 z-0 relative dark:bg-background"
-      >
-        {showTopLoading && (
-          <div className={messageLoadingStyle}>กำลังโหลดข้อความ...</div>
-        )}
+export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
+  (props, scrollRef) => {
+    const {
+      api,
+      messageRefs,
+      audioRef,
+      bottomRef,
+      showTopLoading,
+      combinedMessages,
+      playing,
+      setPlaying,
+      currentTime,
+      setCurrentTime,
+      duration,
+      setDuration,
+      togglePlay,
+      buttonScrollToBottom,
+      scrollToBottom,
+      replyRefMessage,
+      setReplyRefMessage,
+      copyMessage,
+      lastMessage,
+      subId,
+      selectedRoom,
+      customer,
+      onReply,
+      setPreviewUrl,
+    } = props;
 
-        {combinedMessages &&
-          combinedMessages.length > 0 &&
-          _.uniqBy(combinedMessages, "id").map((msg: any, index: number) => {
-            const isBackoffice = msg.platform === "backoffice";
+    return (
+      <div className="flex flex-1 flex-col max-h-[calc(100vh-175px)]">
+        <div
+          ref={scrollRef}
+          className="flex h-full flex-col space-y-4 overflow-y-auto px-4 z-0 relative dark:bg-background"
+        >
+          {showTopLoading && (
+            <div className={messageLoadingStyle}>กำลังโหลดข้อความ...</div>
+          )}
 
-            if (msg.messageLabel === "ROME AI กำลังประมวลผล") return null;
+          {combinedMessages &&
+            combinedMessages.length > 0 &&
+            _.uniqBy(combinedMessages, "id").map((msg: any, index: number) => {
+              const isBackoffice = msg.platform === "backoffice";
 
-            const avatarFallback =
-              msg.imageUrl && !msg.imageUrl.includes("http")
-                ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                    msg.imageUrl
-                  )}`
-                : msg?.imageUrl;
+              if (msg.messageLabel === "ROME AI กำลังประมวลผล") return null;
 
-            const formattedTime = formatDateAndTime(
-              msg.createdAt ? msg.createdAt : msg.timestamp
-            );
+              const avatarFallback =
+                msg.imageUrl && !msg.imageUrl.includes("http")
+                  ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                      msg.imageUrl
+                    )}`
+                  : msg?.imageUrl;
 
-            return (
-              <div
-                key={`${index}-${msg.id}`}
-                ref={(el) => (messageRefs.current[msg.id] = el) as any}
-                id={`msg-${msg.id}`}
-                className={
-                  msg.id === lastMessage?.id ? "animate-message-in" : ""
-                }
-              >
-                {msg && msg?.firstMessageToday && (
-                  <div className="flex items-center justify-center pt-6">
-                    <span className="text-sm text-[12px] text-muted-foreground">
-                      {formattedTime}
-                    </span>
-                  </div>
-                )}
+              const formattedTime = formatDateAndTime(
+                msg.createdAt ? msg.createdAt : msg.timestamp
+              );
+
+              return (
                 <div
-                  className={`group flex flex-col ${msg.isLabel ? "" : "max-w-[75%]"} ${
-                    msg.platform !== "line"
-                      ? "items-end ml-auto"
-                      : "items-start mr-auto"
-                  } ${msg.isFirstInGroup ? "pt-5" : "pt-0"}`}
+                  key={`${index}-${msg.id}`}
+                  ref={(el) => (messageRefs.current[msg.id] = el) as any}
+                  id={`msg-${msg.id}`}
                 >
-                  {msg.showAvatar && !msg.isLabel && (
-                    <div className="flex items-center gap-2 mb-1">
-                      <Avatar className="w-6 h-6">
-                        <img
-                          src={avatarFallback || "/avatar.png"}
-                          alt="avatar"
-                          className="rounded-full object-cover"
-                        />
-                        <AvatarFallback>
-                          {(msg.sender || msg.recipient || "U")[0]}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="text-xs text-muted-foreground font-medium">
-                        {msg.sender || msg.recipient || "Anonymous"}
+                  {msg && msg?.firstMessageToday && (
+                    <div className="flex items-center justify-center pt-6">
+                      <span className="text-sm text-[12px] text-muted-foreground">
+                        {formattedTime}
                       </span>
                     </div>
                   )}
-                  <MessageRenderer
-                    msg={msg}
-                    isBackoffice={isBackoffice}
-                    setPreviewUrl={setPreviewUrl}
-                    playing={playing}
-                    setPlaying={setPlaying}
-                    currentTime={currentTime}
-                    setCurrentTime={setCurrentTime}
-                    duration={duration}
-                    setDuration={setDuration}
-                    audioRef={audioRef}
-                    togglePlay={togglePlay}
-                  />
-                  {msg.platform === "line" && (
-                    <MessageMenu
+                  <div
+                    className={`group flex flex-col ${msg.isLabel ? "" : "max-w-[75%]"} ${
+                      msg.platform !== "line"
+                        ? "items-end ml-auto"
+                        : "items-start mr-auto"
+                    } ${msg.isFirstInGroup ? "pt-5" : "pt-0"}`}
+                  >
+                    {msg.showAvatar && !msg.isLabel && (
+                      <div className="flex items-center gap-2 mb-1">
+                        <Avatar className="w-6 h-6">
+                          <img
+                            src={avatarFallback || "/avatar.png"}
+                            alt="avatar"
+                            className="rounded-full object-cover"
+                          />
+                          <AvatarFallback>
+                            {(msg.sender || msg.recipient || "U")[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-xs text-muted-foreground font-medium">
+                          {msg.sender || msg.recipient || "Anonymous"}
+                        </span>
+                      </div>
+                    )}
+                    <MessageRenderer
                       msg={msg}
-                      onReply={() => onReply(msg)}
-                      onCopy={() => copyMessage(msg.message)}
+                      isBackoffice={isBackoffice}
+                      setPreviewUrl={setPreviewUrl}
+                      playing={playing}
+                      setPlaying={setPlaying}
+                      currentTime={currentTime}
+                      setCurrentTime={setCurrentTime}
+                      duration={duration}
+                      setDuration={setDuration}
+                      audioRef={audioRef}
+                      togglePlay={togglePlay}
                     />
-                  )}
+                    {msg.platform === "line" && (
+                      <MessageMenu
+                        msg={msg}
+                        onReply={() => onReply(msg)}
+                        onCopy={() => copyMessage(msg.message)}
+                      />
+                    )}
 
-                  {msg.showTime && !msg.isLabel && (
-                    <span className="text-[10px] text-muted-foreground mt-1 ">
-                      {msg.read && <span>อ่านแล้ว,</span>} {formattedTime}
-                    </span>
-                  )}
+                    {msg.showTime && !msg.isLabel && (
+                      <span className="text-[10px] text-muted-foreground mt-1 ">
+                        {msg.read && <span>อ่านแล้ว,</span>} {formattedTime}
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
 
-        {lastMessage.messageLabel === "ROME AI กำลังประมวลผล" && (
-          <MessageAILoading />
-        )}
+          {lastMessage.messageLabel === "ROME AI กำลังประมวลผล" && (
+            <MessageAILoading />
+          )}
 
-        <div ref={bottomRef} />
-        {buttonScrollToBottom && (
-          <button onClick={scrollToBottom} className={seemoreStyle}>
-            ดูข้อความล่าสุด
-          </button>
-        )}
+          <div ref={bottomRef} />
+          {buttonScrollToBottom && (
+            <button onClick={scrollToBottom} className={seemoreStyle}>
+              ดูข้อความล่าสุด
+            </button>
+          )}
+        </div>
+
+        <ChatInput
+          api={api}
+          subId={subId}
+          selectedRoom={selectedRoom}
+          customer={customer}
+          replyRefMessage={replyRefMessage}
+          setReplyRefMessage={setReplyRefMessage}
+        />
       </div>
-
-      <ChatInput
-        subId={subId}
-        selectedRoom={selectedRoom}
-        customer={customer}
-        replyRefMessage={replyRefMessage}
-        setReplyRefMessage={setReplyRefMessage}
-      />
-    </div>
-  );
-};
+    );
+  }
+);
 
 const messageLoadingStyle =
   "absolute top-4 left-1/2 -translate-x-1/2 z-30 bg-white dark:bg-gray-800 text-xs text-muted-foreground text-center py-2 px-4 rounded-lg shadow-md w-fit";

@@ -146,15 +146,15 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
   const mainSetting = selectedBranchId
     ? getMainItem(branchesDetail?.setting, branchesDetail?.settings)
     : selectedOrgId
-      ? getMainItem(org?.address, org?.addresses)
-      : getMainItem(organization?.address, organization?.addresses);
+      ? getMainItem(org?.setting, org?.settings)
+      : getMainItem(organization?.setting, organization?.settings);
 
   const settingAddressId = mainAddress?.id ?? "";
-  const settingId = mainSetting?.id ?? "";
+  const settingId = mainSetting?.id ?? mainSetting?.id ?? "";
 
   // main org
   const { mutate: updateOrganization } = useUpdateOrganization(
-    organizationId,
+    selectedOrgId,
     userId
   );
 
@@ -200,7 +200,9 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
 
   const addressForm = useForm<AddressSchemaValues>({
     resolver: zodResolver(addressSchema) as Resolver<AddressSchemaValues>,
-    defaultValues: {},
+    defaultValues: {
+      villageNo: undefined,
+    },
   });
 
   const settingForm = useForm<settingTheme>({
@@ -331,21 +333,26 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     if (!orgSource) return;
 
     orgForm.reset({
+      // isMain: true,
       code: orgSource?.code ?? "",
       nameTh: orgSource?.nameTh ?? "",
       nameEn: orgSource?.nameEn ?? "",
       contactEmail: orgSource?.contactEmail ?? "",
       websiteUrl: orgSource?.websiteUrl ?? "",
-      status: orgSource?.status ?? "",
+
       openingDate: orgSource?.openingDate ?? "",
+
+      orgType: orgSource?.orgType,
+      fromType: orgSource?.fromType,
+      status: orgSource?.status,
+
       descriptionsEn: orgSource?.descriptionsEn ?? "",
       descriptionsTh: orgSource?.descriptionsTh ?? "",
-      fromType: orgSource?.fromType ?? "ordinary_person",
+
       taxId: orgSource?.taxId ?? "",
       registerVat: orgSource?.registerVat ?? false,
       active: orgSource?.active ?? false,
-      isMain: orgSource?.isMain ?? false,
-      branchType: orgSource?.branchType ?? "taxpayer",
+      branchType: orgSource?.branchType ?? "",
       domainName: orgSource?.domainName ?? "",
       contactName: orgSource?.contactName ?? "",
       contactPhone: orgSource?.contactPhone ?? "",
@@ -358,6 +365,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     });
 
     addressForm.reset({
+      isMain: true,
       id: mainAddress?.id ?? "",
       name: mainAddress?.name ?? "",
       building: mainAddress?.building ?? "",
@@ -374,10 +382,10 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
       nation: mainAddress?.nation ?? "",
       postalCode: mainAddress?.postalCode ?? "",
       note: mainAddress?.note ?? "",
-      isMain: mainAddress?.isMain ?? false,
     });
 
     settingForm.reset({
+      isMain: true,
       id: mainSetting?.id ?? "",
       theme: mainSetting?.theme ?? "",
       textDisplay: mainSetting?.textDisplay ?? "",
@@ -392,6 +400,15 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     refetchBranch();
   }, [selectedBranchId]);
 
+  const onError = (errors: any) => {
+    console.log("❌ submit errors:", errors);
+  };
+
+  const backToMain = () => {
+    setIsEditing(false);
+    navigate(`/setting-organization`);
+  };
+
   return (
     <Tabs
       value={activeTab}
@@ -400,6 +417,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     >
       <div className="mb-4">
         <TabControl
+          backpath={backToMain}
           title={
             selectedOrgId ? (
               <div className="flex flex-row gap-2">
@@ -411,7 +429,6 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                   refetch={refetch}
                   setSearch={setSearch}
                   data={data}
-                  backIcon={true}
                 />
                 <OrgSelectorDropdown
                   topic="สาขา"
@@ -450,7 +467,6 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
           noneSticky={true}
         />
       </div>
-
       {!isSingleOrg ? (
         <DataTable queryFunction={paginate} columns={columns} />
       ) : (
@@ -506,10 +522,11 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
               >
                 <fieldset
                   disabled={!isEditing}
-                  className={!isEditing ? "opacity-70" : ""}
+                  className={!isEditing ? "opacity-80 pointer-events-none" : ""}
                 >
                   <SettingOrganizationForm
                     form={orgForm}
+                    editable={isEditing}
                     isLoading={isLoadingOrganization || isLoadingBranch}
                   />
                 </fieldset>
@@ -545,10 +562,11 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
               >
                 <fieldset
                   disabled={!isEditing}
-                  className={!isEditing ? "opacity-70" : ""}
+                  className={!isEditing ? "opacity-80" : ""}
                 >
                   <SettingAddressForm
                     form={addressForm}
+                    editable={isEditing}
                     isLoading={isLoadingOrganization || isLoadingBranch}
                     // isLoading={isRefetching}
                   />
@@ -557,16 +575,21 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
             </TabsContent>
 
             <TabsContent value="Setting">
-              <form
-                id="Setting"
-                onSubmit={settingForm.handleSubmit(handleSettingOnSubmit)}
+              <fieldset
+                disabled={!isEditing}
+                className={!isEditing ? "opacity-80" : ""}
               >
-                <SettingForm
-                  form={settingForm}
-                  isEditing={isEditing}
-                  isLoading={isLoadingOrganization || isLoadingBranch}
-                />
-              </form>
+                <form
+                  id="Setting"
+                  onSubmit={settingForm.handleSubmit(handleSettingOnSubmit)}
+                >
+                  <SettingForm
+                    form={settingForm}
+                    isEditing={isEditing}
+                    isLoading={isLoadingOrganization || isLoadingBranch}
+                  />
+                </form>
+              </fieldset>
             </TabsContent>
           </Card>
         </div>

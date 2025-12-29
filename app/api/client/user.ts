@@ -13,10 +13,12 @@ import {
   fetchSearchUserOrgs,
   fetchSearchUserBranches,
   changeActiveOrg,
+  checkUserEmailDuplicate,
 } from "../server/user";
 import type { UsersFormValues } from "~/schemas/users/user";
 import type { PasswordFormValues } from "~/schemas/users/password-user";
 import { getCurrentMe, getMe } from "../server/auth";
+import { fetchUserPersonalSummary } from "../server/customer/user";
 
 export const usePaginate = ({
   pageIndex,
@@ -109,6 +111,13 @@ export const useGetUsers = (id: string) =>
     queryFn: () => fetchUserById(id),
     enabled: !!id,
   });
+export const useGetUsersPersonalSummary = (userId: string, enabled = true) => {
+  return useQuery({
+    queryKey: ["user-personality", userId],
+    queryFn: () => fetchUserPersonalSummary(userId),
+    enabled: enabled && !!userId,
+  });
+};
 
 export const useGetAllUsers = (role?: string | null) =>
   useQuery({
@@ -180,5 +189,12 @@ export const useChangeActiveOrg = (userId: string) => {
   return useMutation({
     mutationFn: (payload: { organizationId: string }) =>
       changeActiveOrg(userId, payload),
+  });
+};
+
+export const useCheckUserEmailDuplicate = () => {
+  return useMutation({
+    mutationFn: (payload: { email: string }) =>
+      checkUserEmailDuplicate(payload),
   });
 };
