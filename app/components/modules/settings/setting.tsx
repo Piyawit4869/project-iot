@@ -333,7 +333,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     if (!orgSource) return;
 
     orgForm.reset({
-      isMain: true,
+      // isMain: true,
       code: orgSource?.code ?? "",
       nameTh: orgSource?.nameTh ?? "",
       nameEn: orgSource?.nameEn ?? "",
@@ -580,7 +580,10 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
               >
                 <form
                   id="Setting"
-                  onSubmit={settingForm.handleSubmit(handleSettingOnSubmit)}
+                  onSubmit={settingForm.handleSubmit(
+                    handleSettingOnSubmit,
+                    onError
+                  )}
                 >
                   <SettingForm
                     form={settingForm}
