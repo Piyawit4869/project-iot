@@ -43,7 +43,7 @@ import { UsersFormSchema, type UsersFormValues } from "~/schemas/users/user";
 import { getRequiredPaths } from "~/utils/form-adapter";
 import { OrganizationSelector } from "./formSelectOrganization";
 import { formToJSON } from "axios";
-import { fetchUserPagination } from "~/api/server/user";
+import { useCheckUserEmailDuplicate } from "~/api/client/user";
 
 export interface UserFormProfileProps {
   form: UseFormReturn<UsersFormValues>;
@@ -62,6 +62,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
   const [debouncedStatusSearch] = useState<string>("");
   const [openSub, setOpenSub] = React.useState(false);
   const [search, setSearch] = React.useState("");
+  const { mutateAsync: checkEmail } = useCheckUserEmailDuplicate();
 
   const allRoles = Array.isArray(roles) ? roles : [];
 
@@ -95,17 +96,14 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
   const filteredStatusOptions = statusOptions.filter((o) =>
     o.label.toLowerCase().includes(debouncedStatusSearch.toLowerCase())
   );
+
   const handleBlur = async () => {
     const email = form.getValues("email");
+    if (!email) return;
+
     try {
-      const res = await fetchUserPagination({
-        page: 1,
-        limit: 1,
-        status: "",
-        email,
-      });
-      const hasDuplicate = Array.isArray(res?.items) && res.items.length > 0;
-      if (hasDuplicate) {
+      const res = await checkEmail({ email });
+      if (res) {
         form.setError("email", {
           type: "manual",
           message: "อีเมลนี้ถูกใช้งานแล้ว",
@@ -113,9 +111,10 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
       } else {
         form.clearErrors("email");
       }
-    } catch {}
+    } catch (error) {
+      console.error("email check failed", error);
+    }
   };
-
   type OptionItem = { id: string; name: string; active?: boolean }; // ของ list ที่ใช้เลือก
 
   return (
@@ -155,7 +154,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>อีเมล</FormLabel>
+                      <RequiredLabel required>อีเมล</RequiredLabel>
                       <FormControl>
                         <Input
                           placeholder="กรอกอีเมล"
