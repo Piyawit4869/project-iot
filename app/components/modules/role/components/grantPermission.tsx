@@ -134,39 +134,115 @@ export const GrantPermission: React.FC = () => {
   const isChecked = (permissionId?: string) =>
     !!permissionId && selectedPermissionIds.includes(permissionId);
 
+  // const toggleOne = (permissionId?: string) => {
+  //   if (!permissionId) return;
+  //   setSelectedPermissionIds((prev) =>
+  //     prev.includes(permissionId)
+  //       ? prev.filter((id) => id !== permissionId)
+  //       : [...prev, permissionId]
+  //   );
+  // };
+
   const toggleOne = (permissionId?: string) => {
     if (!permissionId) return;
-    setSelectedPermissionIds((prev) =>
-      prev.includes(permissionId)
-        ? prev.filter((id) => id !== permissionId)
-        : [...prev, permissionId]
-    );
+
+    setSelectedPermissionIds((prev) => {
+      let next = [...prev];
+
+      const exists = next.includes(permissionId);
+      if (exists) next = next.filter((id) => id !== permissionId);
+      else next = [...next, permissionId];
+
+      const perm = findPermissionById(permissionId, featureRows);
+
+      if (perm?.action === "get_menu" && exists) {
+        const row = featureRows.find((r) => r.feature === perm.feature);
+        if (row) {
+          Object.values(row.cells).forEach((cell) => {
+            if (cell.action !== "get_menu") {
+              next = next.filter((id) => id !== cell.id);
+            }
+          });
+        }
+      }
+
+      return next;
+    });
   };
 
   // select all in a row (one feature)
+  // const toggleRow = (feature: string, checked: boolean) => {
+  //   const row = featureRows.find((r) => r.feature === feature);
+  //   if (!row) return;
+
+  //   const ids = actions
+  //     .map((a) => row.cells[a]?.id)
+  //     .filter((id): id is string => typeof id === "string" && id.length > 0);
+
+  //   setSelectedPermissionIds((prev) => {
+  //     if (checked) return Array.from(new Set([...prev, ...ids]));
+  //     return prev.filter((id) => !ids.includes(id));
+  //   });
+  // };
+
   const toggleRow = (feature: string, checked: boolean) => {
     const row = featureRows.find((r) => r.feature === feature);
     if (!row) return;
 
-    const ids = actions
-      .map((a) => row.cells[a]?.id)
-      .filter((id): id is string => typeof id === "string" && id.length > 0);
+    const menuId = row.cells.get_menu?.id;
 
     setSelectedPermissionIds((prev) => {
-      if (checked) return Array.from(new Set([...prev, ...ids]));
-      return prev.filter((id) => !ids.includes(id));
+      let next = [...prev];
+
+      if (!checked) {
+        Object.values(row.cells).forEach((cell) => {
+          next = next.filter((id) => id !== cell.id);
+        });
+      } else {
+        if (menuId && !next.includes(menuId)) next.push(menuId);
+
+        Object.values(row.cells).forEach((cell) => {
+          if (!next.includes(cell.id)) next.push(cell.id);
+        });
+      }
+
+      return next;
     });
   };
 
   // select all in a column (one action)
-  const toggleColumn = (action: string, checked: boolean) => {
-    const ids = featureRows
-      .map((r) => r.cells[action]?.id)
-      .filter((id): id is string => typeof id === "string" && id.length > 0);
+  // const toggleColumn = (action: string, checked: boolean) => {
+  //   const ids = featureRows
+  //     .map((r) => r.cells[action]?.id)
+  //     .filter((id): id is string => typeof id === "string" && id.length > 0);
 
+  //   setSelectedPermissionIds((prev) => {
+  //     if (checked) return Array.from(new Set([...prev, ...ids]));
+  //     return prev.filter((id) => !ids.includes(id));
+  //   });
+  // };
+
+  const toggleColumn = (action: string, checked: boolean) => {
     setSelectedPermissionIds((prev) => {
-      if (checked) return Array.from(new Set([...prev, ...ids]));
-      return prev.filter((id) => !ids.includes(id));
+      let next = [...prev];
+
+      featureRows.forEach((row) => {
+        const cell = row.cells[action];
+        if (!cell?.id) return;
+
+        const menuId = row.cells.get_menu?.id;
+        const menuEnabled = menuId && next.includes(menuId);
+
+        if (checked) {
+          if (action === "get_menu" || menuEnabled) {
+            if (!next.includes(cell.id)) next.push(cell.id);
+          }
+        } else {
+          next = next.filter((id) => id !== cell.id);
+        }
+      });
+
+      return next;
     });
   };
 
@@ -176,6 +252,26 @@ export const GrantPermission: React.FC = () => {
     if (count === 0) return false as const;
     if (count === ids.length) return true as const;
     return "indeterminate" as const;
+  };
+
+  const findPermissionById = (
+    id: string,
+    featureRows: { feature: string; cells: Record<string, PermissionItem> }[]
+  ) => {
+    for (const row of featureRows) {
+      for (const action in row.cells) {
+        const cell = row.cells[action];
+        if (cell?.id === id) {
+          return { ...cell, feature: row.feature };
+        }
+      }
+    }
+    return null;
+  };
+
+  const hasMenu = (row: { cells: Record<string, PermissionItem> }) => {
+    const menuId = row.cells.get_menu?.id;
+    return !!menuId && selectedPermissionIds.includes(menuId);
   };
 
   const onSubmit = () => {
@@ -282,6 +378,8 @@ export const GrantPermission: React.FC = () => {
 
               <tbody>
                 {featureRows.map((row) => {
+                  console.log("featureRows", featureRows);
+
                   const rowIds = actions
                     .map((a) => row.cells[a]?.id)
                     .filter(
@@ -308,15 +406,26 @@ export const GrantPermission: React.FC = () => {
                       {actions.map((action) => {
                         const perm = row.cells[action];
                         const hasCell = !!perm?.id;
+                        const menuEnabled = hasMenu(row);
+                        const disabled = action !== "get_menu" && !menuEnabled;
 
                         return (
                           <td
                             key={`${row.feature}-${action}`}
                             className="p-2 text-center"
                           >
+                            {/* {hasCell ? (
+                              <Checkbox
+                                checked={isChecked(perm.id)}
+                                onCheckedChange={() => toggleOne(perm.id)}
+                              />
+                            ) : (
+                              <span className="text-muted-foreground">-</span>
+                            )} */}
                             {hasCell ? (
                               <Checkbox
                                 checked={isChecked(perm.id)}
+                                disabled={disabled}
                                 onCheckedChange={() => toggleOne(perm.id)}
                               />
                             ) : (
