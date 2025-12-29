@@ -39,6 +39,7 @@ import {
 import { CustomerSection } from "~/components/modules/order/components/customerSection";
 import { ListProduct } from "~/components/modules/order/components/product-select";
 import { companyList } from "~/components/modules/inventories/indata/inData";
+import { useSearchParams } from "react-router";
 
 export const NotationForm: React.FC<OrderFormProps> = ({
   form,
@@ -52,6 +53,15 @@ export const NotationForm: React.FC<OrderFormProps> = ({
 }) => {
   const customerPaginate = useCustomerPaginate;
   const [search, setSearch] = React.useState("");
+  const [searchParams] = useSearchParams();
+  const docType = searchParams.get("type"); // quotation | receipt | invoice
+  const docTypeTH = {
+    quotation: "ใบเสนอราคา",
+    receipt: "ใบเสร็จรับเงิน",
+    invoice: "ใบแจ้งหนี้",
+  } as const;
+
+  const docLabel = docType ? docTypeTH[docType as keyof typeof docTypeTH] : "";
 
   const { data: saleData } = useGetAllUsers("sale");
 
@@ -143,7 +153,7 @@ export const NotationForm: React.FC<OrderFormProps> = ({
             "p-6 bg-card text-card-foreground rounded-xl border shadow-sm")
       )}
     >
-      <h3 className="font-semibold text-xl">ข้อมูล typedoc</h3>
+      <h3 className="font-semibold text-xl">ข้อมูล{docLabel}</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <GlobalFormField
           control={form.control}
@@ -357,81 +367,6 @@ export const NotationForm: React.FC<OrderFormProps> = ({
       </OrderProvider>
 
       <hr />
-      <h1 className="font-semibold text-xl">ส่วนลด</h1>
-      <div className="grid grid-cols-2 gap-4">
-        <GlobalFormField
-          control={form.control}
-          name="discount"
-          view={view}
-          label="ส่วนลด"
-          type="input"
-          placeholder="0"
-        />
-
-        <GlobalFormField
-          control={form.control}
-          name="discountType"
-          view={view}
-          label="ประเภทเหตุผลส่วนลด"
-          type="select"
-          placeholder="เลือกเหตุผลส่วนลด"
-          options={statusOptions}
-        />
-
-        {/* <GlobalFormField
-          control={form.control}
-          name="discountCode"
-          label="โค้ดส่วนลด"
-          type="input"
-          placeholder="SALE2026"
-          options={statusOptions}
-        /> */}
-      </div>
-      <GlobalFormField
-        control={form.control}
-        name="discountNote"
-        label="หมายเหตุ"
-        view={view}
-        type="textArea"
-        placeholder="ระบุหมายเหตุ..."
-        options={statusOptions}
-      />
-
-      <GlobalFormField
-        control={form.control}
-        name="discountStep"
-        label="ส่วนลดขั้นบันได"
-        view={"view"}
-        placeholder="ระบุหมายเหตุ..."
-        options={statusOptions}
-      />
-
-      <hr />
-      {/* -----------------------  Summary ----------------------- */}
-      <div className="p-4 mt-3 w-full rounded-2xl bg-gray-50 shadow-inner">
-        <h3 className="font-semibold text-lg mb-4">ราคาส่วนลด</h3>
-
-        <div className="flex justify-between mb-3">
-          <span>ราคาเดิม :</span>
-          <span>{resultTotal || 0} ชิ้น</span>
-        </div>
-
-        <div className="flex justify-between mb-3">
-          <span>ส่วนลด :</span>
-          <span>{discountPrice || 0} บาท</span>
-        </div>
-        <div className="flex justify-between mb-3">
-          <span>ส่วนลดเพิ่มเติม :</span>
-          <span>{discount || 0} บาท</span>
-        </div>
-
-        <div className="flex justify-between font-bold text-lg mb-3">
-          <span>ราคาหลังหักส่วนลด :</span>
-          <span>{formatNumber(finalPrice)} บาท</span>
-        </div>
-      </div>
-      <hr />
-
       <h1 className="font-semibold text-xl">การชำระเงินและเงื่อนไข</h1>
       <div className="grid grid-cols-2 gap-4">
         <GlobalFormField
@@ -512,29 +447,6 @@ export const NotationForm: React.FC<OrderFormProps> = ({
         <div className="flex justify-between mb-3">
           <span>ราคารวมสินค้า :</span>
           <span>{formatNumber(Price)} บาท</span>
-        </div>
-
-        <div className="flex justify-between mb-3">
-          <span>ส่วนลด :</span>
-          <span>
-            {discount ? (
-              discount > 0 && discountPrice > 0 ? (
-                //  แสดงแค่ผลรวม
-                <>{appliedDiscount}</>
-              ) : discount > 0 ? (
-                // discount
-                <>{discount}</>
-              ) : discountPrice > 0 ? (
-                //  discountPrice
-                <>{discountPrice}</>
-              ) : (
-                <>0</>
-              )
-            ) : (
-              <>0</>
-            )}{" "}
-            บาท
-          </span>
         </div>
 
         <div className="flex justify-between mb-3">

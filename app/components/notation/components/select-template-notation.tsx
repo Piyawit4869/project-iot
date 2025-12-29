@@ -122,7 +122,7 @@ export default function SelectTempletNotation({
             ))}
           </div>
           <div className="flex justify-end">
-            <Link to="single">
+            <Link to={`/notation/single?type=${selected}`}>
               <GlobalButton
                 label={
                   <>

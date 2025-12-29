@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Box, FileText, Save } from "lucide-react";
+import { Box, Save } from "lucide-react";
 import { toast } from "sonner";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useCreateOrder } from "~/api/client/order/useGetOrder";
 import type { OrderFormValues } from "~/schemas/order/order";
 import { GlobalModal } from "~/components/shared/modal/modal";
@@ -10,23 +10,28 @@ import GlobalButton from "~/components/shared/global-button";
 import { Form } from "~/components/ui/form";
 import initData from "~/initData/order-initData";
 import { Card, CardContent } from "~/components/ui/card";
-import { formatNumber } from "~/components/shared/global-format";
 import type { ProductColumn } from "~/schemas/order/type";
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { OrderProvider } from "~/hooks/order/order";
-import { useGetAllUsers } from "~/api/client/user";
 import {
   calculateTotals,
   generateOrderNumber,
 } from "../modules/order/components/order-function";
-import { OrderForm } from "../modules/order/components/form/OrderForm-create";
 import { useOrderViewModel } from "../modules/order/viewmodels/useOrderViewModel";
 import { NotationForm } from "./components/notation-form";
 import { QuotationMock } from "./components/template/quotation";
+import { ReceiptMock } from "./components/template/receipt";
+import { InvoiceMock } from "./components/template/invoice";
 
 export default function CreateOrder() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const docType = searchParams.get("type"); // quotation | receipt | invoice
+  const docTypeTH = {
+    quotation: "ใบเสนอราคา",
+    receipt: "ใบเสร็จรับเงิน",
+    invoice: "ใบแจ้งหนี้",
+  } as const;
+
+  const docLabel = docType ? docTypeTH[docType as keyof typeof docTypeTH] : "";
 
   const {
     state: { formCreate, isCreating },
@@ -154,13 +159,14 @@ export default function CreateOrder() {
     <div className="flex flex-col w-full space-y-8 p-8">
       <TabControl
         backpath="/notation"
-        title="สร้าง {typedoc}"
+        title="สร้างเอกสาร"
         buttons={[
           <GlobalButton
             key="create-order"
             label={
               <>
-                <Save /> สร้าง
+                <Save />
+                บันทึก
               </>
             }
             type="submit"
@@ -190,20 +196,41 @@ export default function CreateOrder() {
             <div className="flex-1 w-1/2 md:order-2 flex flex-col ">
               <Card className="p-6  w-full ">
                 <div className="flex flex-row gap-3">
-                  <span className="font-semibold text-xl">ข้อมูล type</span>
+                  <span className="font-semibold text-xl">
+                    ข้อมูล{docLabel}
+                  </span>
                   <Box />
                 </div>
 
-                <CardContent className="p-0 px-0">
-                  <div className="w-full">
+                <CardContent className="p-0">
+                  {docType === "quotation" && (
                     <QuotationMock
                       data={formCreate.getValues()}
                       product={productsSelected}
                       makeImage={makeImage}
                       approvedImage={approvedSign}
                     />
-                  </div>
+                  )}
+
+                  {docType === "receipt" && (
+                    <ReceiptMock
+                      data={formCreate.getValues()}
+                      product={productsSelected}
+                      makeImage={makeImage}
+                      approvedImage={approvedSign}
+                    />
+                  )}
+
+                  {docType === "invoice" && (
+                    <InvoiceMock
+                      data={formCreate.getValues()}
+                      product={productsSelected}
+                      makeImage={makeImage}
+                      approvedImage={approvedSign}
+                    />
+                  )}
                 </CardContent>
+
                 {/* <Tabs defaultValue="order" className="gap-4">
                   <TabsList className="bg-gray-100 rounded-sm px-6 p-1 ml-auto max-w-xs w-full">
                     <TabsTrigger value="order">

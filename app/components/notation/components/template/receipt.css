@@ -1,20 +1,8 @@
-.ibm-plex-sans-thai-looped-regular {
-  font-family: "IBM Plex Sans Thai Looped", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.ibm-plex-sans-thai-bold {
-  font-family: "IBM Plex Sans Thai", sans-serif;
-  font-weight: 700;
-  font-style: normal;
-}
-
 .quotation-container {
   padding: 20px;
   color: #333;
-  font-family: "IBM Plex Sans Thai Looped", sans-serif;
-  font-weight: 400;
+  font-family: sans-serif;
+
   width: 100%;
   margin: 0 auto;
 }
@@ -38,6 +26,7 @@
 }
 
 .quotation-title {
+  font-family: ibm-plex-sans-thai-bold;
   font-size: 24px;
   font-weight: bold;
   color: #01a396;
@@ -54,11 +43,11 @@
 }
 
 .top-info-left {
-  width: 45%;
+  width: 48%;
 }
 
 .top-info-right {
-  width: 35%;
+  width: 32%;
 }
 
 .header-sign {
@@ -98,11 +87,11 @@
 }
 
 .sum-info-left {
-  width: 30%;
+  width: 40%;
 }
 
 .sum-info-right {
-  width: 70%;
+  width: 60%;
 }
 
 .payment-title {
@@ -110,12 +99,19 @@
   align-items: center; 
   gap: 5px;
   color: #01a396;
+  font-weight: bold;
+}
+
+.peyment-row{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
 }
 
 /* summary */
 .summary {
   margin-left: auto;
-  width: 300px;
+  width: 250px;
   font-size: 14px;
 }
 
@@ -125,7 +121,7 @@
   margin-bottom: 4px;
 }
 
-.summary-row.total {
+.summary-row .total {
   font-weight: bold;
   color: #01a396;
 }

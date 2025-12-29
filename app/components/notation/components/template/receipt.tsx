@@ -1,7 +1,6 @@
 import { GlobalImage } from "~/components/shared/global-image";
 import LogoUtotechImage from "/assets/images/logo.webp";
-import "./quotation.css";
-import { CircleDollarSign, MessageCircleMore } from "lucide-react";
+import "./receipt.css";
 
 function bahtText(num: number): string {
   if (isNaN(num)) return "";
@@ -66,7 +65,7 @@ function bahtText(num: number): string {
   return bahtText;
 }
 
-export function QuotationMock({
+export function ReceiptMock({
   data,
   product,
   makeImage,
@@ -96,7 +95,7 @@ export function QuotationMock({
 
         <div className="quotation-title-wrapper">
           <span className="quotation-subtitle">(ต้นฉบับ)</span>
-          <h1 className="quotation-title">ใบเสนอราคา</h1>
+          <h1 className="quotation-title">ใบเสร็จรับเงิน</h1>
         </div>
       </div>
 
@@ -105,13 +104,12 @@ export function QuotationMock({
         <div className="top-info-left">
           <strong>บริษัท ยูโทเทค จำกัด (สำนักงานใหญ่)</strong>
           <br />
-          161/308 ซอยจรัญสนิทวงศ์ 27 แยก 16
+          161/308 ซอยจรัญสนิทวงศ์ 27 แยก 16 แขวงบางขุนศรี เขตบางกอกน้อย กรุงเทพฯ
+          10700
           <br />
-          แขวงบางขุนศรี เขตบางกอกน้อย กรุงเทพฯ 10700
+          เลขประจำตัวผู้เสียภาษี 0105565119323
           <br />
-          เลขที่ผู้เสียภาษี: 0105565119323
-          <br />
-          เบอร์โทรศัพท์: 080-423-7373
+          โทร. 080-423-7373
           <br />
           อีเมล: kiattiphoom@utotech.org
         </div>
@@ -175,35 +173,29 @@ export function QuotationMock({
           ))}
         </tbody>
       </table>
-      <div className="footer-sign"></div>
+
       <div className="sum-info">
         <div className="sum-info-left">
-          <div className="note">
-            <MessageCircleMore /> หมายเหตุ :
-            <br />
-            {data.note}
+          <div className="payment-title">
+            <span>การชำระเงิน</span>
+          </div>
+          <div className="peyment-row">
+            <span>ช่องทาง</span>
+            <span>เงินโอน / เงินสด</span>
+          </div>
+          <div className="peyment-row">
+            <span>ธนาคาร</span>
+            <span>ไทยพาณิชย์</span>
+          </div>
+          <div className="peyment-row">
+            <span>วันที่ชำระ</span>
+            <span>17/07/2568</span>
           </div>
         </div>
 
         <div className="sum-info-right">
           {/* Summary */}
           <div className="summary">
-            <div className="summary-row">
-              <span>จำนวนเงินรวม</span>
-              <span>{data.Price || 0} บาท</span>
-            </div>
-            <div className="summary-row">
-              <span>จำนวนภาษีมูลค่าเพิ่ม (VAT 7%)</span>
-              <span>{data.vat || 0} บาท</span>
-            </div>
-            <div className="summary-row">
-              <span>รวมราคาทั้งสิ้น (รวม VAT)</span>
-              <span>{data.Price + data.vat || 0} บาท</span>
-            </div>
-            <div className="summary-row">
-              <span>หักภาษี ณ ที่จ่าย (WHT 3%)</span>
-              <span>{data.wht || 0} บาท</span>
-            </div>
             <div className="summary-row total">
               <span>จำนวนเงินที่ต้องชำระ</span>
               <span>{data.finalPrice || 0} บาท</span>
@@ -211,12 +203,6 @@ export function QuotationMock({
             <div className="summary-row">
               <span></span>
               <span>({bahtText(data.finalPrice || 0)})</span>
-            </div>
-            <div className="summary-row">
-              <div className="payment-title">
-                <CircleDollarSign />
-                <span>ช่องทางการชำระเงิน</span>
-              </div>
             </div>
           </div>
         </div>

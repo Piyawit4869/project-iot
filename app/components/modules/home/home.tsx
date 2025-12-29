@@ -135,7 +135,7 @@ export default function HomeComponent() {
       name: "Notation",
       nameLocal: "เอกสาร",
       icon: FileText,
-      color: "bg-gradient-to-br from-purple-500 to-blue-500",
+      color: "bg-gradient-to-br from-pink-500 to-blue-500",
       path: "/notation",
     },
 

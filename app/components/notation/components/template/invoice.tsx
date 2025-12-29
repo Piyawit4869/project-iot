@@ -66,7 +66,7 @@ function bahtText(num: number): string {
   return bahtText;
 }
 
-export function QuotationMock({
+export function InvoiceMock({
   data,
   product,
   makeImage,
@@ -96,7 +96,7 @@ export function QuotationMock({
 
         <div className="quotation-title-wrapper">
           <span className="quotation-subtitle">(ต้นฉบับ)</span>
-          <h1 className="quotation-title">ใบเสนอราคา</h1>
+          <h1 className="quotation-title">ใบแจ้งหนี้</h1>
         </div>
       </div>
 
