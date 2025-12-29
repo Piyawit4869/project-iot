@@ -81,7 +81,7 @@ export const fetchDetailBranchesOrganization = async (
     };
 
     const res = await ApiConfig.put(
-      `configurations/branches/${id}/details/settings/edit`,
+      `/configurations/branches/${id}/details/edit`,
       body
     );
 

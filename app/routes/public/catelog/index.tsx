@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { mockProducts } from "./_modules/data/mockProducts";
 import { useProductFilters } from "./_modules/hooks/useProductFilters";
 import { FilterPanel } from "./_modules/components/FilterPanel";
@@ -31,10 +30,14 @@ import {
 } from "./_modules/utils/productUtils";
 import { toast } from "sonner";
 import type { Product } from "./_modules/types/product";
+import liff from "@line/liff";
+import React from "react";
 
 export default function ShoppingPage() {
-  const [isLoading] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isLoading] = React.useState(false);
+  const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(
+    null
+  );
 
   const {
     queryState,
@@ -148,6 +151,35 @@ export default function ShoppingPage() {
       </Pagination>
     );
   };
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const initLiff = async () => {
+      try {
+        await liff.init({
+          liffId: "2008795757-y5IAfURc",
+          withLoginOnExternalBrowser: true,
+        });
+
+        if (!liff.isLoggedIn()) {
+          liff.login(); // redirect to LINE login
+          return;
+        }
+
+        const profile = await liff.getProfile();
+
+        console.log("LINE profile", profile);
+        console.log("name", profile.displayName);
+        console.log("userId", profile.userId);
+        console.log("picture", profile.pictureUrl);
+      } catch (err) {
+        console.error("LIFF error", err);
+      }
+    };
+
+    initLiff();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">

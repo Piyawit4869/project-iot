@@ -66,7 +66,7 @@ export const UserSkills: React.FC<UserFormProfileProps> = ({
         !v?.description &&
         !v?.yearsOfExperience &&
         !v?.isPrimary;
-      if (blank) removeSk(editingIndex);
+      removeSk(editingIndex);
     }
     setOpen(false);
     setEditingIndex(null);

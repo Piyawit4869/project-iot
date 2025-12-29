@@ -47,6 +47,8 @@ export const OrganizationSelector: React.FC<UserFormProfileProps> = ({
     ? organizations?.organizations
     : [];
   const arrayBranch = Array.isArray(branchs?.branches) ? branchs?.branches : [];
+  const selectedOrganizationId = form.watch("organizationId");
+  const canSelectBranch = !!selectedOrganizationId;
 
   return (
     <div
@@ -239,7 +241,7 @@ export const OrganizationSelector: React.FC<UserFormProfileProps> = ({
                     <Button
                       variant="outline"
                       className="px-4 py-2 rounded-2xl"
-                      disabled={isLoading}
+                      disabled={!canSelectBranch || isLoading}
                     >
                       {isLoading
                         ? "กำลังโหลดรายชื่อสาขา..."

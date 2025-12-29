@@ -9,6 +9,7 @@ import { MessageMenu } from "../MessageMenu";
 import React from "react";
 
 interface MessageBodyProps {
+  api: string;
   messageRefs: React.RefObject<{ [id: string]: HTMLDivElement | null }>;
   bottomRef: React.RefObject<HTMLDivElement | null>;
 
@@ -43,6 +44,7 @@ interface MessageBodyProps {
 export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
   (props, scrollRef) => {
     const {
+      api,
       messageRefs,
       audioRef,
       bottomRef,
@@ -177,6 +179,7 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
         </div>
 
         <ChatInput
+          api={api}
           subId={subId}
           selectedRoom={selectedRoom}
           customer={customer}

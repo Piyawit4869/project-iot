@@ -220,7 +220,7 @@ export const useGetConnectionAi = (id: string) =>
   useQuery({
     queryKey: ["OpenAi", id],
     queryFn: () => fetchGetConnectionAi(id),
-    enabled: !!id,
+    // enabled: !!id,
   });
 export const useGetConnectionAiByBranch = (branchId: string) =>
   useQuery({
@@ -248,7 +248,7 @@ export const usePaginatedChatRoomAIConfig = (chatRoomId: string) => {
 
       return meta?.hasMore ? meta.offset + meta.limit : undefined;
     },
-    enabled: !!chatRoomId,
+    // enabled: !!chatRoomId,
   });
 };
 

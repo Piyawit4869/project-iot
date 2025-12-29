@@ -71,22 +71,13 @@ function normalizeHours(input?: WorkingHoursInput): WorkingHoursRecord {
   return base;
 }
 
-function parseTimeRange(range: string): { start: string; end: string } {
-  if (!range) return { start: "09:00", end: "18:00" };
-  const cleaned = range.replace("น.", "").trim();
-  const parts = cleaned.split("-");
-  if (parts.length !== 2) return { start: "09:00", end: "18:00" };
-  const start = (parts[0] ?? "").trim();
-  const end = (parts[1] ?? "").trim();
-  return { start, end };
-}
-
 type WorkingHoursSectionProps = {
   value?: WorkingHoursInput;
   onChange?: (next: WorkingHoursInput) => void;
   form: UseFormReturn<any>;
   defaultValue?: WorkingHoursInput;
   title?: string;
+  subTitle?: string;
 };
 
 export default function WorkingHoursSection({
@@ -94,7 +85,8 @@ export default function WorkingHoursSection({
   form,
   defaultValue,
   onChange,
-  title = "เวลาการทำงาน",
+  // title = "เวลาการทำงาน",
+  subTitle = "เปิดใช้งานการตั้งค่า",
 }: WorkingHoursSectionProps) {
   const isControlled = typeof value !== "undefined";
 
@@ -135,8 +127,6 @@ export default function WorkingHoursSection({
 
   return (
     <div className="gap-4 mb-6">
-      <h2 className="text-xl font-bold mb-4">{title}</h2>
-
       <div className="grid gap-2 w-[50%]">
         {(Object.keys(DAY_LABEL) as DayKey[]).map((day) => (
           <div key={day} className="rounded-xl p-3 bg-card">

@@ -173,16 +173,13 @@ export default function ChatlistSidebar({
     socket.on("rooms", (room: any) => {
       console.log("rooms in", room);
 
-      // if (room && room?.latestMessage?.createdAt) {
-      //   new Audio("/sounds/level-up.mp3").play();
-      // }
-
       setAllRooms((prev) => {
         const merged = mergeRoomImmutable(prev, room);
 
         return merged;
       });
 
+      //assistants
       if (room.chatRoomType === "assistant") {
         addMessageAI({
           ...room,

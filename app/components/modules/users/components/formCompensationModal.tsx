@@ -29,6 +29,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Switch } from "~/components/ui/switch";
 import type { UsersFormValues } from "~/schemas/users/user";
+import { GlobalFormField } from "~/components/shared/global-formField";
 
 type Props = {
   open: boolean;
@@ -37,7 +38,6 @@ type Props = {
   onSubmit: () => void;
   form: UseFormReturn<UsersFormValues>;
   indexPath: number;
-  updateCf: any;
 };
 
 const unitOptions = [
@@ -97,12 +97,11 @@ export const CompensationModal: React.FC<Props> = ({
                     <FormControl>
                       <Input
                         type="number"
-                        value={
-                          field.value && field.value === 0
-                            ? undefined
-                            : field.value
-                        }
-                        onChange={(e) => field.onChange(e.target.value)}
+                        value={field.value ?? ""}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          field.onChange(val === "" ? undefined : Number(val));
+                        }}
                         placeholder="เช่น 50000"
                       />
                     </FormControl>
@@ -230,16 +229,33 @@ export const CompensationModal: React.FC<Props> = ({
                 )}
               />
 
+              {/* <FormField
+                control={form.control}
+                name={`${index}.contractType`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>ประเภทสัญญาจ้าง</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="เช่น Permanent, Contract"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              /> */}
+
               <FormField
                 control={form.control}
                 name={`${index}.contractType`}
                 render={({ field }) => (
                   <FormItem>
-                    <RequiredLabel required>ประเภทสัญญาจ้าง</RequiredLabel>
+                    <FormLabel>ประเภทสัญญาจ้าง</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="เช่น Permanent, Contract"
+                      <DatePicker
+                        value={field.value ?? ""}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />

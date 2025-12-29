@@ -49,6 +49,7 @@ import { OrganizationSelector } from "./formSelectOrganization";
 import { RadioCardGroup } from "~/components/shared/global-radio-card";
 import { gender, prefix } from "~/initData/customer-initData";
 import { InputNumberBox } from "~/components/shared/input-number-box";
+import { useCheckUserEmailDuplicate } from "~/api/client/user";
 
 type OptionItem = { id: string; name: string; active?: boolean };
 
@@ -68,7 +69,6 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
   const [debouncedStatusSearch] = useState<string>("");
   const [search, setSearch] = React.useState("");
   const [openSub, setOpenSub] = React.useState(false);
-  console.log([...checkFields].filter((p) => p.includes("image")));
 
   const userRoles = Array.isArray(roles) ? roles : [];
 
@@ -77,7 +77,7 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
 
     return a;
   });
-  console.log("imageUrl:", form.watch("profile.imageUrl"));
+  const { mutateAsync: checkEmail } = useCheckUserEmailDuplicate();
 
   const statusOptions = [
     { label: "พนักงานงานใหม่", value: "new_user" },
@@ -86,6 +86,32 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
     { label: "พนักงานที่ถูกระงับการใช้งาน", value: "suspended" },
     { label: "พนักงานที่ลบบัญชีออกจากระบบ", value: "deleted" },
   ] as const;
+  const currentEmail = React.useRef<string | null>(
+    form.getValues("email") ?? null
+  );
+
+  const handleBlur = async () => {
+    const email = form.getValues("email");
+    if (!email) return;
+    if (email === currentEmail.current) {
+      form.clearErrors("email");
+      return;
+    }
+
+    try {
+      const res = await checkEmail({ email });
+      if (res) {
+        form.setError("email", {
+          type: "manual",
+          message: "อีเมลนี้ถูกใช้งานแล้ว",
+        });
+      } else {
+        form.clearErrors("email");
+      }
+    } catch (error) {
+      console.error("email check failed", error);
+    }
+  };
 
   const filteredStatusOptions = statusOptions.filter((o) =>
     o.label.toLowerCase().includes(debouncedStatusSearch.toLowerCase())
@@ -192,13 +218,23 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                   placeholder="กรกอรชื่อพนักงาน"
                 />
                 <div className="col-span-2">
-                  <GlobalFormField
+                  <FormField
                     control={form.control}
                     name="email"
-                    label="อีเมล"
-                    type="input"
-                    checkFields={checkFields}
-                    placeholder="กรอกอีเมล"
+                    render={({ field }) => (
+                      <FormItem>
+                        <RequiredLabel required>อีเมล</RequiredLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="กรอกอีเมล"
+                            {...field}
+                            value={field.value ?? undefined}
+                            onBlur={handleBlur}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
                 <div className="col-span-2">
@@ -233,7 +269,7 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                               </span>
                               <button
                                 type="button"
-                                onClick={() => field.onChange(undefined)}
+                                onClick={() => field.onChange(null)}
                                 className="ml-1 text-muted-foreground hover:text-red-500"
                               >
                                 <X className="h-3 w-3" />
@@ -619,7 +655,7 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                   )}
                 />
               </div>
-              <div className=" grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
+              <div className=" grid grid-cols-1 md:grid-cols-1 gap-5 mt-4">
                 <FormField
                   control={form.control}
                   name="profile.taxId"

@@ -18,9 +18,28 @@ import { UserSocalmedias } from "../components/formSocalmedia";
 import { UserDocuments } from "../components/formDocuments";
 import { ArrowBigLeftDash, ArrowBigRightDash, Save } from "lucide-react";
 import { StepsVertical } from "~/components/shared/global-step";
-import { calculateProgress } from "../../customer/create-customer";
 import { Button } from "~/components/ui/button";
 import { useGetAllRoles } from "~/api/client/role/useGetRole";
+import { Card } from "~/components/ui/card";
+
+export function calculateProgress(
+  values: any,
+  requiredFields: string[],
+  errors?: any
+) {
+  let completed = 0;
+
+  requiredFields.forEach((field) => {
+    const value = field.split(".").reduce((o, k) => o?.[k], values);
+    const hasError = field.split(".").reduce((o, k) => o?.[k], errors);
+
+    if (value !== undefined && value !== null && value !== "" && !hasError) {
+      completed += 1;
+    }
+  });
+
+  return Math.round((completed / requiredFields.length) * 100);
+}
 
 export default function CreateUsers() {
   const navigate = useNavigate();
@@ -32,6 +51,7 @@ export default function CreateUsers() {
   const formCreate = useForm<UsersFormValues>({
     resolver: zodResolver(UsersFormSchema as any),
     defaultValues: {
+      userName: null,
       email: "",
       password: "",
       confirmPassword: "",
@@ -109,13 +129,22 @@ export default function CreateUsers() {
     "profile.firstName",
     "profile.lastName",
   ];
+  const {
+    watch,
+    formState: { errors },
+  } = formCreate;
 
-  // const values = formCreate.getValues();
   const values = formCreate.watch();
-  const totalSteps = 6;
 
-  const progressUserData = calculateProgress(values, requiredUserFields);
-  const stepProgressMap = [progressUserData, 100, 100];
+  const progressUserData = calculateProgress(
+    values,
+    requiredUserFields,
+    formCreate.formState.errors
+  );
+  const totalSteps = 6;
+  const hasEmailError = !!formCreate.formState.errors.email;
+
+  const stepProgressMap = [hasEmailError ? 0 : progressUserData, 100, 100];
 
   const next = () => {
     setCurrent((c) => Math.min(c + 1, totalSteps - 1));
@@ -162,6 +191,7 @@ export default function CreateUsers() {
             prev={prev}
             next={next}
             formName="users"
+            disableBtn={stepProgressMap[current] < 100}
             finalButtonText="สร้างผู้ใช้งาน"
             classNameContent="w-full"
             totalSteps={totalSteps}
@@ -184,17 +214,21 @@ export default function CreateUsers() {
                 title: "ข้อมูลด้านค่าตอบแทน",
                 descriptions:
                   "กรอกรายละเอียดเกี่ยวกับเงินเดือน สวัสดิการ และรูปแบบค่าตอบแทน",
-                content: <UserCompensation form={formCreate} />,
+                content: (
+                  <Card>
+                    <UserCompensation form={formCreate} />
+                  </Card>
+                ),
               },
 
               {
                 title: "คุณสมบัติ & ความสามารถ",
                 descriptions: "กรอกทักษะ ความสามารถ และข้อมูลด้านการศึกษา",
                 content: (
-                  <div className="flex flex-col gap-2">
+                  <Card className="flex flex-col gap-2">
                     <UserSkills form={formCreate} />
                     <UserStudy form={formCreate} />
-                  </div>
+                  </Card>
                 ),
               },
 
@@ -203,9 +237,9 @@ export default function CreateUsers() {
                 descriptions:
                   "กรอกประวัติการทำงานก่อนหน้า รวมถึงหน้าที่และระยะเวลา",
                 content: (
-                  <>
+                  <Card>
                     <UserWorkExperience form={formCreate} />
-                  </>
+                  </Card>
                 ),
               },
 
@@ -213,14 +247,22 @@ export default function CreateUsers() {
                 title: "โซเชียลมีเดีย",
                 descriptions:
                   "กรอกช่องทางติดต่อต่าง ๆ ผ่านโซเชียลมีเดียหรือโปรไฟล์ออนไลน์",
-                content: <UserSocalmedias form={formCreate} />,
+                content: (
+                  <Card>
+                    <UserSocalmedias form={formCreate} />
+                  </Card>
+                ),
               },
 
               {
                 title: "เอกสารแนบ",
                 descriptions:
                   "อัปโหลดเอกสารที่เกี่ยวข้อง เช่น สำเนาบัตร Resume หรือใบรับรองต่าง ๆ",
-                content: <UserDocuments form={formCreate} />,
+                content: (
+                  <Card>
+                    <UserDocuments form={formCreate} />
+                  </Card>
+                ),
               },
             ]}
             // buttonBottom={

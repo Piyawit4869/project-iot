@@ -67,7 +67,7 @@ export const UserSocalmedias: React.FC<UserFormProfileProps> = ({
         !v?.url &&
         !v?.description &&
         !v?.isPrimary;
-      if (blank) removeSm(editingIndex);
+      removeSm(editingIndex);
     }
     setOpen(false);
     setEditingIndex(null);
