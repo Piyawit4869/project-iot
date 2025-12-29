@@ -188,3 +188,15 @@ export const changeActiveOrg = async (
     return error;
   }
 };
+
+export const checkUserEmailDuplicate = async (payload: {
+  email: string;
+}): Promise<boolean> => {
+  try {
+    const { data } = await ApiConfig.post("/crud/users/email-check", payload);
+
+    return data.result as boolean;
+  } catch (error) {
+    throw error;
+  }
+};

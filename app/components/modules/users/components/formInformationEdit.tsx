@@ -49,6 +49,7 @@ import { OrganizationSelector } from "./formSelectOrganization";
 import { RadioCardGroup } from "~/components/shared/global-radio-card";
 import { gender, prefix } from "~/initData/customer-initData";
 import { InputNumberBox } from "~/components/shared/input-number-box";
+import { useCheckUserEmailDuplicate } from "~/api/client/user";
 
 type OptionItem = { id: string; name: string; active?: boolean };
 
@@ -76,6 +77,7 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
 
     return a;
   });
+  const { mutateAsync: checkEmail } = useCheckUserEmailDuplicate();
 
   const statusOptions = [
     { label: "พนักงานงานใหม่", value: "new_user" },
@@ -84,6 +86,32 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
     { label: "พนักงานที่ถูกระงับการใช้งาน", value: "suspended" },
     { label: "พนักงานที่ลบบัญชีออกจากระบบ", value: "deleted" },
   ] as const;
+  const currentEmail = React.useRef<string | null>(
+    form.getValues("email") ?? null
+  );
+
+  const handleBlur = async () => {
+    const email = form.getValues("email");
+    if (!email) return;
+    if (email === currentEmail.current) {
+      form.clearErrors("email");
+      return;
+    }
+
+    try {
+      const res = await checkEmail({ email });
+      if (res) {
+        form.setError("email", {
+          type: "manual",
+          message: "อีเมลนี้ถูกใช้งานแล้ว",
+        });
+      } else {
+        form.clearErrors("email");
+      }
+    } catch (error) {
+      console.error("email check failed", error);
+    }
+  };
 
   const filteredStatusOptions = statusOptions.filter((o) =>
     o.label.toLowerCase().includes(debouncedStatusSearch.toLowerCase())
@@ -190,13 +218,23 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                   placeholder="กรกอรชื่อพนักงาน"
                 />
                 <div className="col-span-2">
-                  <GlobalFormField
+                  <FormField
                     control={form.control}
                     name="email"
-                    label="อีเมล"
-                    type="input"
-                    checkFields={checkFields}
-                    placeholder="กรอกอีเมล"
+                    render={({ field }) => (
+                      <FormItem>
+                        <RequiredLabel required>อีเมล</RequiredLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="กรอกอีเมล"
+                            {...field}
+                            value={field.value ?? undefined}
+                            onBlur={handleBlur}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
                 <div className="col-span-2">
