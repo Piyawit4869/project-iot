@@ -192,6 +192,7 @@ export const SettingForm: React.FC<SettingFormProps> = (props) => {
                           form={form}
                           value={field.value}
                           onChange={field.onChange}
+                          isEdit={isEditing}
                         />
                       </FormControl>
                     </FormItem>

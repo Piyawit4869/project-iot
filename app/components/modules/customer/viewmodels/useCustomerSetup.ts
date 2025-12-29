@@ -66,7 +66,7 @@ export const useCustomerSetup = () => {
         name: null,
         imageUrl: null,
 
-        prefix: null,
+        prefix: "นาย",
         taxId: null,
         position: null,
         country: "ไทย",
@@ -80,7 +80,7 @@ export const useCustomerSetup = () => {
         // lastNameTh: "",
         birthDate: null,
         phone: null,
-        gender: null,
+        gender: "male",
         age: null,
       },
 

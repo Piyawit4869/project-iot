@@ -2,44 +2,48 @@ import React from "react";
 import { Pie } from "@ant-design/plots";
 
 export function convertStatsToChart(data: any) {
-  const senderStats = data.senderStats || [];
-  const aiStats = data.aiStats || [];
+  const senderStats = data?.senderStats ?? [];
+  const aiStats = data?.aiStats ?? [];
 
   const totalMessages = senderStats.reduce(
-    (sum: any, s: any) => sum + s.messageCount,
+    (sum: number, s: any) => sum + (s.messageCount || 0),
     0
   );
 
+  // nodata
+  if (senderStats.length === 0 || totalMessages === 0) {
+    return [
+      {
+        type: "ไม่มีข้อมูล",
+        value: 0,
+      },
+    ];
+  }
+
   // convert senderStats to percentage
-  let chartData = senderStats.map((s: any) => {
-    return {
-      type: s.sender,
-      value: Math.round((s.messageCount / totalMessages) * 100),
-    };
-  });
+  let chartData = senderStats.map((s: any) => ({
+    type: s.sender,
+    value: Math.round((s.messageCount / totalMessages) * 100),
+  }));
 
-  // calculate sum
-  const sum = chartData.reduce((a: any, b: any) => a + b.value, 0);
+  const sum = chartData.reduce((a: number, b: any) => a + b.value, 0);
 
-  // if aiStats has value → use that instead of auto-filling
+  // ✅ ถ้ามี aiStats → ใช้ AI
   if (aiStats.length > 0) {
-    aiStats.forEach((ai: any) => {
-      chartData.push({
-        type: ai.sender || "AI",
-        value: ai.messageCount, // assume already percentage or count
-      });
+    const aiTotal = aiStats.reduce(
+      (sum: number, ai: any) => sum + (ai.messageCount || 0),
+      0
+    );
+
+    chartData.push({
+      type: "AI",
+      value: Math.round((aiTotal / totalMessages) * 100),
     });
+
     return chartData;
   }
 
-  // If aiStats is empty and sum < 100 → fill AI to complete 100%
-  if (sum < 100) {
-    chartData.push({
-      type: "AI",
-      value: 100 - sum,
-    });
-  }
-
+  // ✅ มีข้อมูลแล้ว → ไม่ต้องเติม "ไม่มีข้อมูล"
   return chartData;
 }
 
@@ -59,36 +63,17 @@ export const PieChart = ({ initData }: any) => {
     }, 1000);
   }, [initData]);
 
-  // const config = {
-  //   data,
-  //   angleField: "value",
-  //   colorField: "type",
-  //   label: {
-  //     text: "type",
-  //     position: "outside",
-  //     style: {
-  //       fontWeight: "bold",
-  //     },
-  //   },
-  //   legend: {
-  //     color: {
-  //       title: false,
-  //       position: "bottom",
-  //       rowPadding: 5,
-  //     },
-  //   },
-  // };
-  // return <Pie {...config} />;
-
   const config = {
     data,
-    height: 330,
-
+    height: 400,
     angleField: "value",
     colorField: "type",
-    innerRadius: 0.6,
+    radius: 0.9,
+    innerRadius: 0.5,
     label: {
-      text: "value",
+      text: (d: any) => {
+        return d.value < 10 ? `${d.value}` : `${d.value}%`;
+      },
       style: {
         stroke: isDark ? "#D3D3D3" : "#000000",
       },
@@ -96,15 +81,14 @@ export const PieChart = ({ initData }: any) => {
 
     legend: {
       color: {
-        // itemLabelMaxWidth: 9999,
-        itemLabelFill: isDark ? "#D3D3D3" : "#000000",
-        itemLabelFontSize: 15,
         position: "bottom",
-        rowPadding: 5,
-
-        maxRows: 3,
-        itemLabelFontFamily: "IBMPlexSansThai",
         layout: "vertical",
+
+        itemMarkerSize: 12,
+        itemLabelFontSize: 15,
+        itemLabelLineHeight: 18,
+        itemLabelFontFamily: "IBMPlexSansThai",
+        itemLabelFill: isDark ? "#D3D3D3" : "#000000",
       },
       size: {
         titleFontSize: 16,
@@ -114,62 +98,56 @@ export const PieChart = ({ initData }: any) => {
 
     scale: {
       color: {
-        range: ["#ce517cff", "#103F91", "#3e813aff", "#d78f1cff"],
+        range: ["#9D91CA", "#7664B5", "#5D4A9B", "#332956", "#19142A"],
       },
     },
-    annotations: [
-      {
-        type: "text",
-        style: {
-          x: "50%",
-          y: "50%",
-          textAlign: "center",
-          fontSize: 35,
-          fontStyle: "bold",
+    tooltip: ({ type, value }: any) => {
+      return { type, value };
+    },
+
+    interaction: {
+      tooltip: {
+        render: (e: any, { items }: any) => {
+          return (
+            <React.Fragment>
+              {items.map((item: any) => {
+                const { type, value, color } = item;
+                return (
+                  <div
+                    key={type}
+                    style={{
+                      margin: 0,
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div>
+                      <span
+                        style={{
+                          display: "inline-block",
+                          width: 6,
+                          height: 6,
+                          borderRadius: "50%",
+                          backgroundColor: color,
+                          marginRight: 6,
+                        }}
+                      ></span>
+                      <span>{type}</span>
+                    </div>
+                    <b className="ml-5"> {value}</b>
+                  </div>
+                );
+              })}
+            </React.Fragment>
+          );
         },
       },
-    ],
+    },
   };
+
   return (
     <div className="flex flex-col w-full">
       <Pie {...config} />
-      {/* <div className="mt-6 space-y-5">
-       
-        <div>
-          <h3 className="font-semibold text-lg mb-2">Seller</h3>
-          <div className="grid grid-cols-2 gap-y-2">
-            {data.map((s, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <span
-                  className="w-4 h-4 rounded-sm"
-                  style={{ backgroundColor: s.color }}
-                />
-                <span className="text-sm">
-                  {s.label}: {s.percent}%
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-       
-        <div>
-          <h3 className="font-semibold text-lg mb-2">AI</h3>
-          <div className="grid grid-cols-2 gap-y-2">
-            {data.map((s, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <span
-                  className="w-4 h-4 rounded-sm"
-                  style={{ backgroundColor: s.color }}
-                />
-                <span className="text-sm"> 
-                  {s.label}: {s.percent}%
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 };

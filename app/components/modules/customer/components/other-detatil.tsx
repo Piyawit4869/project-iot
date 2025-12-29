@@ -33,6 +33,7 @@ import {
 import { DatePicker } from "~/components/shared/date-picker";
 import { onlyNumber } from "~/components/shared/global-format";
 import { InputNumberBox } from "~/components/shared/input-number-box";
+import { GlobalFormField } from "~/components/shared/global-formField";
 
 export const OtherDetatil: React.FC<CustomerFormCreateProps> = ({
   form,
@@ -300,8 +301,18 @@ export const OtherDetatil: React.FC<CustomerFormCreateProps> = ({
               />
             )} */}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-            <FormField
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <GlobalFormField
+              control={form.control}
+              name="organizationDetails.websiteUrl"
+              label="เว็บไซต์"
+              placeholder="กรอกเว็บไซต์ของบริษัท เช่น https://somchaitrading.co.th"
+              type="input"
+              view={"edit"}
+              canCopy
+            />
+
+            {/* <FormField
               control={form.control}
               name="organizationDetails.websiteUrl"
               render={({ field }) => (
@@ -315,6 +326,29 @@ export const OtherDetatil: React.FC<CustomerFormCreateProps> = ({
                         field.onChange(e);
                       }}
                       placeholder="กรอกเว็บไซต์ของบริษัท เช่น https://somchaitrading.co.th"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> */}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+            <FormField
+              control={form.control}
+              name="organizationDetails.descriptions"
+              render={({ field }) => (
+                <FormItem>
+                  <RequiredLabel>รายละเอียด</RequiredLabel>
+                  <FormControl className="w-full">
+                    <Textarea
+                      value={field.value ?? ""}
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
+                      rows={4}
+                      placeholder="ใส่รายละเอียดบริษัท เช่น Importer and distributor"
                     />
                   </FormControl>
                   <FormMessage />
@@ -335,27 +369,6 @@ export const OtherDetatil: React.FC<CustomerFormCreateProps> = ({
                       }}
                       rows={4}
                       placeholder="กรอกโน้ตสำหรับบริษัท เช่น Company registered in Bangkok"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="organizationDetails.descriptions"
-              render={({ field }) => (
-                <FormItem>
-                  <RequiredLabel>รายละเอียด</RequiredLabel>
-                  <FormControl className="w-full">
-                    <Textarea
-                      value={field.value ?? ""}
-                      onChange={(e) => {
-                        field.onChange(e);
-                      }}
-                      rows={4}
-                      placeholder="ใส่รายละเอียดบริษัท เช่น Importer and distributor"
                     />
                   </FormControl>
                   <FormMessage />

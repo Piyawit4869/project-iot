@@ -10,6 +10,7 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import type { UseFormReturn } from "react-hook-form";
+import { cn } from "~/lib/utils";
 
 //To FIX
 export type DayKey =
@@ -78,6 +79,7 @@ type WorkingHoursSectionProps = {
   defaultValue?: WorkingHoursInput;
   title?: string;
   subTitle?: string;
+  isEdit?: boolean;
 };
 
 export default function WorkingHoursSection({
@@ -85,6 +87,7 @@ export default function WorkingHoursSection({
   form,
   defaultValue,
   onChange,
+  isEdit,
   // title = "เวลาการทำงาน",
   subTitle = "เปิดใช้งานการตั้งค่า",
 }: WorkingHoursSectionProps) {
@@ -112,16 +115,16 @@ export default function WorkingHoursSection({
     setSelectedDays(days);
     setOpen(true);
   };
-
   const confirmTime = () => {
-    setInternal((prev) => {
-      const next = { ...prev };
-      selectedDays.forEach((day) => {
-        next[day] = { open: startTime, close: endTime };
-      });
-      onChange?.(next);
-      return next;
+    const base = normalizeHours(value ?? internal);
+
+    const next = { ...base };
+    selectedDays.forEach((day) => {
+      next[day] = { open: startTime, close: endTime };
     });
+
+    setInternal(next);
+    onChange?.(next);
     setOpen(false);
   };
 
@@ -137,10 +140,12 @@ export default function WorkingHoursSection({
                 onClick={() => openModal([day])}
                 className="flex items-center gap-2 text-sm"
               >
-                {hours[day].open && hours[day].close
-                  ? `${hours[day].open} - ${hours[day].close}`
-                  : "ตั้งเวลา"}
-                <Pencil className="h-4 w-4" />
+                <span className={cn(isEdit ? "  " : "text-muted-foreground")}>
+                  {hours[day].open && hours[day].close
+                    ? `${hours[day].open} - ${hours[day].close}`
+                    : "ตั้งเวลา"}
+                </span>
+                {isEdit && <Pencil className="h-4 w-4" />}
               </button>
             </div>
           </div>
