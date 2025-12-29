@@ -116,7 +116,7 @@ export const SingleUsersView: React.FC<EditUsersViewProps> = ({
         </div>
       </div> */}
       <div className="mt-2 flex flex-col md:flex-row gap-5">
-        <div className="md:w-[35%] h-[50%] w-full flex flex-col gap-5">
+        <div className="md:w-[45%] h-[50%] w-full flex flex-col gap-5">
           <Card className="p-2 pt-4 h-full">
             <UserProfileView data={data} loading={loading} />
           </Card>
@@ -129,7 +129,7 @@ export const SingleUsersView: React.FC<EditUsersViewProps> = ({
           </Card>
         </div>
 
-        <div className="md:w-[65%] w-full flex flex-col gap-5">
+        <div className="md:w-[55%] w-full flex flex-col gap-5">
           <Card className="p-2p py-8">
             <UserCompensation data={data} loading={loading} />
           </Card>
