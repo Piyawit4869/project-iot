@@ -15,6 +15,7 @@ import { useConnectedChatRoomAssistant } from "~/api/client/customer/useCustomer
 import LoadingAnimation from "./loading-animation";
 import { usePaginatedChatRoomAIAssistant } from "~/api/client/settings";
 import { MessageAILoading } from "./chat/MessageAILoading";
+import { cn } from "~/lib/utils";
 
 export default function ChatMessagesWithAI({
   customerId,
@@ -246,9 +247,10 @@ export default function ChatMessagesWithAI({
                 return (
                   <div
                     key={`${msg.lineSubId}+${index}+${msg.sender}`}
-                    className={`mt-4 flex max-w-[75%] flex-col gap-1 ${
+                    className={cn(
+                      "mt-4 flex max-w-[75%] flex-col gap-1",
                       isUser ? "ml-auto items-end" : "mr-auto items-start"
-                    } `}
+                    )}
                   >
                     <div className="flex items-center gap-2 mb-1">
                       <Avatar className="w-6 h-6">
