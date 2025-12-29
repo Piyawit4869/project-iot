@@ -143,24 +143,20 @@ export const GrantPermission: React.FC = () => {
   //   );
   // };
 
-  const toggleOne = (permissionId?: string) => {
+  const toggleOne = (feature: string, action: string, permissionId: string) => {
     if (!permissionId) return;
 
     setSelectedPermissionIds((prev) => {
-      let next = [...prev];
+      let next = prev.includes(permissionId)
+        ? prev.filter((x) => x !== permissionId)
+        : [...prev, permissionId];
 
-      const exists = next.includes(permissionId);
-      if (exists) next = next.filter((id) => id !== permissionId);
-      else next = [...next, permissionId];
-
-      const perm = findPermissionById(permissionId, featureRows);
-
-      if (perm?.action === "get_menu" && exists) {
-        const row = featureRows.find((r) => r.feature === perm.feature);
+      if (action === "get_menu" && prev.includes(permissionId)) {
+        const row = featureRows.find((r) => r.feature === feature);
         if (row) {
           Object.values(row.cells).forEach((cell) => {
             if (cell.action !== "get_menu") {
-              next = next.filter((id) => id !== cell.id);
+              next = next.filter((x) => x !== cell.id);
             }
           });
         }
@@ -234,11 +230,21 @@ export const GrantPermission: React.FC = () => {
         const menuEnabled = menuId && next.includes(menuId);
 
         if (checked) {
-          if (action === "get_menu" || menuEnabled) {
+          if (action === "get_menu") {
             if (!next.includes(cell.id)) next.push(cell.id);
+          } else {
+            if (menuEnabled && !next.includes(cell.id)) next.push(cell.id);
           }
         } else {
           next = next.filter((id) => id !== cell.id);
+
+          if (action === "get_menu") {
+            Object.values(row.cells).forEach((c) => {
+              if (c.action !== "get_menu") {
+                next = next.filter((id) => id !== c.id);
+              }
+            });
+          }
         }
       });
 
@@ -252,21 +258,6 @@ export const GrantPermission: React.FC = () => {
     if (count === 0) return false as const;
     if (count === ids.length) return true as const;
     return "indeterminate" as const;
-  };
-
-  const findPermissionById = (
-    id: string,
-    featureRows: { feature: string; cells: Record<string, PermissionItem> }[]
-  ) => {
-    for (const row of featureRows) {
-      for (const action in row.cells) {
-        const cell = row.cells[action];
-        if (cell?.id === id) {
-          return { ...cell, feature: row.feature };
-        }
-      }
-    }
-    return null;
   };
 
   const hasMenu = (row: { cells: Record<string, PermissionItem> }) => {
@@ -378,8 +369,6 @@ export const GrantPermission: React.FC = () => {
 
               <tbody>
                 {featureRows.map((row) => {
-                  console.log("featureRows", featureRows);
-
                   const rowIds = actions
                     .map((a) => row.cells[a]?.id)
                     .filter(
@@ -426,7 +415,9 @@ export const GrantPermission: React.FC = () => {
                               <Checkbox
                                 checked={isChecked(perm.id)}
                                 disabled={disabled}
-                                onCheckedChange={() => toggleOne(perm.id)}
+                                onCheckedChange={() =>
+                                  toggleOne(row.feature, action, perm.id)
+                                }
                               />
                             ) : (
                               <span className="text-muted-foreground">-</span>

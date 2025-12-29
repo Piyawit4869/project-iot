@@ -26,14 +26,14 @@ export const GrantUser: React.FC<RolesFormProps> = ({
 
   const { data: userData } = useGetAllUsers();
 
-  const allUsers = React.useMemo(
-    () => (Array.isArray(userData) ? userData : []),
-    [userData]
-  );
+  // const allUsers = React.useMemo(
+  //   () => (Array.isArray(userData) ? userData : []),
+  //   [userData]
+  // );
 
-  const userMap = React.useMemo(() => {
-    return new Map(allUsers.map((u: any) => [u.id, u]));
-  }, [allUsers]);
+  // const userMap = React.useMemo(() => {
+  //   return new Map(allUsers.map((u: any) => [u.id, u]));
+  // }, [allUsers]);
 
   const { data: roles, isLoading } = useGetRoles(roleId);
 
