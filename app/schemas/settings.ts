@@ -25,7 +25,7 @@ const typeEnum = z.enum([
 export const organizationSchema = z.object({
   active: z.boolean().optional(),
   status: statusEnum.optional(),
-  isMain: z.boolean().optional(),
+  // isMain: z.boolean().optional(),
   fromType: z.string().optional(),
   taxId: z
     .string()
@@ -141,7 +141,7 @@ export const SettingThemeSchema = z.object({
   theme: z.enum(["light", "dark"]).optional(),
   textDisplay: z.string().optional().nullable(),
   defaultLanguage: z.enum(["TH", "EN"]).optional().nullable(),
-  openDays: WorkingHoursSchema,
+  openDays: WorkingHoursSchema.optional(),
 });
 
 /* ---------- Address ---------- */
