@@ -127,7 +127,8 @@ export function AppSidebar({ data, ...props }: AppSidebarProps) {
   const isSingleOrg = !user?.organizationGroupId;
   const organizationId = selectedOrganization || user?.organizationId;
 
-  const normalizedPermissions = getUserMapPermission(user);
+  // const normalizedPermissions = getUserMapPermission(user);
+  const normalizedPermissions = user.permissions;
 
   const defaultHomeMenu: SidebarItem[] = [
     {

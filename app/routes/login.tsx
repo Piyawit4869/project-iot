@@ -3,6 +3,7 @@ import { createUserSession, getUser } from "~/services/session.server";
 import { redirect } from "react-router";
 import { getMe, login } from "~/api/server/auth";
 import LoginForm from "~/components/modules/auth/login-form";
+import { getUserMapPermission } from "~/utils/permission";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const user = await getUser(request);
@@ -32,6 +33,9 @@ export async function action({ request }: Route.ActionArgs) {
     delete result.updatedAt;
     delete result.createdAt;
     delete result.organization.branches;
+    const normalizedPermissions = getUserMapPermission(me);
+
+    result.permissions = normalizedPermissions;
 
     //  delete result.permissions = {};
 
