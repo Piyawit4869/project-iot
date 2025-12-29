@@ -14,6 +14,7 @@ import { StreamingText } from "./streaming-text";
 import { useConnectedChatRoomAssistant } from "~/api/client/customer/useCustomer";
 import LoadingAnimation from "./loading-animation";
 import { usePaginatedChatRoomAIAssistant } from "~/api/client/settings";
+import { MessageAILoading } from "./chat/MessageAILoading";
 
 export default function ChatMessagesWithAI({
   customerId,
@@ -22,6 +23,7 @@ export default function ChatMessagesWithAI({
   setAutoScroll,
   searchPrompt,
   isAILoading,
+  chatRoomAssistantId,
 }: {
   customerId: string;
   chatRoomId: string;
@@ -29,6 +31,7 @@ export default function ChatMessagesWithAI({
   setAutoScroll: React.Dispatch<React.SetStateAction<boolean>>;
   searchPrompt?: string;
   isAILoading: boolean;
+  chatRoomAssistantId: string;
 }) {
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -50,8 +53,6 @@ export default function ChatMessagesWithAI({
     // refetch,
   } = usePaginatedChatRoomAIAssistant(chatRoomId || "");
 
-  console.log({ chatRoomId });
-
   const { mutateAsync: connectedChatRoomAIAssistant, isPending: isPendingAI } =
     useConnectedChatRoomAssistant();
 
@@ -59,7 +60,17 @@ export default function ChatMessagesWithAI({
 
   const combinedMessages = React.useMemo(() => {
     const paginated = paginatedMessages?.flatMap((m) => m.items || []);
-    return [...paginated, ...socketMessages.flatMap((m) => m || [])]
+    const socket = socketMessages.flatMap((m) => m || []);
+
+    const map = new Map<string, any>();
+
+    [...paginated, ...socket].forEach((msg) => {
+      const key = msg.messageId ?? msg.id;
+
+      map.set(key, msg);
+    });
+
+    return Array.from(map.values())
       .filter((c) => c.chatRoomId === chatRoomId)
       .sort(
         (a, b) =>
@@ -67,6 +78,11 @@ export default function ChatMessagesWithAI({
           dayjs(b.createdAt ?? b.timestamp).valueOf()
       );
   }, [paginatedMessages, socketMessages, chatRoomId]);
+
+  const lastMessage =
+    combinedMessages &&
+    combinedMessages.length &&
+    combinedMessages[combinedMessages.length - 1];
 
   // const isNoMessageData = !messagesData || messagesData.pages.length === 0;
 
@@ -232,7 +248,7 @@ export default function ChatMessagesWithAI({
                     key={`${msg.lineSubId}+${index}+${msg.sender}`}
                     className={`mt-4 flex max-w-[75%] flex-col gap-1 ${
                       isUser ? "ml-auto items-end" : "mr-auto items-start"
-                    }`}
+                    } `}
                   >
                     <div className="flex items-center gap-2 mb-1">
                       <Avatar className="w-6 h-6">
@@ -290,6 +306,7 @@ export default function ChatMessagesWithAI({
             ) : (
               <></>
             )
+
             // messagesLoading.map((msg, index) => {
             //     const isUser = msg.sender !== "ROME Ai";
 
@@ -350,7 +367,7 @@ export default function ChatMessagesWithAI({
             //   })
           }
 
-          {isPendingAI && (
+          {/* {isPendingAI && (
             <div className="mt-4 flex max-w-[50%] flex-col gap-1 mr-auto items-start">
               <div className="flex items-center gap-2 mb-1">
                 <Avatar className="w-6 h-6">
@@ -372,7 +389,14 @@ export default function ChatMessagesWithAI({
                 <LoadingAnimation />
               </div>
             </div>
+          )} */}
+
+          {lastMessage.messageLabel === "ROME AI กำลังประมวลผล" && (
+            <div className="mr-auto items-start">
+              <MessageAILoading />
+            </div>
           )}
+
           <div ref={bottomRef} />
           {buttonScrollToBottom && (
             <button
@@ -399,6 +423,7 @@ export default function ChatMessagesWithAI({
           customerId={customerId}
           chatRoomId={chatRoomId}
           connectedChatRoomAIAssistant={connectedChatRoomAIAssistant}
+          assistantId={chatRoomAssistantId}
         />
       </div>
 

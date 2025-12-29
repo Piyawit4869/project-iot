@@ -16,12 +16,14 @@ export default function ChatInputAIAssistant({
   chatRoomId,
   isAILoading,
   connectedChatRoomAIAssistant,
+  assistantId,
 }: {
   isPendingAI: boolean;
   customerId: string;
   chatRoomId: string;
   isAILoading: boolean;
   firstTimeMessage?: string;
+  assistantId: string;
   connectedChatRoomAIAssistant: (values: any) => void;
 }) {
   const isMobile = useIsMobile();
@@ -81,7 +83,7 @@ export default function ChatInputAIAssistant({
     connectedChatRoomAIAssistant({
       message: messageText,
       messageType: "text",
-      chatRoomId,
+      assistantId,
     });
   };
 

@@ -157,16 +157,19 @@ export function MessageRenderer({
 
   // WRAPPER (รองรับ Reply Reference)
   // WRAPPER: เพิ่ม max-width และลบพื้นหลังเวลาเป็น image/sticker
-  const Wrapper = ({ children, maxWidth }: any) => {
-    const isMedia = ["image", "sticker"].includes(msg?.messageType);
-    const hasRef = !!reference;
+  const Wrapper = ({ children, maxWidth, fullBleed }: any) => {
+    const isMedia = [
+      ChatItem.IMAGE,
+      ChatItem.STICKER,
+      ChatItem.CAROUSEL,
+    ].includes(msg?.messageType);
 
     return (
       <div
         className={`
-        rounded-xl overflow-hidden 
+        rounded-xl overflow-visible
         ${onlyShow ? "" : isMedia ? "" : isBackoffice ? "bg-blue-500/10" : "bg-muted-foreground/10"}
-        ${maxWidth ? maxWidth : hasRef ? "max-w-[260px]" : ""}
+        ${fullBleed ? "max-w-none" : maxWidth ? maxWidth : ""}
       `}
       >
         {reference && <ReplyReference refMsg={reference} />}
