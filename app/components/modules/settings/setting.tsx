@@ -404,6 +404,11 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     console.log("❌ submit errors:", errors);
   };
 
+  const backToMain = () => {
+    setIsEditing(false);
+    navigate(`/setting-organization`);
+  };
+
   return (
     <Tabs
       value={activeTab}
@@ -412,6 +417,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     >
       <div className="mb-4">
         <TabControl
+          backpath={backToMain}
           title={
             selectedOrgId ? (
               <div className="flex flex-row gap-2">
@@ -423,7 +429,6 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                   refetch={refetch}
                   setSearch={setSearch}
                   data={data}
-                  backIcon={true}
                 />
                 <OrgSelectorDropdown
                   topic="สาขา"
@@ -462,7 +467,6 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
           noneSticky={true}
         />
       </div>
-
       {!isSingleOrg ? (
         <DataTable queryFunction={paginate} columns={columns} />
       ) : (
@@ -554,10 +558,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
             <TabsContent value="SettingAddress">
               <form
                 id="SettingAddress"
-                onSubmit={addressForm.handleSubmit(
-                  handleAddressOnSubmit,
-                  onError
-                )}
+                onSubmit={addressForm.handleSubmit(handleAddressOnSubmit)}
               >
                 <fieldset
                   disabled={!isEditing}
@@ -580,10 +581,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
               >
                 <form
                   id="Setting"
-                  onSubmit={settingForm.handleSubmit(
-                    handleSettingOnSubmit,
-                    onError
-                  )}
+                  onSubmit={settingForm.handleSubmit(handleSettingOnSubmit)}
                 >
                   <SettingForm
                     form={settingForm}
