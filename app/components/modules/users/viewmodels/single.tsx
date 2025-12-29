@@ -15,7 +15,7 @@ import { useEntityBreadcrumb } from "~/providers/RouteProvider";
 import { ensureIds } from "~/components/shared/withId";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { useDeleteUsers, useGetUsers, useUpdateUsers } from "~/api/client/user";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useRouteLoaderData } from "react-router";
 import { UsersFormSchema, type UsersFormValues } from "~/schemas/users/user";
 import { TabControl } from "~/components/shared/tab-control";
 import { UserSocalmedias } from "../components/formSocalmedia";
@@ -27,6 +27,8 @@ import { UserProfileEdit } from "../components/formInformationEdit";
 import { UserDocuments } from "../components/formDocuments";
 import { SingleUsersView } from "./single-users-view";
 import { useGetAllRoles } from "~/api/client/role/useGetRole";
+import { getUserActionByPermission } from "~/utils/permission";
+import { PermissionBaseAction } from "~/types/roles/permission";
 
 dayjs.locale("th");
 
@@ -39,6 +41,7 @@ const isSameEmail = (a?: string | null, b?: string | null) => {
 export default function SingleUsers() {
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
+  const { permission } = useRouteLoaderData("root");
 
   const {
     data,
@@ -295,7 +298,9 @@ export default function SingleUsers() {
     if (data) form.reset(form.getValues(), { keepDirty: false });
     setIsEdit(false);
   };
-
+  const handleBack = React.useCallback(() => {
+    navigate(-1);
+  }, [navigate]);
   return (
     <div className="flex flex-col space-y-3 p-8">
       <TabControl
@@ -308,7 +313,7 @@ export default function SingleUsers() {
                 data?.profile?.lastName ?? ""
               }`
         }
-        backpath="/users"
+        backpath={handleBack}
         buttons={[
           isEdit ? (
             <div className="w-full flex flex-row pl-10" key="edit-actions">
@@ -337,20 +342,32 @@ export default function SingleUsers() {
             </div>
           ) : (
             <div className="w-full flex flex-row pl-10">
-              <GlobalButton
-                label="ลบ"
-                variant="outline"
-                key="delete-btn"
-                className="mr-4 max-w-[90px]"
-                onClick={() => params.id && handleDelete(params.id)}
-              />
-              <GlobalButton
-                label="แก้ไข"
-                key="update-button"
-                type="button"
-                className="max-w-[90px] mr-15"
-                onClick={() => setIsEdit(true)}
-              />
+              {getUserActionByPermission(
+                permission,
+                "user",
+                PermissionBaseAction.DELETE
+              ) && (
+                <GlobalButton
+                  label="ลบ"
+                  variant="outline"
+                  key="delete-btn"
+                  className="mr-4 max-w-[90px]"
+                  onClick={() => params.id && handleDelete(params.id)}
+                />
+              )}
+              {getUserActionByPermission(
+                permission,
+                "user",
+                PermissionBaseAction.UPDATE
+              ) && (
+                <GlobalButton
+                  label="แก้ไข"
+                  key="update-button"
+                  type="button"
+                  className="max-w-[90px] mr-15"
+                  onClick={() => setIsEdit(true)}
+                />
+              )}
             </div>
           ),
         ]}
