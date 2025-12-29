@@ -71,16 +71,6 @@ function normalizeHours(input?: WorkingHoursInput): WorkingHoursRecord {
   return base;
 }
 
-function parseTimeRange(range: string): { start: string; end: string } {
-  if (!range) return { start: "09:00", end: "18:00" };
-  const cleaned = range.replace("น.", "").trim();
-  const parts = cleaned.split("-");
-  if (parts.length !== 2) return { start: "09:00", end: "18:00" };
-  const start = (parts[0] ?? "").trim();
-  const end = (parts[1] ?? "").trim();
-  return { start, end };
-}
-
 type WorkingHoursSectionProps = {
   value?: WorkingHoursInput;
   onChange?: (next: WorkingHoursInput) => void;

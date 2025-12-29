@@ -71,7 +71,7 @@ export const useOrganizationSetup = () => {
         roomNo: null,
         floorNo: null,
         village: null,
-        villageNo: 0,
+        villageNo: undefined,
         houseNo: null,
         alley: null,
         road: null,

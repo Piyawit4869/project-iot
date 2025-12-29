@@ -277,6 +277,7 @@ export const ChatMessages = ({
       />
 
       <MessageBody
+        api={api}
         ref={scrollAreaRef}
         messageRefs={messageRefs}
         showTopLoading={showTopLoading}

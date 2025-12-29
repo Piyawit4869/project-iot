@@ -16,6 +16,8 @@ import { StickerSelectorBar } from "./line-sticker";
 import { ReplyContentBar } from "./reply-content-bar";
 import { ChatSelectLocation } from "./chat-select-location";
 import { handleSplitThaiAddress } from "~/utils/chats";
+import { useRouteLoaderData } from "react-router";
+import { useChat, type Message } from "~/providers/chat/useChat";
 
 const getLabelFromType = (type: string): MessageLabelType => {
   switch (type) {
@@ -107,18 +109,22 @@ export interface LatLong {
 }
 
 export default function ChatInput({
+  api,
   selectedRoom,
   customer,
   replyRefMessage,
   subId,
   setReplyRefMessage,
 }: {
+  api: string;
   subId: string;
   selectedRoom: any;
   customer: any;
   replyRefMessage: any;
   setReplyRefMessage: React.Dispatch<React.SetStateAction<any>>;
 }) {
+  const { me } = useRouteLoaderData("root");
+
   const { setMessages } = useCustomer();
   const isMobile = useIsMobile();
 
