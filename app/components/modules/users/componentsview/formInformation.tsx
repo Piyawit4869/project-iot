@@ -58,7 +58,7 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
             className="h-28 w-28 object-cover rounded-md border"
           />
 
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid gird-col-1 lg:grid-cols-2 gap-5">
             <InfoRow label="ชื่อ" value={data?.userName ?? "-"} />
             <InfoRow label="อีเมล" value={data?.email ?? "-"} />
             <InfoRow

@@ -136,13 +136,6 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         },
       },
       {
-        accessorKey: "departmentName",
-        header: "แผนก",
-        cell: (info) => (
-          <span className="">{(info.getValue() as string) || "-"}</span>
-        ),
-      },
-      {
         accessorKey: "gender",
         header: "เพศ",
         cell: (info) => {
