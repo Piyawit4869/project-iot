@@ -18,6 +18,7 @@ import { GlobalModalStatic } from "./components/shared/modal/global-modal-static
 import type { Route } from "./routes/backoffice/customer/+types";
 import { RouteProvider } from "./providers/RouteProvider";
 import { useGoogleAnalytics } from "./hooks/useGoogleAnalytics";
+import ReactGA from "react-ga4";
 
 import TagManager from "react-gtm-module";
 
@@ -25,6 +26,8 @@ const tagManagerArgs = {
   gtmId: "GTM-T724KX5N", // Replace this with your actual GTM ID
 };
 
+const TRACKING_ID = "G-6H2NNQJ75M"; // Replace with your GA4 Measurement ID
+// const TRACKING_ID = "G-455DMN03CD";
 export async function loader({ request }: Route.LoaderArgs) {
   //TODO:FIX TO NOT PASS ACCESS TOKEN
   const token = await getAccessToken(request);
@@ -64,6 +67,21 @@ const TrackPageView = () => {
       },
     };
     TagManager.dataLayer(tagManagerArgs);
+  }, [location]);
+
+  return null;
+};
+
+const PageTracking = () => {
+  const location = useLocation();
+
+  React.useEffect(() => {
+    // Send a pageview hit to Google Analytics whenever the location changes
+    ReactGA.send({
+      hitType: "pageview",
+      page: location.pathname + location.search,
+      title: document.title, // Optionally send the current page title
+    });
   }, [location]);
 
   return null;
@@ -113,6 +131,7 @@ export default function App() {
     localStorage.setItem("accessToken", token);
 
     TagManager.initialize(tagManagerArgs);
+    ReactGA.initialize(TRACKING_ID);
   }
 
   return (
@@ -126,6 +145,7 @@ export default function App() {
       />
       <RouteProvider>
         <TrackPageView />
+        <PageTracking />
 
         <Outlet />
       </RouteProvider>
