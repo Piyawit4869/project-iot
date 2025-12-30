@@ -33,7 +33,6 @@ type NotificationItem = {
 export function Menu() {
   const { me, user } = useRouteLoaderData("root");
 
-  console.log({ me, user });
   const navigate = useNavigate();
   const [isDark, setIsDark] = React.useState<boolean>(() => {
     if (typeof window !== "undefined") {
