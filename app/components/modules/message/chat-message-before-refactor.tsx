@@ -255,6 +255,10 @@ export const ChatMessages = ({
       });
     });
 
+    socket.on("typing", (payload) => {
+      console.log("✍️ typing received", payload);
+    });
+
     return () => {
       socket.disconnect();
     };
@@ -440,6 +444,7 @@ export const ChatMessages = ({
         subId={subId}
         selectedRoom={selectedRoom}
         customer={customer}
+        api={api}
       />
 
       {previewUrl && (

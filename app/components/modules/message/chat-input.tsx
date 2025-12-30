@@ -18,6 +18,8 @@ import { ChatSelectLocation } from "./chat-select-location";
 import { handleSplitThaiAddress } from "~/utils/chats";
 import { useRouteLoaderData } from "react-router";
 import { useChat, type Message } from "~/providers/chat/useChat";
+import { socketConfig } from "~/lib/sockets";
+import { io, type Socket } from "socket.io-client";
 
 const getLabelFromType = (type: string): MessageLabelType => {
   switch (type) {
@@ -134,8 +136,13 @@ export default function ChatInput({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const socketRef = React.useRef<Socket | null>(null);
+
   const [mapAddress, setMapAddress] = React.useState<string>("");
   const [latlng, setLatLng] = React.useState<LatLong | undefined>(undefined);
+
+  const typingTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  const isTypingRef = React.useRef(false);
 
   const { chatRoomId: customerChatRoomId } =
     (customer && customer.chatRoomDetail) || {};
@@ -167,6 +174,21 @@ export default function ChatInput({
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setInput(value);
+
+    const payload = {
+      chatRoomId: selectedRoom.id,
+      userId: me.id,
+    };
+
+    if (!isTypingRef.current) {
+      emitTyping(payload);
+      isTypingRef.current = true;
+    }
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
     setMessages((prev) => {
       const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
       if (roomIndex > -1) {
@@ -384,6 +406,83 @@ export default function ChatInput({
     }
   }, [mapAddress]);
 
+  React.useEffect(() => {
+    const s = socketConfig(api);
+
+    // socketRef.current = io(`wss://service-zev.flune.xyz/live-chat`, {
+    //   transports: ["websocket"],
+    //   autoConnect: true,
+    //   reconnectionAttempts: Infinity,
+    //   reconnectionDelay: 1000,
+    //   // extraHeaders: {
+    //   //   Authorization: `Bearer ${token}`,
+    //   // },
+    //   auth: {
+    //     token: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzZjBmZjI5My04NjdhLTRkYjMtOThjOS0yNmVlZjg4MzUxMjciLCJpYXQiOjE3NjcwNjg0NDQsImV4cCI6MTc2NzMyNzY0NH0.93KHTLx9Dv9v_mvbWHv5XzMM9-0iDdqCEQE-sredPcc`,
+    //   },
+    // });
+
+    socketRef.current = s;
+
+    socketRef.current.on("connect", () => {
+      console.log("✅ socket connected on time", socketRef.current?.id);
+    });
+
+    socketRef.current.on("connect_error", (err) => {
+      console.error("❌ socket error", err.message);
+    });
+
+    socketRef.current.onAny((event, ...args) => {
+      console.log("📡 socket event:", event, args);
+    });
+
+    socketRef.current.on("disconnect", (reason) => {
+      console.warn("🔌 socket disconnected:", reason);
+    });
+
+    return () => {
+      socketRef.current?.disconnect();
+    };
+  }, []);
+
+  const emitTyping = (payload: any) => {
+    const socket = socketRef.current;
+    if (!socket || !socket.connected) return;
+
+    socket.emit("typing", payload, (ack: any) => {
+      console.log("✅ typing ack:", ack);
+
+      if (ack?.ok) {
+        console.log("🎉 emit typing success");
+      } else {
+        console.warn("⚠️ emit typing failed", ack);
+      }
+    });
+  };
+
+  // useEffect(() => {
+  //   if (!socket.current) return;
+
+  //   socket.current = socketConfig(api);
+
+  //   socket.current.onAny((event, ...args) => {
+  //     console.log("📡 socket event:", event, args);
+  //   });
+
+  //   socket.current.on("typing", (data) => {
+  //     console.log("🔥 typing received", data);
+  //   });
+  // }, []);
+
+  const handlePayload = () => {
+    const payload = {
+      chatRoomId: selectedRoom.id,
+      userId: me.id,
+    };
+
+    emitTyping(payload);
+  };
+
   if (!selectedRoom?.id) return <div />;
 
   return (
@@ -481,6 +580,8 @@ export default function ChatInput({
         >
           <Smile className="w-4 h-4" />
         </Button>
+
+        <Button onClick={handlePayload}>ทดสอบพิมพ์</Button>
 
         <LineTemplatePickerModal
           handleSelectChange={setInput}
