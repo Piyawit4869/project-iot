@@ -16,6 +16,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GlobalModalStatic } from "./components/shared/modal/global-modal-static";
 import type { Route } from "./routes/backoffice/customer/+types";
 import { RouteProvider } from "./providers/RouteProvider";
+import { useGoogleAnalytics } from "./hooks/useGoogleAnalytics";
 
 export async function loader({ request }: Route.LoaderArgs) {
   //TODO:FIX TO NOT PASS ACCESS TOKEN
@@ -54,7 +55,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <title>ROME Platform</title>
 
         {/* Google Tag Manager */}
-        <script
+        {/* <script
           dangerouslySetInnerHTML={{
             __html: `
               (function(w,d,s,l,i){w[l]=w[l]||[];
@@ -66,7 +67,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               })(window,document,'script','dataLayer','GTM-T724KX5N');
             `,
           }}
-        />
+        /> */}
         {/* End Google Tag Manager */}
 
         <Meta />
@@ -95,6 +96,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   const [queryClient] = React.useState(() => new QueryClient());
   const { token, user } = useRouteLoaderData("root");
+
+  useGoogleAnalytics();
 
   if (typeof window !== "undefined") {
     localStorage.setItem("accessToken", token);
