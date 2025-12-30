@@ -399,7 +399,6 @@ export default function SingleUsers() {
                       `กรอกข้อมูลไม่ครบหรือไม่ถูกต้อง (${count} จุด)`
                     );
                   }
-                  console.log("errors", count);
                 })}
               >
                 <div className="mt-2 flex flex-col md:flex-row gap-5">

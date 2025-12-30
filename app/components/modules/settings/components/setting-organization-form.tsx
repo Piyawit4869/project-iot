@@ -99,7 +99,7 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                   <GlobalFormField
                     control={form.control}
                     name="logoUrl"
-                    label="โลโก้ของสาขา"
+                    label="โลโก้"
                     type="image"
                     view={editable ? "edit" : "view"}
                   />
