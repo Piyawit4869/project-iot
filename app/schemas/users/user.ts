@@ -63,7 +63,7 @@ export const UsersFormSchema = z.object({
             z.string().min(1, "กรุณากรอกสาขา")
           ),
           faculty: z.string().nullable().optional(),
-          gpa: z.number().optional(),
+          gpa: z.string().optional(),
           startDate: z.string().nullable().default(null),
           endDate: z.string().nullable().default(null),
           isGraduated: z.boolean().optional(),
@@ -109,7 +109,7 @@ export const UsersFormSchema = z.object({
             (v) => v ?? "",
             z.string().min(1, "กรุณากรอกชื่อทักษะ")
           ),
-          level: z.string().optional().default("").nullable(),
+          level: z.string().optional().nullable(),
           yearsOfExperience: z.number().optional(),
           isPrimary: z.boolean().default(false),
           description: z.string().nullable().optional(),

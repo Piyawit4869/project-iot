@@ -21,7 +21,7 @@ dayjs.extend(buddhistEra);
 dayjs.extend(localizedFormat);
 
 export const formatNumber = (
-  value: number | null | undefined,
+  value: number | null | undefined | any,
   options?: Intl.NumberFormatOptions
 ) => {
   if (value == null) return "0.00";
@@ -30,6 +30,13 @@ export const formatNumber = (
     maximumFractionDigits: 2,
     ...options,
   });
+};
+
+export const formatNumberWithComma = (value: string | number) => {
+  if (value === "" || value === null || value === undefined) return "";
+  const num = String(value).replace(/,/g, "");
+  if (Number.isNaN(Number(num))) return "";
+  return Number(num).toLocaleString();
 };
 
 export const formatForNumber = (

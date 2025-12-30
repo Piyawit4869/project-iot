@@ -41,15 +41,15 @@ type Props = {
   indexPath: number;
 };
 
-const documentTypeLabels: Record<string, string> = {
-  resume: "เรซูเม่",
-  cv: "ซีวี",
-  certificate: "ใบรับรอง",
-  transcript: "ใบแสดงผลการศึกษา",
-  id_card: "บัตรประชาชน",
-  contract: "สัญญา",
-  other: "อื่น ๆ",
-};
+export const documentTypeLabels = [
+  { label: "เรซูเม่", value: "resume" },
+  { label: "CV", value: "cv" },
+  { label: "ใบรับรอง", value: "not_specified" },
+  { label: "ใบแสดงผลการศึกษา", value: "transcript" },
+  { label: "บัตรประชาชน", value: "id_card" },
+  { label: "สัญญา", value: "contract" },
+  { label: "อื่น ๆ", value: "other" },
+];
 
 export const DocumentModal: React.FC<Props> = ({
   open,
@@ -155,13 +155,11 @@ export const DocumentModal: React.FC<Props> = ({
                           <SelectValue placeholder="เลือกประเภทเอกสาร" />
                         </SelectTrigger>
                         <SelectContent>
-                          {Object.entries(documentTypeLabels).map(
-                            ([value, label]) => (
-                              <SelectItem key={value} value={value}>
-                                {label}
-                              </SelectItem>
-                            )
-                          )}
+                          {documentTypeLabels.map((item) => (
+                            <SelectItem key={item.value} value={item.value}>
+                              {item.label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -386,7 +384,12 @@ export const DocumentModal: React.FC<Props> = ({
           >
             ยกเลิก
           </Button>
-          <Button type="submit" form="document-form" className="w-1/2">
+          <Button
+            type="button"
+            onClick={onSubmit}
+            form="document-form"
+            className="w-1/2"
+          >
             บันทึก
           </Button>
         </DialogFooter>

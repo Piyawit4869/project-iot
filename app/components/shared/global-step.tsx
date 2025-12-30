@@ -131,7 +131,7 @@ export function StepsVertical({
         <div className={cn("flex-1 min-h-[120px] ml-8", classNameContent)}>
           <div className="bg-white border p-5 mb-2 rounded-xl flex justify-between items-center">
             <span className="flex flex-col">
-              <span className="text-lg font-bold ">
+              <span className=" text-lg font-bold ">
                 {activeStep?.title || ""}
               </span>
 

@@ -53,7 +53,7 @@ export interface UserFormProfileProps {
   loading?: boolean;
   isEdit?: boolean;
 }
-type RangeDate = {
+export type RangeDate = {
   from?: Date;
   to?: Date;
 };
@@ -93,10 +93,10 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
 
   const statusOptions = [
     { label: "ใช้งานอยู่", value: "active" },
-    { label: "ทดลองงาน", value: "probation" },
-    { label: "ลาหยุดชั่วคราว", value: "on_leave" },
-    { label: "ลาออกแล้ว", value: "resigned" },
-    { label: "เลิกจ้าง", value: "terminated" },
+    { label: "พนักงานงานใหม่", value: "new_user" },
+    { label: "พนักงานที่ไม่ใช้งานมานาน", value: "inactive" },
+    { label: "พนักงานที่ถูกระงับการใช้งาน", value: "suspended" },
+    { label: "พนักงานที่ลบบัญชีออกจากระบบ", value: "deleted" },
   ] as const;
 
   const filteredStatusOptions = statusOptions.filter((o) =>
@@ -244,7 +244,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                             <SelectValue placeholder="เลือกสถานะองค์กร" />
                           </SelectTrigger>
                           <SelectContent>
-                            {filteredStatusOptions.map((option) => (
+                            {statusOptions.map((option) => (
                               <SelectItem
                                 key={option.value}
                                 value={option.value}
@@ -566,7 +566,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                   name="profile.age"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>อายุ</FormLabel>
+                      <RequiredLabel required>อายุ</RequiredLabel>
                       <FormControl>
                         <Input
                           placeholder="กรอกอายุ"
