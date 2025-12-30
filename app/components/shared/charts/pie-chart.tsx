@@ -28,7 +28,6 @@ export function convertStatsToChart(data: any) {
 
   const sum = chartData.reduce((a: number, b: any) => a + b.value, 0);
 
-  // ✅ ถ้ามี aiStats → ใช้ AI
   if (aiStats.length > 0) {
     const aiTotal = aiStats.reduce(
       (sum: number, ai: any) => sum + (ai.messageCount || 0),
@@ -43,7 +42,6 @@ export function convertStatsToChart(data: any) {
     return chartData;
   }
 
-  // ✅ มีข้อมูลแล้ว → ไม่ต้องเติม "ไม่มีข้อมูล"
   return chartData;
 }
 
