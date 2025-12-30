@@ -7,6 +7,8 @@ import ChatInput from "../chat-input";
 import { MessageRenderer } from "../render-message-content";
 import { MessageMenu } from "../MessageMenu";
 import React from "react";
+import { useChat, type TypingUser } from "~/providers/chat/useChat";
+import { cn } from "~/lib/utils";
 
 interface MessageBodyProps {
   api: string;
@@ -39,6 +41,7 @@ interface MessageBodyProps {
   subId: string;
   selectedRoom: any;
   customer: any;
+  typingUsers: TypingUser[];
 }
 
 export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
@@ -68,6 +71,7 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
       customer,
       onReply,
       setPreviewUrl,
+      typingUsers,
     } = props;
 
     return (
@@ -103,6 +107,7 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
                   key={`${index}-${msg.id}`}
                   ref={(el) => (messageRefs.current[msg.id] = el) as any}
                   id={`msg-${msg.id}`}
+                  className={cn(lastMessage ? "animate-message-in" : "")}
                 >
                   {msg && msg?.firstMessageToday && (
                     <div className="flex items-center justify-center pt-6">
@@ -165,6 +170,14 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
                 </div>
               );
             })}
+
+          {typingUsers && typingUsers.length > 0 && (
+            <div className="px-4 py-2 text-sm text-muted-foreground bg-white dark:bg-background">
+              {typingUsers.length >= 3
+                ? "คนอื่น ๆ กำลังพิมพ์..."
+                : `${typingUsers.map((u) => u.fullName ?? "").join(", ")} กำลังพิมพ์...`}
+            </div>
+          )}
 
           {lastMessage.messageLabel === "ROME AI กำลังประมวลผล" && (
             <MessageAILoading />

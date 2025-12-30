@@ -19,6 +19,6 @@ export const socketConfig = (api: string): Socket => {
     },
   };
 
-  const config: Socket = io("wss://service-zev.flune.xyz/live-chat", options);
+  const config: Socket = io(env.BASE_URL + `/live-chat`, options);
   return config;
 };

@@ -255,10 +255,6 @@ export const ChatMessages = ({
       });
     });
 
-    socket.on("typing", (payload) => {
-      console.log("✍️ typing received", payload);
-    });
-
     return () => {
       socket.disconnect();
     };

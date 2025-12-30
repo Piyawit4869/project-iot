@@ -409,19 +409,6 @@ export default function ChatInput({
   React.useEffect(() => {
     const s = socketConfig(api);
 
-    // socketRef.current = io(`wss://service-zev.flune.xyz/live-chat`, {
-    //   transports: ["websocket"],
-    //   autoConnect: true,
-    //   reconnectionAttempts: Infinity,
-    //   reconnectionDelay: 1000,
-    //   // extraHeaders: {
-    //   //   Authorization: `Bearer ${token}`,
-    //   // },
-    //   auth: {
-    //     token: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzZjBmZjI5My04NjdhLTRkYjMtOThjOS0yNmVlZjg4MzUxMjciLCJpYXQiOjE3NjcwNjg0NDQsImV4cCI6MTc2NzMyNzY0NH0.93KHTLx9Dv9v_mvbWHv5XzMM9-0iDdqCEQE-sredPcc`,
-    //   },
-    // });
-
     socketRef.current = s;
 
     socketRef.current.on("connect", () => {
@@ -430,10 +417,6 @@ export default function ChatInput({
 
     socketRef.current.on("connect_error", (err) => {
       console.error("❌ socket error", err.message);
-    });
-
-    socketRef.current.onAny((event, ...args) => {
-      console.log("📡 socket event:", event, args);
     });
 
     socketRef.current.on("disconnect", (reason) => {
@@ -458,29 +441,6 @@ export default function ChatInput({
         console.warn("⚠️ emit typing failed", ack);
       }
     });
-  };
-
-  // useEffect(() => {
-  //   if (!socket.current) return;
-
-  //   socket.current = socketConfig(api);
-
-  //   socket.current.onAny((event, ...args) => {
-  //     console.log("📡 socket event:", event, args);
-  //   });
-
-  //   socket.current.on("typing", (data) => {
-  //     console.log("🔥 typing received", data);
-  //   });
-  // }, []);
-
-  const handlePayload = () => {
-    const payload = {
-      chatRoomId: selectedRoom.id,
-      userId: me.id,
-    };
-
-    emitTyping(payload);
   };
 
   if (!selectedRoom?.id) return <div />;
@@ -580,8 +540,6 @@ export default function ChatInput({
         >
           <Smile className="w-4 h-4" />
         </Button>
-
-        <Button onClick={handlePayload}>ทดสอบพิมพ์</Button>
 
         <LineTemplatePickerModal
           handleSelectChange={setInput}
