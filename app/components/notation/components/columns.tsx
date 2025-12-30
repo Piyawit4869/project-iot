@@ -129,7 +129,7 @@ export const useNotationColumns = (): ColumnDef<NotationType>[] => {
       cell: ({ row }) => {
         return (
           <>
-            <a href={`/orders/${row.original.id}`}>
+            <a href={`/notation/${row.original.id}`}>
               <Button className="text-sm bg-[#737373] mr-2">
                 <Eye />
               </Button>

@@ -110,7 +110,6 @@ export const GrantPermission: React.FC = () => {
 
     return arr;
   }, [permissions]);
-  console.log(actions);
 
   // ------- group by feature: feature -> (action -> permission) -------
   const featureRows = React.useMemo(() => {

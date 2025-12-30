@@ -20,8 +20,15 @@ import { NotationForm } from "./components/notation-form";
 import { QuotationMock } from "./components/template/quotation";
 import { ReceiptMock } from "./components/template/receipt";
 import { InvoiceMock } from "./components/template/invoice";
+<link
+  href="https://fonts.googleapis.com/css2?
+  family=IBM+Plex+Sans+Thai:wght@700&
+  family=IBM+Plex+Sans+Thai+Looped:wght@400&
+  display=swap"
+  rel="stylesheet"
+/>;
 
-export default function CreateOrder() {
+export default function NotationCreate() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const docType = searchParams.get("type"); // quotation | receipt | invoice
@@ -39,48 +46,6 @@ export default function CreateOrder() {
   const { mutateAsync: creation } = useCreateOrder();
 
   const [productsSelected, setProductsSelected] = useState<ProductColumn[]>([]);
-
-  // const updateSelectedProducts = (newProducts: ProductColumn[]) => {
-  //   const mergedProducts = newProducts.map((p) => {
-  //     const match = productsSelected.find((sp) => sp.id === p.id);
-  //     return { ...p, quantity: match?.quantity ?? p.quantity ?? 1 };
-  //   });
-
-  //   setProductsSelected(mergedProducts);
-
-  //   formCreate.setValue(
-  //     "orderDetail.products",
-  //     mergedProducts.map((p) => ({
-  //       id: p.id,
-  //       name: p.name,
-  //       quantity: p.quantity,
-  //       sku: p.sku,
-  //       matType: p.matType,
-  //       status: p.status,
-  //       price: p.salePrice,
-  //       salePrice: p.salePrice,
-  //       costPrice: p.costPrice,
-  //       wht: p.wht,
-  //       discountPrice: p.discountPrice,
-  //       vatPrice: p.vatPrice,
-  //       active: p.active ?? true,
-  //     }))
-  //   );
-  // };
-
-  // // add goods
-  // const handleAddProduct = (products: ProductColumn[]) => {
-  //   const newProducts = products.filter(
-  //     (p) => !productsSelected.some((sp) => sp.id === p.id)
-  //   );
-  //   updateSelectedProducts([...productsSelected, ...newProducts]);
-  // };
-
-  // // del goods
-  // const handleRemove = (id: string) => {
-  //   const updatedProducts = productsSelected.filter((p) => p.id !== id);
-  //   updateSelectedProducts(updatedProducts);
-  // };
 
   // cal
   const { Price, totalVat, totalPrice } = calculateTotals(productsSelected);
@@ -141,7 +106,7 @@ export default function CreateOrder() {
               duration: 2500,
               position: "bottom-right",
             });
-            navigate(`/orders/${data.id}`);
+            navigate(`/notation/${data.id}`);
           },
           onError: () => {
             toast.error("เกิดข้อผิดพลาดในการสร้างเอกสาร", {

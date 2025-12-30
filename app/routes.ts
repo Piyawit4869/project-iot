@@ -98,8 +98,8 @@ export default [
 
     ...prefix("notation", [
       index("routes/backoffice/notation/index.tsx"),
-      route("create", "routes/backoffice/notation/create.tsx"),
-      route("single", "routes/backoffice/notation/single.tsx"),
+      route("/create", "routes/backoffice/notation/create.tsx"),
+      route("/:id", "routes/backoffice/notation/single.tsx"),
     ]),
 
     //onboarding
