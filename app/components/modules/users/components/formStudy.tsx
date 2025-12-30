@@ -162,10 +162,7 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
       degree: e.degree ?? "",
       major: e.major ?? "",
       faculty: e.faculty ?? "",
-      gpa:
-        e.gpa === null || e.gpa === undefined || e.gpa === ""
-          ? undefined
-          : Number(e.gpa),
+      gpa: String(e.gpa) ?? "",
       startDate: e.startDate ?? "",
       endDate: e.endDate ?? "",
       isGraduated: !!e.isGraduated,
@@ -245,7 +242,7 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
                       value:
                         ev?.gpa !== undefined &&
                         ev?.gpa !== null &&
-                        String(ev.gpa) !== ""
+                        Number(ev.gpa) !== undefined
                           ? ev.gpa
                           : "-",
                     },

@@ -31,10 +31,12 @@ export const UserPersonality: React.FC<UserPersonalityViewProps> = ({
     refetch,
   } = useGetUsersPersonalSummary(userId ?? "", enabled);
 
-  const personality = personalityData?.summary ?? "";
+  const personality = personalityData?.summary;
+  const hasPersonality =
+    typeof personality === "string" && personality.trim().length > 0;
 
   return (
-    <div className="h-full px-10">
+    <div className="h-full px-4">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-bold flex items-center gap-2">
           <Heart className="h-5 w-5" />
@@ -56,15 +58,16 @@ export const UserPersonality: React.FC<UserPersonalityViewProps> = ({
 
       {isFetching ? (
         <div className="flex flex-col items-center justify-center h-48 w-full border rounded-lg bg-background/50">
-          <LoadingAnimation />
+          <LoadingAnimation text="AI กำลังวิเคราะห์ข้อมูล" />
         </div>
       ) : (
         <div className="text-base leading-relaxed whitespace-pre-line">
-          {personality ? (
+          {hasPersonality ? (
             <div className="animate-in fade-in duration-300">{personality}</div>
           ) : (
-            <div className="text-sm text-muted-foreground py-4 text-center border border-dashed rounded-md">
-              - กด “วิเคราะห์ข้อมูล” เพื่อดูภาพรวมบุคลิก -
+            <div className="text-sm text-muted-foreground flex flex-col py-4 text-center border border-dashed rounded-md">
+              <span>- ยังไม่มีข้อมูลบุคลิก - </span>
+              <span>- กด “วิเคราะห์ข้อมูล” เพื่อดูภาพรวมบุคลิก -</span>
             </div>
           )}
         </div>

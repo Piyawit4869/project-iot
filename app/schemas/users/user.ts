@@ -225,6 +225,7 @@ export const UsersFormSchema = z.object({
   organizationRoleId: z.string().optional(),
   permissions: z.array(z.string()).default([]),
   activate: z.boolean().default(true),
+  mainDepartment: z.string().optional().nullable(),
 });
 
 export type UsersFormValues = z.infer<typeof UsersFormSchema>;

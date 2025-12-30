@@ -12,6 +12,7 @@ import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import type { UsersFormValues } from "~/schemas/users/user";
 import GlobalButton from "~/components/shared/global-button";
+import { fileTypeMap } from "~/initData/user-initData";
 // import dayjs from "dayjs";
 
 export interface UserFormProfileProps {
@@ -257,7 +258,10 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
     //     : "";
 
     const details = [
-      { label: "ประเภท", value: v?.type ?? "-" },
+      {
+        label: "ประเภท",
+        value: fileTypeMap[v.type] ?? "-",
+      },
       { label: "ประเภทไฟล์", value: v?.mimeType ?? "-" },
       // { label: "ขนาดไฟล์", value: sizeTxt },
       // { label: "ผู้ให้บริการ", value: v?.storageProvider ?? "-" },

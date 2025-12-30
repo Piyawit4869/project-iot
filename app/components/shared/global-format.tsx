@@ -81,9 +81,10 @@ export function formatPhoneNumber(phone?: string | any) {
 
   return phone;
 }
-export function formatTaxId(taxId?: string) {
+export function formatTaxId(taxId?: string | null | undefined) {
   if (!taxId) return "";
   const digits = taxId.replace(/\D/g, "");
+  if (digits.length !== 13) return "ไม่มีข้อมูล";
   return `${digits.slice(0, 1)}-${digits.slice(1, 5)}-${digits.slice(
     5,
     10

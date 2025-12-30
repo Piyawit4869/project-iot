@@ -12,6 +12,7 @@ import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import GlobalButton from "~/components/shared/global-button";
 import { Separator } from "~/components/ui/separator";
+import { contactTypeMap } from "~/initData/user-initData";
 
 export interface UserFormProfileProps {
   form: UseFormReturn<UsersFormValues>;
@@ -200,9 +201,10 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
 
                   const details = [
                     { label: "ตำแหน่ง", value: position ?? "-" },
+
                     {
                       label: "ประเภทการจ้างงาน",
-                      value: wv?.employmentType ?? "-",
+                      value: contactTypeMap[wv.employmentType] ?? "-",
                     },
                     { label: "ช่วงเวลา", value: period ?? "-" },
                     { label: "ที่ตั้ง", value: wv?.location ?? "-" },
