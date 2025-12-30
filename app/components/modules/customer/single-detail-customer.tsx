@@ -396,6 +396,8 @@ export default function SingDetailleCustomer() {
                       onUpdate={onUpdate}
                       fetchCustomerNote={fetchCustomerNote}
                       customerNote={customerNote}
+                      isEdit={isEdit}
+                      setIsEdit={setIsEdit}
                     />
                   ),
                 },

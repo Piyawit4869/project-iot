@@ -16,6 +16,10 @@ import { customerType, gender, prefix } from "~/initData/customer-initData";
 import type { CustomerFormCreateProps } from "~/schemas/customer/customer";
 import { EditActionButtons } from "../edit-action-buttons";
 import { is } from "date-fns/locale";
+import {
+  formatPhoneNumber,
+  formatTaxId,
+} from "~/components/shared/global-format";
 
 export const CustomerDeail: React.FC<CustomerFormCreateProps> = ({
   form,
@@ -224,6 +228,7 @@ export const CustomerDeail: React.FC<CustomerFormCreateProps> = ({
               type="number-box"
               groups={[1, 4, 5, 2, 1]}
               format="-"
+              formatter={formatTaxId}
               view={isEdit ? "edit" : "view"}
             />
 
@@ -232,6 +237,7 @@ export const CustomerDeail: React.FC<CustomerFormCreateProps> = ({
               name="profile.phone"
               label="เบอร์โทรศัพท์ (ตัวเลขเท่านั้น)"
               type="number-box"
+              formatter={formatPhoneNumber}
               view={isEdit ? "edit" : "view"}
               placeholder="กรอกเบอร์โทรศัพท์ เช่น 0912345678"
             />
@@ -270,7 +276,7 @@ export const CustomerDeail: React.FC<CustomerFormCreateProps> = ({
               control={form.control}
               name="profile.lineName"
               label="ไอดีไลน์"
-              type="number"
+              type="input"
               view={isEdit ? "edit" : "view"}
               placeholder="กรอกไอดีไลน์ เช่น jupiter-123"
             />
@@ -278,7 +284,7 @@ export const CustomerDeail: React.FC<CustomerFormCreateProps> = ({
               control={form.control}
               name="profile.faceBookName"
               label="ชื่อ Facebook"
-              type="number"
+              type="input"
               view={isEdit ? "edit" : "view"}
               placeholder="กรอกชื่อ facebook เช่น สมชาย หมายสุข"
             />

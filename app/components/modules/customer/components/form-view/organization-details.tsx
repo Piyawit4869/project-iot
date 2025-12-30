@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { customerType, organizationType } from "~/initData/customer-initData";
 import type { CustomerFormCreateProps } from "~/schemas/customer/customer";
 import { EditActionButtons } from "../edit-action-buttons";
+import { formatPhoneNumber } from "~/components/shared/global-format";
 
 export const OrganizationDetails: React.FC<CustomerFormCreateProps> = ({
   form,
@@ -125,6 +126,7 @@ export const OrganizationDetails: React.FC<CustomerFormCreateProps> = ({
               type="number-box"
               groups={[3, 3, 3]}
               placeholder="กรอกเบอร์โทรสำนักงาน/บริษัท"
+              formatter={formatPhoneNumber}
               view={isEdit ? "edit" : "view"}
             />
 
@@ -134,6 +136,7 @@ export const OrganizationDetails: React.FC<CustomerFormCreateProps> = ({
               label="เบอร์โทรสาร (ตัวเลขเท่านั้น)"
               type="number-box"
               placeholder="กรอกเบอร์โทรสาร"
+              formatter={formatPhoneNumber}
               view={isEdit ? "edit" : "view"}
             />
 

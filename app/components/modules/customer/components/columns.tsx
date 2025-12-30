@@ -93,22 +93,6 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
 
     // Name (clickable)
     {
-      accessorKey: "name",
-      id: "name",
-      header: "ชื่อ",
-      enableSorting: true,
-      cell: ({ row }) => {
-        // const name = fullName(row.original);
-        const name = row.original.name;
-        return (
-          <span className="text-blue-400 hover:text-blue-300 hover:underline">
-            <Link to={`/customer/${row.original.id}`}>{name || "-"}</Link>
-          </span>
-        );
-      },
-    },
-
-    {
       accessorKey: "profile",
       header: "ชื่อจริงลูกค้า",
       cell: (info) => {
@@ -131,6 +115,22 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
         );
       },
     },
+    {
+      accessorKey: "name",
+      id: "name",
+      header: "ชื่อ Line",
+      enableSorting: true,
+      cell: ({ row }) => {
+        // const name = fullName(row.original);
+        const name = row.original.name;
+        return (
+          <span className="text-blue-400 hover:text-blue-300 hover:underline">
+            <Link to={`/customer/${row.original.id}`}>{name || "-"}</Link>
+          </span>
+        );
+      },
+    },
+
     // Active (boolean)
     {
       accessorKey: "active",
@@ -226,8 +226,8 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
         const maxShow = 2;
         return (
           <div className="flex flex-wrap gap-1.5 w-30">
-            {tags.slice(0, maxShow).map((t) => ( 
-                <GlobalTagsBadge key={t.name} value={t.name}/>
+            {tags.slice(0, maxShow).map((t) => (
+              <GlobalTagsBadge key={t.name} value={t.name} />
             ))}
 
             {tags.length > maxShow && (
@@ -330,7 +330,7 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
         const name = (info.getValue() as string) || "-";
 
         return id ? (
-          <Link to={`/organization/user/${id}`}>
+          <Link to={`/user/${id}`}>
             <span className="text-muted-foreground hover:text-blue-400 hover:underline">
               {name}
             </span>
@@ -356,13 +356,13 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
               <Eye className="w-4 h-4 text-white" />
             </Button>
           </Link>
-          {/* <Button
+          <Button
             className="h-9 w-9 p-0 bg-[#FF7062] hover:bg-[#E8594B]"
             aria-label="ลบ"
             onClick={() => onDelete(row.original.id)}
           >
             <Trash className="w-4 h-4 text-white" />
-          </Button> */}
+          </Button>
         </div>
       ),
     },
