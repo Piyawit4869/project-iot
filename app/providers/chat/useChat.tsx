@@ -13,6 +13,7 @@ export type Message = {
   customerId: string;
   imageUrl: string;
   timestamp: string;
+  messageId: string;
 };
 
 type ChatContextType = {

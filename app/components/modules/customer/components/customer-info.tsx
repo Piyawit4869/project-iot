@@ -131,7 +131,7 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
               name="profile.prefix"
               render={({ field }) => (
                 <FormItem>
-                  <RequiredLabel>คำนำหน้า</RequiredLabel>
+                  <RequiredLabel required>คำนำหน้า</RequiredLabel>
 
                   <RadioCardGroup
                     options={prefix}
@@ -208,7 +208,7 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
               name="profile.lastName"
               render={({ field }) => (
                 <FormItem>
-                  <RequiredLabel>นามสกุล</RequiredLabel>
+                  <RequiredLabel required>นามสกุล</RequiredLabel>
                   <FormControl className="w-full">
                     <Input
                       value={field.value || ""}
@@ -245,7 +245,7 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
               name="profile.gender"
               render={({ field }) => (
                 <FormItem>
-                  <RequiredLabel>เพศ</RequiredLabel>
+                  <RequiredLabel required>เพศ</RequiredLabel>
                   <RadioCardGroup
                     options={gender}
                     value={field.value || ""}
@@ -358,7 +358,7 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
               name="customerType"
               render={({ field }) => (
                 <FormItem>
-                  <RequiredLabel>ประเภทผู้ติดต่อ</RequiredLabel>
+                  <RequiredLabel>ประเภทลูกค้า</RequiredLabel>
                   <Select
                     {...field}
                     onValueChange={(v) => {
@@ -366,7 +366,7 @@ export const CustomerInfoCard: React.FC<CustomerFormCreateProps> = ({
                     }}
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="เลือกประเภทผู้ติดต่อ เช่น บุคคลธรรมดา" />
+                      <SelectValue placeholder="เลือกประเภทลูกค้า เช่น บุคคลธรรมดา" />
                     </SelectTrigger>
                     <SelectContent className="w-full">
                       {customerType.map((item) => (

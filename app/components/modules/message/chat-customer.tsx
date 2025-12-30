@@ -1058,7 +1058,7 @@ export default function ChatCustomerInfo({
               {tags && tags.length ? (
                 <>
                   <h2>แท็กลูกค้า</h2>
-                  <div className="pb-0 mt-2 px-2">
+                  <div className="mt-2 px-2 pt-2 pb-2">
                     <div className="gap-2 flex flex-row flex-wrap">
                       {tags.map((item: any) => {
                         return (
@@ -1383,6 +1383,7 @@ export default function ChatCustomerInfo({
                       setAutoScroll={setAutoScroll}
                       searchPrompt={firstTimeMessage}
                       isAILoading={isPendingAI}
+                      chatRoomAssistantId={chatRoomAssistantId ?? ""}
                     />
                   )}
                 </div>
@@ -1682,21 +1683,26 @@ export default function ChatCustomerInfo({
                 <div key={item.id} className="flex items-center gap-3">
                   <GlobalImage
                     src={
-                      item?.imageUrl ||
+                      (item && item.imageUrl) ||
                       `https://api.dicebear.com/9.x/initials/svg?seed=${
-                        item?.userId ?? "unknown"
+                        (item && item.participantId) || "unknown"
                       }`
                     }
-                    alt={item?.fullName || item?.userId || ""}
+                    alt={
+                      (item && item.fullName) ||
+                      (item && item.participantId) ||
+                      ""
+                    }
                     className="w-10 h-10 rounded-full object-cover"
                   />
 
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium truncate">
-                      {item?.fullName ?? "-"}
+                      {(item && item.firstName) || "-"}{" "}
+                      {(item && item.lastName) || "-"}
                     </div>
                     <div className="text-xs text-muted-foreground truncate">
-                      {item?.email ?? item?.userName ?? "-"}
+                      {(item && item.email) ?? (item && item.userName) ?? "-"}
                     </div>
                   </div>
 
@@ -1704,7 +1710,9 @@ export default function ChatCustomerInfo({
                     <button
                       className="text-sm underline underline-offset-2"
                       onClick={() =>
-                        navigate(`/users/${item?.userId ?? "unknown"}`)
+                        navigate(
+                          `/users/${(item && item.participantId) || "unknown"}`
+                        )
                       }
                     >
                       ดูโปรไฟล์
@@ -1714,7 +1722,9 @@ export default function ChatCustomerInfo({
 
                     <button
                       className="text-sm text-red-600 hover:text-red-700"
-                      onClick={() => DeleteSupport(item.id)}
+                      onClick={() =>
+                        DeleteSupport((item && item.participantId) || "")
+                      }
                     >
                       ลบ
                     </button>

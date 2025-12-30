@@ -11,7 +11,7 @@ import {
 import { HeadSidebar } from "./sidebar/head-sidebar";
 import { HomeSidebar, type SidebarItem } from "./sidebar/home-sidebar";
 import { MainSidebar } from "./sidebar/main-sidebar";
-import { getUserMapPermission, keyToModuleMap } from "~/utils/permission";
+import { keyToModuleMap } from "~/utils/permission";
 import { OrgSelector } from "./sidebar/org-selector";
 import { useChangeActiveOrg, useGetMe } from "~/api/client/user";
 import { toast } from "sonner";
@@ -127,7 +127,8 @@ export function AppSidebar({ data, ...props }: AppSidebarProps) {
   const isSingleOrg = !user?.organizationGroupId;
   const organizationId = selectedOrganization || user?.organizationId;
 
-  const normalizedPermissions = getUserMapPermission(user);
+  // const normalizedPermissions = getUserMapPermission(user);
+  const normalizedPermissions = user.permissions;
 
   const defaultHomeMenu: SidebarItem[] = [
     {
@@ -153,6 +154,7 @@ export function AppSidebar({ data, ...props }: AppSidebarProps) {
         const permKey = keyToModuleMap[item.key] ?? item.key;
 
         return Boolean(normalizedPermissions[permKey]?.length);
+        // return normalizedPermissions[permKey]?.includes("get_menu");
       });
 
     return items.map((it) => ({

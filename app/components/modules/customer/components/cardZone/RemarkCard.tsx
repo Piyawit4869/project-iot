@@ -13,14 +13,17 @@ export const RemarkCard = ({
   onClick,
   form,
   className,
+  isEdit,
+  setIsEdit,
 }: {
   loading: boolean;
   remark?: string;
   onClick?: any;
   form: UseFormReturn<CustomerValues>;
   className: string;
+  isEdit?: boolean;
+  setIsEdit: any;
 }) => {
-  const [isEdit, setIsEdit] = React.useState(false);
   return (
     <Card className={className}>
       <CardHeader className=" gap-0">
@@ -31,6 +34,7 @@ export const RemarkCard = ({
 
           <EditActionButtons
             isEdit={isEdit}
+            form={form}
             onSave={onClick}
             onEdit={() => {
               setIsEdit(true);
@@ -65,9 +69,9 @@ export const RemarkCard = ({
             )}
           />
         ) : remark ? (
-          <span>{remark}</span>
+          <span className="text-base ">{remark}</span>
         ) : (
-          <span className="text-[#71717A]  dark:text-[#b4b4c5]">
+          <span className="  text-[#71717A]  dark:text-[#b4b4c5]">
             ไม่มีหมายเหตุ
           </span>
         )}
