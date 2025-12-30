@@ -400,7 +400,9 @@ export const GrantPermission: React.FC = () => {
                         const perm = row.cells[action];
                         const hasCell = !!perm?.id;
                         const menuEnabled = hasMenu(row);
-                        const disabled = action !== "get_menu" && !menuEnabled;
+                        const disabled =
+                          action !== PermissionBaseAction.GET_MENU &&
+                          !menuEnabled;
 
                         return (
                           <td
