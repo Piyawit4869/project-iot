@@ -1,6 +1,8 @@
 import { Copy, Save, X } from "lucide-react";
-import React from "react";
+import React, { type ReactNode } from "react";
 import GlobalButton from "~/components/shared/global-button";
+import { GlobalImage } from "~/components/shared/global-image";
+import ImageUpload from "~/components/shared/image-upload";
 import {
   FormControl,
   FormItem,
@@ -12,7 +14,7 @@ import { cn, copyTextToClipboard } from "~/lib/utils";
 import type { ConnectLineValues } from "~/schemas/settings";
 
 type EditableFormFieldProps = {
-  label: string;
+  label: string | ReactNode;
   placeholder?: string;
   edit?: boolean;
   onEdit: () => void;
@@ -22,6 +24,7 @@ type EditableFormFieldProps = {
   masked?: boolean;
   showCopy?: boolean;
   isEdit?: boolean;
+  type?: string;
 };
 
 export function EditableFormField({
@@ -35,6 +38,7 @@ export function EditableFormField({
   onSave,
   showCopy,
   isEdit,
+  type = "input",
 }: EditableFormFieldProps) {
   const [copied, setCopied] = React.useState(false);
 
@@ -52,7 +56,7 @@ export function EditableFormField({
 
   return (
     <FormItem className="flex flex-row w-full items-start">
-      <FormLabel className="w-70 mt-3">
+      <FormLabel className="w-70 whitespace-pre-line mt-3 leading-4">
         {label}{" "}
         {showCopy && (
           <button
@@ -74,18 +78,34 @@ export function EditableFormField({
       <FormControl>
         <div className="flex flex-col w-full">
           <div className="flex flex-row items-center">
-            <Input
-              placeholder={placeholder}
-              disabled={edit}
-              value={masked && edit ? maskValue(field.value) : field.value}
-              onChange={field.onChange}
-              className={cn(
-                "shadow-none max-w-[50%]",
-                edit
-                  ? "border-0 bg-transparent text-muted-foreground"
-                  : "border border-input text-foreground"
-              )}
-            />
+            {type === "input" ? (
+              <Input
+                placeholder={placeholder}
+                disabled={edit}
+                value={masked && edit ? maskValue(field.value) : field.value}
+                onChange={field.onChange}
+                className={cn(
+                  "shadow-none max-w-[50%]",
+                  edit
+                    ? "border-0 bg-transparent text-muted-foreground"
+                    : "border border-input text-foreground"
+                )}
+              />
+            ) : edit ? (
+              <GlobalImage
+                src={field.value}
+                width={80}
+                height={80}
+                className="object-cover rounded-md object-center"
+                fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${field.value || "LN"}`}
+              />
+            ) : (
+              <ImageUpload
+                value={field.value || ""}
+                onChange={field.onChange}
+                className="w-full h-full object-cover rounded-md object-center"
+              />
+            )}
           </div>
 
           {isEdit ? (
