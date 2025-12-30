@@ -52,6 +52,10 @@ export const ChatMessages = ({
     }
   };
 
+  const isAtBottomRef = React.useRef<boolean>(true);
+
+  const isFetchingPrevRef = React.useRef<boolean>(false);
+
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const newestSeenId = React.useRef<string | null>(null);
@@ -67,7 +71,7 @@ export const ChatMessages = ({
 
   const [replyRefMessage, setReplyRefMessage] = useState<string | null>(null);
 
-  const { messages: socketMessages, addMessage } = useChat();
+  const { messages: socketMessages, addMessage, typingUsers } = useChat();
 
   const messageRefs = useRef<{ [id: string]: HTMLDivElement | null }>({});
 
@@ -125,7 +129,6 @@ export const ChatMessages = ({
   };
 
   React.useEffect(() => {
-    //new message and auto scroll
     const el = scrollAreaRef.current;
     const messages = combinedMessages;
     if (!el || messages?.length === 0) return;
@@ -161,11 +164,12 @@ export const ChatMessages = ({
 
     const handleScroll = () => {
       const { scrollHeight, scrollTop, clientHeight } = scrollArea;
-      const isContentScrollable = scrollHeight > clientHeight;
-      const SCROLL_THRESHOLD = 5;
-      const isNotAtBottom =
-        scrollTop < scrollHeight - clientHeight - SCROLL_THRESHOLD;
-      setButtonScrollToBottom(isContentScrollable && isNotAtBottom);
+      const THRESHOLD = 20;
+
+      isAtBottomRef.current =
+        scrollTop + clientHeight >= scrollHeight - THRESHOLD;
+
+      setButtonScrollToBottom(!isAtBottomRef.current);
     };
 
     scrollArea.addEventListener("scroll", handleScroll);
@@ -183,32 +187,33 @@ export const ChatMessages = ({
     const THRESHOLD = 5;
 
     const onScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = el;
+      const THRESHOLD = 20;
+
+      isAtBottomRef.current =
+        scrollTop + clientHeight >= scrollHeight - THRESHOLD;
+
+      setButtonScrollToBottom(!isAtBottomRef.current);
+
       if (isSearching || isProgrammaticScroll.current) return;
 
       if (!hasNextPage || isFetchingNextPage) return;
 
-      const THRESHOLD = 5;
+      if (scrollTop <= 5 && meta?.prev) {
+        isFetchingPrevRef.current = true;
 
-      if (el.scrollTop <= THRESHOLD && meta?.prev) {
-        setDirection("prev");
-        const prevScrollHeight = el.scrollHeight;
+        const prevHeight = el.scrollHeight;
         setShowTopLoading(true);
+        setDirection("prev");
 
         fetchNextPage().finally(() => {
           setShowTopLoading(false);
+
           requestAnimationFrame(() => {
-            const newScrollHeight = el.scrollHeight;
-            el.scrollTop = newScrollHeight - prevScrollHeight;
+            el.scrollTop = el.scrollHeight - prevHeight;
+            isFetchingPrevRef.current = false;
           });
         });
-      }
-
-      const isBottom =
-        el.scrollTop + el.clientHeight >= el.scrollHeight - THRESHOLD;
-
-      if (isBottom && meta?.next) {
-        setDirection("next");
-        fetchNextPage();
       }
     };
 
@@ -237,7 +242,6 @@ export const ChatMessages = ({
 
       setHasScrolledToTarget(true);
 
-      // ⏳ รอ scroll จบจริง ๆ
       setTimeout(() => {
         isProgrammaticScroll.current = false;
         setIsSearching(false);
@@ -259,6 +263,40 @@ export const ChatMessages = ({
     combinedMessages &&
     combinedMessages.length &&
     combinedMessages[combinedMessages.length - 1];
+
+  React.useEffect(() => {
+    const el = scrollAreaRef.current;
+    if (!el || !combinedMessages.length) return;
+
+    if (isFetchingPrevRef.current) return;
+
+    if (!isAtBottomRef.current) return;
+
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+    });
+  }, [combinedMessages.length]);
+
+  React.useEffect(() => {
+    if (!typingUsers.length) return;
+    if (!isAtBottomRef.current) return;
+
+    const el = scrollAreaRef.current;
+    if (!el) return;
+
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+    });
+  }, [typingUsers.length]);
+
+  React.useEffect(() => {
+    const el = scrollAreaRef.current;
+    if (!el || !combinedMessages.length) return;
+
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+    });
+  }, [selectedRoom?.id]);
 
   if (isLoading && selectedRoom) {
     return <CustomerChatSkeleton />;
@@ -302,6 +340,7 @@ export const ChatMessages = ({
         subId={subId}
         selectedRoom={selectedRoom}
         customer={customer}
+        typingUsers={typingUsers}
       />
 
       {previewUrl && (

@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useChat, type Message } from "~/providers/chat/useChat";
@@ -15,13 +16,44 @@ export function useChatSocket({
   me,
   socketConfig,
 }: UseChatSocketProps) {
-  const { addMessage } = useChat();
+  const { addMessage, setTypingUsers } = useChat();
+
+  const typingTimeouts = React.useRef<Record<string, NodeJS.Timeout>>({});
 
   useEffect(() => {
     if (!selectedRoom?.id) return;
 
     const socket = socketConfig(api);
     socket.emit("chat", { chatRoomId: `${selectedRoom.id}` });
+
+    socket.on("typing", (payload: any) => {
+      console.log("👂 typing event onnnnnn:", payload);
+
+      setTypingUsers((prev) => {
+        if (prev.some((u) => u.userId === payload.userId)) {
+          return prev;
+        }
+
+        return [
+          ...prev,
+          {
+            userId: payload.userId,
+            fullName: payload.fullName,
+          },
+        ];
+      });
+
+      if (typingTimeouts.current[payload.userId]) {
+        clearTimeout(typingTimeouts.current[payload.userId]);
+      }
+
+      typingTimeouts.current[payload.userId] = setTimeout(() => {
+        setTypingUsers((prev) =>
+          prev.filter((u) => u.userId !== payload.userId)
+        );
+        delete typingTimeouts.current[payload.userId];
+      }, 2000); // 👈 1.5 sec
+    });
 
     socket.on("chat", (msg: Message) => {
       socket.emit("mark-read", {

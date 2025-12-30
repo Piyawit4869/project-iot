@@ -18,6 +18,8 @@ import { ChatSelectLocation } from "./chat-select-location";
 import { handleSplitThaiAddress } from "~/utils/chats";
 import { useRouteLoaderData } from "react-router";
 import { useChat, type Message } from "~/providers/chat/useChat";
+import { socketConfig } from "~/lib/sockets";
+import { io, type Socket } from "socket.io-client";
 
 const getLabelFromType = (type: string): MessageLabelType => {
   switch (type) {
@@ -134,8 +136,13 @@ export default function ChatInput({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const socketRef = React.useRef<Socket | null>(null);
+
   const [mapAddress, setMapAddress] = React.useState<string>("");
   const [latlng, setLatLng] = React.useState<LatLong | undefined>(undefined);
+
+  const typingTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  const isTypingRef = React.useRef(false);
 
   const { chatRoomId: customerChatRoomId } =
     (customer && customer.chatRoomDetail) || {};
@@ -167,6 +174,21 @@ export default function ChatInput({
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setInput(value);
+
+    const payload = {
+      chatRoomId: selectedRoom.id,
+      userId: me.id,
+    };
+
+    if (!isTypingRef.current) {
+      emitTyping(payload);
+      isTypingRef.current = true;
+    }
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
     setMessages((prev) => {
       const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
       if (roomIndex > -1) {
@@ -383,6 +405,43 @@ export default function ChatInput({
       console.error("error form send location [handleSendLocation]", error);
     }
   }, [mapAddress]);
+
+  React.useEffect(() => {
+    const s = socketConfig(api);
+
+    socketRef.current = s;
+
+    socketRef.current.on("connect", () => {
+      console.log("✅ socket connected on time", socketRef.current?.id);
+    });
+
+    socketRef.current.on("connect_error", (err) => {
+      console.error("❌ socket error", err.message);
+    });
+
+    socketRef.current.on("disconnect", (reason) => {
+      console.warn("🔌 socket disconnected:", reason);
+    });
+
+    return () => {
+      socketRef.current?.disconnect();
+    };
+  }, []);
+
+  const emitTyping = (payload: any) => {
+    const socket = socketRef.current;
+    if (!socket || !socket.connected) return;
+
+    socket.emit("typing", payload, (ack: any) => {
+      console.log("✅ typing ack:", ack);
+
+      if (ack?.ok) {
+        console.log("🎉 emit typing success");
+      } else {
+        console.warn("⚠️ emit typing failed", ack);
+      }
+    });
+  };
 
   if (!selectedRoom?.id) return <div />;
 
