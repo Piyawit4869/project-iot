@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import type { CustomerSupportFormValues } from "~/schemas/customer/support/support";
 import type { Participant } from "~/types/customers/participant";
 import { ParticipantsSection } from "../participants-section";
+import { formatPhoneNumber } from "~/components/shared/global-format";
 
 export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
   customer,
@@ -300,7 +301,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
             )}
           </div>
         </div>
-        <div className="grid grid-cols-1  md:grid-cols-2 mt-5 gap-7">
+        <div className="grid grid-cols-1  2xl:grid-cols-2 mt-5 gap-7">
           <GlobalFormField
             control={form.control}
             name="contacts.0.email"
@@ -315,6 +316,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
             label="เบอร์โทรศัพท์ผู้ติดต่อ (ตัวเลขเท่านั้น)"
             type="number-box"
             view={isEdit ? "edit" : "view"}
+            formatter={formatPhoneNumber}
             placeholder="กรอกเบอร์โทรศัพท์ผู้ติดต่อ เช่น 0612345678"
           />
 

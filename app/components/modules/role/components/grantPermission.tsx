@@ -12,6 +12,7 @@ import {
 } from "~/api/client/role/useGetRole";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { PermissionBaseAction } from "~/types/roles/permission";
 
 type PermissionItem = {
   id: string;
@@ -26,9 +27,10 @@ const ACTION_LABEL: Record<string, string> = {
   create: "เพิ่มข้อมูล",
   update: "แก้ไขข้อมูล",
   delete: "ลบข้อมูล",
+  get_menu: "อนุญาตฟีเจอร์",
 };
 
-const ACTION_ORDER = ["get_all", "get_single", "create", "update", "delete"];
+const ACTION_ORDER = ["get_menu", "get_single", "create", "update", "delete"];
 const FEATURE_LABEL: Record<string, string> = {
   home: "หน้าหลัก",
   chat: "แชท",
@@ -133,39 +135,124 @@ export const GrantPermission: React.FC = () => {
   const isChecked = (permissionId?: string) =>
     !!permissionId && selectedPermissionIds.includes(permissionId);
 
-  const toggleOne = (permissionId?: string) => {
+  // const toggleOne = (permissionId?: string) => {
+  //   if (!permissionId) return;
+  //   setSelectedPermissionIds((prev) =>
+  //     prev.includes(permissionId)
+  //       ? prev.filter((id) => id !== permissionId)
+  //       : [...prev, permissionId]
+  //   );
+  // };
+
+  const toggleOne = (feature: string, action: string, permissionId: string) => {
     if (!permissionId) return;
-    setSelectedPermissionIds((prev) =>
-      prev.includes(permissionId)
-        ? prev.filter((id) => id !== permissionId)
-        : [...prev, permissionId]
-    );
+
+    setSelectedPermissionIds((prev) => {
+      let next = prev.includes(permissionId)
+        ? prev.filter((x) => x !== permissionId)
+        : [...prev, permissionId];
+
+      if (
+        action === PermissionBaseAction.GET_MENU &&
+        prev.includes(permissionId)
+      ) {
+        const row = featureRows.find((r) => r.feature === feature);
+        if (row) {
+          Object.values(row.cells).forEach((cell) => {
+            if (cell.action !== PermissionBaseAction.GET_MENU) {
+              next = next.filter((x) => x !== cell.id);
+            }
+          });
+        }
+      }
+
+      return next;
+    });
   };
 
   // select all in a row (one feature)
+  // const toggleRow = (feature: string, checked: boolean) => {
+  //   const row = featureRows.find((r) => r.feature === feature);
+  //   if (!row) return;
+
+  //   const ids = actions
+  //     .map((a) => row.cells[a]?.id)
+  //     .filter((id): id is string => typeof id === "string" && id.length > 0);
+
+  //   setSelectedPermissionIds((prev) => {
+  //     if (checked) return Array.from(new Set([...prev, ...ids]));
+  //     return prev.filter((id) => !ids.includes(id));
+  //   });
+  // };
+
   const toggleRow = (feature: string, checked: boolean) => {
     const row = featureRows.find((r) => r.feature === feature);
     if (!row) return;
 
-    const ids = actions
-      .map((a) => row.cells[a]?.id)
-      .filter((id): id is string => typeof id === "string" && id.length > 0);
+    const menuId = row.cells?.[PermissionBaseAction.GET_MENU]?.id;
 
     setSelectedPermissionIds((prev) => {
-      if (checked) return Array.from(new Set([...prev, ...ids]));
-      return prev.filter((id) => !ids.includes(id));
+      let next = [...prev];
+
+      if (!checked) {
+        Object.values(row.cells).forEach((cell) => {
+          next = next.filter((id) => id !== cell.id);
+        });
+      } else {
+        if (menuId && !next.includes(menuId)) next.push(menuId);
+
+        Object.values(row.cells).forEach((cell) => {
+          if (!next.includes(cell.id)) next.push(cell.id);
+        });
+      }
+
+      return next;
     });
   };
 
   // select all in a column (one action)
-  const toggleColumn = (action: string, checked: boolean) => {
-    const ids = featureRows
-      .map((r) => r.cells[action]?.id)
-      .filter((id): id is string => typeof id === "string" && id.length > 0);
+  // const toggleColumn = (action: string, checked: boolean) => {
+  //   const ids = featureRows
+  //     .map((r) => r.cells[action]?.id)
+  //     .filter((id): id is string => typeof id === "string" && id.length > 0);
 
+  //   setSelectedPermissionIds((prev) => {
+  //     if (checked) return Array.from(new Set([...prev, ...ids]));
+  //     return prev.filter((id) => !ids.includes(id));
+  //   });
+  // };
+
+  const toggleColumn = (action: string, checked: boolean) => {
     setSelectedPermissionIds((prev) => {
-      if (checked) return Array.from(new Set([...prev, ...ids]));
-      return prev.filter((id) => !ids.includes(id));
+      let next = [...prev];
+
+      featureRows.forEach((row) => {
+        const cell = row.cells[action];
+        if (!cell?.id) return;
+
+        const menuId = row.cells?.[PermissionBaseAction.GET_MENU]?.id;
+        const menuEnabled = menuId && next.includes(menuId);
+
+        if (checked) {
+          if (action === PermissionBaseAction.GET_MENU) {
+            if (!next.includes(cell.id)) next.push(cell.id);
+          } else {
+            if (menuEnabled && !next.includes(cell.id)) next.push(cell.id);
+          }
+        } else {
+          next = next.filter((id) => id !== cell.id);
+
+          if (action === PermissionBaseAction.GET_MENU) {
+            Object.values(row.cells).forEach((c) => {
+              if (c.action !== PermissionBaseAction.GET_MENU) {
+                next = next.filter((id) => id !== c.id);
+              }
+            });
+          }
+        }
+      });
+
+      return next;
     });
   };
 
@@ -175,6 +262,11 @@ export const GrantPermission: React.FC = () => {
     if (count === 0) return false as const;
     if (count === ids.length) return true as const;
     return "indeterminate" as const;
+  };
+
+  const hasMenu = (row: { cells: Record<string, PermissionItem> }) => {
+    const menuId = row.cells?.[PermissionBaseAction.GET_MENU]?.id;
+    return !!menuId && selectedPermissionIds.includes(menuId);
   };
 
   const onSubmit = () => {
@@ -307,16 +399,31 @@ export const GrantPermission: React.FC = () => {
                       {actions.map((action) => {
                         const perm = row.cells[action];
                         const hasCell = !!perm?.id;
+                        const menuEnabled = hasMenu(row);
+                        const disabled =
+                          action !== PermissionBaseAction.GET_MENU &&
+                          !menuEnabled;
 
                         return (
                           <td
                             key={`${row.feature}-${action}`}
                             className="p-2 text-center"
                           >
-                            {hasCell ? (
+                            {/* {hasCell ? (
                               <Checkbox
                                 checked={isChecked(perm.id)}
                                 onCheckedChange={() => toggleOne(perm.id)}
+                              />
+                            ) : (
+                              <span className="text-muted-foreground">-</span>
+                            )} */}
+                            {hasCell ? (
+                              <Checkbox
+                                checked={isChecked(perm.id)}
+                                disabled={disabled}
+                                onCheckedChange={() =>
+                                  toggleOne(row.feature, action, perm.id)
+                                }
                               />
                             ) : (
                               <span className="text-muted-foreground">-</span>

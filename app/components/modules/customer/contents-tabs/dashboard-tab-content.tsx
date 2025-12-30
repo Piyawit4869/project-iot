@@ -72,13 +72,13 @@ export function DashboardTabContent({
           )}
         </div>
 
-        <Card className="w-full md:w-[50%]  ">
+        <Card className="w-full md:w-[50%] gap-0  ">
           <CardHeader>
             <CardTitle className="text-base font-bold">
               ความสัมพันธ์ลูกค้า
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 w-full">
+          <CardContent className="space-y-4 w-full px-6">
             {loadAnalyzeCustomer ? (
               <>
                 <div className="flex justify-center">
