@@ -9,6 +9,8 @@ export function NoteTabContent({
   onUpdate,
   fetchCustomerNote,
   customerNote,
+  isEdit,
+  setIsEdit,
 }: any) {
   return (
     <div className="flex flex-col md:flex-row gap-4 h-full">
@@ -27,6 +29,8 @@ export function NoteTabContent({
           remark={customer?.remark || ""}
           form={formUpdate}
           onClick={onUpdate}
+          isEdit={isEdit}
+          setIsEdit={setIsEdit}
           className="min-h-50 h-auto mt-5"
         />
       </div>

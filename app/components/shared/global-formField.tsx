@@ -107,11 +107,12 @@ export function GlobalFormField({
       case "number-box":
         return (
           <span className="text-muted-foreground">
-            {formatter ? formatter(field.value) : field.value || "-"}
+            {formatter ? formatter(field.value) || "-" : field.value || "-"}
           </span>
         );
 
       case "select":
+      case "select-radio-card":
         return (
           <span className="text-muted-foreground">
             {options.find((opt) => opt.value === field.value)?.label || "-"}
