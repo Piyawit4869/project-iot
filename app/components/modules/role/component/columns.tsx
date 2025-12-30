@@ -22,7 +22,7 @@ export const useRolesColumns = (): ColumnDef<UserColumn>[] => {
         accessorKey: "name",
         header: "ชื่อ",
         cell: (info) => {
-          const id = info.row.original.id;
+          const id = info.row.original?.id;
 
           return (
             <span className="text-blue-400 hover:text-blue-300 hover:underline">
@@ -94,7 +94,7 @@ export const useRolesColumns = (): ColumnDef<UserColumn>[] => {
         id: "actions",
         header: "การดำเนินการ",
         cell: (info) => {
-          const id = info.row.original.id;
+          const id = info.row.original?.id;
 
           return (
             <div className="flex items-center gap-2">
@@ -152,14 +152,14 @@ export const useUserColumns = (
         accessorKey: "profile",
         header: "ชื่อ",
         cell: (info) => {
-          const id = info.row.original.id;
-          const nickName = info.row.original.profile?.nickName
-            ? `( ${info.row.original.profile?.nickName} )`
+          const id = info.row.original?.id;
+          const nickName = info.row.original?.profile?.nickName
+            ? `( ${info.row.original?.profile?.nickName} )`
             : "";
 
-          const fullName = `${info.row.original.profile?.prefix || ""} ${
-            info.row.original.profile?.firstName || ""
-          } ${info.row.original.profile?.lastName || ""} ${nickName || ""}`.trim();
+          const fullName = `${info.row.original?.profile?.prefix || ""} ${
+            info.row.original?.profile?.firstName || ""
+          } ${info.row.original?.profile?.lastName || ""} ${nickName || ""}`.trim();
 
           return (
             <span className="text-blue-400 hover:text-blue-300 hover:underline">
@@ -303,7 +303,7 @@ export const useUserColumns = (
         id: "actions",
         header: "การดำเนินการ",
         cell: (info) => {
-          const id = info.row.original.id;
+          const id = info.row.original?.id;
           return (
             // <div className="flex items-center gap-2 w-full">
             //   <Link to={`/users/${id}`}>
@@ -336,7 +336,7 @@ export const useUserColumns = (
         id: "remove",
         header: "ลบพนักงาน",
         cell: (info) => {
-          const userId = info.row.original.id;
+          const userId = info.row.original?.id;
 
           return (
             <div className="w-auto">
