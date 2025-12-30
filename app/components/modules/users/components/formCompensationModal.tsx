@@ -97,12 +97,11 @@ export const CompensationModal: React.FC<Props> = ({
                     <FormControl>
                       <Input
                         type="number"
-                        value={
-                          field.value && field.value === 0
-                            ? undefined
-                            : field.value
-                        }
-                        onChange={(e) => field.onChange(e.target.value)}
+                        value={field.value ?? ""}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          field.onChange(val === "" ? undefined : Number(val));
+                        }}
                         placeholder="เช่น 50000"
                       />
                     </FormControl>
@@ -246,13 +245,22 @@ export const CompensationModal: React.FC<Props> = ({
                   </FormItem>
                 )}
               /> */}
-              <GlobalFormField
+
+              <FormField
                 control={form.control}
                 name={`${index}.contractType`}
-                label="ประเภทสัญญาจ้าง"
-                type="input"
-                placeholder="เช่น Permanent, Contract"
-                required
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>ประเภทสัญญาจ้าง</FormLabel>
+                    <FormControl>
+                      <DatePicker
+                        value={field.value ?? ""}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
 
               <FormField

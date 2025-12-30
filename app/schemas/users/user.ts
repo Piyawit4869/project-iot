@@ -159,7 +159,10 @@ export const UsersFormSchema = z.object({
           insurance: z.string().optional().nullable(),
           providentFund: z.boolean().default(false),
           // contractType: z.string().optional().nullable(),
-          contractType: z.string().min(1, "กรุณากรอก"),
+          contractType: z.preprocess(
+            (v) => v ?? "",
+            z.string().min(1, "กรุณากรอกประเภทสัญญาจ้าง")
+          ),
           effectiveDate: z.string().nullable().default(null),
           expireDate: z.string().nullable().default(null),
           description: z.string().optional().nullable(),

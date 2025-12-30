@@ -11,15 +11,25 @@ import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useSidebar } from "~/components/ui/sidebar";
 import { useUserColumns } from "../component/columns";
 import { useAllUserSummary, usePaginate } from "~/api/client/user";
-import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useRouteLoaderData,
+  useSearchParams,
+} from "react-router";
 import { TabControl } from "~/components/shared/tab-control";
 import { TabIndexTableUser, UserFilterFields } from "~/types/user/init-data";
 import {
   parseDateRangeParam,
   pickSearchParams,
 } from "../../customer/utils/search-params";
+import { getUserActionByPermission } from "~/utils/permission";
+import { PermissionBaseAction } from "~/types/roles/permission";
 
 export default function Users() {
+  const { permission } = useRouteLoaderData("root");
+
   const { data: user, isLoading } = useAllUserSummary();
   const paginate = usePaginate;
 
@@ -70,46 +80,52 @@ export default function Users() {
     }
   };
 
+  const tabControlButtons = [
+    <GlobalButton
+      label={
+        <>
+          <FileDown className="h-4 w-4" />
+          <span className="hidden sm:inline">&nbsp;นำเข้าข้อมูล</span>
+        </>
+      }
+      variant="outline"
+      disabled
+      key="import-button"
+      // className="bg-blue-300 text-black hover:bg-blue-500 hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+    />,
+    <GlobalButton
+      label={
+        <>
+          <FileUp className="h-4 w-4" />
+          <span className="hidden sm:inline">&nbsp;นำออกข้อมูล</span>
+        </>
+      }
+      variant="outline"
+      disabled
+      key="export-button"
+      // className="bg-yellow-300 text-black hover:bg-yellow-500 hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+    />,
+  ];
+
+  if (
+    getUserActionByPermission(permission, "user", PermissionBaseAction.CREATE)
+  ) {
+    tabControlButtons.push(
+      <Link to={`/users/create`} key="create-link">
+        <Button
+          key="create-button"
+          className="px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+        >
+          <Plus className="h-4 w-4" />
+          <span className="hidden sm:inline">&nbsp;สร้าง</span>
+        </Button>
+      </Link>
+    );
+  }
+
   return (
     <div className="flex flex-col w-full space-y-8 p-8 dark:bg-background">
-      <TabControl
-        title="พนักงาน"
-        buttons={[
-          <GlobalButton
-            label={
-              <>
-                <FileDown className="h-4 w-4" />
-                <span className="hidden sm:inline">&nbsp;นำเข้าข้อมูล</span>
-              </>
-            }
-            variant="outline"
-            disabled
-            key="import-button"
-            // className="bg-blue-300 text-black hover:bg-blue-500 hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-          />,
-          <GlobalButton
-            label={
-              <>
-                <FileUp className="h-4 w-4" />
-                <span className="hidden sm:inline">&nbsp;นำออกข้อมูล</span>
-              </>
-            }
-            variant="outline"
-            disabled
-            key="export-button"
-            // className="bg-yellow-300 text-black hover:bg-yellow-500 hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-          />,
-          <Link to={`/users/create`} key="create-link">
-            <Button
-              key="create-button"
-              className="px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-            >
-              <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline">&nbsp;สร้าง</span>
-            </Button>
-          </Link>,
-        ]}
-      />
+      <TabControl title="พนักงาน" buttons={tabControlButtons} />
 
       <DataTable
         key={tableKey}
