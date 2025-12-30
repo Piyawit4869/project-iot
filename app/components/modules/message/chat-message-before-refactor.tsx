@@ -440,6 +440,7 @@ export const ChatMessages = ({
         subId={subId}
         selectedRoom={selectedRoom}
         customer={customer}
+        api={api}
       />
 
       {previewUrl && (

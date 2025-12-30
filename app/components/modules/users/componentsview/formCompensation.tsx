@@ -8,7 +8,8 @@ import type { UsersFormValues } from "~/schemas/users/user";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { InfoRow } from "~/components/shared/InfoRow";
-import { currencyMap } from "~/initData/user-initData";
+import { contactTypeMap, currencyMap } from "~/initData/user-initData";
+import { formatNumber } from "~/components/shared/global-format";
 
 type CompensationConfig =
   UsersFormValues["profile"]["compensationConfigs"][number];
@@ -34,14 +35,12 @@ export const UserCompensation: React.FC<UserCompensationViewProps> = ({
 
   return (
     <>
-      <CardHeader>
-        <div className="flex gap-2 items-center">
-          <CardTitle className="text-base font-semibold flex items-center gap-2">
-            <Wallet className="h-5 w-5" />
-            ค่าตอบแทน
-          </CardTitle>
-        </div>
-      </CardHeader>
+      <div className="flex gap-2 items-center px-4">
+        <CardTitle className="text-base font-semibold flex items-center gap-2">
+          <Wallet className="h-5 w-5" />
+          ค่าตอบแทน
+        </CardTitle>
+      </div>
       {loading ? (
         <CardContent className="space-y-4">
           <SkeletonLoading />
@@ -50,7 +49,7 @@ export const UserCompensation: React.FC<UserCompensationViewProps> = ({
           <SkeletonLoading />
         </CardContent>
       ) : (
-        <CardContent className="space-y-4">
+        <CardContent className="p-0 space-y-4">
           <div className="lg:col-span-2 flex flex-col">
             <div className="flex items-center justify-between">
               {showActions && (
@@ -70,7 +69,9 @@ export const UserCompensation: React.FC<UserCompensationViewProps> = ({
                   <div key={index} className="rounded-xl space-y-4">
                     <div className="p-4">
                       <div className="flex items-center justify-between">
-                        <h4 className="font-semibold">ค่าตอบแทน {index + 1}</h4>
+                        <h4 className="font-semibold mb-3">
+                          ค่าตอบแทน {index + 1}
+                        </h4>
                         {showActions && (
                           <Button
                             type="button"
@@ -82,10 +83,10 @@ export const UserCompensation: React.FC<UserCompensationViewProps> = ({
                         )}
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <InfoRow
                           label="เงินเดือนพื้นฐาน"
-                          value={(row.baseSalary, row.baseSalary)}
+                          value={formatNumber(row.baseSalary || "0")}
                         />
                         <InfoRow
                           label="สกุลเงิน"
@@ -100,11 +101,14 @@ export const UserCompensation: React.FC<UserCompensationViewProps> = ({
                           label="มีสิทธิ์โบนัสหรือไม่"
                           value={row.bonusEligible ? "มี" : "ไม่มี"}
                         />
-                        <InfoRow label="อัตราโบนัส" value={row.bonusRate} />
+                        <InfoRow
+                          label="อัตราโบนัส"
+                          value={`${row.bonusRate} %`}
+                        />
 
                         <InfoRow
                           label="เบี้ยเลี้ยง"
-                          value={(row.allowance, row.allowance)}
+                          value={formatNumber(row.allowance || "0")}
                         />
                         <InfoRow
                           label="ประกันที่ได้รับ"
@@ -117,7 +121,11 @@ export const UserCompensation: React.FC<UserCompensationViewProps> = ({
                         />
                         <InfoRow
                           label="ประเภทสัญญาจ้าง"
-                          value={row.contractType}
+                          value={
+                            contactTypeMap[row.contractType as any] ??
+                            row.contractType ??
+                            "-"
+                          }
                         />
 
                         <InfoRow

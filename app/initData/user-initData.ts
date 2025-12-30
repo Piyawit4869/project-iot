@@ -31,6 +31,22 @@ export const currencyMap: Record<string, string> = {
   AUD: "ดอลลาร์ออสเตรเลีย",
 };
 
+export const contactTypeMap: Record<string, string> = {
+  "full-time": "พนักงานประจำ (Full-time)",
+  contract: "พนักงานชั่วคราว (Contract)",
+  "part-time": "พนักงานรายวัน (Part-time)",
+};
+
+export const fileTypeMap: Record<string, string> = {
+  resume: "เรซูเม่",
+  cv: "CV",
+  not_specified: "ใบรับรอง",
+  transcript: "ใบแสดงผลการศึกษา",
+  id_card: "บัตรประชาชน",
+  contract: "สัญญา",
+  other: "อื่น ๆ",
+};
+
 export const nationalityMap: Record<string, string> = {
   Thai: "ไทย",
   Japanese: "ญี่ปุ่น",

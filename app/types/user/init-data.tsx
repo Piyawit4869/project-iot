@@ -132,6 +132,12 @@ export const TabIndexTableUser = (user: extendedUser) => {
   return tabs;
 };
 
+export const contractType = [
+  { value: "full-time", label: "พนักงานประจำ (Full-time)" },
+  { value: "contract", label: "พนักงานชั่วคราว (Contract)" },
+  { value: "part-time", label: "พนักงานรายวัน (Part-time)" },
+];
+
 export const statusMap: Record<
   string,
   { label: string; className: string; icon?: React.ReactNode }

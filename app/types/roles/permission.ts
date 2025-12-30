@@ -4,6 +4,7 @@ export enum PermissionBaseAction {
   CREATE = "create",
   UPDATE = "update",
   DELETE = "delete",
+  GET_MENU = "get_menu",
 }
 
 export type Permission = Record<string, string[]>;

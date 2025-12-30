@@ -22,6 +22,8 @@ import type { UseFormReturn } from "react-hook-form";
 import { RequiredLabel } from "~/components/shared/required-design";
 import { Input } from "~/components/ui/input";
 import { Switch } from "~/components/ui/switch";
+import { InputNumberBox } from "~/components/shared/input-number-box";
+import type { RangeDate } from "./formInformationCreate";
 
 type Props = {
   open: boolean;
@@ -41,6 +43,7 @@ export const UserStudyModal: React.FC<Props> = ({
   indexPath,
 }) => {
   const index = `profile.educationInformations.${indexPath}` as const;
+  const [rangeDate, setRangeDate] = React.useState<RangeDate>({});
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -72,7 +75,7 @@ export const UserStudyModal: React.FC<Props> = ({
                   <FormItem className="md:col-span-2">
                     <RequiredLabel required>สถาบันการศึกษา</RequiredLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} placeholder="เช่น มหาวิทยาลัยขอนแก่น" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -86,7 +89,7 @@ export const UserStudyModal: React.FC<Props> = ({
                   <FormItem>
                     <RequiredLabel required>ระดับการศึกษา</RequiredLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} placeholder="เช่น ปริญญาตรี" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -100,7 +103,10 @@ export const UserStudyModal: React.FC<Props> = ({
                   <FormItem>
                     <RequiredLabel required>สาขา</RequiredLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        placeholder="เช่น วิทยาการคอมพิวเตอร์"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -114,7 +120,11 @@ export const UserStudyModal: React.FC<Props> = ({
                   <FormItem>
                     <FormLabel>คณะ</FormLabel>
                     <FormControl>
-                      <Input {...field} value={field.value ?? undefined} />
+                      <Input
+                        {...field}
+                        value={field.value ?? undefined}
+                        placeholder="เช่น คณะมนุษยศาสตร์และสังคมศาสตร์"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -128,19 +138,34 @@ export const UserStudyModal: React.FC<Props> = ({
                   <FormItem>
                     <FormLabel>เกรดเฉลี่ย</FormLabel>
                     <FormControl>
+                      {/* <InputNumberBox
+                        value={
+                          field.value !== undefined ? String(field.value) : ""
+                        }
+                        onChange={field.onChange}
+                        groups={[1, 2]}
+                        format="."
+                      /> */}
                       <Input
                         type="number"
                         value={field.value ?? ""}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value === ""
-                              ? undefined
-                              : Number(e.target.value)
-                          )
-                        }
-                        step="0.01"
-                        min="0"
-                        max="4"
+                        onChange={(e) => {
+                          field.onChange(e);
+                        }}
+                        onBlur={() => {
+                          if (field.value === undefined) return;
+
+                          let num = Number(field.value);
+
+                          if (isNaN(num)) {
+                            field.onChange(undefined);
+                            return;
+                          }
+
+                          num = Math.min(Math.max(num, 0), 4);
+
+                          field.onChange(num.toFixed(2));
+                        }}
                         placeholder="เช่น 3.25"
                       />
                     </FormControl>
@@ -158,7 +183,14 @@ export const UserStudyModal: React.FC<Props> = ({
                     <FormControl>
                       <DatePicker
                         value={field.value ?? ""}
-                        onChange={field.onChange}
+                        placeholder="เลือกวันที่เริ่มศึกษา"
+                        onChange={(val?: string) => {
+                          field.onChange(val);
+                          setRangeDate((prev: any) => ({
+                            ...prev,
+                            from: val ? new Date(val) : undefined,
+                          }));
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -175,7 +207,14 @@ export const UserStudyModal: React.FC<Props> = ({
                     <FormControl>
                       <DatePicker
                         value={field.value ?? ""}
+                        placeholder="เลือกวันที่สำเร็จการศึกษา"
                         onChange={field.onChange}
+                        disabled={(d: string) => {
+                          if (!rangeDate.from) return false;
+                          const dd = new Date(d);
+                          dd.setHours(0, 0, 0, 0);
+                          return dd < rangeDate.from;
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -207,7 +246,11 @@ export const UserStudyModal: React.FC<Props> = ({
                   <FormItem className="md:col-span-2">
                     <FormLabel>รายละเอียดเพิ่มเติม</FormLabel>
                     <FormControl>
-                      <Input {...field} value={field.value ?? undefined} />
+                      <Input
+                        {...field}
+                        value={field.value ?? undefined}
+                        placeholder="เช่น เกียรตินิยม / หลักสูตรนานาชาติ"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -226,7 +269,12 @@ export const UserStudyModal: React.FC<Props> = ({
           >
             ยกเลิก
           </Button>
-          <Button type="submit" form="education-form" className="w-[222px]">
+          <Button
+            type="button"
+            form="education-form"
+            onClick={onSubmit}
+            className="w-[222px]"
+          >
             บันทึก
           </Button>
         </DialogFooter>

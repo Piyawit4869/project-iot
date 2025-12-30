@@ -122,11 +122,15 @@ export function AiConfigListPanel() {
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div className="font-medium truncate">{it.name}</div>
-                    {it.active ? (
-                      <span className="text-[11px] px-2 py-0.5 rounded-full border">
-                        active
+                    {it.active && (
+                      <span
+                        className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full
+                   bg-green-100 text-green-700 border border-green-300"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-600" />
+                        เปิดใช้งาน
                       </span>
-                    ) : null}
+                    )}
                   </div>
 
                   <div className="text-xs text-muted-foreground truncate">

@@ -160,7 +160,12 @@ export const UserSocialModal: React.FC<Props> = ({
           >
             ยกเลิก
           </Button>
-          <Button type="submit" form="social-form" className="w-[222px]">
+          <Button
+            type="button"
+            onClick={onSubmit}
+            form="social-form"
+            className="w-[222px]"
+          >
             บันทึก
           </Button>
         </DialogFooter>

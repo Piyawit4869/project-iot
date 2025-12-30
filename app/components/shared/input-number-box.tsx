@@ -7,7 +7,7 @@ export function InputNumberBox({
   onChange,
   groups = [13],
   format = "-",
-  inputClass = "w-7 h-8.5 border rounded text-center",
+  inputClass = "w-6 h-8 border rounded text-center",
   gap = "gap-1",
 }: {
   value: string;
@@ -60,7 +60,7 @@ export function InputNumberBox({
   let globalIndex = 0;
 
   return (
-    <div className={cn("flex items-center flex-wrap", gap)}>
+    <div className={cn("flex items-center", gap)}>
       {groups.map((groupLen, groupIdx) => (
         <div key={groupIdx} className="flex items-center gap-1">
           {Array.from({ length: groupLen }).map(() => {
@@ -83,7 +83,7 @@ export function InputNumberBox({
           })}
 
           {groupIdx < groups.length - 1 && (
-            <span className="mx-1 text-muted-foreground">{format}</span>
+            <span className="mx-0.5 text-muted-foreground">{format}</span>
           )}
         </div>
       ))}
