@@ -12,6 +12,7 @@ import {
 } from "~/api/client/role/useGetRole";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { PermissionBaseAction } from "~/types/roles/permission";
 
 type PermissionItem = {
   id: string;
@@ -151,11 +152,14 @@ export const GrantPermission: React.FC = () => {
         ? prev.filter((x) => x !== permissionId)
         : [...prev, permissionId];
 
-      if (action === "get_menu" && prev.includes(permissionId)) {
+      if (
+        action === PermissionBaseAction.GET_MENU &&
+        prev.includes(permissionId)
+      ) {
         const row = featureRows.find((r) => r.feature === feature);
         if (row) {
           Object.values(row.cells).forEach((cell) => {
-            if (cell.action !== "get_menu") {
+            if (cell.action !== PermissionBaseAction.GET_MENU) {
               next = next.filter((x) => x !== cell.id);
             }
           });
@@ -185,7 +189,7 @@ export const GrantPermission: React.FC = () => {
     const row = featureRows.find((r) => r.feature === feature);
     if (!row) return;
 
-    const menuId = row.cells.get_menu?.id;
+    const menuId = row.cells?.[PermissionBaseAction.GET_MENU]?.id;
 
     setSelectedPermissionIds((prev) => {
       let next = [...prev];
@@ -226,11 +230,11 @@ export const GrantPermission: React.FC = () => {
         const cell = row.cells[action];
         if (!cell?.id) return;
 
-        const menuId = row.cells.get_menu?.id;
+        const menuId = row.cells?.[PermissionBaseAction.GET_MENU]?.id;
         const menuEnabled = menuId && next.includes(menuId);
 
         if (checked) {
-          if (action === "get_menu") {
+          if (action === PermissionBaseAction.GET_MENU) {
             if (!next.includes(cell.id)) next.push(cell.id);
           } else {
             if (menuEnabled && !next.includes(cell.id)) next.push(cell.id);
@@ -238,9 +242,9 @@ export const GrantPermission: React.FC = () => {
         } else {
           next = next.filter((id) => id !== cell.id);
 
-          if (action === "get_menu") {
+          if (action === PermissionBaseAction.GET_MENU) {
             Object.values(row.cells).forEach((c) => {
-              if (c.action !== "get_menu") {
+              if (c.action !== PermissionBaseAction.GET_MENU) {
                 next = next.filter((id) => id !== c.id);
               }
             });
@@ -261,7 +265,7 @@ export const GrantPermission: React.FC = () => {
   };
 
   const hasMenu = (row: { cells: Record<string, PermissionItem> }) => {
-    const menuId = row.cells.get_menu?.id;
+    const menuId = row.cells?.[PermissionBaseAction.GET_MENU]?.id;
     return !!menuId && selectedPermissionIds.includes(menuId);
   };
 
