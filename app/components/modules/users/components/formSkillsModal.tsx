@@ -182,7 +182,12 @@ export const UserSkillModal: React.FC<Props> = ({
           >
             ยกเลิก
           </Button>
-          <Button type="submit" form="skill-form" className="w-[222px]">
+          <Button
+            type="button"
+            form="skill-form"
+            onClick={onSubmit}
+            className="w-[222px]"
+          >
             บันทึก
           </Button>
         </DialogFooter>

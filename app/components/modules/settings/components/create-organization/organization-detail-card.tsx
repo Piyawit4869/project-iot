@@ -40,7 +40,7 @@ export const OrganizationDetailCard: React.FC<
             <GlobalFormField
               control={form.control}
               name="logoUrl"
-              label="โลโก้ของสาขา"
+              label="โลโก้"
               type="image"
             />
           </div>

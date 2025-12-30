@@ -95,6 +95,7 @@ export type SettingSchemaValues = z.infer<typeof SettingSchema>;
 
 export const ConnectLineSchema = z.object({
   id: z.uuid().optional(),
+  imageUrl: z.string().optional().nullable(),
   name: z.string().min(1, "กรุณากรอก"),
   channelId: z
     .string()

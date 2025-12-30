@@ -22,6 +22,16 @@ import type { UseFormReturn } from "react-hook-form";
 import { Input } from "~/components/ui/input";
 import { Switch } from "~/components/ui/switch";
 import { GlobalFormField } from "~/components/shared/global-formField";
+import { cn } from "~/lib/utils";
+import type { RangeDate } from "./formInformationCreate";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import { contractType } from "~/types/user/init-data";
 
 type Props = {
   open: boolean;
@@ -41,6 +51,8 @@ export const WorkExperienceModal: React.FC<Props> = ({
   indexPath,
 }) => {
   const index = `profile.workExperiences.${indexPath}` as const;
+  const isCurrent = form.watch(`${index}.isCurrent`);
+  const [rangeDate, setRangeDate] = React.useState<RangeDate>({});
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -100,11 +112,28 @@ export const WorkExperienceModal: React.FC<Props> = ({
                   <FormItem>
                     <FormLabel>ประเภทการจ้างงาน</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="เช่น Full-time, Contract"
-                        value={field.value ?? undefined}
-                      />
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full shadow-none">
+                            <SelectValue
+                              placeholder="เช่น Full-time, Contract"
+                              defaultValue="THB"
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="w-full">
+                          {contractType.map((item) => {
+                            return (
+                              <SelectItem key={item.value} value={item.value}>
+                                {item.label}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -128,14 +157,30 @@ export const WorkExperienceModal: React.FC<Props> = ({
                 )}
               /> */}
 
-              <GlobalFormField
+              <FormField
                 control={form.control}
                 name={`${index}.startDate`}
-                label="วันที่เริ่มงาน"
-                type="date"
-                placeholder="เช่น Permanent, Contract"
-                required
+                render={({ field }) => (
+                  <FormItem>
+                    <RequiredLabel required>วันที่เริ่มงาน</RequiredLabel>
+                    <FormControl>
+                      <DatePicker
+                        value={field.value ?? ""}
+                        placeholder="เช่น Permanent, Contract"
+                        onChange={(val?: string) => {
+                          field.onChange(val);
+                          setRangeDate((prev) => ({
+                            ...prev,
+                            from: val ? new Date(val) : undefined,
+                          }));
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
+
               <FormField
                 control={form.control}
                 name={`${index}.endDate`}
@@ -143,10 +188,27 @@ export const WorkExperienceModal: React.FC<Props> = ({
                   <FormItem>
                     <FormLabel>วันที่สิ้นสุดงาน</FormLabel>
                     <FormControl>
-                      <DatePicker
-                        value={field.value ?? ""}
-                        onChange={field.onChange}
-                      />
+                      <div
+                        className={cn(
+                          "relative",
+                          isCurrent && "pointer-events-none opacity-50"
+                        )}
+                      >
+                        <DatePicker
+                          value={field.value ?? ""}
+                          onChange={field.onChange}
+                          disabled={(d: string) => {
+                            if (!rangeDate.from) return false;
+                            const dd = new Date(d);
+                            dd.setHours(0, 0, 0, 0);
+                            return dd < rangeDate.from;
+                          }}
+                        />
+
+                        {isCurrent && (
+                          <div className="absolute inset-0 cursor-not-allowed" />
+                        )}
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -222,7 +284,12 @@ export const WorkExperienceModal: React.FC<Props> = ({
           >
             ยกเลิก
           </Button>
-          <Button type="submit" form="workexp-form" className="w-[222px]">
+          <Button
+            type="button"
+            onClick={onSubmit}
+            form="workexp-form"
+            className="w-[222px]"
+          >
             บันทึก
           </Button>
         </DialogFooter>

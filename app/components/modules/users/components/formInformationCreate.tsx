@@ -44,6 +44,7 @@ import { getRequiredPaths } from "~/utils/form-adapter";
 import { OrganizationSelector } from "./formSelectOrganization";
 import { formToJSON } from "axios";
 import { useCheckUserEmailDuplicate } from "~/api/client/user";
+import { InputNumberBox } from "~/components/shared/input-number-box";
 
 export interface UserFormProfileProps {
   form: UseFormReturn<UsersFormValues>;
@@ -52,6 +53,10 @@ export interface UserFormProfileProps {
   loading?: boolean;
   isEdit?: boolean;
 }
+export type RangeDate = {
+  from?: Date;
+  to?: Date;
+};
 
 export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
   form,
@@ -63,6 +68,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
   const [openSub, setOpenSub] = React.useState(false);
   const [search, setSearch] = React.useState("");
   const { mutateAsync: checkEmail } = useCheckUserEmailDuplicate();
+  const [rangeDate, setRangeDate] = React.useState<RangeDate>({});
 
   const allRoles = Array.isArray(roles) ? roles : [];
 
@@ -87,10 +93,10 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
 
   const statusOptions = [
     { label: "ใช้งานอยู่", value: "active" },
-    { label: "ทดลองงาน", value: "probation" },
-    { label: "ลาหยุดชั่วคราว", value: "on_leave" },
-    { label: "ลาออกแล้ว", value: "resigned" },
-    { label: "เลิกจ้าง", value: "terminated" },
+    { label: "พนักงานงานใหม่", value: "new_user" },
+    { label: "พนักงานที่ไม่ใช้งานมานาน", value: "inactive" },
+    { label: "พนักงานที่ถูกระงับการใช้งาน", value: "suspended" },
+    { label: "พนักงานที่ลบบัญชีออกจากระบบ", value: "deleted" },
   ] as const;
 
   const filteredStatusOptions = statusOptions.filter((o) =>
@@ -180,10 +186,12 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <RequiredLabel required>รหัสผ่าน</RequiredLabel>
+                      <RequiredLabel required>
+                        รหัสผ่าน <FormMessage />
+                      </RequiredLabel>
                       <FormControl>
                         <Input
-                          type="input"
+                          type="password"
                           placeholder="กรอกรหัสผ่าน"
                           aria-invalid={!!form.formState.errors.confirmPassword}
                           className={
@@ -192,7 +200,6 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                           {...field}
                         />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -205,7 +212,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                       <RequiredLabel required>ยืนยันรหัสผ่าน</RequiredLabel>
                       <FormControl>
                         <Input
-                          type="input"
+                          type="password"
                           placeholder="กรอกรหัสผ่านยืนยัน"
                           aria-invalid={!!form.formState.errors.confirmPassword}
                           className={
@@ -237,7 +244,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                             <SelectValue placeholder="เลือกสถานะองค์กร" />
                           </SelectTrigger>
                           <SelectContent>
-                            {filteredStatusOptions.map((option) => (
+                            {statusOptions.map((option) => (
                               <SelectItem
                                 key={option.value}
                                 value={option.value}
@@ -425,23 +432,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     { label: "นางสาว", value: "ms" },
                   ]}
                 /> */}
-                <FormField
-                  control={form.control}
-                  name="profile.nickName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>ชื่อเล่น</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="กรอกชื่อเล่น"
-                          {...field}
-                          value={field.value ?? undefined}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+
                 <FormField
                   control={form.control}
                   name="profile.firstName"
@@ -515,6 +506,44 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     { label: "ไม่ระบุ", value: "not_specified" },
                   ]}
                 /> */}
+
+                <FormField
+                  control={form.control}
+                  name="profile.nickName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ชื่อเล่น</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="กรอกชื่อเล่น"
+                          {...field}
+                          value={field.value ?? undefined}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="profile.phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>เบอร์โทรศัพท์</FormLabel>
+                      <FormControl>
+                        <InputNumberBox
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          groups={[3, 3, 4]}
+                          format="-"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="profile.birthDate"
@@ -531,29 +560,13 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="profile.phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>เบอร์โทรศัพท์</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="กรอกเบอร์โทร"
-                          {...field}
-                          value={field.value ?? undefined}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+
                 <FormField
                   control={form.control}
                   name="profile.age"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>อายุ</FormLabel>
+                      <RequiredLabel required>อายุ</RequiredLabel>
                       <FormControl>
                         <Input
                           placeholder="กรอกอายุ"
@@ -572,16 +585,19 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     <FormItem>
                       <FormLabel>เลขประจำตัวผู้เสียภาษี</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="กรอกเลขประจำตัวผู้เสียภาษี"
-                          {...field}
-                          value={field.value ?? undefined}
+                        <InputNumberBox
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          groups={[1, 4, 5, 2, 1]}
+                          format="-"
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+              </div>
+              <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
                 <FormField
                   control={form.control}
                   name="profile.nationality"
@@ -599,6 +615,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="profile.religion"
@@ -616,19 +633,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="profile.weight"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>น้ำหนัก</FormLabel>
-                      <FormControl>
-                        <Input placeholder="กรอกน้ำหนัก" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+
                 <FormField
                   control={form.control}
                   name="profile.height"
@@ -642,6 +647,21 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="profile.weight"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>น้ำหนัก</FormLabel>
+                      <FormControl>
+                        <Input placeholder="กรอกน้ำหนัก" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="profile.startWorkDate"
@@ -651,7 +671,13 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                       <FormControl>
                         <DatePicker
                           value={field.value ?? undefined}
-                          onChange={(val) => field.onChange(val ?? undefined)}
+                          onChange={(val?: string) => {
+                            field.onChange(val);
+                            setRangeDate((prev) => ({
+                              ...prev,
+                              from: val ? new Date(val) : undefined,
+                            }));
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -668,6 +694,12 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                         <DatePicker
                           value={field.value ?? undefined}
                           onChange={(val) => field.onChange(val ?? undefined)}
+                          disabled={(d: string) => {
+                            if (!rangeDate.from) return false;
+                            const dd = new Date(d);
+                            dd.setHours(0, 0, 0, 0);
+                            return dd < rangeDate.from;
+                          }}
                         />
                       </FormControl>
                       <FormMessage />

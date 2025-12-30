@@ -30,11 +30,17 @@ import { Input } from "~/components/ui/input";
 import { Switch } from "~/components/ui/switch";
 import type { UsersFormValues } from "~/schemas/users/user";
 import { GlobalFormField } from "~/components/shared/global-formField";
+import {
+  formatNumber,
+  formatNumberWithComma,
+} from "~/components/shared/global-format";
+import { contractType } from "~/types/user/init-data";
+import type { RangeDate } from "./formInformationCreate";
 
 type Props = {
   open: boolean;
   title: string;
-  onClose: () => void;
+  onClose?: () => void;
   onSubmit: () => void;
   form: UseFormReturn<UsersFormValues>;
   indexPath: number;
@@ -55,6 +61,8 @@ export const CompensationModal: React.FC<Props> = ({
 }) => {
   const index = `profile.compensationConfigs.${indexPath}` as const;
   const defaultCurrencyValue = form.getValues(`${index}.currency` as const);
+  const haveBouns = form.watch(`${index}.bonusEligible`);
+  const [rangeDate, setRangeDate] = React.useState<RangeDate>({});
 
   React.useEffect(() => {
     if (!defaultCurrencyValue) {
@@ -96,13 +104,14 @@ export const CompensationModal: React.FC<Props> = ({
                     <RequiredLabel required>เงินเดือนพื้นฐาน</RequiredLabel>
                     <FormControl>
                       <Input
-                        type="number"
-                        value={field.value ?? ""}
+                        type="text"
+                        value={formatNumberWithComma(field.value ?? "")}
                         onChange={(e) => {
-                          const val = e.target.value;
-                          field.onChange(val === "" ? undefined : Number(val));
+                          const raw = e.target.value.replace(/,/g, "");
+
+                          field.onChange(raw);
                         }}
-                        placeholder="เช่น 50000"
+                        placeholder="เช่น 50,000"
                       />
                     </FormControl>
                     <FormMessage />
@@ -167,14 +176,22 @@ export const CompensationModal: React.FC<Props> = ({
                       <Input
                         type="number"
                         value={field.value ?? ""}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value === ""
-                              ? undefined
-                              : Number(e.target.value)
-                          )
-                        }
-                        min="0"
+                        disabled={!haveBouns}
+                        onChange={(e) => {
+                          field.onChange(e.target.value);
+                          if (e === undefined) {
+                            field.onChange(undefined);
+                            return;
+                          }
+
+                          const num = Number(e);
+
+                          if (Number.isNaN(num)) return;
+                          if (num > 100) return;
+
+                          field.onChange(num);
+                        }}
+                        min={0}
                         step="0.1"
                         placeholder="เช่น 10"
                       />
@@ -192,17 +209,13 @@ export const CompensationModal: React.FC<Props> = ({
                     <FormLabel>เบี้ยเลี้ยง</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
-                        value={field.value ?? ""}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value === ""
-                              ? undefined
-                              : Number(e.target.value)
-                          )
-                        }
-                        min="0"
-                        step="1"
+                        type="text"
+                        value={formatNumberWithComma(field.value ?? "")}
+                        onChange={(e) => {
+                          const raw = e.target.value.replace(/,/g, "");
+
+                          field.onChange(raw);
+                        }}
                         placeholder="เช่น 3000"
                       />
                     </FormControl>
@@ -251,13 +264,26 @@ export const CompensationModal: React.FC<Props> = ({
                 name={`${index}.contractType`}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>ประเภทสัญญาจ้าง</FormLabel>
-                    <FormControl>
-                      <DatePicker
-                        value={field.value ?? ""}
-                        onChange={field.onChange}
-                      />
-                    </FormControl>
+                    <RequiredLabel required>ประเภทสัญญาจ้าง</RequiredLabel>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger className="w-full shadow-none">
+                          <SelectValue
+                            placeholder="เช่น Full-time, Contract"
+                            defaultValue="THB"
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="w-full">
+                        {contractType.map((item) => {
+                          return (
+                            <SelectItem key={item.value} value={item.value}>
+                              {item.label}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -272,7 +298,13 @@ export const CompensationModal: React.FC<Props> = ({
                     <FormControl>
                       <DatePicker
                         value={field.value ?? ""}
-                        onChange={field.onChange}
+                        onChange={(val?: string) => {
+                          field.onChange(val);
+                          setRangeDate((prev) => ({
+                            ...prev,
+                            from: val ? new Date(val) : undefined,
+                          }));
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -290,6 +322,12 @@ export const CompensationModal: React.FC<Props> = ({
                       <DatePicker
                         value={field.value ?? ""}
                         onChange={field.onChange}
+                        disabled={(d: string) => {
+                          if (!rangeDate.from) return false;
+                          const dd = new Date(d);
+                          dd.setHours(0, 0, 0, 0);
+                          return dd < rangeDate.from;
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -343,7 +381,12 @@ export const CompensationModal: React.FC<Props> = ({
           >
             ยกเลิก
           </Button>
-          <Button type="submit" form="compensation-form" className="w-[222px]">
+          <Button
+            type="button"
+            onClick={onSubmit}
+            form="compensation-form"
+            className="w-[222px]"
+          >
             บันทึก
           </Button>
         </DialogFooter>
