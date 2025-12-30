@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation,
   useRouteLoaderData,
 } from "react-router";
 import { Toaster } from "sonner";
@@ -17,6 +18,12 @@ import { GlobalModalStatic } from "./components/shared/modal/global-modal-static
 import type { Route } from "./routes/backoffice/customer/+types";
 import { RouteProvider } from "./providers/RouteProvider";
 import { useGoogleAnalytics } from "./hooks/useGoogleAnalytics";
+
+import TagManager from "react-gtm-module";
+
+const tagManagerArgs = {
+  gtmId: "GTM-T724KX5N", // Replace this with your actual GTM ID
+};
 
 export async function loader({ request }: Route.LoaderArgs) {
   //TODO:FIX TO NOT PASS ACCESS TOKEN
@@ -46,6 +53,22 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+const TrackPageView = () => {
+  const location = useLocation();
+
+  React.useEffect(() => {
+    const tagManagerArgs = {
+      dataLayer: {
+        event: "pageview",
+        page: location.pathname,
+      },
+    };
+    TagManager.dataLayer(tagManagerArgs);
+  }, [location]);
+
+  return null;
+};
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -53,7 +76,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>ROME Platform</title>
-
+        {/* 
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -66,23 +89,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         })(window,document,'script','dataLayer','GTM-T724KX5N');
       `,
           }}
-        />
+        /> */}
 
         <Meta />
         <Links />
       </head>
       <body>
-        {/* Google Tag Manager (noscript) */}
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-T724KX5N"
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-          />
-        </noscript>
-        {/* End Google Tag Manager (noscript) */}
-
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -95,10 +107,12 @@ export default function App() {
   const [queryClient] = React.useState(() => new QueryClient());
   const { token, user } = useRouteLoaderData("root");
 
-  useGoogleAnalytics();
+  // useGoogleAnalytics();
 
   if (typeof window !== "undefined") {
     localStorage.setItem("accessToken", token);
+
+    TagManager.initialize(tagManagerArgs);
   }
 
   return (
@@ -111,6 +125,8 @@ export default function App() {
         toastOptions={{ className: "font-[IBMPlexSansThai]" }}
       />
       <RouteProvider>
+        <TrackPageView />
+
         <Outlet />
       </RouteProvider>
     </QueryClientProvider>
