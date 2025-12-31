@@ -26,8 +26,10 @@ const tagManagerArgs = {
   gtmId: "GTM-T724KX5N", // Replace this with your actual GTM ID
 };
 
-const TRACKING_ID = "G-6H2NNQJ75M"; // Replace with your GA4 Measurement ID
-// const TRACKING_ID = "G-455DMN03CD";
+const TRACKING_ID = "G-D1Q4M27285"; //ogga
+
+// const TRACKING_ID = "G-6H2NNQJ75M"; //rome-dev
+// const TRACKING_ID = "G-455DMN03CD"; //rome-local
 export async function loader({ request }: Route.LoaderArgs) {
   //TODO:FIX TO NOT PASS ACCESS TOKEN
   const token = await getAccessToken(request);
@@ -78,7 +80,7 @@ const PageTracking = () => {
   React.useEffect(() => {
     // Send a pageview hit to Google Analytics whenever the location changes
     ReactGA.send({
-      hitType: "pageview",
+      hitType: "add_line",
       page: location.pathname + location.search,
       title: document.title, // Optionally send the current page title
     });
