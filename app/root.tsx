@@ -79,11 +79,17 @@ const PageTracking = () => {
 
   React.useEffect(() => {
     // Send a pageview hit to Google Analytics whenever the location changes
-    ReactGA.send({
-      hitType: "add_line",
-      page: location.pathname + location.search,
-      title: document.title, // Optionally send the current page title
-    });
+    // ReactGA.send({
+    //   hitType: "add_line",
+    //   page: location.pathname + location.search,
+    //   title: document.title, // Optionally send the current page title
+    // });
+    //ZEV_TRACKING
+    // ReactGA.event({
+    //   category: "line",
+    //   label: "add_friend",
+    //   action: "add_friend",
+    // });
   }, [location]);
 
   return null;
