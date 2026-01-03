@@ -13,7 +13,7 @@ import { TagsSelectorModal } from "~/components/shared/tags-selector-modal";
 
 import { useWatch } from "react-hook-form";
 import { EditActionButtons } from "../edit-action-buttons";
-import { useNavigate } from "react-router";
+import { useNavigate, useRouteLoaderData } from "react-router";
 
 import {
   useCreateCustomerSupoort,
@@ -27,6 +27,15 @@ import type { Participant } from "~/types/customers/participant";
 import { ParticipantsSection } from "../participants-section";
 import { formatPhoneNumber } from "~/components/shared/global-format";
 import { useDebounce } from "~/hooks/use-debounce";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
+import { Avatar } from "~/components/ui/avatar";
+import { MessagesSquare } from "lucide-react";
+import { channelMap } from "../columns";
+import { Input } from "~/components/ui/input";
 
 export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
   customer,
@@ -60,6 +69,8 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
   const { mutate: DeleteCustomerSupport } = useDeleteCustomerSupport(
     customer?.chatRoomDetail?.chatRoomId ?? ""
   );
+  const customerPlatform = customer?.customerPlatform ?? "";
+  const channel = customerPlatform && channelMap[customerPlatform];
 
   const [isPopoverOpen, setIsPopoverOpen] = React.useState<boolean>(false);
   const [isPopoverMainParticipantsOpen, setIsPopoverMainParticipantsOpen] =
@@ -68,6 +79,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
   const navigate = useNavigate();
 
   const participants = customer?.chatRoomDetail?.participants ?? [];
+  const chatRoomId = customer?.chatRoomDetail?.chatRoomId ?? "";
 
   const mainParticipant = React.useMemo<Participant | undefined>(() => {
     return participants.find((p: Participant) => p.isMain);
@@ -221,42 +233,53 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
     });
   };
 
+  const goToChat = () => {
+    navigate(`/message?name=${customer?.profile?.lineName}`);
+  };
+
   return (
     <Card className="py-4">
-      <CardHeader className=" gap-0">
-        <div className="flex gap-2">
-          <div className="flex  flex-col">
-            <CardTitle className="text-base font-bold mt-2 mb-1 gap-2">
-              <span className="mr-3">สถานะลูกค้า</span>
-            </CardTitle>
-            <GlobalStatusBadge value={customer?.active} />
-            <CardTitle className="text-base font-bold mt-3">
-              ชื่อผู้ติดต่อ
-            </CardTitle>
+      <div className="flex justify-between gap-2 px-6 mt-2">
+        <div
+          className={`grid w-full gap-4 ${
+            isEdit ? "grid-cols-1" : "grid-cols-4"
+          }`}
+        >
+          <div className="mt-0.5">
+            <GlobalFormField
+              control={form.control}
+              name="active"
+              label="สถานะลูกค้า"
+              type="custom"
+              view="view"
+              customControl={() => (
+                <div className="mt-1">
+                  <GlobalStatusBadge value={customer?.active} />
+                </div>
+              )}
+            />
           </div>
 
-          <EditActionButtons
-            isEdit={isEdit}
-            isAnyFilled={isAnyFilled}
-            onSave={onClick}
-            form={form}
-            onEdit={() => {
-              onEditForm?.("contact_detail");
-            }}
-            onCancel={() => {
-              onCancel?.("contact_detail");
-            }}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 gap-5">
-          <GlobalFormField
+          <FormField
             control={form.control}
             name="contacts.0.name"
-            label=""
-            type="input"
-            view={isEdit ? "edit" : "view"}
-            placeholder="กรอกชื่อผู้ติดต่อ เช่น หญิงฟ้า สุขสมบรูณ์"
+            render={({ field }) => (
+              <FormItem>
+                <RequiredLabel>ผู้ติดต่อ</RequiredLabel>
+                {isEdit ? (
+                  <Input
+                    {...field}
+                    placeholder="กรุณากรอกชื่อผู้ติดต่อ เช่น นายสมชาย จิตใจดี"
+                    value={field.value ?? ""}
+                    className="w-full"
+                  />
+                ) : (
+                  <span className="text-muted-foreground">
+                    {field.value || "-"}
+                  </span>
+                )}
+              </FormItem>
+            )}
           />
 
           <FormField
@@ -265,31 +288,58 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
             render={({ field }) => (
               <FormItem>
                 <RequiredLabel>ความสำคัญ</RequiredLabel>
-                {isEdit ? (
-                  <StarRating
-                    rating={field.value}
-                    onRate={(val) => field.onChange(val)}
-                  />
-                ) : (
-                  <div className="flex flex-col w-full ">
-                    <StarRating
-                      rating={field.value}
-                      interactive={false}
-                      size={20}
-                    />
-                  </div>
-                )}
-
-                <FormMessage />
+                <StarRating
+                  rating={field.value}
+                  onRate={isEdit ? field.onChange : undefined}
+                  interactive={isEdit}
+                />
               </FormItem>
             )}
           />
+
+          {isEdit ? null : (
+            <div className={"ml-3"}>
+              <span className="text-sm   flex">ช่องทาง</span>
+              <Tooltip>
+                <TooltipTrigger className="mt-1" asChild>
+                  <Avatar className="w-[40px] h-[40px]">
+                    <GlobalImage
+                      src={channel.icon}
+                      alt={channel.label}
+                      notShowPreview
+                      className="cursor-default"
+                    />
+                  </Avatar>
+                </TooltipTrigger>
+              </Tooltip>
+            </div>
+          )}
         </div>
-      </CardHeader>
+
+        <div className="flex gap-5 items-start shrink-0">
+          {customerPlatform === "line" && (
+            <Tooltip>
+              <TooltipTrigger asChild onClick={goToChat}>
+                <MessagesSquare className="text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent>ไปยังหน้าแชท</TooltipContent>
+            </Tooltip>
+          )}
+
+          <EditActionButtons
+            isEdit={isEdit}
+            isAnyFilled={isAnyFilled}
+            onSave={onClick}
+            form={form}
+            onEdit={() => onEditForm?.("contact_detail")}
+            onCancel={() => onCancel?.("contact_detail")}
+          />
+        </div>
+      </div>
 
       <CardContent className="space-y-4">
         <div className="flex flex-col gap-2">
-          <span className="text-base font-bold leading-none  ">แท็กลูกค้า</span>
+          <span className="text-sm">แท็กลูกค้า</span>
 
           <div className="flex flex-wrap text-muted-foreground gap-2">
             {isEdit ? (
