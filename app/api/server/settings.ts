@@ -307,6 +307,28 @@ export const fetchGetConnectionAi = async (id: string) => {
   }
 };
 
+export const fetchResetAi = async (id: string) => {
+  try {
+    const res = await ApiConfig.put(
+      `/thridparty/openai/config/${id}/clear-thread`
+    );
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchResetAiChatRoom = async (id: string) => {
+  try {
+    const res = await ApiConfig.put(`/chats/assistant/${id}/clear-thread`);
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const fetchGetConnectionAiByBranch = async (branchId: string) => {
   try {
     const res = await ApiConfig.get(

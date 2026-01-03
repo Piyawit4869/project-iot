@@ -108,11 +108,11 @@ export const PieChart = ({ initData }: any) => {
         render: (e: any, { items }: any) => {
           return (
             <React.Fragment>
-              {items.map((item: any) => {
+              {items.map((item: any, index: number) => {
                 const { type, value, color } = item;
                 return (
                   <div
-                    key={type}
+                    key={index}
                     style={{
                       margin: 0,
                       display: "flex",
