@@ -19,6 +19,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { cn } from "~/lib/utils";
 import { useSearchUserOrgs } from "~/api/client/user";
+import PlaceholderImage from "/assets/images/placeholder.webp";
 
 type Org = {
   id: string;
@@ -79,13 +80,27 @@ export function OrgSelector({
           aria-label="Switch organization"
         >
           <div className="flex items-center gap-2 min-w-0">
-            <Avatar className="h-6 w-6">
+            {/* <Avatar className="h-6 w-6">
               <AvatarImage
                 src={current?.logoUrl}
                 alt={current?.nameTh ?? "Organization"}
               />
               <AvatarFallback className="text-black">
                 {initials(current?.nameTh)}
+              </AvatarFallback>
+            </Avatar> */}
+
+            <Avatar className="h-6 w-6">
+              <AvatarImage
+                src={current?.logoUrl}
+                alt={current?.nameTh ?? "Organization"}
+              />
+              <AvatarFallback className="text-black">
+                <img
+                  src={PlaceholderImage}
+                  alt="placeholder"
+                  className="h-full w-full object-cover"
+                />{" "}
               </AvatarFallback>
             </Avatar>
 
@@ -139,10 +154,21 @@ export function OrgSelector({
                       className="rounded-lg h-[45px] cursor-pointer"
                     >
                       <div className="flex items-center gap-2 min-w-0 flex-1">
-                        <Avatar className="h-6 w-6">
+                        {/* <Avatar className="h-6 w-6">
                           <AvatarImage src={org.logoUrl} alt={org.nameTh} />
                           <AvatarFallback>
                             {initials(org.nameTh)}
+                          </AvatarFallback>
+                        </Avatar> */}
+
+                        <Avatar className="h-6 w-6">
+                          <AvatarImage src={org.logoUrl} alt={org.nameTh} />
+                          <AvatarFallback>
+                            <img
+                              src={PlaceholderImage}
+                              alt="placeholder"
+                              className="h-full w-full object-cover"
+                            />
                           </AvatarFallback>
                         </Avatar>
 

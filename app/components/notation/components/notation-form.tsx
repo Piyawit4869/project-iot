@@ -1,5 +1,3 @@
-"use client";
-
 import { Hourglass, ImageUp, RefreshCcw, User } from "lucide-react";
 import React from "react";
 import { DatePicker } from "~/components/shared/date-picker";
@@ -26,25 +24,28 @@ import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
 import { currencyType, notationType } from "~/initData/order-initData";
 import type { OrderFormProps } from "~/schemas/order/type";
-import { calculateTotals, useDebounce } from "../order-function";
 import { useCustomerPaginate } from "~/api/client/customer/useCustomer";
-import { ListProduct } from "../product-select";
 import { OrderProvider } from "~/hooks/order/order";
-import { SignatureDocument } from "../signature";
 import { formatNumber } from "~/components/shared/global-format";
 import type { ProductType } from "~/schemas/order/order";
 import { statusOptions } from "~/initData/product-init-data";
 import { GlobalFormField } from "~/components/shared/global-formField";
-
-import { CustomerSection } from "../customerSection";
 import { cn } from "~/lib/utils";
 import { useGetAllUsers } from "~/api/client/user";
+import {
+  calculateTotals,
+  useDebounce,
+} from "~/components/modules/order/components/order-function";
+import { CustomerSection } from "~/components/modules/order/components/customerSection";
+import { ListProduct } from "~/components/modules/order/components/product-select";
 import { companyList } from "~/components/modules/inventories/indata/inData";
+import { useSearchParams } from "react-router";
+import type { NotationFormProps } from "~/schemas/notation/type";
 
-export const OrderForm: React.FC<OrderFormProps> = ({
+export const NotationForm: React.FC<NotationFormProps> = ({
   form,
   Price,
-  order,
+  notation,
   isEdit,
   viewMode,
   products,
@@ -53,6 +54,15 @@ export const OrderForm: React.FC<OrderFormProps> = ({
 }) => {
   const customerPaginate = useCustomerPaginate;
   const [search, setSearch] = React.useState("");
+  const [searchParams] = useSearchParams();
+  const docType = searchParams.get("type"); // quotation | receipt | invoice
+  const docTypeTH = {
+    quotation: "ใบเสนอราคา",
+    receipt: "ใบเสร็จรับเงิน",
+    invoice: "ใบแจ้งหนี้",
+  } as const;
+
+  const docLabel = docType ? docTypeTH[docType as keyof typeof docTypeTH] : "";
 
   const { data: saleData } = useGetAllUsers("sale");
 
@@ -65,8 +75,8 @@ export const OrderForm: React.FC<OrderFormProps> = ({
 
   const customerData = data?.items;
 
-  const productDetails = order?.orderDetails?.products;
-  const orderCustomer = order?.customer as any;
+  const productDetails = notation?.orderDetails?.products;
+  const orderCustomer = notation?.customer as any;
   const customerProfile = orderCustomer?.profile as any;
 
   const customerDetail = (customerId: string) => {
@@ -144,8 +154,8 @@ export const OrderForm: React.FC<OrderFormProps> = ({
             "p-6 bg-card text-card-foreground rounded-xl border shadow-sm")
       )}
     >
-      <h3 className="font-semibold text-xl">ข้อมูลออเดอร์</h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <h3 className="font-semibold text-xl">ข้อมูล{docLabel}</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <GlobalFormField
           control={form.control}
           name="docName"
@@ -157,15 +167,29 @@ export const OrderForm: React.FC<OrderFormProps> = ({
 
         <GlobalFormField
           control={form.control}
-          name="company"
-          label="บริษัท (Company)"
-          type="select"
+          name="docNo"
+          label="หมายเลขเอกสาร"
+          type="input"
           view={view}
-          placeholder="เลือกบริษัท"
-          options={companyList}
+          placeholder="กรอกชื่อออเดอร์"
+          iconBack={
+            <RefreshCcw className="mt-0.5 w-3.5 h-3.5 hover:text-gray-500" />
+          }
         />
 
-        <GlobalFormField
+        <div>
+          <GlobalFormField
+            control={form.control}
+            name="company"
+            label="บริษัท (Company)"
+            type="select"
+            view={view}
+            placeholder="เลือกบริษัท"
+            options={companyList}
+          />
+        </div>
+
+        {/* <GlobalFormField
           control={form.control}
           name="notationType"
           label="ประเภทเอกสาร"
@@ -175,9 +199,9 @@ export const OrderForm: React.FC<OrderFormProps> = ({
           placeholder="เลือกประเภทเอกสาร"
           options={notationType}
           disabledItem={(item: any) => item.value !== "quotation"}
-        />
+        /> */}
 
-        <div className="col-span-3">
+        <div>
           <GlobalFormField
             control={form.control}
             name="saler"
@@ -314,20 +338,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({
             return dd < startDay;
           }}
         />
-
-        <div className="col-span-2">
-          <GlobalFormField
-            control={form.control}
-            name="docNo"
-            label="หมายเลขเอกสาร"
-            type="input"
-            view={view}
-            placeholder="กรอกชื่อออเดอร์"
-            iconBack={
-              <RefreshCcw className="mt-0.5 w-3.5 h-3.5 hover:text-gray-500" />
-            }
-          />
-        </div>
       </div>
 
       <CustomerSection
@@ -356,81 +366,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({
       </OrderProvider>
 
       <hr />
-      <h1 className="font-semibold text-xl">ส่วนลด</h1>
-      <div className="grid grid-cols-2 gap-4">
-        <GlobalFormField
-          control={form.control}
-          name="discount"
-          view={view}
-          label="ส่วนลด"
-          type="input"
-          placeholder="0"
-        />
-
-        <GlobalFormField
-          control={form.control}
-          name="discountType"
-          view={view}
-          label="ประเภทเหตุผลส่วนลด"
-          type="select"
-          placeholder="เลือกเหตุผลส่วนลด"
-          options={statusOptions}
-        />
-
-        {/* <GlobalFormField
-          control={form.control}
-          name="discountCode"
-          label="โค้ดส่วนลด"
-          type="input"
-          placeholder="SALE2026"
-          options={statusOptions}
-        /> */}
-      </div>
-      <GlobalFormField
-        control={form.control}
-        name="discountNote"
-        label="หมายเหตุ"
-        view={view}
-        type="textArea"
-        placeholder="ระบุหมายเหตุ..."
-        options={statusOptions}
-      />
-
-      <GlobalFormField
-        control={form.control}
-        name="discountStep"
-        label="ส่วนลดขั้นบันได"
-        view={"view"}
-        placeholder="ระบุหมายเหตุ..."
-        options={statusOptions}
-      />
-
-      <hr />
-      {/* -----------------------  Summary ----------------------- */}
-      <div className="p-4 mt-3 w-full rounded-2xl bg-gray-50 shadow-inner">
-        <h3 className="font-semibold text-lg mb-4">ราคาส่วนลด</h3>
-
-        <div className="flex justify-between mb-3">
-          <span>ราคาเดิม :</span>
-          <span>{resultTotal || 0} ชิ้น</span>
-        </div>
-
-        <div className="flex justify-between mb-3">
-          <span>ส่วนลด :</span>
-          <span>{discountPrice || 0} บาท</span>
-        </div>
-        <div className="flex justify-between mb-3">
-          <span>ส่วนลดเพิ่มเติม :</span>
-          <span>{discount || 0} บาท</span>
-        </div>
-
-        <div className="flex justify-between font-bold text-lg mb-3">
-          <span>ราคาหลังหักส่วนลด :</span>
-          <span>{formatNumber(finalPrice)} บาท</span>
-        </div>
-      </div>
-      <hr />
-
       <h1 className="font-semibold text-xl">การชำระเงินและเงื่อนไข</h1>
       <div className="grid grid-cols-2 gap-4">
         <GlobalFormField
@@ -511,29 +446,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({
         <div className="flex justify-between mb-3">
           <span>ราคารวมสินค้า :</span>
           <span>{formatNumber(Price)} บาท</span>
-        </div>
-
-        <div className="flex justify-between mb-3">
-          <span>ส่วนลด :</span>
-          <span>
-            {discount ? (
-              discount > 0 && discountPrice > 0 ? (
-                //  แสดงแค่ผลรวม
-                <>{appliedDiscount}</>
-              ) : discount > 0 ? (
-                // discount
-                <>{discount}</>
-              ) : discountPrice > 0 ? (
-                //  discountPrice
-                <>{discountPrice}</>
-              ) : (
-                <>0</>
-              )
-            ) : (
-              <>0</>
-            )}{" "}
-            บาท
-          </span>
         </div>
 
         <div className="flex justify-between mb-3">

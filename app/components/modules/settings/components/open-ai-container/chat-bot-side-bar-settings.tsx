@@ -1,4 +1,5 @@
-import type React from "react";
+import { EditIcon } from "lucide-react";
+import React from "react";
 import type { UseFormReturn } from "react-hook-form";
 import {
   FormControl,
@@ -17,6 +18,7 @@ import { Slider } from "~/components/ui/slider";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
 import type { ConnectAiValues } from "~/schemas/settings";
+import { InstructionEditModal } from "../config/instruction-edit-modal";
 
 interface ChatbotSideBarSettingsProps {
   form: UseFormReturn<ConnectAiValues>;
@@ -27,8 +29,30 @@ export const ChatbotSideBarSettings: React.FC<ChatbotSideBarSettingsProps> = (
   props
 ) => {
   const { form, id } = props;
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpenEditInstructions = () => {
+    setOpen(true);
+  };
+
+  const onConfirmEditInstructions = (value: string) => {
+    form.setValue("systemInstructions", value);
+
+    setOpen(false);
+  };
+
   return (
     <div className="w-full">
+      {open && (
+        <InstructionEditModal
+          form={form}
+          open={open}
+          onOpenChange={setOpen}
+          onConfirm={(value) => onConfirmEditInstructions(value)}
+          onClose={() => setOpen(false)}
+        />
+      )}
       <div className="space-y-4 pr-6 pt-4">
         <FormField
           control={form.control}
@@ -71,7 +95,15 @@ export const ChatbotSideBarSettings: React.FC<ChatbotSideBarSettingsProps> = (
           name="systemInstructions"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>คำแนะนำระบบ</FormLabel>
+              <div className="flex flex-row justify-between gap-3">
+                <FormLabel>คำแนะนำระบบ</FormLabel>
+
+                <EditIcon
+                  size={18}
+                  className="cursor-pointer"
+                  onClick={handleOpenEditInstructions}
+                />
+              </div>
               <FormControl>
                 <Textarea
                   placeholder="Style, tone, context, etc."

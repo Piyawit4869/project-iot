@@ -26,22 +26,21 @@ import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
 import { currencyType, notationType } from "~/initData/order-initData";
 import type { OrderFormProps } from "~/schemas/order/type";
-import { calculateTotals, useDebounce } from "../order-function";
 import { useCustomerPaginate } from "~/api/client/customer/useCustomer";
-import { ListProduct } from "../product-select";
 import { OrderProvider } from "~/hooks/order/order";
-import { SignatureDocument } from "../signature";
 import { formatNumber } from "~/components/shared/global-format";
 import type { ProductType } from "~/schemas/order/order";
 import { statusOptions } from "~/initData/product-init-data";
 import { GlobalFormField } from "~/components/shared/global-formField";
-
-import { CustomerSection } from "../customerSection";
 import { cn } from "~/lib/utils";
 import { useGetAllUsers } from "~/api/client/user";
 import { companyList } from "~/components/modules/inventories/indata/inData";
+import { useDebounce } from "~/hooks/use-debounce";
+import { CustomerSection } from "~/components/modules/order/components/customerSection";
+import { ListProduct } from "~/components/modules/order/components/product-select";
+import { calculateTotals } from "~/components/modules/order/components/order-function";
 
-export const OrderForm: React.FC<OrderFormProps> = ({
+export const DocumentForm: React.FC<OrderFormProps> = ({
   form,
   Price,
   order,
@@ -144,7 +143,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
             "p-6 bg-card text-card-foreground rounded-xl border shadow-sm")
       )}
     >
-      <h3 className="font-semibold text-xl">ข้อมูลออเดอร์</h3>
+      <h3 className="font-semibold text-xl">ข้อมูลเอกสาร</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <GlobalFormField
           control={form.control}

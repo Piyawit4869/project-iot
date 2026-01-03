@@ -205,7 +205,7 @@ export function Menu() {
           {language.toUpperCase()}
         </span>
       </button> */}
-      {/* 
+      {/*
       <Popover>
         <PopoverTrigger asChild>
           <Icons.BellRing className="items-center hover:text-accent1 hover:scale-110 mr-5 mt-1 p-1 cursor-pointer" />
@@ -245,7 +245,6 @@ export function Menu() {
           ) : (
             <GlobalImage
               src={me?.profile?.imageUrl}
-              fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${me?.userName}`}
               alt="profile-image"
               width={30}
               height={30}
