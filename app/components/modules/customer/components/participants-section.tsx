@@ -19,6 +19,7 @@ interface ParticipantsSectionProps {
   filteredUser?: any[];
   supportedUserIds?: Set<string>;
   isLoading?: boolean;
+  isFetching?: boolean;
   isCreatingSupport?: boolean;
 }
 
@@ -41,6 +42,7 @@ export const ParticipantsSection: React.FC<ParticipantsSectionProps> = (
     filteredUser,
     supportedUserIds,
     isLoading,
+    isFetching,
     isCreatingSupport,
   } = props;
 
@@ -78,6 +80,7 @@ export const ParticipantsSection: React.FC<ParticipantsSectionProps> = (
             filteredUser={filteredUser}
             supportedUserIds={supportedUserIds}
             isLoading={isLoading}
+            isFetching={isFetching}
             disabled={isCreatingSupport}
             onSelect={(id: string) => onAdd && onAdd(id, !!isMain)}
           />

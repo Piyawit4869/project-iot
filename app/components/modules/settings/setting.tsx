@@ -1,11 +1,4 @@
-import {
-  Briefcase,
-  BrushCleaning,
-  MapPinCheck,
-  Settings,
-  User,
-  X,
-} from "lucide-react";
+import { Briefcase, BrushCleaning, MapPinCheck, Settings } from "lucide-react";
 import React from "react";
 
 import { Card } from "~/components/ui/card";
@@ -25,17 +18,13 @@ import {
   useUpdateSettingBranches,
   useUpdateSettings,
 } from "~/api/client/settings";
-import { FormProvider, useForm, type Resolver } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import {
   addressSchema,
-  OrganizationSchema,
   organizationSchema,
-  SettingSchema,
   SettingThemeSchema,
   type AddressSchemaValues,
-  type BranchesOrganization,
   type OrganizationFormValues,
-  type SettingSchemaValues,
   type settingTheme,
 } from "~/schemas/settings";
 import { GlobalModal } from "~/components/shared/modal/modal";
@@ -43,7 +32,6 @@ import { toast } from "sonner";
 import { SettingOrganizationForm } from "./components/setting-organization-form";
 import { RenderHeaderButtons } from "./components/render-header-buttons";
 import {
-  Link,
   useLocation,
   useNavigate,
   useRouteLoaderData,
@@ -55,10 +43,8 @@ import { TabControl } from "~/components/shared/tab-control";
 import { DataTable } from "~/components/shared/data-table";
 import { useOrganizationColumns } from "./components/org-columns";
 import { OrgSelectorDropdown } from "./components/org-selector-dropdown";
-import GlobalButton from "~/components/shared/global-button";
 import { useDebounce } from "~/hooks/use-debounce";
 import { useSearchUserOrgs } from "~/api/client/user";
-import { OrganizationContactCard } from "./components/create-organization/organization-contact-card";
 import { Button } from "~/components/ui/button";
 import { mapOpenDaysToApi } from "./viewmodels/useOrganizationAction";
 

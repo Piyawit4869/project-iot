@@ -92,12 +92,6 @@ export const useOrganizationColumns = (): ColumnDef<OrganizationColumn>[] => {
         header: "โลโก้",
         cell: (info) => {
           const url = info.getValue() as string | null | undefined;
-          const nameTh = info.row.original?.nameTh ?? "";
-          const seed =
-            nameTh ||
-            info.row.original?.nameEn ||
-            info.row.original?.code ||
-            "org";
 
           return (
             <GlobalImage
@@ -106,7 +100,6 @@ export const useOrganizationColumns = (): ColumnDef<OrganizationColumn>[] => {
               width={60}
               height={60}
               className="rounded-xl object-cover object-center"
-              fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${seed}`}
             />
           );
         },

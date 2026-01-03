@@ -16,15 +16,15 @@ export const FlexMessagePersonRender: React.FC<FlexMessagePersonRenderProps> = (
       className="
         snap-center
         shrink-0
-        w-[330px]
-        h-[480px]
+        min-w-[270px]
         rounded-[24px]
         bg-white
-        p-6
         text-center
+        border
+        pb-4
       "
     >
-      <div className="mx-auto mb-4  rounded-2xl overflow-hidden bg-muted flex items-center justify-center">
+      <div className="mx-auto mb-4 rounded-t-[28px] overflow-hidden bg-muted flex items-center justify-center">
         {items && items.imageUrl ? (
           <GlobalImage
             src={items.imageUrl}
