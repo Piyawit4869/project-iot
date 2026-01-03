@@ -30,6 +30,7 @@ type ChatContextType = {
   addMessagesToTop: (msgs: Message[]) => void;
   updateMessage: (id: string | number, updated: Partial<Message>) => void;
   removeMessage: () => void;
+  clearMessagesAI: () => void;
   setCurrentRoomId: (roomId: string) => void;
   setMessagesAI: (value: any) => void;
   typingUsers: TypingUser[];
@@ -73,6 +74,11 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     setMessagesAI([]);
   };
 
+  const clearMessagesAI = () => {
+    setMessages([]);
+    setMessagesAI([]);
+  };
+
   return (
     <ChatContext.Provider
       value={{
@@ -83,6 +89,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         addMessagesToTop,
         updateMessage,
         removeMessage,
+        clearMessagesAI,
         addMessageAI,
         setCurrentRoomId,
         setMessagesAI,

@@ -23,6 +23,8 @@ import {
   fetchLineCardContentPaginate,
   fetchLineFeaturePaginate,
   fetchLineMassagePaginate,
+  fetchResetAi,
+  fetchResetAiChatRoom,
   fetchRoomChatAIConfigLoadMore,
   fetchRoomChatAILoadMore,
   fetchRoomChatLoadMore,
@@ -213,6 +215,18 @@ export const useUpdateConnectionAi = (id: string) => {
   return useMutation({
     mutationFn: (values: ConnectAiValues) =>
       fetchUpdateConnectionAi(id, values),
+  });
+};
+
+export const useResetChatAi = (id: string) => {
+  return useMutation({
+    mutationFn: () => fetchResetAi(id),
+  });
+};
+
+export const useResetAiChatRoom = (id: string) => {
+  return useMutation({
+    mutationFn: () => fetchResetAiChatRoom(id),
   });
 };
 
