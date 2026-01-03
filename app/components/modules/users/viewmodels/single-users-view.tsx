@@ -127,12 +127,12 @@ export const SingleUsersView: React.FC<EditUsersViewProps> = ({
           <Card className="p-4 py-6 gap-2">
             <UserSkills data={data} loading={loading} />
           </Card>
-          <Card className="p-4 py-6 gap-2">
-            <UserPersonality data={data} loading={loading} />
-          </Card>
         </div>
 
         <div className="md:w-[55%] w-full flex flex-col gap-5">
+          <Card className="p-4 py-6 gap-2">
+            <UserPersonality data={data} loading={loading} />
+          </Card>
           <Card className="p-4 py-6 gap-2">
             <UserCompensation data={data} loading={loading} />
           </Card>
