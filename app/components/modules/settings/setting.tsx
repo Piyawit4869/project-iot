@@ -417,7 +417,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
     >
       <div className="mb-4">
         <TabControl
-          backpath={backToMain}
+          backpath={isSingleOrg ? backToMain : undefined}
           title={
             selectedOrgId ? (
               <div className="flex flex-row gap-2">
