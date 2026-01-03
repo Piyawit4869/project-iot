@@ -218,7 +218,7 @@ export const OrganizationSelector: React.FC<UserFormProfileProps> = ({
                       className="w-7 h-7 rounded-2xl"
                     />
                     <div className="flex flex-col text-sm">
-                      <span>ชื่อองค์กร : {selectBranch.nameEn || "-"}</span>
+                      <span>ชื่อสาขา : {selectBranch.nameEn || "-"}</span>
                       <span>
                         อีเมลติดต่อ : {selectBranch.contactEmail || "-"}
                       </span>
@@ -286,7 +286,7 @@ export const OrganizationSelector: React.FC<UserFormProfileProps> = ({
                                   className="w-5 h-5 rounded-2xl"
                                 />
                                 <div className="flex flex-col text-sm">
-                                  <span>ชื่อองค์กร : {item.nameEn || "-"}</span>
+                                  <span>ชื่อสาขา : {item.nameEn || "-"}</span>
                                   <span>
                                     อีเมลติดต่อ :{item.contactEmail || "-"}
                                   </span>
