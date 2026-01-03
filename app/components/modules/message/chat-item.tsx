@@ -148,7 +148,7 @@ export function ChatItem({
 
         {!autoReadMsg && countUnreadMessage > 0 && (
           <span
-            className="absolute top-0 right-0 inline-grid place-items-center min-w-5 h-5 px-1 rounded-full bg-red-500 text-white text-xs font-medium"
+            className="absolute bottom-[5px] left-[-5px] inline-grid place-items-center min-w-4 h-4 px-1 rounded-full bg-red-500 text-white text-[10px] font-medium"
             aria-hidden
           >
             {countUnreadMessage}

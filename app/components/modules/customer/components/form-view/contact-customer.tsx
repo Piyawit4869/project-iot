@@ -19,13 +19,14 @@ import {
   useCreateCustomerSupoort,
   useDeleteCustomerSupport,
 } from "~/api/client/customer/useGetCustomerSupport";
-import { useGetAllUsers } from "~/api/client/user";
+import { useGetSearchUsers } from "~/api/client/user";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 import type { CustomerSupportFormValues } from "~/schemas/customer/support/support";
 import type { Participant } from "~/types/customers/participant";
 import { ParticipantsSection } from "../participants-section";
 import { formatPhoneNumber } from "~/components/shared/global-format";
+import { useDebounce } from "~/hooks/use-debounce";
 import {
   Tooltip,
   TooltipContent,
@@ -53,9 +54,14 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
   const phoneContactState = form.watch("contacts.0.phone");
   const nameContactState = form.watch("contacts.0.name");
 
-  const { data: users, isLoading: userIsLoading } = useGetAllUsers();
-
   const [search, setSearch] = React.useState<string>("");
+  const debouncedSearch = useDebounce(search);
+
+  const {
+    data: allUser,
+    isLoading: isUserLoading,
+    isFetching: isUserFetching,
+  } = useGetSearchUsers(debouncedSearch);
 
   const { mutate: createCustomerSupport, isPending: isCreatingSupport } =
     useCreateCustomerSupoort(customer?.chatRoomDetail?.chatRoomId ?? "");
@@ -91,19 +97,19 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
     );
   }, [participants]);
 
-  const filteredUser = React.useMemo(() => {
-    if (!users || users.length === 0) return [];
+  // const filteredUser = React.useMemo(() => {
+  //   if (!users || users.length === 0) return [];
 
-    const key = search.toLowerCase();
-    return (
-      (users &&
-        users.filter(
-          (item: any) =>
-            item && item.userName && item.userName.toLowerCase().includes(key)
-        )) ||
-      []
-    );
-  }, [users, search]);
+  //   const key = search.toLowerCase();
+  //   return (
+  //     (users &&
+  //       users.filter(
+  //         (item: any) =>
+  //           item && item.userName && item.userName.toLowerCase().includes(key)
+  //       )) ||
+  //     []
+  //   );
+  // }, [users, search]);
 
   //disable btn
   let isAnyFilled = false;
@@ -228,7 +234,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
   };
 
   const goToChat = () => {
-    navigate(`/message?chatRoomId=${chatRoomId}`);
+    navigate(`/message?name=${customer?.profile?.lineName}`);
   };
 
   return (
@@ -412,9 +418,10 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
               setIsPopoverOpen={setIsPopoverMainParticipantsOpen}
               search={search}
               setSearch={setSearch}
-              filteredUser={filteredUser}
+              filteredUser={allUser}
               supportedUserIds={supportedUserIds}
-              isLoading={userIsLoading}
+              isLoading={isUserLoading}
+              isFetching={isUserFetching}
               isCreatingSupport={isCreatingSupport}
             />
 
@@ -429,9 +436,10 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
               setIsPopoverOpen={setIsPopoverOpen}
               search={search}
               setSearch={setSearch}
-              filteredUser={filteredUser}
+              filteredUser={allUser}
               supportedUserIds={supportedUserIds}
-              isLoading={userIsLoading}
+              isLoading={isUserLoading}
+              isFetching={isUserFetching}
               isCreatingSupport={isCreatingSupport}
             />
           </div>

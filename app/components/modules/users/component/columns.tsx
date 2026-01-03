@@ -25,7 +25,6 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         header: "รูปภาพ",
         cell: (info) => {
           const url = info.getValue() as string;
-          const userName = info.row.original?.userName;
 
           return (
             <GlobalImage
@@ -64,15 +63,22 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         },
       },
       {
-        accessorKey: "emId",
+        accessorKey: "profile.emId",
         header: "รหัสพนักงาน",
         cell: (info) => (
           <span className="">{(info.getValue() as string) || "-"}</span>
         ),
       },
       {
+        accessorKey: "organizationRoles.name",
+        header: "ตำแหน่งงาน",
+        cell: (info) => (
+          <span className="">{(info.getValue() as string) || "-"}</span>
+        ),
+      },
+      {
         accessorKey: "userName",
-        header: "User Name",
+        header: "ชื่อผู้ใช้งาน",
         cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
       },
       {

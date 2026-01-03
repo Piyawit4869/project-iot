@@ -130,11 +130,10 @@ export const useUserColumns = (
   const columns = useMemo<ColumnDef<UserColumn>[]>(
     () => [
       {
-        accessorKey: "profile.imageUrl",
+        accessorKey: "profile",
         header: "รูปภาพ",
         cell: (info) => {
-          const url = info.getValue() as string;
-          const userName = info.row.original?.userName;
+          const url = info.row.original?.profile?.imageUrl;
 
           return (
             <GlobalImage
@@ -143,7 +142,6 @@ export const useUserColumns = (
               width={60}
               height={60}
               className="rounded-xl w-[60px] h-[60px] object-cover object-center"
-              fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${userName}`}
             />
           );
         },
@@ -168,26 +166,31 @@ export const useUserColumns = (
           );
         },
       },
+
       {
         accessorKey: "userName",
-        header: "User Name",
-        cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
+        header: "ชื่อผู้ใช้งาน",
+
+        cell: (info) => {
+          const userName = info.row.original?.userName;
+          return <span>{userName}</span>;
+        },
       },
+
       {
         accessorKey: "email",
         header: "อีเมล",
         minSize: 600,
-        cell: (info) => (
-          <span className="text-muted-foreground">
-            {(info.getValue() as string) || "-"}
-          </span>
-        ),
+        cell: (info) => {
+          const email = info.row.original?.email;
+          return <span className="text-muted-foreground">{email}</span>;
+        },
       },
       {
         accessorKey: "status",
         header: "สถานะ",
         cell: (info) => {
-          const status = info.getValue() as string;
+          const status = info.row.original?.status;
 
           const current = statusMap[status] || {
             label: status || "-",
@@ -216,15 +219,16 @@ export const useUserColumns = (
         header: "เบอร์โทรศัพท์",
         enableSorting: false,
         cell: (info) => {
-          const phone = info.row.original.profile?.phone as string;
+          const phone = info.row.original?.profile?.phone as string;
+
           return <span>{phone ? formatPhoneNumber(phone) : "-"}</span>;
         },
       },
-      {
-        accessorKey: "departmentName",
-        header: "แผนก",
-        cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
-      },
+      // {
+      //   accessorKey: "departmentName",
+      //   header: "แผนก",
+      //   cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
+      // },
       {
         accessorKey: "gender",
         header: "เพศ",
@@ -234,7 +238,7 @@ export const useUserColumns = (
             female: "หญิง",
             not_specified: "ไม่ระบุ",
           };
-          const value = info.row.original.profile?.gender as string;
+          const value = info.row.original?.profile?.gender as string;
           return <span>{genderMap[value] ?? "-"}</span>;
         },
       },
@@ -242,33 +246,36 @@ export const useUserColumns = (
         accessorKey: "birthDate",
         header: "วัน / เดือน / ปีเกิด",
         cell: (info) => {
-          const value = info.row.original.profile?.birthDate as string;
+          const value = info.row.original?.profile?.birthDate as string;
           return <span>{formatDateTH(value)}</span>;
         },
       },
       {
+        id: "createdAt",
         accessorKey: "createdAt",
         header: "วันที่สร้าง",
         enableSorting: true,
-        cell: (info) => (
-          <span>{formatDateAndTime(info.getValue() as string)}</span>
-        ),
+        cell: (info) => {
+          const createdAt = info.row.original?.createdAt as string;
+
+          return <span>{formatDateAndTime(createdAt)}</span>;
+        },
       },
       {
         accessorKey: "createdBy",
         header: "ผู้สร้าง",
         cell: (info) => {
-          const id = info.row.original.createdById;
-          const name = (info.getValue() as string) || "-";
+          const id = info.row.original?.createdById;
+          const createdById = info.row.original?.createdBy || "-";
 
           return id ? (
             <Link to={`/users/${id}`}>
               <span className="text-muted-foreground hover:text-blue-400 hover:underline">
-                {name}
+                {createdById}
               </span>
             </Link>
           ) : (
-            <span className="text-muted-foreground">{name}</span>
+            <span className="text-muted-foreground">{createdById}</span>
           );
         },
       },
@@ -276,7 +283,8 @@ export const useUserColumns = (
         accessorKey: "updatedAt",
         header: "วันที่แก้ไข",
         cell: (info) => {
-          const value = info.getValue() as string;
+          const value = info.row.original?.updatedAt;
+
           return <span>{formatDateAndTime(value)}</span>;
         },
       },
@@ -284,8 +292,9 @@ export const useUserColumns = (
         accessorKey: "updatedBy",
         header: "ผู้ที่แก้ไข",
         cell: (info) => {
-          const id = info.row.original.updatedById;
-          const name = (info.getValue() as string) || "-";
+          const id = info.row.original?.updatedById;
+
+          const name = info.row.original?.updatedBy;
 
           return id ? (
             <Link to={`/users/${id}`}>
@@ -305,54 +314,54 @@ export const useUserColumns = (
         cell: (info) => {
           const id = info.row.original?.id;
           return (
-            // <div className="flex items-center gap-2 w-full">
-            //   <Link to={`/users/${id}`}>
-            //     <Button
-            //       className="w-full p-0 bg-[#737373] hover:bg-[#5E5E5E]"
-            //       aria-label="แก้ไข"
-            //       title="แก้ไข"
-            //     >
-            //       <Eye className=" text-white" />
-            //     </Button>
-            //   </Link>
-
-            <div className="w-auto">
+            <div className="flex flex-row w-auto gap-2">
               <Link to={`/users/${id}`}>
                 <GlobalButton
                   label=""
                   icon={<Eye className="w-4 h-4 text-white" />}
-                  onClick={() => {}}
-                  className="h-10 w-10 p-0 bg-[#737373] text-white hover:bg-[#E8594B] hover:text-white transition-colors"
+                  className="p-0 bg-[#737373] text-white hover:bg-[#E8594B] hover:text-white transition-colors"
                   aria-label="ลบ"
+                  width="40px"
                   disabled
                 />
               </Link>
-            </div>
-            // </div>
-          );
-        },
-      },
-      {
-        id: "remove",
-        header: "ลบพนักงาน",
-        cell: (info) => {
-          const userId = info.row.original?.id;
 
-          return (
-            <div className="w-auto">
               <GlobalButton
                 label=""
                 icon={<Trash className="w-4 h-4 text-white" />}
-                onClick={() => onRemove?.(userId)}
-                className="h-10 w-10 p-0 bg-[#FF7062] text-white hover:bg-[#E8594B] hover:text-white transition-colors"
+                onClick={() => onRemove?.(id)}
+                className="p-0 bg-[#FF7062] text-white hover:bg-[#E8594B] hover:text-white transition-colors"
                 aria-label="ลบออกจากตำแหน่ง"
                 disabled={!onRemove}
                 type="button"
+                width="40px"
               />
             </div>
           );
         },
       },
+      // {
+      //   id: "remove",
+      //   header: "ลบพนักงาน",
+      //   cell: (info) => {
+      //     const userId = info.row.original?.id;
+
+      //     return (
+      //       <div className="w-auto">
+      //         <GlobalButton
+      //           label=""
+      //           icon={<Trash className="w-4 h-4 text-white" />}
+      //           onClick={() => onRemove?.(userId)}
+      //           className="h-10 w-10 p-0 bg-[#FF7062] text-white hover:bg-[#E8594B] hover:text-white transition-colors"
+      //           aria-label="ลบออกจากตำแหน่ง"
+      //           disabled={!onRemove}
+      //           type="button"
+      //           width="40px"
+      //         />
+      //       </div>
+      //     );
+      //   },
+      // },
     ],
     [onView, onRemove]
   );

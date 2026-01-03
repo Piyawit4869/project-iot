@@ -889,7 +889,7 @@ export default function LineTemplatePickerModal({
       </DialogTrigger>
 
       {/* IMPORTANT: flex-col, NO overflow here */}
-      <DialogContent className="min-w-[65%] h-[90vh] p-0 gap-0 flex flex-col">
+      <DialogContent className="min-w-[65%] p-0 gap-0 flex flex-col">
         {/* Header */}
         <DialogHeader className="px-6 pt-5 shrink-0">
           <DialogTitle>เลือกคอนเทนต์</DialogTitle>
