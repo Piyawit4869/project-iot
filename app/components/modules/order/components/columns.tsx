@@ -169,27 +169,27 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
     //   },
     // },
 
-    {
-      id: "actions",
-      header: "การดำเนินการ",
-      cell: ({ row }) => {
-        return (
-          <>
-            <a href={`/orders/${row.original.id}`}>
-              <Button className="text-sm bg-[#737373] mr-2">
-                <Eye />
-              </Button>
-            </a>
-            <Button
-              className="text-sm bg-[#FF7062]"
-              onClick={() => onDelete(row.original.id)}
-            >
-              <Trash />
-            </Button>
-          </>
-        );
-      },
-    },
+    // {
+    //   id: "actions",
+    //   header: "การดำเนินการ",
+    //   cell: ({ row }) => {
+    //     return (
+    //       <>
+    //         <a href={`/orders/${row.original.id}`}>
+    //           <Button className="text-sm bg-[#737373] mr-2">
+    //             <Eye />
+    //           </Button>
+    //         </a>
+    //         <Button
+    //           className="text-sm bg-[#FF7062]"
+    //           onClick={() => onDelete(row.original.id)}
+    //         >
+    //           <Trash />
+    //         </Button>
+    //       </>
+    //     );
+    //   },
+    // },
   ];
 };
 
