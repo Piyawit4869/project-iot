@@ -136,8 +136,6 @@ export const ChatMessages = ({
     }
   }, [messagesData]);
 
-  console.log({ combinedMessages });
-
   React.useEffect(() => {
     // show button to scroll down
     const scrollArea = scrollAreaRef.current;
