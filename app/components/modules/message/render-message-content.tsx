@@ -230,6 +230,9 @@ export function MessageRenderer({
         >
           <img
             src={message}
+            onLoad={() => {
+              window.dispatchEvent(new Event("chat-image-loaded"));
+            }}
             className="
             rounded-xl 
             object-cover 

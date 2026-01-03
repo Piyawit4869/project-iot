@@ -1,13 +1,11 @@
 import React, { useRef, useState } from "react";
-import dayjs from "dayjs";
 import _ from "lodash";
-import { v4 as uuidv4 } from "uuid";
 
 import { socketConfig } from "~/lib/sockets";
 import { CustomerChatSkeleton } from "./noData/customer-chat-skeleton";
 import type { ChatRoomSchemaType } from "~/schemas/message/message";
 import { usePaginatedMessagesCursor } from "~/api/client/message/useMessage";
-import { useChat, type Message } from "~/providers/chat/useChat";
+import { useChat } from "~/providers/chat/useChat";
 
 import { useRouteLoaderData } from "react-router";
 import { MessageNoData } from "./chat/MessageNoData";
@@ -54,11 +52,15 @@ export const ChatMessages = ({
 
   const isAtBottomRef = React.useRef<boolean>(true);
 
+  const prevMessageLengthRef = React.useRef<number>(0);
+
+  const hasInitialScrolledRef = React.useRef<boolean>(false);
+
   const isFetchingPrevRef = React.useRef<boolean>(false);
 
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
-  const newestSeenId = React.useRef<string | null>(null);
+  const scrollRafRef = React.useRef<number | null>(null);
 
   const isProgrammaticScroll = React.useRef(false);
 
@@ -129,33 +131,12 @@ export const ChatMessages = ({
   };
 
   React.useEffect(() => {
-    const el = scrollAreaRef.current;
-    const messages = combinedMessages;
-    if (!el || messages?.length === 0) return;
-    const newest = messages[messages.length - 1] as any;
-    const isNewMessage =
-      newestSeenId.current && newestSeenId.current !== newest.timestamp;
-    newestSeenId.current = newest.timestamp;
-    if (isNewMessage) {
-      requestAnimationFrame(() => {
-        el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
-      });
-    }
-  }, [combinedMessages]);
-
-  React.useEffect(() => {
     if (messagesData?.pages?.length === 1) {
       setAutoScroll(true);
     }
   }, [messagesData]);
 
-  React.useEffect(() => {
-    const el = scrollAreaRef.current;
-    if (!el || !combinedMessages?.length) return;
-    requestAnimationFrame(() => {
-      el.scrollTop = el.scrollHeight;
-    });
-  }, [!!combinedMessages?.length]);
+  console.log({ combinedMessages });
 
   React.useEffect(() => {
     // show button to scroll down
@@ -252,8 +233,6 @@ export const ChatMessages = ({
   }, [targetMessageId, messagesData]);
 
   React.useEffect(() => {
-    //clear target on new select room
-
     if (selectedRoom) {
       setTargetMessageId("");
     }
@@ -264,22 +243,54 @@ export const ChatMessages = ({
     combinedMessages.length &&
     combinedMessages[combinedMessages.length - 1];
 
+  const scheduleScrollToBottom = React.useCallback(() => {
+    if (scrollRafRef.current) return;
+
+    scrollRafRef.current = requestAnimationFrame(() => {
+      const el = scrollAreaRef.current;
+      if (el) {
+        el.scrollTop = el.scrollHeight;
+      }
+      scrollRafRef.current = null;
+    });
+  }, []);
+
   React.useEffect(() => {
-    const el = scrollAreaRef.current;
-    if (!el || !combinedMessages.length) return;
+    const handleImageLoaded = () => {
+      const el = scrollAreaRef.current;
+      if (!el) return;
+
+      if (!hasInitialScrolledRef.current) {
+        hasInitialScrolledRef.current = true;
+        isAtBottomRef.current = true;
+        scheduleScrollToBottom();
+        return;
+      }
+
+      if (!isAtBottomRef.current) return;
+
+      scheduleScrollToBottom();
+    };
+
+    window.addEventListener("chat-image-loaded", handleImageLoaded);
+    return () => {
+      window.removeEventListener("chat-image-loaded", handleImageLoaded);
+    };
+  }, [scheduleScrollToBottom]);
+
+  React.useEffect(() => {
+    const currentLength = combinedMessages.length;
+    const prevLength = prevMessageLengthRef.current;
+
+    if (currentLength <= prevLength) {
+      prevMessageLengthRef.current = currentLength;
+      return;
+    }
+
+    prevMessageLengthRef.current = currentLength;
 
     if (isFetchingPrevRef.current) return;
-
-    if (!isAtBottomRef.current) return;
-
-    requestAnimationFrame(() => {
-      el.scrollTop = el.scrollHeight;
-    });
-  }, [combinedMessages.length]);
-
-  React.useEffect(() => {
-    if (!typingUsers.length) return;
-    if (!isAtBottomRef.current) return;
+    if (isSearching) return;
 
     const el = scrollAreaRef.current;
     if (!el) return;
@@ -287,15 +298,10 @@ export const ChatMessages = ({
     requestAnimationFrame(() => {
       el.scrollTop = el.scrollHeight;
     });
-  }, [typingUsers.length]);
+  }, [combinedMessages.length, isSearching]);
 
   React.useEffect(() => {
-    const el = scrollAreaRef.current;
-    if (!el || !combinedMessages.length) return;
-
-    requestAnimationFrame(() => {
-      el.scrollTop = el.scrollHeight;
-    });
+    hasInitialScrolledRef.current = false;
   }, [selectedRoom?.id]);
 
   if (isLoading && selectedRoom) {

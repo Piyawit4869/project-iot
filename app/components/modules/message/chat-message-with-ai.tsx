@@ -203,27 +203,18 @@ export default function ChatMessagesWithAI({
 
     bottomRef.current.scrollIntoView({ behavior: "auto" });
     didInitialAutoScrollRef.current = true;
+    setIsScrollReady(true);
   }, [combinedMessages]);
 
   React.useEffect(() => {
     const el = scrollAreaRef.current;
-    if (!el) return;
+    if (!el || !didInitialAutoScrollRef.current) return;
 
     const hasNewMessage = combinedMessages.length > lastMessageCountRef.current;
 
     lastMessageCountRef.current = combinedMessages.length;
 
     if (!hasNewMessage) return;
-
-    if (isSendingMessageRef.current) {
-      isSendingMessageRef.current = false;
-
-      requestAnimationFrame(() => {
-        el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
-      });
-      return;
-    }
-
     if (!isAtBottomRef.current) return;
 
     requestAnimationFrame(() => {
@@ -233,20 +224,33 @@ export default function ChatMessagesWithAI({
 
   React.useEffect(() => {
     if (
-      lastMessage?.messageLabel !== "ROME AI กำลังประมวลผล" ||
-      !aiLoadingRef.current
+      !didInitialAutoScrollRef.current ||
+      (lastMessage && lastMessage.messageLabel !== "ROME AI กำลังประมวลผล") ||
+      !aiLoadingRef.current ||
+      !isAtBottomRef.current
     )
       return;
 
-    if (!isAtBottomRef.current) return;
-
     requestAnimationFrame(() => {
-      aiLoadingRef.current?.scrollIntoView({
+      aiLoadingRef?.current?.scrollIntoView({
         behavior: "smooth",
         block: "end",
       });
     });
   }, [lastMessage?.messageLabel]);
+
+  React.useEffect(() => {
+    didInitialAutoScrollRef.current = false;
+    isAtBottomRef.current = true;
+    lastMessageCountRef.current = 0;
+    isSendingMessageRef.current = false;
+
+    setButtonScrollToBottom(false);
+    setShowTopLoading(false);
+    setHasScrolledOnce(false);
+    setHasAutoScrolled(false);
+    setIsScrollReady(false);
+  }, [chatRoomId]);
 
   React.useEffect(() => {
     refetch();
