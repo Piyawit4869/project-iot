@@ -9,15 +9,15 @@ import {
   useRouteLoaderData,
 } from "react-router";
 import { Toaster } from "sonner";
+import React from "react";
 
 import "./app.css";
 import { getAccessToken, getUser } from "./services/session.server";
-import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GlobalModalStatic } from "./components/shared/modal/global-modal-static";
 import type { Route } from "./routes/backoffice/customer/+types";
 import { RouteProvider } from "./providers/RouteProvider";
-import { useGoogleAnalytics } from "./hooks/useGoogleAnalytics";
+// import { useGoogleAnalytics } from "./hooks/useGoogleAnalytics";
 import ReactGA from "react-ga4";
 
 import TagManager from "react-gtm-module";
@@ -102,20 +102,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>ROME Platform</title>
-        {/* 
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-        (function(w,d,s,l,i){w[l]=w[l]||[];
-        w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
-        var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
-        j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
-        f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-T724KX5N');
-      `,
-          }}
-        /> */}
 
         <Meta />
         <Links />
@@ -152,8 +138,8 @@ export default function App() {
         toastOptions={{ className: "font-[IBMPlexSansThai]" }}
       />
       <RouteProvider>
-        <TrackPageView />
-        <PageTracking />
+        {/* <TrackPageView />
+        <PageTracking /> */}
 
         <Outlet />
       </RouteProvider>
