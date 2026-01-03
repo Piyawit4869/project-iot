@@ -1,0 +1,232 @@
+/* ================= Fonts ================= */
+/* .font-important {
+  font-family: "IBM Plex Sans Thai", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+} */
+
+/* .font-genaral {
+  font-family: "IBM Plex Sans Thai Looped", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+} */
+
+.font-body {
+  font-family: "IBMPlexSansThaiLooped", sans-serif;
+}
+
+.font-head {
+  font-family: "IBMPlexSansThai", sans-serif;
+  font-weight: 700;
+}
+
+.font-second {
+  font-family: "IBMPlexSansThai", sans-serif;
+}
+
+/* ================= Layout ================= */
+.document-container {
+  padding: 20px;
+  color: #333;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.document-header {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+strong {
+    font-size: 18px;
+}
+
+.document-title-wrapper {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.document-subtitle {
+  font-size: 14px;
+  color: #666;
+}
+
+.document-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1c918b;
+  margin-left: auto;
+}
+
+/* ================= Top info ================= */
+.top-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.top-info-left {
+  width: 55%;
+}
+
+.top-info-right {
+  width: 45%;
+}
+
+.top-info-right.box {
+  padding: 5px 10px;
+  background-color: #d4f4f2;
+  display: inline-block;
+}
+
+.header-sign {
+  margin-top: -10px;
+  padding: 10px 0;
+  border-top: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* ================= Table ================= */
+.q-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  table-layout: fixed;
+}
+
+.q-table th:nth-child(1),
+.q-table td:nth-child(1) {
+  width: 70%;
+  text-align: left;
+}
+
+.q-table th:nth-child(2),
+.q-table td:nth-child(2) {
+  width: 20%;
+  text-align: center;
+}
+
+.q-table th:nth-child(3),
+.q-table td:nth-child(3),
+.q-table th:nth-child(4),
+.q-table td:nth-child(4) {
+  width: 30%;
+  text-align: right;
+}
+
+.q-table th,
+.q-table td {
+  padding: 8px;
+  text-align: left;
+  word-wrap: break-word;
+}
+
+.q-table thead {
+  background-color: #d4f4f2;
+}
+
+/* ================= Summary / Payment ================= */
+.sum-info {
+  margin: 24px 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.sum-info-left {
+  width: 40%;
+}
+
+.sum-info-right {
+  width: 60%;
+}
+
+.payment-title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+}
+
+.peyment-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.summary {
+  margin-left: auto;
+  width: 250px;
+  font-size: 14px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.summary-row.total {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 5px 10px;
+  background-color: #d4f4f2;
+}
+
+.totalnum {
+  color: #1c918b;
+}
+
+/* ================= Note ================= */
+.note {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+}
+
+/* ================= Customer ================= */
+.customer-block {
+  margin-top: 32px;
+  font-size: 14px;
+}
+
+/* ================= Footer ================= */
+.footer-sign {
+  margin-top: 80px;
+  border-top: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.footer-sign-inner {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 48px;
+}
+
+.signature-block {
+  color: #1c918b;
+  font-weight: bold;
+}
+
+.signature-block.right {
+  text-align: right;
+}
+
+.signature-image {
+  height: 64px;
+}
+
+.page-number {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 12px;
+}
