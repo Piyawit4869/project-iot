@@ -3,10 +3,11 @@ import { toast } from "sonner";
 import { FormProvider, useForm, type Resolver } from "react-hook-form";
 import { useRouteLoaderData, useSearchParams } from "react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronLeft, ChevronRight, Save } from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCcw, Save } from "lucide-react";
 
 import {
   useGetConnectionAi,
+  useResetChatAi,
   useUpdateConnectionAi,
 } from "~/api/client/settings";
 import { ConnectAiSchema, type ConnectAiValues } from "~/schemas/settings";
@@ -22,6 +23,7 @@ import { useEntityBreadcrumb } from "~/providers/RouteProvider";
 // ✅ NEW
 import { AiConfigListPanel } from "./ai-config-list-panel"; // <- ปรับ path ให้ตรงไฟล์ที่คุณสร้าง
 import { cn } from "~/lib/utils";
+import GlobalButton from "~/components/shared/global-button";
 
 interface OpenAiContainerSettingsChatBotProps {
   api: string;
@@ -39,10 +41,12 @@ export const OpenAiContainerSettingsChatBot: React.FC<
   const [showList, setShowList] = useState(true);
 
   const { mutate: UpdateConnectionAi } = useUpdateConnectionAi(String(id));
+
   const { refetch: refetchChatAI } = useGetConnectionAi(String(id));
   const { user } = useRouteLoaderData("root") as any;
 
-  const { data, isLoading } = useGetConnectionAi(id ?? "");
+  const { data, isLoading, refetch } = useGetConnectionAi(id ?? "");
+  const { mutate: resetChatAi } = useResetChatAi(String(data?.id));
 
   const chatroomConfigId = data?.chatroomConfigId;
 
@@ -75,6 +79,34 @@ export const OpenAiContainerSettingsChatBot: React.FC<
           onError: (error) => {
             console.error("Update connection ai error:", error);
             toast.error("เกิดข้อผิดพลาดขณะบันทึกการเชื่อมต่อ", {
+              id: toastId,
+            });
+          },
+        });
+      },
+    });
+  };
+
+  const resetAi = () => {
+    GlobalModal.info({
+      title: "Reset Chat AI",
+      description: "คุณต้องการ Reset Chat AI ใช่หรือไม่",
+      confirmText: "ยืนยัน",
+      cancelText: "ยกเลิก",
+      onConfirm: async () => {
+        const toastId = toast.loading("กำลัง Reset Chat...");
+        resetChatAi(undefined, {
+          onSuccess: () => {
+            toast.success("Reset Chat สำเร็จ !", {
+              id: toastId,
+              duration: 2500,
+              position: "bottom-right",
+            });
+            refetch();
+          },
+          onError: (error) => {
+            console.error("Reset Chat ai error:", error);
+            toast.error("เกิดข้อผิดพลาดขณะการ Reset Chat", {
               id: toastId,
             });
           },
@@ -220,6 +252,14 @@ export const OpenAiContainerSettingsChatBot: React.FC<
                   ทดสอบการคุยและดู output
                 </div>
               </div>
+              <GlobalButton
+                label="Reset AI"
+                variant="secondary"
+                icon={<RotateCcw className="w-2 h-2" />}
+                width="100px"
+                onClick={resetAi}
+                className="bg-white border-1 hover:bg-gray-100 hover:border-gray-100"
+              />
             </div>
 
             <div className="h-full flex-1 overflow-y-auto p-3">

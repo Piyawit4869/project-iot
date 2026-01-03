@@ -39,6 +39,7 @@ import { GlobalFormField } from "~/components/shared/global-formField";
 import { CustomerSection } from "../customerSection";
 import { cn } from "~/lib/utils";
 import { useGetAllUsers } from "~/api/client/user";
+import { companyList } from "~/components/modules/inventories/indata/inData";
 
 export const OrderForm: React.FC<OrderFormProps> = ({
   form,
@@ -160,8 +161,8 @@ export const OrderForm: React.FC<OrderFormProps> = ({
           label="บริษัท (Company)"
           type="select"
           view={view}
-          placeholder="เลือกประเภทเอกสาร"
-          options={notationType}
+          placeholder="เลือกบริษัท"
+          options={companyList}
         />
 
         <GlobalFormField

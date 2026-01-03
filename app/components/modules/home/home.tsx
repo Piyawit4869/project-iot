@@ -9,6 +9,7 @@ import {
   BookA,
   Book,
   Users,
+  FileText,
 } from "lucide-react";
 import React from "react";
 import { Link, useRouteLoaderData } from "react-router";
@@ -128,6 +129,14 @@ export default function HomeComponent() {
       icon: Book,
       color: "bg-gradient-to-br from-purple-500 to-blue-500",
       path: "/on-boarding",
+    },
+    {
+      id: "notation",
+      name: "Notation",
+      nameLocal: "เอกสาร",
+      icon: FileText,
+      color: "bg-gradient-to-br from-pink-500 to-blue-500",
+      path: "/notation",
     },
 
     {

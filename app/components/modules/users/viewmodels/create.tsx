@@ -67,15 +67,15 @@ export default function CreateUsers() {
         gender: "",
         birthDate: null,
         phone: "",
-        age: 0,
+        age: undefined,
         imageUrl: "",
         photoUrl: "",
         taxId: "",
         nickName: "",
         nationality: "",
         religion: "",
-        weight: 0,
-        height: 0,
+        weight: undefined,
+        height: undefined,
         startWorkDate: null,
         endWorkDate: null,
         isMobile: false,
@@ -128,6 +128,7 @@ export default function CreateUsers() {
     "active",
     "profile.firstName",
     "profile.lastName",
+    "profile.age",
   ];
   const {
     watch,
@@ -215,7 +216,7 @@ export default function CreateUsers() {
                 descriptions:
                   "กรอกรายละเอียดเกี่ยวกับเงินเดือน สวัสดิการ และรูปแบบค่าตอบแทน",
                 content: (
-                  <Card>
+                  <Card className="py-2">
                     <UserCompensation form={formCreate} />
                   </Card>
                 ),
@@ -225,10 +226,14 @@ export default function CreateUsers() {
                 title: "คุณสมบัติ & ความสามารถ",
                 descriptions: "กรอกทักษะ ความสามารถ และข้อมูลด้านการศึกษา",
                 content: (
-                  <Card className="flex flex-col gap-2">
-                    <UserSkills form={formCreate} />
-                    <UserStudy form={formCreate} />
-                  </Card>
+                  <div className="flex flex-col gap-2 py-2">
+                    <Card className="py-2">
+                      <UserSkills form={formCreate} />
+                    </Card>
+                    <Card className="py-2 mt-3">
+                      <UserStudy form={formCreate} />
+                    </Card>
+                  </div>
                 ),
               },
 
@@ -237,7 +242,7 @@ export default function CreateUsers() {
                 descriptions:
                   "กรอกประวัติการทำงานก่อนหน้า รวมถึงหน้าที่และระยะเวลา",
                 content: (
-                  <Card>
+                  <Card className="py-2">
                     <UserWorkExperience form={formCreate} />
                   </Card>
                 ),
@@ -248,7 +253,7 @@ export default function CreateUsers() {
                 descriptions:
                   "กรอกช่องทางติดต่อต่าง ๆ ผ่านโซเชียลมีเดียหรือโปรไฟล์ออนไลน์",
                 content: (
-                  <Card>
+                  <Card className="py-2">
                     <UserSocalmedias form={formCreate} />
                   </Card>
                 ),
@@ -259,7 +264,7 @@ export default function CreateUsers() {
                 descriptions:
                   "อัปโหลดเอกสารที่เกี่ยวข้อง เช่น สำเนาบัตร Resume หรือใบรับรองต่าง ๆ",
                 content: (
-                  <Card>
+                  <Card className="py-2">
                     <UserDocuments form={formCreate} />
                   </Card>
                 ),

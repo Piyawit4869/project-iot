@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 
-import { X } from "lucide-react";
+import { PenLine, Save, Trash2, X } from "lucide-react";
 
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
 import { ensureIds } from "~/components/shared/withId";
@@ -316,17 +316,14 @@ export default function SingleUsers() {
         backpath={handleBack}
         buttons={[
           isEdit ? (
-            <div className="w-full flex flex-row pl-10" key="edit-actions">
+            <div className="w-full flex flex-row " key="edit-actions">
               <GlobalButton
-                label={
-                  <>
-                    <X /> ยกเลิก
-                  </>
-                }
+                label={"ยกเลิก"}
                 type="button"
-                className="mr-4 max-w-[90px] bg-[#EF4343] text-white hover:bg-[#d73232]"
+                className="mr-4 max-w-[85px] bg-[#EF4343] text-white hover:bg-[#d73232]"
                 onClick={handleCancel}
                 variant="secondary"
+                icon={<X />}
               />
               <GlobalButton
                 label="บันทึก"
@@ -334,14 +331,15 @@ export default function SingleUsers() {
                 type="submit"
                 form="users"
                 loading={isSubmitting}
-                className="max-w-[90px] mr-5"
+                className="max-w-[90px] mr-2 "
                 onClick={form.handleSubmit(onSubmit, (errors) => {
                   console.log("errors", errors);
                 })}
+                icon={<Save />}
               />
             </div>
           ) : (
-            <div className="w-full flex flex-row pl-10">
+            <div className="w-full flex flex-row ">
               {getUserActionByPermission(
                 permission,
                 "user",
@@ -351,7 +349,8 @@ export default function SingleUsers() {
                   label="ลบ"
                   variant="outline"
                   key="delete-btn"
-                  className="mr-4 max-w-[90px]"
+                  className="mr-4 max-w-[85px]"
+                  icon={<Trash2 />}
                   onClick={() => params.id && handleDelete(params.id)}
                 />
               )}
@@ -364,7 +363,8 @@ export default function SingleUsers() {
                   label="แก้ไข"
                   key="update-button"
                   type="button"
-                  className="max-w-[90px] mr-15"
+                  className="max-w-[90px] mr-5 "
+                  icon={<PenLine />}
                   onClick={() => setIsEdit(true)}
                 />
               )}
@@ -399,7 +399,6 @@ export default function SingleUsers() {
                       `กรอกข้อมูลไม่ครบหรือไม่ถูกต้อง (${count} จุด)`
                     );
                   }
-                  console.log("errors", count);
                 })}
               >
                 <div className="mt-2 flex flex-col md:flex-row gap-5">
@@ -412,29 +411,29 @@ export default function SingleUsers() {
                         roles={roles}
                       />
                     </Card>
-                    <Card className="p-2 py-8">
+                    <Card className="p-2 ">
                       <UserSkills form={form} data={data} />
                     </Card>
                   </div>
 
                   <div className="md:w-[55%] w-full flex flex-col gap-5">
-                    <Card className="p-2 py-8">
+                    <Card className="p-2 ">
                       <UserCompensation form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2 py-8">
+                    <Card className="p-2 ">
                       <UserWorkExperience form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2 py-8">
+                    <Card className="p-2 ">
                       <UserStudy form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2 py-8">
+                    <Card className="p-2 ">
                       <UserSocalmedias form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2 py-8">
+                    <Card className="p-2 ">
                       <UserDocuments form={form} data={data} />
                     </Card>
                   </div>

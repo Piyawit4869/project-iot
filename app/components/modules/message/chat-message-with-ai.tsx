@@ -25,10 +25,12 @@ export default function ChatMessagesWithAI({
   searchPrompt,
   isAILoading,
   chatRoomAssistantId,
+  resetChatAi,
 }: {
   customerId: string;
   chatRoomId: string;
   autoScroll: boolean;
+  resetChatAi?: number;
   setAutoScroll: React.Dispatch<React.SetStateAction<boolean>>;
   searchPrompt?: string;
   isAILoading: boolean;
@@ -50,14 +52,14 @@ export default function ChatMessagesWithAI({
   const [hasAutoScrolled, setHasAutoScrolled] = useState(false);
   const [isScrollReady, setIsScrollReady] = useState(false);
   const [buttonScrollToBottom, setButtonScrollToBottom] = React.useState(false);
-  const { messagesAI: socketMessages } = useChat();
+  const { messagesAI: socketMessages, clearMessagesAI } = useChat();
   const {
     data: messagesData,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    // refetch,
+    refetch,
   } = usePaginatedChatRoomAIAssistant(chatRoomId || "");
 
   const { mutateAsync: connectedChatRoomAIAssistant, isPending: isPendingAI } =
@@ -245,6 +247,11 @@ export default function ChatMessagesWithAI({
       });
     });
   }, [lastMessage?.messageLabel]);
+
+  React.useEffect(() => {
+    refetch();
+    clearMessagesAI();
+  }, [resetChatAi]);
 
   if (isLoading && customerId) {
     return <CustomerChatSkeleton />;

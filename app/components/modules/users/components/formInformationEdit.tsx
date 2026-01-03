@@ -50,6 +50,7 @@ import { RadioCardGroup } from "~/components/shared/global-radio-card";
 import { gender, prefix } from "~/initData/customer-initData";
 import { InputNumberBox } from "~/components/shared/input-number-box";
 import { useCheckUserEmailDuplicate } from "~/api/client/user";
+import type { RangeDate } from "./formInformationCreate";
 
 type OptionItem = { id: string; name: string; active?: boolean };
 
@@ -69,6 +70,7 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
   const [debouncedStatusSearch] = useState<string>("");
   const [search, setSearch] = React.useState("");
   const [openSub, setOpenSub] = React.useState(false);
+  const [rangeDate, setRangeDate] = React.useState<RangeDate>({});
 
   const userRoles = Array.isArray(roles) ? roles : [];
 
@@ -212,10 +214,10 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                 <GlobalFormField
                   control={form.control}
                   name="userName"
-                  label="ชื่อพนักงาน"
+                  label="User Name"
                   type="input"
                   checkFields={checkFields}
-                  placeholder="กรกอรชื่อพนักงาน"
+                  placeholder="กรอก User Name ของพนักงาน"
                 />
                 <div className="col-span-2">
                   <FormField
@@ -256,7 +258,6 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                         <RequiredLabel required>ตำแหน่ง</RequiredLabel>
 
                         <div className="flex flex-wrap gap-2">
-                          {/* แสดงค่าเมื่อมี */}
                           {selectedRole && (
                             <div className="flex items-center gap-2 px-2 py-1.5 rounded-full border">
                               <GlobalImage
@@ -333,7 +334,7 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                 <OrganizationSelector form={form} roles={roles} isEdit={true} />
               </div>
 
-              <h1 className="font-bold">ข้อมูลส่วนตัว</h1>
+              <h1 className="font-bold mt-4">ข้อมูลส่วนตัว</h1>
               <div className=" grid grid-cols-1 md:grid-cols-1 gap-5">
                 <FormField
                   control={form.control}
@@ -631,7 +632,13 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                       <FormControl>
                         <DatePicker
                           value={field.value || ""}
-                          onChange={field.onChange}
+                          onChange={(val?: string) => {
+                            field.onChange(val);
+                            setRangeDate((prev) => ({
+                              ...prev,
+                              from: val ? new Date(val) : undefined,
+                            }));
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -648,6 +655,12 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                         <DatePicker
                           value={field.value || ""}
                           onChange={field.onChange}
+                          disabled={(d: string) => {
+                            if (!rangeDate.from) return false;
+                            const dd = new Date(d);
+                            dd.setHours(0, 0, 0, 0);
+                            return dd < rangeDate.from;
+                          }}
                         />
                       </FormControl>
                       <FormMessage />

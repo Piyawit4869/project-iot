@@ -16,6 +16,7 @@ import {
   Brain,
   ShoppingBag,
   PlusIcon,
+  RotateCcw,
 } from "lucide-react";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -102,6 +103,8 @@ import { OrderViewModal } from "./orders-view-modal";
 import { AIMessageView } from "./ai-message-view-modal";
 import { GlobalTooltip } from "~/components/shared/global-tooltip";
 import { ChatCustomerTags } from "./chat-customer-tags";
+import { useResetAiChatRoom, useResetChatAi } from "~/api/client/settings";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface UserProps {
   id: string;
@@ -171,6 +174,7 @@ export default function ChatCustomerInfo({
   currentCustomer: Customer;
   api: string;
 }) {
+  const queryClient = useQueryClient();
   const { data: allTags } = useGetAllTags();
 
   const { data: roomDetail } = useGetChatRoomAssistantId(
@@ -226,6 +230,8 @@ export default function ChatCustomerInfo({
   const { mutateAsync: connectedChatRoomAI, isPending: isPendingAI } =
     useConnectedChatRoomAssistant();
 
+  const { mutate: resetAiChatRoom } = useResetAiChatRoom(String(assistantId));
+
   const navigate = useNavigate();
 
   const [isFirstTimeAI, setIsFirstTimeAI] = React.useState<boolean>(true);
@@ -250,6 +256,7 @@ export default function ChatCustomerInfo({
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [viewOrderDetail] = React.useState<string>("");
   const [viewOrderDetailOpen, setViewOrderDetailOpen] = React.useState(false);
+  const [resetChatAi, setResetChatAI] = React.useState(0);
 
   const [cartItems, setCartItems] = React.useState<Product[]>([]);
   const [selectProductItem, setSelectProductItem] = React.useState<
@@ -485,6 +492,36 @@ export default function ChatCustomerInfo({
     if (!modelCustomerDetails) {
       refetchCustomer();
     }
+  };
+
+  const resetAi = () => {
+    GlobalModal.info({
+      title: "Reset Chat AI",
+      description: "คุณต้องการ Reset Chat AI ใช่หรือไม่",
+      confirmText: "ยืนยัน",
+      cancelText: "ยกเลิก",
+      onConfirm: async () => {
+        const toastId = toast.loading("กำลัง Reset Chat...");
+        resetAiChatRoom(undefined, {
+          onSuccess: () => {
+            toast.success("Reset Chat สำเร็จ !", {
+              id: toastId,
+              duration: 2500,
+              position: "bottom-right",
+            });
+
+            setResetChatAI((prev) => prev + 1);
+          },
+
+          onError: (error) => {
+            console.error("Reset Chat ai error:", error);
+            toast.error("เกิดข้อผิดพลาดขณะการ Reset Chat", {
+              id: toastId,
+            });
+          },
+        });
+      },
+    });
   };
 
   const handleFirstTimeAISearch = async (value: string) => {
@@ -1361,16 +1398,27 @@ export default function ChatCustomerInfo({
                   <div className="flex flex-row justify-between items-center w-full">
                     <h3 className="text-sm font-semibold mt-1">พูดคุยกับ AI</h3>
 
-                    <Button
-                      type="button"
-                      size={"sm"}
-                      className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-sm text-black"
-                      onClick={() => {
-                        setOpenAiSetting(true);
-                      }}
-                    >
-                      <Settings />
-                    </Button>
+                    <div className="flex flex-row gap-2">
+                      <Button
+                        type="button"
+                        size={"sm"}
+                        className="bg-white border-1 hover:bg-gray-100 hover:border-gray-100"
+                        onClick={resetAi}
+                      >
+                        <RotateCcw className="text-black" />
+                      </Button>
+
+                      <Button
+                        type="button"
+                        size={"sm"}
+                        className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-sm text-black"
+                        onClick={() => {
+                          setOpenAiSetting(true);
+                        }}
+                      >
+                        <Settings />
+                      </Button>
+                    </div>
                   </div>
 
                   {isFirstTimeAI && !assistantId ? (
@@ -1380,6 +1428,7 @@ export default function ChatCustomerInfo({
                       customerId={customer?.id}
                       chatRoomId={assistantId || chatRoomAssistantId}
                       autoScroll={autoScroll}
+                      resetChatAi={resetChatAi}
                       setAutoScroll={setAutoScroll}
                       searchPrompt={firstTimeMessage}
                       isAILoading={isPendingAI}

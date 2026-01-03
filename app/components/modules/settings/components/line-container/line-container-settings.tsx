@@ -68,6 +68,7 @@ export const LineContainerSettings: React.FC = () => {
     resolver: zodResolver(ConnectLineSchema),
     defaultValues: {
       id: "",
+      imageUrl: "",
       name: "",
       channelId: "",
       channelSecret: "",
@@ -127,6 +128,7 @@ export const LineContainerSettings: React.FC = () => {
     if (data) {
       form.reset({
         id: data?.id ?? "",
+        imageUrl: data?.imageUrl ?? "",
         name: data?.name ?? "",
         channelId: data?.channelId ?? "",
         channelSecret: data?.channelSecret ?? "",
@@ -183,6 +185,7 @@ export const LineContainerSettings: React.FC = () => {
     { key: "channelId", mode: true },
     { key: "channelSecret", mode: true },
     { key: "channelAccessToken", mode: true },
+    { key: "imageUrl", mode: true },
   ]);
 
   const handleCloseForm = (key: string) => {
@@ -216,6 +219,10 @@ export const LineContainerSettings: React.FC = () => {
   )?.mode;
   const editChannelAccessToken = customerForms.find(
     (f: any) => f.key === "channelAccessToken"
+  )?.mode;
+
+  const editImageUrl = customerForms.find(
+    (f: any) => f.key === "imageUrl"
   )?.mode;
 
   return (
@@ -260,6 +267,25 @@ export const LineContainerSettings: React.FC = () => {
 
                       <div className="grid grid-cols-1 md:grid-cols-1 gap-3 mt-5">
                         <FormField
+                          name="imageUrl"
+                          render={({ field }) => (
+                            <EditableFormField
+                              onSave={form.handleSubmit(handleOnSubmit)}
+                              label="รูปภาพ"
+                              edit={editImageUrl}
+                              onCancel={() => handleCloseForm("imageUrl")}
+                              onEdit={() => handleEditForm("imageUrl")}
+                              field={field}
+                              masked
+                              type="image"
+                              isEdit={editImageUrl}
+                            />
+                          )}
+                        />
+
+                        <Separator />
+
+                        <FormField
                           name="name"
                           render={({ field }) => (
                             <EditableFormField
@@ -270,6 +296,7 @@ export const LineContainerSettings: React.FC = () => {
                               onEdit={() => handleEditForm("name")}
                               onSave={form.handleSubmit(handleOnSubmit)}
                               field={field}
+                              showCopy
                               isEdit={editName}
                             />
                           )}
@@ -307,6 +334,7 @@ export const LineContainerSettings: React.FC = () => {
                               onEdit={() => handleEditForm("channelSecret")}
                               field={field}
                               masked
+                              showCopy
                               onSave={form.handleSubmit(handleOnSubmit)}
                               isEdit={editChannelSecret}
                             />
@@ -320,7 +348,12 @@ export const LineContainerSettings: React.FC = () => {
                           render={({ field }) => (
                             <EditableFormField
                               onSave={form.handleSubmit(handleOnSubmit)}
-                              label="Channel access token (long-lived)"
+                              label={
+                                <span>
+                                  Channel access token
+                                  <span className="block">(long-lived)</span>
+                                </span>
+                              }
                               placeholder="w231-12abcdefg1234567890"
                               edit={editChannelAccessToken}
                               onCancel={() =>
@@ -331,6 +364,7 @@ export const LineContainerSettings: React.FC = () => {
                               }
                               field={field}
                               masked
+                              showCopy
                               isEdit={editChannelAccessToken}
                             />
                           )}

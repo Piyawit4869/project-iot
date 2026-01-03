@@ -63,11 +63,11 @@ export const OrganizationSelector: React.FC<UserFormProfileProps> = ({
           <div className="flex items-center gap-2 border px-2 py-1.5 rounded-2xl">
             <GlobalImage
               src={organization?.logoUrl}
-              alt={organization?.nameEn || ""}
+              alt={organization?.nameTh || ""}
               className="w-7 h-7 rounded-2xl"
             />
             <div className="flex flex-col text-sm">
-              <span>ชื่อองค์กร : {organization.nameEn || "-"}</span>
+              <span>ชื่อองค์กร : {organization.nameTh || "-"}</span>
             </div>
           </div>
         </div>
@@ -87,12 +87,12 @@ export const OrganizationSelector: React.FC<UserFormProfileProps> = ({
                     <div className="flex items-center gap-2 border px-2 py-1.5 rounded-2xl">
                       <GlobalImage
                         src={selectorganization?.logoUrl}
-                        alt={selectorganization?.nameEn || ""}
+                        alt={selectorganization?.nameTh || ""}
                         className="w-7 h-7 rounded-2xl"
                       />
                       <div className="flex flex-col text-sm">
                         <span>
-                          ชื่อองค์กร : {selectorganization.nameEn || "-"}
+                          ชื่อองค์กร : {selectorganization.nameTh || "-"}
                         </span>
                         <span>
                           โดเมน : {selectorganization.domainName || "-"}
@@ -165,12 +165,12 @@ export const OrganizationSelector: React.FC<UserFormProfileProps> = ({
                                 >
                                   <GlobalImage
                                     src={item?.logoUrl}
-                                    alt={item?.nameEn || ""}
+                                    alt={item?.nameTh || ""}
                                     className="w-5 h-5 rounded-2xl"
                                   />
                                   <div className="flex flex-col text-sm">
                                     <span>
-                                      ชื่อองค์กร : {item.nameEn || "-"}
+                                      ชื่อองค์กร : {item.nameTh || "-"}
                                     </span>
                                     <span>
                                       โดเมน : {item.domainName || "-"}
@@ -214,11 +214,11 @@ export const OrganizationSelector: React.FC<UserFormProfileProps> = ({
                   <div className="flex items-center gap-2 border px-2 py-1.5 rounded-2xl">
                     <GlobalImage
                       src={selectBranch?.logoUrl}
-                      alt={selectBranch?.nameEn || ""}
+                      alt={selectBranch?.nameTh || ""}
                       className="w-7 h-7 rounded-2xl"
                     />
                     <div className="flex flex-col text-sm">
-                      <span>ชื่อองค์กร : {selectBranch.nameEn || "-"}</span>
+                      <span>ชื่อสาขา : {selectBranch.nameTh || "-"}</span>
                       <span>
                         อีเมลติดต่อ : {selectBranch.contactEmail || "-"}
                       </span>
@@ -282,11 +282,11 @@ export const OrganizationSelector: React.FC<UserFormProfileProps> = ({
                               >
                                 <GlobalImage
                                   src={item?.logoUrl}
-                                  alt={item?.nameEn || ""}
+                                  alt={item?.nameTh || ""}
                                   className="w-5 h-5 rounded-2xl"
                                 />
                                 <div className="flex flex-col text-sm">
-                                  <span>ชื่อองค์กร : {item.nameEn || "-"}</span>
+                                  <span>ชื่อสาขา : {item.nameTh || "-"}</span>
                                   <span>
                                     อีเมลติดต่อ :{item.contactEmail || "-"}
                                   </span>
