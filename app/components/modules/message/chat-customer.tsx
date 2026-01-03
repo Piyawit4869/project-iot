@@ -1409,13 +1409,6 @@ export default function ChatCustomerInfo({
         onOpenChange={setCheckStatusOpen}
       />
 
-      <AIMessageView
-        open={AIOpen}
-        onOpenChange={setAIOpen}
-        customer={dataFromAI}
-        noSyncBtn={true}
-      />
-
       <AboutCustomer
         open={addCustomerDetail}
         onOpenChange={setAddCustomerDetail}
