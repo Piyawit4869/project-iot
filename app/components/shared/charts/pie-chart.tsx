@@ -45,7 +45,12 @@ export function convertStatsToChart(data: any) {
   return chartData;
 }
 
-export const PieChart = ({ initData }: any) => {
+type PieChartProps = {
+  initData: any;
+  isEdit?: boolean;
+};
+
+export const PieChart = ({ initData, isEdit }: PieChartProps) => {
   const [data, setData] = React.useState<any>([]);
 
   const handleGetInitialTheme = (): boolean => {
@@ -63,7 +68,7 @@ export const PieChart = ({ initData }: any) => {
 
   const config = {
     data,
-    height: 400,
+    height: isEdit ? 400 : 320,
     angleField: "value",
     colorField: "type",
     radius: 0.9,

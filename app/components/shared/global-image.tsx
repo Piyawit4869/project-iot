@@ -22,7 +22,7 @@ const GlobalImageComponent: React.FC<GlobalImageProps> = ({
   alt = "image",
   width = 100,
   height = 100,
-  className,
+  className = "cursor-pointer",
   notShowPreview = false,
   fallbackSrc,
 }) => {
@@ -71,7 +71,7 @@ const GlobalImageComponent: React.FC<GlobalImageProps> = ({
         alt={alt}
         width={width}
         height={height}
-        className={cn(className, "cursor-pointer")}
+        className={cn(className)}
         onError={() => setHasError(true)}
         onClick={() => !notShowPreview && setOpen(true)}
       />

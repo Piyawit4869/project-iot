@@ -36,7 +36,7 @@ const fullName = (c: CustomerType) =>
   [c.profile?.firstName, c.profile?.lastName].filter(Boolean).join(" ") ||
   "-";
 
-const channelMap: Record<string, { label: string; icon: any }> = {
+export const channelMap: Record<string, { label: string; icon: any }> = {
   backoffice: { label: "Backoffice", icon: rome },
   line: { label: "LINE", icon: lineLogo },
   facebook: { label: "Facebook", icon: facebookLogo },

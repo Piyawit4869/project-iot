@@ -164,6 +164,9 @@ export function GlobalFormField({
           </div>
         );
 
+      case "custom":
+        return customControl(field);
+
       default:
         return (
           <span className="text-muted-foreground">{field.value || "-"}</span>
