@@ -142,7 +142,6 @@ export function GlobalFormField({
             width={widthImage || 110}
             height={heightImage || 110}
             className="object-cover rounded-md object-center"
-            fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${field.value}`}
           />
         );
 
@@ -163,6 +162,9 @@ export function GlobalFormField({
             </label>
           </div>
         );
+
+      case "custom":
+        return customControl(field);
 
       default:
         return (

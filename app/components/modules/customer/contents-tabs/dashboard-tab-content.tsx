@@ -23,6 +23,9 @@ export function DashboardTabContent({
   setTab,
   fetchCustomer,
 }: any) {
+  const mode = customerForms.find((f: any) => f.key === "contact_detail")?.mode;
+  const isEdit = mode === "view" ? false : true;
+
   return (
     <>
       <div className="flex flex-col md:flex-row gap-5">
@@ -96,7 +99,7 @@ export function DashboardTabContent({
               </>
             ) : (
               <div className="flex w-full">
-                <PieChart initData={analyzeCustomer} />
+                <PieChart initData={analyzeCustomer} isEdit={isEdit} />
               </div>
             )}
           </CardContent>

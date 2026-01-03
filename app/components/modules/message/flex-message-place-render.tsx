@@ -19,7 +19,7 @@ export const FlexMessagePlaceRender: React.FC<FlexMessagePlaceRenderProps> = (
   return (
     <div
       data-card="place"
-      className="mx-auto shrink-0  min-w-[270px] h-[400px] overflow-hidden rounded-[28px] bg-white text-card-foreground  "
+      className="mx-auto shrink-0  min-w-[270px] h-[400px] overflow-hidden rounded-[28px] bg-white text-card-foreground  border"
     >
       <div
         className="rounded-t-[28px] px-5 pt-5 pb-10 text-white"

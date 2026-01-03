@@ -117,7 +117,7 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
                     </div>
                   )}
                   <div
-                    className={`group flex flex-col ${msg.isLabel ? "" : "max-w-[75%]"} ${
+                    className={`group flex flex-col ${msg.isLabel || msg.contents?.name ? "" : "max-w-[75%]"} ${
                       msg.platform !== "line"
                         ? "items-end ml-auto"
                         : "items-start mr-auto"

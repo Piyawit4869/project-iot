@@ -14,6 +14,7 @@ import {
   fetchSearchUserBranches,
   changeActiveOrg,
   checkUserEmailDuplicate,
+  fetchGetSearchlUsers,
 } from "../server/user";
 import type { UsersFormValues } from "~/schemas/users/user";
 import type { PasswordFormValues } from "~/schemas/users/password-user";
@@ -129,6 +130,14 @@ export const useGetAllUsersLimit = (isAll: boolean) =>
   useQuery({
     queryKey: ["user-all"],
     queryFn: () => fetchGetAllUsersLimit({ isAll }),
+    enabled: !!isAll,
+  });
+
+export const useGetSearchUsers = (search?: string) =>
+  useQuery({
+    queryKey: ["user-search", search],
+    queryFn: () => fetchGetSearchlUsers({ search }),
+    enabled: true,
   });
 
 export const useCreateUsers = () => {

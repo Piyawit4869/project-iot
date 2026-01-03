@@ -245,7 +245,7 @@ export default function StatusToolbar({
               if (!isDisable) setIsSearchFull(true);
             }}
           >
-            ค้นหา
+            ค้นหาในข้อความทั้งหมด
           </div>
         </React.Fragment>
       ) : (
