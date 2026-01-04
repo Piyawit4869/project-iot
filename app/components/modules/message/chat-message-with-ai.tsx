@@ -41,6 +41,12 @@ export default function ChatMessagesWithAI({
   const newestSeenId = React.useRef<string | null>(null);
   const [previewUrl, setPreviewUrl] = React.useState("");
 
+  const aiLoadingRef = React.useRef<HTMLDivElement | null>(null);
+  const isAtBottomRef = React.useRef<boolean>(true);
+  const lastMessageCountRef = React.useRef<number>(0);
+  const didInitialAutoScrollRef = React.useRef<boolean>(false);
+  const isSendingMessageRef = React.useRef<boolean>(false);
+
   const [showTopLoading, setShowTopLoading] = useState(false);
   const [hasScrolledOnce, setHasScrolledOnce] = useState(false);
   const [hasAutoScrolled, setHasAutoScrolled] = useState(false);
@@ -122,38 +128,6 @@ export default function ChatMessagesWithAI({
   }, [messagesData]);
 
   React.useEffect(() => {
-    if (!autoScroll || !bottomRef.current) return;
-
-    const scrollToBottom = () => {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-      setAutoScroll(false);
-      setHasAutoScrolled(true);
-      setTimeout(() => {
-        setIsScrollReady(true);
-      }, 300);
-    };
-
-    requestAnimationFrame(() => {
-      setTimeout(scrollToBottom, 0);
-    });
-  }, [combinedMessages, autoScroll]);
-
-  React.useEffect(() => {
-    const el = scrollAreaRef.current;
-    const messages = combinedMessages;
-    if (!el || messages?.length === 0) return;
-    const newest = messages[messages.length - 1] as any;
-    const isNewMessage =
-      newestSeenId.current && newestSeenId.current !== newest.timestamp;
-    newestSeenId.current = newest.timestamp;
-    if (isNewMessage) {
-      requestAnimationFrame(() => {
-        el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
-      });
-    }
-  }, [combinedMessages]);
-
-  React.useEffect(() => {
     const el = scrollAreaRef.current;
     if (!isScrollReady || !el) return;
 
@@ -196,6 +170,87 @@ export default function ChatMessagesWithAI({
     hasScrolledOnce,
     hasAutoScrolled,
   ]);
+
+  React.useEffect(() => {
+    const scrollArea = scrollAreaRef.current;
+    if (!scrollArea) return;
+
+    const handleScroll = () => {
+      const { scrollHeight, scrollTop, clientHeight } = scrollArea;
+      const SCROLL_THRESHOLD = 50;
+
+      const isAtBottom =
+        scrollTop + clientHeight >= scrollHeight - SCROLL_THRESHOLD;
+
+      isAtBottomRef.current = isAtBottom;
+
+      setButtonScrollToBottom(!isAtBottom);
+    };
+
+    scrollArea.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => scrollArea.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  React.useEffect(() => {
+    if (
+      didInitialAutoScrollRef.current ||
+      !bottomRef.current ||
+      combinedMessages.length === 0
+    )
+      return;
+
+    bottomRef.current.scrollIntoView({ behavior: "auto" });
+    didInitialAutoScrollRef.current = true;
+    setIsScrollReady(true);
+  }, [combinedMessages]);
+
+  React.useEffect(() => {
+    const el = scrollAreaRef.current;
+    if (!el || !didInitialAutoScrollRef.current) return;
+
+    const hasNewMessage = combinedMessages.length > lastMessageCountRef.current;
+
+    lastMessageCountRef.current = combinedMessages.length;
+
+    if (!hasNewMessage) return;
+    if (!isAtBottomRef.current) return;
+
+    requestAnimationFrame(() => {
+      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    });
+  }, [combinedMessages]);
+
+  React.useEffect(() => {
+    if (
+      !didInitialAutoScrollRef.current ||
+      (lastMessage && lastMessage.messageLabel !== "ROME AI กำลังประมวลผล") ||
+      !aiLoadingRef.current ||
+      !isAtBottomRef.current
+    )
+      return;
+
+    requestAnimationFrame(() => {
+      aiLoadingRef?.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    });
+  }, [lastMessage?.messageLabel]);
+
+  React.useEffect(() => {
+    didInitialAutoScrollRef.current = false;
+    isAtBottomRef.current = true;
+    lastMessageCountRef.current = 0;
+    isSendingMessageRef.current = false;
+
+    setButtonScrollToBottom(false);
+    setShowTopLoading(false);
+    setHasScrolledOnce(false);
+    setHasAutoScrolled(false);
+    setIsScrollReady(false);
+  }, [chatRoomId]);
 
   React.useEffect(() => {
     refetch();
@@ -400,11 +455,12 @@ export default function ChatMessagesWithAI({
             </div>
           )} */}
 
-          {lastMessage.messageLabel === "ROME AI กำลังประมวลผล" && (
-            <div className="mr-auto items-start">
-              <MessageAILoading />
-            </div>
-          )}
+          {lastMessage &&
+            lastMessage.messageLabel === "ROME AI กำลังประมวลผล" && (
+              <div ref={aiLoadingRef} className="mr-auto items-start">
+                <MessageAILoading />
+              </div>
+            )}
 
           <div ref={bottomRef} />
           {buttonScrollToBottom && (

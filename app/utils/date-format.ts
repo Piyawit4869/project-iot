@@ -6,6 +6,16 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import isToday from "dayjs/plugin/isToday";
 import isYesterday from "dayjs/plugin/isYesterday";
 import localizedFormat from "dayjs/plugin/localizedFormat";
+import weekday from "dayjs/plugin/weekday";
+import localeData from "dayjs/plugin/localeData";
+import "dayjs/locale/th";
+
+dayjs.extend(isToday);
+dayjs.extend(isYesterday);
+dayjs.extend(weekday);
+dayjs.extend(localeData);
+
+dayjs.locale("th");
 
 import "dayjs/locale/th";
 import { isValid, parseISO } from "date-fns";
@@ -55,7 +65,7 @@ export const DateTimeStampChatDisplay = (timestamp: string | Date): string => {
     return "เมื่อวาน";
   }
 
-  return time.format("DD MMM YYYY");
+  return time.format("ddd");
 };
 
 export function toSafeDate(v?: string | Date) {

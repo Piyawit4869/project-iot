@@ -171,14 +171,6 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
               );
             })}
 
-          {typingUsers && typingUsers.length > 0 && (
-            <div className="px-4 py-2 text-sm text-muted-foreground bg-white dark:bg-background">
-              {typingUsers.length >= 3
-                ? "คนอื่น ๆ กำลังพิมพ์..."
-                : `${typingUsers.map((u) => u.fullName ?? "").join(", ")} กำลังพิมพ์...`}
-            </div>
-          )}
-
           {lastMessage.messageLabel === "ROME AI กำลังประมวลผล" && (
             <MessageAILoading />
           )}
@@ -190,6 +182,14 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
             </button>
           )}
         </div>
+
+        {typingUsers && typingUsers.length > 0 && (
+          <div className="px-4 py-2 text-sm text-muted-foreground bg-white dark:bg-background">
+            {typingUsers.length >= 3
+              ? "คนอื่น ๆ กำลังพิมพ์..."
+              : `${typingUsers.map((u) => u.fullName ?? "").join(", ")} กำลังพิมพ์...`}
+          </div>
+        )}
 
         <ChatInput
           api={api}
