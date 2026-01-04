@@ -8,45 +8,45 @@
   ],
   "home": [
     {
-      "name": "หน้าแรก",
+      "name": "หน้าหลัก",
       "key": "home",
       "path": "/",
       "icon": "Home",
-      "isActive": false
+      "isActive": true
     },
     {
       "name": "แชท",
       "key": "messages",
       "icon": "MessageCircleMore",
       "path": "/message",
-      "isActive": false
+      "isActive": true
     },
     {
       "name": "ลูกค้า",
       "key": "customer",
       "icon": "ShieldUser",
-      "isActive": false,
+      "isActive": true,
       "path": "/customer"
     },
     {
       "name": "ออเดอร์",
       "key": "orders",
       "icon": "BookA",
-      "isActive": false,
+      "isActive": true,
       "path": "/orders"
     },
     {
       "name": "คลังสินค้า",
       "key": "inventory",
       "icon": "Warehouse",
-      "isActive": false,
+      "isActive": true,
       "path": "/inventory"
     },
     {
       "name": "สินค้า",
       "key": "product",
       "icon": "Package",
-      "isActive": false,
+      "isActive": true,
       "path": "/products"
     },
     {
@@ -54,42 +54,57 @@
       "key": "employee",
       "path": "/users",
       "icon": "User",
-      "isActive": false
+      "isActive": true
     },
     {
-      "name": "ตำแหน่ง",
+      "name": "บทบาท",
       "key": "role",
       "path": "/roles",
       "icon": "Users",
-      "isActive": false
+      "isActive": true
     },
     {
       "name": "ออนบอร์ด",
       "key": "on_boarding",
       "path": "/on-boarding",
       "icon": "BookOpen",
-      "isActive": false
+      "isActive": true
     },
     {
       "name": "เอกสาร",
       "key": "notation",
       "path": "/notation",
       "icon": "FileText",
-      "isActive": false
+      "isActive": true
     },
     {
-      "name": "การตั้งค่า",
+      "name": "ตั้งค่า",
       "key": "setting-organization",
       "icon": "Settings",
-      "isActive": false,
+      "isActive": true,
       "path": "/setting-organization"
     },
     {
       "name": "ประวัติการเข้าสู่ระบบ",
       "key": "loginLog",
       "icon": "History",
-      "isActive": false,
+      "isActive": true,
       "path": "/login-log"
+    },
+
+    {
+      "name": "องค์กร",
+      "key": "organization",
+      "icon": "Hotel",
+      "isActive": false,
+      "path": "/organization"
+    },
+    {
+      "name": "สาขา",
+      "key": "branch",
+      "icon": "Network",
+      "isActive": false,
+      "path": "/branch"
     }
   ],
   "main": []

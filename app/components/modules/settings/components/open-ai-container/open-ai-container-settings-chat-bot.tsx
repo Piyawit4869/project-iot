@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, RotateCcw, Save } from "lucide-react";
 
 import {
   useGetConnectionAi,
+  useGetConnectionAiByOrgGroup,
   useResetChatAi,
   useUpdateConnectionAi,
 } from "~/api/client/settings";
@@ -33,6 +34,8 @@ interface OpenAiContainerSettingsChatBotProps {
 export const OpenAiContainerSettingsChatBot: React.FC<
   OpenAiContainerSettingsChatBotProps
 > = (props) => {
+  const { user } = useRouteLoaderData("root") as any;
+
   const { api } = props;
 
   const [sp] = useSearchParams();
@@ -43,10 +46,15 @@ export const OpenAiContainerSettingsChatBot: React.FC<
   const { mutate: UpdateConnectionAi } = useUpdateConnectionAi(String(id));
 
   const { refetch: refetchChatAI } = useGetConnectionAi(String(id));
-  const { user } = useRouteLoaderData("root") as any;
 
   const { data, isLoading, refetch } = useGetConnectionAi(id ?? "");
   const { mutate: resetChatAi } = useResetChatAi(String(data?.id));
+
+  const {
+    data: assistants,
+    isLoading: isAssistantsLoading,
+    refetch: assistantsRefetch,
+  } = useGetConnectionAiByOrgGroup(user?.organizationGroupId ?? "");
 
   const chatroomConfigId = data?.chatroomConfigId;
 
@@ -75,6 +83,7 @@ export const OpenAiContainerSettingsChatBot: React.FC<
               position: "bottom-right",
             });
             refetchChatAI();
+            assistantsRefetch();
           },
           onError: (error) => {
             console.error("Update connection ai error:", error);
@@ -223,7 +232,11 @@ export const OpenAiContainerSettingsChatBot: React.FC<
 
               {/* CONTENT */}
               <div className="flex-1 overflow-y-auto">
-                <AiConfigListPanel />
+                <AiConfigListPanel
+                  data={assistants}
+                  isLoading={isAssistantsLoading}
+                  refetch={assistantsRefetch}
+                />
               </div>
             </>
           ) : (

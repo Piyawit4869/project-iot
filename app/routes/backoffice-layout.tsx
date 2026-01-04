@@ -1,7 +1,6 @@
 import { Menu } from "~/components/shared/menu";
 import { AppSidebar } from "~/components/shared/sidebar";
 import { SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";
-import data from "~/components/shared/sidebar/data/backoffice-data.json";
 import { Outlet, redirect } from "react-router";
 import {
   destroySession,
@@ -11,6 +10,8 @@ import {
 } from "~/services/session.server";
 import type { Route } from "./backoffice/settings/+types/setting-layout";
 import { HeaderBreadcrumb } from "~/components/shared/header-breadcrumb";
+
+import data from "~/components/shared/sidebar/data/backoffice-data.json";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const token = await getAccessToken(request);

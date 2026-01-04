@@ -50,16 +50,18 @@ export function HomeSidebar({
   return (
     <SidebarGroup>
       <SidebarMenu>
-        {home.map((item) => (
-          <SidebarMenuItem key={item.key}>
-            <SidebarMenuButton asChild isActive={activeKey === item.key}>
-              <Link to={item.path}>
-                {item.icon && icon(item.icon)}
-                <span>{item.name}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        ))}
+        {home
+          .filter((menu) => menu.isActive)
+          .map((item) => (
+            <SidebarMenuItem key={item.key}>
+              <SidebarMenuButton asChild isActive={activeKey === item.key}>
+                <Link to={item.path}>
+                  {item.icon && icon(item.icon)}
+                  <span>{item.name}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
       </SidebarMenu>
     </SidebarGroup>
   );

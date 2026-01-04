@@ -14,6 +14,9 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { PermissionBaseAction } from "~/types/roles/permission";
 
+import data from "~/components/shared/sidebar/data/backoffice-data.json";
+import { RenderIcon } from "~/components/shared/render-icon";
+
 type PermissionItem = {
   id: string;
   feature: string;
@@ -28,6 +31,15 @@ const ACTION_LABEL: Record<string, string> = {
   update: "แก้ไขข้อมูล",
   delete: "ลบข้อมูล",
   get_menu: "อนุญาตฟีเจอร์",
+};
+
+const ACTION_ICON: Record<string, string> = {
+  get_all: "Shapes",
+  get_single: "HandCoins",
+  create: "Plus",
+  update: "PenLine",
+  delete: "Trash2",
+  get_menu: "UserStar",
 };
 
 const ACTION_ORDER = ["get_menu", "get_single", "create", "update", "delete"];
@@ -356,9 +368,13 @@ export const GrantPermission: React.FC = () => {
                         className="sticky top-0 bg-sidebar p-2 text-center text-white min-w-[120px]"
                       >
                         <div className="flex flex-col items-center gap-1">
-                          <span className="text-xs font-medium">
-                            {ACTION_LABEL[action] ?? action}
-                          </span>
+                          <div className="flex flex-row gap-1">
+                            {RenderIcon(ACTION_ICON[action], "w-4 h-4")}
+                            <span className="text-xs font-medium">
+                              {ACTION_LABEL[action] ?? action}
+                            </span>
+                          </div>
+
                           <Checkbox
                             checked={colState}
                             onCheckedChange={(checked) =>
@@ -393,6 +409,12 @@ export const GrantPermission: React.FC = () => {
                               toggleRow(row.feature, checked === true)
                             }
                           />
+                          {RenderIcon(
+                            data.home.find(
+                              (menu) => menu.name === featureTH(row.feature)
+                            )?.icon as string,
+                            "w-5 h-5"
+                          )}
                           <span>{featureTH(row.feature)}</span>
                         </div>
                       </td>
