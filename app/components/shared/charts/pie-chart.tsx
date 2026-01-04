@@ -104,48 +104,51 @@ export const PieChart = ({ initData, isEdit }: PieChartProps) => {
         range: ["#9D91CA", "#7664B5", "#5D4A9B", "#332956", "#19142A"],
       },
     },
+    // tooltip: ({ type, value }: any) => {
+    //   return { type, value };
+    // },
     tooltip: ({ type, value }: any) => {
       return { type, value };
     },
 
-    interaction: {
-      tooltip: {
-        render: (e: any, { items }: any) => {
-          return (
-            <React.Fragment>
-              {items.map((item: any, index: number) => {
-                const { type, value, color } = item;
-                return (
-                  <div
-                    key={index}
-                    style={{
-                      margin: 0,
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <div>
-                      <span
-                        style={{
-                          display: "inline-block",
-                          width: 6,
-                          height: 6,
-                          borderRadius: "50%",
-                          backgroundColor: color,
-                          marginRight: 6,
-                        }}
-                      ></span>
-                      <span>{type}</span>
-                    </div>
-                    <b className="ml-5"> {value}</b>
-                  </div>
-                );
-              })}
-            </React.Fragment>
-          );
-        },
-      },
-    },
+    // interaction: {
+    //   tooltip: {
+    //     render: (e: any, { items }: any) => {
+    //       return (
+    //         <React.Fragment>
+    //           {items.map((item: any, index: number) => {
+    //             const { type, value, color } = item;
+    //             return (
+    //               <div
+    //                 key={index}
+    //                 style={{
+    //                   margin: 0,
+    //                   display: "flex",
+    //                   justifyContent: "space-between",
+    //                 }}
+    //               >
+    //                 <div>
+    //                   <span
+    //                     style={{
+    //                       display: "inline-block",
+    //                       width: 6,
+    //                       height: 6,
+    //                       borderRadius: "50%",
+    //                       backgroundColor: color,
+    //                       marginRight: 6,
+    //                     }}
+    //                   ></span>
+    //                   <span>{type}</span>
+    //                 </div>
+    //                 <b className="ml-5"> {value}</b>
+    //               </div>
+    //             );
+    //           })}
+    //         </React.Fragment>
+    //       );
+    //     },
+    //   },
+    // },
   };
 
   return (
