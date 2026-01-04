@@ -282,8 +282,12 @@ export default function SingDetailleCustomer() {
             backpath={() => handleBack()}
             title={
               isEdit
-                ? `แก้ไขลูกค้า ${fullName || otherName || ""}`
-                : `ลูกค้า ${fullName || otherName || ""}`
+                ? `แก้ไขลูกค้า ${fullName || otherName || ""}${
+                    lineName ? `  ( ${lineName} )` : ""
+                  }`
+                : `ลูกค้า ${fullName || otherName || ""}${
+                    lineName ? `  ( ${lineName} )` : ""
+                  }`
             }
             buttons={[
               <div className="w-full flex flex-row flex-wrap gap-2">

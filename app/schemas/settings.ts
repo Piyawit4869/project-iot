@@ -74,6 +74,9 @@ export const addressSchema = z.object({
   nation: z.string().optional(),
   postalCode: z.string().min(1, "กรุณากรอกรหัสไปรษณีย์"),
   note: z.string().optional(),
+  longitude: z.string().optional().nullable(),
+  latitude: z.string().optional().nullable(),
+
   isMain: z.boolean().optional(),
 });
 

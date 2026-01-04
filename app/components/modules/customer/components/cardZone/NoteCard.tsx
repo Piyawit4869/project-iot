@@ -38,7 +38,7 @@ export const NotesCard = ({
         <CardHeader className=" gap-0">
           <div className="flex gap-2">
             <div className="flex  flex-col">
-              <CardTitle className="text-base font-bold mt-2">
+              <CardTitle className="text-base font-semibold mt-2">
                 โน้ตลูกค้า
               </CardTitle>
             </div>
@@ -78,7 +78,7 @@ export const NotesCard = ({
                     key={item.id ?? index}
                     className="border rounded-lg p-3 bg-white shadow-sm space-y-2 w-full dark:bg-muted"
                   >
-                    <p className="whitespace-pre-line text-foreground">
+                    <p className="text-sm whitespace-pre-line text-foreground">
                       {item.note}
                     </p>
                     <div className="flex items-center justify-between text-sm text-foreground ">

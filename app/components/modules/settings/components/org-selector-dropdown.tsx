@@ -105,7 +105,7 @@ export function OrgSelectorDropdown({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <div className="flex flex-row gap-3 items-center cursor-pointer">
+        <div className=" flex-row flex items-center gap-3 cursor-pointer rounded-md border border-border px-5 py-2 hover:bg-muted transition">
           <div className="flex items-center gap-2 min-w-0">
             {backIcon && (
               <Link to="/setting-organization">
@@ -113,11 +113,14 @@ export function OrgSelectorDropdown({
               </Link>
             )}
 
-            <div className="min-w-45">
-              <span className="truncate text-base font-medium">{topic}</span>
-              <div className="truncate text-md font-medium">
+            <div className="min-w-30">
+              <div className="truncate text-sm font-semibold">{topic}</div>
+
+              <div className="truncate ">
                 {showName?.nameTh ?? (
-                  <span className="text-muted-foreground">กรุณาเลือกสาขา</span>
+                  <span className="text-muted-foreground">
+                    กรุณาเลือกองค์กร
+                  </span>
                 )}
               </div>
             </div>

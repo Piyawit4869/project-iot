@@ -9,6 +9,7 @@ interface TabItem {
   key: string;
   label: string;
   icon?: React.ReactNode;
+  iconFront?: React.ReactNode;
   content: React.ReactNode;
 }
 
@@ -54,6 +55,7 @@ export const CustomTabs = ({
                transition-colors flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium`
             )}
           >
+            {item.iconFront && <span className="ml-1">{item.iconFront}</span>}
             <span>{item.label}</span>
             {item.icon && <span className="ml-1">{item.icon}</span>}
           </TabsTrigger>
