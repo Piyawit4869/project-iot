@@ -359,8 +359,8 @@ export function MessageRenderer({
     switch (category) {
       case FlexMessageType.PRODUCT:
         return (
-          <Wrapper maxWidth="max-w-[400px]">
-            <div className="max-w-full px-4">
+          <Wrapper maxWidth="w-full">
+            <div className="flex justify-end max-w-full px-4">
               <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory p-3">
                 {items.map((items: any, index: string) => (
                   <FlexMessageProductRender key={index} items={items} />
@@ -372,8 +372,8 @@ export function MessageRenderer({
 
       case FlexMessageType.PLACE:
         return (
-          <Wrapper maxWidth="max-w-[400px]">
-            <div className="max-w-full px-4">
+          <Wrapper maxWidth="max-w-[100vh]">
+            <div className="flex justify-end max-w-full px-4 wrap">
               <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory p-3">
                 {items.map((items: any, index: string) => (
                   <FlexMessagePlaceRender key={index} items={items} />
@@ -385,8 +385,8 @@ export function MessageRenderer({
 
       case FlexMessageType.PERSON:
         return (
-          <Wrapper maxWidth="max-w-[400px]">
-            <div className="max-w-full px-4">
+          <Wrapper maxWidth="w-full">
+            <div className="flex justify-end max-w-full px-4">
               <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory p-3">
                 {items.map((items: any, index: string) => (
                   <FlexMessagePersonRender key={index} items={items} />

@@ -1,34 +1,9 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import { type UseFormReturn } from "react-hook-form";
-import { DatePicker } from "~/components/shared/date-picker";
-import ImageUpload from "~/components/shared/image-upload";
-import { InputNumberBox } from "~/components/shared/input-number-box";
 
-import { RequiredLabel } from "~/components/shared/required-design";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
-import { Card } from "~/components/ui/card";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
-import { Switch } from "~/components/ui/switch";
+import { Form } from "~/components/ui/form";
 import type { OrganizationFormValues } from "~/schemas/settings";
-import type { OptionStatus } from "~/types/settings";
-import { OrganizationContactCard } from "./create-organization/organization-contact-card";
 import { GlobalFormField } from "~/components/shared/global-formField";
 import {
   customerStatus,
@@ -45,28 +20,6 @@ interface SettingOrganizationFormProps {
   editable?: boolean;
   isLoading?: boolean;
 }
-
-//   const statusOptions: OptionStatus = [
-//   { label: "ลงทะเบียนใหม่", value: "newly_registered" },
-//   { label: "ใช้งานอยู่", value: "active" },
-//   { label: "ลูกค้าประจำ", value: "loyal_customer" },
-//   { label: "มีความเสี่ยง", value: "at_risk" },
-//   { label: "ยกเลิกใช้งาน", value: "churned" },
-// ] as const;
-
-//   const typeOptions: typeof statusOptions = [
-//   { label: "บุคคลธรรมดา", value: "taxpayer" },
-//   { label: "ห้างหุ้นส่วนสามัญ", value: "ordinary_partnership" },
-//   { label: "ร้านค้า", value: "shop" },
-//   { label: "คณะบุคคล", value: "body_of_person" },
-//   { label: "บริษัทจำกัด", value: "company_limited" },
-//   { label: "บริษัทมหาชนจำกัด", value: "public_company_limited" },
-//   { label: "ห้างหุ้นส่วนจำกัด", value: "limited_partnership" },
-//   { label: "มูลนิธิ", value: "foundation" },
-//   { label: "สมาคม", value: "association" },
-//   { label: "กิจการร่วมค้า", value: "joint_venture" },
-//   { label: "อื่น ๆ", value: "others" },
-// ] as const;
 
 export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
   props

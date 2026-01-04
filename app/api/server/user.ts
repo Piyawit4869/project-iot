@@ -1,5 +1,3 @@
-"use server";
-
 import type { UsersFormValues } from "~/schemas/users/user";
 import { ApiConfig } from "../config";
 import type { PasswordFormValues } from "~/schemas/users/password-user";
@@ -38,6 +36,17 @@ export const fetchUserPagination = async (params: {
     });
 
     return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchGetSearchlUsers = async (params: { search?: string }) => {
+  try {
+    const { data } = await ApiConfig.get(`/crud/users/paginate`, {
+      params,
+    });
+    return data.items;
   } catch (error) {
     return error;
   }

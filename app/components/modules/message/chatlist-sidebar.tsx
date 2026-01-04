@@ -1,5 +1,5 @@
 import React from "react";
-import { useRouteLoaderData } from "react-router";
+import { useNavigate, useRouteLoaderData, useSearchParams } from "react-router";
 
 import { GlobalImage } from "~/components/shared/global-image";
 import { useChat } from "~/providers/chat/useChat";
@@ -53,6 +53,12 @@ export default function ChatlistSidebar({
   details,
   handleChangeSelectedRoom,
 }: Props) {
+  const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+
+  const name = searchParams.get("name");
+
   const { me } = useRouteLoaderData("root");
 
   const [recent, setRecent] = React.useState<string[]>([]);
@@ -87,7 +93,8 @@ export default function ChatlistSidebar({
   const RECENT_KEY = "recent-searches";
   const LIMIT = 5;
 
-  const { currentRoomId, addMessageAI, removeMessage } = useChat();
+  const { currentRoomId, addMessageAI, removeMessage, setCurrentRoomId } =
+    useChat();
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
   const handleScroll = () => {
@@ -102,6 +109,8 @@ export default function ChatlistSidebar({
   const handleCloseSearch = React.useCallback(() => {
     setSearch("");
     setInputOpen(false);
+
+    navigate("/message");
   }, [setInputOpen, setSearch]);
 
   const handleClickMenu = (action: string) => {
@@ -111,6 +120,7 @@ export default function ChatlistSidebar({
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
+    navigate("/message");
   };
 
   const addRecentSearch = () => {
@@ -203,6 +213,16 @@ export default function ChatlistSidebar({
     }
   }, [chatRooms, filterRoom, select]);
 
+  React.useEffect(() => {
+    if (name) {
+      setSearch(name);
+      setInputOpen(true);
+
+      handleChangeSelectedRoom(allRooms && allRooms.length && allRooms[0]);
+      setCurrentRoomId(allRooms[0]?.id);
+    }
+  }, [allRooms]);
+
   const compareText: Record<StatusKey, string> = {
     unread: "ยังไม่อ่าน",
     done: "ดำเนินการแล้ว",
@@ -245,7 +265,7 @@ export default function ChatlistSidebar({
                   autoFocus
                   type="text"
                   placeholder="ค้นหา"
-                  value={search}
+                  value={search || (name as string)}
                   // onChange={(e) => setSearch(e.target.value)}
                   onChange={handleSearch}
                   className="border border-gray-300 rounded-md px-3 py-1 text-sm bg-white w-full transition-all duration-200 focus:outline-none focus:ring-0 focus:border-gray-300"

@@ -100,7 +100,7 @@ export function OrgSelector({
                   src={PlaceholderImage}
                   alt="placeholder"
                   className="h-full w-full object-cover"
-                />{" "}
+                />
               </AvatarFallback>
             </Avatar>
 

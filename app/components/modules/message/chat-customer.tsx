@@ -63,7 +63,7 @@ import {
   type CustomerSupportFormValues,
 } from "~/schemas/customer/support/support";
 import type { Customer } from "~/schemas/customer/customer-form";
-import { useGetAllUsers } from "~/api/client/user";
+import { useGetSearchUsers } from "~/api/client/user";
 import { useOrder } from "~/hooks/order/order";
 import { cn } from "~/lib/utils";
 import { customerStatus, customerType } from "~/initData/customer-initData";
@@ -87,7 +87,6 @@ import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { Input } from "~/components/ui/input";
-import { Checkbox } from "~/components/ui/checkbox";
 import { Badge } from "~/components/ui/badge";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
@@ -103,8 +102,10 @@ import { OrderViewModal } from "./orders-view-modal";
 import { AIMessageView } from "./ai-message-view-modal";
 import { GlobalTooltip } from "~/components/shared/global-tooltip";
 import { ChatCustomerTags } from "./chat-customer-tags";
-import { useResetAiChatRoom, useResetChatAi } from "~/api/client/settings";
+import { useResetAiChatRoom } from "~/api/client/settings";
 import { useQueryClient } from "@tanstack/react-query";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import PlaceholderImage from "/assets/images/placeholder.webp";
 
 interface UserProps {
   id: string;
@@ -188,12 +189,15 @@ export default function ChatCustomerInfo({
   let participants = participantData && participantData?.items;
 
   const [search, setSearch] = React.useState<string>("");
+  const [userSearch, setUserSearch] = React.useState<string>("");
+  const [userList, setUserList] = React.useState([]);
   const [showTagManager, setShowTagManager] = React.useState(false);
   const [selectedTags, setSelectedTags] = React.useState<
     { id: string; name: string }[]
   >([]);
 
   const debouncedSearch = useDebounce(search);
+  const debouncedUserSearch = useDebounce(userSearch);
 
   const { data: productsPaginate, isLoading: productsLoading } = usePaginate({
     pageIndex: 1,
@@ -212,7 +216,11 @@ export default function ChatCustomerInfo({
   const { mutate: update } = useAiReplySettings(selectedRoom?.id);
   const customerAI = currentCustomer?.aiReplySettings?.[0];
 
-  const { data: allUser, isLoading } = useGetAllUsers();
+  const {
+    data: allUser,
+    isLoading,
+    isFetching,
+  } = useGetSearchUsers(debouncedUserSearch);
 
   const { mutate: create, isPending: isCreatingSupport } =
     useCreateCustomerSupoort(selectedRoom?.id ?? "");
@@ -601,12 +609,12 @@ export default function ChatCustomerInfo({
       : []
   );
 
-  const filteredUser =
-    allUser?.length > 0
-      ? allUser.filter((item: any) =>
-          item.userName?.toLowerCase().includes(search.toLowerCase())
-        )
-      : [];
+  // const filteredUser =
+  //   allUser?.length > 0
+  //     ? allUser.filter((item: any) =>
+  //         item.userName?.toLowerCase().includes(search.toLowerCase())
+  //       )
+  //     : [];
 
   React.useEffect(() => {
     if (customerAI) {
@@ -719,36 +727,22 @@ export default function ChatCustomerInfo({
             <div>
               <div className="flex gap-2">
                 <GlobalImage
-                  src={currentCustomer.profile?.imageUrl || ""}
+                  src={currentCustomer.profile?.imageUrl || PlaceholderImage}
                   alt="Customer"
                   className="w-[50px] h-[50px] rounded-full object-cover mt-1"
                 />
-                <div className="flex flex-col ml-1">
-                  {currentCustomer.profile?.name ? (
-                    <>
-                      <div className="flex flex-row gap-2 items-center">
-                        <h2 className="font-semibold text-lg mr-auto">
-                          {currentCustomer.profile.name}
-                        </h2>
+                {/* <div className="flex flex-col ml-1"> */}
+                {currentCustomer.profile?.name ? (
+                  <div
+                    className={cn(
+                      "flex flex-col ml-1",
 
-                        <UserPen
-                          size={18}
-                          color="#09a799"
-                          className="cursor-pointer"
-                          onClick={() => setAddCustomerDetail(true)}
-                        />
-                      </div>
-
-                      {!isLineNameSameAsCustomerName && (
-                        <h2 className="font-semibold text-sm mr-auto">
-                          {currentCustomer.profile.lineName || "ไม่ทราบชื่อ"}
-                        </h2>
-                      )}
-                    </>
-                  ) : (
+                      isLineNameSameAsCustomerName && "justify-center"
+                    )}
+                  >
                     <div className="flex flex-row gap-2 items-center">
                       <h2 className="font-semibold text-lg mr-auto">
-                        {currentCustomer.profile?.lineName || "ไม่ทราบชื่อ"}
+                        {currentCustomer.profile.name}
                       </h2>
 
                       <UserPen
@@ -758,8 +752,35 @@ export default function ChatCustomerInfo({
                         onClick={() => setAddCustomerDetail(true)}
                       />
                     </div>
-                  )}
-                </div>
+
+                    {!isLineNameSameAsCustomerName && (
+                      <h2 className="flex items-center gap-1 font-semibold text-sm mr-auto">
+                        {currentCustomer.profile.lineName || "ไม่ทราบชื่อ"}
+
+                        <GlobalImage
+                          src="https://img.freepik.com/premium-vector/line-icon-vector-logo-set_1097694-1650.jpg"
+                          alt="avatar"
+                          className="rounded-full object-cover w-4 h-4"
+                          notShowPreview
+                        />
+                      </h2>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex flex-row gap-2 items-center">
+                    <h2 className="font-semibold text-lg mr-auto">
+                      {currentCustomer.profile?.lineName || "ไม่ทราบชื่อ"}
+                    </h2>
+
+                    <UserPen
+                      size={18}
+                      color="#09a799"
+                      className="cursor-pointer"
+                      onClick={() => setAddCustomerDetail(true)}
+                    />
+                  </div>
+                )}
+                {/* </div> */}
               </div>
               <div className="flex flex-row gap-2 mt-1">
                 <span
@@ -834,10 +855,7 @@ export default function ChatCustomerInfo({
                                       }
                                     >
                                       <GlobalImage
-                                        src={
-                                          par.imageUrl ||
-                                          `https://api.dicebear.com/9.x/initials/svg?seed=${par.participantId}`
-                                        }
+                                        src={par.imageUrl || PlaceholderImage}
                                         alt={`main-spl-${par.participantId}`}
                                         className={`w-[35px] h-[35px] rounded-full object-cover border-2 ${
                                           userIndex === 0 && "border-amber-500"
@@ -882,60 +900,72 @@ export default function ChatCustomerInfo({
                       </PopoverTrigger>
 
                       <PopoverContent className="w-95">
-                        <Command>
+                        <Command shouldFilter={false}>
                           <CommandInput
                             placeholder="ค้นหาชื่อผู้รับผิดชอบ"
-                            value={search}
-                            onValueChange={setSearch}
+                            value={userSearch}
+                            onValueChange={setUserSearch}
                           />
+
                           <CommandList>
-                            {isLoading ? (
-                              <div className="p-5 text-gray-400 text-sm">
-                                กำลังโหลด...
-                              </div>
-                            ) : filteredUser && filteredUser.length > 0 ? (
-                              filteredUser
-                                .filter(
-                                  (user: UserProps) =>
-                                    !supportedUserIds.has(user.id)
-                                )
-                                .map((item: any) => {
-                                  return (
-                                    <CommandItem
-                                      key={item.id}
-                                      onSelect={() => {
-                                        handleUserButtonClick(item.id, true);
-                                      }}
-                                      className="flex items-center gap-2 py-1.5"
-                                    >
-                                      <GlobalImage
-                                        src={
-                                          item.profile?.imageUrl ||
-                                          `https://api.dicebear.com/9.x/initials/svg?seed=${item.userName}`
-                                        }
-                                        alt={item?.userName || ""}
-                                        className="w-10 h-10 rounded-2xl"
-                                      />
-                                      <div className="flex flex-col text-sm">
-                                        <span>
-                                          ชื่อ :{" "}
-                                          {item?.profile?.firstName ||
-                                            "-" + item?.profile?.lastName ||
-                                            "-"}
-                                        </span>
-                                        <span>อีเมล : {item.email || "-"}</span>
-                                        <span>
-                                          ตำแหน่ง : {item.mainDepartment || "-"}
-                                        </span>
-                                      </div>
-                                    </CommandItem>
-                                  );
-                                })
-                            ) : (
-                              <div className="p-5 text-gray-400 text-sm">
-                                ไม่มีข้อมูลผู้รับผิดชอบ
-                              </div>
-                            )}
+                            <CommandEmpty>
+                              {isFetching
+                                ? "กำลังโหลด..."
+                                : "ไม่มีข้อมูลผู้รับผิดชอบ"}
+                            </CommandEmpty>
+
+                            <CommandGroup>
+                              {!isLoading &&
+                                allUser
+                                  .filter(
+                                    (user: UserProps) =>
+                                      !supportedUserIds.has(user.id)
+                                  )
+                                  .map((item: any) => {
+                                    return (
+                                      <CommandItem
+                                        key={item.id}
+                                        onSelect={() => {
+                                          handleUserButtonClick(item.id, true);
+                                        }}
+                                        className="flex items-center gap-2 py-1.5"
+                                      >
+                                        <Avatar className="h-6 w-6">
+                                          <AvatarImage
+                                            src={item.profile?.imageUrl}
+                                            alt={
+                                              item.profile?.imageUrl ??
+                                              "Profile Image"
+                                            }
+                                          />
+                                          <AvatarFallback className="text-black">
+                                            <img
+                                              src={PlaceholderImage}
+                                              alt="placeholder"
+                                              className="h-full w-full object-cover"
+                                            />
+                                          </AvatarFallback>
+                                        </Avatar>
+                                        <div className="flex flex-col text-sm">
+                                          <span>
+                                            ชื่อ :{" "}
+                                            {item?.profile?.firstName ||
+                                              "-" + item?.profile?.lastName ||
+                                              "-"}
+                                          </span>
+                                          <span>
+                                            อีเมล : {item.email || "-"}
+                                          </span>
+                                          <span>
+                                            ตำแหน่ง :{" "}
+                                            {item?.organizationRoles?.name ||
+                                              "-"}
+                                          </span>
+                                        </div>
+                                      </CommandItem>
+                                    );
+                                  })}
+                            </CommandGroup>
                           </CommandList>
                         </Command>
                       </PopoverContent>
@@ -967,12 +997,7 @@ export default function ChatCustomerInfo({
                                 }
                               >
                                 <GlobalImage
-                                  src={
-                                    user?.imageUrl ||
-                                    `https://api.dicebear.com/9.x/initials/svg?seed=${
-                                      user?.id ?? "unknown"
-                                    }`
-                                  }
+                                  src={user?.imageUrl || PlaceholderImage}
                                   alt={`secondary-spl-${user?.participantId ?? "unknown"}`}
                                   className={`w-[35px] h-[35px] rounded-full object-cover`}
                                   notShowPreview
@@ -1025,60 +1050,63 @@ export default function ChatCustomerInfo({
                       </PopoverTrigger>
 
                       <PopoverContent className="w-95">
-                        <Command>
+                        <Command shouldFilter={false}>
                           <CommandInput
                             placeholder="ค้นหาชื่อผู้รับผิดชอบ"
-                            value={search}
-                            onValueChange={setSearch}
+                            value={userSearch}
+                            onValueChange={setUserSearch}
                           />
                           <CommandList>
-                            {isLoading ? (
-                              <div className="p-5 text-gray-400 text-sm">
-                                กำลังโหลด...
-                              </div>
-                            ) : filteredUser && filteredUser.length > 0 ? (
-                              filteredUser
-                                .filter(
-                                  (user: UserProps) =>
-                                    !supportedUserIds.has(user.id)
-                                )
-                                .map((item: any) => {
-                                  return (
-                                    <CommandItem
-                                      key={item.id}
-                                      onSelect={() => {
-                                        handleUserButtonClick(item.id, false);
-                                      }}
-                                      className="flex items-center gap-2 py-1.5"
-                                    >
-                                      <GlobalImage
-                                        src={
-                                          item.profile?.imageUrl ||
-                                          `https://api.dicebear.com/9.x/initials/svg?seed=${item.userName}`
-                                        }
-                                        alt={item?.userName || ""}
-                                        className="w-10 h-10 rounded-2xl"
-                                      />
-                                      <div className="flex flex-col text-sm">
-                                        <span>
-                                          ชื่อ :{" "}
-                                          {item?.profile?.firstName ||
-                                            "-" + item?.profile?.lastName ||
-                                            "-"}
-                                        </span>
-                                        <span>อีเมล : {item.email || "-"}</span>
-                                        <span>
-                                          ตำแหน่ง : {item.mainDepartment || "-"}
-                                        </span>
-                                      </div>
-                                    </CommandItem>
-                                  );
-                                })
-                            ) : (
-                              <div className="p-5 text-gray-400 text-sm">
-                                ไม่มีข้อมูลผู้รับผิดชอบ
-                              </div>
-                            )}
+                            <CommandEmpty>
+                              {isFetching
+                                ? "กำลังโหลด..."
+                                : "ไม่มีข้อมูลผู้รับผิดชอบ"}
+                            </CommandEmpty>
+
+                            <CommandGroup>
+                              {!isLoading &&
+                                allUser
+                                  .filter(
+                                    (user: UserProps) =>
+                                      !supportedUserIds.has(user.id)
+                                  )
+                                  .map((item: any) => {
+                                    return (
+                                      <CommandItem
+                                        key={item.id}
+                                        onSelect={() => {
+                                          handleUserButtonClick(item.id, false);
+                                        }}
+                                        className="flex items-center gap-2 py-1.5"
+                                      >
+                                        <GlobalImage
+                                          src={
+                                            item.profile?.imageUrl ||
+                                            PlaceholderImage
+                                          }
+                                          alt={item?.userName || ""}
+                                          className="w-10 h-10 rounded-2xl"
+                                        />
+                                        <div className="flex flex-col text-sm">
+                                          <span>
+                                            ชื่อ :{" "}
+                                            {item?.profile?.firstName ||
+                                              "-" + item?.profile?.lastName ||
+                                              "-"}
+                                          </span>
+                                          <span>
+                                            อีเมล : {item.email || "-"}
+                                          </span>
+                                          <span>
+                                            ตำแหน่ง :{" "}
+                                            {item?.organizationRoles?.name ||
+                                              "-"}
+                                          </span>
+                                        </div>
+                                      </CommandItem>
+                                    );
+                                  })}
+                            </CommandGroup>
                           </CommandList>
                         </Command>
                       </PopoverContent>
@@ -1310,7 +1338,7 @@ export default function ChatCustomerInfo({
                                   <div className="flex items-center gap-3">
                                     <GlobalImage
                                       notShowPreview={true}
-                                      src={item.imageUrl ?? ""}
+                                      src={item.imageUrl || PlaceholderImage}
                                       alt={item.name ?? ""}
                                       className="w-[50px] h-[50px] rounded-md object-cover border"
                                     />
@@ -1621,7 +1649,7 @@ export default function ChatCustomerInfo({
               <div className="size-[160px] rounded-lg border bg-muted/40 overflow-hidden">
                 <GlobalImage
                   notShowPreview={true}
-                  src={selectProductItem?.imageUrl || ""}
+                  src={selectProductItem?.imageUrl || PlaceholderImage}
                   alt={selectProductItem?.name || "product-image"}
                   className="w-full h-full object-cover"
                 />
@@ -1731,12 +1759,7 @@ export default function ChatCustomerInfo({
               secondarySupports.map((item: any) => (
                 <div key={item.id} className="flex items-center gap-3">
                   <GlobalImage
-                    src={
-                      (item && item.imageUrl) ||
-                      `https://api.dicebear.com/9.x/initials/svg?seed=${
-                        (item && item.participantId) || "unknown"
-                      }`
-                    }
+                    src={(item && item.imageUrl) || PlaceholderImage}
                     alt={
                       (item && item.fullName) ||
                       (item && item.participantId) ||
