@@ -239,105 +239,100 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
 
   return (
     <Card className="py-4">
-      <div className="flex justify-between gap-2 px-6 mt-2">
-        <div
-          className={`grid w-full gap-4 ${
-            isEdit ? "grid-cols-1" : "grid-cols-4"
-          }`}
-        >
-          <div className="mt-0.5">
-            <GlobalFormField
+      <CardContent className="space-y-4 px-6 pb-4">
+        <div className="flex justify-between gap-2  mt-2">
+          <div
+            className={`grid w-full gap-4 grid-cols-1 ${
+              isEdit ? " " : "2xl:grid-cols-4"
+            }`}
+          >
+            <div className="mt-0.5">
+              <GlobalFormField
+                control={form.control}
+                name="active"
+                label="สถานะลูกค้า"
+                type="custom"
+                view="view"
+                customControl={() => (
+                  <div className="mt-1">
+                    <GlobalStatusBadge value={customer?.active} />
+                  </div>
+                )}
+              />
+            </div>
+            <FormField
               control={form.control}
-              name="active"
-              label="สถานะลูกค้า"
-              type="custom"
-              view="view"
-              customControl={() => (
-                <div className="mt-1">
-                  <GlobalStatusBadge value={customer?.active} />
-                </div>
+              name="contacts.0.name"
+              render={({ field }) => (
+                <FormItem>
+                  <RequiredLabel>ผู้ติดต่อ</RequiredLabel>
+                  {isEdit ? (
+                    <Input
+                      {...field}
+                      placeholder="กรุณากรอกชื่อผู้ติดต่อ เช่น นายสมชาย จิตใจดี"
+                      value={field.value ?? ""}
+                      className="w-full"
+                    />
+                  ) : (
+                    <span className="text-muted-foreground">
+                      {field.value || "-"}
+                    </span>
+                  )}
+                </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="priority"
+              render={({ field }) => (
+                <FormItem>
+                  <RequiredLabel>ความสำคัญ</RequiredLabel>
+                  <StarRating
+                    rating={field.value}
+                    onRate={isEdit ? field.onChange : undefined}
+                    interactive={isEdit}
+                  />
+                </FormItem>
+              )}
+            />
+
+            {isEdit ? null : (
+              <div className={"ml-3"}>
+                <span className="text-sm flex">ช่องทาง</span>
+                <Tooltip>
+                  <TooltipTrigger className="mt-1" asChild>
+                    <Avatar className="w-[35px] h-[35px]">
+                      <img src={channel.icon} alt={channel.label} />
+                    </Avatar>
+                  </TooltipTrigger>
+                </Tooltip>
+              </div>
+            )}
           </div>
 
-          <FormField
-            control={form.control}
-            name="contacts.0.name"
-            render={({ field }) => (
-              <FormItem>
-                <RequiredLabel>ผู้ติดต่อ</RequiredLabel>
-                {isEdit ? (
-                  <Input
-                    {...field}
-                    placeholder="กรุณากรอกชื่อผู้ติดต่อ เช่น นายสมชาย จิตใจดี"
-                    value={field.value ?? ""}
-                    className="w-full"
-                  />
-                ) : (
-                  <span className="text-muted-foreground">
-                    {field.value || "-"}
-                  </span>
-                )}
-              </FormItem>
+          <div className="flex gap-5 items-start shrink-0">
+            {customerPlatform === "line" && (
+              <div
+                className={`edit-icon-container cursor-pointer }`}
+                onClick={goToChat}
+              >
+                <div className="edit-icon-wrapper">
+                  <MessagesSquare className="text-muted-foreground w-" />
+                </div>
+              </div>
             )}
-          />
 
-          <FormField
-            control={form.control}
-            name="priority"
-            render={({ field }) => (
-              <FormItem>
-                <RequiredLabel>ความสำคัญ</RequiredLabel>
-                <StarRating
-                  rating={field.value}
-                  onRate={isEdit ? field.onChange : undefined}
-                  interactive={isEdit}
-                />
-              </FormItem>
-            )}
-          />
-
-          {isEdit ? null : (
-            <div className={"ml-3"}>
-              <span className="text-sm   flex">ช่องทาง</span>
-              <Tooltip>
-                <TooltipTrigger className="mt-1" asChild>
-                  <Avatar className="w-[40px] h-[40px]">
-                    <GlobalImage
-                      src={channel.icon}
-                      alt={channel.label}
-                      notShowPreview
-                      className="cursor-default"
-                    />
-                  </Avatar>
-                </TooltipTrigger>
-              </Tooltip>
-            </div>
-          )}
+            <EditActionButtons
+              isEdit={isEdit}
+              isAnyFilled={isAnyFilled}
+              onSave={onClick}
+              form={form}
+              onEdit={() => onEditForm?.("contact_detail")}
+              onCancel={() => onCancel?.("contact_detail")}
+            />
+          </div>
         </div>
 
-        <div className="flex gap-5 items-start shrink-0">
-          {customerPlatform === "line" && (
-            <Tooltip>
-              <TooltipTrigger asChild onClick={goToChat}>
-                <MessagesSquare className="text-muted-foreground" />
-              </TooltipTrigger>
-              <TooltipContent>ไปยังหน้าแชท</TooltipContent>
-            </Tooltip>
-          )}
-
-          <EditActionButtons
-            isEdit={isEdit}
-            isAnyFilled={isAnyFilled}
-            onSave={onClick}
-            form={form}
-            onEdit={() => onEditForm?.("contact_detail")}
-            onCancel={() => onCancel?.("contact_detail")}
-          />
-        </div>
-      </div>
-
-      <CardContent className="space-y-4">
         <div className="flex flex-col gap-2">
           <span className="text-sm">แท็กลูกค้า</span>
 
