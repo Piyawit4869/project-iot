@@ -44,8 +44,6 @@ export const ChatInputOpenAiConfig: React.FC<ChatInputOpenAiConfigProps> = (
   };
 
   const sendText = async (e: React.FormEvent) => {
-    console.log({ input });
-
     const textarea = e.target as HTMLTextAreaElement;
     textarea.style.height = "auto";
 

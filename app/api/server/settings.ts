@@ -434,12 +434,9 @@ export const fetchQuickMessagePaginate = async (params: {
     p.page = params.page;
     p.limit = params.limit;
 
-    const res = await ApiConfig.get(
-      `/thirdparty/line/contents/paginate?type=reply`,
-      {
-        params: p,
-      }
-    );
+    const res = await ApiConfig.get(`/thirdparty/line/contents/paginate`, {
+      params: { ...p, type: "quick_reply" },
+    });
 
     return res.data;
   } catch (error) {

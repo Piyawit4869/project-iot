@@ -150,7 +150,7 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
   };
 
   return (
-    <div className="mt-4 flex flex-col h-[calc(100vh-480px)]">
+    <div className="mt-4 flex flex-col h-[calc(100vh-500px)]">
       <div className="flex justify-between items-center">
         <div className="flex flex-row gap-3">
           <h2 className="text-base font-semibold">โน้ต</h2>

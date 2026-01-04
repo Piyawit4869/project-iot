@@ -370,10 +370,27 @@ export type TeamMessage = z.infer<typeof TeamMessageSchema>;
 export type TeamMessageCreateDTO = z.infer<typeof TeamMessageCreateSchema>;
 export type TeamMessageList = TeamMessage[];
 
+// schemas/quick-reply.ts
+
+const QuickReplyItemSchema = z.object({
+  imageUrl: z.string().optional(),
+  label: z.string().min(1).max(20),
+  text: z.string().min(1).max(100),
+});
+
+export const QuickReplySchema = z.object({
+  name: z.string().max(30),
+  description: z.string().optional(),
+  items: z.array(QuickReplyItemSchema).min(1).max(13),
+});
+
+export type QuickReplyValues = z.infer<typeof QuickReplySchema>;
+
 export {
   TeamMessageSchema,
   TeamMessageCreateSchema,
   TeamMessageListSchema,
   ContentSchema,
   MessageItemSchema,
+  QuickReplyItemSchema,
 };

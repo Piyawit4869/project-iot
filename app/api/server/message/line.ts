@@ -107,7 +107,10 @@ export const createQuickReplyMessage = async (
   payload: TeamMessageCreateDTO
 ) => {
   try {
-    const res = await ApiConfig.post(`/quick-reply/create`, payload); // waiting for link
+    const res = await ApiConfig.post(
+      `/thirdparty/line/contents/quick-reply/create`,
+      payload
+    );
 
     return res.data;
   } catch (error) {
@@ -121,7 +124,7 @@ export const updateQuickReplyMessage = async (
 ) => {
   try {
     const res = await ApiConfig.put(
-      `/thirdparty/line/contents/${id}/edit`, // waiting for link
+      `/thirdparty/line/contents/quick-reply/${id}`,
       payload
     );
 
@@ -133,7 +136,7 @@ export const updateQuickReplyMessage = async (
 
 export const getQuickReplyMessage = async (id: string) => {
   try {
-    const res = await ApiConfig.get(`/quick-reply/${id}`); // waiting for link
+    const res = await ApiConfig.get(`/thirdparty/line/contents/${id}`); // waiting for link
 
     return res.data;
   } catch (error) {

@@ -51,14 +51,6 @@ export default function QuickReplayForm({
     },
   });
 
-  // โหลดข้อมูลเดิมเมื่อแก้ไข
-  // React.useEffect(() => {
-  //   if (mode === "edit" && replyId) {
-  // TODO: ดึงข้อมูลด้วย replyId แล้ว form.reset(...)
-  // ตัวอย่าง: form.reset({ title: data.title, message: data.message });
-  //   }
-  // }, [mode, replyId, form]);
-
   const name = form.watch("name")?.length ?? 0;
   const description = form.watch("description")?.length ?? 0;
   const text = form.watch("content")?.length ?? 0;

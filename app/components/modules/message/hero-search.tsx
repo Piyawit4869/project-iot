@@ -46,14 +46,14 @@ export default function HeroSearch(props: HeroSearchProps) {
     },
   ];
 
-  const onSend = () => {
+  const onSend = (value?: string) => {
     // TODO: wire to your search/route action
 
-    onInputChange(query);
+    onInputChange(value ?? "");
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-495px)] border-1 rounded-sm bg-white dark:bg-background">
+    <div className="flex flex-col h-[calc(100vh-550px)] border border-b-0 bg-white dark:bg-background">
       <div
         className="flex flex-1 flex-col"
         style={{
@@ -64,8 +64,8 @@ export default function HeroSearch(props: HeroSearchProps) {
           ref={scrollAreaRef}
           className="flex h-full flex-col space-y-6 overflow-y-auto px-2 z-0 relative  "
         >
-          <div className="h-[calc(100vh-625px)]">
-            <div className="h-[calc(100vh-625px)] flex flex-col items-center justify-center gap-3">
+          <div className="h-[calc(100vh-669px)]">
+            <div className="h-[calc(100vh-669px)] flex flex-col items-center justify-center gap-3">
               {salePrompts.map((prompt) => {
                 const Icon = prompt.icon;
 
@@ -75,6 +75,8 @@ export default function HeroSearch(props: HeroSearchProps) {
                     type="button"
                     onClick={() => {
                       setQuery(prompt.value);
+
+                      onSend(prompt.value);
                       textareaRef.current?.focus();
                     }}
                     className={`
@@ -96,7 +98,7 @@ export default function HeroSearch(props: HeroSearchProps) {
           </div>
           <div>
             <form
-              onSubmit={onSend}
+              onSubmit={() => onSend()}
               className="flex flex-col justify-between gap-2 border-t w-full h-[100px]"
             >
               <textarea

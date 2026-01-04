@@ -457,21 +457,19 @@ export const useQuickReplyMessagePaginate = ({
 
 export const useCreateQuickReplyMessage = () => {
   return useMutation({
-    mutationFn: (payload: TeamMessageCreateDTO) =>
-      createQuickReplyMessage(payload),
+    mutationFn: (payload: any) => createQuickReplyMessage(payload),
   });
 };
 
 export const useLineUpdateQuickReplyMessage = (id: string) => {
   return useMutation({
-    mutationFn: (payload: TeamMessageCreateDTO) =>
-      updateReplyMessage(id, payload),
+    mutationFn: (payload: any) => updateReplyMessage(id, payload),
   });
 };
 
 export const useLineQuickReplyMessage = (id: string) => {
   return useQuery({
-    queryKey: ["line-reply"],
+    queryKey: ["line-quick-reply"],
     queryFn: async () => getQuickReplyMessage(id),
   });
 };

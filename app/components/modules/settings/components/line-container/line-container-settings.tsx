@@ -484,10 +484,10 @@ export const LineContainerSettings: React.FC = () => {
                 )}
 
                 {viewFromUrl === "create" && (
-                  <QuickReplayForm
+                  <EditQuickReplayForm
                     mode="create"
                     onCancel={() => goView("quick-reply", "list")}
-                    onSaved={() => goView("quick-reply", "list")}
+                    onSaved={(id) => goView("quick-reply", "list", id)}
                   />
                 )}
 

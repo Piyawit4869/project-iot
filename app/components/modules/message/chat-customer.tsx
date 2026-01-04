@@ -548,21 +548,6 @@ export default function ChatCustomerInfo({
       setIsFirstTimeAI(false);
       console.error(err);
     }
-
-    // try {
-    //   const res = await connectedChatRoomAI({
-    //     message: value,
-    //     messageType: "text",
-    //     customerId: customer?.id,
-    //   });
-
-    //   setIsFirstTimeAI(false);
-    //   setFirstTimeMessage(value);
-
-    //   setChatRoomId(res.chatRoomId);
-    // } catch (err) {
-    //   console.error(err);
-    // }
   };
 
   const isInCart = (itemId: string) => {
@@ -1294,7 +1279,7 @@ export default function ChatCustomerInfo({
                     onChange={(e) => setSearch(e.target.value)}
                   />
 
-                  <ScrollArea className="h-[calc(100vh-560px)] rounded-md border p-2 bg-white dark:bg-black/30 pb-[35px]">
+                  <ScrollArea className="h-[calc(100vh-600px)] rounded-md border p-2 bg-white dark:bg-black/30 pb-[35px]">
                     <ul className="space-y-2">
                       {productsLoading ? (
                         <div className="space-y-2">
@@ -1422,7 +1407,7 @@ export default function ChatCustomerInfo({
               </TabsContent>
 
               <TabsContent value="settingAI">
-                <div className="space-y-3 h-[calc(100vh-450px)] overflow-auto">
+                <div className="space-y-3 h-[calc(100vh-500px)] overflow-auto">
                   <div className="flex flex-row justify-between items-center w-full">
                     <h3 className="text-sm font-semibold mt-1">พูดคุยกับ AI</h3>
 

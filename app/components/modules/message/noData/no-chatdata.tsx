@@ -1,23 +1,8 @@
 import FeatureCard from "~/components/shared/feature-card";
-import {
-  Send,
-  FileImage,
-  MessagesSquare,
-  X,
-  Paperclip,
-  PlusCircle,
-  // Users,
-  // FileText,
-  // ListChecks,
-  // CircleCheckBig,
-} from "lucide-react";
-import React from "react";
-import { Input } from "~/components/ui/input";
+import { Send, MessagesSquare, Paperclip, PlusCircle } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import ChatInput from "../chat-input";
 import { useIsMobile } from "~/hooks/use-mobile";
 import StatusToolbar from "../status-toolbar";
-import LineTemplatePickerModal from "../line-template-picker-modal";
 
 export default function NoChatDetail() {
   const isMobile = useIsMobile();

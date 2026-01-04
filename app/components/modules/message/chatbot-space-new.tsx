@@ -14,6 +14,8 @@ import { cn } from "~/lib/utils";
 import { ChatMessageRender } from "./chat-message-render";
 import { ChatMessageNoData } from "./noData/chat-message-no-data";
 import { ParticipantType, RoomUserType } from "~/utils/enum";
+import { PermissionBar } from "./permission-bar";
+import { useNotificationPermission } from "~/hooks/use-notification-permission";
 
 export default function ChatbotSpaceNew({
   api,
@@ -22,6 +24,7 @@ export default function ChatbotSpaceNew({
   api: string;
   chatRooms: any;
 }) {
+  const { permission, requestNotification } = useNotificationPermission();
   const isMobile = useIsMobile();
 
   const { customerInfoOpen, setCustomerInfoOpen } = useChatRoom();
@@ -32,6 +35,8 @@ export default function ChatbotSpaceNew({
   const [drawer, setDrawer] = React.useState(false);
   const [addCustomerDetail, setAddCustomerDetail] =
     React.useState<boolean>(false);
+
+  const [visible, setVisible] = React.useState(true);
 
   const subId =
     selectedRoom && selectedRoom?.kind === RoomUserType.CUSTOMER_USER_DM
@@ -57,92 +62,116 @@ export default function ChatbotSpaceNew({
 
   const isLineGroup = selectedRoom?.kind === RoomUserType.GROUP;
 
+  const showPermissionBar =
+    !!selectedRoom?.id &&
+    visible &&
+    (permission === "denied" || permission === "default");
+
+  React.useEffect(() => {
+    if (permission === "granted") {
+      setVisible(false);
+    }
+  }, [permission]);
+
   return (
-    <div className="flex flex-row h-[calc(100vh-56px)]">
-      <OrderProvider>
-        {showChatList && (
-          <div className="max-w-[80px] lg:max-w-[310px]">
-            <ChatlistContainer
-              chatRooms={chatRooms}
-              api={api}
-              handleChangeSelectedRoom={(room) => {
-                setSelectedRoom(room);
-              }}
-            />
-          </div>
+    <div className="flex flex-col">
+      <div
+        className={cn(
+          "flex flex-row",
+          showPermissionBar ? "h-[calc(100vh-90px)]" : "h-[calc(100vh-55px)]"
         )}
-
-        <div className={cn("flex-1 flex flex-col")}>
-          {selectedRoom && selectedRoom?.id && !isLoading ? (
-            <ChatMessageRender
-              api={api}
-              selectedRoom={selectedRoom}
-              drawer={drawer}
-              isMobile={isMobile}
-              isLoading={isLoading}
-              customerInfoOpen={customerInfoOpen}
-              customerSingle={customerSingle}
-              isCreateOrderOpen={false}
-              refetch={refetch}
-              setCreateOrderOpen={setCreateOrderOpen}
-              setAddCustomerDetail={setAddCustomerDetail}
-              addCustomerDetail={addCustomerDetail}
-              handleShowSetting={() => setShowChatList(!showChatList)}
-              handleShowCustomerInfoOpen={() =>
-                setCustomerInfoOpen(!customerInfoOpen)
-              }
-              handleCloseDrawer={() => {
-                setDrawer(true);
-                setCustomerInfoOpen(false);
-              }}
-              handleOpenDrawer={() => setDrawer(true)}
-              isLineGroup={isLineGroup}
-              subId={subId}
-            />
-          ) : (
-            <ChatMessageNoData
-              handleShowChatList={() => setShowChatList(!showChatList)}
-              handleShowCustomerInfoOpen={() =>
-                setCustomerInfoOpen(!customerInfoOpen)
-              }
-            />
+      >
+        <OrderProvider>
+          {showChatList && (
+            <div className="max-w-[80px] lg:max-w-[310px]">
+              <ChatlistContainer
+                chatRooms={chatRooms}
+                api={api}
+                handleChangeSelectedRoom={(room) => {
+                  setSelectedRoom(room);
+                }}
+              />
+            </div>
           )}
-        </div>
 
-        {customerInfoOpen && !isMobile && (
-          <div className="w-96">
-            {selectedRoom && selectedRoom?.id && subId && !isLoading ? (
-              <ChatCustomerInfo
-                isLineGroup={isLineGroup}
+          <div className={cn("flex-1 flex flex-col")}>
+            {selectedRoom && selectedRoom?.id && !isLoading ? (
+              <ChatMessageRender
+                api={api}
                 selectedRoom={selectedRoom}
-                refetchCustomer={refetch}
+                drawer={drawer}
+                isMobile={isMobile}
+                isLoading={isLoading}
+                customerInfoOpen={customerInfoOpen}
+                customerSingle={customerSingle}
+                isCreateOrderOpen={false}
+                refetch={refetch}
                 setCreateOrderOpen={setCreateOrderOpen}
                 setAddCustomerDetail={setAddCustomerDetail}
                 addCustomerDetail={addCustomerDetail}
-                modelCustomerDetails={addCustomerDetail}
-                currentCustomer={customerSingle}
-                api={api}
+                handleShowSetting={() => setShowChatList(!showChatList)}
+                handleShowCustomerInfoOpen={() =>
+                  setCustomerInfoOpen(!customerInfoOpen)
+                }
+                handleCloseDrawer={() => {
+                  setDrawer(true);
+                  setCustomerInfoOpen(false);
+                }}
+                handleOpenDrawer={() => setDrawer(true)}
+                isLineGroup={isLineGroup}
+                subId={subId}
               />
             ) : (
-              <MenuWhenNoData hasCustomerId={hasCustomerId} />
+              <ChatMessageNoData
+                handleShowChatList={() => setShowChatList(!showChatList)}
+                handleShowCustomerInfoOpen={() =>
+                  setCustomerInfoOpen(!customerInfoOpen)
+                }
+              />
             )}
           </div>
-        )}
 
-        {/* modal section */}
-        <AboutCustomer
-          open={addCustomerDetail}
-          onOpenChange={setAddCustomerDetail}
-          customer={customerSingle}
-          setAddCustomerDetail={setAddCustomerDetail}
-        />
+          {customerInfoOpen && !isMobile && (
+            <div className="w-96">
+              {selectedRoom && selectedRoom?.id && subId && !isLoading ? (
+                <ChatCustomerInfo
+                  isLineGroup={isLineGroup}
+                  selectedRoom={selectedRoom}
+                  refetchCustomer={refetch}
+                  setCreateOrderOpen={setCreateOrderOpen}
+                  setAddCustomerDetail={setAddCustomerDetail}
+                  addCustomerDetail={addCustomerDetail}
+                  modelCustomerDetails={addCustomerDetail}
+                  currentCustomer={customerSingle}
+                  api={api}
+                />
+              ) : (
+                <MenuWhenNoData hasCustomerId={hasCustomerId} />
+              )}
+            </div>
+          )}
 
-        <CreateOrderDialog
-          open={isCreateOrderOpen}
-          onOpenChange={setCreateOrderOpen}
-          customerId={customerId}
+          <AboutCustomer
+            open={addCustomerDetail}
+            onOpenChange={setAddCustomerDetail}
+            customer={customerSingle}
+            setAddCustomerDetail={setAddCustomerDetail}
+          />
+
+          <CreateOrderDialog
+            open={isCreateOrderOpen}
+            onOpenChange={setCreateOrderOpen}
+            customerId={customerId}
+          />
+        </OrderProvider>
+      </div>
+      {showPermissionBar && (
+        <PermissionBar
+          onAllow={requestNotification}
+          visible={visible}
+          setVisible={setVisible}
         />
-      </OrderProvider>
+      )}
     </div>
   );
 }

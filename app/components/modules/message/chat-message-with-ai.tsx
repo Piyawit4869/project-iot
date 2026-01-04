@@ -20,7 +20,6 @@ import { cn } from "~/lib/utils";
 export default function ChatMessagesWithAI({
   customerId,
   chatRoomId,
-  autoScroll,
   setAutoScroll,
   searchPrompt,
   isAILoading,
@@ -257,16 +256,16 @@ export default function ChatMessagesWithAI({
     clearMessagesAI();
   }, [resetChatAi]);
 
-  if (isLoading && customerId) {
-    return <CustomerChatSkeleton />;
-  }
+  // if (isLoading && customerId) {
+  //   return <CustomerChatSkeleton />;
+  // }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-500px)] border-1 rounded-sm bg-white dark:bg-background overflow-hidden">
+    <div className="flex flex-col h-[calc(100vh-545px)] border border-b-0 bg-white dark:bg-background overflow-hidden">
       <div
         className="flex flex-1 flex-col"
         style={{
-          height: 300,
+          height: 100,
         }}
       >
         <div
@@ -288,179 +287,97 @@ export default function ChatMessagesWithAI({
             </div>
           )}
 
-          {
-            combinedMessages && combinedMessages.length ? (
-              combinedMessages.map((msg, index) => {
-                const isUser = msg.sender !== "ROME AI";
+          {combinedMessages && combinedMessages.length ? (
+            combinedMessages.map((msg, index) => {
+              const isUser = msg.sender !== "ROME AI";
 
-                if (msg.messageLabel === "ROME AI กำลังประมวลผล") return null;
+              if (msg.messageLabel === "ROME AI กำลังประมวลผล") return null;
 
-                const avatarFallback =
-                  msg.imageUrl && !msg.imageUrl.includes("http")
-                    ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                        msg.imageUrl
-                      )}`
-                    : msg.imageUrl;
+              const avatarFallback =
+                msg.imageUrl && !msg.imageUrl.includes("http")
+                  ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                      msg.imageUrl
+                    )}`
+                  : msg.imageUrl;
 
-                const formattedTime = dayjs(
-                  msg.createdAt ? msg.createdAt : msg.timestamp
-                ).format("DD MMM YYYY, HH:mm");
+              const formattedTime = dayjs(
+                msg.createdAt ? msg.createdAt : msg.timestamp
+              ).format("DD MMM YYYY, HH:mm");
 
-                return (
-                  <div
-                    key={`${msg.lineSubId}+${index}+${msg.sender}`}
-                    className={cn(
-                      "mt-4 flex max-w-[75%] flex-col gap-1",
-                      isUser ? "ml-auto items-end" : "mr-auto items-start"
+              return (
+                <div
+                  key={`${msg.lineSubId}+${index}+${msg.sender}`}
+                  className={cn(
+                    "mt-4 flex max-w-[75%] flex-col gap-1",
+                    isUser ? "ml-auto items-end" : "mr-auto items-start"
+                  )}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <Avatar className="w-6 h-6">
+                      <img
+                        src={avatarFallback || "/avatar.png"}
+                        alt="avatar"
+                        className="rounded-full object-cover"
+                      />
+                      <AvatarFallback>
+                        {(msg.sender || msg.recipient || "U")[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                    {isUser ? (
+                      <span className="text-xs text-muted-foreground font-medium">
+                        {msg.sender || msg.recipient || "Anonymous"}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-muted-foreground font-medium">
+                        ROME AI Assistant
+                      </span>
                     )}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <Avatar className="w-6 h-6">
-                        <img
-                          src={avatarFallback || "/avatar.png"}
-                          alt="avatar"
-                          className="rounded-full object-cover"
-                        />
-                        <AvatarFallback>
-                          {(msg.sender || msg.recipient || "U")[0]}
-                        </AvatarFallback>
-                      </Avatar>
-                      {isUser ? (
-                        <span className="text-xs text-muted-foreground font-medium">
-                          {msg.sender || msg.recipient || "Anonymous"}
-                        </span>
+                  </div>
+
+                  {msg.messageType === "text" ? (
+                    <div
+                      className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
+                        isUser
+                          ? "bg-blue-500 text-white"
+                          : "bg-muted text-primary"
+                      }`}
+                    >
+                      {index === combinedMessages.length - 1 &&
+                      msg.streaming &&
+                      !isAILoading ? (
+                        <StreamingText text={msg.message} speed={40} />
                       ) : (
-                        <span className="text-xs text-muted-foreground font-medium">
-                          ROME AI Assistant
-                        </span>
+                        msg.message
                       )}
                     </div>
+                  ) : (
+                    <div
+                      onClick={() => setPreviewUrl(msg.message)}
+                      className="cursor-pointer"
+                    >
+                      <GlobalImage src={msg.message} />
+                    </div>
+                  )}
 
-                    {msg.messageType === "text" ? (
-                      <div
-                        className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
-                          isUser
-                            ? "bg-blue-500 text-white"
-                            : "bg-muted text-primary"
-                        }`}
-                      >
-                        {index === combinedMessages.length - 1 &&
-                        msg.streaming &&
-                        !isAILoading ? (
-                          <StreamingText text={msg.message} speed={40} />
-                        ) : (
-                          msg.message
-                        )}
-                      </div>
-                    ) : (
-                      <div
-                        onClick={() => setPreviewUrl(msg.message)}
-                        className="cursor-pointer"
-                      >
-                        <GlobalImage src={msg.message} />
-                      </div>
-                    )}
+                  <span className="text-[10px] text-muted-foreground mt-1">
+                    {formattedTime}
+                  </span>
+                </div>
+              );
+            })
+          ) : (
+            <></>
+          )}
 
-                    <span className="text-[10px] text-muted-foreground mt-1">
-                      {formattedTime}
-                    </span>
-                  </div>
-                );
-              })
-            ) : (
-              <></>
-            )
-
-            // messagesLoading.map((msg, index) => {
-            //     const isUser = msg.sender !== "ROME Ai";
-
-            //     const avatarFallback =
-            //       msg.imageUrl && !msg.imageUrl.includes("http")
-            //         ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
-            //             msg.imageUrl
-            //           )}`
-            //         : msg.imageUrl;
-
-            //     return (
-            //       <div
-            //         key={index}
-            //         className={`mt-4 flex max-w-[75%] flex-col gap-1 ${
-            //           isUser ? "ml-auto items-end" : "mr-auto items-start"
-            //         }`}
-            //       >
-            //         <div className="flex items-center gap-2 mb-1">
-            //           <Avatar className="w-6 h-6">
-            //             <img
-            //               src={avatarFallback || "/avatar.png"}
-            //               alt="avatar"
-            //               className="rounded-full object-cover"
-            //             />
-            //             <AvatarFallback>
-            //               {(msg.sender || "U")[0]}
-            //             </AvatarFallback>
-            //           </Avatar>
-            //           <span className="text-xs text-muted-foreground font-medium">
-            //             {msg.sender || msg.recipient || "Anonymous"}
-            //           </span>
-            //         </div>
-
-            //         {msg.messageType === "text" ? (
-            //           <div
-            //             className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
-            //               isUser
-            //                 ? "bg-blue-500 text-white"
-            //                 : "bg-muted text-primary"
-            //             }`}
-            //           >
-            //             {msg.message === "AI กำลังตอบ..." ? (
-            //               <LoadingAnimation />
-            //             ) : (
-            //               msg.message
-            //             )}
-            //           </div>
-            //         ) : (
-            //           <div
-            //             onClick={() => setPreviewUrl(msg?.message || "")}
-            //             className="cursor-pointer"
-            //           >
-            //             <GlobalImage src={msg?.message || ""} />
-            //           </div>
-            //         )}
-            //       </div>
-            //     );
-            //   })
-          }
-
-          {/* {isPendingAI && (
-            <div className="mt-4 flex max-w-[50%] flex-col gap-1 mr-auto items-start">
-              <div className="flex items-center gap-2 mb-1">
-                <Avatar className="w-6 h-6">
-                  <img
-                    src={"https://api.dicebear.com/9.x/glass/svg?seed=rome"}
-                    alt="avatar"
-                    className="rounded-full object-cover"
-                  />
-                  <AvatarFallback>{"U"[0]}</AvatarFallback>
-                </Avatar>
-
-                <span className="text-xs text-muted-foreground font-medium">
-                  ROME AI Assistant
-                </span>
-              </div>
-              <div
-                className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap bg-muted text-primary"`}
-              >
-                <LoadingAnimation />
-              </div>
-            </div>
-          )} */}
-
-          {lastMessage &&
+          {lastMessage && lastMessage.length ? (
             lastMessage.messageLabel === "ROME AI กำลังประมวลผล" && (
               <div ref={aiLoadingRef} className="mr-auto items-start">
                 <MessageAILoading />
               </div>
-            )}
+            )
+          ) : (
+            <></>
+          )}
 
           <div ref={bottomRef} />
           {buttonScrollToBottom && (
