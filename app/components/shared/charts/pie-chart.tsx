@@ -68,7 +68,7 @@ export const PieChart = ({ initData, isEdit }: PieChartProps) => {
 
   const config = {
     data,
-    height: isEdit ? 400 : 320,
+    height: isEdit ? 400 : 300,
     angleField: "value",
     colorField: "type",
     radius: 0.9,

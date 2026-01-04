@@ -102,3 +102,50 @@ export const getAllLineSticker = async () => {
   const res = await ApiConfig.get(`/chat-stickers`);
   return res.data;
 };
+
+export const createQuickReplyMessage = async (
+  payload: TeamMessageCreateDTO
+) => {
+  try {
+    const res = await ApiConfig.post(`/quick-reply/create`, payload); // waiting for link
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const updateQuickReplyMessage = async (
+  id: string,
+  payload: TeamMessageCreateDTO
+) => {
+  try {
+    const res = await ApiConfig.put(
+      `/thirdparty/line/contents/${id}/edit`, // waiting for link
+      payload
+    );
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getQuickReplyMessage = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(`/quick-reply/${id}`); // waiting for link
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchDeleteQuickReply = async (id: string) => {
+  try {
+    const res = await ApiConfig.delete(`/quick-reply/${id}`); // waiting for link
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
