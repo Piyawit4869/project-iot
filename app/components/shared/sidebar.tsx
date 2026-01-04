@@ -1,5 +1,4 @@
 import React from "react";
-import * as Icons from "lucide-react";
 import { useRouteLoaderData } from "react-router";
 
 import {
@@ -16,13 +15,7 @@ import { OrgSelector } from "./sidebar/org-selector";
 import { useChangeActiveOrg, useGetMe } from "~/api/client/user";
 import { toast } from "sonner";
 import { SkeletonLoading } from "./skeleton-loading";
-
-const renderIcon = (iconName: string) => {
-  const IconComponent = Icons[iconName as keyof typeof Icons] as React.FC<
-    React.SVGProps<SVGSVGElement>
-  >;
-  return IconComponent ? <IconComponent className="w-10 h-10" /> : null;
-};
+import { RenderIcon } from "./render-icon";
 
 type SidebarData = {
   home: {
@@ -211,8 +204,8 @@ export function AppSidebar({ data, ...props }: AppSidebarProps) {
         </>
       </SidebarHeader>
       <SidebarContent>
-        <HomeSidebar home={homeItems} icon={renderIcon} />
-        <MainSidebar items={data.main} icon={renderIcon} />
+        <HomeSidebar home={homeItems} icon={RenderIcon} />
+        <MainSidebar items={data.main} icon={RenderIcon} />
       </SidebarContent>
     </Sidebar>
   );

@@ -34,9 +34,7 @@ export function StickerSelectorBar({
   const { data } = useLineGetSticker();
   const { mutate: send } = useSendMessage();
 
-  const [packageId, setPackageId] = React.useState(
-    data && data.length ? data[0]?.packageId : ""
-  );
+  const [packageId, setPackageId] = React.useState<string | null>();
 
   const handleSendSticker = (stickerPackage: any, sticker: any) => {
     setMessages((prev) => {
@@ -68,6 +66,12 @@ export function StickerSelectorBar({
       quoteToken: replyRefMessage?.quoteToken || "",
     });
   };
+
+  React.useEffect(() => {
+    if (data && data.length) {
+      setPackageId(data && data.length ? data[0]?.packageId : "");
+    }
+  }, [data]);
 
   return (
     <div className="h-60 flex flex-col border-b">

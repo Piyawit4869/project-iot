@@ -329,6 +329,17 @@ export const fetchResetAiChatRoom = async (id: string) => {
   }
 };
 
+export const fetchGetConnectionAiByOrgGroup = async (orgGroupId: string) => {
+  try {
+    const res = await ApiConfig.get(
+      `/thridparty/openai/config/orgGroup/${orgGroupId}`
+    );
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const fetchGetConnectionAiByBranch = async (branchId: string) => {
   try {
     const res = await ApiConfig.get(

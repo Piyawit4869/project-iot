@@ -869,14 +869,17 @@ export default function LineTemplatePickerModal({
       )
     )
     .sort((a, b) => {
+      // 1. favorite มาก่อน
+      if (a.isFavorite && !b.isFavorite) return -1;
+      if (!a.isFavorite && b.isFavorite) return 1;
+
+      // 2. reply มาก่อน
       const isReplyA = a.type === "reply";
       const isReplyB = b.type === "reply";
-
-      // ให้ reply มาก่อนทั้งหมด
       if (isReplyA && !isReplyB) return -1;
       if (!isReplyA && isReplyB) return 1;
 
-      // ถ้าทั้งคู่เป็น reply หรือทั้งคู่ไม่ใช่ reply → เรียงตามวันที่ปกติ
+      // 3. เรียงตามวันที่
       return sortBy === "newest"
         ? +new Date(b.createdAt) - +new Date(a.createdAt)
         : +new Date(a.createdAt) - +new Date(b.createdAt);

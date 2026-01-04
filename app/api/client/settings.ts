@@ -16,6 +16,7 @@ import {
   fetchGetBranchesOrganization,
   fetchGetConnectionAi,
   fetchGetConnectionAiByBranch,
+  fetchGetConnectionAiByOrgGroup,
   fetchGetConnectionLine,
   fetchGetOrganizationDetail,
   fetchGetOrganizations,
@@ -252,6 +253,13 @@ export const useGetConnectionAiByBranch = (branchId: string) =>
       if (Array.isArray(res?.data)) return res.data;
       return [];
     },
+  });
+
+export const useGetConnectionAiByOrgGroup = (orgGroupId: string) =>
+  useQuery({
+    queryKey: ["OpenAiByoOgGroup", orgGroupId],
+    queryFn: () => fetchGetConnectionAiByOrgGroup(orgGroupId),
+    enabled: !!orgGroupId,
   });
 
 export const usePaginatedChatRoomAIConfig = (chatRoomId: string) => {

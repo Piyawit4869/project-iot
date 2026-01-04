@@ -375,7 +375,7 @@ export function MessageRenderer({
 
       case FlexMessageType.PLACE:
         return (
-          <Wrapper maxWidth="max-w-[100vh]">
+          <Wrapper maxWidth="max-w-[80vh]">
             <div className="flex justify-end max-w-full px-4 wrap">
               <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory p-3">
                 {items.map((items: any, index: string) => (
@@ -388,7 +388,7 @@ export function MessageRenderer({
 
       case FlexMessageType.PERSON:
         return (
-          <Wrapper maxWidth="w-full">
+          <Wrapper maxWidth="max-w-[80vh]">
             <div className="flex justify-end max-w-full px-4">
               <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory p-3">
                 {items.map((items: any, index: string) => (

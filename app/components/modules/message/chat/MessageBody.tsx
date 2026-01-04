@@ -9,6 +9,7 @@ import { MessageMenu } from "../MessageMenu";
 import React from "react";
 import { useChat, type TypingUser } from "~/providers/chat/useChat";
 import { cn } from "~/lib/utils";
+import PlaceholderImage from "/assets/images/placeholder.webp";
 
 interface MessageBodyProps {
   api: string;
@@ -125,16 +126,12 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
                   >
                     {msg.showAvatar && !msg.isLabel && (
                       <div className="flex items-center gap-2 mb-1">
-                        <Avatar className="w-6 h-6">
-                          <img
-                            src={avatarFallback || "/avatar.png"}
-                            alt="avatar"
-                            className="rounded-full object-cover"
-                          />
-                          <AvatarFallback>
-                            {(msg.sender || msg.recipient || "U")[0]}
-                          </AvatarFallback>
-                        </Avatar>
+                        <img
+                          src={msg.imageUrl ?? PlaceholderImage}
+                          alt="avatar"
+                          className="w-5 h-5 rounded-full object-cover"
+                        />
+
                         <span className="text-xs text-muted-foreground font-medium">
                           {msg.sender || msg.recipient || "Anonymous"}
                         </span>

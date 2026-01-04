@@ -1,16 +1,14 @@
-"use client";
-
 import * as React from "react";
 import { useRouteLoaderData, useSearchParams } from "react-router";
+import { Plus } from "lucide-react";
+
 import { Input } from "~/components/ui/input";
 import { cn } from "~/lib/utils";
-import { useGetConnectionAiByBranch } from "~/api/client/settings";
+import { useGetConnectionAiByOrgGroup } from "~/api/client/settings";
 import { Separator } from "~/components/ui/separator";
-import { Card, CardContent } from "~/components/ui/card";
+import { CardContent } from "~/components/ui/card";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { Button } from "~/components/ui/button";
-import { Plus } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "~/components/ui/dialog";
 import ModalCreateConfig from "./modal-create-config";
 
 type AiConfigItem = {
@@ -20,9 +18,19 @@ type AiConfigItem = {
   active?: boolean;
 };
 
-export function AiConfigListPanel() {
-  const { me } = useRouteLoaderData("root") as any;
-  const branchId = (me?.branchId ?? "") as string;
+interface AiConfigListPanelProps {
+  data: any;
+  isLoading: boolean;
+  refetch: () => void;
+}
+
+export function AiConfigListPanel({
+  data,
+  isLoading,
+  refetch,
+}: AiConfigListPanelProps) {
+  const { user } = useRouteLoaderData("root") as any;
+  // const branchId = (user?.branchId ?? "") as string;
 
   const [sp, setSp] = useSearchParams();
   const selectedId = sp.get("id") ?? "";
@@ -31,7 +39,9 @@ export function AiConfigListPanel() {
 
   const [open, setOpen] = React.useState(false);
   const [isFinish, setIsFinish] = React.useState(false);
-  const { data, isLoading, refetch } = useGetConnectionAiByBranch(branchId);
+  // const { data, isLoading, refetch } = useGetConnectionAiByBranch(branchId);
+
+  console.log({ data });
 
   const items: AiConfigItem[] = React.useMemo(() => {
     const arr = Array.isArray(data) ? data : [];
@@ -39,7 +49,6 @@ export function AiConfigListPanel() {
       .map((x: any) => ({
         id: String(x?.id ?? ""),
         name: String(x?.name ?? ""),
-        // openAssistantId: x?.openAssistantId ? String(x.openAssistantId) : "",
         active: Boolean(x?.active),
       }))
       .filter((x) => x.id && x.name);
@@ -54,7 +63,6 @@ export function AiConfigListPanel() {
     const next = new URLSearchParams(sp);
     next.set("id", first.id);
     setSp(next);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, selectedId]);
 
   const filtered = React.useMemo(() => {
@@ -78,19 +86,12 @@ export function AiConfigListPanel() {
 
   return (
     <div className="h-full bg-background overflow-hidden flex flex-col p-3">
-      {/* <div className="p-3 border-b"> */}
-      {/* <div className="font-semibold">รายการ Assistant</div>
-        <div className="text-xs text-muted-foreground">
-          เลือก config เพื่อแก้ไข
-        </div> */}
-
       <Input
         className="mt-2"
         placeholder="ค้นหา name / assistantId..."
         value={q}
         onChange={(e) => setQ(e.target.value)}
       />
-      {/* </div> */}
 
       <div className="flex-1 overflow-y-auto">
         {isLoading ? (
@@ -131,10 +132,6 @@ export function AiConfigListPanel() {
                         เปิดใช้งาน
                       </span>
                     )}
-                  </div>
-
-                  <div className="text-xs text-muted-foreground truncate">
-                    {/* {it.openAssistantId || it.id} */}
                   </div>
                 </button>
               );
