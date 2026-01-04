@@ -112,17 +112,9 @@ export const CustomerDeail: React.FC<CustomerFormCreateProps> = ({
               control={form.control}
               name="profile.prefix"
               label="คำนำหน้า"
-              type="custom"
+              type="select-radio-card"
               view={isEdit ? "edit" : "view"}
-              customControl={(field: any) => {
-                return (
-                  <RadioCardGroup
-                    options={prefix}
-                    value={field.value || ""}
-                    onChange={field.onChange}
-                  />
-                );
-              }}
+              options={prefix}
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

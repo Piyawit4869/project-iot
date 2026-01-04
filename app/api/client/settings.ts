@@ -23,6 +23,7 @@ import {
   fetchLineCardContentPaginate,
   fetchLineFeaturePaginate,
   fetchLineMassagePaginate,
+  fetchQuickMessagePaginate,
   fetchResetAi,
   fetchResetAiChatRoom,
   fetchRoomChatAIConfigLoadMore,
@@ -48,8 +49,11 @@ import type {
   settingTheme,
 } from "~/schemas/settings";
 import {
+  createQuickReplyMessage,
   createReplyMessage,
+  fetchDeleteQuickReply,
   getAllLineSticker,
+  getQuickReplyMessage,
   getReplyMessage,
   markFavoriteReplyMessage,
   sendCardContent,
@@ -419,5 +423,53 @@ export const useLineGetSticker = () => {
   return useQuery({
     queryKey: ["line-sticker"],
     queryFn: async () => getAllLineSticker(),
+  });
+};
+
+export const useQuickReplyMessagePaginate = ({
+  pageIndex,
+  pageSize = 10,
+  limit,
+}: {
+  pageIndex: number;
+  pageSize?: number;
+  limit: number;
+}) => {
+  return useQuery({
+    queryKey: ["quick-reply-message", pageIndex, pageSize, limit],
+    queryFn: () =>
+      fetchQuickMessagePaginate({
+        page: pageIndex,
+        itemsPerPage: pageSize,
+        limit: limit,
+      }),
+    enabled: !!pageIndex && !!pageSize,
+  });
+};
+
+export const useCreateQuickReplyMessage = () => {
+  return useMutation({
+    mutationFn: (payload: TeamMessageCreateDTO) =>
+      createQuickReplyMessage(payload),
+  });
+};
+
+export const useLineUpdateQuickReplyMessage = (id: string) => {
+  return useMutation({
+    mutationFn: (payload: TeamMessageCreateDTO) =>
+      updateReplyMessage(id, payload),
+  });
+};
+
+export const useLineQuickReplyMessage = (id: string) => {
+  return useQuery({
+    queryKey: ["line-reply"],
+    queryFn: async () => getQuickReplyMessage(id),
+  });
+};
+
+export const useDeleteQuickReply = () => {
+  return useMutation({
+    mutationFn: (id: string) => fetchDeleteQuickReply(id),
   });
 };

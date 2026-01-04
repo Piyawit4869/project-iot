@@ -413,6 +413,29 @@ export const fetchLineFeaturePaginate = async (params: {
   }
 };
 
+export const fetchQuickMessagePaginate = async (params: {
+  page: number;
+  itemsPerPage: number;
+  limit: number;
+}) => {
+  try {
+    const p = Object.assign({});
+    p.page = params.page;
+    p.limit = params.limit;
+
+    const res = await ApiConfig.get(
+      `/thirdparty/line/contents/paginate?type=reply`,
+      {
+        params: p,
+      }
+    );
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const fetchLineMassagePaginate = async (params: {
   page: number;
   itemsPerPage: number;

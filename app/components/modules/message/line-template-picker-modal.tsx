@@ -36,6 +36,14 @@ import {
   Clock,
   PhoneCall,
   Info,
+  Settings,
+  Layers,
+  MessageSquareReply,
+  CreditCard,
+  Zap,
+  Menu,
+  MessageCircleMore,
+  GalleryHorizontalEnd,
 } from "lucide-react";
 import { cn } from "~/lib/utils";
 import {
@@ -44,8 +52,9 @@ import {
   useLineMarkFavoriteRplyMessage,
   useLineMassagePaginate,
   useLineSendCardContent,
+  usePaginateChatBot,
 } from "~/api/client/settings";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 
 import { GlobalImage } from "~/components/shared/global-image";
@@ -58,7 +67,7 @@ import { FlexMessageImageRender } from "./flex-message-image-render";
 // Types
 // -----------------------------
 
-type CategoryKey = "reply" | "card" | "coupon";
+type CategoryKey = "reply" | "card" | "coupon" | "quick-reply";
 
 export type ProfileCardData = {
   category?: string;
@@ -770,6 +779,7 @@ export default function LineTemplatePickerModal({
   subId?: string;
   chatRoomId: string;
 }) {
+  const navigate = useNavigate();
   const { data, refetch, isLoading } = useLineMassagePaginate({
     pageIndex: 1,
     limit: 100,
@@ -779,6 +789,21 @@ export default function LineTemplatePickerModal({
     pageIndex: 1,
     limit: 100,
   });
+
+  const { data: lineQuickMessage } = useLineFeatureMessagePaginate({
+    //waiting api
+    pageIndex: 1,
+    limit: 100,
+  });
+
+  const { data: chatBot } = usePaginateChatBot({
+    pageIndex: 1,
+    pageSize: 10,
+  });
+  const lineIds =
+    chatBot
+      ?.filter((bot: any) => bot.platform === "line")
+      .map((bot: any) => bot.refId) ?? [];
 
   const { mutate } = useLineMarkFavoriteRplyMessage();
 
@@ -791,6 +816,7 @@ export default function LineTemplatePickerModal({
       ? lineFeatureFlex?.items
       : []
   );
+
   const [selectedId, setSelectedId] = React.useState<string | undefined>();
   const [categoryValue, setCategoryValue] = React.useState<
     string | undefined
@@ -880,6 +906,37 @@ export default function LineTemplatePickerModal({
       }
     );
   };
+
+  const goToSetting = () => {
+    navigate(
+      `/setting-organization/third-party/line?id=${lineIds}&tab=config-card&view=list`
+    );
+  };
+
+  const getCreateConfig = (category: string) => {
+    switch (category) {
+      case "reply":
+        return {
+          label: "สร้างข้อความตอบกลับ",
+          path: `/setting-organization/third-party/line?id=${lineIds}&tab=massage-line&view=list`,
+        };
+      case "card":
+        return {
+          label: "สร้างการ์ดแสดงผล",
+          path: `/setting-organization/third-party/line?id=${lineIds}&tab=quick-reply&view=list`,
+        };
+      case "quick-reply":
+        return {
+          label: "สร้างข้อความตอบกลับอัตโนมัติ",
+          path: `/setting-organization/third-party/line?id=${lineIds}&tab=quick-reply&view=list`,
+        };
+      default:
+        return null;
+    }
+  };
+
+  const config = getCreateConfig(category);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -899,7 +956,7 @@ export default function LineTemplatePickerModal({
         <div className="flex-1 min-h-0 overflow-auto">
           {/* Tabs */}
           <Tabs defaultValue="all" className="w-full px-6 mt-2">
-            <TabsList className="grid grid-cols-3 w-fit">
+            <TabsList className="grid grid-cols-4 w-fit">
               <TabsTrigger
                 value="all"
                 onClick={() => setCategory("all")}
@@ -907,7 +964,10 @@ export default function LineTemplatePickerModal({
                 after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black
                 after:transition-all after:w-0 data-[state=active]:after:w-full"
               >
-                ทั้งหมด
+                <div className="flex items-center gap-2">
+                  <LayoutList size={16} />
+                  <span>ทั้งหมด</span>
+                </div>
               </TabsTrigger>
 
               <TabsTrigger
@@ -917,7 +977,11 @@ export default function LineTemplatePickerModal({
                 after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black
                 after:transition-all after:w-0 data-[state=active]:after:w-full"
               >
-                ข้อความตอบกลับ
+                <div className="flex items-center gap-2">
+                  <MessageCircleMore size={16} />
+
+                  <span>ข้อความตอบกลับ</span>
+                </div>
               </TabsTrigger>
 
               <TabsTrigger
@@ -927,7 +991,22 @@ export default function LineTemplatePickerModal({
                 after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black
                 after:transition-all after:w-0 data-[state=active]:after:w-full"
               >
-                การ์ดแสดงผล
+                <div className="flex items-center gap-2">
+                  <GalleryHorizontalEnd size={16} />
+                  <span>การ์ดแสดงผล</span>
+                </div>
+              </TabsTrigger>
+              <TabsTrigger
+                value="quick-reply"
+                onClick={() => setCategory("quick-reply")}
+                className="hover:bg-border relative !shadow-none !border-0 rounded-md
+                after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black
+                after:transition-all after:w-0 data-[state=active]:after:w-full"
+              >
+                <div className="flex items-center gap-2">
+                  <MessageSquareText size={16} />
+                  <span>ข้อความตอบกลับอัตโนมัติ</span>
+                </div>
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -960,10 +1039,15 @@ export default function LineTemplatePickerModal({
                     <SelectItem value="oldest">เก่าสุด</SelectItem>
                   </SelectContent>
                 </Select>
+                <div className={`edit-icon-container cursor-pointer`}>
+                  <div className="edit-icon-wrapper">
+                    <Settings className="w-5 h-5 " onClick={goToSetting} />
+                  </div>
+                </div>
               </div>
 
               {/* List */}
-              <Card className="mt-3  h-[370px]">
+              <Card className={`mt-3 ${config ? "h-[380px]" : "h-[400px]"}`}>
                 <ScrollArea className="h-full">
                   {isLoading ? (
                     <ul className="flex flex-col gap-3 px-4 py-4">
@@ -1025,14 +1109,15 @@ export default function LineTemplatePickerModal({
                 </ScrollArea>
               </Card>
 
-              {/* Create Button */}
-              <div className="mt-3">
-                <Link to="/setting-organization/third-party/line?tab=massage-line&view=create">
-                  <Button variant="secondary" className="w-full">
-                    สร้างข้อความตอบกลับ
-                  </Button>
-                </Link>
-              </div>
+              {config && (
+                <div className="mt-3">
+                  <Link to={config.path}>
+                    <Button variant="secondary" className="w-full">
+                      {config.label}
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </div>
 
             {/* Right Pane */}

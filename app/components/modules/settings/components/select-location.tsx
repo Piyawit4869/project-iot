@@ -10,26 +10,33 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
-import type { LatLong } from "./chat-input";
+
 import { toast } from "sonner";
+import type { LatLong } from "../../message/chat-input";
 
-interface ChatSelectLocationProps {
+type ChatSelectLocationProps = {
+  latlng?: {
+    lat: number;
+    lng: number;
+  };
   address: string;
-  latlng: LatLong | undefined;
   setAddress: React.Dispatch<React.SetStateAction<string>>;
-  setLatLng: React.Dispatch<React.SetStateAction<LatLong | undefined>>;
-  handleSendLocation: () => void;
-}
+  setLatLng: (v?: { lat: number; lng: number }) => void;
+  // handleSendLocation: () => void;
+};
 
-export const ChatSelectLocation: React.FC<ChatSelectLocationProps> = ({
+export const SelectLocation: React.FC<ChatSelectLocationProps> = ({
   address,
   latlng,
   setAddress,
   setLatLng,
-  handleSendLocation,
+  // handleSendLocation,
 }) => {
   const [openModal, setOpenModal] = React.useState(false);
   const [loadingAddress, setLoadingAddress] = React.useState(false);
+  const [selectLocation, setSelectLocation] = React.useState<
+    { lat: number; lng: number } | undefined
+  >(latlng ?? undefined);
 
   const handleChangeLatLng = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +47,7 @@ export const ChatSelectLocation: React.FC<ChatSelectLocationProps> = ({
         return;
       }
 
-      setLatLng({
+      setSelectLocation({
         lat: Number(lat),
         lng: Number(lng),
       });
@@ -78,10 +85,12 @@ export const ChatSelectLocation: React.FC<ChatSelectLocationProps> = ({
     [setOpenModal]
   );
 
-  const handleConfirmLocation = React.useCallback(() => {
-    handleSendLocation();
-    handleCloseModal();
-  }, [handleSendLocation, handleCloseModal]);
+  const handleConfirmLocation = () => {
+    if (!selectLocation) return;
+    setLatLng({ lat: selectLocation.lat, lng: selectLocation.lng });
+    // handleSendLocation();
+    setOpenModal(false);
+  };
 
   React.useEffect(() => {
     if (typeof latlng?.lat !== "number" || typeof latlng?.lng !== "number") {
@@ -104,7 +113,9 @@ export const ChatSelectLocation: React.FC<ChatSelectLocationProps> = ({
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
+
         setLatLng({ lat: latitude, lng: longitude });
+        setSelectLocation({ lat: latitude, lng: longitude });
       },
       (error) => {
         toast.error("ไม่สามารถดึงตำแหน่งได้ : " + error);
@@ -113,13 +124,19 @@ export const ChatSelectLocation: React.FC<ChatSelectLocationProps> = ({
   };
 
   React.useEffect(() => {
-    getCurrentLocation();
-  }, []);
+    if (!latlng || !selectLocation) {
+      getCurrentLocation();
+    }
+  }, [selectLocation, latlng]);
 
   return (
     <Dialog open={openModal} onOpenChange={setOpenModal}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" type="button">
+        <Button
+          type="button"
+          className="w-35 bg-white border-1 rounded-md text-black hover:bg-gray-100 hover:scale-105"
+        >
+          เลือกโลเคชั่น
           <MapPin className="w-4 h-4" />
         </Button>
       </DialogTrigger>
@@ -139,8 +156,8 @@ export const ChatSelectLocation: React.FC<ChatSelectLocationProps> = ({
             ไม่รู้พิกัด?{" "}
             <a
               href={
-                latlng
-                  ? `https://www.google.com/maps?q=${(latlng && latlng.lat) || ""},${(latlng && latlng.lng) || ""}`
+                selectLocation
+                  ? `https://www.google.com/maps?q=${(selectLocation && selectLocation.lat) || ""},${(selectLocation && selectLocation.lng) || ""}`
                   : "https://www.google.com/maps"
               }
               target="_blank"
@@ -151,13 +168,13 @@ export const ChatSelectLocation: React.FC<ChatSelectLocationProps> = ({
             </a>
           </p>
 
-          {latlng &&
-            latlng.lat !== undefined &&
-            latlng &&
-            latlng.lng !== undefined && (
+          {selectLocation &&
+            selectLocation.lat !== undefined &&
+            selectLocation &&
+            selectLocation.lng !== undefined && (
               <div className="mt-4 overflow-hidden rounded-lg border">
                 <iframe
-                  src={`https://www.google.com/maps?q=${(latlng && latlng.lat) || ""},${(latlng && latlng.lng) || ""}&z=17&output=embed`}
+                  src={`https://www.google.com/maps?q=${(selectLocation && selectLocation.lat) || ""},${(selectLocation && selectLocation.lng) || ""}&z=17&output=embed`}
                   width="100%"
                   height="450"
                   style={{ border: 0 }}
@@ -187,10 +204,10 @@ export const ChatSelectLocation: React.FC<ChatSelectLocationProps> = ({
             ยกเลิก
           </Button>
 
-          {latlng &&
-            latlng.lat !== undefined &&
-            latlng &&
-            latlng.lng !== undefined && (
+          {selectLocation &&
+            selectLocation.lat !== undefined &&
+            selectLocation &&
+            selectLocation.lng !== undefined && (
               <Button onClick={handleConfirmLocation}>ส่ง</Button>
             )}
         </DialogFooter>

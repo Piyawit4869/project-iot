@@ -136,6 +136,7 @@ export function ChatItem({
         <GlobalImage
           src={!image || image === "" ? fallbackImage : image}
           alt={name}
+          notShowPreview
           className="w-[40px] h-[40px] rounded-full object-cover"
         />
         <Avatar className="w-[20px] h-[20px] absolute top-[-5px] right-0">

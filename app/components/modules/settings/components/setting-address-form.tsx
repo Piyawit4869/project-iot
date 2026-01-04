@@ -7,16 +7,32 @@ import { addressSchema, type AddressSchemaValues } from "~/schemas/settings";
 import { getRequiredPaths } from "~/utils/form-adapter";
 import { GlobalFormField } from "~/components/shared/global-formField";
 
+import type { LatLong } from "../../message/chat-input";
+import { SelectLocation } from "./select-location";
+import { MapPin } from "lucide-react";
+
 interface SettingAddressFormProps {
   form: UseFormReturn<AddressSchemaValues>;
   isLoading: boolean;
   editable?: boolean;
+  latlng?: any;
+  mapAddress?: any;
+  setMapAddress: React.Dispatch<React.SetStateAction<string>>;
+  setLatLng: React.Dispatch<React.SetStateAction<LatLong | undefined>>;
 }
 
 export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
   props
 ) => {
-  const { form, isLoading, editable } = props;
+  const {
+    form,
+    isLoading,
+    editable,
+    latlng,
+    mapAddress,
+    setMapAddress,
+    setLatLng,
+  } = props;
 
   // const checkFields = new Set(getRequiredPaths(addressSchema as any));
   return (
@@ -49,149 +65,183 @@ export const SettingAddressForm: React.FC<SettingAddressFormProps> = (
               <SkeletonLoading />
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 mt-2">
-              <GlobalFormField
-                control={form.control}
-                name="name"
-                label="ชื่อสถานที่ตั้ง"
-                type="input"
-                placeholder="กรอกชื่อสถานที่ เช่น ตึกกิ่งทอง"
-                view={editable ? "edit" : "view"}
-                required={editable}
-              />
+            <>
+              <div className="grid grid-cols-2 gap-4 mt-2">
+                <GlobalFormField
+                  control={form.control}
+                  name="name"
+                  label="ชื่อสถานที่ตั้ง"
+                  type="input"
+                  placeholder="กรอกชื่อสถานที่ เช่น ตึกกิ่งทอง"
+                  view={editable ? "edit" : "view"}
+                  required={editable}
+                />
 
-              <GlobalFormField
-                control={form.control}
-                name="building"
-                label="ชื่อตึก/อาคาร"
-                type="input"
-                placeholder="กรอกชื่อตึกของสาขา เช่น สาขา A"
-                view={editable ? "edit" : "view"}
-              />
+                <GlobalFormField
+                  control={form.control}
+                  name="building"
+                  label="ชื่อตึก/อาคาร"
+                  type="input"
+                  placeholder="กรอกชื่อตึกของสาขา เช่น สาขา A"
+                  view={editable ? "edit" : "view"}
+                />
 
-              <GlobalFormField
-                control={form.control}
-                name="roomNo"
-                label="ห้องหมายเลข"
-                placeholder="กรอกห้อง เช่น ห้อง 315"
-                type="input"
-                view={editable ? "edit" : "view"}
-              />
+                <GlobalFormField
+                  control={form.control}
+                  name="roomNo"
+                  label="ห้องหมายเลข"
+                  placeholder="กรอกห้อง เช่น ห้อง 315"
+                  type="input"
+                  view={editable ? "edit" : "view"}
+                />
 
-              <GlobalFormField
-                control={form.control}
-                name="floorNo"
-                label="ชั้นที่อยู่"
-                placeholder="กรอกชั้น เช่น ชั้น 3"
-                type="input"
-                view={editable ? "edit" : "view"}
-              />
+                <GlobalFormField
+                  control={form.control}
+                  name="floorNo"
+                  label="ชั้นที่อยู่"
+                  placeholder="กรอกชั้น เช่น ชั้น 3"
+                  type="input"
+                  view={editable ? "edit" : "view"}
+                />
 
-              <GlobalFormField
-                control={form.control}
-                name="houseNo"
-                label="เลขที่บ้าน"
-                type="input"
-                placeholder="กรอกบ้านเลขที่ เช่น 31/5"
-                view={editable ? "edit" : "view"}
-                required={editable}
-              />
+                <GlobalFormField
+                  control={form.control}
+                  name="houseNo"
+                  label="เลขที่บ้าน"
+                  type="input"
+                  placeholder="กรอกบ้านเลขที่ เช่น 31/5"
+                  view={editable ? "edit" : "view"}
+                  required={editable}
+                />
 
-              <GlobalFormField
-                control={form.control}
-                name="village"
-                label="ชื่อหมู่บ้าน"
-                type="input"
-                placeholder="กรอกชื่อหมู่บ้าน เช่น หมู่บ้านสามร้อยสิบห้า"
-                view={editable ? "edit" : "view"}
-              />
+                <GlobalFormField
+                  control={form.control}
+                  name="village"
+                  label="ชื่อหมู่บ้าน"
+                  type="input"
+                  placeholder="กรอกชื่อหมู่บ้าน เช่น หมู่บ้านสามร้อยสิบห้า"
+                  view={editable ? "edit" : "view"}
+                />
 
-              <GlobalFormField
-                control={form.control}
-                name="villageNo"
-                label="หมู่ที่"
-                type="input"
-                placeholder="กรอกหมู่ เช่น 13"
-                view={editable ? "edit" : "view"}
-              />
+                <GlobalFormField
+                  control={form.control}
+                  name="villageNo"
+                  label="หมู่ที่"
+                  type="input"
+                  placeholder="กรอกหมู่ เช่น 13"
+                  view={editable ? "edit" : "view"}
+                />
 
-              <GlobalFormField
-                control={form.control}
-                name="alley"
-                label="ซอย"
-                type="input"
-                placeholder="กรอกซอย เช่น 48"
-                view={editable ? "edit" : "view"}
-              />
+                <GlobalFormField
+                  control={form.control}
+                  name="alley"
+                  label="ซอย"
+                  type="input"
+                  placeholder="กรอกซอย เช่น 48"
+                  view={editable ? "edit" : "view"}
+                />
 
-              <GlobalFormField
-                control={form.control}
-                name="road"
-                label="ถนน"
-                type="input"
-                placeholder="กรอกถนน เช่น พหลโยธิน"
-                view={editable ? "edit" : "view"}
-              />
+                <GlobalFormField
+                  control={form.control}
+                  name="road"
+                  label="ถนน"
+                  type="input"
+                  placeholder="กรอกถนน เช่น พหลโยธิน"
+                  view={editable ? "edit" : "view"}
+                />
 
-              <GlobalFormField
-                control={form.control}
-                name="subDistrict"
-                label="ตำบล/แขวง"
-                type="input"
-                placeholder="กรอกตำบล/แขวง เช่น แขวงบางกะปิ"
-                view={editable ? "edit" : "view"}
-                required={editable}
-              />
+                <GlobalFormField
+                  control={form.control}
+                  name="subDistrict"
+                  label="ตำบล/แขวง"
+                  type="input"
+                  placeholder="กรอกตำบล/แขวง เช่น แขวงบางกะปิ"
+                  view={editable ? "edit" : "view"}
+                  required={editable}
+                />
 
-              <GlobalFormField
-                control={form.control}
-                name="city"
-                label="เขต/อำเภอ/เมือง"
-                type="input"
-                placeholder="กรอกเขต/อำเภอ/เมือง เช่น เขตห้วยขวาง"
-                view={editable ? "edit" : "view"}
-                required={editable}
-              />
+                <GlobalFormField
+                  control={form.control}
+                  name="city"
+                  label="เขต/อำเภอ/เมือง"
+                  type="input"
+                  placeholder="กรอกเขต/อำเภอ/เมือง เช่น เขตห้วยขวาง"
+                  view={editable ? "edit" : "view"}
+                  required={editable}
+                />
 
-              <GlobalFormField
-                control={form.control}
-                name="province"
-                label="จังหวัด"
-                type="input"
-                placeholder="กรอกจังหวัด เช่น กรุงเทพมหานคร"
-                view={editable ? "edit" : "view"}
-                required={editable}
-              />
+                <GlobalFormField
+                  control={form.control}
+                  name="province"
+                  label="จังหวัด"
+                  type="input"
+                  placeholder="กรอกจังหวัด เช่น กรุงเทพมหานคร"
+                  view={editable ? "edit" : "view"}
+                  required={editable}
+                />
 
-              <GlobalFormField
-                control={form.control}
-                name="postalCode"
-                label="รหัสไปรษณีย์"
-                placeholder="กรอกรหัสไปรษณีย์ เช่น 10310"
-                type="number-box"
-                groups={[5]}
-                view={editable ? "edit" : "view"}
-                required={editable}
-              />
+                <GlobalFormField
+                  control={form.control}
+                  name="postalCode"
+                  label="รหัสไปรษณีย์"
+                  placeholder="กรอกรหัสไปรษณีย์ เช่น 10310"
+                  type="number-box"
+                  groups={[5]}
+                  view={editable ? "edit" : "view"}
+                  required={editable}
+                />
 
-              <GlobalFormField
-                control={form.control}
-                name="nation"
-                label="ประเทศ"
-                type="input"
-                placeholder="กรอกประเทศ เช่น ประเทศไทย"
-                view="view"
-              />
+                <GlobalFormField
+                  control={form.control}
+                  name="nation"
+                  label="ประเทศ"
+                  type="input"
+                  placeholder="กรอกประเทศ เช่น ประเทศไทย"
+                  view="view"
+                />
 
-              <GlobalFormField
-                control={form.control}
-                name="note"
-                label="หมายเหตุ"
-                type="textArea"
-                placeholder="กรอกหมายเหตุสาขา"
-                view={editable ? "edit" : "view"}
-              />
-            </div>
+                <GlobalFormField
+                  control={form.control}
+                  name="note"
+                  label="หมายเหตุ"
+                  type="textArea"
+                  placeholder="กรอกหมายเหตุสาขา"
+                  view={editable ? "edit" : "view"}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 mt-5 ">
+                <div className="flex items-center gap-4">
+                  <span>แผนที่</span>
+                  <SelectLocation
+                    latlng={latlng}
+                    setLatLng={setLatLng}
+                    address={mapAddress}
+                    setAddress={setMapAddress}
+                  />
+                </div>
+                {mapAddress && (
+                  <div className=" rounded-md bg-muted p-3 text-sm">
+                    <div className="flex items-start gap-2">
+                      <MapPin className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                      <span>{mapAddress}</span>
+                    </div>
+                  </div>
+                )}
+
+                {latlng && (
+                  <div className="mt-4 overflow-hidden rounded-lg border">
+                    <iframe
+                      src={`https://www.google.com/maps?q=${latlng.lat},${latlng.lng}&z=17&output=embed`}
+                      width="100%"
+                      height="450"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+              </div>
+            </>
           )}
         </div>
       </div>

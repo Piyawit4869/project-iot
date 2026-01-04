@@ -29,7 +29,7 @@ export const RemarkCard = ({
       <CardHeader className=" gap-0">
         <div className="flex gap-2">
           <div className="flex gap-2">
-            <CardTitle className="text-base font-bold">หมายเหตุ</CardTitle>
+            <CardTitle className="text-base font-semibold">หมายเหตุ</CardTitle>
           </div>
 
           <EditActionButtons
@@ -69,7 +69,7 @@ export const RemarkCard = ({
             )}
           />
         ) : remark ? (
-          <span className="text-base ">{remark}</span>
+          <span className="text-sm">{remark}</span>
         ) : (
           <span className="  text-[#71717A]  dark:text-[#b4b4c5]">
             ไม่มีหมายเหตุ

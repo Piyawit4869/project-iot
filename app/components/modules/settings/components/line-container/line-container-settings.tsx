@@ -1,5 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, Copy, PenLine, Save, ShieldCheck, User2 } from "lucide-react";
+import {
+  Check,
+  Copy,
+  GalleryHorizontalEnd,
+  Info,
+  MessageCircleMore,
+  MessageSquareText,
+  PenLine,
+  Save,
+  ShieldCheck,
+  User2,
+} from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -36,8 +47,12 @@ import GlobalButton from "~/components/shared/global-button";
 import { cn, copyTextToClipboard } from "~/lib/utils";
 import { EditableFormField } from "./editable-formField";
 import { CustomTabs } from "~/components/shared/custom-tabs";
+import { GlobalImage } from "~/components/shared/global-image";
+import QuickReplayMassageTable from "../quick-reply-message/quick-replay-massage-table";
+import QuickReplayForm from "../quick-reply-message/create-quick-replay";
+import EditQuickReplayForm from "../quick-reply-message/edit-quick-replay-form";
 
-type LineTab = "config-line" | "massage-line" | "config-card";
+type LineTab = "config-line" | "massage-line" | "config-card" | "quick-reply";
 type LineView = "list" | "create" | "edit";
 
 export const LineContainerSettings: React.FC = () => {
@@ -49,7 +64,8 @@ export const LineContainerSettings: React.FC = () => {
   const id = sp.get("id") ?? "";
 
   const { mutate: UpdateConnectionLine } = useUpdateConnectionLine(id);
-  const { data } = useGetConnectionLine(id ?? "");
+  const { data, refetch } = useGetConnectionLine(id ?? "");
+  const imageLine = data?.imageUrl ?? "";
 
   const tabFromUrl = (sp.get("tab") as LineTab) ?? "config-line";
   const viewFromUrl = (sp.get("view") as LineView) ?? "list";
@@ -109,6 +125,7 @@ export const LineContainerSettings: React.FC = () => {
               setCustomerForms((prev) =>
                 prev.map((f) => ({ ...f, mode: true }))
               );
+              refetch();
             },
             onError: (error) => {
               console.error("Update connection error:", error);
@@ -242,7 +259,7 @@ export const LineContainerSettings: React.FC = () => {
           {
             key: "config-line",
             label: "ข้อมูล",
-
+            iconFront: <Info size={16} />,
             content: (
               <Form {...form}>
                 <form
@@ -252,14 +269,29 @@ export const LineContainerSettings: React.FC = () => {
                   <div className="flex w-full flex-col bg-white rounded-xl border  shadow-sm">
                     <div className="px-6 mt-4 pb-4">
                       <div className="flex items-center gap-4">
-                        <div className="relative">
-                          <div className="flex h-12 w-12   items-center justify-center rounded-full bg-gray-700">
-                            <User2 className="h-7 w-7 text-white" />
+                        {imageLine ? (
+                          <div className="relative">
+                            <GlobalImage
+                              src={imageLine}
+                              width={60}
+                              height={60}
+                              className="object-cover rounded-md object-center"
+                            />
+                            <div className="absolute -right-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500">
+                              <ShieldCheck className="h-3.5 w-3.5 text-white" />
+                            </div>
                           </div>
-                          <div className="absolute -right-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500">
-                            <ShieldCheck className="h-3.5 w-3.5 text-white" />
+                        ) : (
+                          <div className="relative">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-700">
+                              <User2 className="h-7 w-7 text-white" />
+                            </div>
+                            <div className="absolute -right-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500">
+                              <ShieldCheck className="h-3.5 w-3.5 text-white" />
+                            </div>
                           </div>
-                        </div>
+                        )}
+
                         <p className="text-lg pl-3 font-semibold text-[var(--card-foreground)]">
                           ข้อมูลการเชื่อมต่อ Line Official
                         </p>
@@ -379,7 +411,7 @@ export const LineContainerSettings: React.FC = () => {
           {
             key: "massage-line",
             label: "ข้อความตอบกลับ",
-
+            iconFront: <MessageCircleMore size={16} />,
             content: (
               <>
                 {viewFromUrl === "list" && (
@@ -411,7 +443,7 @@ export const LineContainerSettings: React.FC = () => {
           {
             key: "config-card",
             label: "การ์ดเมสเสจ",
-
+            iconFront: <GalleryHorizontalEnd size={16} />,
             content: (
               <>
                 {viewFromUrl === "list" && (
@@ -433,6 +465,38 @@ export const LineContainerSettings: React.FC = () => {
                     id={subIdFromUrl}
                     onCancel={() => goView("config-card", "list")}
                     onSaved={() => goView("config-card", "list")}
+                  />
+                )}
+              </>
+            ),
+          },
+          {
+            key: "quick-reply",
+            label: "ข้อความอัตโนมัติ",
+            iconFront: <MessageSquareText size={16} />,
+            content: (
+              <>
+                {viewFromUrl === "list" && (
+                  <QuickReplayMassageTable
+                    onCreate={() => goView("quick-reply", "create")}
+                    onEdit={(id) => goView("quick-reply", "edit", id)}
+                  />
+                )}
+
+                {viewFromUrl === "create" && (
+                  <QuickReplayForm
+                    mode="create"
+                    onCancel={() => goView("quick-reply", "list")}
+                    onSaved={() => goView("quick-reply", "list")}
+                  />
+                )}
+
+                {viewFromUrl === "edit" && subIdFromUrl && (
+                  <EditQuickReplayForm
+                    mode="edit"
+                    replyId={subIdFromUrl}
+                    onCancel={() => goView("quick-reply", "list")}
+                    onSaved={() => goView("quick-reply", "list")}
                   />
                 )}
               </>

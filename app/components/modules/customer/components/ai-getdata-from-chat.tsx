@@ -230,12 +230,10 @@ export function AiGetDataFromChat({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
       <div>
-        <Card>
+        <Card className="gap-1">
           <CardHeader>
             <div className="flex items-center lg:col-span-2">
-              <CardTitle className="text-2xl font-extrabold">
-                ข้อมูลจาก AI
-              </CardTitle>
+              <span className="font-semibold">ข้อมูลจาก AI</span>
             </div>
           </CardHeader>
 
@@ -251,13 +249,13 @@ export function AiGetDataFromChat({
                       <span className="flex items-center justify-center w-5 h-5 text-muted-foreground">
                         {item.icon}
                       </span>
-                      <span className="text-md font-semibold text-foreground min-w-[120px]">
+                      <span className=" text-sm text-foreground min-w-[120px]">
                         {item.label}
                       </span>
                     </div>
 
                     <div className="ml-10">
-                      <span className="text-md text-muted-foreground flex-1">
+                      <span className="text-sm text-muted-foreground flex-1">
                         {item.value || "ยังไม่มีข้อมูล"}
                       </span>
                     </div>
@@ -269,12 +267,10 @@ export function AiGetDataFromChat({
         </Card>
       </div>
       <div>
-        <Card>
+        <Card className="gap-1">
           <CardHeader>
             <div className="flex  items-center ">
-              <CardTitle className="text-2xl font-extrabold">
-                บุคลิกของลูกค้า
-              </CardTitle>
+              <span className="font-semibold">บุคลิกของลูกค้า</span>
             </div>
           </CardHeader>
 
@@ -290,15 +286,15 @@ export function AiGetDataFromChat({
                       <span className="flex items-center justify-center w-5 h-5 text-muted-foreground">
                         {item.icon}
                       </span>
-                      <span className="text-md font-semibold text-foreground min-w-[120px]">
+                      <span className="text-sm  text-foreground min-w-[120px]">
                         {item.label}
                       </span>
                     </div>
 
                     <div className="ml-10">
-                      <span className="text-md text-muted-foreground flex-1">
+                      <span className="text-sm text-muted-foreground flex-1">
                         {item.value ||
-                          "ตอนนี้ยังไม่สามารถบอกบุคลิกได้ พอดียังไม่มีโอกาสได้คุยกับเขาเลย ขอทำความรู้จักเขาก่อนดีกว่านะ"}
+                          "ยังไม่มีข้อมูลเพียงพอสำหรับการประเมินลักษณะบุคลิก กรุณามีการสนทนาเพิ่มเติมเพื่อให้ระบบสามารถวิเคราะห์ได้อย่างถูกต้อง"}
                       </span>
                     </div>
                   </div>

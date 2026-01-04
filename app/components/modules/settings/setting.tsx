@@ -18,7 +18,7 @@ import {
   useUpdateSettingBranches,
   useUpdateSettings,
 } from "~/api/client/settings";
-import { useForm, type Resolver } from "react-hook-form";
+import { FormProvider, useForm, type Resolver } from "react-hook-form";
 import {
   addressSchema,
   organizationSchema,
@@ -32,6 +32,7 @@ import { toast } from "sonner";
 import { SettingOrganizationForm } from "./components/setting-organization-form";
 import { RenderHeaderButtons } from "./components/render-header-buttons";
 import {
+  Link,
   useLocation,
   useNavigate,
   useRouteLoaderData,
@@ -47,6 +48,7 @@ import { useDebounce } from "~/hooks/use-debounce";
 import { useSearchUserOrgs } from "~/api/client/user";
 import { Button } from "~/components/ui/button";
 import { mapOpenDaysToApi } from "./viewmodels/useOrganizationAction";
+import type { LatLong } from "../message/chat-input";
 
 interface SettingsPageProps {}
 
@@ -74,6 +76,8 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
   );
   const [isEditing, setIsEditing] = React.useState(false);
   const [search, setSearch] = React.useState("");
+  const [latlng, setLatLng] = React.useState<LatLong | undefined>(undefined);
+  const [mapAddress, setMapAddress] = React.useState<string>("");
 
   const debouncedSearch = useDebounce(search);
 
@@ -135,8 +139,8 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
       ? getMainItem(org?.setting, org?.settings)
       : getMainItem(organization?.setting, organization?.settings);
 
-  const settingAddressId = mainAddress?.id ?? "";
-  const settingId = mainSetting?.id ?? mainSetting?.id ?? "";
+  const settingAddressId = mainAddress && mainAddress?.id !== undefined;
+  const settingId = mainSetting && mainSetting?.id !== undefined;
 
   // main org
   const { mutate: updateOrganization } = useUpdateOrganization(
@@ -241,6 +245,12 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
   };
 
   const handleAddressOnSubmit = (values: any) => {
+    const payload = {
+      ...values,
+      latitude: Number(latlng?.lat),
+      longitude: Number(latlng?.lng),
+    };
+
     GlobalModal.info({
       title: "แก้ไขที่อยู่ติดต่อ",
       description: "คุณต้องการบันทึกการแก้ไขที่อยู่ติดต่อใช่หรือไม่",
@@ -252,7 +262,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
         const mutate = selectedBranchId
           ? updateAddressBranches
           : updateSettingAddress;
-        mutate(values, {
+        mutate(payload, {
           onSuccess: () => {
             toast.success("บันทึกที่อยู่ติดต่อสำเร็จ", { id: toastId });
 
@@ -368,7 +378,19 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
       nation: mainAddress?.nation ?? "",
       postalCode: mainAddress?.postalCode ?? "",
       note: mainAddress?.note ?? "",
+      longitude: mainAddress?.longitude ?? "",
+      latitude: mainAddress?.latitude ?? "",
     });
+
+    if (mainAddress?.latitude && mainAddress?.longitude) {
+      setLatLng({
+        lat: mainAddress.latitude,
+        lng: mainAddress.longitude,
+      });
+    } else {
+      setLatLng(undefined);
+      setMapAddress("");
+    }
 
     settingForm.reset({
       isMain: true,
@@ -406,7 +428,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
           backpath={isSingleOrg ? backToMain : undefined}
           title={
             selectedOrgId ? (
-              <div className="flex flex-row gap-2">
+              <div className="flex flex-row gap-2 ml-5">
                 <OrgSelectorDropdown
                   topic="บริษัท/องค์กร"
                   currentOrgId={selectedOrgId ?? organizationId}
@@ -416,7 +438,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                   setSearch={setSearch}
                   data={data}
                 />
-                <OrgSelectorDropdown
+                {/* <OrgSelectorDropdown
                   topic="สาขา"
                   currentBranchId={selectedBranchId ?? branchId}
                   currentOrganization={user?.organization}
@@ -430,7 +452,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                   className=" flex flex-row items-center gap-2 text-sm"
                 >
                   <BrushCleaning className="w-4" /> ล้างค่า
-                </Button>
+                </Button> */}
               </div>
             ) : (
               "องค์กรทั้งหมด"
@@ -513,6 +535,7 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                   <SettingOrganizationForm
                     form={orgForm}
                     editable={isEditing}
+                    selectedBranchId={selectedBranchId}
                     isLoading={isLoadingOrganization || isLoadingBranch}
                   />
                 </fieldset>
@@ -554,6 +577,10 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
                     form={addressForm}
                     editable={isEditing}
                     isLoading={isLoadingOrganization || isLoadingBranch}
+                    latlng={latlng}
+                    mapAddress={mapAddress}
+                    setMapAddress={setMapAddress}
+                    setLatLng={setLatLng}
                     // isLoading={isRefetching}
                   />
                 </fieldset>

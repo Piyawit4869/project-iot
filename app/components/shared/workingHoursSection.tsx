@@ -11,6 +11,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import type { UseFormReturn } from "react-hook-form";
 import { cn } from "~/lib/utils";
+import { Checkbox } from "../ui/checkbox";
 
 //To FIX
 export type DayKey =
@@ -102,9 +103,10 @@ export default function WorkingHoursSection({
   }, [isControlled, value, internal]);
 
   const [open, setOpen] = React.useState(false);
+  const [isClosed, setIsClosed] = React.useState(false);
   const [selectedDays, setSelectedDays] = React.useState<DayKey[]>([]);
-  const [startTime, setStartTime] = React.useState("09:00");
-  const [endTime, setEndTime] = React.useState("18:00");
+  const [startTime, setStartTime] = React.useState<string | null>("09:00");
+  const [endTime, setEndTime] = React.useState<string | null>("18:00");
 
   const openModal = (days: DayKey[]) => {
     const first = days[0];
@@ -120,13 +122,22 @@ export default function WorkingHoursSection({
 
     const next = { ...base };
     selectedDays.forEach((day) => {
-      next[day] = { open: startTime, close: endTime };
+      next[day] = { open: startTime ?? "", close: endTime ?? "" };
     });
 
     setInternal(next);
     onChange?.(next);
+
     setOpen(false);
   };
+
+  React.useEffect(() => {
+    if (startTime === "00:00" && endTime === "00:00") {
+      setIsClosed(true);
+    } else {
+      setIsClosed(false);
+    }
+  }, [startTime, endTime]);
 
   return (
     <div className="gap-4 mb-6">
@@ -142,7 +153,10 @@ export default function WorkingHoursSection({
               >
                 <span className={cn(isEdit ? "  " : "text-muted-foreground")}>
                   {hours[day].open && hours[day].close
-                    ? `${hours[day].open} - ${hours[day].close}`
+                    ? hours[day].open === "00:00" &&
+                      hours[day].close === "00:00"
+                      ? "ปิดทำการ"
+                      : `${hours[day].open} - ${hours[day].close}`
                     : "ตั้งเวลา"}
                 </span>
                 {isEdit && <Pencil className="h-4 w-4" />}
@@ -152,31 +166,39 @@ export default function WorkingHoursSection({
         ))}
       </div>
 
-      <div className="flex gap-4 mt-5">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => openModal(Object.keys(DAY_LABEL) as DayKey[])}
-        >
-          แก้ไขทั้งหมด
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() =>
-            openModal(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
-          }
-        >
-          แก้ไขจันทร์ - ศุกร์
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => openModal(["Saturday", "Sunday"])}
-        >
-          แก้ไขเสาร์ - อาทิตย์
-        </Button>
-      </div>
+      {isEdit && (
+        <div className="flex gap-4 mt-5">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => openModal(Object.keys(DAY_LABEL) as DayKey[])}
+          >
+            แก้ไขทั้งหมด
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() =>
+              openModal([
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+              ])
+            }
+          >
+            แก้ไขจันทร์ - ศุกร์
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => openModal(["Saturday", "Sunday"])}
+          >
+            แก้ไขเสาร์ - อาทิตย์
+          </Button>
+        </div>
+      )}
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
@@ -187,19 +209,43 @@ export default function WorkingHoursSection({
           <div className="flex items-center gap-2">
             <Input
               type="time"
-              value={startTime}
+              value={startTime ?? ""}
+              disabled={isClosed}
               onChange={(e) => setStartTime(e.target.value)}
             />
             <span>ถึง</span>
             <Input
               type="time"
-              value={endTime}
+              value={endTime ?? ""}
+              disabled={isClosed}
               onChange={(e) => setEndTime(e.target.value)}
             />
           </div>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                checked={isClosed}
+                onCheckedChange={(checked) => {
+                  const value = !!checked;
+                  setIsClosed(value);
+
+                  if (value) {
+                    setStartTime("00:00");
+                    setEndTime("00:00");
+                  }
+                }}
+              />
+              <label className="font-normal mt-2 leading-none">ปิดทำการ</label>
+            </div>
+          </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
               ยกเลิก
             </Button>
             <Button onClick={confirmTime}>ยืนยัน</Button>

@@ -19,12 +19,16 @@ interface SettingOrganizationFormProps {
   form: UseFormReturn<OrganizationFormValues>;
   editable?: boolean;
   isLoading?: boolean;
+  selectedBranchId?: string;
 }
 
 export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
   props
 ) => {
-  const { form, isLoading, editable } = props;
+  const { form, isLoading, editable, selectedBranchId } = props;
+  const isBranch = Boolean(selectedBranchId);
+  const labelForm = (branchLabel: string, orgLabel: string) =>
+    isBranch ? branchLabel : orgLabel;
 
   return (
     <Form {...form}>
@@ -46,13 +50,13 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                 </div>
               </>
             ) : (
-              <div className="space-y-4  ">
-                {/* Activity Name */}{" "}
-                <div className="grid grid-cols-1 md:grid-cols-1 gap-5">
+              <div className="space-y-4">
+                {/* โลโก้ + สถานะ */}
+                <div className="grid grid-cols-1 gap-5">
                   <GlobalFormField
                     control={form.control}
                     name="logoUrl"
-                    label="โลโก้"
+                    label={labelForm("โลโก้สาขา", "โลโก้องค์กร")}
                     type="image"
                     view={editable ? "edit" : "view"}
                   />
@@ -65,49 +69,61 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                     view={editable ? "edit" : "view"}
                   />
                 </div>
+
+                {/* รหัส */}
                 <div className="grid grid-cols-2 gap-5 mt-3">
                   <GlobalFormField
                     control={form.control}
                     name="code"
-                    label="รหัสสาขา"
-                    placeholder="กรอกชื่อสาขาภาษาไทย เช่น สาขาสามร้อยสิบห้าโปรดักชั่น"
+                    label={labelForm("รหัสสาขา", "รหัสองค์กร")}
+                    placeholder={labelForm("กรอกรหัสสาขา", "กรอกรหัสองค์กร")}
                     type="input"
                     view={editable ? "edit" : "view"}
                   />
                 </div>
+
+                {/* ชื่อ + รายละเอียด */}
                 <div className="grid grid-cols-2 gap-5 mt-3">
-                  {/* <GlobalFormField
-                    control={form.control}
-                    name="isMain"
-                    label="สาขาหลัก"
-                    labelCheckbox="กำหนดสาขานี้เป็นสาขาหลักขององค์กร"
-                    type="checkbox"
-                  /> */}
                   <GlobalFormField
                     control={form.control}
                     name="nameTh"
-                    label="ชื่อสาขา (ไทย)"
-                    placeholder="กรอกชื่อสาขาภาษาไทย เช่น สาขาสามร้อยสิบห้าโปรดักชั่น"
+                    label={labelForm("ชื่อสาขา (ไทย)", "ชื่อองค์กร (ไทย)")}
+                    placeholder={labelForm(
+                      "กรอกชื่อสาขาภาษาไทย เช่น สาขาสามร้อยสิบห้าโปรดักชั่น",
+                      "กรอกชื่อองค์กรภาษาไทย เช่น สามร้อยสิบห้าโปรดักชั่น"
+                    )}
                     type="input"
                     view={editable ? "edit" : "view"}
-                    required={editable ? true : false}
+                    required={editable}
                   />
 
                   <GlobalFormField
                     control={form.control}
                     name="nameEn"
-                    label="ชื่อสาขา (อังกฤษ)"
-                    placeholder="กรอกชื่อสาขาภาษาอังกฤษ เช่น Samroi Sipha Production Branch"
+                    label={labelForm(
+                      "ชื่อสาขา (อังกฤษ)",
+                      "ชื่อองค์กร (อังกฤษ)"
+                    )}
+                    placeholder={labelForm(
+                      "กรอกชื่อสาขาภาษาอังกฤษ  เช่น Samroi Sipha Production Branch",
+                      "กรอกชื่อองค์กรภาษาอังกฤษ เช่น Samroi Sipha Production co."
+                    )}
                     type="input"
                     view={editable ? "edit" : "view"}
-                    required={editable ? true : false}
+                    required={editable}
                   />
 
                   <GlobalFormField
                     control={form.control}
                     name="descriptionsTh"
-                    label="คำอธิบายสาขา (ภาษาไทย)"
-                    placeholder="กรอกคำอธิบายภาษาไทย เช่น สาขาหลักขององค์กร"
+                    label={labelForm(
+                      "คำอธิบายสาขา (ภาษาไทย)",
+                      "คำอธิบายองค์กร (ภาษาไทย)"
+                    )}
+                    placeholder={labelForm(
+                      "กรอกคำอธิบายสาขา เช่น สาขาหลักขององค์กร",
+                      "กรอกคำอธิบายองค์กร เช่น บริษัทดูแลเรื่องการจัดการชีวิต"
+                    )}
                     type="textArea"
                     view={editable ? "edit" : "view"}
                   />
@@ -115,8 +131,14 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                   <GlobalFormField
                     control={form.control}
                     name="descriptionsEn"
-                    label="คำอธิบายสาขา (ภาษาอังกฤษ)"
-                    placeholder="กรอกคำอธิบายอังกฤษ เช่น Main branch of the organization"
+                    label={labelForm(
+                      "คำอธิบายสาขา (ภาษาอังกฤษ)",
+                      "คำอธิบายองค์กร (ภาษาอังกฤษ)"
+                    )}
+                    placeholder={labelForm(
+                      "กรอกคำอธิบายสาขาอังกฤษ เช่น main branch of the organization",
+                      "กรอกคำอธิบายองค์กรภาษาอังกฤษ เช่น life management company"
+                    )}
                     type="textArea"
                     view={editable ? "edit" : "view"}
                   />
@@ -124,33 +146,13 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                   <GlobalFormField
                     control={form.control}
                     name="openingDate"
-                    label="วันที่เปิดให้บริการ"
-                    placeholder="กรอกคำอธิบายอังกฤษ เช่น Main branch of the organization"
+                    label={labelForm(
+                      "วันที่เปิดให้บริการสาขา",
+                      "วันที่ก่อตั้งองค์กร"
+                    )}
                     type="date"
                     view={editable ? "edit" : "view"}
                   />
-
-                  {/* <div className="flex items-center space-x-4 p-3 ">
-                    <FormField
-                      control={form.control}
-                      name="active"
-                      render={({ field }) => (
-                        <FormItem>
-                          <div className="flex items-center justify-end space-x-2 mt-2">
-                            <FormLabel className="text-sm font-normal">
-                              สถานะองค์กร
-                            </FormLabel>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                              className="data-[state=checked]:bg-primary"
-                            />
-                          </div>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div> */}
                 </div>
               </div>
             )}
@@ -179,55 +181,44 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                   <GlobalFormField
                     control={form.control}
                     name="orgType"
-                    label="รูปแบบองค์กร"
-                    placeholder="เลือกประเภทรูปแบบองค์กร"
+                    label={labelForm("รูปแบบสาขา", "รูปแบบองค์กร")}
+                    placeholder={labelForm(
+                      "เลือกประเภทรูปแบบสาขา",
+                      "เลือกประเภทรูปแบบองค์กร"
+                    )}
                     type="select"
                     options={organizationType}
                     view={editable ? "edit" : "view"}
-                    required={editable ? true : false}
+                    required={editable}
                   />
 
                   <GlobalFormField
                     control={form.control}
                     name="taxId"
-                    label="เลขประจำผู้เสียภาษี"
+                    label={labelForm(
+                      "เลขประจำผู้เสียภาษีสาขา",
+                      "เลขประจำผู้เสียภาษีองค์กร"
+                    )}
                     type="number-box"
                     groups={[1, 4, 5, 2, 1]}
                     format="-"
                     formatter={formatTaxId}
                     view={editable ? "edit" : "view"}
-                    required={editable ? true : false}
+                    required={editable}
                   />
 
-                  <div className="flex items-center space-x-4  ">
+                  <div className="flex items-center space-x-4">
                     <GlobalFormField
                       control={form.control}
                       name="registerVat"
                       label="ภาษีมูลค่าเพิ่ม"
-                      labelCheckbox="สาขามีการจดภาษีมูลค่าเพิ่ม"
+                      labelCheckbox={labelForm(
+                        "สาขามีการจดภาษีมูลค่าเพิ่ม",
+                        "องค์กรมีการจดภาษีมูลค่าเพิ่ม"
+                      )}
                       type="checkbox"
                       view={editable ? "edit" : "view"}
                     />
-
-                    {/* <FormField
-                      control={form.control}
-                      name="registerVat"
-                      render={({ field }) => (
-                        <FormItem>
-                          <div className="flex items-center justify-end space-x-2">
-                            <FormLabel className="text-sm font-normal">
-                              ลงทะเบียนสำหรับ VAT
-                            </FormLabel>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                              className="data-[state=checked]:bg-primary"
-                            />
-                          </div>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    /> */}
                   </div>
                 </div>
               )}
@@ -265,8 +256,11 @@ export const SettingOrganizationForm: React.FC<SettingOrganizationFormProps> = (
                   <GlobalFormField
                     control={form.control}
                     name="status"
-                    label="สถานะองค์กร"
-                    placeholder="เลือกสถานะองค์กร"
+                    label={labelForm("สถานะสาขา", "สถานะองค์กร")}
+                    placeholder={labelForm(
+                      "เลือกสถานะสาขา",
+                      "เลือกสถานะองค์กร"
+                    )}
                     type="select"
                     options={customerStatus}
                     view={editable ? "edit" : "view"}
