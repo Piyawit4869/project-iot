@@ -61,16 +61,6 @@ export function OrgSelector({
       : currentOrganization;
   }, [orgs, currentOrgId]);
 
-  console.log({ current, currentOrgId });
-
-  const initials = (name?: string) =>
-    (name ?? "")
-      .trim()
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((s) => s[0]?.toUpperCase())
-      .join("") || "OR";
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -80,16 +70,6 @@ export function OrgSelector({
           aria-label="Switch organization"
         >
           <div className="flex items-center gap-2 min-w-0">
-            {/* <Avatar className="h-6 w-6">
-              <AvatarImage
-                src={current?.logoUrl}
-                alt={current?.nameTh ?? "Organization"}
-              />
-              <AvatarFallback className="text-black">
-                {initials(current?.nameTh)}
-              </AvatarFallback>
-            </Avatar> */}
-
             <Avatar className="h-6 w-6">
               <AvatarImage
                 src={current?.logoUrl}
@@ -108,18 +88,6 @@ export function OrgSelector({
               <div className="truncate text-sm font-medium text-black">
                 {current?.nameTh ?? "-"}
               </div>
-
-              {/* <div
-                className="
-        text-xs text-muted-foreground
-        opacity-0 translate-y-1
-        transition-all duration-200
-        group-hover:opacity-100
-        group-hover:translate-y-0
-      "
-              >
-                เปลี่ยนองค์กร
-              </div> */}
             </div>
           </div>
 
@@ -154,13 +122,6 @@ export function OrgSelector({
                       className="rounded-lg h-[45px] cursor-pointer"
                     >
                       <div className="flex items-center gap-2 min-w-0 flex-1">
-                        {/* <Avatar className="h-6 w-6">
-                          <AvatarImage src={org.logoUrl} alt={org.nameTh} />
-                          <AvatarFallback>
-                            {initials(org.nameTh)}
-                          </AvatarFallback>
-                        </Avatar> */}
-
                         <Avatar className="h-6 w-6">
                           <AvatarImage src={org.logoUrl} alt={org.nameTh} />
                           <AvatarFallback>

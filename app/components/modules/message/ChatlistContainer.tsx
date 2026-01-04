@@ -24,7 +24,7 @@ export const ChatlistContainer = ({
   } = useChatRoom();
 
   return (
-    <div className="h-[calc(100vh-50px)]">
+    <div className="h-full">
       <ChatlistSidebar
         api={api}
         handleChangeSelectedRoom={handleChangeSelectedRoom}

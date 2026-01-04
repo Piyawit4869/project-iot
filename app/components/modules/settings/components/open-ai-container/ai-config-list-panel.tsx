@@ -4,7 +4,6 @@ import { Plus } from "lucide-react";
 
 import { Input } from "~/components/ui/input";
 import { cn } from "~/lib/utils";
-import { useGetConnectionAiByOrgGroup } from "~/api/client/settings";
 import { Separator } from "~/components/ui/separator";
 import { CardContent } from "~/components/ui/card";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
@@ -29,9 +28,6 @@ export function AiConfigListPanel({
   isLoading,
   refetch,
 }: AiConfigListPanelProps) {
-  const { user } = useRouteLoaderData("root") as any;
-  // const branchId = (user?.branchId ?? "") as string;
-
   const [sp, setSp] = useSearchParams();
   const selectedId = sp.get("id") ?? "";
 
@@ -39,9 +35,6 @@ export function AiConfigListPanel({
 
   const [open, setOpen] = React.useState(false);
   const [isFinish, setIsFinish] = React.useState(false);
-  // const { data, isLoading, refetch } = useGetConnectionAiByBranch(branchId);
-
-  console.log({ data });
 
   const items: AiConfigItem[] = React.useMemo(() => {
     const arr = Array.isArray(data) ? data : [];

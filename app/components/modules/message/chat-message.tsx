@@ -311,7 +311,7 @@ export const ChatMessages = ({
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-100px)] bg-white dark:bg-background">
+    <div className="flex flex-col h-full bg-white dark:bg-background">
       <MessageHeader
         chatRoomDetail={selectedRoom}
         total={messagesData?.pages[0]?.meta?.total ?? 0}

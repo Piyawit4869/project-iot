@@ -35,8 +35,6 @@ export const UserProfileViewNew: React.FC<UserFormProfileProps> = ({
   const userDepartments = data?.userDepartments;
   const Departments = userDepartments?.filter((s: any) => !s.isMain);
 
-  console.log("data", data);
-
   return (
     <>
       {loading ? (

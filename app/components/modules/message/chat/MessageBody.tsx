@@ -76,10 +76,10 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
     } = props;
 
     return (
-      <div className="flex flex-1 flex-col max-h-[calc(100vh-175px)]">
+      <div className="flex flex-1 flex-col h-full">
         <div
           ref={scrollRef}
-          className="flex h-full flex-col space-y-4 overflow-y-auto px-4 z-0 relative dark:bg-background"
+          className="flex h-[calc(100vh-330px)] flex-col space-y-4 overflow-y-auto px-4 z-0 relative dark:bg-background"
         >
           {showTopLoading && (
             <div className={messageLoadingStyle}>กำลังโหลดข้อความ...</div>

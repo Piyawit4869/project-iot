@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import {
   Dialog,
@@ -53,6 +51,7 @@ import {
   useLineMassagePaginate,
   useLineSendCardContent,
   usePaginateChatBot,
+  useQuickReplyMessagePaginate,
 } from "~/api/client/settings";
 import { Link, useNavigate } from "react-router";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
@@ -62,12 +61,13 @@ import { FlexMessagePersonRender } from "./flex-message-person-render";
 import { FlexMessageProductRender } from "./flex-message-product-render";
 import { FlexMessagePlaceRender } from "./flex-message-place-render";
 import { FlexMessageImageRender } from "./flex-message-image-render";
+import type { platform } from "os";
 
 // -----------------------------
 // Types
 // -----------------------------
 
-type CategoryKey = "reply" | "card" | "coupon" | "quick-reply";
+type CategoryKey = "reply" | "card" | "coupon" | "quick_reply";
 
 export type ProfileCardData = {
   category?: string;
@@ -131,93 +131,6 @@ export interface TemplateItem {
 // Mock Data
 // -----------------------------
 
-const MOCK_ITEMS: TemplateItem[] = [
-  {
-    id: "t1",
-    title: "ไม่ลดราคา สินค้า exclusive",
-    subtitle: "รายการนี้ เป็นสินค้าในกลุ่ม Exclusive Products ของเรา...",
-    category: "reply",
-    createdAt: "2025-10-10T09:00:00Z",
-    starred: true,
-    icon: <MessageSquareText className="size-4" />,
-    profileCards: [],
-  },
-  {
-    id: "t2",
-    title: "ประกาศแจ้งลูกค้า 1-8 ตุลาฯ",
-    subtitle: "ประกาศแจ้งลูกค้า เนื่องจากประเทศมีวันหยุด...",
-    category: "reply",
-    createdAt: "2025-10-08T10:00:00Z",
-    icon: <MessageSquareText className="size-4" />,
-    profileCards: [],
-  },
-
-  {
-    id: "t3",
-    title: "ทีมฝ่ายขาย (การ์ดโปรไฟล์)",
-    category: "card",
-    createdAt: "2025-10-05T10:00:00Z",
-    icon: <LayoutList className="size-4" />,
-    // profileCards: [
-    //   {
-    //     imageUrl:
-    //       "https://images.unsplash.com/photo-1554151228-14d9def656e4?q=80&w=600&auto=format&fit=crop",
-    //     name: "Ms.GARFEILD",
-    //     position: "Sale Admin",
-    //     note: "สนับสนุนฝ่ายขาย",
-    //     callText: "โทรหาคุณการ์ฟิว",
-    //     emailText: "ส่งอีเมล",
-    //     tel: "0912345678",
-    //     email: "garfeild@example.com",
-    //   },
-    //   {
-    //     imageUrl:
-    //       "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600&auto=format&fit=crop",
-    //     name: "Ms.MOLLY",
-    //     position: "Client Solutions",
-    //     note: "ผู้เชี่ยวชาญลูกค้าองค์กร",
-    //     callText: "โทรหาคุณมอลลี่",
-    //     emailText: "ส่งอีเมล",
-    //     tel: "0891112222",
-    //     email: "molly@example.com",
-    //   },
-    //   // เพิ่มได้เรื่อย ๆ
-    // ],
-  },
-
-  {
-    id: "t4",
-    title: "คูปองส่วนลด 10% สัปดาห์นี้",
-    subtitle: "ใช้ได้กับสินค้าในหมวด Accessories",
-    category: "coupon",
-    createdAt: "2025-10-01T10:00:00Z",
-    icon: <TicketCheck className="size-4" />,
-    profileCards: [],
-  },
-];
-
-// -----------------------------
-// meta array
-// -----------------------------
-// function normalizeMeta(meta: any, category?: string) {
-//   if (!meta) return [];
-
-//   switch (category) {
-//     case "product":
-//       return meta.items ?? (meta.items ? [meta.item] : []);
-//     case "place":
-//       return meta.places ?? (meta.place ? [meta.place] : []);
-//     case "person":
-//       return meta.persons ?? (meta.person ? [meta.person] : []);
-//     default:
-//       return meta.items ?? (meta.item ? [meta.items] : []);
-//   }
-// }
-
-// -----------------------------
-// Helper UI
-// -----------------------------
-
 function ChatBubble({ text }: { text: string }) {
   return (
     <div className="flex items-start gap-2">
@@ -231,344 +144,13 @@ function ChatBubble({ text }: { text: string }) {
   );
 }
 
-function ImageCard({ items }: ProfileCardProps) {
-  return (
-    <div
-      data-card="image"
-      className="mx-auto w-[300px] shrink-0  overflow-hidden rounded-[28px] bg-white text-card-foreground  "
-    >
-      <div className="relative overflow-hidden rounded-2xl bg-muted">
-        {items?.imageUrl ? (
-          <GlobalImage
-            src={items?.imageUrl}
-            alt="ภาพตัวอย่างการ์ด"
-            className="h-full w-full object-cover "
-            notShowPreview
-          />
-        ) : (
-          <div className="flex h-44 items-center justify-center text-muted-foreground">
-            <svg
-              viewBox="0 0 48 48"
-              fill="none"
-              role="img"
-              aria-label="placeholder"
-              className="h-12 w-12"
-            >
-              <path
-                d="M8 12a2 2 0 0 1 2-2h28a2 2 0 0 1 2 2v24a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V12Z"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M16 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 0 8 8 6-4 8 8"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-        )}
-
-        {items?.tagEnabled && (
-          <span
-            className="absolute left-3 top-3 inline-flex items-center rounded-full px-3 py-1 text-xs font-medium tracking-tight text-white"
-            style={{ backgroundColor: items?.tagColor || "#4B5D73" }}
-          >
-            {items?.tagText}
-          </span>
-        )}
-
-        {items?.actionEnabled && (
-          <div className="absolute bottom-3 left-1/2 w-[85%] -translate-x-1/2 rounded-full bg-black/70 px-3 py-1 text-center text-[12px] text-white">
-            {items?.actionText}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function PlaceCard({ items }: ProfileCardProps) {
-  const ExtraIcon =
-    items?.extraInfoType === "time"
-      ? Clock
-      : items?.extraInfoType === "phone"
-        ? PhoneCall
-        : Info;
-  return (
-    <div
-      data-card="place"
-      className="mx-auto shrink-0  min-w-[270px] h-[430px] overflow-hidden rounded-[28px] bg-white text-card-foreground  "
-    >
-      <div
-        className="rounded-t-[28px] px-5 pt-5 pb-10 text-white"
-        style={{
-          backgroundColor: "#6F96AE",
-          backgroundImage: `url(${items?.imageUrl})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          minHeight: 200,
-        }}
-      >
-        {items?.tagEnabled && (
-          <span
-            className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium tracking-tight"
-            style={{ backgroundColor: items?.tagColor }}
-          >
-            {items?.tagText}
-          </span>
-        )}
-      </div>
-      <div className="space-y-3 px-5 py-6">
-        <p className="text-base font-semibold">{items?.title}</p>
-        {items?.addressEnabled && (
-          <div className="flex items-start gap-2 text-sm text-muted-foreground">
-            <MapPin className="mt-0.5 size-4" />
-            <div>
-              <p>{items?.addressLabel}</p>
-            </div>
-          </div>
-        )}
-        {items?.extraInfoEnabled && (
-          <div className="flex items-start gap-2 text-sm text-muted-foreground">
-            <ExtraIcon className="mt-0.5 size-4" />
-            <p>{items?.extraInfoValue}</p>
-          </div>
-        )}
-        <div className="pt-2 text-center">
-          {items?.ctaPrimaryEnabled && (
-            <p className="px-0 text-blue-500">
-              {items?.ctaPrimaryText || "ใส่ข้อความสำหรับป้ายแอ็กชัน"}
-            </p>
-          )}
-          {items?.ctaSecondaryEnabled && (
-            <p className="mt-2 text-sm text-blue-500">
-              {items?.ctaSecondaryText || "ป้ายแอ็กชันรอง"}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ProductCard({ items }: ProfileCardProps) {
-  return (
-    // <div className="w-full">
-    //   <div className="bg-[#2a5182] text-white rounded-t-xl px-4 py-2 flex items-center justify-between">
-    //     <div className="flex items-center gap-2">
-    //       <div className="size-8 rounded-full bg-black grid place-items-center text-xs font-semibold">
-    //         ogga
-    //       </div>
-    //       <span className="text-sm font-medium">ดูตัวอย่าง</span>
-    //     </div>
-    //     <div className="text-xs opacity-80">ตัวอย่างการแสดงผล</div>
-    //   </div>
-
-    //   <div className="bg-[#e6eefb] rounded-b-xl p-4">
-    //     <div className="flex gap-3">
-    //       {/* การ์ดโปรไฟล์ซ้าย */}
-    //       <div className="flex-1">
-    //         <div className="rounded-2xl bg-white shadow p-5 text-center h-full">
-    //           <div className="w-28 h-28 rounded-full overflow-hidden mx-auto mb-4">
-    //             {/* ใช้ <img> เพื่อความง่าย (คุณสามารถเปลี่ยนเป็น GlobalImage/Image ได้ตามโปรเจกต์) */}
-    //             <img
-    //               src={items.imageUrl}
-    //               alt={items.name}
-    //               className="w-full h-full object-cover"
-    //             />
-    //           </div>
-    //           <div className="text-lg font-semibold">{items.name}</div>
-    //           <div className="text-sm text-gray-600">{items.position}</div>
-    //           {items.note && (
-    //             <div className="text-xs text-gray-500 mt-1">{items.note}</div>
-    //           )}
-
-    //           <div className="mt-4 space-y-2">
-    //             <button className="w-full border rounded-xl px-3 py-2 text-sm hover:bg-gray-50">
-    //               {items.callText ?? "โทรหา"}
-    //             </button>
-    //             <button className="w-full border rounded-xl px-3 py-2 text-sm hover:bg-gray-50">
-    //               {items.emailText ?? "ส่งอีเมล"}
-    //             </button>
-    //           </div>
-    //         </div>
-    //       </div>
-
-    //       {/* สไลด์ถัดไป placeholder ขวา (ให้ฟีลแบบรูปตัวอย่างมีการ์ดเลื่อนได้) */}
-    //       <div className="hidden md:block w-12 shrink-0">
-    //         <div className="h-full rounded-2xl border border-dashed grid place-items-center text-gray-400">
-    //           →
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
-
-    <div
-      data-card="product"
-      className="mx-auto shrink-0 min-w-[270px] h-[370px] overflow-hidden rounded-[28px] bg-white text-card-foreground  "
-    >
-      <div
-        className="rounded-t-[28px] px-5 pt-5 pb-10 text-white"
-        style={{
-          backgroundColor: "#6F96AE",
-          backgroundImage: `url(${items?.imageUrl})`,
-          backgroundSize: "cover", // ให้ภาพเต็ม div
-          backgroundPosition: "center", // จัดตำแหน่งกลาง
-          minHeight: 200,
-        }}
-      >
-        {items?.tagEnabled && (
-          <span
-            className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium tracking-tight"
-            style={{ backgroundColor: items?.tagColor }}
-          >
-            {items?.tagText}
-          </span>
-        )}
-      </div>
-      <div className="space-y-3 px-5 py-6">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-base font-semibold">{items?.title}</p>
-            <p className="text-muted-foreground text-sm">
-              {items?.description}
-            </p>
-          </div>
-        </div>
-        {/* <p className="text-muted-foreground text-sm leading-relaxed">
-            {description}
-          </p> */}
-        {items?.priceEnabled && (
-          <p className="text-right text-lg font-semibold">
-            {items?.currency}
-            {items?.price}
-          </p>
-        )}
-        <div className="pt-2 text-center">
-          {(items?.ctaPrimaryEnabled || items?.ctaSecondaryEnabled) && (
-            <div className="pt-2 text-center">
-              {items?.ctaPrimaryEnabled && (
-                <p className="px-0 text-blue-500">
-                  {items?.ctaPrimaryText || "ข้อความป้ายแอ็กชัน"}
-                </p>
-              )}
-              {items?.ctaSecondaryEnabled && (
-                <p className="mt-2 text-sm text-blue-500">
-                  {items?.ctaSecondaryText || "ป้ายแอ็กชันรอง"}
-                </p>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ProfileCard({ items }: ProfileCardProps) {
-  return (
-    // <div
-    //   data-card="profile"
-    //   className="rounded-2xl bg-white shadow p-5 text-center w-[260px] h-full border border-[#d8e5fb]"
-    // >
-    //   <div className="w-36 h-36 rounded-full overflow-hidden mx-auto mb-4">
-    //     <img
-    //       src={items.imageUrl}
-    //       alt={items.name}
-    //       className="w-full h-full object-cover"
-    //     />
-    //   </div>
-    //   <div className="text-lg font-semibold">{items.name}</div>
-    //   <div className="text-sm text-gray-700">{items.position}</div>
-    //   {items.note && (
-    //     <div className="text-xs text-gray-500 mt-1">{items.note}</div>
-    //   )}
-
-    //   <div className="mt-4 space-y-1">
-    //     <a
-    //       href={items.tel ? `tel:${items.tel}` : "#"}
-    //       className="block text-sm text-blue-700 hover:underline"
-    //     >
-    //       {items.callText ?? "โทรหา"}
-    //     </a>
-    //     <a
-    //       href={items.email ? `mailto:${items.email}` : "#"}
-    //       className="block text-sm text-blue-700 hover:underline"
-    //     >
-    //       {items.emailText ?? "ส่งอีเมล"}
-    //     </a>
-    //   </div>
-    // </div>
-    <div
-      data-card="profile"
-      className="mx-auto shrink-0 min-w-[240px] h-[300px] rounded-[24px] bg-white p-10 text-center shadow-lg"
-    >
-      <div className="mx-auto mb-4 size-24 overflow-hidden rounded-full bg-muted flex items-center justify-center">
-        {items?.imageUrl ? (
-          <GlobalImage
-            src={items?.imageUrl}
-            alt="รูปโปรไฟล์"
-            width={96}
-            height={96}
-            className="h-full w-full object-cover"
-            notShowPreview
-          />
-        ) : (
-          <UserRound className="size-10 text-muted-foreground" />
-        )}
-      </div>
-      <p className="text-base font-semibold">{items?.name}</p>
-      <div className="mt-3 flex flex-wrap justify-center gap-2"></div>
-      {items?.tagEnabled && (
-        <div className="mt-3 flex flex-wrap justify-center gap-2">
-          {items?.tags?.map((tag: any, idx: number) => (
-            <span
-              key={`${tag.text}-${idx}`}
-              className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium tracking-tight text-white"
-              style={{ backgroundColor: tag.color || "#4B5D73" }}
-            >
-              {tag?.text?.trim() || "ใส่ข้อความแท็ก"}
-            </span>
-          ))}
-        </div>
-      )}
-      {items?.description && (
-        <p className="mt-3 text-sm text-muted-foreground">
-          {items?.description}
-        </p>
-      )}
-      {(items?.ctaPrimaryEnabled || items?.ctaSecondaryEnabled) && (
-        <div className="pt-2 text-center">
-          {items?.ctaPrimaryEnabled && (
-            <p className="px-0 text-blue-500">{items?.ctaPrimaryText}</p>
-          )}
-          {items?.ctaSecondaryEnabled && (
-            <p className="mt-2 text-sm text-blue-500">
-              {items?.ctaSecondaryText}
-            </p>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
 function ProfileCardCarousel({ items, category }: ProfileCardProps) {
   const listRef = React.useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = React.useState(false);
   const [canNext, setCanNext] = React.useState(true);
 
   const cardSimple = items?.meta;
-  // const metaArray = normalizeMeta(items.meta, items.meta?.category);
 
-  // console.log({ metaArray });
-
-  // โปรโมชั่น: ความกว้างต่อการเลื่อน (เท่ากับการ์ด 1 ใบ + gap)
   const getStep = () => {
     const card = listRef.current?.querySelector<HTMLDivElement>(
       '[data-card="profile"], [data-card="product"], [data-card="image"], [data-card="place"]'
@@ -683,12 +265,6 @@ function ProfileCardCarousel({ items, category }: ProfileCardProps) {
                   />
                 ))}
             </div>
-
-            {/* {items.map((p, idx) => (
-            <div key={`${p.name}-${idx}`} className="shrink-0">
-              <ProfileCard p={p} />
-            </div>
-          ))} */}
           </div>
         </div>
       </div>
@@ -706,15 +282,6 @@ function PreviewPane({ item }: { item?: any }) {
   if (!item) {
     return (
       <div className="h-full gap-0  pb-0">
-        {/* <CardHeader className="border-b">
-          <div className="flex items-center justify-between pb-0">
-            <div className="font-medium">ดูตัวอย่าง</div>
-            <div className="text-muted-foreground text-xs">
-              ตัวอย่างการแสดงผล
-            </div>
-          </div>
-        </CardHeader> */}
-
         <div className="bg-[#2a5182] text-white rounded-t-xl px-4 py-2 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="size-8 rounded-full bg-black grid place-items-center text-xs font-semibold">
@@ -731,21 +298,12 @@ function PreviewPane({ item }: { item?: any }) {
     );
   }
 
-  // โหมดการ์ดแสดงผล (หลายใบจากอาร์เรย์)
   if (item.type === "card") {
     return <ProfileCardCarousel items={item} />;
   }
 
-  // โหมดข้อความตอบกลับ (เดิม)
   return (
     <div className="h-full gap-0 pb-0">
-      {/* <CardHeader className="border-b">
-        <div className="flex items-center justify-between pb-0">
-          <div className="font-medium">ดูตัวอย่าง</div>
-          <div className="text-muted-foreground text-xs">ตัวอย่างการแสดงผล</div>
-        </div>
-      </CardHeader> */}
-
       <div className="bg-[#2a5182] text-white rounded-t-xl px-4 py-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="size-8 rounded-full bg-black grid place-items-center text-xs font-semibold">
@@ -774,10 +332,12 @@ export default function LineTemplatePickerModal({
   handleSelectChange,
   subId,
   chatRoomId,
+  onSendQuickReply,
 }: {
   handleSelectChange: React.Dispatch<React.SetStateAction<any>>;
   subId?: string;
   chatRoomId: string;
+  onSendQuickReply?: (values: any) => void;
 }) {
   const navigate = useNavigate();
   const { data, refetch, isLoading } = useLineMassagePaginate({
@@ -786,12 +346,6 @@ export default function LineTemplatePickerModal({
   });
 
   const { data: lineFeatureFlex } = useLineFeatureMessagePaginate({
-    pageIndex: 1,
-    limit: 100,
-  });
-
-  const { data: lineQuickMessage } = useLineFeatureMessagePaginate({
-    //waiting api
     pageIndex: 1,
     limit: 100,
   });
@@ -848,19 +402,6 @@ export default function LineTemplatePickerModal({
 
   const selected = items.find((i) => i.id === selectedId);
 
-  // const filtered = items
-  //   .filter((i) => (category === "all" ? true : i.type === category))
-  //   .filter((i) =>
-  //     [i.name, i.content?.messages?.[0]?.text].some((t) =>
-  //       t?.toLowerCase().includes(query.toLowerCase())
-  //     )
-  //   )
-  //   .sort((a, b) =>
-  //     sortBy === "newest"
-  //       ? +new Date(b.createdAt) - +new Date(a.createdAt)
-  //       : +new Date(a.createdAt) - +new Date(b.createdAt)
-  //   );
-
   const filtered = items
     .filter((i) => (category === "all" ? true : i.type === category))
     .filter((i) =>
@@ -890,6 +431,8 @@ export default function LineTemplatePickerModal({
 
     if (categoryValue === "card") {
       sendCardApi(selectedId || "");
+    } else if (categoryValue === "quick_reply") {
+      onSendQuickReply?.(selected?.id);
     } else {
       handleSelectChange(value);
       setOpen(false);
@@ -1001,7 +544,7 @@ export default function LineTemplatePickerModal({
               </TabsTrigger>
               <TabsTrigger
                 value="quick-reply"
-                onClick={() => setCategory("quick-reply")}
+                onClick={() => setCategory("quick_reply")}
                 className="hover:bg-border relative !shadow-none !border-0 rounded-md
                 after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black
                 after:transition-all after:w-0 data-[state=active]:after:w-full"

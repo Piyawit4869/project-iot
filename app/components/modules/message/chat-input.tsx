@@ -406,6 +406,26 @@ export default function ChatInput({
     }
   }, [mapAddress]);
 
+  const handleSendQuickReply = (id: string) => {
+    const payload = {
+      chatRoomId: selectedRoom.id,
+      lineSubId: customer?.lineSubId ?? "",
+      message: "โปรดเลือกคำตอบของคุณ",
+      messageType: "quick_reply",
+      isAiReply: false,
+      recipient: customer?.name ?? "Unknown",
+      customerId: customer?.id || "",
+      platform: "backoffice",
+      lineContentId: id,
+    };
+
+    try {
+      send(payload);
+    } catch (error) {
+      console.error("error form send location [handleSendLocation]", error);
+    }
+  };
+
   React.useEffect(() => {
     const s = socketConfig(api);
 
@@ -545,6 +565,7 @@ export default function ChatInput({
           handleSelectChange={setInput}
           subId={subId}
           chatRoomId={customerChatRoomId}
+          onSendQuickReply={handleSendQuickReply}
         />
 
         <Button

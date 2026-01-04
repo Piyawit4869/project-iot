@@ -169,10 +169,10 @@ export default function ShoppingPage() {
 
         const profile = await liff.getProfile();
 
-        console.log("LINE profile", profile);
-        console.log("name", profile.displayName);
-        console.log("userId", profile.userId);
-        console.log("picture", profile.pictureUrl);
+        // console.log("LINE profile", profile);
+        // console.log("name", profile.displayName);
+        // console.log("userId", profile.userId);
+        // console.log("picture", profile.pictureUrl);
       } catch (err) {
         console.error("LIFF error", err);
       }
