@@ -139,8 +139,8 @@ export const Setting: React.FC<SettingsPageProps> = (props) => {
       ? getMainItem(org?.setting, org?.settings)
       : getMainItem(organization?.setting, organization?.settings);
 
-  const settingAddressId = mainAddress?.id ?? "";
-  const settingId = mainSetting?.id ?? mainSetting?.id ?? "";
+  const settingAddressId = mainAddress && mainAddress?.id !== undefined;
+  const settingId = mainSetting && mainSetting?.id !== undefined;
 
   // main org
   const { mutate: updateOrganization } = useUpdateOrganization(
