@@ -36,6 +36,7 @@ import { Avatar } from "~/components/ui/avatar";
 import { MessagesSquare } from "lucide-react";
 import { channelMap } from "../columns";
 import { Input } from "~/components/ui/input";
+import { cn } from "~/lib/utils";
 
 export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
   customer,
@@ -237,6 +238,9 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
   const goToChat = () => {
     navigate(`/message?name=${customer?.profile?.lineName}`);
   };
+
+  const isDisabled = true;
+
   const noChatRoom: boolean = customer?.chatRoomDetail?.chatRoomId == null;
 
   return (
@@ -313,7 +317,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
           </div>
 
           <div className="flex gap-5 items-start shrink-0 ">
-            {customerPlatform === "line" && (
+            {/* {customerPlatform === "line" && (
               <div
                 className={`edit-icon-container ${
                   noChatRoom ? "opacity-50 cursor-not-allowed" : ""
@@ -328,7 +332,20 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
                   <MessagesSquare className="text-muted-foreground " />
                 </div>
               </div>
-            )}
+            )} */}
+
+            <div
+              className={cn(
+                "edit-icon-container",
+                isDisabled &&
+                  "opacity-50 cursor-not-allowed pointer-events-none"
+              )}
+              onClick={!isDisabled ? goToChat : undefined}
+            >
+              <div className="edit-icon-wrapper">
+                <MessagesSquare className="text-muted-foreground" />
+              </div>
+            </div>
 
             <EditActionButtons
               isEdit={isEdit}

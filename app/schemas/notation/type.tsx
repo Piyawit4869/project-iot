@@ -34,10 +34,8 @@ export type NotationType = {
   signatureDataUrl: string;
   stampUrl: string;
   customer: Customer;
-  notationDetails?: {
-    products: NotationItem[];
-    createdAt: string;
-  };
+  products: NotationItem[];
+  createdAt: string;
 };
 
 export type NotationItem = {

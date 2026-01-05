@@ -35,6 +35,12 @@ export const useNotationColumns = (): ColumnDef<NotationType>[] => {
     });
   };
 
+  const notationTypeTH: Record<string, string> = {
+    quotation: "ใบเสนอราคา",
+    invoice: "ใบแจ้งหนี้",
+    receipt: "ใบเสร็จรับเงิน",
+  };
+
   return [
     {
       accessorKey: "docNo",
@@ -84,36 +90,48 @@ export const useNotationColumns = (): ColumnDef<NotationType>[] => {
       },
     },
     {
-      accessorKey: "type",
+      accessorKey: "notationType",
       header: "ประเภทเอกสาร",
       cell: (info) => {
-        const price = info.getValue() as number;
+        const notationType = info.getValue() as string;
         return (
-          <span className="font-medium">฿ {formatNumber(price ?? 0.0)} </span>
+          <span className="font-medium">
+            {notationTypeTH[notationType] ?? "-"}
+          </span>
         );
       },
     },
     {
-      accessorKey: "notationDetails.createdAt",
+      accessorKey: "createdAt",
       header: "วันที่ออกเอกสาร",
-      accessorFn: (row: NotationType) => row.notationDetails?.createdAt,
       cell: (info) => {
-        const date = info.getValue() as string;
-        return <span>{formatDateAndTime(date)}</span>;
+        const createdAt = info.getValue() as string;
+        return <span>{formatDateAndTime(createdAt)}</span>;
       },
     },
     {
-      accessorKey: "notationDetails.createdAt",
-      header: "วันที่หมดอายุเอกสาร",
-      accessorFn: (row: NotationType) => row.notationDetails?.createdAt,
+      accessorKey: "expireDate",
+      header: "วันที่ชำระเอกสาร",
       cell: (info) => {
-        const date = info.getValue() as string;
-        return <span>{formatDateAndTime(date)}</span>;
+        const expireDate = info.getValue() as string;
+        return <span>{formatDateAndTime(expireDate)}</span>;
+      },
+    },
+    {
+      accessorKey: "docNo",
+      header: "รหัสอ้างอิง",
+      cell: ({ getValue, row }) => {
+        const docNo = getValue() as string;
+        return (
+          <span className="text-blue-400 hover:text-blue-300 hover:underline">
+            <Link to={""}>{docNo ?? "-"}</Link>
+          </span>
+        );
       },
     },
     {
       accessorKey: "status",
-      header: "รหัสอ้างอิง",
+      header: "สถานะเอกสาร",
       cell: (info) => {
         const status = info.getValue() as string;
         return (
