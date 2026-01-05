@@ -136,13 +136,13 @@ export default function ChatInput({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const typingTriggeredRef = React.useRef(false);
+  const typingResetTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+
   const socketRef = React.useRef<Socket | null>(null);
 
   const [mapAddress, setMapAddress] = React.useState<string>("");
   const [latlng, setLatLng] = React.useState<LatLong | undefined>(undefined);
-
-  const typingTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-  const isTypingRef = React.useRef(false);
 
   const { chatRoomId: customerChatRoomId } =
     (customer && customer.chatRoomDetail) || {};
@@ -174,20 +174,6 @@ export default function ChatInput({
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setInput(value);
-
-    const payload = {
-      chatRoomId: selectedRoom.id,
-      userId: me.id,
-    };
-
-    if (!isTypingRef.current) {
-      emitTyping(payload);
-      isTypingRef.current = true;
-    }
-
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-    }
 
     setMessages((prev) => {
       const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
@@ -534,10 +520,32 @@ export default function ChatInput({
       overflow-auto
     "
         value={input}
-        onChange={handleInputChange}
         disabled={isPending}
         rows={1}
-        onInput={autoResize}
+        onChange={handleInputChange}
+        onInput={(e) => {
+          autoResize();
+
+          if (typingTriggeredRef.current) return;
+
+          const value = (e.target as HTMLTextAreaElement).value;
+          if (!value || value.trim().length === 0) return;
+
+          emitTyping({
+            chatRoomId: selectedRoom.id,
+            userId: me.id,
+          });
+
+          typingTriggeredRef.current = true;
+
+          if (typingResetTimerRef.current) {
+            clearTimeout(typingResetTimerRef.current);
+          }
+
+          typingResetTimerRef.current = setTimeout(() => {
+            typingTriggeredRef.current = false;
+          }, 1000);
+        }}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey && !isMobile) {
             e.preventDefault();

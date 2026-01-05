@@ -56,8 +56,6 @@ function filterAppsByRole(items: RomeApp[], role: Role): RomeApp[] {
 export default function HomeComponent() {
   const { user, permission } = useRouteLoaderData("root");
 
-  const role = React.useMemo(() => inferRole(user), [user]);
-
   const romeApps = [
     {
       id: "chat",
@@ -69,7 +67,7 @@ export default function HomeComponent() {
     },
 
     {
-      id: "customers",
+      id: "customer",
       name: "Customer",
       nameLocal: "ลูกค้า",
       icon: ShieldUser,
