@@ -219,6 +219,23 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                   checkFields={checkFields}
                   placeholder="กรอก User Name ของพนักงาน"
                 />
+                <FormField
+                  control={form.control}
+                  name="profile.emId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>รหัสพนักงาน</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="กรอกรหัสพนักงาน"
+                          {...field}
+                          value={field.value ?? undefined}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <div className="col-span-2">
                   <FormField
                     control={form.control}
@@ -239,6 +256,7 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                     )}
                   />
                 </div>
+
                 <div className="col-span-2">
                   <ChangePassword title="เปลี่ยนรหัสผ่าน" />
                 </div>
