@@ -148,6 +148,7 @@ export type CustomerUpdateChatDetails = {
   remark: string;
   rating: number;
   lineName: string;
+  customerType: string;
 };
 
 export type CustomerUpdateTags = {

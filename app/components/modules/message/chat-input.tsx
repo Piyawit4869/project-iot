@@ -534,7 +534,80 @@ export default function ChatInput({
       </div>
 
       {/* ===== TEXT INPUT ===== */}
-      <textarea
+
+      <div className="flex flex-col gap-2">
+        {/* ===== TEXTAREA (โตได้) ===== */}
+        <div className="relative">
+          <textarea
+            ref={textareaRef}
+            placeholder={
+              isMobile
+                ? "พิมพ์ข้อความเพื่อส่ง"
+                : "Enter = ส่งข้อความ / Shift+Enter = ขึ้นบรรทัดใหม่"
+            }
+            className=" w-full resize-none p-2 outline-none min-h-[55px] max-h-[55px] leading-6 overflow-auto"
+            value={input}
+            onChange={handleInputChange}
+            disabled={isPending}
+            rows={1}
+            onInput={autoResize}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey && !isMobile) {
+                e.preventDefault();
+                (e.currentTarget.form as HTMLFormElement)?.requestSubmit();
+              }
+            }}
+          />
+        </div>
+
+        <div className="flex items-center justify-end gap-2 shrink-0">
+          <ChatSelectLocation
+            address={mapAddress}
+            latlng={latlng}
+            setAddress={setMapAddress}
+            setLatLng={setLatLng}
+            handleSendLocation={handleSendLocation}
+          />
+
+          <Button
+            variant="ghost"
+            size="icon"
+            type="button"
+            title="อีโมจิ"
+            onClick={() => setShowStickerSelector((isOpen) => !isOpen)}
+          >
+            <Smile className="w-4 h-4" />
+          </Button>
+
+          <LineTemplatePickerModal
+            handleSelectChange={setInput}
+            subId={subId}
+            chatRoomId={customerChatRoomId}
+            onSendQuickReply={handleSendQuickReply}
+          />
+
+          <Button
+            variant="ghost"
+            size="icon"
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isPending}
+            title="แนบไฟล์"
+          >
+            {isPending ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <Paperclip />
+            )}
+          </Button>
+
+          <Button size="icon" type="submit" disabled={isPending} title="ส่ง">
+            <Send className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* <textarea
         ref={textareaRef}
         placeholder={
           isMobile
@@ -588,7 +661,7 @@ export default function ChatInput({
         }}
       />
 
-      {/* ===== ACTION BAR (อยู่ล่างสุดเสมอ) ===== */}
+      
       <div className="mt-2 flex items-center justify-end gap-2">
         <ChatSelectLocation
           address={mapAddress}
@@ -635,14 +708,14 @@ export default function ChatInput({
         </Button>
       </div>
 
-      {/* hidden file input */}
+      
       <input
         type="file"
         ref={fileInputRef}
         onChange={handleFileUpload}
         className="hidden"
         multiple
-      />
+      /> */}
     </form>
   );
 }
