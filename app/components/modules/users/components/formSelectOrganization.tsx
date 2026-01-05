@@ -199,7 +199,7 @@ export const OrganizationSelector: React.FC<UserFormProfileProps> = ({
         />
       )}
 
-      <FormField
+      {/* <FormField
         control={form.control}
         name={"branchId"}
         render={({ field }) => {
@@ -308,7 +308,7 @@ export const OrganizationSelector: React.FC<UserFormProfileProps> = ({
             </FormItem>
           );
         }}
-      />
+      /> */}
     </div>
   );
 };

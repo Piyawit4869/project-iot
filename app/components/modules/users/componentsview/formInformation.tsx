@@ -94,9 +94,10 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
 
             <InfoRow label="อีเมล" value={data?.email ?? "-"} />
             <InfoRow label="ตำแหน่ง" value={data?.mainDepartment} />
+            <InfoRow label="รหัสพนักงาน" value={profile.emId} />
 
             <InfoRow label="องค์กร" value={departments?.nameTh} />
-            <InfoRow label="สาขา" value={branch?.nameTh} />
+            {/* <InfoRow label="สาขา" value={branch?.nameTh} /> */}
           </div>
           <h1 className="font-bold mt-4">ข้อมูลส่วนตัว</h1>
           <div className="grid gird-col-1 lg:grid-cols-2 gap-5">

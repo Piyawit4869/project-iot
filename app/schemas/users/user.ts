@@ -4,10 +4,11 @@ import { branchSchema } from "../order/order";
 
 export const UsersFormSchema = z.object({
   id: z.string().optional(),
-  email: z.preprocess(
-    (v) => v ?? "",
-    z.string().email("รูปแบบอีเมลไม่ถูกต้อง")
-  ),
+  email: z
+    .string()
+    .email("รูปแบบอีเมลไม่ถูกต้อง")
+    .transform((v) => v.trim().toLowerCase()),
+
   userName: z.string().optional().nullable().default(null),
   password: z
     .preprocess((v) => v ?? "", z.string().min(1, "กรุณาระบุรหัสผ่าน"))
@@ -27,6 +28,7 @@ export const UsersFormSchema = z.object({
     ),
     firstNameTh: z.string().nullable(),
     lastNameTh: z.string().nullable(),
+    emId: z.string().nullable(),
     gender: z.string().default("").nullable(),
     birthDate: z.string().nullable().default(null),
     phone: z.string().nullable(),

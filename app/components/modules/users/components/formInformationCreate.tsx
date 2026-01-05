@@ -276,6 +276,23 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="profile.emId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>รหัสพนักงาน</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="กรอกรหัสพนักงาน"
+                          {...field}
+                          value={field.value ?? undefined}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <div className="md:grid-cols-2 gap-4">
@@ -413,6 +430,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                   }}
                 />
               </div>
+
               <div>
                 <OrganizationSelector form={form} />
               </div>
