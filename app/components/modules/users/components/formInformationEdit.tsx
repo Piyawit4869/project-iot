@@ -95,9 +95,6 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
   const handleBlur = async () => {
     const email = form.getValues("email");
     if (!email) return;
-    console.log(currentEmail.current);
-    console.log(email);
-
     if (email === currentEmail.current) {
       form.clearErrors("email");
       return;
