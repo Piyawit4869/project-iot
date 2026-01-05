@@ -6,7 +6,7 @@ import { useChat, type Message } from "~/providers/chat/useChat";
 interface UseChatSocketProps {
   api: any;
   selectedRoom: { id: string } | null;
-  me: { branchId?: string; id: string } | null;
+  me: any;
   socketConfig: (api: any) => any;
 }
 
