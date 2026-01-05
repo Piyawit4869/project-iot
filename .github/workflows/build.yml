@@ -40,30 +40,52 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # ---- Node + pnpm setup ----
-      - uses: actions/setup-node@v4
+      # -------------------------------------------------
+      # 1) Setup Node.js (no cache yet)
+      # -------------------------------------------------
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: "22.20"
-          cache: "pnpm"
+          node-version: "22.12"
 
-      - uses: pnpm/action-setup@v4
+      # -------------------------------------------------
+      # 2) Setup pnpm (adds pnpm to PATH)
+      # -------------------------------------------------
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
           version: 9
+          run_install: false
 
-      # ---- Install deps (verbose) ----
+      # -------------------------------------------------
+      # 3) Enable pnpm cache (AFTER pnpm exists)
+      # -------------------------------------------------
+      - name: Enable pnpm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.12"
+          cache: "pnpm"
+
+      # -------------------------------------------------
+      # 4) Install dependencies (verbose)
+      # -------------------------------------------------
       - name: Install dependencies (pnpm)
         run: |
           pnpm -v
           pnpm install --reporter=append-only
 
-      # ---- Build & lint (verbose) ----
+      # -------------------------------------------------
+      # 5) Build & lint (verbose)
+      # -------------------------------------------------
       - name: Build and Lint (verbose)
         run: |
           set -x
           pnpm build --loglevel debug
           pnpm lint --loglevel debug
 
-      # ---- Notify Discord ----
+      # -------------------------------------------------
+      # 6) Notify Discord
+      # -------------------------------------------------
       - name: Notify Discord (Code Check)
         uses: sarisia/actions-status-discord@v1
         if: always()
@@ -91,14 +113,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # ---- Repo / service name ----
+      # -------------------------------------------------
+      # Repo / service name
+      # -------------------------------------------------
       - name: Extract repo name
         run: echo "REPO=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
 
       - name: Extract service name
         run: echo "SERVICE_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
 
-      # ---- GCP auth ----
+      # -------------------------------------------------
+      # GCP auth
+      # -------------------------------------------------
       - name: Set up gcloud
         uses: google-github-actions/setup-gcloud@v2
         with:
@@ -114,7 +140,9 @@ jobs:
       - name: Configure Docker auth
         run: gcloud auth configure-docker $GAR_REGION-docker.pkg.dev --quiet
 
-      # ---- Version logic ----
+      # -------------------------------------------------
+      # Version logic
+      # -------------------------------------------------
       - name: Get version
         id: get_version
         run: |
@@ -133,7 +161,9 @@ jobs:
             echo "VERSION=dev" >> $GITHUB_OUTPUT
           fi
 
-      # ---- Docker build & push (verbose) ----
+      # -------------------------------------------------
+      # Docker build & push (verbose)
+      # -------------------------------------------------
       - name: Build & push image (verbose)
         id: build
         env:
@@ -149,7 +179,9 @@ jobs:
 
           echo "image=$APP_IMAGE:$APP_VERSION" >> $GITHUB_OUTPUT
 
-      # ---- Trigger deploy workflow ----
+      # -------------------------------------------------
+      # Trigger deploy workflow
+      # -------------------------------------------------
       - name: Invoke Deploy workflow
         uses: benc-uk/workflow-dispatch@v1
         with:
@@ -161,7 +193,9 @@ jobs:
               "service": "${{ env.REPO }}-${{ github.event.inputs.environment || 'dev' }}"
             }
 
-      # ---- Notify Discord ----
+      # -------------------------------------------------
+      # Notify Discord
+      # -------------------------------------------------
       - name: 🔔 Notify Discord (Build)
         uses: sarisia/actions-status-discord@v1
         if: always()
