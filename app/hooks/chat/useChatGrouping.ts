@@ -8,10 +8,19 @@ export function useChatGrouping(
   roomId?: string
 ) {
   return useMemo(() => {
-    const merged = [
-      ...pages.flatMap((p) => p.items || []),
-      ...socketMessages.flatMap((m) => m || []),
-    ]
+    const paginated = pages?.flatMap((m) => m.items || []);
+    const socket = socketMessages.flatMap((m) => m || []);
+
+    const map = new Map<string, any>();
+
+    [...paginated, ...socket].map((msg: any) => {
+      const key = msg.messageId ?? msg.id;
+
+      map.set(key, msg);
+    });
+    const merged = Array.from(map.values());
+
+    merged
       .sort(
         (a, b) =>
           dayjs(a.createdAt ?? a.timestamp).valueOf() -
@@ -72,7 +81,8 @@ export function useChatGrouping(
       showAvatar: !isAIProcessing,
       isFirstInGroup: !isAIProcessing,
     };
-
+    //chatRoomType
+    // return _.uniqBy(result, "id");
     return result;
   }, [pages, socketMessages, roomId]);
 }
