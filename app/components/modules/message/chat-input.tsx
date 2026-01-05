@@ -17,7 +17,7 @@ import { ReplyContentBar } from "./reply-content-bar";
 import { ChatSelectLocation } from "./chat-select-location";
 import { handleSplitThaiAddress } from "~/utils/chats";
 import { useRouteLoaderData } from "react-router";
-import { useChat, type Message } from "~/providers/chat/useChat";
+import { useChat } from "~/providers/chat/useChat";
 import { socketConfig } from "~/lib/sockets";
 import { io, type Socket } from "socket.io-client";
 
@@ -130,6 +130,8 @@ export default function ChatInput({
   const { setMessages } = useCustomer();
   const isMobile = useIsMobile();
 
+  const { setChatInputLabel, chatInputLabel } = useChat();
+
   const [input, setInput] = useState("");
   const [showStickerSelector, setShowStickerSelector] = useState(false);
   const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
@@ -175,18 +177,29 @@ export default function ChatInput({
     const value = e.target.value;
     setInput(value);
 
-    setMessages((prev) => {
-      const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
-      if (roomIndex > -1) {
-        const updated = [...prev];
-        updated[roomIndex] = {
-          ...updated[roomIndex],
-          lastestMessage: value,
-        } as CustomerMessage;
-        return updated;
-      }
-      return [...prev, { roomId: selectedRoom.id, lastestMessage: value }];
-    });
+    if (!selectedRoom?.id) return;
+
+    setChatInputLabel &&
+      setChatInputLabel((prev = []) => {
+        const index = prev.findIndex((p) => p.chatRoomId === selectedRoom.id);
+
+        if (index > -1) {
+          const updated = [...prev];
+          updated[index] = {
+            ...updated[index],
+            label: value,
+          };
+          return updated;
+        }
+
+        return [
+          ...prev,
+          {
+            chatRoomId: selectedRoom.id,
+            label: value,
+          },
+        ];
+      });
   };
 
   const uploadFile = (file: File) =>
@@ -268,6 +281,12 @@ export default function ChatInput({
         quoteToken: replyRefMessage?.quoteToken || "",
       });
     }
+
+    setChatInputLabel &&
+      setChatInputLabel((prev = []) =>
+        prev.filter((p) => p.chatRoomId !== selectedRoom.id)
+      );
+
     setReplyRefMessage(null);
     setInput("");
     requestAnimationFrame(autoResize);
@@ -411,6 +430,21 @@ export default function ChatInput({
       console.error("error form send location [handleSendLocation]", error);
     }
   };
+
+  const draftWording = React.useMemo(() => {
+    if (!chatInputLabel || !selectedRoom || !selectedRoom.id) return "";
+    return (
+      chatInputLabel.find((p) => p.chatRoomId === selectedRoom.id)?.label ?? ""
+    );
+  }, [chatInputLabel, selectedRoom?.id]);
+
+  React.useEffect(() => {
+    if (!selectedRoom || !selectedRoom?.id) {
+      setInput("");
+      return;
+    }
+    setInput(draftWording);
+  }, [draftWording, selectedRoom?.id]);
 
   React.useEffect(() => {
     const s = socketConfig(api);
