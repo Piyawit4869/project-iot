@@ -258,7 +258,7 @@ export const ChatMessages = ({
   }, []);
 
   React.useEffect(() => {
-    const handleImageLoaded = () => {
+    const handleMediaLoaded = () => {
       const el = scrollAreaRef.current;
       if (!el) return;
 
@@ -274,9 +274,9 @@ export const ChatMessages = ({
       scheduleScrollToBottom();
     };
 
-    window.addEventListener("chat-image-loaded", handleImageLoaded);
+    window.addEventListener("chat-media-loaded", handleMediaLoaded);
     return () => {
-      window.removeEventListener("chat-image-loaded", handleImageLoaded);
+      window.removeEventListener("chat-media-loaded", handleMediaLoaded);
     };
   }, [scheduleScrollToBottom]);
 

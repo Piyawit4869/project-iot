@@ -4,7 +4,7 @@ import { formatDateAndTime } from "~/components/shared/global-format";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { MessageAILoading } from "./MessageAILoading";
 import ChatInput from "../chat-input";
-import { MessageRenderer } from "../render-message-content";
+import { MemoMessageRenderer } from "../render-message-content";
 import { MessageMenu } from "../MessageMenu";
 import React from "react";
 import { useChat, type TypingUser } from "~/providers/chat/useChat";
@@ -75,6 +75,11 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
       typingUsers,
     } = props;
 
+    const uniqueMessages = React.useMemo(
+      () => _.uniqBy(combinedMessages, "id"),
+      [combinedMessages]
+    );
+
     return (
       <div className="flex flex-1 flex-col h-full">
         <div
@@ -87,7 +92,7 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
 
           {combinedMessages &&
             combinedMessages.length > 0 &&
-            _.uniqBy(combinedMessages, "id").map((msg: any, index: number) => {
+            uniqueMessages.map((msg: any, index: number) => {
               const isBackoffice = msg.platform === "backoffice";
 
               if (msg.messageLabel === "ROME AI กำลังประมวลผล") return null;
@@ -105,7 +110,7 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
 
               return (
                 <div
-                  key={`${index}-${msg.id}`}
+                  key={msg.id}
                   ref={(el) => (messageRefs.current[msg.id] = el) as any}
                   id={`msg-${msg.id}`}
                   className={cn(lastMessage ? "animate-message-in" : "")}
@@ -138,7 +143,7 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
                       </div>
                     )}
                     <div className="flex flex-row items-center gap-2 mt-1">
-                      <MessageRenderer
+                      <MemoMessageRenderer
                         msg={msg}
                         allMessages={combinedMessages}
                         isBackoffice={isBackoffice}
