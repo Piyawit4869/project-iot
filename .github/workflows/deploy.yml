@@ -45,3 +45,42 @@ jobs:
             --region $REGION \
             --platform managed \
             --allow-unauthenticated
+
+      - name: 🔔 Notify Discord (Deploy Status)
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          color: ${{ job.status == 'success' && '0x57F287' || '0xED4245' }}
+
+          content: |
+            🚀 **Deploy Notification**
+            <@&888117099246026772>
+
+            **Repository:** `${{ github.event.repository.name }}`
+            **Environment:** `${{ env.APP_ENV }}`
+            **Triggered by:** `${{ github.actor }}`
+
+          title: '📦 Deploy: ${{ github.event.repository.name }} → ${{ env.APP_ENV }}'
+
+          description: |
+            **🟢 Status**
+            `${{ job.status }}`
+
+            **🔖 Version**
+            `${{ env.APP_VERSION }}`
+
+            **🗄 Migration**
+            `${{ env.RUN_MIGRATION }}`
+
+            **🌿 Branch**
+            `${{ github.ref_name }}`
+
+            **🧾 Commit**
+            [`${{ github.sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
+
+            **⏱ Deployed at**
+            `${{ github.run_started_at }}`
+
+          url: '${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}'

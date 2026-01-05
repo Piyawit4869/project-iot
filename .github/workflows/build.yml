@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - release
 
   workflow_dispatch:
     inputs:
@@ -33,6 +34,36 @@ on:
           - prod
 
 jobs:
+  code-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '22.20'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build and Lint
+        run: |
+          yarn build && yarn lint
+
+      # running this later when got jest test
+      # - name: Run tests
+      #   run: yarn test
+
+      - name: Notify Discord (Code Check)
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: 'Code check by ${{ github.actor }}'
+          description: 'Code check ${{ job.status }} please check in github before pull request'
+          url: '${{ github.server_url }}/${{ github.repository }}'
+
   build:
     runs-on: ubuntu-latest
     if: contains('refs/heads/main refs/heads/uat refs/heads/develop', github.ref)
@@ -110,3 +141,13 @@ jobs:
               "image": "${{ steps.build.outputs.image }}",
               "service": "${{ env.REPO }}-${{ github.event.inputs.environment || 'dev' }}"
             }
+
+      - name: 🔔 Notify Discord (Build)
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: 'Build by ${{ github.actor }}'
+          description: 'Packed prepared to deploy'
+          url: '${{ github.server_url }}/${{ github.repository }}'
