@@ -107,9 +107,10 @@ export const PieChart = ({ initData, isEdit }: PieChartProps) => {
     // tooltip: ({ type, value }: any) => {
     //   return { type, value };
     // },
-    tooltip: ({ type, value }: any) => {
-      return { type, value };
-    },
+    // tooltip: ({ type, value }: any) => {
+    //   return { type, value };
+    // },
+    tooltip: false,
 
     // interaction: {
     //   tooltip: {
