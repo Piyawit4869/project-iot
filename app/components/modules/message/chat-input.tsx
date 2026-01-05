@@ -545,7 +545,7 @@ export default function ChatInput({
                 ? "พิมพ์ข้อความเพื่อส่ง"
                 : "Enter = ส่งข้อความ / Shift+Enter = ขึ้นบรรทัดใหม่"
             }
-            className=" w-full resize-none p-2 outline-none min-h-[55px] max-h-[40vh] leading-6 overflow-auto"
+            className=" w-full resize-none p-2 outline-none min-h-[55px] max-h-[55px] leading-6 overflow-auto"
             value={input}
             onChange={handleInputChange}
             disabled={isPending}
