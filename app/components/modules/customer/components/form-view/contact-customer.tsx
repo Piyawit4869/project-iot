@@ -40,7 +40,8 @@ import { Input } from "~/components/ui/input";
 export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
   customer,
   form,
-  loading = false,
+  loading,
+  // isLoading,
   onClick,
   mode = "view",
   onEditForm,
@@ -236,6 +237,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
   const goToChat = () => {
     navigate(`/message?name=${customer?.profile?.lineName}`);
   };
+  const noChatRoom: boolean = customer?.chatRoomDetail?.chatRoomId == null;
 
   return (
     <Card className="py-4">
@@ -310,14 +312,20 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
             )}
           </div>
 
-          <div className="flex gap-5 items-start shrink-0">
+          <div className="flex gap-5 items-start shrink-0 ">
             {customerPlatform === "line" && (
               <div
-                className={`edit-icon-container cursor-pointer }`}
-                onClick={goToChat}
+                className={`edit-icon-container ${
+                  noChatRoom ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                onClick={noChatRoom ? undefined : goToChat}
               >
-                <div className="edit-icon-wrapper">
-                  <MessagesSquare className="text-muted-foreground w-" />
+                <div
+                  className={`edit-icon-wrapper ${
+                    noChatRoom ? "cursor-not-allowed" : ""
+                  }`}
+                >
+                  <MessagesSquare className="text-muted-foreground " />
                 </div>
               </div>
             )}
@@ -336,7 +344,7 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
         <div className="flex flex-col gap-2">
           <span className="text-sm">แท็กลูกค้า</span>
 
-          <div className="flex flex-wrap text-muted-foreground gap-2">
+          <div className="flex text-sm flex-wrap text-muted-foreground gap-2">
             {isEdit ? (
               <TagsSelectorModal form={form} />
             ) : customer && customer.tags && customer.tags.length > 0 ? (
@@ -389,55 +397,56 @@ export const ContactCustomer: React.FC<CustomerFormCreateProps> = ({
           />
         </div>
 
-        {customer &&
-        customer.chatRoomDetail &&
-        (customer.chatRoomDetail.chatRoomId === null ||
-          customer.chatRoomDetail.chatRoomId === undefined) ? (
-          <div className="flex items-center justify-center py-6">
-            <span className="text-sm text-muted-foreground">
-              ลูกค้าคนนี้ยังไม่มีการโต้ตอบภายในแชท
-            </span>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
-            <ParticipantsSection
-              title="ผู้รับผิดชอบหลัก"
-              isMain
-              isEdit={isEdit}
-              mainParticipant={mainParticipant}
-              participants={[]}
-              onDelete={handleDeleteParticipants}
-              onAdd={handleUserButtonClick}
-              navigate={navigate}
-              isPopoverOpen={isPopoverMainParticipantsOpen}
-              setIsPopoverOpen={setIsPopoverMainParticipantsOpen}
-              search={search}
-              setSearch={setSearch}
-              filteredUser={allUser}
-              supportedUserIds={supportedUserIds}
-              isLoading={isUserLoading}
-              isFetching={isUserFetching}
-              isCreatingSupport={isCreatingSupport}
-            />
+        {/* {customer && customer.chatRoomDetail && (
+          <>
+            
+          </>
+        )} */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
+          <ParticipantsSection
+            title="ผู้รับผิดชอบหลัก"
+            isMain
+            disable={noChatRoom}
+            isEdit={isEdit}
+            mainParticipant={mainParticipant}
+            participants={[]}
+            onDelete={handleDeleteParticipants}
+            onAdd={handleUserButtonClick}
+            navigate={navigate}
+            isPopoverOpen={isPopoverMainParticipantsOpen}
+            setIsPopoverOpen={setIsPopoverMainParticipantsOpen}
+            search={search}
+            setSearch={setSearch}
+            filteredUser={allUser}
+            supportedUserIds={supportedUserIds}
+            isLoading={isUserLoading}
+            isFetching={isUserFetching}
+            isCreatingSupport={isCreatingSupport}
+          />
 
-            <ParticipantsSection
-              title="ผู้รับผิดชอบรอง"
-              isEdit={isEdit}
-              participants={normalParticipants}
-              onDelete={handleDeleteParticipants}
-              onAdd={handleUserButtonClick}
-              navigate={navigate}
-              isPopoverOpen={isPopoverOpen}
-              setIsPopoverOpen={setIsPopoverOpen}
-              search={search}
-              setSearch={setSearch}
-              filteredUser={allUser}
-              supportedUserIds={supportedUserIds}
-              isLoading={isUserLoading}
-              isFetching={isUserFetching}
-              isCreatingSupport={isCreatingSupport}
-            />
-          </div>
+          <ParticipantsSection
+            disable={noChatRoom}
+            title="ผู้รับผิดชอบรอง"
+            isEdit={isEdit}
+            participants={normalParticipants}
+            onDelete={handleDeleteParticipants}
+            onAdd={handleUserButtonClick}
+            navigate={navigate}
+            isPopoverOpen={isPopoverOpen}
+            setIsPopoverOpen={setIsPopoverOpen}
+            search={search}
+            setSearch={setSearch}
+            filteredUser={allUser}
+            supportedUserIds={supportedUserIds}
+            isLoading={isUserLoading}
+            isFetching={isUserFetching}
+            isCreatingSupport={isCreatingSupport}
+          />
+        </div>
+        {!loading && noChatRoom && (
+          <span className="text-sm text-muted-foreground">
+            *ลูกค้าคนนี้ยังไม่มีการโต้ตอบภายในแชท
+          </span>
         )}
       </CardContent>
     </Card>
