@@ -95,6 +95,7 @@ function ReplyReference({ refMsg }: { refMsg: any }) {
 }
 
 export function MessageRenderer({
+  allMessages,
   onlyShow = false,
   msg,
   isBackoffice,
@@ -109,6 +110,7 @@ export function MessageRenderer({
   audioRef,
   togglePlay,
 }: {
+  allMessages?: any[];
   onlyShow?: boolean;
   msg: any;
   isBackoffice: boolean;
@@ -127,6 +129,10 @@ export function MessageRenderer({
   const type = msg?.messageType;
   const isLabel = msg?.isLabel;
   const reference = msg?.messageReference;
+  const lastMessage =
+    Array.isArray(allMessages) && allMessages.length > 0
+      ? allMessages[allMessages.length - 1]
+      : null;
 
   const {
     address = "",
@@ -184,6 +190,99 @@ export function MessageRenderer({
       <Wrapper>
         <MessageText text={String(message)} />
       </Wrapper>
+    );
+  }
+
+  // if (type === ChatItem.QUICK_REPLY) {
+  //   const lastLength = allMessages ? allMessages?.length - 1 : 0;
+
+  //   const lastMessage = allMessages && allMessages[lastLength];
+
+  //   const isLastMessage = lastMessage?.id === msg?.id;
+
+  //   return (
+  //     <>
+  //       <Wrapper>
+  //         <MessageText text={String(message)} />
+  //       </Wrapper>
+  //       {allMessages?.map((msg: any, msgIdx: number) => {
+  //         const textContent = Array.isArray(msg?.contents?.items)
+  //           ? msg.contents.items
+  //           : [];
+
+  //         if (lastMessage?.id === msg?.id)
+  //           return (
+  //             <div key={msgIdx} className="flex w-full flex-col">
+  //               <div className="flex flex-row gap-4 mt-4 ml-0 lg:ml-20">
+  //                 {textContent.map((p: any, idx: number) => (
+  //                   <div
+  //                     key={idx}
+  //                     className="max-w-[100%] rounded-2xl bg-white shadow p-1.5 px-3 text-sm leading-6 "
+  //                   >
+  //                     <div className="flex flex-row gap-2">
+  //                       {p?.imageUrl && (
+  //                         <img
+  //                           src={p?.imageUrl}
+  //                           alt="logo"
+  //                           width={10}
+  //                           height={10}
+  //                           className="w-6 h-6  object-cover rounded-full"
+  //                         />
+  //                       )}
+  //                       <span>{p?.action?.label}</span>
+  //                     </div>
+  //                   </div>
+  //                 ))}
+  //               </div>
+  //             </div>
+  //           );
+  //       })}
+  //     </>
+  //   );
+  // }
+
+  if (type === ChatItem.QUICK_REPLY) {
+    const lastMessage =
+      Array.isArray(allMessages) && allMessages.length > 0
+        ? allMessages[allMessages.length - 1]
+        : null;
+
+    const textContent = Array.isArray(lastMessage?.contents?.items)
+      ? lastMessage.contents.items
+      : [];
+
+    const isLastMessage = lastMessage?.id === msg?.id;
+
+    return (
+      <>
+        <Wrapper>
+          <MessageText text={String(message)} />
+        </Wrapper>
+
+        {isLastMessage && (
+          <div className="flex w-full flex-col">
+            <div className="flex flex-row gap-4 mt-4 ml-0 lg:ml-20">
+              {textContent.map((p: any, idx: number) => (
+                <div
+                  key={idx}
+                  className="max-w-[100%] rounded-2xl bg-white shadow p-1.5 px-3 text-sm leading-6"
+                >
+                  <div className="flex flex-row gap-2">
+                    {p?.imageUrl && (
+                      <img
+                        src={p.imageUrl}
+                        alt="logo"
+                        className="w-6 h-6 object-cover rounded-full"
+                      />
+                    )}
+                    <span>{p?.action?.label}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </>
     );
   }
 

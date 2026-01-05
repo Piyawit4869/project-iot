@@ -139,6 +139,7 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
                     )}
                     <MessageRenderer
                       msg={msg}
+                      allMessages={combinedMessages}
                       isBackoffice={isBackoffice}
                       setPreviewUrl={setPreviewUrl}
                       playing={playing}
