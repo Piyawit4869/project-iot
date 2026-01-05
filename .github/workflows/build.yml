@@ -9,24 +9,24 @@ on:
   workflow_dispatch:
     inputs:
       branch:
-        description: "Branch to build (only main and uat allowed)"
+        description: 'Branch to build (only main and uat allowed)'
         required: true
-        default: "uat"
+        default: 'uat'
         type: choice
         options:
           - uat
           - main
 
       version:
-        description: "Version tag to build (e.g., 1.0.0)"
+        description: 'Version tag to build (e.g., 1.0.0)'
         required: true
-        default: "1.0.0"
+        default: '1.0.0'
         type: string
 
       environment:
-        description: "Environment to deploy (dev, uat, prod)"
+        description: 'Environment to deploy (dev, uat, prod)'
         required: true
-        default: "dev"
+        default: 'dev'
         type: choice
         options:
           - dev
@@ -39,51 +39,39 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      # ---- Node + pnpm setup ----
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v2
         with:
-          node-version: "22.20"
-          cache: "pnpm"
+          node-version: '22.20'
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
+      - name: Install dependencies
+        run: yarn install
 
-      # ---- Install deps (verbose) ----
-      - name: Install dependencies (pnpm)
+      - name: Build and Lint
         run: |
-          pnpm -v
-          pnpm install --reporter=append-only
+          yarn build && yarn lint
 
-      # ---- Build & lint (verbose) ----
-      - name: Build and Lint (verbose)
-        run: |
-          set -x
-          pnpm build --loglevel debug
-          pnpm lint --loglevel debug
+      # running this later when got jest test
+      # - name: Run tests
+      #   run: yarn test
 
-      # ---- Notify Discord ----
       - name: Notify Discord (Code Check)
         uses: sarisia/actions-status-discord@v1
         if: always()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
-          title: "Code check by ${{ github.actor }}"
-          description: "Code check ${{ job.status }} please check in github before pull request"
-          url: "${{ github.server_url }}/${{ github.repository }}"
+          title: 'Code check by ${{ github.actor }}'
+          description: 'Code check ${{ job.status }} please check in github before pull request'
+          url: '${{ github.server_url }}/${{ github.repository }}'
 
   build:
     runs-on: ubuntu-latest
     if: contains('refs/heads/main refs/heads/uat refs/heads/develop', github.ref)
-    environment: "gcp-cicd"
-
+    environment: 'gcp-cicd'
     permissions:
       id-token: write
       contents: read
       actions: write
-
     env:
       GAR_REGION: asia-southeast1
       REGION: asia-southeast1
@@ -91,14 +79,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # ---- Repo / service name ----
       - name: Extract repo name
         run: echo "REPO=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
 
       - name: Extract service name
         run: echo "SERVICE_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
 
-      # ---- GCP auth ----
       - name: Set up gcloud
         uses: google-github-actions/setup-gcloud@v2
         with:
@@ -114,14 +100,10 @@ jobs:
       - name: Configure Docker auth
         run: gcloud auth configure-docker $GAR_REGION-docker.pkg.dev --quiet
 
-      # ---- Version logic ----
       - name: Get version
         id: get_version
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && \
-             [ -n "${{ github.event.inputs.version }}" ] && \
-             [ "${{ github.event.inputs.branch }}" != "develop" ]; then
-
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.version }}" ] && [ "${{ github.event.inputs.branch }}" != "develop" ]; then
             BRANCH=${{ github.event.inputs.branch }}
 
             if [ "$BRANCH" = "uat" ]; then
@@ -133,23 +115,22 @@ jobs:
             echo "VERSION=dev" >> $GITHUB_OUTPUT
           fi
 
-      # ---- Docker build & push (verbose) ----
-      - name: Build & push image (verbose)
+      - name: Build & push image
         id: build
         env:
           APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
           APP_IMAGE: ${{ env.GAR_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-docker-images/${{ env.REPO }}
         run: |
-          set -x
-          echo "APP_VERSION=$APP_VERSION"
-          echo "APP_IMAGE=$APP_IMAGE"
+          echo "🔧 Building image..."
+          echo "APP_VERSION: $APP_VERSION"
+          echo "APP_IMAGE: $APP_IMAGE"
+          docker build -t "$APP_IMAGE:$APP_VERSION" .
 
-          docker build --progress=plain -t "$APP_IMAGE:$APP_VERSION" .
+          echo "🚀 Pushing image..."
           docker push "$APP_IMAGE:$APP_VERSION"
 
           echo "image=$APP_IMAGE:$APP_VERSION" >> $GITHUB_OUTPUT
 
-      # ---- Trigger deploy workflow ----
       - name: Invoke Deploy workflow
         uses: benc-uk/workflow-dispatch@v1
         with:
@@ -161,13 +142,12 @@ jobs:
               "service": "${{ env.REPO }}-${{ github.event.inputs.environment || 'dev' }}"
             }
 
-      # ---- Notify Discord ----
       - name: 🔔 Notify Discord (Build)
         uses: sarisia/actions-status-discord@v1
         if: always()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
-          title: "Build by ${{ github.actor }}"
-          description: "Packed prepared to deploy"
-          url: "${{ github.server_url }}/${{ github.repository }}"
+          title: 'Build by ${{ github.actor }}'
+          description: 'Packed prepared to deploy'
+          url: '${{ github.server_url }}/${{ github.repository }}'

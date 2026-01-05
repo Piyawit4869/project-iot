@@ -7,6 +7,7 @@ export enum ChatItem {
   AUDIO = "audio",
   LOCATION = "location",
   CAROUSEL = "carousel",
+  QUICK_REPLY = "quick_reply",
 }
 
 export enum FlexMessageType {
