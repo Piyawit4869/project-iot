@@ -190,7 +190,7 @@ export default function ChatlistSidebar({
       });
 
       //assistants
-      if (room.chatRoomType === "assistant") {
+      if (room?.chatRoomType === "assistant") {
         addMessageAI({
           ...room,
           imageUrl:

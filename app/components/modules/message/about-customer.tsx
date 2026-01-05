@@ -23,7 +23,7 @@ import type {
 } from "~/schemas/customer/customer";
 import { useUpdateCustomerChatDetailsAndTags } from "~/api/client/customer/useCustomer";
 import { StarRating } from "~/components/shared/StarRating";
-import { customerType } from "~/initData/customer-initData";
+import { customerStatus, customerType } from "~/initData/customer-initData";
 import {
   Form,
   FormControl,
@@ -47,6 +47,7 @@ type FormValues = {
   lineName: string;
   customerName: string;
   status: string;
+  customerType: string;
   tags: { name: string; active: boolean }[];
   remark: string;
   rating: number;
@@ -72,7 +73,8 @@ export const AboutCustomer: React.FC<ChecklistDialogProps> = (props) => {
   const form = useForm<FormValues>({
     defaultValues: {
       customerName: "",
-      status: "ordinary_person",
+      customerType: "ordinary_person",
+      status: "newly_registered",
       tags: [],
       remark: "",
       rating: 0,
@@ -86,6 +88,7 @@ export const AboutCustomer: React.FC<ChecklistDialogProps> = (props) => {
       status: data.status ?? "",
       remark: data.remark ?? "",
       rating: data.rating ?? 0,
+      customerType: data.customerType ?? "",
       lineName: data.lineName ?? "",
     };
 
@@ -139,6 +142,7 @@ export const AboutCustomer: React.FC<ChecklistDialogProps> = (props) => {
       tags: tagsMap,
       remark: customer?.remark ?? "",
       rating: customer?.priority ?? 0,
+      customerType: customer?.customerType ?? "",
       lineName: customer?.profile?.lineName ?? "",
     });
   }, [open, form, customer]);
@@ -199,6 +203,34 @@ export const AboutCustomer: React.FC<ChecklistDialogProps> = (props) => {
             {/* สถานะลูกค้า */}
             <FormField
               control={form.control}
+              name="customerType"
+              rules={{ required: "กรุณาเลือกประเภทลูกค้า" }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    สถานะลูกค้า <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Select {...field} onValueChange={(v) => field.onChange(v)}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="เลือกประเภทของลูกค้า" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {customerType.map((item) => (
+                          <SelectItem key={item.value} value={item.value}>
+                            {item.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="status"
               rules={{ required: "กรุณาเลือกสถานะลูกค้า" }}
               render={({ field }) => (
@@ -212,7 +244,7 @@ export const AboutCustomer: React.FC<ChecklistDialogProps> = (props) => {
                         <SelectValue placeholder="เลือกสถานะของลูกค้า" />
                       </SelectTrigger>
                       <SelectContent>
-                        {customerType.map((item) => (
+                        {customerStatus.map((item) => (
                           <SelectItem key={item.value} value={item.value}>
                             {item.label}
                           </SelectItem>

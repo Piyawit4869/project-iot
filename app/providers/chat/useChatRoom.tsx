@@ -79,7 +79,7 @@ export const mergeRoomImmutable = (
   allRooms: ChatRoom[],
   incoming: IncomingRoomPayload
 ): ChatRoom[] => {
-  const incomingId = incoming.chatRoomId ?? incoming.id;
+  const incomingId = incoming?.chatRoomId ?? incoming?.id;
   if (!incomingId) {
     return sortingChatRoomByLatestTime(allRooms);
   }
