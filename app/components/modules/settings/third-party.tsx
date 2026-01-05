@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { PenLine } from "lucide-react";
+import { Eye, PenLine } from "lucide-react";
 import React from "react";
 import { redirect, useNavigate } from "react-router";
 import { usePaginateChatBot } from "~/api/client/settings";
@@ -68,9 +68,25 @@ function buildColumns(
       },
     },
     {
-      accessorKey: "name",
+      id: "name",
       header: "ชื่อ",
-      cell: (info) => <span>{info.getValue() as string}</span>,
+      cell: ({ row }) => {
+        const task = row.original;
+        const status = row.original?.status;
+
+        return (
+          <div className="ml-7">
+            <Button
+              className="bg-transparent border-none shadow-none p-0 h-auto text-muted-foreground hover:text-blue-400 hover:underline hover:bg-transparent disabled:text-gray-400"
+              type="button"
+              onClick={() => onEdit(task)}
+              disabled={status === "inactive"}
+            >
+              <span>{task.name}</span>
+            </Button>
+          </div>
+        );
+      },
     },
     {
       accessorKey: "isConnected",
@@ -134,7 +150,7 @@ function buildColumns(
               onClick={() => onEdit(task)}
               disabled={status === "inactive"}
             >
-              <PenLine className="w-4 h-4 text-white" />
+              <Eye className="w-4 h-4 text-white" />
             </Button>
           </div>
         );
@@ -158,10 +174,16 @@ export const ThirdParty: React.FC<ThirdPartyProps> = (props) => {
       const isLine = task.platform === "line";
 
       if (task?.isConnected) {
+        // navigate(
+        //   isLine
+        //     ? `/setting-organization/third-party/line/${task.refId}`
+        //     : `/setting-organization/third-party/ai/${task.refId}`
+        // );
+
         navigate(
           isLine
-            ? `/setting-organization/third-party/line/${task.refId}`
-            : `/setting-organization/third-party/ai/${task.refId}`
+            ? `/setting-organization/third-party/line?id=${task.refId}`
+            : `/setting-organization/third-party/ai?id=${task.refId}`
         );
       } else {
         if (isLine) {
@@ -185,7 +207,7 @@ export const ThirdParty: React.FC<ThirdPartyProps> = (props) => {
         offFilter={true}
       />
 
-      <ConnectLineWizardModal
+      {/* <ConnectLineWizardModal
         open={openLine}
         onOpenChange={setOpenLine}
         channelId={selectedId ?? undefined}
@@ -195,7 +217,7 @@ export const ThirdParty: React.FC<ThirdPartyProps> = (props) => {
         open={openAi}
         onOpenChange={setOpenAi}
         channelId={selectedId ?? undefined}
-      />
+      /> */}
     </div>
   );
 };

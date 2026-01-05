@@ -18,17 +18,89 @@ export const useProductPaginate = ({
   sorting,
   status = "",
   limit,
+  sku,
+  name,
+  barcode,
+  available,
+  availableForSale,
+  matType,
+  salePrice,
+  vatPrice,
+  createdBy,
+  updatedBy,
+  // createdAt,
+  // updatedAt,
+  createdFrom,
+  createdTo,
+  updatedFrom,
+  updatedTo,
 }: {
   pageIndex: number;
   pageSize: number;
   sorting: SortingState;
   status?: string;
   limit: number;
+  sku?: string;
+  name?: string;
+  barcode?: string;
+  available?: number;
+  availableForSale?: number;
+  matType?: string;
+  salePrice?: number;
+  vatPrice?: number;
+  createdBy?: string;
+  updatedBy?: string;
+  // createdAt?: string;
+  // updatedAt?: string;
+  createdFrom?: string;
+  createdTo?: string;
+  updatedFrom?: string;
+  updatedTo?: string;
 }) => {
   return useQuery({
-    queryKey: ["product-paginate", sorting, pageIndex, pageSize, status, limit],
+    queryKey: [
+      "product-paginate",
+      sorting,
+      pageIndex,
+      pageSize,
+      status,
+      limit,
+      sku,
+      name,
+      barcode,
+      available,
+      availableForSale,
+      matType,
+      salePrice,
+      vatPrice,
+      createdBy,
+      updatedBy,
+      createdFrom,
+      createdTo,
+      updatedFrom,
+      updatedTo,
+    ],
     queryFn: () =>
-      fetchProduct({ page: pageIndex, limit: pageSize, sorting, status }),
+      fetchProduct({
+        page: pageIndex,
+        limit: pageSize,
+        sorting,
+        status,
+        sku,
+        name,
+        barcode,
+        available,
+        availableForSale,
+        matType,
+        salePrice,
+        vatPrice,
+        createdBy,
+        updatedBy,
+        createdFrom,
+        createdTo,
+        updatedFrom,
+        updatedTo,
+      } as any),
     placeholderData: keepPreviousData,
     enabled: !!pageIndex && !!pageSize,
   });

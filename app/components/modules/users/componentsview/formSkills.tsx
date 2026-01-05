@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
@@ -30,14 +28,13 @@ export const UserSkills: React.FC<UserSkillsViewProps> = ({
 
   return (
     <>
-      <CardHeader>
-        <div className="flex gap-2 items-center">
-          <CardTitle className="text-base font-semibold flex items-center gap-2">
-            <Star className="h-5 w-5" />
-            ทักษะ
-          </CardTitle>
-        </div>
-      </CardHeader>
+      <div className="flex gap-2 items-center px-4">
+        <CardTitle className="text-base font-semibold flex items-center gap-2">
+          <Star className="h-5 w-5" />
+          ทักษะ
+        </CardTitle>
+      </div>
+
       {loading ? (
         <CardContent className="space-y-4">
           <SkeletonLoading />
@@ -46,7 +43,7 @@ export const UserSkills: React.FC<UserSkillsViewProps> = ({
           <SkeletonLoading />
         </CardContent>
       ) : (
-        <CardContent className="space-y-4">
+        <CardContent className="p-0 space-y-4">
           <div className="lg:col-span-2 flex flex-col gap-3">
             {skills.length === 0 ? (
               <div className="rounded-xl text-sm text-muted-foreground">
@@ -56,9 +53,9 @@ export const UserSkills: React.FC<UserSkillsViewProps> = ({
               <div className="grid grid-cols-1 gap-5">
                 {skills.map((row, index) => (
                   <div key={index} className="rounded-xl space-y-4">
-                    <Card className="p-4">
+                    <div className="p-4">
                       <div className="flex items-center justify-between">
-                        <h4 className="font-semibold">
+                        <h4 className="font-semibold mb-3">
                           ประวัติทักษะ {index + 1}
                         </h4>
                         {showActions && (
@@ -72,7 +69,7 @@ export const UserSkills: React.FC<UserSkillsViewProps> = ({
                         )}
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <InfoRow label="ชื่อทักษะ" value={row.name} />
                         <InfoRow label="ระดับความชำนาญ" value={row.level} />
 
@@ -95,7 +92,7 @@ export const UserSkills: React.FC<UserSkillsViewProps> = ({
                           }
                         />
                       </div>
-                    </Card>
+                    </div>
                   </div>
                 ))}
               </div>

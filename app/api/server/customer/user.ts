@@ -57,6 +57,14 @@ export const fetchUserById = async (id: string) => {
     return error;
   }
 };
+export const fetchUserPersonalSummary = async (id: string) => {
+  try {
+    const { data } = await ApiConfig.get(`users/summary/${id}`);
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
 
 export const fetchCreateUser = async (payload: UsersFormValues) => {
   try {

@@ -1,0 +1,43 @@
+.edit-icon-container {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.edit-icon-wrapper {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 999px;
+  transition: all 0.2s ease;
+}
+
+.edit-icon-container:hover .edit-icon-wrapper {
+  background-color: #f5f5f5; /* เทาอ่อน แบบ hover:bg-gray-100 */
+  transform: scale(1.05);
+}
+
+.edit-icon {
+  transition: transform 0.2s ease;
+}
+
+.edit-icon-container:hover .edit-icon {
+  transform: scale(1.10);
+}
+
+
+.step-content {
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.step-content.active {
+  opacity: 1;
+  transform: translateY(0);
+}

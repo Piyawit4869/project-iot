@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import { DataTable } from "~/components/shared/data-table";
 import { TabControl } from "~/components/shared/tab-control";
@@ -7,7 +7,7 @@ import { FileDown, FileUp, Plus } from "lucide-react";
 
 import GlobalButton from "~/components/shared/global-button";
 import { cn } from "~/lib/utils";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
 import { useSidebar } from "~/components/ui/sidebar";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import {
@@ -18,18 +18,57 @@ import {
   useAllInventorysSummary,
   usePaginate,
 } from "~/api/client/inventories/useInventoryQuery";
-import { useInventoryColumnTable } from "./inventory-column-table";
+import { useInventoryColumnTable } from "./no-data/inventory-column-table";
+import {
+  parseDateRangeParam,
+  pickSearchParams,
+} from "../customer/utils/search-params";
 
 export const InventoryIndexContainer = () => {
   const { data: categories, isLoading } = useAllInventorysSummary();
 
   const { isMobile } = useSidebar();
   const columns = useInventoryColumnTable();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [sp, setSearchParams] = useSearchParams();
   const [status, setStatus] = useState("all");
+  const [tableKey, setTableKey] = useState(0);
+
+  const filters = useMemo(
+    () =>
+      pickSearchParams(sp, [
+        "name",
+        "productCount",
+        "productCanSale",
+        "createdBy",
+        "updatedBy",
+      ]),
+    [sp]
+  );
+
+  const created = parseDateRangeParam(sp, "createdAt") ?? {};
+  const updated = parseDateRangeParam(sp, "updatedAt") ?? {};
+  const createdFrom = created.fromDate;
+  const createdTo = created.toDate;
+  const updatedFrom = updated.fromDate;
+  const updatedTo = updated.toDate;
 
   const items = TabIndexTableinventorys(categories);
-  const handleChangeTab = (values: any) => {
-    setStatus(values);
+
+  const clearAllFilters = useCallback(() => {
+    setSearchParams({});
+
+    navigate(location.pathname, { replace: true });
+  }, [setSearchParams, navigate, location.pathname]);
+
+  const handleChangeTab = (val: string) => {
+    const hadQuery = sp.toString().length > 0;
+    setStatus(val);
+    clearAllFilters();
+    if (hadQuery) {
+      setTableKey((k) => k + 1);
+    }
   };
 
   const paginate = usePaginate;
@@ -74,32 +113,41 @@ export const InventoryIndexContainer = () => {
           </Link>,
         ]}
       />
+
       <DataTable
+        key={tableKey}
         queryFunction={({ pageIndex, pageSize }) =>
           paginate({
             pageIndex,
             pageSize,
             status: status === "all" ? "" : status,
             limit: pageSize,
+            ...filters,
+            createdFrom,
+            createdTo,
+            updatedFrom,
+            updatedTo,
           })
         }
         columns={columns}
         addOn={
           <Tabs
-            defaultValue="all"
+            value={status}
             onValueChange={handleChangeTab}
-            className={cn("block", isMobile && "hidden")}
+            className={cn("block ", isMobile && "hidden")}
           >
             <TabsList>
-              {items.map((c) => (
-                <TabsTrigger
-                  key={c.label}
-                  value={c.status}
-                  className="hover:bg-gray-200 relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
-                >
-                  {c.icon} {c.label} ({c.value})
-                </TabsTrigger>
-              ))}
+              {items &&
+                items.length > 0 &&
+                items.map((c) => (
+                  <TabsTrigger
+                    key={c.label}
+                    value={c.status}
+                    className="hover:bg-border relative px-2 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
+                  >
+                    {c.icon} {c.label} ({c.value})
+                  </TabsTrigger>
+                ))}
             </TabsList>
           </Tabs>
         }

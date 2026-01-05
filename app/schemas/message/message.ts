@@ -14,9 +14,17 @@ export const pushMessageSchema = z.object({
   messageType: z.string(),
   isAiReply: z.boolean(),
   recipient: z.string().optional(),
-  customerId: z.string().uuid().optional(),
+  customerId: z.string().optional(),
   platform: z.string(),
-  messageLabel: z.string(),
+  messageLabel: z.string().optional(),
+  thumbnailUrl: z.string().optional(),
+  quoteToken: z.string().optional(),
+  packageId: z.string().optional(),
+  stickerId: z.string().optional(),
+  address: z.string().optional(),
+  latitude: z.string().optional(),
+  longitude: z.string().optional(),
+  lineContentId: z.string().optional(),
 });
 
 export type PushMessageValues = z.infer<typeof pushMessageSchema>;
@@ -72,3 +80,8 @@ export const chatMessageSchema = z.object({
 });
 
 export type ChatMessageSchemaType = z.infer<typeof chatMessageSchema>;
+
+export interface UpdateStatusProgressTagPayLoad {
+  isProcess: boolean;
+  done: boolean;
+}

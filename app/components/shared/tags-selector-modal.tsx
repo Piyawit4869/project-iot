@@ -1,181 +1,232 @@
 "use client";
 
 import React from "react";
-
-import { Check, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { GlobalTagsBadge } from "./global-tags";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
 import { Button } from "../ui/button";
-import { Command, CommandInput, CommandItem, CommandList } from "../ui/command";
+import { Separator } from "../ui/separator";
+import { TagManagerModal } from "../modules/message/TagManagerModal";
+import {
+  useCreateTag,
+  useCustomer,
+  useGetAllTags,
+  useUpdateCustomerTags,
+} from "~/api/client/customer/useCustomer";
+import { ChatCustomerTags } from "../modules/message/chat-customer-tags";
+import { GlobalModal } from "./modal/modal";
+import { toast } from "sonner";
+import { useParams } from "react-router";
 
 interface TagsSelectorModalProps {
   form: any;
 }
 
-const defaultTags = [
-  { name: "ลูกค้า VIP", active: true },
-  { name: "ลูกค้าใหม่", active: true },
-  { name: "ลูกค้าประจำ", active: true },
-  { name: "ลูกค้าที่สนใจ", active: true },
-  { name: "ลูกค้าไม่เคลื่อนไหว", active: false },
-  { name: "ใช้โปรโมชั่น", active: true },
-  { name: "มียอดซื้อสูง", active: true },
-  { name: "มีประวัติร้องเรียน", active: false },
-  { name: "ลูกค้าขายส่ง", active: true },
-  { name: "ลูกค้าปลีก", active: true },
-  { name: "สมาชิก", active: true },
-  { name: "Walk-in", active: true },
-];
+type Tag = {
+  id: string;
+  name: string;
+};
 
-export const TagsSelectorModal: React.FC<TagsSelectorModalProps> = (props) => {
-  const { form } = props;
+export const TagsSelectorModal: React.FC<TagsSelectorModalProps> = ({
+  form,
+}) => {
+  const initialTags = form.getValues("tags") ?? [];
+  const customerId = useParams<{ id: string }>();
+  const [open, setOpen] = React.useState(false);
+  const [inputValue, setInputValue] = React.useState("");
 
-  const initialTags: typeof defaultTags = form.getValues("tags") ?? [];
+  const [selectedTags, setSelectedTags] = React.useState<Tag[]>([]);
+  const { data: customerSingle, refetch } = useCustomer(customerId.id ?? "");
+  const { mutate: updateTags } = useUpdateCustomerTags(customerSingle?.id);
 
-  const [tags, setTags] = React.useState<typeof defaultTags>(() => {
-    const tagMap = new Map(defaultTags.map((tag) => [tag.name, tag]));
+  const { data: allTags = [] } = useGetAllTags();
+  const { mutate: createTag, isPending } = useCreateTag();
 
-    initialTags.forEach((initialTag) => {
-      if (tagMap.has(initialTag.name)) {
-        tagMap.set(initialTag.name, initialTag);
-      } else {
-        tagMap.set(initialTag.name, initialTag);
-      }
+  /* =========================
+   * DERIVED DATA
+   ========================= */
+  const availableTags: Tag[] = allTags.map((t: any) => ({
+    id: t.id,
+    name: t.name,
+  }));
+
+  const availableTagObjects = availableTags.filter(
+    (t) => !selectedTags.some((s) => s.id === t.id)
+  );
+
+  /* =========================
+   * HANDLERS
+   ========================= */
+
+  const handleToggleTag = (tag: Tag) => {
+    setSelectedTags((prev) => {
+      const exists = prev.some((t) => t.id === tag.id);
+      return exists ? prev.filter((t) => t.id !== tag.id) : [...prev, tag];
     });
+  };
 
-    return Array.from(tagMap.values());
-  });
+  const handleRemoveTag = (tagId: string) => {
+    setSelectedTags((prev) => prev.filter((t) => t.id !== tagId));
+  };
 
-  const [open, setOpen] = React.useState<boolean>(false);
-  const [search, setSearch] = React.useState<string>("");
-  const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
+  const handleDeleteTag = (tagId: string) => {
+    const updated = selectedTags.filter((t) => t.id !== tagId);
+    setSelectedTags(updated);
 
-  const handleToggleTag = (tagName: string) => {
-    setSelectedTags((prevTags) =>
-      prevTags.includes(tagName)
-        ? prevTags.filter((tag) => tag !== tagName)
-        : [...prevTags, tagName]
+    form.setValue(
+      "tags",
+      updated.map((t) => ({
+        id: t.id,
+        name: t.name,
+        active: true,
+      }))
     );
   };
 
-  const handleDeleteTag = (tagName: string) => {
-    const updatedTags = selectedTags.filter((tag) => tag !== tagName);
-
-    setSelectedTags(updatedTags);
-
-    const updatedTagObjects = updatedTags.map((tag) => ({
-      name: tag,
-      active: true,
-    }));
-
-    form.setValue("tags", updatedTagObjects);
+  const handleCreateTag = (name: string) => {
+    if (!name.trim()) return;
+    createTag(
+      { active: true, name },
+      {
+        onSuccess: (created) => {
+          setSelectedTags((prev) => [
+            ...prev,
+            { id: created.id, name: created.name },
+          ]);
+          setInputValue("");
+        },
+      }
+    );
   };
 
-  const handleCreateTag = () => {
-    if (!search) return;
-    const newTag = { name: search, active: true };
-    setTags((prevTags) => [...prevTags, newTag]);
-    handleToggleTag(search);
-    setSearch("");
+  const handleAddTag = (nameOrId: string) => {
+    const existing =
+      availableTags.find((t) => t.id === nameOrId) ||
+      availableTags.find((t) => t.name === nameOrId);
+
+    if (existing) {
+      handleToggleTag(existing);
+      return;
+    }
+
+    handleCreateTag(nameOrId);
   };
 
-  const handleOnSaveTags = () => {
-    const selectedTagObjects = selectedTags.map((tag) => ({
-      name: tag,
-      active: true,
-    }));
-
-    form.setValue("tags", selectedTagObjects);
-
+  const handleSave = () => {
+    form.setValue(
+      "tags",
+      selectedTags.map((t) => ({
+        id: t.id,
+        name: t.name,
+        active: true,
+      }))
+    );
     setOpen(false);
   };
 
-  const handleOnClose = (isOpen: boolean) => {
-    if (!isOpen) {
-      handleOnSaveTags();
-    }
-    setOpen(isOpen);
+  const handleSubmitTags = () => {
+    GlobalModal.info({
+      title: "เพิ่มแท็กของลูกค้า",
+      description: "คุณต้องการเพิ่มแท็กของลูกค้า ใช่หรือไม่?",
+      confirmText: "ยืนยัน",
+      cancelText: "ยกเลิก",
+      onConfirm: () => {
+        const toastId = toast.loading("กำลังเพิ่มแท็กของลูกค้า...");
+
+        updateTags(
+          {
+            tags: selectedTags.map((t) => ({
+              id: t.id,
+              active: true,
+            })),
+          },
+          {
+            onSuccess: () => {
+              toast.success("เพิ่มแท็กของลูกค้าเรียบร้อยแล้ว!", {
+                id: toastId,
+              });
+              refetch();
+              setOpen(false);
+            },
+            onError: () => {
+              toast.error("ไม่สามารถเพิ่มแท็กของลูกค้า", { id: toastId });
+            },
+          }
+        );
+      },
+    });
   };
 
+  const handleInputKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && inputValue.trim()) {
+      e.preventDefault();
+      handleAddTag(inputValue.trim());
+      setInputValue("");
+    }
+  };
+
+  /* =========================
+   * INIT
+   ========================= */
   React.useEffect(() => {
-    const initialSelectedTags = initialTags.map((tag: any) => tag.name) ?? [];
-    setSelectedTags(initialSelectedTags);
+    setSelectedTags(
+      initialTags.map((t: any) => ({
+        id: t.id,
+        name: t.name,
+      }))
+    );
   }, [initialTags]);
 
+  /* =========================
+   * RENDER
+   ========================= */
   return (
-    <FormField
-      control={form.control}
-      name="tags"
-      render={() => {
-        return (
+    <>
+      <FormField
+        control={form.control}
+        name="tags"
+        render={() => (
           <FormItem>
-            <FormControl className="w-full">
-              <div className="flex flex-wrap gap-2 space-y-2">
+            <FormControl>
+              <div className="flex flex-wrap gap-2">
                 {selectedTags.map((tag) => (
                   <GlobalTagsBadge
-                    key={tag}
-                    value={tag}
-                    onClick={() => handleDeleteTag(tag)}
+                    key={tag.id}
+                    value={tag.name}
+                    onClick={() => handleDeleteTag(tag.id)}
                   />
                 ))}
 
-                <Dialog open={open} onOpenChange={handleOnClose}>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" size="sm">
-                      แก้ไขแท็ก
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>เลือกหรือสร้างแท็ก</DialogTitle>
-                      <DialogDescription>
-                        คุณสามารถเลือกจากแท็กที่มีหรือสร้างแท็กใหม่
-                      </DialogDescription>
-                    </DialogHeader>
-
-                    <Command>
-                      <CommandInput
-                        placeholder="ค้นหาหรือเพิ่มแท็ก..."
-                        value={search}
-                        onValueChange={setSearch}
-                      />
-                      <CommandList>
-                        <Button
-                          variant="ghost"
-                          className="w-full justify-start"
-                          onClick={handleCreateTag}
-                        >
-                          <Plus size={16} /> สร้าง Tags ใหม่: {search}
-                        </Button>
-                        {tags.map((tag) => (
-                          <CommandItem
-                            key={tag.name}
-                            onSelect={() => handleToggleTag(tag.name)}
-                          >
-                            {tag.name}
-                            {selectedTags.includes(tag.name) && (
-                              <Check size={16} className="ml-auto" />
-                            )}
-                          </CommandItem>
-                        ))}
-                      </CommandList>
-                    </Command>
-                  </DialogContent>
-                </Dialog>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setOpen(true)}
+                >
+                  แก้ไขแท็ก
+                </Button>
               </div>
             </FormControl>
             <FormMessage />
           </FormItem>
-        );
-      }}
-    />
+        )}
+      />
+
+      <TagManagerModal
+        open={open}
+        title="เลือกหรือสร้างแท็ก"
+        inputValue={inputValue}
+        onInputChange={setInputValue}
+        handleInputKeyDown={handleInputKeyDown}
+        selectedTags={selectedTags}
+        availableTags={availableTagObjects}
+        loading={isPending}
+        onAddTag={(tag) => handleToggleTag(tag)}
+        onRemoveTag={(tag) => handleRemoveTag(tag.id)}
+        onCreateTag={handleCreateTag}
+        onClose={() => setOpen(false)}
+        onSubmit={customerId.id ? handleSubmitTags : handleSave}
+      />
+    </>
   );
 };

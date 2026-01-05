@@ -7,9 +7,27 @@ import {
 import {
   fetchBranchPagination,
   fetchChatBotPagination,
+  fetchCreateBranchesOrganizations,
+  fetchCreateConfigAi,
+  fetchDetailAddressBranches,
+  fetchDetailBranchesOrganization,
+  fetchDetailSettingBranches,
+  fetchGetBranchesDetail,
+  fetchGetBranchesOrganization,
   fetchGetConnectionAi,
+  fetchGetConnectionAiByBranch,
+  fetchGetConnectionAiByOrgGroup,
   fetchGetConnectionLine,
+  fetchGetOrganizationDetail,
   fetchGetOrganizations,
+  fetchGetOrganizationsPaginate,
+  fetchLineCardContentPaginate,
+  fetchLineFeaturePaginate,
+  fetchLineMassagePaginate,
+  fetchQuickMessagePaginate,
+  fetchResetAi,
+  fetchResetAiChatRoom,
+  fetchRoomChatAIConfigLoadMore,
   fetchRoomChatAILoadMore,
   fetchRoomChatLoadMore,
   fetchSendMessage,
@@ -18,21 +36,104 @@ import {
   fetchUpdateOrganization,
   fetchUpdateSetting,
   fetchUpdateSettingAddress,
+  getCardContent,
 } from "../server/settings";
 import type {
   AddressSchemaValues,
   ConnectAiValues,
   ConnectLineValues,
+  BranchesOrganization,
   OrganizationFormValues,
   PushMessageValues,
   SettingSchemaValues,
+  TeamMessageCreateDTO,
+  settingTheme,
 } from "~/schemas/settings";
+import {
+  createQuickReplyMessage,
+  createReplyMessage,
+  fetchDeleteQuickReply,
+  getAllLineSticker,
+  getQuickReplyMessage,
+  getReplyMessage,
+  markFavoriteReplyMessage,
+  sendCardContent,
+  updateReplyMessage,
+} from "../server/message/line";
+import { useSearchParams } from "react-router";
+
+export const useGetOrganizationsPaginate = ({
+  pageIndex,
+  pageSize,
+}: {
+  pageIndex: number;
+  pageSize: number;
+}) => {
+  return useQuery({
+    queryKey: ["organization-paginate", pageIndex, pageSize],
+    queryFn: () =>
+      fetchGetOrganizationsPaginate({ page: pageIndex, limit: pageSize }),
+    placeholderData: keepPreviousData,
+    enabled: !!pageIndex && !!pageSize,
+  });
+};
+
+export const useCreateBranchesOrganization = () => {
+  return useMutation({
+    mutationFn: (values: any) => fetchCreateBranchesOrganizations(values),
+  });
+};
 
 export const useGetOrganizations = () =>
   useQuery({
     queryKey: ["organization"],
     queryFn: () => fetchGetOrganizations(),
   });
+
+export const useGetOrganization = (id: string) =>
+  useQuery({
+    queryKey: ["organization-detail", id],
+    queryFn: () => fetchGetOrganizationDetail(id),
+    enabled: !!id,
+  });
+
+export const useGetBranchesDetail = (id: string) =>
+  useQuery({
+    queryKey: ["branches-organization-detail", id],
+    queryFn: () => fetchGetBranchesDetail(id),
+    enabled: !!id,
+  });
+export const useGetBranchesOrganization = (id: string) =>
+  useQuery({
+    queryKey: ["branches-organization", id],
+    queryFn: () => fetchGetBranchesOrganization(id),
+    enabled: !!id,
+  });
+
+// ----------------------
+
+export const useUpdateBranchesOrganization = (branchesid: string) => {
+  return useMutation({
+    mutationFn: (values: BranchesOrganization) =>
+      fetchDetailBranchesOrganization(branchesid, values),
+  });
+};
+
+export const useUpdateAddressBranches = (branchesid: string) => {
+  return useMutation({
+    mutationFn: (values: BranchesOrganization) =>
+      fetchDetailAddressBranches(branchesid, values),
+  });
+};
+
+export const useUpdateSettingBranches = (branchesid: string) => {
+  return useMutation({
+    mutationFn: (values: BranchesOrganization) =>
+      fetchDetailSettingBranches(branchesid, values),
+  });
+};
+
+// ----------------------
 
 export const useUpdateOrganization = (
   organizationId: string,
@@ -44,16 +145,16 @@ export const useUpdateOrganization = (
   });
 };
 
-export const useUpdateAddress = (settingAddressId: string, userId: string) => {
+export const useUpdateAddress = (settingAddressId: string, orgId: string) => {
   return useMutation({
     mutationFn: (values: AddressSchemaValues) =>
-      fetchUpdateSettingAddress(values),
+      fetchUpdateSettingAddress(orgId, settingAddressId, values),
   });
 };
 
-export const useUpdateSettings = (settingId: string, userId: string) => {
+export const useUpdateSettings = (settingId: string, orgId: string) => {
   return useMutation({
-    mutationFn: (values: SettingSchemaValues) => fetchUpdateSetting(values),
+    mutationFn: (values: any) => fetchUpdateSetting(orgId, settingId, values),
   });
 };
 
@@ -109,6 +210,12 @@ export const useGetConnectionLine = (id: string) =>
     enabled: !!id,
   });
 
+export const useCreateConfigAi = () => {
+  return useMutation({
+    mutationFn: (values: ConnectAiValues) => fetchCreateConfigAi(values),
+  });
+};
+
 export const useUpdateConnectionAi = (id: string) => {
   return useMutation({
     mutationFn: (values: ConnectAiValues) =>
@@ -116,16 +223,64 @@ export const useUpdateConnectionAi = (id: string) => {
   });
 };
 
+export const useResetChatAi = (id: string) => {
+  return useMutation({
+    mutationFn: () => fetchResetAi(id),
+  });
+};
+
+export const useResetAiChatRoom = (id: string) => {
+  return useMutation({
+    mutationFn: () => fetchResetAiChatRoom(id),
+  });
+};
+
 export const useGetConnectionAi = (id: string) =>
   useQuery({
     queryKey: ["OpenAi", id],
     queryFn: () => fetchGetConnectionAi(id),
-    enabled: !!id,
+    // enabled: !!id,
+  });
+export const useGetConnectionAiByBranch = (branchId: string) =>
+  useQuery({
+    queryKey: ["OpenAiByBranch", branchId],
+    queryFn: () => fetchGetConnectionAiByBranch(branchId),
+    enabled: !!branchId,
+    select: (res: any) => {
+      // รองรับทั้งกรณี API ส่งเป็น array ตรง ๆ หรือห่อมาใน data/items
+      if (Array.isArray(res)) return res;
+      if (Array.isArray(res?.items)) return res.items;
+      if (Array.isArray(res?.data)) return res.data;
+      return [];
+    },
   });
 
-export const usePaginatedChatRoomAI = (chatRoomId: string) => {
+export const useGetConnectionAiByOrgGroup = (orgGroupId: string) =>
+  useQuery({
+    queryKey: ["OpenAiByoOgGroup", orgGroupId],
+    queryFn: () => fetchGetConnectionAiByOrgGroup(orgGroupId),
+    enabled: !!orgGroupId,
+  });
+
+export const usePaginatedChatRoomAIConfig = (chatRoomId: string) => {
   return useInfiniteQuery({
-    queryKey: ["roomChat-ai", chatRoomId],
+    queryKey: ["room-chat-ai-config", chatRoomId],
+    queryFn: async ({ pageParam }) =>
+      fetchRoomChatAIConfigLoadMore(chatRoomId, pageParam, 10),
+
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      const meta = lastPage?.meta;
+
+      return meta?.hasMore ? meta.offset + meta.limit : undefined;
+    },
+    // enabled: !!chatRoomId,
+  });
+};
+
+export const usePaginatedChatRoomAIAssistant = (chatRoomId: string) => {
+  return useInfiniteQuery({
+    queryKey: ["room-chat-ai-assistant", chatRoomId],
     queryFn: async ({ pageParam }) =>
       fetchRoomChatAILoadMore(chatRoomId, pageParam, 10),
 
@@ -153,8 +308,174 @@ export const usePaginatedChatRooms = () => {
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       const meta = lastPage?.meta;
-
       return meta?.hasMore ? meta.offset + meta?.limit : undefined;
     },
+  });
+};
+
+export const useLineFeatureMessagePaginate = ({
+  pageIndex,
+  pageSize = 10,
+  limit,
+}: {
+  pageIndex: number;
+  pageSize?: number;
+  limit: number;
+}) => {
+  return useQuery({
+    queryKey: ["line-feature-paginate", pageIndex, pageSize, limit],
+    queryFn: () =>
+      fetchLineFeaturePaginate({
+        page: pageIndex,
+        itemsPerPage: pageSize,
+        limit: limit,
+      }),
+    enabled: !!pageIndex && !!pageSize,
+  });
+};
+
+export const useLineMassagePaginate = ({
+  pageIndex,
+  pageSize = 10,
+  limit,
+}: {
+  pageIndex: number;
+  pageSize?: number;
+  limit: number;
+}) => {
+  return useQuery({
+    queryKey: ["customer-paginate", pageIndex, pageSize, limit],
+    queryFn: () =>
+      fetchLineMassagePaginate({
+        page: pageIndex,
+        itemsPerPage: pageSize,
+        limit: limit,
+      }),
+    enabled: !!pageIndex && !!pageSize,
+  });
+};
+
+export const useLineCardContentPaginate = ({
+  pageIndex,
+  pageSize = 10,
+  limit,
+  filter,
+}: {
+  pageIndex: number;
+  pageSize?: number;
+  limit: number;
+  filter?: { category?: string };
+}) => {
+  const [searchParams] = useSearchParams();
+
+  const category = searchParams.get("category") || "";
+
+  if (filter?.category === "all") {
+    filter.category = "";
+  }
+
+  return useQuery({
+    queryKey: ["card-line-paginate", pageIndex, pageSize, limit, filter],
+    queryFn: () =>
+      fetchLineCardContentPaginate({
+        page: pageIndex,
+        itemsPerPage: pageSize,
+        limit,
+        filter: { category: category },
+      }),
+    enabled: pageIndex !== undefined,
+  });
+};
+
+export const useLineSendCardContent = (id: string) => {
+  return useMutation({
+    mutationFn: async (payload: { to?: string; chatRoomId?: string }) =>
+      sendCardContent(id, payload),
+  });
+};
+
+export const useLineCreateReplyMessage = () => {
+  return useMutation({
+    mutationFn: (payload: TeamMessageCreateDTO) => createReplyMessage(payload),
+  });
+};
+
+export const useLineUpdateReplyMessage = (id: string) => {
+  return useMutation({
+    mutationFn: (payload: TeamMessageCreateDTO) =>
+      updateReplyMessage(id, payload),
+  });
+};
+
+export const useLineGetReplyMessage = (id: string) => {
+  return useQuery({
+    queryKey: ["line-reply"],
+    queryFn: async () => getReplyMessage(id),
+  });
+};
+
+export const useLineMarkFavoriteRplyMessage = () => {
+  return useMutation({
+    mutationFn: async (id: string) => markFavoriteReplyMessage(id),
+  });
+};
+
+export const useLineGetCardContent = (id: string) => {
+  return useQuery({
+    queryKey: ["line-card-content"],
+    queryFn: async () => getCardContent(id),
+  });
+};
+
+export const useLineGetSticker = () => {
+  return useQuery({
+    queryKey: ["line-sticker"],
+    queryFn: async () => getAllLineSticker(),
+  });
+};
+
+export const useQuickReplyMessagePaginate = ({
+  pageIndex,
+  pageSize = 10,
+  limit,
+}: {
+  pageIndex: number;
+  pageSize?: number;
+  limit: number;
+}) => {
+  return useQuery({
+    queryKey: ["quick-reply-message", pageIndex, pageSize, limit],
+    queryFn: () =>
+      fetchQuickMessagePaginate({
+        page: pageIndex,
+        itemsPerPage: pageSize,
+        limit: limit,
+      }),
+    enabled: !!pageIndex && !!pageSize,
+  });
+};
+
+export const useCreateQuickReplyMessage = () => {
+  return useMutation({
+    mutationFn: (payload: any) => createQuickReplyMessage(payload),
+  });
+};
+
+export const useLineUpdateQuickReplyMessage = (id: string) => {
+  return useMutation({
+    mutationFn: (payload: any) => updateReplyMessage(id, payload),
+  });
+};
+
+export const useLineQuickReplyMessage = (id: string) => {
+  return useQuery({
+    queryKey: ["line-quick-reply"],
+    queryFn: async () => getQuickReplyMessage(id),
+  });
+};
+
+export const useDeleteQuickReply = () => {
+  return useMutation({
+    mutationFn: (id: string) => fetchDeleteQuickReply(id),
   });
 };

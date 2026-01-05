@@ -1,56 +1,86 @@
-"use client";
-
-import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import React, { useRef, useState } from "react";
-import dayjs from "dayjs";
-import * as Icons from "lucide-react";
+import _ from "lodash";
 
-import { GlobalImage } from "~/components/shared/global-image";
-import FeatureCard from "~/components/shared/feature-card";
-import { MessagesSquare } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import ChatInput from "./chat-input";
-import { OrderViewModal } from "./orders-view-modal";
-import { AIMessageView } from "./ai-message-view-modal";
-import { flushSync } from "react-dom";
-import { CustomerChatSkeleton } from "./noData/customer-chat-skeleton";
-import { useRouteLoaderData } from "react-router";
 import { socketConfig } from "~/lib/sockets";
+import { CustomerChatSkeleton } from "./noData/customer-chat-skeleton";
 import type { ChatRoomSchemaType } from "~/schemas/message/message";
-import { usePaginatedMessages } from "~/api/client/message/useMessage";
-import { useChat, type Message } from "~/providers/chat/useChat";
-import StatusToolbar from "./status-toolbar";
+import { usePaginatedMessagesCursor } from "~/api/client/message/useMessage";
+import { useChat } from "~/providers/chat/useChat";
 
-// import { useChatRoom } from "@/stores/chat/useRoom";
+import { useRouteLoaderData } from "react-router";
+import { MessageNoData } from "./chat/MessageNoData";
+import { MessagePreviewImage } from "./chat/MessagePreviewImage";
+import { MessageHeader } from "./chat/MessageHeader";
+import { MessageBody } from "./chat/MessageBody";
+import { useChatController } from "~/hooks/chat/useChatController";
 
-export default function ChatMessages({
+export const ChatMessages = ({
   api,
-  autoScroll,
-  setAutoScroll,
+  subId,
+  customer,
   selectedRoom,
+  setAutoScroll,
 }: {
   api: string;
+  subId: string;
+  customer: any;
   autoScroll: boolean;
-  setAutoScroll: React.Dispatch<React.SetStateAction<boolean>>;
+  isLineGroup: boolean;
   selectedRoom: ChatRoomSchemaType;
-  isCreateOrderOpen: boolean;
-}) {
+  setAutoScroll: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const { me } = useRouteLoaderData("root");
+
+  const [playing, setPlaying] = React.useState(false);
+  const [currentTime, setCurrentTime] = React.useState(0);
+  const [duration, setDuration] = React.useState(0);
+
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+
+  const togglePlay = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (playing) {
+      audio.pause();
+      setPlaying(false);
+    } else {
+      audio.play();
+      // setPlaying(true);
+    }
+  };
+
+  const isAtBottomRef = React.useRef<boolean>(true);
+
+  const prevMessageLengthRef = React.useRef<number>(0);
+
+  const hasInitialScrolledRef = React.useRef<boolean>(false);
+
+  const isFetchingPrevRef = React.useRef<boolean>(false);
 
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
-  const newestSeenId = React.useRef<string | null>(null);
+  const scrollRafRef = React.useRef<number | null>(null);
+
+  const isProgrammaticScroll = React.useRef(false);
+
   const [previewUrl, setPreviewUrl] = React.useState("");
 
+  const [isSearching, setIsSearching] = React.useState<boolean>(false);
+
   const [showTopLoading, setShowTopLoading] = useState(false);
-  const [hasScrolledOnce, setHasScrolledOnce] = useState(false);
-  const [hasAutoScrolled, setHasAutoScrolled] = useState(false);
-  const [isScrollReady, setIsScrollReady] = useState(false);
-  const [isCheckStatusOpen, setCheckStatusOpen] = useState(false);
-  const [AIOpen, setAIOpen] = useState(false);
   const [buttonScrollToBottom, setButtonScrollToBottom] = React.useState(false);
 
-  const { messages: socketMessages, addMessage } = useChat();
+  const [replyRefMessage, setReplyRefMessage] = useState<string | null>(null);
+
+  const { messages: socketMessages, addMessage, typingUsers } = useChat();
+
+  const messageRefs = useRef<{ [id: string]: HTMLDivElement | null }>({});
+
+  const [targetMessageId, setTargetMessageId] = useState<string>("");
+  const [direction, setDirection] = useState<string>("prev");
+
+  const [hasScrolledToTarget, setHasScrolledToTarget] = useState(false);
 
   const {
     data: messagesData,
@@ -58,21 +88,20 @@ export default function ChatMessages({
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = usePaginatedMessages(selectedRoom.id);
+  } = usePaginatedMessagesCursor(selectedRoom.id, targetMessageId, direction);
 
-  const paginatedMessages = messagesData?.pages.flatMap((page) => page) ?? [];
-
-  const combinedMessages = React.useMemo(() => {
-    const paginated = paginatedMessages.flatMap((m) => m.items || []);
-    const messages = [...paginated, ...socketMessages.flatMap((m) => m || [])]
-      .sort(
-        (a, b) =>
-          dayjs(a.createdAt ?? a.timestamp).valueOf() -
-          dayjs(b.createdAt ?? b.timestamp).valueOf()
-      )
-      .filter((c) => c.chatRoomId === selectedRoom?.id);
-    return messages;
-  }, [paginatedMessages, socketMessages]);
+  const { combinedMessages } = useChatController({
+    api,
+    me,
+    selectedRoom,
+    pages: messagesData?.pages ?? [],
+    socketMessages,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    socketConfig,
+  });
+  const meta = messagesData?.pages?.[0]?.meta;
 
   const isNoMessageData = !messagesData || messagesData.pages.length === 0;
 
@@ -82,25 +111,24 @@ export default function ChatMessages({
     }
   };
 
-  React.useEffect(() => {
-    const scrollArea = scrollAreaRef.current;
-    if (!scrollArea) {
-      return;
-    }
-    const handleScroll = () => {
-      const { scrollHeight, scrollTop, clientHeight } = scrollArea;
-      const isContentScrollable = scrollHeight > clientHeight;
-      const SCROLL_THRESHOLD = 50;
-      const isNotAtBottom =
-        scrollTop < scrollHeight - clientHeight - SCROLL_THRESHOLD;
-      setButtonScrollToBottom(isContentScrollable && isNotAtBottom);
-    };
-    scrollArea.addEventListener("scroll", handleScroll);
-    handleScroll();
-    return () => {
-      scrollArea.removeEventListener("scroll", handleScroll);
-    };
-  }, [scrollAreaRef.current]);
+  const handleSearchClick = (messageId: string) => {
+    setIsSearching(true);
+    setTargetMessageId(messageId);
+    setDirection("none");
+    setHasScrolledToTarget(false);
+  };
+
+  const onReply = (msg: any) => {
+    setReplyRefMessage(msg);
+  };
+
+  const copyMessage = (text: string) => {
+    if (!navigator?.clipboard) return;
+
+    navigator.clipboard.writeText(text).catch((err) => {
+      console.error("copy failed", err);
+    });
+  };
 
   React.useEffect(() => {
     if (messagesData?.pages?.length === 1) {
@@ -109,343 +137,224 @@ export default function ChatMessages({
   }, [messagesData]);
 
   React.useEffect(() => {
-    if (!autoScroll || !bottomRef.current) return;
+    // show button to scroll down
+    const scrollArea = scrollAreaRef.current;
+    if (!scrollArea) return;
 
-    const scrollToBottom = () => {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-      setAutoScroll(false);
-      setHasAutoScrolled(true);
-      setTimeout(() => {
-        setIsScrollReady(true);
-      }, 300);
+    const handleScroll = () => {
+      const { scrollHeight, scrollTop, clientHeight } = scrollArea;
+      const THRESHOLD = 20;
+
+      isAtBottomRef.current =
+        scrollTop + clientHeight >= scrollHeight - THRESHOLD;
+
+      setButtonScrollToBottom(!isAtBottomRef.current);
     };
 
-    requestAnimationFrame(() => {
-      setTimeout(scrollToBottom, 0);
-    });
-  }, [combinedMessages, autoScroll]);
+    scrollArea.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => {
+      scrollArea.removeEventListener("scroll", handleScroll);
+    };
+  }, [bottomRef.current]);
 
   React.useEffect(() => {
     const el = scrollAreaRef.current;
-    if (!isScrollReady || !el) return;
+    if (!el) return;
 
-    const handleScroll = () => {
-      if (
-        el.scrollTop < 10 &&
-        hasNextPage &&
-        !isFetchingNextPage &&
-        hasScrolledOnce
-      ) {
-        const prevScrollHeight = el.scrollHeight;
+    const THRESHOLD = 5;
 
+    const onScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = el;
+      const THRESHOLD = 20;
+
+      isAtBottomRef.current =
+        scrollTop + clientHeight >= scrollHeight - THRESHOLD;
+
+      setButtonScrollToBottom(!isAtBottomRef.current);
+
+      if (isSearching || isProgrammaticScroll.current) return;
+
+      if (!hasNextPage || isFetchingNextPage) return;
+
+      if (scrollTop <= 5 && meta?.prev) {
+        isFetchingPrevRef.current = true;
+
+        const prevHeight = el.scrollHeight;
         setShowTopLoading(true);
+        setDirection("prev");
 
         fetchNextPage().finally(() => {
           setShowTopLoading(false);
 
-          flushSync(() => {
-            requestAnimationFrame(() => {
-              const newScrollHeight = el.scrollHeight;
-              const heightDiff = newScrollHeight - prevScrollHeight;
-              el.scrollTop = heightDiff;
-            });
+          requestAnimationFrame(() => {
+            el.scrollTop = el.scrollHeight - prevHeight;
+            isFetchingPrevRef.current = false;
           });
         });
       }
-
-      if (!hasScrolledOnce && hasAutoScrolled) {
-        setHasScrolledOnce(true);
-      }
     };
 
-    el.addEventListener("scroll", handleScroll);
-    return () => el.removeEventListener("scroll", handleScroll);
-  }, [
-    isScrollReady,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-    hasScrolledOnce,
-    hasAutoScrolled,
-  ]);
+    el.addEventListener("scroll", onScroll);
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [hasNextPage, isFetchingNextPage, meta, isSearching]);
 
   React.useEffect(() => {
-    const el = scrollAreaRef.current;
-    const messages = combinedMessages;
-    if (!el || messages?.length === 0) return;
-    const newest = messages[messages.length - 1] as any;
-    const isNewMessage =
-      newestSeenId.current && newestSeenId.current !== newest.timestamp;
-    newestSeenId.current = newest.timestamp;
-    if (isNewMessage) {
-      requestAnimationFrame(() => {
-        el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    if (!targetMessageId || hasScrolledToTarget) return;
+
+    const el = messageRefs.current[targetMessageId];
+    const container = scrollAreaRef.current;
+    if (!el || !container) return;
+
+    isProgrammaticScroll.current = true;
+    setIsSearching(true);
+
+    requestAnimationFrame(() => {
+      el.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
       });
-    }
-  }, [combinedMessages]);
 
-  React.useEffect(() => {
-    if (!isLoading) {
-      const socket = socketConfig(api);
-      const body = {
-        chatRoomId: selectedRoom?.id,
-        userId: selectedRoom.customerId,
-        branchId: selectedRoom?.branchId,
-      };
+      el.classList.add("shake");
+      setTimeout(() => el.classList.remove("shake"), 500);
 
-      socket.emit("mark-read", body); // manual read
-      socket.emit("recent-chat", body);
-    }
-  }, [isLoading, selectedRoom]);
+      setHasScrolledToTarget(true);
 
-  React.useEffect(() => {
-    const socket = socketConfig(api);
-
-    if (selectedRoom?.id) {
-      socket.emit("chat", { chatRoomId: `${selectedRoom.id}` });
-    }
-
-    socket.on("chat", (msg: Message) => {
-      // const isCurrentRoom =
-      //   selectedRoom?.id && msg.chatRoomId === selectedRoom.id;
-
-      // if (isCurrentRoom) {
-      // const body = {
-      //   chatRoomId: selectedRoom.id,
-      //   userId: selectedRoom?.customer?.id,
-      //   branchId: selectedRoom.branchId,
-      // };
-      // socket.emit("mark-read", body);
-      // setAutoReadMsg(true);
-      // setRealtimeChatRooms((prev: any) => ({
-      //   ...prev,
-      //   unreadMessageCount: 0,
-      // }));
-      // }
-
-      addMessage({
-        ...msg,
-        imageUrl:
-          msg.imageUrl || `https://ui-avatars.com/api/?name=${msg.sender}`,
-      });
+      setTimeout(() => {
+        isProgrammaticScroll.current = false;
+        setIsSearching(false);
+        setTargetMessageId("");
+        setDirection("prev");
+      }, 800); // ⬅️ สำคัญ
     });
+  }, [targetMessageId, messagesData]);
 
-    return () => {
-      socket.disconnect();
-    };
+  React.useEffect(() => {
+    if (selectedRoom) {
+      setTargetMessageId("");
+    }
   }, [selectedRoom]);
+
+  const lastMessage =
+    combinedMessages &&
+    combinedMessages.length &&
+    combinedMessages[combinedMessages.length - 1];
+
+  const scheduleScrollToBottom = React.useCallback(() => {
+    if (scrollRafRef.current) return;
+
+    scrollRafRef.current = requestAnimationFrame(() => {
+      const el = scrollAreaRef.current;
+      if (el) {
+        el.scrollTop = el.scrollHeight;
+      }
+      scrollRafRef.current = null;
+    });
+  }, []);
+
+  React.useEffect(() => {
+    const handleImageLoaded = () => {
+      const el = scrollAreaRef.current;
+      if (!el) return;
+
+      if (!hasInitialScrolledRef.current) {
+        hasInitialScrolledRef.current = true;
+        isAtBottomRef.current = true;
+        scheduleScrollToBottom();
+        return;
+      }
+
+      if (!isAtBottomRef.current) return;
+
+      scheduleScrollToBottom();
+    };
+
+    window.addEventListener("chat-image-loaded", handleImageLoaded);
+    return () => {
+      window.removeEventListener("chat-image-loaded", handleImageLoaded);
+    };
+  }, [scheduleScrollToBottom]);
+
+  React.useEffect(() => {
+    const currentLength = combinedMessages.length;
+    const prevLength = prevMessageLengthRef.current;
+
+    if (currentLength <= prevLength) {
+      prevMessageLengthRef.current = currentLength;
+      return;
+    }
+
+    prevMessageLengthRef.current = currentLength;
+
+    if (isFetchingPrevRef.current) return;
+    if (isSearching) return;
+
+    const el = scrollAreaRef.current;
+    if (!el) return;
+
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+    });
+  }, [combinedMessages.length, isSearching]);
+
+  React.useEffect(() => {
+    hasInitialScrolledRef.current = false;
+  }, [selectedRoom?.id]);
 
   if (isLoading && selectedRoom) {
     return <CustomerChatSkeleton />;
   }
 
   if (isNoMessageData) {
-    return (
-      <div className="flex flex-col h-[200px] w-full justify-center items-center gap-12">
-        <h2 className="text-center text-2xl">
-          ยินดีต้อนรับสู่แชท Feature ที่ผนวกร่วมกับ Rome AI
-        </h2>
-        <div className="w-[300px]">
-          <FeatureCard
-            icon={<MessagesSquare className="w-8 h-8 text-blue-500" />}
-            title="แชท sale AI & Support"
-            description="ช่องทางแชทระหว่างฝ่ายขายและลูกค้า พร้อมผนวก AI ช่วยตอบคำถามและสนับสนุนการสนทนาอย่างรวดเร็วและแม่นยำ"
-          />
-        </div>
-      </div>
-    );
+    return <MessageNoData />;
   }
-  {
-    /* <Button
-            disabled={!isCreateOrderOpen}
-            type="button"
-            size={"sm"}
-            className="btn px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm"
-            onClick={() =>
-              //  router.push("/notation-view")
-              window.open("/notation-view", "_blank")
-            }
-          >
-            ออกใบเสนอราคา
-          </Button> */
-  }
+
   return (
-    <div className="flex flex-col h-[calc(100vh-100px)] bg-white dark:bg-secondary">
-      <div className="flex items-center justify-between gap-4 p-2 border-b bg-white dark:bg-background">
-        <div className="hidden xl:block">
-          <StatusToolbar value={"done"} />
-        </div>
-
-        <div className="flex items-center gap-3">
-          <Button
-            type="button"
-            size={"sm"}
-            className=" bg-muted-foreground text-background hover:bg-gray-200 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-            onClick={() => {
-              setAIOpen(true);
-            }}
-          >
-            ข้อมูลลูกค้าผ่าน AI
-          </Button>
-          <Button
-            type="button"
-            size={"sm"}
-            className="px-3 py-1 bg-black hover:bg-gray-600 text-sm text-background dark:bg-primary"
-            onClick={() => {
-              setCheckStatusOpen(true);
-            }}
-          >
-            ดูออเดอร์
-          </Button>
-        </div>
-      </div>
-
-      <div className="flex flex-1 flex-col max-h-[calc(100vh-175px)]">
-        <div
-          ref={scrollAreaRef}
-          className="flex h-full flex-col space-y-6 overflow-y-auto px-4 z-0 relative dark:bg-background"
-        >
-          {showTopLoading && (
-            <div
-              className="
-      absolute top-4 left-1/2 -translate-x-1/2 z-30
-      bg-white dark:bg-gray-800
-      text-xs text-muted-foreground text-center
-      py-2 px-4
-      rounded-lg shadow-md
-      w-fit
-    "
-            >
-              กำลังโหลดข้อความ...
-            </div>
-          )}
-
-          {combinedMessages.map((msg, index) => {
-            const isUser = msg.platform === "backoffice";
-
-            const avatarFallback =
-              msg.imageUrl && !msg.imageUrl.includes("http")
-                ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                    msg.imageUrl
-                  )}`
-                : msg.imageUrl;
-
-            const formattedTime = dayjs(
-              msg.createdAt ? msg.createdAt : msg.timestamp
-            ).format("DD MMM YYYY, HH:mm");
-
-            return (
-              <div
-                key={`${msg.lineSubId}+${index}+${msg.sender}`}
-                className={`flex max-w-[75%] flex-col gap-1 ${
-                  isUser ? "ml-auto items-end" : "mr-auto items-start"
-                }`}
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <Avatar className="w-6 h-6">
-                    <img
-                      src={avatarFallback || "/avatar.png"}
-                      alt="avatar"
-                      className="rounded-full object-cover"
-                    />
-                    <AvatarFallback>
-                      {(msg.sender || msg.recipient || "U")[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-xs text-muted-foreground font-medium">
-                    {msg.sender || msg.recipient || "Anonymous"}
-                  </span>
-                </div>
-
-                {msg.messageType === "text" ? (
-                  <div
-                    className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
-                      isUser
-                        ? "bg-blue-500 text-white"
-                        : "bg-muted text-primary"
-                    }`}
-                  >
-                    {msg.message}
-                  </div>
-                ) : (
-                  <div
-                    onClick={() => setPreviewUrl(msg.message)}
-                    className="cursor-pointer"
-                  >
-                    <GlobalImage src={msg.message} />
-                  </div>
-                )}
-
-                <span className="text-[10px] text-muted-foreground mt-1">
-                  {formattedTime}
-                </span>
-              </div>
-            );
-          })}
-          <div ref={bottomRef} />
-          {buttonScrollToBottom && (
-            <button
-              onClick={scrollToBottom}
-              className="
-                    sticky bottom-5 left-1/2 -translate-x-1/2 z-20
-                    bg-white dark:bg-gray-800
-                    text-xs text-muted-foreground text-center
-                    py-2 px-4
-                    rounded-full shadow-lg
-                    w-fit cursor-pointer
-                    hover:bg-gray-100 dark:hover:bg-gray-700
-                    transition-colors duration-200
-                "
-            >
-              ดูข้อความล่าสุด
-            </button>
-          )}
-        </div>
-        <ChatInput selectedRoom={selectedRoom} />
-      </div>
-
-      {/* <ChecklistDialog
-        open={isCheckStatusOpen}
-        onOpenChange={setCheckStatusOpen}
-        checklist={checklistData}
-        data={customerData}
-      /> */}
-
-      <OrderViewModal
-        open={isCheckStatusOpen}
-        onOpenChange={setCheckStatusOpen}
+    <div className="flex flex-col h-full bg-white dark:bg-background">
+      <MessageHeader
+        chatRoomDetail={selectedRoom}
+        total={messagesData?.pages[0]?.meta?.total ?? 0}
+        onSearchClick={handleSearchClick}
       />
 
-      <AIMessageView open={AIOpen} onOpenChange={setAIOpen} />
+      <MessageBody
+        api={api}
+        ref={scrollAreaRef}
+        messageRefs={messageRefs}
+        showTopLoading={showTopLoading}
+        combinedMessages={combinedMessages}
+        bottomRef={bottomRef}
+        audioRef={audioRef}
+        playing={playing}
+        setPlaying={setPlaying}
+        currentTime={currentTime}
+        setCurrentTime={setCurrentTime}
+        duration={duration}
+        setDuration={setDuration}
+        togglePlay={togglePlay}
+        setPreviewUrl={setPreviewUrl}
+        buttonScrollToBottom={buttonScrollToBottom}
+        scrollToBottom={scrollToBottom}
+        onReply={onReply}
+        replyRefMessage={replyRefMessage}
+        setReplyRefMessage={setReplyRefMessage}
+        copyMessage={copyMessage}
+        lastMessage={lastMessage}
+        subId={subId}
+        selectedRoom={selectedRoom}
+        customer={customer}
+        typingUsers={typingUsers}
+      />
 
       {previewUrl && (
-        <div
-          className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4 h-full"
-          role="dialog"
-          aria-modal="true"
-          onClick={() => setPreviewUrl("")}
-        >
-          <div
-            className="relative bg-transparent rounded-lg overflow-hidden w-full h-full"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className="absolute top-10 right-8 bg-white/90 rounded-full p-1 border"
-              onClick={() => setPreviewUrl("")}
-              aria-label="ปิด"
-            >
-              <Icons.X className="w-5 h-5" />
-            </button>
-            <GlobalImage
-              src={previewUrl}
-              alt="preview"
-              className="w-full h-full object-contain"
-              width={1200}
-              height={800}
-            />
-          </div>
-        </div>
+        <MessagePreviewImage
+          previewUrl={previewUrl}
+          setPreviewUrl={setPreviewUrl}
+        />
       )}
     </div>
   );
-}
+};
+
+export default ChatMessages;

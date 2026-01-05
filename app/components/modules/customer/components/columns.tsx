@@ -1,12 +1,12 @@
 // features/customer/table/useCustomerColumns.tsx
 "use client";
 
-import { PenLine, Trash } from "lucide-react";
+import { Eye, PenLine, Trash } from "lucide-react";
 
 import { toast } from "sonner";
 
 // import rome from "@/public/images/rome.png";
-import rome from "/assets/images/rome.png";
+import rome from "/assets/images/rome.svg";
 
 import lineLogo from "/assets/images/logoChannel/LINE_logo.webp";
 import facebookLogo from "/assets/images/logoChannel/Facebook_Logo.png";
@@ -19,7 +19,7 @@ import type { CustomerType } from "../types/customer";
 import type { ColumnDef } from "@tanstack/react-table";
 import {
   formatDateAndTime,
-  formatDateBirthDay,
+  formatDateFull,
   formatPhoneNumber,
 } from "~/components/shared/global-format";
 import { StarRating } from "~/components/shared/StarRating";
@@ -36,7 +36,7 @@ const fullName = (c: CustomerType) =>
   [c.profile?.firstName, c.profile?.lastName].filter(Boolean).join(" ") ||
   "-";
 
-const channelMap: Record<string, { label: string; icon: any }> = {
+export const channelMap: Record<string, { label: string; icon: any }> = {
   backoffice: { label: "Backoffice", icon: rome },
   line: { label: "LINE", icon: lineLogo },
   facebook: { label: "Facebook", icon: facebookLogo },
@@ -93,24 +93,6 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
 
     // Name (clickable)
     {
-      accessorKey: "profile.name",
-      id: "profile.name",
-      header: "ชื่อ",
-      enableSorting: true,
-      cell: ({ row }) => {
-        // const id = row.original.id;
-        const name = fullName(row.original);
-        return (
-          <Link to={`/customer/${row.original.id}`}>
-            <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline">
-              {name}
-            </span>
-          </Link>
-        );
-      },
-    },
-
-    {
       accessorKey: "profile",
       header: "ชื่อจริงลูกค้า",
       cell: (info) => {
@@ -126,13 +108,29 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
 
         return (
           <Link to={`/customer/${info.row.original.id}`}>
-            <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline">
+            <span className="text-muted-foreground hover:text-blue-400 hover:underline">
               {fullName || "-"}
             </span>
           </Link>
         );
       },
     },
+    {
+      accessorKey: "name",
+      id: "name",
+      header: "ชื่อ Line",
+      enableSorting: true,
+      cell: ({ row }) => {
+        // const name = fullName(row.original);
+        const name = row.original.name;
+        return (
+          <span className="text-blue-400 hover:text-blue-300 hover:underline">
+            <Link to={`/customer/${row.original.id}`}>{name || "-"}</Link>
+          </span>
+        );
+      },
+    },
+
     // Active (boolean)
     {
       accessorKey: "active",
@@ -151,7 +149,7 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
     // Codes
     {
       accessorKey: "customerCode",
-      header: "Code",
+      header: "โค้ด",
       enableSorting: true,
       cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
     },
@@ -172,7 +170,7 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
     },
     {
       accessorKey: "customerPlatform",
-      header: "Channel",
+      header: "ชื่อช่องทาง",
       enableSorting: true,
       cell: (info) => {
         const url = info.getValue() as string;
@@ -219,22 +217,22 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
     // Tags (badges)
     {
       accessorKey: "tags",
-      header: "Tags",
+      header: "แท็ก",
       minSize: 300,
       enableSorting: false,
       cell: (info) => {
         const tags = (info.getValue() as { name: string }[]) ?? [];
         if (!tags.length) return <span>ไม่มีข้อมูล</span>;
-        const maxShow = 3;
+        const maxShow = 2;
         return (
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5 w-30">
             {tags.slice(0, maxShow).map((t) => (
               <GlobalTagsBadge key={t.name} value={t.name} />
             ))}
 
             {tags.length > maxShow && (
               <span
-                className="flex items-center justify-center rounded-xl border border-gray-300
+                className="flex items-center justify-center w-full rounded-xl border border-gray-300
                      px-3 py-1 text-sm font-medium bg-gray-100 text-gray-700"
               >
                 +{tags.length - maxShow}
@@ -279,24 +277,9 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
       enableSorting: false,
       cell: (info) => {
         const birthDate = info.getValue() as string | null | undefined;
-        return <span>{birthDate ? formatDateBirthDay(birthDate) : "-"}</span>;
+        return <span>{birthDate ? formatDateFull(birthDate) : "-"}</span>;
       },
     },
-    {
-      accessorKey: "createdBy",
-      header: "ผู้สร้าง",
-      enableSorting: true,
-      cell: (info) => {
-        const tranData = info.getValue() as string;
-        const displayText =
-          tranData === "auto generated by line oa"
-            ? "สร้างโดย Line OA"
-            : tranData || "-";
-
-        return <span>{displayText}</span>;
-      },
-    },
-
     {
       accessorKey: "createdAt",
       header: "วันที่สร้าง",
@@ -306,20 +289,26 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
       ),
     },
     {
-      accessorKey: "updatedBy",
-      header: "ผู้ที่แก้ไข",
+      accessorKey: "createdBy",
+      header: "ผู้สร้าง",
+      enableSorting: true,
       cell: (info) => {
-        const id = info.row.original.updatedById;
-        const name = (info.getValue() as string) || "-";
+        const tranData = info.getValue() as string;
+        const id = info.row.original.createdById;
+        const isLineOA = tranData === "auto generated by line oa";
+        const displayText = isLineOA ? "สร้างโดย Line OA" : tranData || "-";
 
-        return id ? (
-          <Link to={`/organization/user/${id}`}>
-            <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline">
-              {name}
-            </span>
+        if (isLineOA || !id) {
+          return <span className="text-muted-foreground">{displayText}</span>;
+        }
+
+        return (
+          <Link
+            to={`/users/${id}`}
+            className="text-muted-foreground hover:text-blue-400 hover:underline"
+          >
+            {displayText}
           </Link>
-        ) : (
-          <span className="text-sm text-muted-foreground">{name}</span>
         );
       },
     },
@@ -332,6 +321,26 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
         <span>{formatDateAndTime(info.getValue() as string)}</span>
       ),
     },
+
+    {
+      accessorKey: "updatedBy",
+      header: "ผู้ที่แก้ไข",
+      cell: (info) => {
+        const id = info.row.original.updatedById;
+        const name = (info.getValue() as string) || "-";
+
+        return id ? (
+          <Link to={`/user/${id}`}>
+            <span className="text-muted-foreground hover:text-blue-400 hover:underline">
+              {name}
+            </span>
+          </Link>
+        ) : (
+          <span className=" text-muted-foreground text-center">{name}</span>
+        );
+      },
+    },
+
     // Actions
     {
       id: "actions",
@@ -344,7 +353,7 @@ export const useCustomerColumns = (): ColumnDef<CustomerType>[] => {
               className="h-9 w-9 p-0 bg-[#737373] hover:bg-[#5E5E5E]"
               aria-label="แก้ไข"
             >
-              <PenLine className="w-4 h-4 text-white" />
+              <Eye className="w-4 h-4 text-white" />
             </Button>
           </Link>
           <Button

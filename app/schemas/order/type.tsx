@@ -14,6 +14,7 @@ import {
 import type { OrderFormValues } from "./order";
 import type { UseFormReturn } from "react-hook-form";
 import type { ReactNode } from "react";
+import type { FilterField } from "~/types/global";
 
 export type Customer = {
   id: string;
@@ -49,6 +50,7 @@ export type OrderType = {
   customer: Customer;
   orderDetails?: {
     products: OrderItem[];
+    createdAt: string;
   };
 };
 
@@ -119,6 +121,7 @@ export interface ProductColumn {
   costPrice: number;
   active: boolean;
   updatedById: string;
+  createdById: string;
 }
 
 export interface OrderFormProps {
@@ -133,29 +136,38 @@ export interface OrderFormProps {
   totalPrice?: number;
   isLoading?: boolean;
   totalWht?: number;
+  isEdit?: boolean;
   quantities?: ProductColumn[];
+  products?: ProductColumn[];
+  viewMode?: boolean;
+  productsSelected?: ProductColumn[];
+  setProductsSelected?: any;
+  onChangeProducts?: (items: ProductColumn[]) => void;
 }
 
-export type FilterKind =
-  | "text"
-  | "select"
-  | "boolean"
-  | "numberRange"
-  | "dateRange";
-
-export type FilterField = {
-  id: string;
-  path?: string;
-  label: ReactNode | string;
-  kind: FilterKind;
-  options?: { label: string; value: string | number | boolean }[];
-  placeholder?: string;
-  showOnlyMobile?: boolean;
-};
-
 export const OrderFilterFields: FilterField[] = [
-  { id: "docName", label: "ชื่อออเดอร์", kind: "text" },
-  { id: "customer.name", label: "ชื่อลูกค้า", kind: "text" },
+  { id: "docNo", label: "เลขที่", kind: "text", showIn: "main" },
+  // { id: "docName", label: "ชื่อออเดอร์", kind: "text", showIn: "main" },
+  // { id: "name", label: "ชื่อลูกค้า", kind: "text", showIn: "main" },
+  { id: "name", label: "ชื่อลูกค้า", kind: "text", showIn: "main" },
+  // { id: "profit", label: "กำไรโดยประมาณ", kind: "number", showIn: "main" },
+
+  {
+    id: "createdAt",
+    label: "วันที่ออกเอกสาร",
+    kind: "date",
+    showIn: "main",
+  },
+  // {
+  //   id: "docStatus",
+  //   label: "สถานะออเดอร์",
+  //   kind: "select",
+  //   showIn: "main",
+  //   options: [
+  //     { label: "", value: "" },
+  //     { label: "", value: "" },
+  //   ],
+  // },
   {
     id: "status",
     label: "สถานะ",

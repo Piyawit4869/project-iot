@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import GlobalButton from "~/components/shared/global-button";
 import { Form } from "~/components/ui/form";
@@ -11,18 +9,13 @@ import dayjs from "dayjs";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 
-import { X } from "lucide-react";
+import { PenLine, Save, Trash2, X } from "lucide-react";
 
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
 import { ensureIds } from "~/components/shared/withId";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
-import {
-  useDeleteUsers,
-  useGetAllDepartments,
-  useGetUsers,
-  useUpdateUsers,
-} from "~/api/client/user";
-import { useNavigate, useParams } from "react-router";
+import { useDeleteUsers, useGetUsers, useUpdateUsers } from "~/api/client/user";
+import { useNavigate, useParams, useRouteLoaderData } from "react-router";
 import { UsersFormSchema, type UsersFormValues } from "~/schemas/users/user";
 import { TabControl } from "~/components/shared/tab-control";
 import { UserSocalmedias } from "../components/formSocalmedia";
@@ -33,6 +26,9 @@ import { UserCompensation } from "../components/formCompensation";
 import { UserProfileEdit } from "../components/formInformationEdit";
 import { UserDocuments } from "../components/formDocuments";
 import { SingleUsersView } from "./single-users-view";
+import { useGetAllRoles } from "~/api/client/role/useGetRole";
+import { getUserActionByPermission } from "~/utils/permission";
+import { PermissionBaseAction } from "~/types/roles/permission";
 
 dayjs.locale("th");
 
@@ -45,11 +41,17 @@ const isSameEmail = (a?: string | null, b?: string | null) => {
 export default function SingleUsers() {
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
+  const { permission } = useRouteLoaderData("root");
 
-  const { data, isLoading } = useGetUsers(params.id ?? "");
+  const {
+    data,
+    isLoading,
+    refetch: refetchUser,
+    isFetching: isUserFetching,
+  } = useGetUsers(params.id ?? "");
   const { mutate: DeleteUsers } = useDeleteUsers();
 
-  const { data: departments } = useGetAllDepartments(true);
+  const { data: roles } = useGetAllRoles();
   const [isEdit, setIsEdit] = React.useState(false);
   const displayName =
     `${data?.profile?.firstName}` + " " + `${data?.profile?.lastName}`;
@@ -111,6 +113,7 @@ export default function SingleUsers() {
       lastName: raw?.profile?.lastName ?? "",
       firstNameTh: raw?.profile?.firstNameTh ?? "",
       lastNameTh: raw?.profile?.lastNameTh ?? "",
+      emId: raw?.profile?.emId ?? "",
       gender: raw?.profile?.gender ?? "",
       birthDate: raw?.profile?.birthDate ?? null,
       phone: raw?.profile?.phone ?? "",
@@ -221,6 +224,8 @@ export default function SingleUsers() {
         updatedAt: d.updatedAt ?? undefined,
       })),
     },
+    organizationRoleId:
+      raw?.organizationRoles?.[0]?.organizationRoleId ?? undefined,
     userDepartments: raw?.departments ?? [],
     permissions: raw?.permissions ?? [],
   });
@@ -258,6 +263,8 @@ export default function SingleUsers() {
         mutate(cleaned as UsersFormValues, {
           onSuccess: () => {
             toast.success("แก้ไขพนักงานเรียบร้อยแล้ว!", { id: toastId });
+            setIsEdit(false);
+            refetchUser?.();
           },
           onError: () => {
             toast.error("เกิดข้อผิดพลาดขณะแก้ไขพนักงาน", { id: toastId });
@@ -292,7 +299,9 @@ export default function SingleUsers() {
     if (data) form.reset(form.getValues(), { keepDirty: false });
     setIsEdit(false);
   };
-
+  const handleBack = React.useCallback(() => {
+    navigate(-1);
+  }, [navigate]);
   return (
     <div className="flex flex-col space-y-3 p-8">
       <TabControl
@@ -305,56 +314,71 @@ export default function SingleUsers() {
                 data?.profile?.lastName ?? ""
               }`
         }
-        backpath="/users"
+        backpath={handleBack}
         buttons={[
           isEdit ? (
-            <div className="w-full flex flex-row pl-10" key="edit-actions">
+            <div className="w-full flex flex-row " key="edit-actions">
               <GlobalButton
-                label={
-                  <>
-                    <X /> ยกเลิก
-                  </>
-                }
+                label={"ยกเลิก"}
                 type="button"
-                className="mr-4 max-w-[90px] bg-[#EF4343] text-white hover:bg-[#d73232]"
+                className="mr-4 max-w-[85px] bg-[#EF4343] text-white hover:bg-[#d73232]"
                 onClick={handleCancel}
                 variant="secondary"
+                icon={<X />}
               />
               <GlobalButton
                 label="บันทึก"
                 key="save-btn"
-                type="button"
+                type="submit"
+                form="users"
                 loading={isSubmitting}
-                className="max-w-[90px] mr-5"
-                onClick={form.handleSubmit(onSubmit)}
+                className="max-w-[90px] mr-2 "
+                onClick={form.handleSubmit(onSubmit, (errors) => {
+                  console.log("errors", errors);
+                })}
+                icon={<Save />}
               />
             </div>
           ) : (
-            <div className="w-full flex flex-row pl-10">
-              <GlobalButton
-                label="แก้ไข"
-                key="update-button"
-                type="button"
-                className="mr-4 max-w-[90px]"
-                onClick={() => setIsEdit(true)}
-              />
-              <GlobalButton
-                label="ลบ"
-                variant="outline"
-                key="delete-btn"
-                className="max-w-[90px] mr-15"
-                onClick={() => params.id && handleDelete(params.id)}
-              />
+            <div className="w-full flex flex-row ">
+              {getUserActionByPermission(
+                permission,
+                "user",
+                PermissionBaseAction.DELETE
+              ) && (
+                <GlobalButton
+                  label="ลบ"
+                  variant="outline"
+                  key="delete-btn"
+                  className="mr-4 max-w-[85px]"
+                  icon={<Trash2 />}
+                  onClick={() => params.id && handleDelete(params.id)}
+                />
+              )}
+              {getUserActionByPermission(
+                permission,
+                "user",
+                PermissionBaseAction.UPDATE
+              ) && (
+                <GlobalButton
+                  label="แก้ไข"
+                  key="update-button"
+                  type="button"
+                  className="max-w-[90px] mr-5 "
+                  icon={<PenLine />}
+                  onClick={() => setIsEdit(true)}
+                />
+              )}
             </div>
           ),
         ]}
       />
-      {isLoading ? (
+      {isLoading || isUserFetching ? (
         <div className="mt-2 flex flex-col md:flex-row gap-5">
-          <div className="md:w-[35%] h-[50%] w-full">
+          <div className="md:w-[45%] h-[50%] w-full">
             <SkeletonLoading className="w-full h-[calc(100vh-200px)]" />
           </div>
-          <div className="md:w-[65%] w-full flex flex-col gap-5">
+          <div className="md:w-[55%] w-full flex flex-col gap-5">
             <SkeletonLoading className="w-full h-1/6" />
             <SkeletonLoading className="w-full h-1/6" />
             <SkeletonLoading className="w-full h-1/6" />
@@ -379,38 +403,38 @@ export default function SingleUsers() {
                 })}
               >
                 <div className="mt-2 flex flex-col md:flex-row gap-5">
-                  <div className="md:w-[35%] h-[50%] w-full">
+                  <div className="md:w-[45%] h-[50%] w-full flex flex-col gap-5">
                     <Card className=" h-full">
                       <UserProfileEdit
                         form={form}
                         data={data}
-                        departments={departments}
+                        // departments={departments}
+                        roles={roles}
                       />
+                    </Card>
+                    <Card className="p-2 ">
+                      <UserSkills form={form} data={data} />
                     </Card>
                   </div>
 
-                  <div className="md:w-[65%] w-full flex flex-col gap-5">
-                    <Card className="p-2">
+                  <div className="md:w-[55%] w-full flex flex-col gap-5">
+                    <Card className="p-2 ">
                       <UserCompensation form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2">
-                      <UserSkills form={form} data={data} />
-                    </Card>
-
-                    <Card className="p-2">
+                    <Card className="p-2 ">
                       <UserWorkExperience form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2">
+                    <Card className="p-2 ">
                       <UserStudy form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2">
+                    <Card className="p-2 ">
                       <UserSocalmedias form={form} data={data} />
                     </Card>
 
-                    <Card className="p-2">
+                    <Card className="p-2 ">
                       <UserDocuments form={form} data={data} />
                     </Card>
                   </div>

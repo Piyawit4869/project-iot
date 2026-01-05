@@ -3,14 +3,16 @@ import React from "react";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { useFieldArray, useWatch, type UseFormReturn } from "react-hook-form";
 
-import { PlusIcon } from "lucide-react";
+import { PenLine, PlusIcon, Trash2 } from "lucide-react";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 import { DocumentModal } from "./formDocumentsModal";
 
-import { CardContent } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import type { UsersFormValues } from "~/schemas/users/user";
+import GlobalButton from "~/components/shared/global-button";
+import { fileTypeMap } from "~/initData/user-initData";
 // import dayjs from "dayjs";
 
 export interface UserFormProfileProps {
@@ -144,7 +146,7 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
         !v?.verified &&
         !v?.remark;
 
-      if (blank) removeDm(editingIndex);
+      removeDm(editingIndex);
     }
     setOpen(false);
     setEditingIndex(null);
@@ -166,11 +168,11 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
           const tagsArr = Array.isArray(current?.tags)
             ? current.tags
             : current?.tags
-            ? String(current.tags)
-                .split(",")
-                .map((s: string) => s.trim())
-                .filter(Boolean)
-            : [];
+              ? String(current.tags)
+                  .split(",")
+                  .map((s: string) => s.trim())
+                  .filter(Boolean)
+              : [];
 
           updateDm(editingIndex, {
             type: current?.type ?? "",
@@ -238,8 +240,8 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
     const v = dmValues?.[idx] as any;
     const type = v?.type && String(v.type).trim();
     const fileName = v?.fileName && String(v.fileName).trim();
-    if (fileName) return `ไฟล์: ${fileName}`;
-    if (type) return `เอกสาร: ${type}`;
+    if (fileName) return `ไฟล์ : ${fileName}`;
+    if (type) return `เอกสาร : ${type}`;
     return `เอกสารแนบ #${idx + 1}`;
   };
 
@@ -256,7 +258,10 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
     //     : "";
 
     const details = [
-      { label: "ประเภท", value: v?.type ?? "-" },
+      {
+        label: "ประเภท",
+        value: fileTypeMap[v.type] ?? "-",
+      },
       { label: "ประเภทไฟล์", value: v?.mimeType ?? "-" },
       // { label: "ขนาดไฟล์", value: sizeTxt },
       // { label: "ผู้ให้บริการ", value: v?.storageProvider ?? "-" },
@@ -292,14 +297,14 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
         )}
 
         {details.length > 0 && (
-          <div className="space-y-1 text-xs text-muted-foreground">
+          <div className="space-y-1 text-sm text-muted-foreground">
             {details.map((d) => (
               <p
                 key={d.label}
                 className={d.label === "หมายเหตุ" ? "break-words" : "truncate"}
                 title={safeString(d.value)}
               >
-                <span className="font-medium">{d.label}:</span>{" "}
+                <span className="font-medium">{d.label} : </span>{" "}
                 <span>{safeString(d.value)}</span>
               </p>
             ))}
@@ -310,7 +315,7 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
   };
 
   return (
-    <>
+    <div className="py-0 pb-5">
       {loading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
@@ -322,7 +327,7 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
         <CardContent className="space-y-4">
           <div className="lg:col-span-2 flex flex-col gap-3 mt-5 ">
             <div className="flex items-center justify-between">
-              <h1 className="font-bold">เอกสารแนบ</h1>
+              <h1 className="font-bold text-base">เอกสารแนบ</h1>
               <Button
                 type="button"
                 size="sm"
@@ -340,7 +345,7 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
             ) : (
               <div className="grid grid-cols-1 gap-5">
                 {dmFields.map((row, index) => (
-                  <div key={row.id} className="rounded-xl border p-4 space-y-4">
+                  <div key={row.id}>
                     <div className="flex items-center justify-between">
                       <div className="min-w-0">
                         <h4 className="font-semibold truncate">
@@ -350,22 +355,27 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
                       </div>
 
                       <div className="flex gap-2 flex-shrink-0">
-                        <Button
-                          type="button"
-                          variant="secondary"
-                          aria-label={`แก้ไขเอกสารแนบ #${index + 1}`}
-                          onClick={() => handleOpenEdit(index)}
-                        >
-                          แก้ไข
-                        </Button>
-                        <Button
+                        <GlobalButton
+                          label="แก้ไข"
                           type="button"
                           variant="outline"
+                          width="80px"
+                          aria-label={`แก้ไขเอกสารแนบ #${index + 1}`}
+                          onClick={() => handleOpenEdit(index)}
+                          className="  transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
+                          icon={<PenLine size={20} />}
+                        />
+
+                        <GlobalButton
+                          label="ลบรายการนี้"
+                          type="button"
+                          variant="secondary"
+                          width="120px"
                           aria-label={`ลบเอกสารแนบ #${index + 1}`}
                           onClick={() => handleDelete(index)}
-                        >
-                          ลบรายการนี้
-                        </Button>
+                          className="  transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
+                          icon={<Trash2 size={20} />}
+                        />
                       </div>
                     </div>
                   </div>
@@ -390,6 +400,6 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
           onSubmit={handleSubmitFromModal}
         />
       )}
-    </>
+    </div>
   );
 };

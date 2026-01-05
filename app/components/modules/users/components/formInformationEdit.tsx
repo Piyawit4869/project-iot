@@ -44,6 +44,13 @@ import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { getRequiredPaths } from "~/utils/form-adapter";
 import { nationalityMap, religionMap } from "~/initData/user-initData";
+import ChangePassword from "~/components/shared/change-password";
+import { OrganizationSelector } from "./formSelectOrganization";
+import { RadioCardGroup } from "~/components/shared/global-radio-card";
+import { gender, prefix } from "~/initData/customer-initData";
+import { InputNumberBox } from "~/components/shared/input-number-box";
+import { useCheckUserEmailDuplicate } from "~/api/client/user";
+import type { RangeDate } from "./formInformationCreate";
 
 type OptionItem = { id: string; name: string; active?: boolean };
 
@@ -51,26 +58,28 @@ export interface UserFormProfileProps {
   form: UseFormReturn<UsersFormValues>;
   data?: Partial<UsersFormValues>;
   loading?: boolean;
-  departments: any;
+  roles: any;
 }
 
 export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
   form,
-  departments,
+  roles,
   loading = false,
 }) => {
   const checkFields = new Set(getRequiredPaths(UsersFormSchema as any));
   const [debouncedStatusSearch] = useState<string>("");
   const [search, setSearch] = React.useState("");
   const [openSub, setOpenSub] = React.useState(false);
+  const [rangeDate, setRangeDate] = React.useState<RangeDate>({});
 
-  const userDepartments = Array.isArray(departments) ? departments : [];
+  const userRoles = Array.isArray(roles) ? roles : [];
 
-  const filtered = userDepartments.filter((item: any) => {
+  const filtered = userRoles.filter((item: any) => {
     const a = item.name?.toLowerCase().includes(search.toLowerCase());
 
     return a;
   });
+  const { mutateAsync: checkEmail } = useCheckUserEmailDuplicate();
 
   const statusOptions = [
     { label: "พนักงานงานใหม่", value: "new_user" },
@@ -79,6 +88,32 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
     { label: "พนักงานที่ถูกระงับการใช้งาน", value: "suspended" },
     { label: "พนักงานที่ลบบัญชีออกจากระบบ", value: "deleted" },
   ] as const;
+  const currentEmail = React.useRef<string | null>(
+    form.getValues("email") ?? null
+  );
+
+  const handleBlur = async () => {
+    const email = form.getValues("email");
+    if (!email) return;
+    if (email === currentEmail.current) {
+      form.clearErrors("email");
+      return;
+    }
+
+    try {
+      const res = await checkEmail({ email });
+      if (res) {
+        form.setError("email", {
+          type: "manual",
+          message: "อีเมลนี้ถูกใช้งานแล้ว",
+        });
+      } else {
+        form.clearErrors("email");
+      }
+    } catch (error) {
+      console.error("email check failed", error);
+    }
+  };
 
   const filteredStatusOptions = statusOptions.filter((o) =>
     o.label.toLowerCase().includes(debouncedStatusSearch.toLowerCase())
@@ -146,14 +181,6 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                   checkFields={checkFields}
                   placeholder="กรอกชื่อพนักงาน"
                 /> */}
-                <GlobalFormField
-                  control={form.control}
-                  name="email"
-                  label="อีเมล"
-                  type="input"
-                  checkFields={checkFields}
-                  placeholder="กรอกอีเมล"
-                />
                 <FormField
                   control={form.control}
                   name="status"
@@ -184,178 +211,168 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
+                <GlobalFormField
+                  control={form.control}
+                  name="userName"
+                  label="User Name"
+                  type="input"
+                  checkFields={checkFields}
+                  placeholder="กรอก User Name ของพนักงาน"
+                />
+                <FormField
+                  control={form.control}
+                  name="profile.emId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>รหัสพนักงาน</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="กรอกรหัสพนักงาน"
+                          {...field}
+                          value={field.value ?? undefined}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="col-span-2">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <RequiredLabel required>อีเมล</RequiredLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="กรอกอีเมล"
+                            {...field}
+                            value={field.value ?? undefined}
+                            onBlur={handleBlur}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="col-span-2">
+                  <ChangePassword title="เปลี่ยนรหัสผ่าน" />
+                </div>
               </div>
               <div className="md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
-                  name="userDepartments"
+                  name="organizationRoleId"
                   render={({ field }) => {
-                    const selected = Array.isArray(field.value)
-                      ? (field.value as {
-                          id: string;
-                          name: string;
-                          active: boolean;
-                          department: any;
-                        }[])
-                      : [];
-
-                    const toRef = (item: any) => ({
-                      id: item.id,
-                      name: item.name,
-                      active: item.active ?? true,
-                      department: item,
-                    });
-
-                    const selectedIds = new Set(selected.map((s) => s.id));
-
-                    const toggle = (item: OptionItem) => {
-                      const exists = selectedIds.has(item.id);
-                      const next = exists
-                        ? selected.filter((s) => s.id !== item.id)
-                        : [...selected, toRef(item)];
-                      field.onChange(next);
-                      field.onBlur?.();
-                    };
-
-                    const removeId = (id: string) => {
-                      const next = selected.filter((s) => s.id !== id);
-                      field.onChange(next);
-                      field.onBlur?.();
-                    };
-
-                    const findDep = (id?: string) =>
-                      (userDepartments ?? []).find((d) => d.id === id);
+                    const selectedId = field.value as string | undefined;
+                    const selectedRole = userRoles.find(
+                      (r: any) => r.id === selectedId
+                    );
 
                     return (
                       <FormItem>
-                        <RequiredLabel required>แผนก</RequiredLabel>
-                        <div className="flex flex-wrap gap-2">
-                          {selected.map((s) => {
-                            const dep = findDep(s.id);
-                            const depId = s.id;
-                            const depName =
-                              dep?.department?.name ??
-                              s.department?.name ??
-                              "-";
-                            return (
-                              <div
-                                key={depId}
-                                className="flex items-center gap-2 border-1 px-2 py-1.5 rounded-full"
-                              >
-                                <GlobalImage
-                                  src={`https://api.dicebear.com/9.x/initials/svg?seed=${depName}`}
-                                  alt={depName}
-                                  className="w-6 h-6 rounded-full"
-                                />
-                                <span>{depName}</span>
-                                <button
-                                  type="button"
-                                  onClick={() => removeId(depId)}
-                                  className="ml-1 text-gray-500 hover:text-red-500"
-                                >
-                                  <X className="h-3 w-3" />
-                                </button>
-                              </div>
-                            );
-                          })}
+                        <RequiredLabel required>ตำแหน่ง</RequiredLabel>
 
-                          <Popover
-                            open={openSub}
-                            onOpenChange={(v) => {
-                              setOpenSub(v);
-                              if (!v) field.onBlur?.();
-                            }}
-                          >
-                            <PopoverTrigger asChild>
-                              <Button
+                        <div className="flex flex-wrap gap-2">
+                          {selectedRole && (
+                            <div className="flex items-center gap-2 px-2 py-1.5 rounded-full border">
+                              <GlobalImage
+                                src={`https://api.dicebear.com/9.x/initials/svg?seed=${selectedRole.name}`}
+                                alt={selectedRole.name}
+                                className="w-6 h-6 rounded-full"
+                              />
+                              <span className="text-sm">
+                                {selectedRole.name}
+                              </span>
+                              <button
                                 type="button"
-                                variant="outline"
-                                className="px-4 py-2 rounded-full"
-                                disabled={!!selected.length}
+                                onClick={() => field.onChange(null)}
+                                className="ml-1 text-muted-foreground hover:text-red-500"
                               >
-                                เพิ่มแผนก +
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-64">
-                              <Command>
-                                <CommandInput
-                                  placeholder="ค้นหา..."
-                                  value={search}
-                                  onValueChange={setSearch}
-                                />
-                                <CommandEmpty>ไม่มีข้อมูล</CommandEmpty>
-                                <CommandList>
-                                  {(filtered ?? []).map((item: OptionItem) => {
-                                    const checked = selectedIds.has(item.id);
-                                    return (
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          )}
+
+                          {/* ปุ่มเพิ่ม (แสดงเฉพาะตอนยังไม่มีค่า) */}
+                          {!selectedRole && (
+                            <Popover
+                              open={openSub}
+                              onOpenChange={(v) => {
+                                setOpenSub(v);
+                                if (!v) field.onBlur?.();
+                              }}
+                            >
+                              <PopoverTrigger asChild>
+                                <Button type="button" variant="outline">
+                                  เพิ่มตำแหน่ง +
+                                </Button>
+                              </PopoverTrigger>
+
+                              <PopoverContent className="w-64">
+                                <Command>
+                                  <CommandInput
+                                    placeholder="ค้นหา..."
+                                    value={search}
+                                    onValueChange={setSearch}
+                                  />
+                                  <CommandEmpty>ไม่มีข้อมูล</CommandEmpty>
+
+                                  <CommandList>
+                                    {filtered.map((item: OptionItem) => (
                                       <CommandItem
                                         key={item.id}
                                         onSelect={() => {
-                                          toggle(item);
+                                          field.onChange(item.id);
                                           setOpenSub(false);
                                         }}
                                       >
-                                        <Checkbox
-                                          checked={checked}
-                                          onCheckedChange={() => {
-                                            toggle(item);
-                                            setOpenSub(false);
-                                          }}
-                                          className="mr-2"
-                                        />
                                         {item.name}
-                                        {checked && (
+                                        {item.id === selectedId && (
                                           <Check className="ml-auto h-4 w-4" />
                                         )}
                                       </CommandItem>
-                                    );
-                                  })}
-                                </CommandList>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
+                                    ))}
+                                  </CommandList>
+                                </Command>
+                              </PopoverContent>
+                            </Popover>
+                          )}
                         </div>
+
                         <FormMessage />
                       </FormItem>
                     );
                   }}
                 />
               </div>
+              <div>
+                <OrganizationSelector form={form} roles={roles} isEdit={true} />
+              </div>
 
-              <h1 className="font-bold">ข้อมูลส่วนตัว</h1>
-              <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
+              <h1 className="font-bold mt-4">ข้อมูลส่วนตัว</h1>
+              <div className=" grid grid-cols-1 md:grid-cols-1 gap-5">
                 <FormField
                   control={form.control}
-                  name="profile.nickName"
+                  name="profile.prefix"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>ชื่อเล่น</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="กรอกชื่อเล่น"
-                          {...field}
-                          value={field.value ?? undefined}
-                        />
-                      </FormControl>
+                      <RequiredLabel>คำนำหน้า</RequiredLabel>
 
+                      <RadioCardGroup
+                        options={prefix}
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                        columns={3}
+                      />
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <GlobalFormField
-                  control={form.control}
-                  name="profile.prefix"
-                  label="คำนำหน้า"
-                  type="select"
-                  placeholder="นาย, นาง, นางสาว"
-                  checkFields={checkFields}
-                  selectOptions={[
-                    { label: "นาย", value: "mr" },
-                    { label: "นาง", value: "mrs" },
-                    { label: "นางสาว", value: "ms" },
-                  ]}
-                />
-
+              </div>
+              <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
                 <FormField
                   control={form.control}
                   name="profile.firstName"
@@ -443,19 +460,25 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 /> */}
-                <GlobalFormField
+                <FormField
                   control={form.control}
-                  name="profile.gender"
-                  label="เพศ"
-                  type="select"
-                  placeholder="ชาย / หญิง"
-                  checkFields={checkFields}
-                  selectOptions={[
-                    { label: "ชาย", value: "male" },
-                    { label: "หญิง", value: "female" },
-                    { label: "ไม่ระบุ", value: "not_specified" },
-                  ]}
+                  name="profile.nickName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ชื่อเล่น</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="กรอกชื่อเล่น"
+                          {...field}
+                          value={field.value ?? undefined}
+                        />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
+
                 <FormField
                   control={form.control}
                   name="profile.birthDate"
@@ -472,6 +495,42 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
+              </div>
+              <div className=" grid grid-cols-1 md:grid-cols-1 gap-5 mt-4">
+                <FormField
+                  control={form.control}
+                  name="profile.gender"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>เพศ</FormLabel>
+                      <FormControl>
+                        <RadioCardGroup
+                          options={gender}
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          columns={3}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* <GlobalFormField
+                  control={form.control}
+                  name="profile.gender"
+                  label="เพศ"
+                  type="select"
+                  placeholder="ชาย / หญิง"
+                  checkFields={checkFields}
+                  selectOptions={[
+                    { label: "ชาย", value: "male" },
+                    { label: "หญิง", value: "female" },
+                    { label: "ไม่ระบุ", value: "not_specified" },
+                  ]}
+                /> */}
+              </div>
+              <div className=" grid grid-cols-1 md:grid-cols-1 gap-5 mt-4">
                 <FormField
                   control={form.control}
                   name="profile.phone"
@@ -479,38 +538,28 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                     <FormItem>
                       <FormLabel>เบอร์โทรศัพท์</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="กรอกเบอร์โทร"
-                          {...field}
-                          value={field.value ?? undefined}
+                        <InputNumberBox
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          groups={[3, 3, 4]}
+                          format="-"
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+              </div>
+              <div className=" grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
                 <FormField
                   control={form.control}
                   name="profile.age"
                   render={({ field }) => (
                     <FormItem>
-                      <RequiredLabel required>อายุ</RequiredLabel>
-                      <FormControl>
-                        <Input placeholder="กรอกอายุ" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="profile.taxId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>เลขประจำตัวผู้เสียภาษี</FormLabel>
+                      <FormLabel>อายุ</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="กรอกเลขประจำตัวผู้เสียภาษี"
+                          placeholder="กรอกอายุ"
                           {...field}
                           value={field.value ?? undefined}
                         />
@@ -591,6 +640,7 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="profile.startWorkDate"
@@ -599,8 +649,14 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                       <FormLabel>วันที่เริ่มงาน</FormLabel>
                       <FormControl>
                         <DatePicker
-                          value={field.value ?? undefined}
-                          onChange={(val) => field.onChange(val ?? undefined)}
+                          value={field.value || ""}
+                          onChange={(val?: string) => {
+                            field.onChange(val);
+                            setRangeDate((prev) => ({
+                              ...prev,
+                              from: val ? new Date(val) : undefined,
+                            }));
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -615,8 +671,34 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                       <FormLabel>วันที่สิ้นสุดงาน</FormLabel>
                       <FormControl>
                         <DatePicker
-                          value={field.value ?? undefined}
-                          onChange={(val) => field.onChange(val ?? undefined)}
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          disabled={(d: string) => {
+                            if (!rangeDate.from) return false;
+                            const dd = new Date(d);
+                            dd.setHours(0, 0, 0, 0);
+                            return dd < rangeDate.from;
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className=" grid grid-cols-1 md:grid-cols-1 gap-5 mt-4">
+                <FormField
+                  control={form.control}
+                  name="profile.taxId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>เลขประจำตัวผู้เสียภาษี</FormLabel>
+                      <FormControl>
+                        <InputNumberBox
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          groups={[1, 4, 5, 2, 1]}
+                          format="-"
                         />
                       </FormControl>
                       <FormMessage />

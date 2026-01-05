@@ -11,15 +11,18 @@ export const fetchOrderPagination = async (params: {
   itemsPerPage?: number;
   status: string;
   limit?: number;
+  docName?: string;
+  docNo?: string;
+  name?: string;
+  profit?: number;
+  total?: number;
+  docStatus?: string;
 }) => {
   try {
-    const p = Object.assign({});
-    p.page = params.page;
-    p.limit = params.limit;
-    if (params.status && params.status !== "all") {
-      p.status = params.status;
+    const p = { ...params } as any;
+    if (params.status && params.status === "all") {
+      delete p.status;
     }
-
     const res = await ApiConfig.get(`/crud/orders/paginate`, {
       params: p,
     });
@@ -35,6 +38,8 @@ export const fetchOrderPaginationFilter = async (params: {
   itemsPerPage: number;
   limit?: number;
   customerId?: string;
+  sortField?: string;
+  sortingBy?: string;
 }) => {
   try {
     const res = await ApiConfig.get(`/crud/orders/paginate`, {

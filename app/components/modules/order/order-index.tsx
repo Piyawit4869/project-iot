@@ -1,7 +1,5 @@
-"use client";
-
 import { FileDown, FileUp, Plus } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useAllOrderSummary } from "~/api/client/order/useGetOrder";
 import { DataTable } from "~/components/shared/data-table";
 import GlobalButton from "~/components/shared/global-button";
@@ -13,20 +11,52 @@ import { cn } from "~/lib/utils";
 import { OrderFilterFields, TabIndexTableOrder } from "~/schemas/order/type";
 import { useOrderViewModel } from "./viewmodels/useOrderViewModel";
 import { useOrderColumns } from "./components/columns";
+import { useLocation, useNavigate, useSearchParams } from "react-router";
+import { pickSearchParams } from "../customer/utils/search-params";
 
 export default function OrdersIndex() {
   const {
     orderPagination,
     actions: { onNavigateCreate },
   } = useOrderViewModel();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [sp, setSearchParams] = useSearchParams();
   const [status, setStatus] = useState("all");
+  const [tableKey, setTableKey] = useState(0);
+
+  const filters = useMemo(
+    () =>
+      pickSearchParams(sp, [
+        "status",
+        "docName",
+        "docNo",
+        "name",
+        "profit",
+        "total",
+        "docStatus",
+      ]),
+    [sp]
+  );
+
   const { data: Order, isLoading } = useAllOrderSummary();
   const { isMobile } = useSidebar();
 
   const items = TabIndexTableOrder(Order);
 
-  const handleChangeTab = (values: any) => {
-    setStatus(values);
+  const clearAllFilters = useCallback(() => {
+    setSearchParams({});
+
+    navigate(location.pathname, { replace: true });
+  }, [setSearchParams, navigate, location.pathname]);
+
+  const handleChangeTab = (val: string) => {
+    const hadQuery = sp.toString().length > 0;
+    setStatus(val);
+    clearAllFilters();
+    if (hadQuery) {
+      setTableKey((k) => k + 1);
+    }
   };
 
   const columns = useOrderColumns();
@@ -73,18 +103,20 @@ export default function OrdersIndex() {
       />
 
       <DataTable
+        key={tableKey}
         queryFunction={({ pageIndex, pageSize }) =>
           paginate({
             pageIndex,
             pageSize,
             status: status === "all" ? "" : status,
             limit: pageSize,
-          })
+            ...filters,
+          } as any)
         }
         columns={columns}
         addOn={
           <Tabs
-            defaultValue="all"
+            value={status}
             onValueChange={handleChangeTab}
             className={cn("block", isMobile && "hidden")}
           >
@@ -93,7 +125,7 @@ export default function OrdersIndex() {
                 <TabsTrigger
                   key={c.label}
                   value={c.status}
-                  className="hover:bg-gray-200 relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
+                  className="hover:bg-border relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
                 >
                   {c.icon} {c.label} ({c.value})
                 </TabsTrigger>

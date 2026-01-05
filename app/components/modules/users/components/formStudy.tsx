@@ -1,15 +1,17 @@
 import React, { useEffect } from "react";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
-import { PlusIcon } from "lucide-react";
+import { PenLine, PlusIcon, Trash2 } from "lucide-react";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 
 import dayjs from "dayjs";
 import { useFieldArray, useWatch, type UseFormReturn } from "react-hook-form";
 import type { UsersFormValues } from "~/schemas/users/user";
-import { CardContent } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { UserStudyModal } from "./formStudyModal";
+import GlobalButton from "~/components/shared/global-button";
+import { Separator } from "~/components/ui/separator";
 
 export interface UserFormProfileProps {
   form: UseFormReturn<UsersFormValues>;
@@ -80,9 +82,7 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
         !v?.endDate &&
         !v?.isGraduated;
 
-      if (blank) {
-        removeEdu(editingIndex);
-      }
+      removeEdu(editingIndex);
     }
     setOpen(false);
     setEditingIndex(null);
@@ -162,10 +162,7 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
       degree: e.degree ?? "",
       major: e.major ?? "",
       faculty: e.faculty ?? "",
-      gpa:
-        e.gpa === null || e.gpa === undefined || e.gpa === ""
-          ? undefined
-          : Number(e.gpa),
+      gpa: String(e.gpa) ?? "",
       startDate: e.startDate ?? "",
       endDate: e.endDate ?? "",
       isGraduated: !!e.isGraduated,
@@ -186,7 +183,7 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
   }, [data, form, replaceEdu]);
 
   return (
-    <>
+    <div className="py-0 pb-5">
       {loading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
@@ -198,7 +195,7 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
         <CardContent className="space-y-4">
           <div className="lg:col-span-2 flex flex-col gap-3 mt-5">
             <div className="flex items-center justify-between">
-              <h1 className="font-bold">การศึกษา</h1>
+              <h1 className="font-bold  text-base">การศึกษา</h1>
               <Button
                 type="button"
                 size="sm"
@@ -231,8 +228,8 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
                           ev?.isGraduated
                             ? formatDate(ev?.endDate)
                             : ev?.endDate
-                            ? formatDate(ev?.endDate)
-                            : "ปัจจุบัน"
+                              ? formatDate(ev?.endDate)
+                              : "ปัจจุบัน"
                         }`
                       : "";
 
@@ -245,7 +242,7 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
                       value:
                         ev?.gpa !== undefined &&
                         ev?.gpa !== null &&
-                        String(ev.gpa) !== ""
+                        Number(ev.gpa) !== undefined
                           ? ev.gpa
                           : "-",
                     },
@@ -257,20 +254,17 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
                   ].filter((d) => d.value && String(d.value).trim().length > 0);
 
                   return (
-                    <div
-                      key={row.id}
-                      className="rounded-xl border p-4 space-y-4"
-                    >
+                    <div key={row.id} className="space-y-4">
                       <div className="flex items-center justify-between">
                         <div className="min-w-0">
                           <h4 className="font-semibold truncate">
                             {inst
-                              ? `การศึกษา: ${inst}`
+                              ? `การศึกษา : ${inst}`
                               : `ประวัติการศึกษา #${index + 1}`}
                           </h4>
 
                           {details.length > 0 && (
-                            <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+                            <div className="mt-2 space-y-1 text-sm text-muted-foreground">
                               {details.map((d) => (
                                 <p
                                   key={d.label}
@@ -281,7 +275,7 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
                                   }
                                 >
                                   <span className="font-medium">
-                                    {d.label}:
+                                    {d.label} :
                                   </span>{" "}
                                   <span>{String(d.value)}</span>
                                 </p>
@@ -291,24 +285,30 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
                         </div>
 
                         <div className="flex gap-2 flex-shrink-0">
-                          <Button
-                            type="button"
-                            variant="secondary"
-                            aria-label={`แก้ไขประวัติการศึกษา #${index + 1}`}
-                            onClick={() => handleOpenEdit(index)}
-                          >
-                            แก้ไข
-                          </Button>
-                          <Button
+                          <GlobalButton
+                            label="แก้ไข"
                             type="button"
                             variant="outline"
+                            width="80px"
+                            aria-label={`แก้ไขประวัติการศึกษา #${index + 1}`}
+                            onClick={() => handleOpenEdit(index)}
+                            className="  transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
+                            icon={<PenLine size={20} />}
+                          />
+
+                          <GlobalButton
+                            label="ลบรายการนี้"
+                            type="button"
+                            variant="secondary"
+                            width="120px"
                             aria-label={`ลบประวัติการศึกษา #${index + 1}`}
                             onClick={() => handleDelete(index)}
-                          >
-                            ลบรายการนี้
-                          </Button>
+                            className="  transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
+                            icon={<Trash2 size={20} />}
+                          />
                         </div>
                       </div>
+                      {eduFields.length > 1 && <Separator className="my-2" />}
                     </div>
                   );
                 })}
@@ -334,6 +334,6 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
           onSubmit={handleSubmitFromModal}
         />
       )}
-    </>
+    </div>
   );
 };

@@ -14,6 +14,7 @@ interface GlobalImageProps {
   width?: number;
   height?: number;
   className?: string;
+  notShowPreview?: boolean;
 }
 
 const GlobalImageComponent: React.FC<GlobalImageProps> = ({
@@ -22,11 +23,14 @@ const GlobalImageComponent: React.FC<GlobalImageProps> = ({
   width = 100,
   height = 100,
   className,
+  notShowPreview = false,
+  fallbackSrc,
 }) => {
   const [hasError, setHasError] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const imageSrc = !src || hasError ? (PlaceholderImage as any).src : src;
+  const imageSrc =
+    !src || hasError ? fallbackSrc || (PlaceholderImage as any).src : src;
 
   const ImagePreview: React.FC<{
     src: string;
@@ -69,7 +73,7 @@ const GlobalImageComponent: React.FC<GlobalImageProps> = ({
         height={height}
         className={cn(className, "cursor-pointer")}
         onError={() => setHasError(true)}
-        onClick={() => setOpen(true)}
+        onClick={() => !notShowPreview && setOpen(true)}
       />
 
       {open && (

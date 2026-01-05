@@ -7,20 +7,46 @@ import {
   type InventoryCreateDTO,
 } from "~/schemas/product/detail/InventorySchema";
 
-/**
- * เพิ่ม id?: string เข้าไปในฟอร์ม เพื่อพก id ในโหมดแก้ไข
- */
 type InventoryForm = InventoryCreateDTO & { id?: string };
 
 export const useFormInventorySetup = (slug: string) => {
   const fetch = useInventoryFetch(slug);
+
   const { inventory, isLoading } = fetch as {
     inventory?: {
       id?: string;
-      active?: boolean;
       name?: string;
+
+      hasCapacityLimit?: boolean;
+      enableLowStockAlert?: boolean;
+      lowStockThreshold?: number;
+      capacityThreshold?: number;
+
+      inventoryType?: string;
+      contactName?: string;
+      contactPhone?: string;
+      contactEmail?: string;
+
+      allowSell?: boolean;
+      allowBorrow?: boolean;
+      maxBorrowQty?: number;
+      allowRent?: boolean;
+      rentPrice?: number;
+
       description?: string;
+      address?: string;
+      company?: string;
+      branch?: string;
       capacity?: string;
+
+      // productcapacity?: number;
+      // stockQty?: number;
+      active?: boolean;
+      productIds?: string[];
+
+      // targetQty?: number;
+      // soldQtyThisPeriod?: number;
+      monthlyTarget?: number;
     };
     isLoading?: boolean;
   };
@@ -28,37 +54,122 @@ export const useFormInventorySetup = (slug: string) => {
   const form = useForm<InventoryForm>({
     resolver: zodResolver(InventoryCreateSchema) as Resolver<InventoryForm>,
     defaultValues: {
-      id: undefined,
-      active: true,
+      id: "",
       name: "",
+
+      hasCapacityLimit: false,
+      enableLowStockAlert: false,
+      lowStockThreshold: null,
+      capacityThreshold: null,
+
+      inventoryType: "main_warehouse",
+      contactName: "",
+      contactPhone: "",
+      contactEmail: "",
+
+      allowSell: false,
+      allowBorrow: false,
+      maxBorrowQty: null,
+      allowRent: false,
+      rentPrice: null,
+
       description: "",
+      address: "",
+      company: "",
+      branch: "",
       capacity: "",
+
+      // productcapacity: 0,
+      // stockQty: 0,
+      active: true,
+      productIds: [],
+
+      // targetQty: 0,
+      // soldQtyThisPeriod: 0,
+      monthlyTarget: null,
     },
   });
 
   React.useEffect(() => {
     if (inventory) {
       form.reset({
-        id: inventory.id ?? undefined,
-        active: inventory.active ?? true,
+        id: inventory.id ?? "",
         name: inventory.name ?? "",
+
+        hasCapacityLimit: inventory.hasCapacityLimit ?? false,
+        enableLowStockAlert: inventory.enableLowStockAlert ?? false,
+        lowStockThreshold: inventory.lowStockThreshold ?? null,
+        capacityThreshold: inventory.capacityThreshold ?? null,
+
+        inventoryType:
+          (inventory.inventoryType as InventoryForm["inventoryType"]) ??
+          "main_warehouse",
+        contactName: inventory.contactName ?? "",
+        contactPhone: inventory.contactPhone ?? "",
+        contactEmail: inventory.contactEmail ?? "",
+
+        allowSell: inventory.allowSell ?? false,
+        allowBorrow: inventory.allowBorrow ?? false,
+        maxBorrowQty: inventory.maxBorrowQty ?? null,
+        allowRent: inventory.allowRent ?? false,
+        rentPrice: inventory.rentPrice ?? null,
+
         description: inventory.description ?? "",
+        address: inventory.address ?? "",
+        company: inventory.company ?? "",
+        branch: inventory.branch ?? "",
         capacity: inventory.capacity ?? "",
+
+        // productcapacity: inventory.productcapacity ?? 0,
+        // stockQty: inventory.stockQty ?? 0,
+        active: inventory.active ?? true,
+        productIds: inventory.productIds ?? [],
+
+        // targetQty: inventory.targetQty ?? 0,
+        // soldQtyThisPeriod: inventory.soldQtyThisPeriod ?? 0,
+        monthlyTarget: inventory.monthlyTarget ?? null,
       });
     } else {
       form.reset({
-        id: undefined,
-        active: true,
+        id: "",
         name: "",
+
+        hasCapacityLimit: false,
+        enableLowStockAlert: false,
+        lowStockThreshold: null,
+        capacityThreshold: null,
+
+        inventoryType: "main_warehouse",
+        contactName: "",
+        contactPhone: "",
+        contactEmail: "",
+
+        allowSell: false,
+        allowBorrow: false,
+        maxBorrowQty: null,
+        allowRent: false,
+        rentPrice: null,
+
         description: "",
+        address: "",
+        company: "",
+        branch: "",
         capacity: "",
+
+        // productcapacity: 0,
+        // stockQty: 0,
+        active: true,
+        productIds: [],
+
+        // targetQty: 0,
+        // soldQtyThisPeriod: 0,
+        monthlyTarget: null,
       });
     }
   }, [inventory, form]);
 
   const { isSubmitting, errors } = form.formState;
   const ready = !isLoading;
-
   const isEdit = Boolean(inventory?.id || form.getValues("id"));
 
   const buildPayload = (): InventoryCreateDTO & { id?: string } => {

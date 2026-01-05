@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
@@ -9,6 +7,7 @@ import type { UsersFormValues } from "~/schemas/users/user";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { InfoRow } from "~/components/shared/InfoRow";
+import { contactTypeMap } from "~/initData/user-initData";
 
 type WorkItem = UsersFormValues["profile"]["workExperiences"][number];
 
@@ -32,14 +31,13 @@ export const UserWorkExperience: React.FC<UserWorkExperienceViewProps> = ({
 
   return (
     <>
-      <CardHeader>
-        <div className="flex gap-2 items-center">
-          <CardTitle className="text-base font-semibold flex items-center gap-2">
-            <Briefcase className="h-5 w-5" />
-            ประสบการณ์ทำงาน
-          </CardTitle>
-        </div>
-      </CardHeader>
+      <div className="flex gap-2 items-center px-4">
+        <CardTitle className="text-base font-semibold flex items-center gap-2">
+          <Briefcase className="h-5 w-5" />
+          ประสบการณ์ทำงาน
+        </CardTitle>
+      </div>
+
       {loading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
@@ -48,7 +46,7 @@ export const UserWorkExperience: React.FC<UserWorkExperienceViewProps> = ({
           <SkeletonLoading />
         </CardContent>
       ) : (
-        <CardContent className="space-y-4">
+        <CardContent className="p-0 space-y-4">
           <div className="lg:col-span-2 flex flex-col">
             <div className="flex items-center justify-between">
               {showActions && (
@@ -63,12 +61,12 @@ export const UserWorkExperience: React.FC<UserWorkExperienceViewProps> = ({
                 ยังไม่มีประวัติประสบการณ์ทำงาน
               </div>
             ) : (
-              <div className="grid grid-cols-1">
+              <div className="grid grid-cols-1 gap-5">
                 {works.map((row, index) => (
                   <div key={index} className="rounded-xl space-y-4">
-                    <Card className="p-4">
+                    <div className="p-4">
                       <div className="flex items-center justify-between">
-                        <h4 className="font-semibold">
+                        <h4 className="font-semibold mb-3">
                           ประสบการณ์ทำงาน {index + 1}
                         </h4>
                         {showActions && (
@@ -87,7 +85,11 @@ export const UserWorkExperience: React.FC<UserWorkExperienceViewProps> = ({
                         <InfoRow label="ตำแหน่งงาน" value={row.position} />
                         <InfoRow
                           label="ประเภทการจ้างงาน"
-                          value={row.employmentType}
+                          value={
+                            contactTypeMap[row.employmentType as any] ??
+                            row.employmentType ??
+                            "-"
+                          }
                         />
                         {/* <InfoRow
                         label=""
@@ -108,16 +110,8 @@ export const UserWorkExperience: React.FC<UserWorkExperienceViewProps> = ({
                           );
                         }}
                       /> */}
-                        <InfoRow
-                          label="รายละเอียดงาน"
-                          value={
-                            <span className=" text-sm text-muted-foreground">
-                              {row.description && row.description.trim()
-                                ? row.description
-                                : "-"}
-                            </span>
-                          }
-                        />
+                        <InfoRow label="ที่ตั้งงาน" value={row.location} />
+
                         <InfoRow
                           label="วันที่เริ่มงาน"
                           value={row.startDate}
@@ -133,16 +127,25 @@ export const UserWorkExperience: React.FC<UserWorkExperienceViewProps> = ({
                           }
                         />
 
-                        <InfoRow label="ที่ตั้งงาน" value={row.location} />
                         <InfoRow
                           label="สถานะ"
                           value={
                             row.isCurrent ? "กำลังทำงานอยู่" : "สิ้นสุดแล้ว"
                           }
                         />
+                        <InfoRow
+                          label="รายละเอียดงาน"
+                          value={
+                            <span className=" text-sm text-muted-foreground">
+                              {row.description && row.description.trim()
+                                ? row.description
+                                : "-"}
+                            </span>
+                          }
+                        />
                       </div>
                       {/* <div className="h-px w-full bg-gray-200"></div> */}
-                    </Card>
+                    </div>
                   </div>
                 ))}
               </div>

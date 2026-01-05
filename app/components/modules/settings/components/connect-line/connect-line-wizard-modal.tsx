@@ -128,7 +128,7 @@ export const ConnectLineWizardModal: React.FC<ConnectLineWizardModalProps> = (
         name: data?.name ?? "",
         channelId: data?.channelId ?? "",
         channelSecret: data?.channelSecret ?? "",
-        accessToken: data?.accessToken ?? "",
+        channelAccessToken: data?.channelAccessToken ?? "",
       });
     }
   }, [data, form]);

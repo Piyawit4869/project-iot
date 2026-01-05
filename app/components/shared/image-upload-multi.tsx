@@ -62,7 +62,7 @@ export default function ImageUploadMulti({
 
   return (
     <div className={cn("flex flex-col gap-3 mt-5", className)}>
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(112px,1fr))] gap-2">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-2">
         {value.map((url, idx) => (
           <div
             key={url + idx}

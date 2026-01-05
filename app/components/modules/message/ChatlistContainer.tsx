@@ -1,16 +1,12 @@
-import React from "react";
-
 import ChatlistSidebar from "./chatlist-sidebar";
 import { useChatRoom } from "~/providers/chat/useChatRoom";
 
 export const ChatlistContainer = ({
   chatRooms,
-  resize,
   api,
   handleChangeSelectedRoom,
 }: {
   chatRooms: any;
-  resize: number;
   api: string;
   handleChangeSelectedRoom: (room: any) => void;
 }) => {
@@ -24,13 +20,13 @@ export const ChatlistContainer = ({
     setSidebarOpen,
     fetchNextPage,
     setOnSelectRoom,
+    setSearch,
   } = useChatRoom();
 
   return (
-    <div className="h-[calc(100vh-50px)]">
+    <div className="h-full">
       <ChatlistSidebar
         api={api}
-        resize={resize}
         handleChangeSelectedRoom={handleChangeSelectedRoom}
         details={{
           rooms,
@@ -44,6 +40,7 @@ export const ChatlistContainer = ({
           setOnSelectRoom,
           currentCustomer,
           handleChangeSelectedRoom,
+          setSearch,
         }}
       />
     </div>

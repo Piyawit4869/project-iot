@@ -1,25 +1,33 @@
 import { Loader2, Send } from "lucide-react";
 import React from "react";
-import { useConnectedChatRoomAIConfig } from "~/api/client/customer/useCustomer";
 import { useSendMessage } from "~/api/client/settings";
 import { useUpload } from "~/api/client/useGetUpload";
 import { Button } from "~/components/ui/button";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { useChatRoom } from "~/providers/chat/useChatRoom";
-import { useMessage, type Message } from "~/providers/chat/useMessage";
+import { useMessage } from "~/providers/chat/useMessage";
 import { MessageLabelType } from "~/types/global";
 
 interface ChatInputOpenAiConfigProps {
-  chatRoomId: string;
+  data: any;
+  chatroomConfigId: string;
   isAILoading: boolean;
+  isPendingAI: boolean;
+  connectedChatRoomAI: (values: any) => void;
 }
 
 export const ChatInputOpenAiConfig: React.FC<ChatInputOpenAiConfigProps> = (
   props
 ) => {
-  const { chatRoomId, isAILoading } = props;
+  const {
+    data,
+    chatroomConfigId,
+    isAILoading,
+    isPendingAI,
+    connectedChatRoomAI,
+  } = props;
 
-  const { messagesAI, setMessagesAI } = useMessage();
+  const { messagesAI } = useMessage();
 
   const isMobile = useIsMobile();
 
@@ -28,63 +36,38 @@ export const ChatInputOpenAiConfig: React.FC<ChatInputOpenAiConfigProps> = (
   const { selectedRoom, customer } = useChatRoom();
   const { mutate: upload, isPending } = useUpload();
   const { mutate: send } = useSendMessage();
-  const { mutateAsync: connectedChatRoomAI, isPending: isPendingAI } =
-    useConnectedChatRoomAIConfig(chatRoomId);
 
   const handleInputChange = (e: any) => {
     const value = e.target.value;
 
-    setInput(e.target.value);
-    setMessagesAI((prev) => {
-      const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
-
-      if (roomIndex > -1) {
-        const updatedMessages = [...prev];
-        updatedMessages[roomIndex] = {
-          ...updatedMessages[roomIndex],
-          lastestMessage: value,
-        } as Message;
-
-        return updatedMessages;
-      }
-
-      return [...prev, { roomId: selectedRoom.id, lastestMessage: value }];
-    });
+    setInput(value);
   };
 
   const sendText = async (e: React.FormEvent) => {
-    // const socket = socketConfig(api);
-
     const textarea = e.target as HTMLTextAreaElement;
     textarea.style.height = "auto";
 
-    setMessagesAI((prev) => {
-      const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
-
-      if (roomIndex > -1) {
-        const updatedMessages = [...prev];
-        updatedMessages[roomIndex] = {
-          ...updatedMessages[roomIndex],
-          lastestMessage: "",
-        } as Message;
-
-        return updatedMessages;
-      }
-
-      return prev;
-    });
-
     e.preventDefault();
-    if (!input.trim() || !customer?.id) return;
+
+    if (
+      !input.trim()
+      // || !chatroomConfigId
+    )
+      return;
 
     const messageText = input.trim();
+
     setInput("");
 
+    // if (chatroomConfigId) {
+    // } else {
     connectedChatRoomAI({
       message: messageText,
       messageType: "text",
-      customerId: customer?.id,
+      chatroomConfigId: chatroomConfigId,
+      configAiId: data?.id,
     });
+    // }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,7 +101,6 @@ export const ChatInputOpenAiConfig: React.FC<ChatInputOpenAiConfigProps> = (
           messageType: "image",
           isAiReply: false,
           recipient: selectedRoom.customer?.fullName ?? "Unknown",
-          customerId: selectedRoom.customerId ?? "",
           platform: "line",
           messageLabel: MessageLabelType.SENDIMAGE,
         });
@@ -150,7 +132,7 @@ export const ChatInputOpenAiConfig: React.FC<ChatInputOpenAiConfigProps> = (
         //     ? "กดส่งข้อความเพื่อส่งข้อความ"
         //     : "Enter: ส่ง, Shift+Enter:ขึ้นบรรทัดใหม่"
         // }
-        placeholder="สอบถามข้อมูลเกี่ยวกับลูกค้าคนนี้..."
+        placeholder="ทดสอบการพูดคุย..."
         className="flex-1 max-h-[300px] w-full resize-none overflow-auto p-2 border-0 rounded-md outline-none"
         value={input}
         onChange={handleInputChange}

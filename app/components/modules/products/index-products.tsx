@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import React from "react";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
 
 import { DataTable } from "~/components/shared/data-table";
 import { TabControl } from "~/components/shared/tab-control";
 import { Button } from "~/components/ui/button";
 import { FileDown, FileUp, Plus } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
 import GlobalButton from "~/components/shared/global-button";
 import { cn } from "~/lib/utils";
-import { Link } from "react-router";
-import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useSidebar } from "~/components/ui/sidebar";
+
 import { useProductColumnTable } from "./product-column-table";
 import {
   ProductsFilterFields,
@@ -19,18 +21,61 @@ import {
   useAllProductsSummary,
   useProductPaginate,
 } from "~/api/client/products/useGetProducts";
+import {
+  parseDateRangeParam,
+  pickSearchParams,
+} from "../customer/utils/search-params";
 
 export const ProductIndexContainer = () => {
   const { data: categories, isLoading } = useAllProductsSummary();
   const columns = useProductColumnTable();
-
   const { isMobile } = useSidebar();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [sp, setSearchParams] = useSearchParams();
   const [status, setStatus] = useState("all");
+  const [tableKey, setTableKey] = useState(0);
+
+  const filters = useMemo(
+    () =>
+      pickSearchParams(sp, [
+        "sku",
+        "name",
+        "barcode",
+        "available",
+        "availableForSale",
+        "matType",
+        "salePrice",
+        "vatPrice",
+        "createdBy",
+        "updatedBy",
+      ]),
+    [sp]
+  );
+
+  const created = parseDateRangeParam(sp, "createdAt") ?? {};
+  const updated = parseDateRangeParam(sp, "updatedAt") ?? {};
+  const createdFrom = created.fromDate;
+  const createdTo = created.toDate;
+  const updatedFrom = updated.fromDate;
+  const updatedTo = updated.toDate;
 
   const items = TabIndexTableProducts(categories);
-  const handleChangeTab = (values: any) => {
-    setStatus(values);
+
+  const clearAllFilters = useCallback(() => {
+    setSearchParams({});
+
+    navigate(location.pathname, { replace: true });
+  }, [setSearchParams, navigate, location.pathname]);
+
+  const handleChangeTab = (val: string) => {
+    const hadQuery = sp.toString().length > 0;
+    setStatus(val);
+    clearAllFilters();
+    if (hadQuery) {
+      setTableKey((k) => k + 1);
+    }
   };
 
   const paginate = useProductPaginate;
@@ -50,7 +95,6 @@ export const ProductIndexContainer = () => {
             variant="outline"
             disabled
             key="import-button"
-            // className="bg-blue-300 text-black hover:bg-blue-500 hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
           />,
           <GlobalButton
             label={
@@ -62,7 +106,6 @@ export const ProductIndexContainer = () => {
             variant="outline"
             disabled
             key="export-button"
-            // className="bg-yellow-300 text-black hover:bg-yellow-500 hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
           />,
           <Link to="/products/create" key="create-link">
             <Button
@@ -77,6 +120,7 @@ export const ProductIndexContainer = () => {
       />
 
       <DataTable
+        key={tableKey}
         queryFunction={({ pageIndex, pageSize, sorting = [] }) =>
           paginate({
             pageIndex,
@@ -84,12 +128,17 @@ export const ProductIndexContainer = () => {
             sorting,
             status: status === "all" ? "" : status,
             limit: pageSize,
-          })
+            ...filters,
+            createdFrom,
+            createdTo,
+            updatedFrom,
+            updatedTo,
+          } as any)
         }
         columns={columns}
         addOn={
           <Tabs
-            defaultValue="all"
+            value={status}
             onValueChange={handleChangeTab}
             className={cn("block", isMobile && "hidden")}
           >
@@ -98,7 +147,7 @@ export const ProductIndexContainer = () => {
                 <TabsTrigger
                   key={c.label}
                   value={c.status}
-                  className="hover:bg-gray-200 relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
+                  className="hover:bg-border relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
                 >
                   {c.icon} {c.label} ({c.value})
                 </TabsTrigger>

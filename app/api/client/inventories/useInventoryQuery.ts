@@ -2,6 +2,8 @@ import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import {
   createInventory,
   deleteInventory,
+  fetchGetAnalyzeInventory,
+  fetchInventoryAiById,
   fetchInventorysSummary,
   getInventories,
   getInventory,
@@ -14,19 +16,65 @@ export const usePaginate = ({
   pageSize,
   status = "",
   limit,
+  name,
+  productCount,
+  productCanSale,
+  createdBy,
+  updatedBy,
+  // createdAt,
+  // updatedAt,
+  createdFrom,
+  createdTo,
+  updatedFrom,
+  updatedTo,
 }: {
   pageIndex: number;
   pageSize: number;
   status: string;
   limit: number;
+  name?: string;
+  productCount?: string;
+  productCanSale?: string;
+  createdBy?: string;
+  updatedBy?: string;
+  // createdAt?: string;
+  // updatedAt?: string;
+  createdFrom?: string;
+  createdTo?: string;
+  updatedFrom?: string;
+  updatedTo?: string;
 }) => {
   return useQuery({
-    queryKey: ["paginate", pageIndex, pageSize, status, limit],
+    queryKey: [
+      "paginate",
+      pageIndex,
+      pageSize,
+      status,
+      limit,
+      name,
+      productCount,
+      productCanSale,
+      createdBy,
+      updatedBy,
+      createdFrom,
+      createdTo,
+      updatedFrom,
+      updatedTo,
+    ],
     queryFn: () =>
       getInventoryPaginate({
         page: pageIndex,
         limit: pageSize,
         status: status,
+        name,
+        productCount,
+        productCanSale,
+        createdBy,
+        updatedBy,
+        createdFrom,
+        createdTo,
+        updatedFrom,
+        updatedTo,
       }),
     placeholderData: keepPreviousData,
     enabled: !!pageIndex && !!pageSize,
@@ -71,5 +119,20 @@ export const useAllInventorysSummary = () => {
     queryKey: ["inventory"],
     queryFn: () => fetchInventorysSummary(),
     enabled: true,
+  });
+};
+
+export const useGetAiInventory = (id: string) =>
+  useQuery({
+    queryKey: ["customer-ai-note", id],
+    queryFn: () => fetchInventoryAiById(id),
+    enabled: !!id,
+  });
+
+export const useGetAnalyzeInventory = (id: string) => {
+  return useQuery({
+    queryKey: ["analyze-customer", id],
+    queryFn: () => fetchGetAnalyzeInventory(id),
+    enabled: !!id,
   });
 };

@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
@@ -24,8 +22,8 @@ const toLink = (url?: string) =>
   url?.startsWith("http://") || url?.startsWith("https://")
     ? url
     : url
-    ? `https://${url}`
-    : undefined;
+      ? `https://${url}`
+      : undefined;
 
 export const UserSocalmedias: React.FC<UserSocialMediasViewProps> = ({
   data,
@@ -39,14 +37,13 @@ export const UserSocalmedias: React.FC<UserSocialMediasViewProps> = ({
 
   return (
     <>
-      <CardHeader>
-        <div className="flex gap-2 items-center">
-          <CardTitle className="text-base font-semibold flex items-center gap-2">
-            <Share2 className="h-5 w-5" />
-            โซเชียลมีเดีย
-          </CardTitle>
-        </div>
-      </CardHeader>
+      <div className="flex gap-2 items-center px-4">
+        <CardTitle className="text-base font-semibold flex items-center gap-2">
+          <Share2 className="h-5 w-5" />
+          โซเชียลมีเดีย
+        </CardTitle>
+      </div>
+
       {loading ? (
         <CardContent className="space-y-4">
           <SkeletonLoading />
@@ -55,7 +52,7 @@ export const UserSocalmedias: React.FC<UserSocialMediasViewProps> = ({
           <SkeletonLoading />
         </CardContent>
       ) : (
-        <CardContent className="space-y-4">
+        <CardContent className="p-0 space-y-4">
           <div className="lg:col-span-2 flex flex-col">
             <div className="flex items-center justify-between">
               {showActions && (
@@ -76,9 +73,9 @@ export const UserSocalmedias: React.FC<UserSocialMediasViewProps> = ({
 
                   return (
                     <div key={index} className="rounded-xl space-y-4">
-                      <Card className="p-4">
+                      <div className="p-4">
                         <div className="flex items-center justify-between">
-                          <h4 className="font-semibold">
+                          <h4 className="font-semibold mb-3">
                             โซเชียลมีเดีย {index + 1}
                           </h4>
                           {showActions && (
@@ -91,24 +88,28 @@ export const UserSocalmedias: React.FC<UserSocialMediasViewProps> = ({
                             </Button>
                           )}
                         </div>
-                        <InfoRow
-                          label="ลิงก์ URL"
-                          value={
-                            href ? (
-                              <a
-                                href={href}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="underline underline-offset-2 break-all"
-                              >
-                                {href}
-                              </a>
-                            ) : (
-                              "-"
-                            )
-                          }
-                        />
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <div className="grid grid-cols-1 md:grid-cols-2 mb-4">
+                          {" "}
+                          <InfoRow
+                            label="ลิงก์ URL"
+                            value={
+                              href ? (
+                                <a
+                                  href={href}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="underline underline-offset-2 break-all"
+                                >
+                                  x{href}
+                                </a>
+                              ) : (
+                                "-"
+                              )
+                            }
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <InfoRow
                             label="แพลตฟอร์ม"
                             value={row?.platform ?? "-"}
@@ -120,7 +121,7 @@ export const UserSocalmedias: React.FC<UserSocialMediasViewProps> = ({
 
                           <InfoRow
                             label="เป็นบัญชีหลักหรือไม่"
-                            value={row?.isPrimary ?? "ไม่ใช่"}
+                            value={row?.isPrimary ? "ใช่" : "ไม่ใช่"}
                           />
 
                           <InfoRow
@@ -133,7 +134,7 @@ export const UserSocalmedias: React.FC<UserSocialMediasViewProps> = ({
                             }
                           />
                         </div>
-                      </Card>
+                      </div>
                     </div>
                   );
                 })}

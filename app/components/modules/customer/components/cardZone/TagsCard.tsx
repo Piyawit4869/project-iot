@@ -14,7 +14,7 @@ export const TagsCard = ({
   className,
 }: {
   loading: boolean;
-  isEdit: boolean;
+  isEdit?: boolean;
   tags: any;
   className: string;
   form: UseFormReturn<CustomerValues>;
@@ -49,7 +49,7 @@ export const TagsCard = ({
         ) : isEdit ? (
           <TagsSelectorModal form={form} />
         ) : (
-          <span className="text-sm text-[#71717A]">
+          <span className="text-[#71717A]">
             ลูกค้ารายนี้ยังไม่มี Tags หากต้องการเพิ่ม Tags กรุณากดที่ปุ่มแก้ไข
           </span>
         )}

@@ -153,14 +153,14 @@ export const AICard = ({
           ) : (
             <div className="flex flex-col space-y-2 ">
               <div className="flex items-center justify-between ">
-                <Label htmlFor="ai-enabled" className="text-sm">
+                <Label htmlFor="ai-enabled" className="text-md">
                   เปิดใช้งานตลอดเวลา
                 </Label>
                 <Switch id="for-show" disabled checked={customerAI?.allDay} />
               </div>
 
               <div className="flex items-center justify-between mt-4 mb-3">
-                <Label htmlFor="ai-enabled-condition" className="text-sm">
+                <Label htmlFor="ai-enabled-condition" className="text-md">
                   ใช้งาน AI ตามเงื่อนไข
                 </Label>
                 <Switch disabled checked={customerAI?.enabled} />
@@ -168,19 +168,19 @@ export const AICard = ({
 
               <div className="mt-4 space-y-4 transition-all ">
                 <div className="flex flex-row justify-between ">
-                  <Label className="text-sm">ช่วงเวลาที่ให้ AI ตอบ</Label>
-                  <div className="text-sm flex gap-3">
-                    <span> {customerAI?.startTime || "00.00"}</span>
+                  <Label className="text-md">ช่วงเวลาที่ให้ AI ตอบ</Label>
+                  <div className="text-md flex gap-3">
+                    <span> {customerAI?.startTime || "00.00"} น.</span>
                     <span>ถึง</span>
                     <span>{customerAI?.endTime || "00.00"} น.</span>
                   </div>
                 </div>
 
                 <div className="flex flex-row justify-between gap-2">
-                  <Label className="text-sm mt-2">
+                  <Label className="text-md mt-2">
                     หากไม่มีการตอบกลับจากเซลภายใน (นาที)
                   </Label>
-                  <div className="flex items-center gap-2 text-sm">
+                  <div className="flex items-center gap-2 text-md">
                     {customerAI?.aiReplyResponseDuration || 0} นาที
                   </div>
                 </div>
@@ -198,7 +198,7 @@ export const AICard = ({
 
           <div className="flex flex-col space-y-2 mt-4 max-h-[60vh] overflow-y-auto">
             <div className="flex items-center justify-between mt-4 mb-3">
-              <Label htmlFor="ai-enabled" className="text-sm">
+              <Label htmlFor="ai-enabled" className="text-md">
                 เปิดใช้งานตลอดเวลา
               </Label>
               <Switch
@@ -214,7 +214,7 @@ export const AICard = ({
             </div>
 
             <div className="flex items-center justify-between mt-4 mb-3">
-              <Label htmlFor="ai-enabled-condition" className="text-sm">
+              <Label htmlFor="ai-enabled-condition" className="text-md">
                 ใช้งาน AI ตามเงื่อนไข
               </Label>
               <Switch
@@ -236,7 +236,7 @@ export const AICard = ({
               )}
             >
               <div className="flex flex-col gap-2">
-                <Label className="text-sm">ช่วงเวลาที่ให้ AI ตอบ</Label>
+                <Label className="text-md">ช่วงเวลาที่ให้ AI ตอบ</Label>
                 <div className="flex items-center gap-2">
                   <Input
                     type="time"
@@ -245,7 +245,7 @@ export const AICard = ({
                     className="w-[120px]"
                     disabled={!aiEnabledWithCondition}
                   />
-                  <span className="text-sm">ถึง</span>
+                  <span className="text-md">ถึง</span>
                   <Input
                     type="time"
                     value={aiEndTime || ""}
@@ -257,7 +257,7 @@ export const AICard = ({
               </div>
 
               <div className="flex flex-col gap-2">
-                <Label className="text-sm">
+                <Label className="text-md">
                   หากไม่มีการตอบกลับจากเซลภายใน (ชั่วโมง:นาที)
                 </Label>
                 <div className="flex items-center gap-2">

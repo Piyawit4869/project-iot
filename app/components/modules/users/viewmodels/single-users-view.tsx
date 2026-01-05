@@ -8,16 +8,20 @@ import { UserWorkExperience } from "../componentsview/formworkExperiences";
 import { UserStudy } from "../componentsview/formStudy";
 import { UserSocalmedias } from "../componentsview/formSocalmedia";
 import { UserDocuments } from "../componentsview/formDocuments";
+import { UserPersonality } from "../componentsview/formPesonality";
+import type { UseFormReturn } from "react-hook-form";
 
 type EditUsersViewProps = {
   data?: Partial<UsersFormValues>;
   loading?: boolean;
+
   onEdit?: () => void;
   onDelete?: () => void;
 };
 
 export const SingleUsersView: React.FC<EditUsersViewProps> = ({
   data = {},
+
   loading = false,
 }) => {
   // const profile: Partial<UsersFormValues["profile"]> = data?.profile ?? {};
@@ -82,35 +86,70 @@ export const SingleUsersView: React.FC<EditUsersViewProps> = ({
           </div>
         </div>
       </Card> */}
+      {/* <Card className="p-2 pt-4 h-full">
+        <UserProfileView data={data} loading={loading} />
+      </Card>
       <div className="mt-2 flex flex-col md:flex-row gap-5">
-        <div className="md:w-[35%] h-[50%] w-full">
-          <Card className="p-4 h-full">
-            <UserProfileView data={data} loading={loading} />
-          </Card>
-        </div>
+        <div className="md:w-[35%] h-[50%] w-full"></div>
 
         <div className="md:w-[65%] w-full flex flex-col gap-5">
-          <Card className="p-2">
+          <Card className="p-2p py-8">
             <UserCompensation data={data} loading={loading} />
           </Card>
 
-          <Card className="p-2">
+          <Card className="p-2 py-8">
             <UserSkills data={data} loading={loading} />
           </Card>
 
-          <Card className="p-2">
+          <Card className="p-2 py-8">
             <UserWorkExperience data={data} loading={loading} />
           </Card>
 
-          <Card className="p-2">
+          <Card className="p-2 py-8">
             <UserStudy data={data} loading={loading} />
           </Card>
 
-          <Card className="p-2">
+          <Card className="p-2 py-8">
             <UserSocalmedias data={data} loading={loading} />
           </Card>
 
-          <Card className="p-2">
+          <Card className="p-2 py-8">
+            <UserDocuments data={data} loading={loading} />
+          </Card>
+        </div>
+      </div> */}
+      <div className="mt-2 flex flex-col md:flex-row gap-5">
+        <div className="md:w-[45%] h-[50%] w-full flex flex-col gap-5">
+          <Card className="p-2 pt-2 h-full">
+            <UserProfileView data={data} loading={loading} />
+          </Card>
+
+          <Card className="p-4 py-6 gap-2">
+            <UserSkills data={data} loading={loading} />
+          </Card>
+        </div>
+
+        <div className="md:w-[55%] w-full flex flex-col gap-5">
+          <Card className="p-4 py-6 gap-2">
+            <UserPersonality data={data} loading={loading} />
+          </Card>
+          <Card className="p-4 py-6 gap-2">
+            <UserCompensation data={data} loading={loading} />
+          </Card>
+
+          <Card className="p-4 py-6 gap-2">
+            <UserWorkExperience data={data} loading={loading} />
+          </Card>
+
+          <Card className="p-4 py-6 gap-2">
+            <UserStudy data={data} loading={loading} />
+          </Card>
+
+          <Card className="p-4 py-6 gap-2">
+            <UserSocalmedias data={data} loading={loading} />
+          </Card>
+
+          <Card className="p-4 py-6 gap-2">
             <UserDocuments data={data} loading={loading} />
           </Card>
 

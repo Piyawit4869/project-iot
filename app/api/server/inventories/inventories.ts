@@ -4,19 +4,26 @@ export const getInventoryPaginate = async (params: {
   page?: number;
   limit?: number;
   status: string;
+  name?: string;
+  productCount?: string;
+  productCanSale?: string;
+  createdBy?: string;
+  updatedBy?: string;
+  createdFrom?: string;
+  createdTo?: string;
+  updatedFrom?: string;
+  updatedTo?: string;
 }) => {
   try {
-    const p = Object.assign({});
-    p.page = params.page;
-    p.limit = params.limit;
-    if (params.status && params.status !== "all") {
-      p.status = params.status;
+    const p = { ...params } as any;
+    if (params.status && params.status === "all") {
+      delete p.status;
     }
-
-    const { data } = await ApiConfig.get(`/crud/inventories/paginate`, {
+    const res = await ApiConfig.get(`/crud/inventories/paginate`, {
       params: p,
     });
-    return data;
+
+    return res.data;
   } catch (error) {
     return error;
   }
@@ -70,6 +77,32 @@ export const deleteInventory = async (id: string) => {
 export const fetchInventorysSummary = async () => {
   try {
     const res = await ApiConfig.get(`/crud/inventories/status-summary`);
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchInventoryAiById = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(`/crud/inventories/ai-collects/${id}`);
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchGetAnalyzeInventory = async (id: string) => {
+  try {
+    // const res = await ApiConfig.get(
+    //   `/crud/inventories/${id}/summary-chat-message
+    //    `
+    // );
+    const res = await ApiConfig.get(
+      `
+       `
+    );
 
     return res.data;
   } catch (error) {

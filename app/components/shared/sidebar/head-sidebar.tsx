@@ -1,5 +1,3 @@
-"use client";
-
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -8,7 +6,7 @@ import {
 } from "~/components/ui/sidebar";
 import { HeadSidebarLoading } from "./components/head-sidebar-loading";
 
-import RomeLogo from "/assets/images/rome.png";
+import RomeLogo from "/assets/images/rome.svg";
 import { Link } from "react-router";
 
 interface HeaderType {
@@ -42,7 +40,6 @@ export function HeadSidebar({ org, isLoading }: HeaderType) {
             alt="ROME"
             width={40}
             height={40}
-            // unoptimized
             className="rounded-lg"
           />
           <span className="font-semibold ml-3 text-base">ROME</span>
@@ -53,12 +50,10 @@ export function HeadSidebar({ org, isLoading }: HeaderType) {
     return (
       <div className="flex items-center">
         <img
-          // loader={({ src }) => src}
           src={logoUrl}
           alt="logo"
           width={40}
           height={40}
-          // unoptimized
           className="rounded-lg"
         />
         {state === "expanded" && (
@@ -75,7 +70,7 @@ export function HeadSidebar({ org, isLoading }: HeaderType) {
           size="lg"
           className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
         >
-          <Link to="/utotech">{renderLogoSection()}</Link>
+          <Link to="/">{renderLogoSection()}</Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
     </SidebarMenu>

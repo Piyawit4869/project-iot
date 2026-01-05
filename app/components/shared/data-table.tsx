@@ -35,7 +35,7 @@ import { TablePagination } from "./global-table";
 import { type UseQueryResult } from "@tanstack/react-query";
 import { SkeletonLoading } from "./skeleton-loading";
 import { FileSearch } from "lucide-react";
-import { SortableHeader } from "./sortIconTable";
+import { SortableHeader } from "./sort-table-header";
 import { DynamicFilterBar } from "./dynamic-filter-bar";
 import { ColumnResizer } from "./column-resizer";
 import { useSidebar } from "../ui/sidebar";
@@ -53,6 +53,8 @@ interface DataTableProps<TData, TValue> {
   data?: TData[];
   customerFilterFields?: any;
   isCustomLoading?: boolean;
+  showAdvancedButton?: boolean;
+  offPaginate?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -60,10 +62,12 @@ export function DataTable<TData, TValue>({
   queryFunction,
   // offSearch,
   // offFilter,
+  offPaginate,
   addOn,
   data: propData,
   customerFilterFields,
   isCustomLoading,
+  showAdvancedButton,
 }: DataTableProps<TData, TValue>) {
   const { isMobile, state } = useSidebar();
 
@@ -117,6 +121,8 @@ export function DataTable<TData, TValue>({
 
   const [isLoadingState, setIsLoadingState] = React.useState<boolean>(true);
 
+  const isServer = Boolean(queryFunction);
+
   const table = useReactTable({
     data: rows,
     pageCount,
@@ -140,9 +146,9 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    ...(isServer ? {} : { getFilteredRowModel: getFilteredRowModel() }),
+    ...(isServer ? {} : { getPaginationRowModel: getPaginationRowModel() }),
+    ...(isServer ? {} : { getSortedRowModel: getSortedRowModel() }),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
 
@@ -193,7 +199,11 @@ export function DataTable<TData, TValue>({
         )}
       </div> */}
       {customerFilterFields && (
-        <DynamicFilterBar table={table} fields={customerFilterFields} />
+        <DynamicFilterBar
+          table={table}
+          fields={customerFilterFields}
+          showAdvanced={showAdvancedButton}
+        />
       )}
 
       {addOn && <div>{addOn}</div>}
@@ -240,16 +250,16 @@ export function DataTable<TData, TValue>({
                         {header.isPlaceholder
                           ? null
                           : header.column.id === "actions" ||
-                            header.column.id === "imageUrl" ||
-                            header.column.id === "profile.imageUrl"
-                          ? flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )
-                          : flexRender(
-                              <SortableHeader column={header.column} />,
-                              header.getContext()
-                            )}
+                              header.column.id === "imageUrl" ||
+                              header.column.id === "profile.imageUrl"
+                            ? flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )
+                            : flexRender(
+                                <SortableHeader column={header.column} />,
+                                header.getContext()
+                              )}
 
                         <ColumnResizer header={header} />
                       </TableHead>
@@ -297,7 +307,7 @@ export function DataTable<TData, TValue>({
         </div>
       )}
 
-      <TablePagination table={table} data={totalItems} />
+      {!offPaginate && <TablePagination table={table} data={totalItems} />}
     </div>
   );
 }

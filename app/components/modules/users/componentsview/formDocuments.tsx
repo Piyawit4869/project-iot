@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
@@ -8,6 +6,7 @@ import type { UsersFormValues } from "~/schemas/users/user";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { InfoRow } from "~/components/shared/InfoRow";
+import { fileTypeMap } from "~/initData/user-initData";
 
 // ---------- Types ----------
 type DocumentItem = UsersFormValues["profile"]["documents"][number];
@@ -34,14 +33,13 @@ export const UserDocuments: React.FC<UserDocumentsViewProps> = ({
 
   return (
     <>
-      <CardHeader>
-        <div className="flex gap-2 items-center">
-          <CardTitle className="text-base font-semibold flex items-center gap-2">
-            <File className="h-5 w-5" />
-            เอกสารแนบ
-          </CardTitle>
-        </div>
-      </CardHeader>
+      <div className="flex gap-2 items-center px-4">
+        <CardTitle className="text-base font-semibold flex items-center gap-2">
+          <File className="h-5 w-5" />
+          เอกสารแนบ
+        </CardTitle>
+      </div>
+
       {loading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
@@ -50,7 +48,7 @@ export const UserDocuments: React.FC<UserDocumentsViewProps> = ({
           <SkeletonLoading />
         </CardContent>
       ) : (
-        <CardContent className="space-y-4">
+        <CardContent className="p-0 space-y-4">
           <div className="lg:col-span-2 flex flex-col">
             <div className="flex items-center justify-between">
               {showActions && (
@@ -92,9 +90,9 @@ export const UserDocuments: React.FC<UserDocumentsViewProps> = ({
                     );
                   return (
                     <div key={index} className="rounded-xl space-y-4">
-                      <Card className="p-4">
+                      <div className="p-4">
                         <div className="flex items-center justify-between">
-                          <h4 className="font-semibold">
+                          <h4 className="font-semibold mb-3">
                             เอกสารแนบ {index + 1}
                           </h4>
                           {showActions && (
@@ -107,7 +105,7 @@ export const UserDocuments: React.FC<UserDocumentsViewProps> = ({
                             </Button>
                           )}
                         </div>
-                        <div>
+                        <div className="flex mb-4">
                           <InfoRow
                             label="ไฟล์"
                             value={
@@ -118,8 +116,13 @@ export const UserDocuments: React.FC<UserDocumentsViewProps> = ({
                           />
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                          <InfoRow label="ประเภทเอกสาร" value={row.type} />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <InfoRow
+                            label="ประเภทเอกสาร"
+                            value={
+                              fileTypeMap[row.type as any] ?? row.type ?? "-"
+                            }
+                          />
                           <InfoRow label="ชื่อไฟล์" value={row.fileName} />
                           {/* <InfoRow
                             label="แท็กกำกับไฟล์"
@@ -170,7 +173,7 @@ export const UserDocuments: React.FC<UserDocumentsViewProps> = ({
                             }
                           /> */}
                         </div>
-                      </Card>
+                      </div>
                     </div>
                   );
                 })}

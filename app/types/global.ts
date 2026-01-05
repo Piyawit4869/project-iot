@@ -18,9 +18,25 @@ export type Item =
   | null;
 
 export enum MessageLabelType {
-  SENDTEXT = "ส่งข้อความ", //"send-text",
+  SENDTEXT = "ส่งข้อความ",
   SENDIMAGE = "ส่งรูปภาพ",
   SENDSTICKER = "ส่งสติ้กเกอร์",
+  SENDAUDIO = "ส่งเสียง",
+  SENDVIDEO = "ส่งวิดีโอ",
+  SENDFILE = "ส่งไฟล์",
+  SENDLOCATION = "ส่งตำแหน่งที่อยู่",
+}
+
+//line message type
+export enum LineMessageType {
+  TEXT = "text",
+  IMAGE = "image",
+  VIDEO = "video",
+  AUDIO = "audio",
+  LOCATION = "location",
+  STICKER = "sticker",
+  FLEX = "flex",
+  CAROUSEL = "carousel",
 }
 
 export type FilterKind =
@@ -28,7 +44,9 @@ export type FilterKind =
   | "select"
   | "boolean"
   | "numberRange"
-  | "dateRange";
+  | "number"
+  | "dateRange"
+  | "date";
 
 export type FilterField = {
   id: string;
@@ -38,4 +56,5 @@ export type FilterField = {
   options?: { label: string; value: string | number | boolean }[];
   placeholder?: string;
   showOnlyMobile?: boolean;
+  showIn?: "main" | "advanced" | "both";
 };

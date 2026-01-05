@@ -53,14 +53,10 @@ export const useCustomerSetup = () => {
       status: "newly_registered",
       customerType: "ordinary_person",
       customerPlatform: "backoffice",
-      // email: "",
       lineSubId: null,
       customerCode: null,
       refCode: null,
       branchId: null,
-      // progressPercentage: 0,
-      // aiReplyResponseDuration: {},
-      // isAiReply: false,
       consentPii: false,
       priority: 0,
       remark: null,
@@ -70,10 +66,10 @@ export const useCustomerSetup = () => {
         name: null,
         imageUrl: null,
 
-        prefix: null,
+        prefix: "นาย",
         taxId: null,
         position: null,
-        country: "ประเทศไทย",
+        country: "ไทย",
         nation: "ไทย",
         lineName: null,
         faceBookName: null,
@@ -84,7 +80,7 @@ export const useCustomerSetup = () => {
         // lastNameTh: "",
         birthDate: null,
         phone: null,
-        gender: null,
+        gender: "male",
         age: null,
       },
 
@@ -120,9 +116,9 @@ export const useCustomerSetup = () => {
 
       tags: [],
 
-      supports: [
-        /* { userId: "", isMain: true } */
-      ],
+      // supports: [
+      //    { userId: "", isMain: true }
+      // ],
     },
   });
   const { isSubmitting: isCreating, isDirty: isDirtyCreate } =
@@ -188,7 +184,7 @@ export const useCustomerSetup = () => {
       },
 
       contacts: customer?.contacts ?? [],
-      supports: customer?.supports ?? [],
+      // supports: customer?.supports ?? [],
       tags: customer?.tags ?? [],
     },
   });
@@ -263,16 +259,16 @@ export const useCustomerSetup = () => {
             ? customer?.contacts
             : [customer?.contacts]
           : [],
-        supports: customer?.supports
-          ? Array.isArray(customer?.supports)
-            ? customer?.supports
-            : [customer?.supports]
-          : [],
+        // supports: customer?.supports
+        //   ? Array.isArray(customer?.supports)
+        //     ? customer?.supports
+        //     : [customer?.supports]
+        //   : [],
         tags: Array.isArray(customer?.tags)
           ? customer?.tags
           : customer?.tags
-          ? Object.values(customer?.tags)
-          : [],
+            ? Object.values(customer?.tags)
+            : [],
       });
     }
   }, [customer]);

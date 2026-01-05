@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import React from "react";
-import { usePaginatedChatRoomAI } from "~/api/client/settings";
+import { usePaginatedChatRoomAIConfig } from "~/api/client/settings";
 import type { ChatRoomSchemaType, ConnectAiValues } from "~/schemas/settings";
 import { flushSync } from "react-dom";
 import { GlobalImage } from "~/components/shared/global-image";
@@ -8,9 +8,13 @@ import { X } from "lucide-react";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { ChatInputOpenAiConfig } from "./chat-input-open-ai-config";
 import { useChat } from "~/providers/chat/useChat";
+import { formatDateHHMM } from "~/components/shared/global-format";
+import { StreamingText } from "~/components/modules/message/streaming-text";
+import LoadingAnimation from "~/components/modules/message/loading-animation";
+import { useConnectedChatRoomAIConfig } from "~/api/client/customer/useCustomer";
 
 interface ChatBotChatMessagesAndConfigProps {
-  chatRoomId: string;
+  chatroomConfigId: string;
   autoScroll: boolean;
   setAutoScroll: React.Dispatch<React.SetStateAction<boolean>>;
   selectedRoom?: ChatRoomSchemaType;
@@ -22,12 +26,12 @@ export const ChatBotChatMessagesAndConfig: React.FC<
   ChatBotChatMessagesAndConfigProps
 > = (props) => {
   const {
-    chatRoomId,
-    selectedRoom,
+    chatroomConfigId,
     autoScroll,
     setAutoScroll,
     data,
     searchPrompt,
+    selectedRoom,
   } = props;
 
   const scrollAreaRef = React.useRef<HTMLDivElement | null>(null);
@@ -39,10 +43,9 @@ export const ChatBotChatMessagesAndConfig: React.FC<
   const [hasScrolledOnce, setHasScrolledOnce] = React.useState(false);
   const [hasAutoScrolled, setHasAutoScrolled] = React.useState(false);
   const [isScrollReady, setIsScrollReady] = React.useState(false);
-  // const [isCheckStatusOpen, setCheckStatusOpen] = useState(false);
-  // const [AIOpen, setAIOpen] = useState(false);
+
   const [buttonScrollToBottom, setButtonScrollToBottom] = React.useState(false);
-  const { messages: socketMessages } = useChat();
+  const { messagesAI: socketMessages, setMessagesAI } = useChat();
 
   const {
     data: messagesData,
@@ -50,8 +53,11 @@ export const ChatBotChatMessagesAndConfig: React.FC<
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    // refetch,
-  } = usePaginatedChatRoomAI(chatRoomId || "");
+    isRefetching,
+  } = usePaginatedChatRoomAIConfig(chatroomConfigId || "");
+
+  const { mutateAsync: connectedChatRoomAI, isPending: isPendingAI } =
+    useConnectedChatRoomAIConfig();
 
   const paginatedMessages = messagesData?.pages.flatMap((page) => page) ?? [];
 
@@ -174,7 +180,13 @@ export const ChatBotChatMessagesAndConfig: React.FC<
     }
   }, [combinedMessages]);
 
-  if (isLoading) {
+  React.useLayoutEffect(() => {
+    if (data) {
+      setMessagesAI([]);
+    }
+  }, [data]);
+
+  if (isLoading || isRefetching) {
     return (
       <div className="flex flex-col h-full items-center justify-center gap-4 px-4">
         {Array.from({ length: 5 }).map((_, i) => (
@@ -196,13 +208,8 @@ export const ChatBotChatMessagesAndConfig: React.FC<
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-400px)] bg-white dark:bg-secondary">
-      <div
-        className="flex flex-1 flex-col"
-        style={{
-          height: 350,
-        }}
-      >
+    <div className="flex flex-col h-[calc(90vh-100px)] bg-white dark:bg-secondary">
+      <div className="flex flex-1 flex-col" style={{ height: "75vh" }}>
         <div
           ref={scrollAreaRef}
           className="flex h-full flex-col space-y-6 overflow-y-auto px-4 z-0 relative dark:bg-background"
@@ -223,7 +230,9 @@ export const ChatBotChatMessagesAndConfig: React.FC<
           )}
 
           {combinedMessages.map((msg, index) => {
-            const isUser = msg.sender !== "ROME Ai";
+            const isUser = msg.sender !== "ROME AI";
+
+            if (msg.messageLabel === "ROME AI กำลังประมวลผล") return null;
 
             const avatarFallback =
               msg.imageUrl && !msg.imageUrl.includes("http")
@@ -232,9 +241,9 @@ export const ChatBotChatMessagesAndConfig: React.FC<
                   )}`
                 : msg.imageUrl;
 
-            const formattedTime = dayjs(
+            const formattedTime = formatDateHHMM(
               msg.createdAt ? msg.createdAt : msg.timestamp
-            ).format("DD MMM YYYY, HH:mm");
+            );
 
             return (
               <div
@@ -268,7 +277,11 @@ export const ChatBotChatMessagesAndConfig: React.FC<
                         : "bg-muted text-primary"
                     }`}
                   >
-                    {msg.message}
+                    {index === combinedMessages.length - 1 && msg.streaming ? (
+                      <StreamingText text={msg.message} speed={40} />
+                    ) : (
+                      msg.message
+                    )}
                   </div>
                 ) : (
                   <div
@@ -285,6 +298,33 @@ export const ChatBotChatMessagesAndConfig: React.FC<
               </div>
             );
           })}
+          {isPendingAI && (
+            <div
+              className={
+                "mt-4 flex max-w-[75%] flex-col gap-1 mr-auto items-start"
+              }
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <Avatar className="w-6 h-6">
+                  <img
+                    src={"https://api.dicebear.com/9.x/glass/svg?seed=rome"}
+                    alt="avatar"
+                    className="rounded-full object-cover"
+                  />
+                  <AvatarFallback>{"U"[0]}</AvatarFallback>
+                </Avatar>
+
+                <span className="text-xs text-muted-foreground font-medium">
+                  ROME AI
+                </span>
+              </div>
+              <div
+                className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap bg-muted text-primary"`}
+              >
+                <LoadingAnimation />
+              </div>
+            </div>
+          )}
           <div ref={bottomRef} />
           {buttonScrollToBottom && (
             <button
@@ -304,15 +344,14 @@ export const ChatBotChatMessagesAndConfig: React.FC<
             </button>
           )}
         </div>
-        <ChatInputOpenAiConfig chatRoomId={chatRoomId} isAILoading={false} />
+        <ChatInputOpenAiConfig
+          data={data}
+          chatroomConfigId={chatroomConfigId}
+          isAILoading={false}
+          isPendingAI={isPendingAI}
+          connectedChatRoomAI={connectedChatRoomAI}
+        />
       </div>
-
-      {/* <ChecklistDialog
-        open={isCheckStatusOpen}
-        onOpenChange={setCheckStatusOpen}
-        checklist={checklistData}
-        data={customerData}
-      /> */}
 
       {previewUrl && (
         <div

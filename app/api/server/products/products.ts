@@ -4,22 +4,36 @@ import type { Product } from "~/schemas/product/product";
 export const fetchProduct = async (params: {
   page?: number;
   limit?: number;
-  name?: string;
   sorting?: any;
   searchTerms?: any;
   status: string;
+  sku?: string;
+  name?: string;
+  barcode?: string;
+  available?: number;
+  availableForSale?: number;
+  matType?: string;
+  salePrice?: number;
+  vatPrice?: number;
+  createdBy?: string;
+  updatedBy?: string;
+  // createdAt?: string;
+  // updatedAt?: string;
+  createdFrom?: string;
+  createdTo?: string;
+  updatedFrom?: string;
+  updatedTo?: string;
 }) => {
   try {
-    const p = Object.assign({});
-    p.page = params.page;
-    p.limit = params.limit;
-    if (params.status && params.status !== "all") {
-      p.status = params.status;
+    const p = { ...params } as any;
+    if (params.status && params.status === "all") {
+      delete p.status;
     }
 
     const res = await ApiConfig.get(`/crud/products/paginate`, {
       params: p,
     });
+
     return res.data;
   } catch (error) {
     return error;
@@ -42,6 +56,7 @@ export const fetchProducts = async (params: {
         ...params.searchTerms,
       },
     });
+
     return res.data;
   } catch (error) {
     return error;

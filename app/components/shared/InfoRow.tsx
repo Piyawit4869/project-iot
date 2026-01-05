@@ -3,7 +3,7 @@
 import React from "react";
 
 export type InfoRowProps = {
-  label: React.ReactNode;
+  label?: React.ReactNode;
   value?: React.ReactNode;
   className?: string;
   labelClassName?: string;
@@ -35,15 +35,13 @@ export const InfoRow: React.FC<InfoRowProps> = ({
       }`}
     >
       <div
-        className={`text-sm text-muted-foreground ${labelClassName ?? ""} ${
+        className={`text-base font-medium break-words ${labelClassName ?? ""} ${
           isRow ? "min-w-36 shrink-0" : ""
         }`}
       >
         {label}
       </div>
-      <div
-        className={`text-base font-medium break-words ${valueClassName ?? ""}`}
-      >
+      <div className={`text-sm text-muted-foreground ${valueClassName ?? ""}`}>
         {displayValue}
       </div>
     </div>

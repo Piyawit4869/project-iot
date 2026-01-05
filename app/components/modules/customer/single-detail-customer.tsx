@@ -1,14 +1,23 @@
-"use client";
+import {
+  Activity,
+  Bot,
+  ClipboardList,
+  FileText,
+  LayoutDashboard,
+  Link,
+  Save,
+  User,
+  X,
+} from "lucide-react";
 
-import { Link, Save, X } from "lucide-react";
-
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { toast } from "sonner";
 import { useCustomerViewModel } from "./viewmodels/useCustomerViewModel";
 import { useGetAllUsers } from "~/api/client/customer/useGetUsers";
 import {
   useGetAiNote,
+  useGetAnalyzeCustomer,
   useUpdateCustomer,
 } from "~/api/client/customer/useCustomer";
 import type { CustomerValues } from "~/schemas/customer/customer-form";
@@ -18,18 +27,21 @@ import { CustomerProvider } from "~/hooks/customer/useCustomerStore";
 import { TabControl } from "~/components/shared/tab-control";
 import GlobalButton from "~/components/shared/global-button";
 import { Form } from "~/components/ui/form";
-import { Card, CardContent } from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { DataTable } from "~/components/shared/data-table";
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
 import { useOrdersPaginateFilter } from "~/api/client/order/useGetOrder";
-import { FormCustomerDetailCard } from "./components/form/customer-detail-form";
-import { FormCustomerInfoCard } from "./components/form/customer-info-form";
-import { FormCustomerContact } from "./components/form/customer-contact-form";
-import { ViewCustomerDeatailCard } from "./components/view/customer-detail-view";
-import { ViewCustomerInfoCard } from "./components/view/customer-info-view";
-import { ViewCustomerContact } from "./components/view/customer-contact";
-import { RelationshipCard } from "./components/relationship";
-import { ViewCustomerActivityLog } from "./components/customer-activityLog";
+
+import { AIMessageView } from "../message/ai-message-view-modal";
+import { useOrderColumns } from "../order/components/columns";
+import { AiGetDataFromChat } from "./components/ai-getdata-from-chat";
+import { CustomTabs } from "~/components/shared/custom-tabs";
+
+import { OrderFilterFields } from "~/schemas/order/type";
+
+import { DashboardTabContent } from "./contents-tabs/dashboard-tab-content";
+import { CustomerDetailTabContent } from "./contents-tabs/customer-detail-tab-content";
+import { NoteTabContent } from "./contents-tabs/note-tab-content";
 
 export default function SingDetailleCustomer() {
   const navigate = useNavigate();
@@ -37,43 +49,45 @@ export default function SingDetailleCustomer() {
   const id = params?.id as string;
 
   const {
-    state: { customer, loadCustomer, formUpdate, isUpdating },
+    state: { customer, loadCustomer, formUpdate, isUpdating, fetchCustomer },
   } = useCustomerViewModel();
 
   const { isLoading } = useGetAllUsers();
-  const { data: getData, isLoading: isLoadingAiNote } = useGetAiNote(id);
+  const { data: getData } = useGetAiNote(id);
+  const dataFromAI = getData?.customerData;
+  const columns = useOrderColumns();
   const { mutate: update, isPending } = useUpdateCustomer(id);
+  const { data: analyzeCustomer, isLoading: loadAnalyzeCustomer } =
+    useGetAnalyzeCustomer(id);
+
+  const {
+    state: {
+      customerNote,
+      fetchCustomerNote,
+      customerAISetting,
+      fetchCustomercAISetting,
+    },
+  } = useCustomerViewModel();
+
   const [isEdit, setIsEdit] = React.useState(false);
   const [AIOpen, setAIOpen] = React.useState(false);
-
-  const dataFromAI = getData?.customerData;
-  const ordersPaginateFilter = useOrdersPaginateFilter;
+  const [customerForms, setCustomerForms] = useState([
+    { key: "contact_detail", mode: "view" },
+    { key: "customer_detail", mode: "view" },
+    { key: "organization_detail", mode: "view" },
+  ]);
+  const [tab, setTab] = React.useState("dashboard");
 
   const data = customer?.profile;
   const otherName = data?.name;
   const lineName = data?.lineName;
+
   const fullName = [data?.firstName, data?.lastName]
     .filter(Boolean)
     .join(" ")
     .trim();
-  const phoneContactState = formUpdate.getFieldState("contacts.0.phone");
-  const nameContactState = formUpdate.getFieldState("contacts.0.name");
-  const { isDirty } = formUpdate.formState;
 
-  useEntityBreadcrumb({
-    feature: "customer",
-    entity: customer
-      ? {
-          id: id,
-          name: fullName || lineName || otherName,
-        }
-      : undefined,
-    base: customer && {
-      href: `/customers/${id}`,
-      label: fullName || lineName || otherName,
-      uuid: id,
-    },
-  });
+  const { isDirty } = formUpdate.formState;
 
   const onUpdate = (values: CustomerValues) => {
     const payload = Object.assign({}, values);
@@ -106,6 +120,12 @@ export default function SingDetailleCustomer() {
               return;
             }
             toast.success("แก้ไขข้อมูลลูกค้าสำเร็จ !", { id: toastId });
+            fetchCustomer();
+
+            setCustomerForms((prev) =>
+              prev.map((f) => ({ ...f, mode: "view" }))
+            );
+
             setIsEdit(false);
           },
           onError: () => {
@@ -127,19 +147,20 @@ export default function SingDetailleCustomer() {
       id,
       contacts: [
         {
-          name: dataFromAI.customerName || baseValues.contacts?.[0]?.name || "",
-          email: dataFromAI.email || baseValues.contacts?.[0]?.email || "",
+          name:
+            dataFromAI?.customerName || baseValues?.contacts?.[0]?.name || "",
+          email: dataFromAI?.email || baseValues?.contacts?.[0]?.email || "",
           phone:
-            dataFromAI.contactNumber || baseValues.contacts?.[0]?.phone || "",
+            dataFromAI?.contactNumber || baseValues?.contacts?.[0]?.phone || "",
         },
       ],
       status: status || "newly_registered",
       profile: {
-        ...baseValues.profile,
-        taxId: dataFromAI.taxId || baseValues.profile?.taxId || "",
+        ...baseValues?.profile,
+        taxId: dataFromAI?.taxId || baseValues?.profile?.taxId || "",
       },
-      consentPii: dataFromAI.consentPii ?? baseValues.consentPii,
-      remark: dataFromAI.summary || baseValues.remark,
+      consentPii: dataFromAI?.consentPii ?? baseValues?.consentPii,
+      remark: dataFromAI?.summary || baseValues?.remark,
     };
 
     GlobalModal.info({
@@ -186,9 +207,32 @@ export default function SingDetailleCustomer() {
     });
   };
 
-  const handleCancel = () => {
+  const handleCloseForm = (key: string) => {
+    setCustomerForms((prev) => {
+      return prev.map((form) => {
+        if (form.key === key) {
+          return { ...form, mode: "view" };
+        }
+        return form;
+      });
+    });
+  };
+
+  const handleEditForm = (key: string) => {
+    setCustomerForms((prev) => {
+      return prev.map((form) => {
+        if (form.key === key) {
+          return { ...form, mode: "edit" };
+        }
+        return form;
+      });
+    });
+  };
+
+  const handleCancel = (key: string) => {
     if (!isDirty) {
-      setIsEdit(false);
+      handleCloseForm(key);
+      formUpdate.reset();
     } else {
       GlobalModal.warning({
         title: "ยืนยันการออกจากหน้าแก้ไขลูกค้า",
@@ -197,7 +241,8 @@ export default function SingDetailleCustomer() {
         confirmText: "ยืนยัน",
         cancelText: "ยกเลิก",
         onConfirm: () => {
-          setIsEdit(false);
+          handleCloseForm(key);
+          formUpdate.reset();
         },
         onCancel: () => {
           useModalStore.getState().hide();
@@ -214,6 +259,21 @@ export default function SingDetailleCustomer() {
     }
   };
 
+  useEntityBreadcrumb({
+    feature: "customer",
+    entity: customer
+      ? {
+          id: id,
+          name: fullName || lineName || otherName,
+        }
+      : undefined,
+    base: customer && {
+      href: `/customers/${id}`,
+      label: fullName || lineName || otherName,
+      uuid: id,
+    },
+  });
+
   return (
     <>
       <CustomerProvider>
@@ -222,141 +282,144 @@ export default function SingDetailleCustomer() {
             backpath={() => handleBack()}
             title={
               isEdit
-                ? `แก้ไขลูกค้า ${fullName || otherName || ""}`
-                : `ลูกค้า ${fullName || otherName || ""}`
+                ? `แก้ไขลูกค้า ${fullName || otherName || ""}${
+                    lineName ? `  ( ${lineName} )` : ""
+                  }`
+                : `ลูกค้า ${fullName || otherName || ""}${
+                    lineName ? `  ( ${lineName} )` : ""
+                  }`
             }
             buttons={[
-              isEdit ? (
-                <div className="w-full flex flex-row flex-wrap gap-2">
-                  <GlobalButton
-                    key="sync-ai"
-                    type="button"
-                    onClick={() => setAIOpen(true)}
-                    // disabled={isLoading || dataFromAI === null}
-                    variant="secondary"
-                    className="flex-1  bg-[#2e498d] text-white hover:bg-[#142a60] hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-                    icon={<Link />}
-                    label={
-                      <span className="hidden sm:inline">Sync ข้อมูล AI</span>
-                    }
-                  />
-
-                  <GlobalButton
-                    key="cancel-btn"
-                    type="button"
-                    onClick={handleCancel}
-                    variant="secondary"
-                    className="flex-1 bg-[#EF4343] text-white hover:bg-[#d73232] flex items-center gap-1 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-                    icon={<X />}
-                    label={<span className="hidden sm:inline">ยกเลิก</span>}
-                  />
-
-                  <GlobalButton
-                    key="save"
-                    type="submit"
-                    form="customer"
-                    loading={isUpdating}
-                    disabled={
-                      isLoading ||
-                      isPending ||
-                      phoneContactState.invalid ||
-                      nameContactState.invalid
-                    }
-                    className="flex-1  flex items-center gap-1 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-                    icon={<Save />}
-                    label={<span className="hidden sm:inline">บันทึก</span>}
-                  />
-                </div>
-              ) : (
+              <div className="w-full flex flex-row flex-wrap gap-2">
                 <GlobalButton
-                  label="แก้ไข"
-                  key="update-button"
+                  key="sync-ai"
                   type="button"
-                  onClick={() => setIsEdit(true)}
+                  onClick={() => {
+                    setAIOpen(true);
+                  }}
+                  // disabled={isLoading || dataFromAI === null}
+                  variant="secondary"
+                  className="flex-1  bg-[#2e498d] text-white hover:bg-[#142a60] hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+                  icon={<Link />}
+                  label={
+                    <span className="hidden sm:inline">Sync ข้อมูล AI</span>
+                  }
                 />
-              ),
+              </div>,
             ]}
           />
 
           <Form {...formUpdate}>
-            <form id="customer" onSubmit={formUpdate.handleSubmit(onUpdate)}>
-              <div className="flex w-full gap-3 flex-col md:flex-row">
-                <div className="flex-1 flex flex-col gap-3 transition-all">
-                  {isEdit ? (
+            <CustomTabs
+              defaultValue="dashboard"
+              value={tab}
+              onValueChange={(val) => setTab(val)}
+              items={[
+                {
+                  key: "dashboard",
+                  label: "แดชบอร์ด (สรุป) ",
+                  icon: <LayoutDashboard className="w-4 h-4" />,
+                  content: (
+                    <DashboardTabContent
+                      isLoading={isLoading}
+                      customer={customer}
+                      formUpdate={formUpdate}
+                      loadCustomer={loadCustomer}
+                      onUpdate={onUpdate}
+                      isPending={isPending}
+                      handleCancel={handleCancel}
+                      handleEditForm={handleEditForm}
+                      columns={columns}
+                      id={id}
+                      customerForms={customerForms}
+                      analyzeCustomer={analyzeCustomer}
+                      loadAnalyzeCustomer={loadAnalyzeCustomer}
+                      setTab={setTab}
+                      fetchCustomer={fetchCustomer}
+                    />
+                  ),
+                },
+                {
+                  key: "customerDetail",
+                  label: "ข้อมูลลูกค้า",
+                  icon: <User className="w-4 h-4" />,
+                  content: (
+                    <CustomerDetailTabContent
+                      customer={customer}
+                      formUpdate={formUpdate}
+                      loadCustomer={loadCustomer}
+                      onUpdate={onUpdate}
+                      isLoading={isLoading}
+                      isPending={isPending}
+                      customerForms={customerForms}
+                      handleCancel={handleCancel}
+                      handleEditForm={handleEditForm}
+                    />
+                  ),
+                },
+                {
+                  key: "dataFromAI",
+                  label: "ข้อมูลจาก AI",
+                  icon: <Bot className="w-4 h-4" />,
+                  content: (
                     <>
-                      <FormCustomerDetailCard
-                        form={formUpdate}
-                        loading={loadCustomer}
-                      />
-                      <FormCustomerInfoCard
-                        form={formUpdate}
-                        loading={loadCustomer}
-                        dataFromAI={dataFromAI || []}
-                      />
-                      <FormCustomerContact
-                        form={formUpdate}
-                        loading={loadCustomer}
+                      <AiGetDataFromChat data={dataFromAI} />
+                    </>
+                  ),
+                },
+                {
+                  key: "order",
+                  label: "ออเดอร์ที่เคยสั่งซื้อ",
+                  icon: <FileText className="w-4 h-4" />,
+                  content: (
+                    <>
+                      <DataTable
+                        queryFunction={({ pageIndex, pageSize }) =>
+                          useOrdersPaginateFilter({
+                            pageIndex,
+                            pageSize,
+                            customerId: id,
+                          })
+                        }
+                        columns={columns}
+                        customerFilterFields={OrderFilterFields}
+                        showAdvancedButton={false}
                       />
                     </>
-                  ) : (
-                    <>
-                      <ViewCustomerDeatailCard
-                        form={formUpdate}
-                        loading={loadCustomer}
-                      />
-                      <ViewCustomerInfoCard
-                        form={formUpdate}
-                        loading={loadCustomer}
-                      />
-                      <ViewCustomerContact
-                        form={formUpdate}
-                        loading={loadCustomer}
-                      />
-                    </>
-                  )}
-                </div>
-
-                <div className="flex-1 flex flex-col gap-3 transition-all h-full">
-                  <RelationshipCard
-                    form={formUpdate}
-                    customer={customer}
-                    loading={loadCustomer}
-                    isEdit={isEdit}
-                    users={[]}
-                  />
-                  <ViewCustomerActivityLog loading={loadCustomer} />
-                </div>
-              </div>
-            </form>
+                  ),
+                },
+                {
+                  key: "note",
+                  label: "โน๊ต/กิจกรรม",
+                  icon: <Activity className="w-4 h-4" />,
+                  content: (
+                    <NoteTabContent
+                      isLoading={isLoading}
+                      customer={customer}
+                      formUpdate={formUpdate}
+                      onUpdate={onUpdate}
+                      fetchCustomerNote={fetchCustomerNote}
+                      customerNote={customerNote}
+                      isEdit={isEdit}
+                      setIsEdit={setIsEdit}
+                    />
+                  ),
+                },
+              ]}
+            />
           </Form>
-
-          <Card>
-            <div className="flex gap-2 mt-5 mx-6">
-              <span className="text-base font-bold pb-4">
-                ออเดอร์ที่เคยสั่งซื้อ
-              </span>
-            </div>
-            <CardContent>
-              {/* <DataTable
-                offSearch
-                offFilter
-                queryFunction={({ pageIndex, pageSize }) =>
-                  ordersPaginateFilter({ pageIndex, pageSize, customerId: id })
-                }
-                columns={columnsOrders}
-              /> */}
-            </CardContent>
-          </Card>
         </div>
       </CustomerProvider>
 
-      {/* <AIMessageView
-        open={AIOpen}
-        onOpenChange={setAIOpen}
-        data={getData}
-        onClickBtn={onSync}
-        isLoading={isLoadingAiNote}
-      /> */}
+      <div className="flex flex-col space-y-2 overflow-y-auto">
+        <AIMessageView
+          open={AIOpen}
+          onOpenChange={setAIOpen}
+          customer={dataFromAI}
+          closeBtn={true}
+          onClickBtn={onSync}
+        />
+      </div>
     </>
   );
 }

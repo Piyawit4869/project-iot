@@ -20,20 +20,50 @@ export const useOrdersPaginate = ({
   status = "",
   limit,
   isAll,
+  docName,
+  docNo,
+  name,
+  profit,
+  total,
+  docStatus,
 }: {
   pageIndex: number;
   pageSize: number;
   status: string;
   limit: number;
   isAll?: boolean;
+  docName?: string;
+  docNo?: string;
+  name?: string;
+  profit?: number;
+  total?: number;
+  docStatus?: string;
 }) => {
   return useQuery({
-    queryKey: ["paginate", pageIndex, pageSize, status, limit],
+    queryKey: [
+      "paginate",
+      pageIndex,
+      pageSize,
+      status,
+      limit,
+      docName,
+      docNo,
+      name,
+      profit,
+      total,
+      docStatus,
+    ],
     queryFn: () =>
       fetchOrderPagination({
         page: pageIndex,
         limit: isAll ? 0 : pageSize,
         status: status,
+        docName,
+        docNo,
+        name,
+        profit,
+        total,
+        docStatus,
       }),
   });
 };
@@ -43,20 +73,33 @@ export const useOrdersPaginateFilter = ({
   pageSize = 20,
   isAll,
   customerId,
+  sortField,
+  sortingBy,
 }: {
   pageIndex: number;
   pageSize: number;
   isAll?: boolean;
   customerId?: string;
+  sortField?: string;
+  sortingBy?: string;
 }) => {
   return useQuery({
-    queryKey: ["paginate", pageIndex, pageSize, customerId],
+    queryKey: [
+      "paginate",
+      pageIndex,
+      pageSize,
+      customerId,
+      sortField,
+      sortingBy,
+    ],
     queryFn: () =>
       fetchOrderPaginationFilter({
         page: pageIndex,
         itemsPerPage: pageSize,
         limit: isAll ? 0 : 10,
         customerId,
+        sortField,
+        sortingBy,
       }),
   });
 };

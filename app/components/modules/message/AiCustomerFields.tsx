@@ -1,85 +1,22 @@
-// AiCustomerFields.tsx
-import * as React from "react";
+import {
+  Building2,
+  CalendarDays,
+  Link,
+  Mail,
+  Navigation,
+  Package,
+  Phone,
+  Smile,
+  Tag,
+  User,
+  Wallet,
+} from "lucide-react";
+import { useNavigate } from "react-router";
 
 import { formatDateAndTime } from "~/components/shared/global-format";
 import type { CustomerRequestResponse } from "../customer/types/customer";
-
-type FieldKey =
-  | "customerStatus"
-  | "businessType"
-  | "customerName"
-  | "citizenId"
-  | "businessPhone"
-  | "businessEmail"
-  | "importantDate"
-  | "incorporationDate"
-  | "accountOwnerName";
-
-type Field = {
-  key: FieldKey;
-  label: string;
-  placeholder?: string;
-  checked?: boolean;
-  defaultValues?: string;
-};
-
-const FIELDS: Field[] = [
-  {
-    key: "customerStatus",
-    label: "สถานะลูกค้า",
-    placeholder: "เช่น ลูกค้าเก่า / ลูกค้าใหม่",
-    defaultValues: "ลูกค้าเก่า",
-  },
-  {
-    key: "businessType",
-    label: "ประเภทธุรกิจ/กิจการ",
-    placeholder: "เช่น ค้าปลีก อาหารและเครื่องดื่ม",
-    checked: true,
-    defaultValues: "ค้าปลีก",
-  },
-  {
-    key: "customerName",
-    label: "ชื่อลูกค้า",
-    placeholder: "ชื่อ-นามสกุล หรือชื่อกิจการ",
-    checked: true,
-    defaultValues: "นามสกุล",
-  },
-  {
-    key: "citizenId",
-    label: "เลขประจำตัวประชาชน",
-    placeholder: "xxxxxxxxxxxxx",
-  },
-  {
-    key: "businessPhone",
-    label: "หมายเลขโทรศัพท์กิจการ",
-    placeholder: "0x-xxx-xxxx",
-  },
-  {
-    key: "businessEmail",
-    label: "อีเมลกิจการ",
-    placeholder: "name@company.com",
-  },
-  {
-    key: "importantDate",
-    label: "วันสำคัญของกิจการ",
-    placeholder: "เช่น ครบรอบเปิดร้าน 15 มิ.ย.",
-  },
-  {
-    key: "incorporationDate",
-    label: "วันก่อตั้งของกิจการ",
-    placeholder: "YYYY-MM-DD",
-  },
-  {
-    key: "accountOwnerName",
-    label: "ชื่อเจ้าของบัญชี",
-    placeholder: "ชื่อ-นามสกุล",
-  },
-];
-
-export type AiFieldsState = Record<
-  FieldKey,
-  { checked: boolean; note: string; defaultValues: string }
->;
+import GlobalButton from "~/components/shared/global-button";
+import { Separator } from "~/components/ui/separator";
 
 type CustomerStatusValue =
   | "newly_registered"
@@ -89,217 +26,176 @@ type CustomerStatusValue =
   | "churned";
 
 type Props = {
-  title?: string;
-  value?: AiFieldsState;
-  defaultValue?: AiFieldsState;
-  onChange?: (v: AiFieldsState) => void;
-  defaultOpen?: FieldKey[];
+  onClickBtn?: () => void;
   data: CustomerRequestResponse;
+  closeBtn?: boolean;
+  noSyncBtn?: boolean;
 };
-
-const statusTh: Record<string, string> = {
-  newly_registered: "ลงทะเบียนใหม่",
-  active: "ใช้งานอยู่",
-  loyal_customer: "ลูกค้าภักดี",
-  at_risk: "เสี่ยง",
-  churned: "ยกเลิก",
-};
-
-const displayStatus = (s: CustomerStatusValue | null) =>
-  s ? statusTh[s] ?? s : "-";
-
-const displayConsent = (b: boolean | null) =>
-  b === null ? "-" : b ? "ยินยอม" : "ไม่ยินยอม";
 
 export function AiCustomerFields({
-  // title = "ข้อมูลลูกค้าประเมินผ่าน AI",
-  value,
-  defaultValue,
-  onChange,
-  defaultOpen,
+  closeBtn,
+  noSyncBtn,
   data,
+  onClickBtn,
 }: Props) {
-  const emptyState = (checkedKeys: FieldKey[] = []): AiFieldsState =>
-    FIELDS.reduce((acc, f) => {
-      acc[f.key] = {
-        checked: checkedKeys.includes(f.key),
-        note: "",
-        defaultValues: "",
-      };
-      return acc;
-    }, {} as AiFieldsState);
+  const navigate = useNavigate();
 
-  const [state, setState] = React.useState<AiFieldsState>(
-    value ?? defaultValue ?? emptyState(defaultOpen)
-  );
-
-  React.useEffect(() => {
-    if (value) setState(value);
-  }, [value]);
-
-  React.useEffect(() => {
-    onChange?.(state);
-  }, [state, onChange]);
-
-  // const setChecked = (key: FieldKey, checked: boolean) => {
-  //   setState((prev) => ({ ...prev, [key]: { ...prev[key], checked } }));
-  //   setOpen((prev) =>
-  //     checked
-  //       ? Array.from(new Set<FieldKey>([...prev, key]))
-  //       : prev.filter((k) => k !== key)
-  //   );
-  // };
-
-  // const setNote = (key: FieldKey, note: string) => {
-  //   setState((prev) => ({ ...prev, [key]: { ...prev[key], note } }));
-  // };
+  const infoItems = [
+    {
+      label: "ชื่อผู้ติดต่อ",
+      value: data?.contactName,
+      icon: <User />,
+    },
+    {
+      label: "ชื่อบริษัท",
+      value: data?.companyName,
+      icon: <Building2 />,
+    },
+    {
+      label: "อีเมล",
+      value: data?.email,
+      icon: <Mail />,
+    },
+    {
+      label: "เบอร์โทรศัพท์ที่ติดต่อได้สะดวก",
+      value: data?.contactNumber,
+      icon: <Phone />,
+    },
+    {
+      label: "ชื่อแบรนด์ (ภาษาอังกฤษ)",
+      value: data?.brandNameEn,
+      icon: <Tag />,
+    },
+    {
+      label: "จำนวนที่ต้องการสั่งผลิต",
+      value: data?.orderQuantity,
+      icon: <Package />,
+    },
+    {
+      label: "งบประมาณหรือช่วงราคาที่ต้องการ (ถ้ามี)",
+      value: data?.budgetRange,
+      icon: <Wallet />,
+    },
+    {
+      label: "วันที่ต้องการใช้สินค้า (ETD)",
+      value: formatDateAndTime(data?.etdDate),
+      icon: <CalendarDays />,
+    },
+  ];
 
   return (
-    // <div className="space-y-3 my-2">
-    //   <div>สถานะลูกค้า : {data.customerStatus ?? "-"}</div>
-    //   <div>อุปนิสัย : {data.personality ?? "-"}</div>
-    //   <span>อุปนิสัย : {data.personality ?? "-"}</span>
-    //   <Accordion
-    //     type="multiple"
-    //     value={open}
-    //     onValueChange={(v) => {
-    //       const keys = v as FieldKey[];
-
-    //       const newlyOpened = keys.filter(
-    //         (k) => !open.includes(k) && !state[k].checked
-    //       );
-
-    //       if (newlyOpened.length) {
-    //         setState((prev) => {
-    //           const next = { ...prev };
-    //           newlyOpened.forEach((k) => {
-    //             next[k] = { ...next[k], checked: true };
-    //           });
-    //           return next;
-    //         });
-    //       }
-
-    //       setOpen(keys);
-    //     }}
-    //     className="w-full"
-    //   >
-    //     {FIELDS.map((f) => {
-    //       const s = state[f.key];
-    //       const preview =
-    //         s.note.trim().length > 0 ? s.note.trim().slice(0, 50) : undefined;
-
-    //       return (
-    //         <AccordionItem
-    //           key={f.key}
-    //           value={f.key}
-    //           className="border rounded-lg mb-2"
-    //         >
-    //           <AccordionTrigger className="px-3 py-2 hover:no-underline gap-3">
-    //             <div className="flex items-center gap-3 w-full">
-    //               <Checkbox
-    //                 checked={s.checked}
-    //                 onCheckedChange={(c) => setChecked(f.key, Boolean(c))}
-    //                 onClick={(e) => e.stopPropagation()}
-    //               />
-    //               <div className="flex-1 text-left">
-    //                 <div className="font-medium">{f.label}</div>
-    //                 {preview && (
-    //                   <div className="text-xs text-muted-foreground line-clamp-1">
-    //                     {preview}
-    //                   </div>
-    //                 )}
-    //               </div>
-    //             </div>
-    //           </AccordionTrigger>
-    //           <AccordionContent className="px-3 pb-3 pt-0">
-    //             <div className="space-y-2">
-    //               <Label
-    //                 htmlFor={`${f.key}-note`}
-    //                 className="text-xs text-muted-foreground"
-    //               >
-    //                 ค่า/บันทึกของฟิลด์นี้
-    //               </Label>
-    //               <Textarea
-    //                 id={`${f.key}-note`}
-    //                 placeholder={f.placeholder}
-    //                 value={s.note || s.defaultValues}
-    //                 onChange={(e) => setNote(f.key, e.target.value)}
-    //                 className="min-h-[72px] resize-y"
-    //               />
-    //             </div>
-    //           </AccordionContent>
-    //         </AccordionItem>
-    //       );
-    //     })}
-    //   </Accordion>
-    // </div>
     <div className="space-y-3 my-2">
-      <div>
-        สรุปคำขอ : <span className="font-semibold">{data?.summary || "-"}</span>
-      </div>
-
-      <div>
-        ชื่อลูกค้าผู้ติดต่อ (ชื่อผู้ติดต่อ) :{" "}
-        <span className="font-semibold">{data?.customerName ?? "-"}</span>
-      </div>
-
-      <div>
-        เบอร์โทร :{" "}
-        <span className="font-semibold">{data?.contactNumber ?? "-"}</span>
-      </div>
-
-      <div>
-        อีเมลล์ : <span className="font-semibold">{data?.email ?? "-"}</span>
-      </div>
-      <div>
-        วันที่อยากใช้ของ (วันนัดสำคัญ) :{" "}
-        <span className="font-semibold">
-          {formatDateAndTime(data?.eventKeyDate)}
-        </span>
-      </div>
-
-      <div>
-        ใช้ในงานอะไร (กิจกรรม) :{" "}
-        <span className="font-semibold">{data?.activityType ?? "-"}</span>
-      </div>
-
-      <div>
-        สถานะลูกค้า :{" "}
-        <span className="font-semibold">
-          {displayStatus(data?.customerStatus)}
-        </span>
-      </div>
-      <div>
-        ยินยอมข้อมูลส่วนบุคคล :{" "}
-        <span className="font-semibold">
-          {displayConsent(data?.consentPii)}
-        </span>
-      </div>
-      <div>
-        เลขผู้เสียภาษี :{" "}
-        <span className="font-semibold">{data?.taxId ?? "-"}</span>
-      </div>
-      <div>
-        ลักษณะการคุยของลูกค้า (อุปนิสัย) :{" "}
-        <span className="font-semibold">{data?.personality ?? "-"}</span>
-      </div>
-      {/* <div>วันเตรียมงาน : {formatDateAndTime(data.eventSetupDate)}</div>
-      <div>สร้างเมื่อ : {formatDateAndTime(data.createdAt)}</div>
-      <div>แก้ไขเมื่อ : {formatDateAndTime(data.updatedAt)}</div> */}
-
-      {/* <div className="text-xs text-muted-foreground mt-4">
-        <div>
-          Customer ID :{" "}
-          <span className="font-mono break-all">{data.customerId}</span>
-        </div>
-        <div>
-          Branch ID :{" "}
-          <span className="font-mono break-all">{data.branchId}</span>
-        </div>
-        <div>
-          Record ID : <span className="font-mono break-all">{data.id}</span>
-        </div>
+      {/* <div className="space-y-2">
+        {infoItems.map((item, index) => (
+          <div key={index} className="flex flex-row flex-wrap ">
+            <span className="flex mr-2 w-4 h-4">{item.icon}</span>
+            <span className="font-bold">{item.label} :</span>
+            <span className="pl-4 text-[#71717A]">
+              {item.value || "ยังไม่มีข้อมูล"}
+            </span>
+          </div>
+        ))}
       </div> */}
+
+      <div className="flex flex-row w-full px-6 py-6 max-h-[95vh] overflow-y-auto">
+        <div className="space-y-4 w-1/2">
+          {infoItems.map((item, index) => {
+            const isPopulated = !!item.value;
+            return (
+              <div key={index} className="group">
+                <div className="flex items-start gap-3">
+                  <div
+                    className={`flex-shrink-0 w-5 h-5 mt-0.5 transition-all ${
+                      isPopulated
+                        ? "text-green-600"
+                        : "text-gray-300 group-hover:text-gray-400"
+                    }`}
+                  >
+                    {item.icon}
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-col gap-1">
+                      <span
+                        className={`text-md font-bold font-medium transition-colors ${
+                          isPopulated ? "text-slate-900" : "text-slate-600"
+                        }`}
+                      >
+                        {item.label}
+                      </span>
+                      <span
+                        className={`text-sm transition-colors break-words ${
+                          isPopulated
+                            ? "text-slate-700 font-medium leading-relaxed"
+                            : "text-slate-400 italic"
+                        }`}
+                      >
+                        {item.value || "ยังไม่มีข้อมูล"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {isPopulated && (
+                  <div className="h-px bg-gradient-to-r from-green-300 to-transparent mt-3" />
+                )}
+              </div>
+            );
+          })}
+        </div>
+        <Separator orientation="vertical" />
+        <div className="w-1/2">
+          <div className="flex items-center ">บุคลิกของลูกค้า</div>
+          <div className="space-y-3">
+            <div className="flex  flex-col flex-wrap gap-2 py-1">
+              <div className="flex flex-row gap-3">
+                <span className="flex items-center justify-center w-5 h-5 text-muted-foreground">
+                  <Smile />
+                </span>
+                <span className="text-md font-semibold text-foreground min-w-[120px]">
+                  ลักษณะการคุยของลูกค้า (อุปนิสัย)
+                </span>
+              </div>
+
+              <div className="ml-10">
+                <span className="text-md text-muted-foreground flex-1">
+                  {data?.personality ||
+                    "ตอนนี้ยังไม่สามารถบอกบุคลิกได้ พอดียังไม่มีโอกาสได้คุยกับเขาเลย ขอทำความรู้จักเขาก่อนดีกว่านะ"}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex justify-between items-center gap-2 mt-5 min-w-0">
+        {!noSyncBtn && (
+          <GlobalButton
+            key="sync-ai"
+            type="button"
+            onClick={() => onClickBtn?.()}
+            variant="secondary"
+            className="flex-1  bg-[#2e498d] text-white hover:bg-[#142a60] hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+            icon={<Link />}
+            label={<span className="hidden sm:inline">Sync ข้อมูล AI</span>}
+          />
+        )}
+        {closeBtn ?? (
+          <GlobalButton
+            key="navigate-customer-details"
+            type="button"
+            onClick={() => {
+              navigate(`/customer/${data.customerId}`);
+            }}
+            variant="secondary"
+            className="flex-1  bg-[#34cf16] text-white hover:bg-[#142a60] hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+            icon={<Navigation />}
+            label={
+              <span className="hidden sm:inline">ไปยังหน้ารายละเอียด</span>
+            }
+          />
+        )}
+      </div>
     </div>
   );
 }

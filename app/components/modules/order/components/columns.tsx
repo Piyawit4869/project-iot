@@ -4,12 +4,16 @@ import { Eye, Trash } from "lucide-react";
 import { Link } from "react-router";
 import { toast } from "sonner";
 import { useDeleteOrder } from "~/api/client/order/useGetOrder";
-import { formatDateTH, formatNumber } from "~/components/shared/global-format";
+import {
+  formatDateAndTime,
+  formatDateTH,
+  formatNumber,
+} from "~/components/shared/global-format";
 import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { Button } from "~/components/ui/button";
 import type { OrderType } from "~/schemas/order/type";
-// import { useOrderViewModel } from "../viewmodels/useOrderViewModel";
+
 export const useOrderColumns = (): ColumnDef<OrderType>[] => {
   const qc = useQueryClient();
   const deleteOrders = useDeleteOrder();
@@ -35,21 +39,19 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
 
   return [
     {
-      accessorKey: "docName",
-      header: "ชื่อออเดอร์",
+      accessorKey: "docNo",
+      header: "เลขที่",
       cell: ({ getValue, row }) => {
-        const name = getValue() as string;
+        const docNo = getValue() as string;
         return (
-          <Link to={`/orders/${row.original.id}`}>
-            <span className="text-sm text-muted-foreground hover:text-blue-400 hover:underline">
-              {name ?? "-"}
-            </span>
-          </Link>
+          <span className="text-blue-400 hover:text-blue-300 hover:underline">
+            <Link to={`/orders/${row.original.id}`}>{docNo ?? "-"}</Link>
+          </span>
         );
       },
     },
     {
-      accessorKey: "customer.name",
+      accessorKey: "name",
       header: "ชื่อลูกค้า",
       cell: ({ row }) => {
         const customer = row.original.customer ?? {};
@@ -63,6 +65,7 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
           .join(" ");
 
         return (
+          // <span className="text-blue-400 hover:text-blue-300 hover:underline">
           <span className="hover:text-blue-400 hover:underline">
             <Link to={`/customer/${customer.id}`}>
               {fullName || customer.name || "-"}
@@ -71,13 +74,13 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
         );
       },
     },
-
     {
       accessorKey: "orderDetails.createdAt",
       header: "วันที่สั่งซื้อ",
+      accessorFn: (row: OrderType) => row.orderDetails?.createdAt,
       cell: (info) => {
         const date = info.getValue() as string;
-        return <span>{formatDateTH(date)}</span>;
+        return <span>{formatDateAndTime(date)}</span>;
       },
     },
     {
@@ -86,10 +89,9 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
       accessorFn: (row: OrderType) => row.orderDetails?.products?.length ?? 0,
       cell: ({ getValue }) => <span>{`${getValue()} รายการ`}</span>,
     },
-
     {
       accessorKey: "status",
-      header: "สถานะการชำระเงิน",
+      header: "สถานะชำระเงิน",
       cell: (info) => {
         const status = info.getValue() as string;
         return (
@@ -99,8 +101,9 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
         );
       },
     },
+
     {
-      accessorKey: "profit",
+      accessorKey: "net",
       header: "กำไรโดยประมาณ",
       cell: (info) => {
         const price = info.getValue() as number;
@@ -119,8 +122,20 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
         );
       },
     },
+    // {
+    //   accessorKey: "docStatus",
+    //   header: "สถานะออเดอร์",
+    //   cell: (info) => {
+    //     const status = info.getValue() as string;
+    //     return (
+    //       <span className="flex justify-center">
+    //         <GlobalStatusBadge value={status} />
+    //       </span>
+    //     );
+    //   },
+    // },
     {
-      accessorKey: "docStatus",
+      accessorKey: "status",
       header: "สถานะออเดอร์",
       cell: (info) => {
         const status = info.getValue() as string;
@@ -132,26 +147,49 @@ export const useOrderColumns = (): ColumnDef<OrderType>[] => {
       },
     },
     {
-      id: "actions",
-      header: "การดำเนินการ",
-      cell: ({ row }) => {
-        return (
-          <>
-            <a href={`/orders/${row.original.id}`}>
-              <Button className="text-sm bg-[#737373] mr-2">
-                <Eye />
-              </Button>
-            </a>
-            <Button
-              className="text-sm bg-[#FF7062]"
-              onClick={() => onDelete(row.original.id)}
-            >
-              <Trash />
-            </Button>
-          </>
-        );
+      accessorKey: "orderDetails.createdAt",
+      header: "วันที่ออกเอกสาร",
+      accessorFn: (row: OrderType) => row.orderDetails?.createdAt,
+      cell: (info) => {
+        const date = info.getValue() as string;
+        return <span>{formatDateAndTime(date)}</span>;
       },
     },
+
+    // {
+    //   accessorKey: "status",
+    //   header: "สถานะการชำระเงิน",
+    //   cell: (info) => {
+    //     const status = info.getValue() as string;
+    //     return (
+    //       <span className="flex justify-center">
+    //         <GlobalStatusBadge value={status} />
+    //       </span>
+    //     );
+    //   },
+    // },
+
+    // {
+    //   id: "actions",
+    //   header: "การดำเนินการ",
+    //   cell: ({ row }) => {
+    //     return (
+    //       <>
+    //         <a href={`/orders/${row.original.id}`}>
+    //           <Button className="text-sm bg-[#737373] mr-2">
+    //             <Eye />
+    //           </Button>
+    //         </a>
+    //         <Button
+    //           className="text-sm bg-[#FF7062]"
+    //           onClick={() => onDelete(row.original.id)}
+    //         >
+    //           <Trash />
+    //         </Button>
+    //       </>
+    //     );
+    //   },
+    // },
   ];
 };
 

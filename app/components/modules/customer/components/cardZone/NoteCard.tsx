@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { NoteLists } from "./note-lists";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { DateISOToDisplayDate } from "~/utils/date-format";
+import { EditActionButtons } from "../edit-action-buttons";
+import React from "react";
 
 export interface TNote {
   id: string;
@@ -17,23 +19,41 @@ export interface TNote {
 export const NotesCard = ({
   loading,
   notes,
-  isEdit,
+  onClick,
   customerNote,
   fetchCustomerNote,
   className,
 }: {
   loading: boolean;
   notes?: any;
-  isEdit?: boolean;
+  onClick?: any;
   customerNote?: any;
   className: string;
   fetchCustomerNote?: () => void;
 }) => {
+  const [isEdit, setIsEdit] = React.useState(false);
   return (
     <Card className={className}>
       {!isEdit ? (
-        <CardHeader>
-          <CardTitle className="text-base font-bold">โน้ต</CardTitle>
+        <CardHeader className=" gap-0">
+          <div className="flex gap-2">
+            <div className="flex  flex-col">
+              <CardTitle className="text-base font-semibold mt-2">
+                โน้ตลูกค้า
+              </CardTitle>
+            </div>
+
+            <EditActionButtons
+              isEdit={isEdit}
+              onSave={onClick}
+              onEdit={() => {
+                setIsEdit(true);
+              }}
+              onCancel={() => {
+                setIsEdit(false);
+              }}
+            />
+          </div>
         </CardHeader>
       ) : (
         <></>
@@ -56,12 +76,12 @@ export const NotesCard = ({
                 return (
                   <div
                     key={item.id ?? index}
-                    className="border rounded-lg p-3 bg-white shadow-sm space-y-2 w-full"
+                    className="border rounded-lg p-3 bg-white shadow-sm space-y-2 w-full dark:bg-muted"
                   >
-                    <p className="whitespace-pre-line text-sm text-gray-800">
+                    <p className="text-sm whitespace-pre-line text-foreground">
                       {item.note}
                     </p>
-                    <div className="flex items-center justify-between text-xs text-gray-500">
+                    <div className="flex items-center justify-between text-sm text-foreground ">
                       <span>
                         {DateISOToDisplayDate(
                           item.created_at ?? item.createdAt ?? ""
@@ -87,12 +107,12 @@ export const NotesCard = ({
                 refetchCustomer={fetchCustomerNote ?? (() => {})}
               />
             </span>
-            <span className="text-sm text-gray-500 flex mt-3">
+            <span className="text-[#71717A]  dark:text-[#b4b4c5] flex mt-3">
               หากต้องการเพิ่มโน้ตกรุณากดที่ปุ่ม + เพื่อเพิ่มโน้ต
             </span>
           </>
         ) : (
-          <span className="text-sm text-gray-500">
+          <span className="text-[#71717A]  dark:text-[#b4b4c5]">
             ลูกค้ารายนี้ยังไม่มีโน้ต หากต้องการเพิ่มโน้ตกรุณากดที่ปุ่มแก้ไข
           </span>
         )}

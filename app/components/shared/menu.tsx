@@ -1,8 +1,8 @@
-"use client";
-
 import * as React from "react";
-// import { signOut } from "next-auth/react";
 import * as Icons from "lucide-react";
+import { useNavigate, useRouteLoaderData } from "react-router";
+import { User, Mail, IdCard, Shield } from "lucide-react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +15,6 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { SkeletonLoading } from "./skeleton-loading";
 import { GlobalImage } from "./global-image";
-import { useNavigate, useRouteLoaderData } from "react-router";
 
 type ItemMenuType = {
   key: string;
@@ -23,9 +22,17 @@ type ItemMenuType = {
   path: string;
   icon: Icons.LucideIcon;
 };
+type NotificationItem = {
+  band: string;
+  noti: string;
+  name: string;
+  email: string;
+  time: string;
+};
 
 export function Menu() {
-  const { me } = useRouteLoaderData("root");
+  const { me, user } = useRouteLoaderData("root");
+
   const navigate = useNavigate();
   const [isDark, setIsDark] = React.useState<boolean>(() => {
     if (typeof window !== "undefined") {
@@ -51,13 +58,19 @@ export function Menu() {
   const firstName = me?.profile?.firstName?.trim();
   const lastName = me?.profile?.lastName?.trim();
   const userName = me?.userName?.trim();
+  const email = me?.email?.trim();
+  // const role = me?.mainDepartment;
+
+  const role =
+    me && me.permissions
+      ? Object.keys(me?.permissions)?.map((role: any) => role)[0] || "-"
+      : "-";
 
   const hasFullName = firstName || lastName;
 
   const displayFullname = hasFullName
-    ? `${firstName ?? ""} ${lastName ?? ""}`.trim() +
-      (userName ? ` (${userName})` : "")
-    : userName ?? "";
+    ? `${firstName ?? ""} ${lastName ?? ""}`.trim()
+    : (userName ?? "");
 
   // const [language, setLanguage] = React.useState<"en" | "th">("th");
 
@@ -79,9 +92,107 @@ export function Menu() {
       icon: Icons.Settings,
     },
   ];
+  const Badge = {
+    Chat: "แชท",
+    Customer: "ลูกค้า",
+    Order: "ออเดอร์",
+    Inventory: "คลังสินค้า",
+    Product: "สินค้า",
+    Employee: "พนักงาน",
+    Setting: "การตั้งค่า",
+  } as const;
+  const notification = [
+    {
+      band: Badge.Chat,
+      noti: "New project created",
+      name: "John Doe",
+      email: "john@example.com",
+      time: "2 นาทีที่แล้ว",
+    },
+    {
+      band: Badge.Customer,
+      noti: "Team member added to your workspace",
+      name: "sarah Smith",
+      email: "sarah@example.com",
+      time: "151 นาทีที่แล้ว",
+    },
+    {
+      band: Badge.Order,
+      noti: "Team member added to your workspace",
+      name: "sarah Smith",
+      email: "sarah@example.com",
+      time: "151 นาทีที่แล้ว",
+    },
+    {
+      band: Badge.Inventory,
+      noti: "Team member added to your workspace",
+      name: "sarah Smith",
+      email: "sarah@example.com",
+      time: "151 นาทีที่แล้ว",
+    },
+    {
+      band: Badge.Product,
+      noti: "Team member added to your workspace",
+      name: "sarah Smith",
+      email: "sarah@example.com",
+      time: "151 นาทีที่แล้ว",
+    },
+    {
+      band: Badge.Employee,
+      noti: "Team member added to your workspace",
+      name: "sarah Smith",
+      email: "sarah@example.com",
+      time: "151 นาทีที่แล้ว",
+    },
+    {
+      band: Badge.Setting,
+      noti: "Team member added to your workspace",
+      name: "sarah Smith",
+      email: "sarah@example.com",
+      time: "151 นาทีที่แล้ว",
+    },
+    {
+      band: Badge.Chat,
+      noti: "Team member added to your workspace",
+      name: "sarah Smith",
+      email: "sarah@example.com",
+      time: "151 นาทีที่แล้ว",
+    },
+    {
+      band: Badge.Order,
+      noti: "Team member added to your workspace",
+      name: "sarah Smith",
+      email: "sarah@example.com",
+      time: "151 นาทีที่แล้ว",
+    },
+  ];
+  function renderNotification(notification: NotificationItem[]) {
+    const elements = [];
 
+    for (let i = 0; i < notification.length; i++) {
+      const item = notification[i];
+      elements.push(
+        <div key={i} className="space-y-2">
+          <div className="flex flex-row justify-between">
+            <div className="inline-flex items-center bg-blue-100 text-blue-600 px-3 py-1 rounded-full">
+              <span className="text-sm font-medium">{item.band}</span>
+              <span className="w-2 h-2 bg-blue-500 rounded-full ml-2"></span>
+            </div>
+            <p>{item.time}</p>
+          </div>
+          <h6 className="font-medium leading-none">{item.noti}</h6>
+          <p className="text-sm text-muted-foreground">
+            {item.name}
+            <br />
+            {item.email}
+          </p>
+        </div>
+      );
+    }
+    return elements;
+  }
   return (
-    <div className="justify-between items-center flex gap-3">
+    <div className="justify-between items-center flex gap-1 pr-3">
       {/* <button
         onClick={toggleLanguage}
         className="relative w-10 h-5 rounded-full border border-border shadow-inner transition-colors duration-300"
@@ -94,27 +205,7 @@ export function Menu() {
           {language.toUpperCase()}
         </span>
       </button> */}
-
-      <button
-        onClick={toggleDarkMode}
-        className="relative w-10 h-5 rounded-full border border-border shadow-inner transition-colors duration-300"
-      >
-        <span
-          className={`absolute top-[1px] left-[2px] h-4 w-4 flex items-center justify-center rounded-full transition-all duration-300
-          ${
-            isDark
-              ? "translate-x-[18px] bg-blue-500"
-              : "translate-x-0 bg-yellow-400"
-          } text-white`}
-        >
-          {isDark ? (
-            <Icons.Moon className="h-[12px] w-[12px]" />
-          ) : (
-            <Icons.Sun className="h-[12px] w-[12px]" />
-          )}
-        </span>
-      </button>
-
+      {/*
       <Popover>
         <PopoverTrigger asChild>
           <Icons.BellRing className="items-center hover:text-accent1 hover:scale-110 mr-5 mt-1 p-1 cursor-pointer" />
@@ -124,24 +215,24 @@ export function Menu() {
             การแจ้งเตือน
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <div className="grid gap-4 mt-4">
-            <div className="space-y-2">
-              <h6 className="font-medium leading-none">ไม่มีการแจ้งเตือน</h6>
-            </div>
-            {/* <div className="space-y-2">
-              <h6 className="font-medium leading-none">การจัดการงาน</h6>
-              <p className="text-sm text-muted-foreground">
-                เจมส์ เข้างาน 10:00
-              </p>
-              <DropdownMenuSeparator />
-              <h6 className="font-medium leading-none mt-2">ผู้ช่วยส่วนตัว</h6>
-              <p className="text-sm text-muted-foreground">
-                สวัสดี วันนี้มีอะไรให้ช่วยไหม
-              </p>
-            </div> */}
+          <DropdownMenuLabel className="text-base flex ">
+            <button className="flex  text-blue-600">
+              <Icons.Check className="items-center hover:text-accent1  " />
+              ทำเครื่องหมายทั้งหมดว่าอ่านแล้ว
+            </button>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <div className="grid gap-4 mt-4 overflow-y-auto max-h-128 pr-2 bg-blue-1">
+            {renderNotification(notification)}
           </div>
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel className="text-base flex justify-center item-aligmen-center">
+            <button className="flex justify-center text-blue-600">
+              ดูการแจ้งเตือนทั้งหมด
+            </button>
+          </DropdownMenuLabel>
         </PopoverContent>
-      </Popover>
+      </Popover> */}
 
       <DropdownMenu>
         <DropdownMenuTrigger className="hover:scale-110">
@@ -163,9 +254,26 @@ export function Menu() {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>
-            <div>
-              <div>{me?.email ?? "-"}</div>
-              <div> {displayFullname}</div>
+            <div className="space-y-1 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <User className="h-4 w-4 text-primary" />
+                <span>{displayFullname ?? "-"}</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-primary" />
+                <span>{email ?? "-"}</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <IdCard className="h-4 w-4 text-primary" />
+                <span>{userName ?? "-"}</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Shield className="h-4 w-4 text-primary" />
+                <span>{role ?? "-"}</span>
+              </div>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
@@ -183,7 +291,31 @@ export function Menu() {
                 </a>
               </DropdownMenuItem>
             ))}
+
+            <DropdownMenuItem>
+              <Icons.Palette className="w-5 h-5" />
+              <button
+                onClick={toggleDarkMode}
+                className="relative w-10 h-5 rounded-full border border-border shadow-inner transition-colors duration-300"
+              >
+                <span
+                  className={`absolute top-[1px] left-[2px] h-4 w-4 flex items-center justify-center rounded-full transition-all duration-300
+          ${
+            isDark
+              ? "translate-x-[18px] bg-blue-500"
+              : "translate-x-0 bg-yellow-400"
+          } text-white`}
+                >
+                  {isDark ? (
+                    <Icons.Moon className="h-[12px] w-[12px]" />
+                  ) : (
+                    <Icons.Sun className="h-[12px] w-[12px]" />
+                  )}
+                </span>
+              </button>
+            </DropdownMenuItem>
           </DropdownMenuGroup>
+
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => navigate("/logout")}

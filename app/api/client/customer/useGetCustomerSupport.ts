@@ -5,15 +5,16 @@ import {
 } from "../../server/customer/customerSupport";
 import type { CustomerSupportFormValues } from "~/schemas/customer/support/support";
 
-export const useCreateCustomerSupoort = () => {
+export const useCreateCustomerSupoort = (id: string) => {
   return useMutation({
     mutationFn: (values: CustomerSupportFormValues) =>
-      fetchCreateCustomerSupport(values),
+      fetchCreateCustomerSupport(id, values),
   });
 };
 
-export const useDeleteCustomerSupport = () => {
+export const useDeleteCustomerSupport = (id: string) => {
   return useMutation({
-    mutationFn: (id: string) => fetchDeleteCustomerSupport(id),
+    mutationFn: (values: CustomerSupportFormValues) =>
+      fetchDeleteCustomerSupport(id, values),
   });
 };

@@ -9,6 +9,7 @@ import type {
   CustomerUpdateChatDetailsAndTags,
   CustomerUpdateTags,
   CustomerUpdateValueNote,
+  CustomerCreateTag,
 } from "~/schemas/customer/customer";
 import type {
   ContactValues,
@@ -17,21 +18,37 @@ import type {
 
 export const fetchCustomerPagination = async (params: {
   page: number;
-  itemsPerPage: number;
-  status: string;
-  limit: number;
+  limit?: number;
+  status?: string;
+  itemsPerPage?: number;
+  name?: string;
+  fullname?: string;
+  customerPlatform?: string;
+  priorityForm?: number;
+  priorityTo?: number;
+  priority?: number;
+  tags?: string;
+  customerType?: string;
+  phone?: string;
+  createdBy?: string;
+  updatedBy?: string;
+  createdFrom?: string;
+  createdTo?: string;
+  updatedFrom?: string;
+  updatedTo?: string;
 }) => {
   try {
-    const p = Object.assign({});
-    p.page = params.page;
-    p.limit = params.limit;
-    if (params.status && params.status !== "all") {
-      p.status = params.status;
+    const p = Object.fromEntries(
+      Object.entries(params).filter(
+        ([_, v]) => v !== undefined && v !== "" && v !== null
+      )
+    );
+
+    if (p.status === "all") {
+      delete p.status;
     }
 
-    const res = await ApiConfig.get(`/crud/customers/paginate`, {
-      params: p,
-    });
+    const res = await ApiConfig.get(`/crud/customers/paginate`, { params: p });
 
     return res.data;
   } catch (error) {
@@ -66,6 +83,15 @@ export const fetchCustomerNoteAiById = async (id: string) => {
   }
 };
 
+export const fetchCustomerSummaryNoteAiById = async (customerId: string) => {
+  try {
+    const res = await ApiConfig.get(`/chats/summary/note/${customerId}`);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const fetchCreateCustomer = async (payload: CustomerValues) => {
   try {
     const res = await ApiConfig.post(`/crud/customers/create`, payload);
@@ -94,7 +120,7 @@ export const fetchAiReplySettings = async (
 ) => {
   try {
     const res = await ApiConfig.put(
-      `/crud/customers/edit/${id}/ai-reply-settings`,
+      `/crud/chats/rooms/edit/${id}/ai-reply-settings`,
       payload
     );
 
@@ -113,18 +139,45 @@ export const fetchDeleteCustomer = async (id: string) => {
   }
 };
 
-export const fetchCustomerSummary = async () => {
+export const fetchCustomerSummary = async (customerType?: string) => {
   try {
-    const res = await ApiConfig.get(`/crud/customers/status-summary`);
+    const res = await ApiConfig.get(`/crud/customers/status-summary`, {
+      params: { customerType },
+    });
     return res.data;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
 export const fetchAllContact = async () => {
   try {
     const res = await ApiConfig.get(`/crud/customer-contacts`);
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchGetAnalyzeCustomer = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(
+      `/crud/customers/${id}/summary-chat-message
+       `
+    );
+
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchGetAiSettings = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(
+      `/crud/chats/rooms/${id}/ai-reply-settings`
+    );
 
     return res.data;
   } catch (error) {
@@ -304,12 +357,52 @@ export const fetchUpdateCustomerChatDetailsAndTags = async (
       id,
       chatDetails
     );
-    const resTags = await fetchUpdateCustomerTags(id, tags);
+    // const resTags = await fetchUpdateCustomerTags(id, tags);
     return {
       chatDetails: resChatDetails.data,
-      tags: resTags.data,
+      // tags: [],
     };
   } catch (error) {
     return error;
+  }
+};
+
+export const createTag = async (payload: CustomerCreateTag) => {
+  try {
+    const res = await ApiConfig.post(`/crud/tags/create`, payload);
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAllTags = async () => {
+  try {
+    const res = await ApiConfig.get(`/crud/tags`);
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getChatRoomPartipants = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(`/crud/chats/rooms/participants/${id}`);
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getChatRoomAssistantId = async (id: string) => {
+  try {
+    const res = await ApiConfig.get(`/crud/chats/rooms/details/${id}`);
+
+    return res.data;
+  } catch (error) {
+    throw error;
   }
 };

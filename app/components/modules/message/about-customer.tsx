@@ -23,7 +23,7 @@ import type {
 } from "~/schemas/customer/customer";
 import { useUpdateCustomerChatDetailsAndTags } from "~/api/client/customer/useCustomer";
 import { StarRating } from "~/components/shared/StarRating";
-import { customerStatus } from "~/initData/customer-initData";
+import { customerType } from "~/initData/customer-initData";
 import {
   Form,
   FormControl,
@@ -72,7 +72,7 @@ export const AboutCustomer: React.FC<ChecklistDialogProps> = (props) => {
   const form = useForm<FormValues>({
     defaultValues: {
       customerName: "",
-      status: "",
+      status: "ordinary_person",
       tags: [],
       remark: "",
       rating: 0,
@@ -143,8 +143,6 @@ export const AboutCustomer: React.FC<ChecklistDialogProps> = (props) => {
     });
   }, [open, form, customer]);
 
-  // const currentCustomer = useCustomer(customerId);
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -198,7 +196,6 @@ export const AboutCustomer: React.FC<ChecklistDialogProps> = (props) => {
                 </FormItem>
               )}
             />
-            <TagsSelectorModal form={form} />
             {/* สถานะลูกค้า */}
             <FormField
               control={form.control}
@@ -215,7 +212,7 @@ export const AboutCustomer: React.FC<ChecklistDialogProps> = (props) => {
                         <SelectValue placeholder="เลือกสถานะของลูกค้า" />
                       </SelectTrigger>
                       <SelectContent>
-                        {customerStatus.map((item) => (
+                        {customerType.map((item) => (
                           <SelectItem key={item.value} value={item.value}>
                             {item.label}
                           </SelectItem>

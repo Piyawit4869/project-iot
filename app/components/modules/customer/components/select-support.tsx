@@ -58,7 +58,7 @@ export const CustomerSupportSelector: React.FC<CustomerFormCreateProps> = ({
   };
 
   return (
-    <div className="space-y-6 ">
+    <div className="grid grid-cols-1  md:grid-cols-2 gap-4">
       <FormField
         control={form.control}
         name={"supports"}
@@ -111,8 +111,8 @@ export const CustomerSupportSelector: React.FC<CustomerFormCreateProps> = ({
                       {isLoading
                         ? "กำลังโหลดรายชื่อผู้รับผิดชอบหลัก"
                         : mainInfo
-                        ? "เปลี่ยนผู้รับผิดชอบหลัก"
-                        : "เลือกผู้รับผิดชอบหลัก +"}
+                          ? "เปลี่ยนผู้รับผิดชอบหลัก"
+                          : "เลือกผู้รับผิดชอบหลัก +"}
                     </Button>
                   </PopoverTrigger>
 
@@ -123,7 +123,7 @@ export const CustomerSupportSelector: React.FC<CustomerFormCreateProps> = ({
                         value={search}
                         onValueChange={setSearch}
                       />
-                      <CommandList>
+                      <CommandList className=" overflow-auto scrollbar-hide">
                         {isLoading ? (
                           <div className="p-5 text-gray-400 text-sm">
                             กำลังโหลด...
@@ -194,7 +194,7 @@ export const CustomerSupportSelector: React.FC<CustomerFormCreateProps> = ({
                   alt={info.fullName}
                   className="w-7 h-7 rounded-2xl"
                 />
-                <div className="flex flex-col text-sm">
+                <div className="flex flex-col text-sm ">
                   <span>ชื่อ : {info.fullName || "-"}</span>
                   <span>อีเมล : {info.email || "-"}</span>
                   <span>ตำแหน่ง : {info.department || "-"}</span>
@@ -232,7 +232,7 @@ export const CustomerSupportSelector: React.FC<CustomerFormCreateProps> = ({
               </Button>
             </PopoverTrigger>
 
-            <PopoverContent className="w-90 max-w-full p-2 flex ml-2">
+            <PopoverContent className="w-90 max-w-full p-2 flex ml-2 ">
               <Command>
                 <CommandInput
                   placeholder="ค้นหาผู้รับผิดชอบรอง"

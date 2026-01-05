@@ -23,12 +23,20 @@ import {
   fetchUpdateCustomerChatDetailsAndTags,
   fetchUpdateCustomerNote,
   fetchUpdateCustomerTags,
+  fetchGetAnalyzeCustomer,
+  fetchCustomerSummaryNoteAiById,
+  createTag,
+  getAllTags,
+  getChatRoomPartipants,
+  fetchGetAiSettings,
+  getChatRoomAssistantId,
 } from "../../server/customer/customer";
 import type {
   ContactValues,
   CustomerValues,
 } from "~/schemas/customer/customer-form";
 import type {
+  CustomerCreateTag,
   CustomerDeleteValueNote,
   CustomerUpdateChatDetails,
   CustomerUpdateChatDetailsAndTags,
@@ -42,43 +50,99 @@ export const useCustomerPaginate = ({
   pageSize = 10,
   status = "",
   limit,
+  name,
+  fullname,
+  customerPlatform,
+  priorityForm,
+  priorityTo,
+  priority,
+  tags,
+  customerType,
+  phone,
+  createdBy,
+  updatedBy,
+  createdFrom,
+  createdTo,
+  updatedFrom,
+  updatedTo,
 }: {
   pageIndex: number;
   pageSize: number;
-  status: string;
-  limit: number;
+  status?: string;
+  limit?: number;
+  name?: string;
+  fullname?: string;
+  customerPlatform?: string;
+  priorityForm?: number;
+  priorityTo?: number;
+  priority?: number;
+  tags?: string;
+  customerType?: string;
+  phone?: string;
+  createdBy?: string;
+  updatedBy?: string;
+  createdFrom?: string;
+  createdTo?: string;
+  updatedFrom?: string;
+  updatedTo?: string;
 }) => {
   return useQuery({
-    queryKey: ["customer-paginate", pageIndex, pageSize, status, limit],
+    queryKey: [
+      "customer-paginate",
+      pageIndex,
+      pageSize,
+      status,
+      limit,
+      name,
+      fullname,
+      customerPlatform,
+      priorityForm,
+      priorityTo,
+      priority,
+      tags,
+      customerType,
+      phone,
+      createdBy,
+      updatedBy,
+      createdFrom,
+      createdTo,
+      updatedFrom,
+      updatedTo,
+    ],
     queryFn: () =>
       fetchCustomerPagination({
         page: pageIndex,
-        itemsPerPage: pageSize,
+        // itemsPerPage: pageSize,
         status: status,
-        limit: limit,
+        limit: limit || undefined,
+        name,
+        fullname,
+        customerPlatform,
+        priorityForm,
+        priorityTo,
+        tags,
+        customerType,
+        phone,
+        createdBy,
+        updatedBy,
+        createdFrom,
+        createdTo,
+        updatedFrom,
+        updatedTo,
       }),
     enabled: !!pageIndex && !!pageSize,
   });
 };
 
-export const useConnectedChatRoomAssistant = (
-  customerId: string,
-  chatRoomId: string
-) => {
+export const useConnectedChatRoomAssistant = () => {
   return useMutation({
-    mutationFn: (values: any) =>
-      connectedChatRoomAssistant({
-        ...values,
-        customerId: customerId,
-        chatRoomId: chatRoomId,
-      }),
+    mutationFn: (values: any) => connectedChatRoomAssistant(values),
   });
 };
 
-export const useConnectedChatRoomAIConfig = (chatRoomId: string) => {
+export const useConnectedChatRoomAIConfig = () => {
   return useMutation({
-    mutationFn: (values: any) =>
-      connectedChatRoomAIConfig({ ...values, chatRoomId: chatRoomId }),
+    mutationFn: (values: any) => connectedChatRoomAIConfig({ ...values }),
   });
 };
 
@@ -86,34 +150,46 @@ export const useGetAiNote = (id: string) =>
   useQuery({
     queryKey: ["customer-ai-note", id],
     queryFn: () => fetchCustomerNoteAiById(id),
-  });
-
-export const useAllCustomer = () =>
-  useQuery({
-    queryKey: ["customer-all"],
-    queryFn: () => fetchCustomerAll(),
-  });
-
-export const useCustomer = (id: string) =>
-  useQuery({
-    queryKey: ["customer", id],
-    queryFn: () => fetchCustomerById(id),
     enabled: !!id,
   });
 
-export const useCustomerNote = (id: string) =>
+export const useGetSummaryAINote = (id: string) =>
   useQuery({
+    queryKey: ["customer-ai-summary-note", id],
+    queryFn: () => fetchCustomerSummaryNoteAiById(id),
+    enabled: !!id,
+  });
+
+export const useAllCustomer = (id?: string) =>
+  useQuery({
+    queryKey: ["customer-all"],
+    queryFn: () => fetchCustomerAll(),
+    enabled: !id,
+  });
+
+export const useCustomer = (id: string) => {
+  return useQuery({
+    queryKey: ["customer-single", id],
+    queryFn: () => fetchCustomerById(id),
+    enabled: !!id,
+  });
+};
+
+export const useCustomerNote = (id: string) => {
+  return useQuery({
     queryKey: ["customer-note", id],
     queryFn: () => fetchCustomerById(id),
     enabled: !!id,
   });
+};
 
-export const useCustomerAiSetting = (id: string) =>
-  useQuery({
+export const useCustomerAiSetting = (id: string) => {
+  return useQuery({
     queryKey: ["customer-ai-setting", id],
     queryFn: () => fetchCustomerById(id),
     enabled: !!id,
   });
+};
 
 export const useCreateCustomer = () => {
   return useMutation({
@@ -133,6 +209,14 @@ export const useAiReplySettings = (id: string) => {
   });
 };
 
+export const useGetAiReplySettings = (id: string) => {
+  return useQuery({
+    queryKey: ["ai-reply-setting", id],
+    queryFn: () => fetchGetAiSettings(id),
+    enabled: !!id,
+  });
+};
+
 export const useDeleteCustomer = () => {
   return useMutation({
     mutationFn: (id: string) => fetchDeleteCustomer(id),
@@ -144,6 +228,14 @@ export const useAllContacts = () => {
     queryKey: ["contacts"],
     queryFn: () => fetchAllContact(),
     enabled: true,
+  });
+};
+
+export const useGetAnalyzeCustomer = (id: string) => {
+  return useQuery({
+    queryKey: ["analyze-customer", id],
+    queryFn: () => fetchGetAnalyzeCustomer(id),
+    enabled: !!id,
   });
 };
 
@@ -182,11 +274,10 @@ export const useDeleteContact = () => {
   });
 };
 
-export const useAllCustomerSummary = () => {
+export const useAllCustomerSummary = (customerType?: string) => {
   return useQuery({
-    queryKey: ["contacts"],
-    queryFn: () => fetchCustomerSummary(),
-    enabled: true,
+    queryKey: ["contacts", customerType],
+    queryFn: () => fetchCustomerSummary(customerType),
   });
 };
 
@@ -229,5 +320,34 @@ export const useUpdateCustomerChatDetailsAndTags = (id: string) => {
   return useMutation({
     mutationFn: (values: CustomerUpdateChatDetailsAndTags) =>
       fetchUpdateCustomerChatDetailsAndTags(id, values),
+  });
+};
+
+export const useCreateTag = () => {
+  return useMutation({
+    mutationFn: (values: CustomerCreateTag) => createTag(values),
+  });
+};
+
+export const useGetAllTags = () => {
+  return useQuery({
+    queryKey: ["customer-tags"],
+    queryFn: () => getAllTags(),
+  });
+};
+
+export const useChatRoomParticipants = (id: string) => {
+  return useQuery({
+    queryKey: ["room-participant", id],
+    queryFn: () => getChatRoomPartipants(id),
+    enabled: !!id,
+  });
+};
+
+export const useGetChatRoomAssistantId = (id: string) => {
+  return useQuery({
+    queryKey: ["room-assistant-id", id],
+    queryFn: () => getChatRoomAssistantId(id),
+    enabled: !!id,
   });
 };

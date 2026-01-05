@@ -1,35 +1,60 @@
-"use server";
-
 import type { UsersFormValues } from "~/schemas/users/user";
 import { ApiConfig } from "../config";
 import type { PasswordFormValues } from "~/schemas/users/password-user";
+import axios from "axios";
 
 export const fetchUserPagination = async (params: {
   page: number;
   limit: number;
   status: string;
+  userName?: string;
+  fullname?: string;
+  email?: string;
+  emId?: string;
+  active?: boolean;
+  phone?: string;
+  gender?: number;
+  createdBy?: string;
+  updatedBy?: string;
+  createdFrom?: string;
+  createdTo?: string;
+  updatedFrom?: string;
+  updatedTo?: string;
 }) => {
   try {
-    const p = Object.assign({});
-    p.page = params.page;
-    p.limit = params.limit;
-    if (params.status && params.status !== "all") {
-      p.status = params.status;
+    const p = { ...params } as any;
+    // p.page = params.page;
+    // p.userName = params.userName;
+    // p.email = params.email;
+    // p.limit = params.limit;
+    if (params.status && params.status === "all") {
+      delete p.status;
     }
 
-    const { data } = await ApiConfig.get(`/crud/users/paginate`, {
+    const res = await ApiConfig.get(`/crud/users/paginate`, {
       params: p,
     });
 
-    return data;
+    return res.data;
   } catch (error) {
     return error;
   }
 };
 
-export const fetchGetAllUsers = async () => {
+export const fetchGetSearchlUsers = async (params: { search?: string }) => {
   try {
-    const { data } = await ApiConfig.get(`/crud/users`);
+    const { data } = await ApiConfig.get(`/crud/users/paginate`, {
+      params,
+    });
+    return data.items;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const fetchGetAllUsers = async (params?: { role?: string | null }) => {
+  try {
+    const { data } = await ApiConfig.get(`/crud/users`, { params });
     return data;
   } catch (error) {
     return error;
@@ -63,7 +88,12 @@ export const fetchCreateUser = async (payload: UsersFormValues) => {
     const { data } = await ApiConfig.post(`/crud/users/create`, payload);
     return data;
   } catch (error) {
-    return error;
+    if (axios.isAxiosError(error)) {
+      console.error("HTTP", error.response?.status);
+      console.error("DATA →", JSON.stringify(error.response?.data, null, 2)); // สำคัญสุด
+      console.error("HEADERS →", error.response?.headers);
+    }
+    throw error;
   }
 };
 
@@ -124,5 +154,58 @@ export const fetchUserSummary = async () => {
     return res.data;
   } catch (error) {
     return error;
+  }
+};
+
+export const fetchSearchUserOrgs = async (search?: string) => {
+  try {
+    const { data } = await ApiConfig.get(`/crud/users/search/organizations`, {
+      params: search,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchSearchUserBranches = async (
+  groupId: string,
+  search?: string
+) => {
+  try {
+    const { data } = await ApiConfig.get(
+      `/crud/users/search/${groupId}/branches`,
+      {
+        params: search,
+      }
+    );
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const changeActiveOrg = async (
+  userId: string,
+  payload: { organizationId: string }
+) => {
+  try {
+    const { data } = await ApiConfig.put(`/crud/users/meta/${userId}`, payload);
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const checkUserEmailDuplicate = async (payload: {
+  email: string;
+}): Promise<boolean> => {
+  try {
+    const { data } = await ApiConfig.post("/crud/users/email-check", payload);
+
+    return data.result as boolean;
+  } catch (error) {
+    throw error;
   }
 };

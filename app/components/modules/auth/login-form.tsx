@@ -14,10 +14,13 @@ import {
 import React from "react";
 import GlobalButton from "~/components/shared/global-button";
 import BgLogin from "/assets/images/bg-login.png";
-import LogoImage from "/assets/images/rome.png";
+import LogoImage from "/assets/images/rome.svg";
 import LogoUtotechImage from "/assets/images/logo.webp";
-import { useActionData, useNavigation, useSubmit } from "react-router";
+import { Link, useActionData, useNavigation, useSubmit } from "react-router";
 import { loginFormSchema, type LoginFormValues } from "~/schemas/login";
+import WebSitePolicyDialog from "~/components/modules/auth/web-policy";
+import { useState } from "react";
+import SavePolicyDialog from "~/components/modules/auth/save-policy";
 
 export default function LoginForm() {
   const { state } = useNavigation();
@@ -27,6 +30,8 @@ export default function LoginForm() {
   const submit = useSubmit();
 
   const [showPassword, setShowPassword] = React.useState(false);
+  const [openWeb, setWebPoOpen] = React.useState<boolean>(false);
+  const [openSave, setSavePoOpen] = React.useState<boolean>(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -131,7 +136,10 @@ export default function LoginForm() {
               name="user"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>ชื่อผู้ใช้งาน / อีเมล</FormLabel>
+                  <FormLabel>
+                    <Icons.Mail className="w-5 h-5" />
+                    ชื่อผู้ใช้งาน / อีเมล
+                  </FormLabel>
                   <FormControl>
                     <Input {...field} placeholder="กรอกชื่อผู้ใช้งาน/อีเมล" />
                   </FormControl>
@@ -145,7 +153,10 @@ export default function LoginForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>รหัสผ่าน</FormLabel>
+                  <FormLabel>
+                    <Icons.UnlockIcon className="w-5 h-5" />
+                    รหัสผ่าน
+                  </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
@@ -165,11 +176,23 @@ export default function LoginForm() {
                 </FormItem>
               )}
             />
+
+            <div className="mt-1 flex flex-row justify-end  gap-2 text-gray-500 underline">
+              <Link to="/forgot-password" key="hover:underline">
+                ลืมรหัสผ่าน
+              </Link>
+            </div>
+
             <span className="w-full flex justify-center text-red-600">
               {action?.error}
             </span>
             <GlobalButton
-              label="เข้าสู่ระบบ"
+              label={
+                <span className="flex items-center justify-center gap-2 -translate-x-1">
+                  <Icons.LogIn className="w-5 h-5" />
+                  เข้าสู่ระบบ
+                </span>
+              }
               type="submit"
               loading={
                 isProcessing || state === "submitting" || state === "loading"
@@ -185,13 +208,22 @@ export default function LoginForm() {
         </Form>
 
         <div className="mt-10 flex flex-row gap-2">
-          <a href="" className="hover:underline">
+          <div
+            key="hover:underline"
+            className="cursor-pointer"
+            onClick={() => setWebPoOpen(true)}
+          >
             นโยบายเว็บไซต์
-          </a>
-          |
-          <a href="" className="hover:underline">
+          </div>
+          <WebSitePolicyDialog openWeb={openWeb} setOpen={setWebPoOpen} />|
+          <div
+            key="hover:underline"
+            className="cursor-pointer"
+            onClick={() => setSavePoOpen(true)}
+          >
             นโยบายการรักษาความมั่นคงปลอดภัย
-          </a>
+          </div>
+          <SavePolicyDialog openSave={openSave} setOpen={setSavePoOpen} />
         </div>
       </div>
     </div>

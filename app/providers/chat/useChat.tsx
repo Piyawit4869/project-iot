@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
 
 export type Message = {
   id: string;
@@ -13,6 +13,12 @@ export type Message = {
   customerId: string;
   imageUrl: string;
   timestamp: string;
+  messageId: string;
+};
+
+export type TypingUser = {
+  userId: string;
+  fullName: string;
 };
 
 type ChatContextType = {
@@ -24,7 +30,11 @@ type ChatContextType = {
   addMessagesToTop: (msgs: Message[]) => void;
   updateMessage: (id: string | number, updated: Partial<Message>) => void;
   removeMessage: () => void;
+  clearMessagesAI: () => void;
   setCurrentRoomId: (roomId: string) => void;
+  setMessagesAI: (value: any) => void;
+  typingUsers: TypingUser[];
+  setTypingUsers: React.Dispatch<React.SetStateAction<TypingUser[]>>;
 };
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -33,6 +43,8 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [messagesAI, setMessagesAI] = useState<Message[]>([]);
   const [currentRoomId, setCurrentRoomId] = useState<string>("");
+
+  const [typingUsers, setTypingUsers] = React.useState<TypingUser[]>([]);
 
   const addMessagesToTop = (msgs: Message[]) => {
     setMessages((prev) => {
@@ -59,6 +71,12 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
   const removeMessage = () => {
     setMessages([]);
+    setMessagesAI([]);
+  };
+
+  const clearMessagesAI = () => {
+    setMessages([]);
+    setMessagesAI([]);
   };
 
   return (
@@ -71,8 +89,12 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         addMessagesToTop,
         updateMessage,
         removeMessage,
+        clearMessagesAI,
         addMessageAI,
         setCurrentRoomId,
+        setMessagesAI,
+        typingUsers,
+        setTypingUsers,
       }}
     >
       {children}

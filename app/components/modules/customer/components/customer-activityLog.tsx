@@ -3,6 +3,7 @@ import React from "react";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { cn } from "~/lib/utils";
 
 // ----- Types -----
 export type Activity = {
@@ -20,14 +21,16 @@ type CustomerFormCreateProps = {
   form?: any;
   loading?: boolean;
   activities?: Activity[];
+  className?: any;
 };
 
 export const ViewCustomerActivityLog: React.FC<CustomerFormCreateProps> = ({
   loading = false,
   activities = [],
+  className,
 }) => {
   return (
-    <Card className="h-50">
+    <Card className={cn("h-50", className)}>
       <CardHeader>
         <div className="flex  items-center ">
           <CardTitle className="text-base font-bold">บันทึกกิจกรรม</CardTitle>
@@ -44,14 +47,14 @@ export const ViewCustomerActivityLog: React.FC<CustomerFormCreateProps> = ({
       ) : (
         <>
           <div className="flex justify-center">
-            <div className="rounded-full w-15 text-sm p-1 mb-3 text-center   bg-neutral-50  text-neutral-600">
+            <div className="rounded-full w-15 text-md p-1 mb-3 text-center   bg-neutral-50  text-neutral-600">
               วันนี้
             </div>
           </div>
 
           <CardContent className="space-y-4">
             {activities.length === 0 ? (
-              <div className="text-md mt-6 flex justify-center text-neutral-500">
+              <div className="text-md mx-6 flex justify-center text-[#71717A]  dark:text-[#b4b4c5]">
                 ยังไม่มีกิจกรรม
               </div>
             ) : (

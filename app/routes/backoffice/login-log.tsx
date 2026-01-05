@@ -6,6 +6,14 @@ import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import type { LogEntry } from "~/types/login-log";
 import { useLoginLogPaginate } from "~/api/client/login-log/useGetLoginLog";
 
+import { useMemo } from "react";
+import {
+  parseDateRangeParam,
+  pickSearchParams,
+} from "~/components/modules/customer/utils/search-params";
+import { useSearchParams } from "react-router";
+import { ActivityFilterFields } from "~/utils/filter/activity-filter";
+
 const columns: ColumnDef<LogEntry>[] = [
   {
     accessorKey: "metadata.name",
@@ -25,6 +33,37 @@ const columns: ColumnDef<LogEntry>[] = [
       </span>
     ),
   },
+  // {
+  //   accessorKey: "event",
+  //   header: "Event",
+  //   cell: (info) => (
+  //     <span className="text-sm text-muted-foreground">
+  //       {(info.getValue() as string) ?? "-"}
+  //     </span>
+  //   ),
+  // },
+  {
+    accessorKey: "event",
+    header: "Event",
+    cell: (info) => {
+      const value = (info.getValue() as string) ?? "-";
+
+      // ตรวจสอบข้อความ
+      let displayText = value;
+      if (value.toLowerCase().includes("in")) {
+        if (value.toLowerCase().includes("out")) {
+          displayText = "Sign Out";
+        } else {
+          displayText = "Sign In";
+        }
+      }
+
+      return (
+        <span className="text-sm text-muted-foreground">{displayText}</span>
+      );
+    },
+  },
+
   {
     accessorKey: "metadata.role.status",
     header: "สถานะ",
@@ -36,7 +75,7 @@ const columns: ColumnDef<LogEntry>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: "วันที่สร้าง",
+    header: "วันที่เข้าสู่ระบบ",
     enableSorting: true,
     cell: (info) => (
       <span>{formatDateAndTime((info.getValue() as string) ?? "-")}</span>
@@ -138,10 +177,37 @@ const columns: ColumnDef<LogEntry>[] = [
 
 export default function Loginlog() {
   const paginate = useLoginLogPaginate;
+  const [sp] = useSearchParams();
+  const filters = useMemo(
+    () =>
+      pickSearchParams(sp, [
+        "name",
+        "email",
+        "event",
+        "createdFrom",
+        "createdTo",
+      ]),
+    [sp]
+  );
+  const created = parseDateRangeParam(sp, "createdAt") ?? {};
+  const createdFrom = created.fromDate;
+  const createdTo = created.toDate;
   return (
     <div className="flex flex-col w-full space-y-8 p-8">
       <TabControl title="ประวัติการเข้าสู่ระบบ" buttons={[]} />
-      <DataTable queryFunction={paginate} columns={columns} />
+      <DataTable
+        queryFunction={({ pageIndex, pageSize }) =>
+          paginate({
+            pageIndex,
+            pageSize,
+            ...filters,
+            createdFrom,
+            createdTo,
+          } as any)
+        }
+        columns={columns}
+        customerFilterFields={ActivityFilterFields}
+      />
     </div>
   );
 }

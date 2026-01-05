@@ -2,7 +2,7 @@
 import React from "react";
 import { LabelList, Legend, Pie, PieChart, Sector } from "recharts";
 import { Search } from "lucide-react";
-import type { RelationshipCircleProps } from "~/schemas/customer/customer";
+
 import {
   ChartContainer,
   ChartTooltip,
@@ -10,29 +10,36 @@ import {
   type ChartConfig,
 } from "../ui/chart";
 
+export interface SenderStat {
+  sender: string;
+  messageCount: number;
+}
+interface Data {
+  senderStats?: SenderStat[];
+  aiStats?: SenderStat[];
+}
+
+export interface RelationshipCircleProps {
+  chartData?: Data;
+  emptyMessage?: React.ReactNode;
+}
+
+function generateColor(index: number): string {
+  const baseColors = ["#5D4A9B", "#7664B5", "#B3A9D6", "#F0EEF7"];
+  if (index < baseColors.length) return baseColors[index];
+
+  const hue = (index * 45) % 360;
+  return `hsl(${hue}, 60%, 60%)`;
+}
+
 export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
   chartData,
+  emptyMessage = "ยังไม่มีการพูดคุยกับลูกค้า",
 }) => {
   const chartConfig = {
-    mainResponsible: {
-      label: "ผู้รับผิดชอบหลัก",
-      color: "#0D0D0D",
-    },
-    subResponsible1: {
-      label: "ผู้รับผิดชอบรอง 1",
-      color: "#D9D9D9",
-    },
-    subResponsible2: {
-      label: "ผู้รับผิดชอบรอง 2",
-      color: "#737373",
-    },
-    subResponsible3: {
-      label: "ผู้รับผิดชอบรอง 3",
-      color: "#F2F2F2",
-    },
     AI: {
       label: "Rome AI",
-      color: " #3b82f6",
+      color: " #332956",
     },
   } satisfies ChartConfig;
 
@@ -46,9 +53,6 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
 
     { name: "Rome AI", process: 2, fill: " #A6A6A6" },
   ];
-  // const total = React.useMemo(() => {
-  //   return chartData.reduce((acc, curr) => acc + curr.process, 0);
-  // }, []);
 
   const [activeKeys, setActiveKeys] = React.useState<string[]>([]);
   const [viewFocusData, setViewFocusData] = React.useState<boolean>(false);
@@ -56,7 +60,7 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
 
   const handleLegendClick = (key: string) => {
     setActiveKeys((prev) =>
-      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+      prev?.includes(key) ? prev?.filter((k) => k !== key) : [...prev, key]
     );
   };
 
@@ -64,7 +68,54 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
     <Sector {...props} outerRadius={outerRadius + 10} fillOpacity={1} />
   );
 
-  const activeIndexes = mockData
+  let chartDataData = [
+    ...(chartData?.senderStats
+      ?.filter((s) => s.sender)
+      .map((s, idx) => ({
+        name: s.sender,
+        process: s.messageCount,
+        fill: generateColor(idx),
+      })) ?? []),
+    ...(chartData?.aiStats
+      ?.filter((s) => s.sender)
+      .map((s) => ({
+        name: s.sender,
+        process: s.messageCount,
+        fill: "#332956",
+      })) ?? []),
+  ];
+
+  let salerGroup = chartDataData?.filter((p) => !p?.name?.includes("Rome"));
+  let aiGroup = chartDataData?.filter((p) => p?.name?.includes("Rome"));
+
+  const totalSaler = salerGroup.reduce((sum, item) => sum + item.process, 0);
+
+  if (totalSaler < 100) {
+    const remaining = 100 - totalSaler;
+    if (aiGroup.length > 0) {
+      aiGroup = aiGroup.map((a, idx) =>
+        idx === 0 ? { ...a, process: a.process + remaining } : a
+      );
+    } else {
+      aiGroup = [
+        {
+          name: "Rome AI",
+          process: remaining,
+          fill: "#332956",
+        },
+      ];
+    }
+  } else if (totalSaler > 100) {
+    const normalizeFactor = 100 / totalSaler;
+    salerGroup = salerGroup.map((s) => ({
+      ...s,
+      process: s.process * normalizeFactor,
+    }));
+  }
+
+  chartDataData = [...salerGroup, ...aiGroup];
+
+  const activeIndexes = chartDataData
     .map((d, idx) => {
       if (viewFocusData) {
         return d.name === focusedName ? idx : -1;
@@ -76,9 +127,12 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
 
   // const totalProcess = mockData.reduce((sum, item) => sum + item.process, 0);
 
+  const hasData =
+    (chartData?.senderStats && chartData?.senderStats?.length > 0) ||
+    (chartData?.aiStats && chartData?.aiStats?.length > 0);
   return (
     <div className="flex-1">
-      {!chartData || chartData.length === 0 ? (
+      {!hasData ? (
         <ChartContainer
           config={chartConfig}
           className="aspect-square max-h-[290px] w-full"
@@ -100,8 +154,8 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
               verticalAlign="bottom"
               content={() => (
                 <div className="flex justify-center w-full">
-                  <span className="text-base text-zinc-400">
-                    ยังไม่มีการพูดคุยกับลูกค้า
+                  <span className="text-base text-[#71717A]  dark:text-[#b4b4c5]">
+                    {emptyMessage}
                   </span>
                 </div>
               )}
@@ -111,7 +165,7 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
       ) : (
         <ChartContainer
           config={chartConfig}
-          className="aspect-square max-h-[360px] w-full"
+          className="aspect-square max-h-[350px] w-full"
         >
           <PieChart>
             <ChartTooltip
@@ -119,7 +173,7 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
               content={<ChartTooltipContent nameKey="process" />}
             />
             <Pie
-              data={chartData}
+              data={chartDataData}
               dataKey="process"
               nameKey="name"
               innerRadius={50}
@@ -131,7 +185,8 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
                 <text
                   x={x}
                   y={y}
-                  fill="#000"
+                  fill="currentColor"
+                  className="text-black dark:text-white"
                   fontSize={12}
                   textAnchor={x > cx ? "start" : "end"}
                   dominantBaseline="central"
@@ -154,13 +209,8 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
             <Legend
               verticalAlign="bottom"
               content={() => {
-                const salerGroup = mockData.filter(
-                  (p) => !p.name.includes("Rome")
-                );
-                const aiGroup = mockData.filter((p) => p.name.includes("Rome"));
-
                 const renderGroup = (title: string, items: any[]) => (
-                  <div className="mt-3 text-[16px]">
+                  <div className=" text-[14px]">
                     <strong>{title}</strong>
                     <div className="flex flex-wrap gap-x-5 gap-y-2">
                       {items.map((entry: any) => {
@@ -184,17 +234,14 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
                               }}
                             />
                             <span
-                              style={{
-                                opacity: opacity,
-                                /* fontWeight: isActiveOrFocused ? "bold" : 200, */
-                              }}
+                              style={{ opacity: opacity }}
                               onClick={() => {
                                 handleLegendClick(entry.name);
                                 setViewFocusData(false);
                                 setFocusedName("");
                               }}
                             >
-                              {entry.name}: {entry.process}%
+                              {entry.name} : {entry.process.toFixed(1)}%
                             </span>
                             <span
                               onClick={(e) => {
@@ -213,9 +260,9 @@ export const DualProgressCircle: React.FC<RelationshipCircleProps> = ({
                 );
 
                 return (
-                  <div className="flex flex-col">
+                  <div className="flex flex-col gap-3">
                     {renderGroup("Saler", salerGroup)}
-                    {renderGroup("AI", aiGroup)}
+                    {(aiGroup ?? []).length > 0 && renderGroup("AI", aiGroup)}
                   </div>
                 );
               }}

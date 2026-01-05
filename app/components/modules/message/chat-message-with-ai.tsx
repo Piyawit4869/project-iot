@@ -1,76 +1,96 @@
-"use client";
-
 import React, { useRef, useState } from "react";
+
 import dayjs from "dayjs";
 import * as Icons from "lucide-react";
 
 import { GlobalImage } from "~/components/shared/global-image";
-// import FeatureCard from "@/components/shared/feature-card";
-// import { MessagesSquare } from "lucide-react";
-// import { Button } from "@/components/ui";
-// import ChatInput from "./chat-input";
-// import { OrderViewModal } from "./orders-view-modal";
-// import { AIMessageView } from "./ai-message-view-modal";
+
 import { flushSync } from "react-dom";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { CustomerChatSkeleton } from "./noData/customer-chat-skeleton";
 import ChatInputAIAssistant from "./chat-input-ai-assistant";
-import { useRouteLoaderData } from "react-router";
-import { usePaginatedChatRoomAI } from "~/api/client/message/useMessage";
 import { useChat } from "~/providers/chat/useChat";
+import { StreamingText } from "./streaming-text";
+import { useConnectedChatRoomAssistant } from "~/api/client/customer/useCustomer";
+import LoadingAnimation from "./loading-animation";
+import { usePaginatedChatRoomAIAssistant } from "~/api/client/settings";
+import { MessageAILoading } from "./chat/MessageAILoading";
+import { cn } from "~/lib/utils";
 
 export default function ChatMessagesWithAI({
   customerId,
   chatRoomId,
-  autoScroll,
   setAutoScroll,
   searchPrompt,
   isAILoading,
+  chatRoomAssistantId,
+  resetChatAi,
 }: {
   customerId: string;
   chatRoomId: string;
   autoScroll: boolean;
+  resetChatAi?: number;
   setAutoScroll: React.Dispatch<React.SetStateAction<boolean>>;
   searchPrompt?: string;
   isAILoading: boolean;
+  chatRoomAssistantId: string;
 }) {
-  const { me } = useRouteLoaderData("root");
-
-  const profile = me?.profile;
-
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const newestSeenId = React.useRef<string | null>(null);
   const [previewUrl, setPreviewUrl] = React.useState("");
+
+  const aiLoadingRef = React.useRef<HTMLDivElement | null>(null);
+  const isAtBottomRef = React.useRef<boolean>(true);
+  const lastMessageCountRef = React.useRef<number>(0);
+  const didInitialAutoScrollRef = React.useRef<boolean>(false);
+  const isSendingMessageRef = React.useRef<boolean>(false);
 
   const [showTopLoading, setShowTopLoading] = useState(false);
   const [hasScrolledOnce, setHasScrolledOnce] = useState(false);
   const [hasAutoScrolled, setHasAutoScrolled] = useState(false);
   const [isScrollReady, setIsScrollReady] = useState(false);
   const [buttonScrollToBottom, setButtonScrollToBottom] = React.useState(false);
-  const { messagesAI: socketMessages } = useChat();
-
+  const { messagesAI: socketMessages, clearMessagesAI } = useChat();
   const {
     data: messagesData,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    // refetch,
-  } = usePaginatedChatRoomAI(chatRoomId || "");
+    refetch,
+  } = usePaginatedChatRoomAIAssistant(chatRoomId || "");
+
+  const { mutateAsync: connectedChatRoomAIAssistant, isPending: isPendingAI } =
+    useConnectedChatRoomAssistant();
 
   const paginatedMessages = messagesData?.pages.flatMap((page) => page) ?? [];
 
   const combinedMessages = React.useMemo(() => {
     const paginated = paginatedMessages?.flatMap((m) => m.items || []);
-    return [...paginated, ...socketMessages.flatMap((m) => m || [])]
-      .filter((c) => c.chatRoomId)
+    const socket = socketMessages.flatMap((m) => m || []);
+
+    const map = new Map<string, any>();
+
+    [...paginated, ...socket].forEach((msg) => {
+      const key = msg.messageId ?? msg.id;
+
+      map.set(key, msg);
+    });
+
+    return Array.from(map.values())
+      .filter((c) => c.chatRoomId === chatRoomId)
       .sort(
         (a, b) =>
           dayjs(a.createdAt ?? a.timestamp).valueOf() -
           dayjs(b.createdAt ?? b.timestamp).valueOf()
       );
-  }, [paginatedMessages, socketMessages]);
+  }, [paginatedMessages, socketMessages, chatRoomId]);
+
+  const lastMessage =
+    combinedMessages &&
+    combinedMessages.length &&
+    combinedMessages[combinedMessages.length - 1];
 
   // const isNoMessageData = !messagesData || messagesData.pages.length === 0;
 
@@ -105,38 +125,6 @@ export default function ChatMessagesWithAI({
       setAutoScroll(true);
     }
   }, [messagesData]);
-
-  React.useEffect(() => {
-    if (!autoScroll || !bottomRef.current) return;
-
-    const scrollToBottom = () => {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-      setAutoScroll(false);
-      setHasAutoScrolled(true);
-      setTimeout(() => {
-        setIsScrollReady(true);
-      }, 300);
-    };
-
-    requestAnimationFrame(() => {
-      setTimeout(scrollToBottom, 0);
-    });
-  }, [combinedMessages, autoScroll]);
-
-  React.useEffect(() => {
-    const el = scrollAreaRef.current;
-    const messages = combinedMessages;
-    if (!el || messages?.length === 0) return;
-    const newest = messages[messages.length - 1] as any;
-    const isNewMessage =
-      newestSeenId.current && newestSeenId.current !== newest.timestamp;
-    newestSeenId.current = newest.timestamp;
-    if (isNewMessage) {
-      requestAnimationFrame(() => {
-        el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
-      });
-    }
-  }, [combinedMessages]);
 
   React.useEffect(() => {
     const el = scrollAreaRef.current;
@@ -182,60 +170,107 @@ export default function ChatMessagesWithAI({
     hasAutoScrolled,
   ]);
 
-  if (isLoading && customerId) {
-    return <CustomerChatSkeleton />;
-  }
+  React.useEffect(() => {
+    const scrollArea = scrollAreaRef.current;
+    if (!scrollArea) return;
 
-  // if (isNoMessageData) {
-  //   return (
-  //     <div className="flex flex-col h-[200px] w-full justify-center items-center gap-12">
-  //       <h2 className="text-center text-2xl">
-  //         ยินดีต้อนรับสู่แชท Feature ที่ผนวกร่วมกับ Rome AI
-  //       </h2>
-  //       <div className="w-[300px]">
-  //         <FeatureCard
-  //           icon={<MessagesSquare className="w-8 h-8 text-blue-500" />}
-  //           title="แชท sale AI & Support"
-  //           description="ช่องทางแชทระหว่างฝ่ายขายและลูกค้า พร้อมผนวก AI ช่วยตอบคำถามและสนับสนุนการสนทนาอย่างรวดเร็วและแม่นยำ"
-  //         />
-  //       </div>
-  //     </div>
-  //   );
+    const handleScroll = () => {
+      const { scrollHeight, scrollTop, clientHeight } = scrollArea;
+      const SCROLL_THRESHOLD = 50;
+
+      const isAtBottom =
+        scrollTop + clientHeight >= scrollHeight - SCROLL_THRESHOLD;
+
+      isAtBottomRef.current = isAtBottom;
+
+      setButtonScrollToBottom(!isAtBottom);
+    };
+
+    scrollArea.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => scrollArea.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  React.useEffect(() => {
+    if (
+      didInitialAutoScrollRef.current ||
+      !bottomRef.current ||
+      combinedMessages.length === 0
+    )
+      return;
+
+    bottomRef.current.scrollIntoView({ behavior: "auto" });
+    didInitialAutoScrollRef.current = true;
+    setIsScrollReady(true);
+  }, [combinedMessages]);
+
+  React.useEffect(() => {
+    const el = scrollAreaRef.current;
+    if (!el || !didInitialAutoScrollRef.current) return;
+
+    const hasNewMessage = combinedMessages.length > lastMessageCountRef.current;
+
+    lastMessageCountRef.current = combinedMessages.length;
+
+    if (!hasNewMessage) return;
+    if (!isAtBottomRef.current) return;
+
+    requestAnimationFrame(() => {
+      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    });
+  }, [combinedMessages]);
+
+  React.useEffect(() => {
+    if (
+      !didInitialAutoScrollRef.current ||
+      (lastMessage && lastMessage.messageLabel !== "ROME AI กำลังประมวลผล") ||
+      !aiLoadingRef.current ||
+      !isAtBottomRef.current
+    )
+      return;
+
+    requestAnimationFrame(() => {
+      aiLoadingRef?.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    });
+  }, [lastMessage?.messageLabel]);
+
+  React.useEffect(() => {
+    didInitialAutoScrollRef.current = false;
+    isAtBottomRef.current = true;
+    lastMessageCountRef.current = 0;
+    isSendingMessageRef.current = false;
+
+    setButtonScrollToBottom(false);
+    setShowTopLoading(false);
+    setHasScrolledOnce(false);
+    setHasAutoScrolled(false);
+    setIsScrollReady(false);
+  }, [chatRoomId]);
+
+  React.useEffect(() => {
+    refetch();
+    clearMessagesAI();
+  }, [resetChatAi]);
+
+  // if (isLoading && customerId) {
+  //   return <CustomerChatSkeleton />;
   // }
 
-  const messagesLoading = [
-    {
-      id: 1,
-      type: "text",
-      messageType: "text",
-      message: searchPrompt,
-      sender: "user",
-      imageUrl: profile?.imageUrl,
-      recipient: "",
-      name: profile?.firstName,
-    },
-    {
-      id: 2,
-      type: "text",
-      messageType: "text",
-      message: "AI กำลังตอบ...",
-      sender: "ROME Ai",
-      imageUrl: "https://api.dicebear.com/9.x/glass/svg?seed=rome",
-      recipient: "",
-      name: "ROME AI Assistant",
-    },
-  ];
   return (
-    <div className="flex flex-col h-[calc(100vh-400px)] border-1 rounded-sm bg-white dark:bg-background">
+    <div className="flex flex-col h-[calc(100vh-545px)] border border-b-0 bg-white dark:bg-background overflow-hidden">
       <div
         className="flex flex-1 flex-col"
         style={{
-          height: 350,
+          height: 100,
         }}
       >
         <div
           ref={scrollAreaRef}
-          className="flex h-full flex-col space-y-6 overflow-y-auto px-4 z-0 relative  "
+          className="flex h-full flex-col space-y-6 overflow-y-auto px-4 z-0 relative"
         >
           {showTopLoading && (
             <div
@@ -252,128 +287,98 @@ export default function ChatMessagesWithAI({
             </div>
           )}
 
-          {combinedMessages && combinedMessages.length
-            ? combinedMessages.map((msg, index) => {
-                const isUser = msg.sender !== "ROME Ai";
-                const avatarFallback =
-                  msg.imageUrl && !msg.imageUrl.includes("http")
-                    ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                        msg.imageUrl
-                      )}`
-                    : msg.imageUrl;
+          {combinedMessages && combinedMessages.length ? (
+            combinedMessages.map((msg, index) => {
+              const isUser = msg.sender !== "ROME AI";
 
-                const formattedTime = dayjs(
-                  msg.createdAt ? msg.createdAt : msg.timestamp
-                ).format("DD MMM YYYY, HH:mm");
+              if (msg.messageLabel === "ROME AI กำลังประมวลผล") return null;
 
-                return (
-                  <div
-                    key={`${msg.lineSubId}+${index}+${msg.sender}`}
-                    className={`mt-4 flex max-w-[75%] flex-col gap-1 ${
-                      isUser ? "ml-auto items-end" : "mr-auto items-start"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <Avatar className="w-6 h-6">
-                        <img
-                          src={avatarFallback || "/avatar.png"}
-                          alt="avatar"
-                          className="rounded-full object-cover"
-                        />
-                        <AvatarFallback>
-                          {(msg.sender || msg.recipient || "U")[0]}
-                        </AvatarFallback>
-                      </Avatar>
-                      {isUser ? (
-                        <span className="text-xs text-muted-foreground font-medium">
-                          {msg.sender || msg.recipient || "Anonymous"}
-                        </span>
-                      ) : (
-                        <span className="text-xs text-muted-foreground font-medium">
-                          ROME AI Assistant
-                        </span>
-                      )}
-                    </div>
+              const avatarFallback =
+                msg.imageUrl && !msg.imageUrl.includes("http")
+                  ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                      msg.imageUrl
+                    )}`
+                  : msg.imageUrl;
 
-                    {msg.messageType === "text" ? (
-                      <div
-                        className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
-                          isUser
-                            ? "bg-blue-500 text-white"
-                            : "bg-muted text-primary"
-                        }`}
-                      >
-                        {msg.message}
-                      </div>
-                    ) : (
-                      <div
-                        onClick={() => setPreviewUrl(msg.message)}
-                        className="cursor-pointer"
-                      >
-                        <GlobalImage src={msg.message} />
-                      </div>
-                    )}
+              const formattedTime = dayjs(
+                msg.createdAt ? msg.createdAt : msg.timestamp
+              ).format("DD MMM YYYY, HH:mm");
 
-                    <span className="text-[10px] text-muted-foreground mt-1">
-                      {formattedTime}
-                    </span>
-                  </div>
-                );
-              })
-            : messagesLoading.map((msg, index) => {
-                const isUser = msg.sender !== "ROME Ai";
-
-                const avatarFallback =
-                  msg.imageUrl && !msg.imageUrl.includes("http")
-                    ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                        msg.imageUrl
-                      )}`
-                    : msg.imageUrl;
-
-                return (
-                  <div
-                    key={index}
-                    className={`mt-4 flex max-w-[75%] flex-col gap-1 ${
-                      isUser ? "ml-auto items-end" : "mr-auto items-start"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <Avatar className="w-6 h-6">
-                        <img
-                          src={avatarFallback || "/avatar.png"}
-                          alt="avatar"
-                          className="rounded-full object-cover"
-                        />
-                        <AvatarFallback>
-                          {(msg.sender || "U")[0]}
-                        </AvatarFallback>
-                      </Avatar>
+              return (
+                <div
+                  key={`${msg.lineSubId}+${index}+${msg.sender}`}
+                  className={cn(
+                    "mt-4 flex max-w-[75%] flex-col gap-1",
+                    isUser ? "ml-auto items-end" : "mr-auto items-start"
+                  )}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <Avatar className="w-6 h-6">
+                      <img
+                        src={avatarFallback || "/avatar.png"}
+                        alt="avatar"
+                        className="rounded-full object-cover"
+                      />
+                      <AvatarFallback>
+                        {(msg.sender || msg.recipient || "U")[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                    {isUser ? (
                       <span className="text-xs text-muted-foreground font-medium">
                         {msg.sender || msg.recipient || "Anonymous"}
                       </span>
-                    </div>
-
-                    {msg.messageType === "text" ? (
-                      <div
-                        className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
-                          isUser
-                            ? "bg-blue-500 text-white"
-                            : "bg-muted text-primary"
-                        }`}
-                      >
-                        {msg.message}
-                      </div>
                     ) : (
-                      <div
-                        onClick={() => setPreviewUrl(msg?.message || "")}
-                        className="cursor-pointer"
-                      >
-                        <GlobalImage src={msg?.message || ""} />
-                      </div>
+                      <span className="text-xs text-muted-foreground font-medium">
+                        ROME AI Assistant
+                      </span>
                     )}
                   </div>
-                );
-              })}
+
+                  {msg.messageType === "text" ? (
+                    <div
+                      className={`rounded-xl px-4 py-2 text-sm whitespace-pre-wrap ${
+                        isUser
+                          ? "bg-blue-500 text-white"
+                          : "bg-muted text-primary"
+                      }`}
+                    >
+                      {index === combinedMessages.length - 1 &&
+                      msg.streaming &&
+                      !isAILoading ? (
+                        <StreamingText text={msg.message} speed={40} />
+                      ) : (
+                        msg.message
+                      )}
+                    </div>
+                  ) : (
+                    <div
+                      onClick={() => setPreviewUrl(msg.message)}
+                      className="cursor-pointer"
+                    >
+                      <GlobalImage src={msg.message} />
+                    </div>
+                  )}
+
+                  <span className="text-[10px] text-muted-foreground mt-1">
+                    {formattedTime}
+                  </span>
+                </div>
+              );
+            })
+          ) : (
+            <></>
+          )}
+
+          {lastMessage && lastMessage.length ? (
+            lastMessage.messageLabel === "ROME AI กำลังประมวลผล" && (
+              <div ref={aiLoadingRef} className="mr-auto items-start">
+                <MessageAILoading />
+              </div>
+            )
+          ) : (
+            <></>
+          )}
+
           <div ref={bottomRef} />
           {buttonScrollToBottom && (
             <button
@@ -394,19 +399,15 @@ export default function ChatMessagesWithAI({
           )}
         </div>
         <ChatInputAIAssistant
+          isPendingAI={isPendingAI}
           isAILoading={isAILoading}
           firstTimeMessage={searchPrompt}
           customerId={customerId}
           chatRoomId={chatRoomId}
+          connectedChatRoomAIAssistant={connectedChatRoomAIAssistant}
+          assistantId={chatRoomAssistantId}
         />
       </div>
-
-      {/* <ChecklistDialog
-        open={isCheckStatusOpen}
-        onOpenChange={setCheckStatusOpen}
-        checklist={checklistData}
-        data={customerData}
-      /> */}
 
       {previewUrl && (
         <div

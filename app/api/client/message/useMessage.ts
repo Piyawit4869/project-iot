@@ -1,18 +1,35 @@
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
 import {
+  fetchAllMessageCursorWithRoomId,
   fetchAllMessageWithRoomId,
   fetchAllRoomChat,
   fetchAskQuestion,
+  fetchLineBundleConfig,
   fetchRoomChatAILoadMore,
   fetchRoomChatLoadMore,
+  fetchSearchByKeyword,
   fetchSendMessage,
+  fetchUpdateStatusProgressTag,
+  markAsDone,
+  markAsSpam,
+  markAsProcess,
+  fetchRoomChatSummary,
 } from "~/api/server/message/message";
 
 import type {
   AskQuestionValues,
   PushMessageValues,
+  UpdateStatusProgressTagPayLoad,
 } from "~/schemas/message/message";
+
+export const useLineBundleConfig = (id: string, enabled: boolean) => {
+  return useQuery({
+    queryKey: ["line-bunddle-config"],
+    queryFn: () => fetchLineBundleConfig(id),
+    enabled,
+  });
+};
 
 export const useAskQuestion = () => {
   return useMutation({
@@ -20,10 +37,42 @@ export const useAskQuestion = () => {
   });
 };
 
+export const useMarkAsProcess = (id: string) => {
+  return useMutation({
+    mutationFn: (isProcess: boolean) => markAsProcess(id, isProcess),
+  });
+};
+
+export const useMarkAsDone = (id: string) => {
+  return useMutation({
+    mutationFn: (done: boolean) => markAsDone(id, done),
+  });
+};
+export const useMarkAsSpam = (id: string) => {
+  return useMutation({
+    mutationFn: (spam: boolean) => markAsSpam(id, spam),
+  });
+};
+
+export const useUpdateStatusProgressTag = (id: string) => {
+  return useMutation({
+    mutationFn: (payload: UpdateStatusProgressTagPayLoad) =>
+      fetchUpdateStatusProgressTag(id, payload),
+  });
+};
+
 export const useAllRoomChat = () => {
   return useQuery({
     queryKey: ["roomChat"],
     queryFn: () => fetchAllRoomChat(),
+    enabled: true,
+  });
+};
+
+export const useRoomChatSummary = () => {
+  return useQuery({
+    queryKey: ["roomChatSummary"],
+    queryFn: () => fetchRoomChatSummary(),
     enabled: true,
   });
 };
@@ -44,26 +93,76 @@ export const useAllMessageWithRoomId = (id: string) => {
   });
 };
 
-export const usePaginatedMessages = (roomId: string) => {
+export const usePaginatedMessages = (roomId: string, jumpOffset = 0) => {
+  const limit = 10;
+
   return useInfiniteQuery({
     queryKey: ["messages", roomId],
-    queryFn: async ({ pageParam }) => {
-      return fetchAllMessageWithRoomId(roomId, pageParam, 10);
+    queryFn: async ({ pageParam = jumpOffset }) => {
+      return fetchAllMessageWithRoomId(roomId, pageParam, limit);
     },
-    initialPageParam: 0,
+    initialPageParam: jumpOffset ?? "",
     getNextPageParam: (lastPage) => {
       const meta = lastPage?.meta;
-      return meta?.hasMore ? meta.offset + meta.limit : undefined;
+      if (!meta?.hasMore) return undefined;
+      return meta.offset + meta.limit;
     },
     enabled: !!roomId,
   });
 };
 
-export const usePaginatedChatRooms = () => {
+export const usePaginatedMessagesCursor = (
+  roomId: string,
+  currentId?: string | null,
+  direction?: string | null
+) => {
+  const limit = 20;
+
+  const isSearchMode = !!currentId; // ⭐ ตัวตัดสิน
+
   return useInfiniteQuery({
-    queryKey: ["roomChat"],
+    queryKey: ["messages-cursor", roomId, currentId],
+
     queryFn: async ({ pageParam }) => {
-      return fetchRoomChatLoadMore(pageParam, 20);
+      return fetchAllMessageCursorWithRoomId(
+        roomId,
+        pageParam ?? currentId ?? "",
+        limit,
+        direction ? direction : "none"
+      );
+    },
+
+    initialPageParam: currentId ?? "",
+
+    getNextPageParam: (lastPage) => {
+      if (isSearchMode) return undefined;
+
+      const meta = lastPage?.meta;
+      if (!meta) return undefined;
+
+      if (direction === "prev") return meta.prev ?? undefined;
+      if (direction === "next") return meta.next ?? undefined;
+
+      return undefined;
+    },
+
+    enabled: !!roomId,
+  });
+};
+
+export const useSearchByKeyWord = (id: string, keyword: string) => {
+  return useQuery({
+    queryKey: ["search-by-keyword", id, keyword],
+    queryFn: () => fetchSearchByKeyword(id, keyword),
+    enabled: !!id && !!keyword,
+  });
+};
+
+export const usePaginatedChatRooms = (name = "", topic = "") => {
+  return useInfiniteQuery({
+    queryKey: ["roomChat", name, topic],
+    queryFn: async ({ pageParam }) => {
+      return fetchRoomChatLoadMore(pageParam, 20, name, topic);
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {

@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,43 +5,39 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 
-import { AiCustomerFields, type AiFieldsState } from "./AiCustomerFields";
-import { SkeletonLoading } from "~/components/shared/skeleton-loading";
-import { useChatRoom } from "~/providers/chat/useChatRoom";
-import { useGetAiNote } from "~/api/client/customer/useCustomer";
+import { AiCustomerFields } from "./AiCustomerFields";
 
 type ChecklistDialogProps = {
   open: boolean;
+  onClickBtn?: () => void;
   onOpenChange: (open: boolean) => void;
+  customer: any;
+  closeBtn?: boolean;
+  noSyncBtn?: boolean;
 };
 
-export function AIMessageView({ open, onOpenChange }: ChecklistDialogProps) {
-  const [, setFields] = React.useState<AiFieldsState>();
-
-  const { customer: currentCustomer } = useChatRoom();
-
-  console.log({ currentCustomer });
-  const { data, isLoading } = useGetAiNote(currentCustomer?.id);
-
+export function AIMessageView({
+  open,
+  onOpenChange,
+  customer,
+  onClickBtn,
+  closeBtn,
+  noSyncBtn = false,
+}: ChecklistDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg w-full max-h-[70vh] overflow-auto p-6 rounded-lg">
+      <DialogContent className="sm:max-w-lg w-full max-h-[95vh] min-w-[60%] overflow-auto p-6 rounded-lg">
         <DialogHeader>
           <DialogTitle>ข้อมูลลูกค้าผ่าน AI</DialogTitle>
         </DialogHeader>
 
-        <div className="flex flex-col space-y-2 mt-4 max-h-[50vh] overflow-y-auto">
-          {isLoading ? (
-            <div className="flex justify-center">
-              <SkeletonLoading className="w-[440px] h-[390px] " />
-            </div>
-          ) : (
-            <AiCustomerFields
-              defaultOpen={["customerStatus", "businessType", "customerName"]}
-              onChange={setFields}
-              data={data?.customerData}
-            />
-          )}
+        <div className="flex flex-col space-y-2 overflow-y-auto">
+          <AiCustomerFields
+            data={customer}
+            onClickBtn={onClickBtn}
+            closeBtn={closeBtn}
+            noSyncBtn={noSyncBtn}
+          />
         </div>
       </DialogContent>
     </Dialog>

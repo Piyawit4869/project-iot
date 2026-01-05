@@ -1,26 +1,21 @@
 import React from "react";
-import ChatMessages from "./chat-message";
-import { Button } from "~/components/ui/button";
 
-import { Settings2 } from "lucide-react";
 import ChatCustomerInfo from "./chat-customer";
 import { CreateOrderDialog } from "./create-order";
 
-import NoChatDetail from "./noData/no-chatdata";
 import MenuWhenNoData from "./noData/menuWhenNoData";
 import { AboutCustomer } from "./about-customer";
 import { ChatlistContainer } from "./ChatlistContainer";
-import { SkeletonLoading } from "~/components/shared/skeleton-loading";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "~/components/ui/resizeble";
 import { useChatRoom } from "~/providers/chat/useChatRoom";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { useCustomer } from "~/api/client/customer/useCustomer";
-import { Drawer, DrawerContent, DrawerTrigger } from "~/components/ui/drawer";
 import { OrderProvider } from "~/hooks/order/order";
+import { cn } from "~/lib/utils";
+import { ChatMessageRender } from "./chat-message-render";
+import { ChatMessageNoData } from "./noData/chat-message-no-data";
+import { ParticipantType, RoomUserType } from "~/utils/enum";
+import { PermissionBar } from "./permission-bar";
+import { useNotificationPermission } from "~/hooks/use-notification-permission";
 
 export default function ChatbotSpaceNew({
   api,
@@ -29,180 +24,154 @@ export default function ChatbotSpaceNew({
   api: string;
   chatRooms: any;
 }) {
-  const { customerInfoOpen, setCustomerInfoOpen } = useChatRoom();
-
+  const { permission, requestNotification } = useNotificationPermission();
   const isMobile = useIsMobile();
 
+  const { customerInfoOpen, setCustomerInfoOpen } = useChatRoom();
   const [selectedRoom, setSelectedRoom] = React.useState<any>();
+  const [showChatList, setShowChatList] = React.useState(true);
+
+  const [isCreateOrderOpen, setCreateOrderOpen] = React.useState(false);
+  const [drawer, setDrawer] = React.useState(false);
+  const [addCustomerDetail, setAddCustomerDetail] =
+    React.useState<boolean>(false);
+
+  const [visible, setVisible] = React.useState(true);
+
+  const subId =
+    selectedRoom && selectedRoom?.kind === RoomUserType.CUSTOMER_USER_DM
+      ? selectedRoom?.lineSubId
+      : selectedRoom?.lineGroupId;
+  const hasCustomerId = !!(selectedRoom && subId);
+
+  const findCustomerInParticipant = selectedRoom?.participants?.find(
+    (participant: any) =>
+      participant.participantType === ParticipantType.CUSTOMER
+  );
+
+  const customerId =
+    selectedRoom?.kind === RoomUserType.CUSTOMER_USER_DM
+      ? findCustomerInParticipant?.participantId
+      : null;
 
   const {
     data: customerSingle,
     isLoading,
     refetch,
-  } = useCustomer(
-    selectedRoom && selectedRoom.customer && selectedRoom.customer.id
-  );
+  } = useCustomer(customerId ?? "");
 
-  const [autoScroll, setAutoScroll] = React.useState(true);
+  const isLineGroup = selectedRoom?.kind === RoomUserType.GROUP;
 
-  const [isCreateOrderOpen, setCreateOrderOpen] = React.useState(false);
-  const [resize, setResize] = React.useState(0);
-  const [drawer, setDrawer] = React.useState(false);
+  const showPermissionBar =
+    !!selectedRoom?.id &&
+    visible &&
+    (permission === "denied" || permission === "default");
 
-  const [addCustomerDetail, setAddCustomerDetail] =
-    React.useState<boolean>(false);
+  React.useEffect(() => {
+    if (permission === "granted") {
+      setVisible(false);
+    }
+  }, [permission]);
 
   return (
-    <div className="h-[calc(100vh-56px)]">
-      <OrderProvider>
-        <ResizablePanelGroup direction="horizontal">
-          <ResizablePanel
-            defaultSize={40}
-            minSize={6}
-            maxSize={40}
-            className="min-w-[75px] max-w-[80px] lg:max-w-[350px]"
-            onResize={(size) => setResize(size)}
-          >
-            <ChatlistContainer
-              chatRooms={chatRooms}
-              resize={resize}
-              api={api}
-              handleChangeSelectedRoom={(room) => setSelectedRoom(room)}
-            />
-          </ResizablePanel>
-          <ResizableHandle withHandle className="hidden lg:flex " />
-          <ResizablePanel defaultSize={50}>
-            <>
-              {selectedRoom && selectedRoom.id && selectedRoom.customer ? (
-                <div className="flex flex-col w-full h-full bg-white dark:bg-secondary">
-                  <div className="flex items-center  border-b px-4 py-2 dark:bg-background">
-                    <div className="flex items-center w-full gap-2 h-[36px] justify-between">
-                      {isLoading ? (
-                        <SkeletonLoading className="w-[200px] h-[20px]" />
-                      ) : (
-                        <h2 className="text-lg font-semibold">
-                          {customerSingle?.profile?.name ?? ""}
-                        </h2>
-                      )}
-
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setCustomerInfoOpen(!customerInfoOpen)}
-                        className="hidden md:flex"
-                      >
-                        <Settings2 className="h-4 w-4" />
-                      </Button>
-
-                      <Drawer
-                        direction="right"
-                        open={isMobile ? drawer || customerInfoOpen : drawer}
-                        onClose={() => {
-                          setDrawer(false);
-                          setCustomerInfoOpen(false);
-                        }}
-                      >
-                        <DrawerTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setDrawer(true)}
-                            className="flex md:hidden"
-                          >
-                            <Settings2 className="h-4 w-4" />
-                          </Button>
-                        </DrawerTrigger>
-                        <DrawerContent>
-                          <div className="mx-auto w-full">
-                            {selectedRoom.id && selectedRoom.customer ? (
-                              <ChatCustomerInfo
-                                refetchCustomer={refetch}
-                                setCreateOrderOpen={setCreateOrderOpen}
-                                setAddCustomerDetail={setAddCustomerDetail}
-                                addCustomerDetail={addCustomerDetail}
-                                modelCustomerDetails={addCustomerDetail}
-                                currentCustomer={customerSingle}
-                                api={api}
-                              />
-                            ) : (
-                              <MenuWhenNoData />
-                            )}
-                          </div>
-                        </DrawerContent>
-                      </Drawer>
-                    </div>
-                  </div>
-
-                  <ChatMessages
-                    api={api}
-                    selectedRoom={selectedRoom}
-                    autoScroll={autoScroll}
-                    setAutoScroll={setAutoScroll}
-                    isCreateOrderOpen={isCreateOrderOpen}
-                  />
-                </div>
-              ) : (
-                // : onSelectRoom ? (
-                //   <CustomerChatSkeleton />
-                // )
-
-                <React.Fragment>
-                  <div className="flex flex-col w-full h-full bg-white dark:bg-secondary">
-                    <div className="flex items-center justify-between border-b px-4 py-2 dark:bg-background">
-                      <div className="flex items-center gap-2">
-                        <h2 className="text-lg font-semibold">Rome Chat AI</h2>
-                      </div>
-
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setCustomerInfoOpen(!customerInfoOpen)}
-                        className="hidden md:flex"
-                      >
-                        <Settings2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <NoChatDetail />
-                  </div>
-                </React.Fragment>
-              )}
-            </>
-          </ResizablePanel>
-          <ResizableHandle withHandle className="hidden lg:flex" />
-          {customerInfoOpen && (
-            <ResizablePanel minSize={20} maxSize={25} className="min-w-[300px]">
-              <aside className="hidden md:flex w-full">
-                {selectedRoom && selectedRoom?.id && selectedRoom?.customer ? (
-                  <ChatCustomerInfo
-                    refetchCustomer={refetch}
-                    setCreateOrderOpen={setCreateOrderOpen}
-                    setAddCustomerDetail={setAddCustomerDetail}
-                    addCustomerDetail={addCustomerDetail}
-                    modelCustomerDetails={addCustomerDetail}
-                    currentCustomer={customerSingle}
-                    api={api}
-                  />
-                ) : (
-                  <MenuWhenNoData />
-                )}
-              </aside>
-            </ResizablePanel>
+    <div className="flex flex-col">
+      <div
+        className={cn(
+          "flex flex-row",
+          showPermissionBar ? "h-[calc(100vh-90px)]" : "h-[calc(100vh-55px)]"
+        )}
+      >
+        <OrderProvider>
+          {showChatList && (
+            <div className="max-w-[80px] lg:max-w-[310px]">
+              <ChatlistContainer
+                chatRooms={chatRooms}
+                api={api}
+                handleChangeSelectedRoom={(room) => {
+                  setSelectedRoom(room);
+                }}
+              />
+            </div>
           )}
-        </ResizablePanelGroup>
 
-        <AboutCustomer
-          open={addCustomerDetail}
-          onOpenChange={setAddCustomerDetail}
-          customer={customerSingle}
-          setAddCustomerDetail={setAddCustomerDetail}
-        />
+          <div className={cn("flex-1 flex flex-col")}>
+            {selectedRoom && selectedRoom?.id && !isLoading ? (
+              <ChatMessageRender
+                api={api}
+                selectedRoom={selectedRoom}
+                drawer={drawer}
+                isMobile={isMobile}
+                isLoading={isLoading}
+                customerInfoOpen={customerInfoOpen}
+                customerSingle={customerSingle}
+                isCreateOrderOpen={false}
+                refetch={refetch}
+                setCreateOrderOpen={setCreateOrderOpen}
+                setAddCustomerDetail={setAddCustomerDetail}
+                addCustomerDetail={addCustomerDetail}
+                handleShowSetting={() => setShowChatList(!showChatList)}
+                handleShowCustomerInfoOpen={() =>
+                  setCustomerInfoOpen(!customerInfoOpen)
+                }
+                handleCloseDrawer={() => {
+                  setDrawer(true);
+                  setCustomerInfoOpen(false);
+                }}
+                handleOpenDrawer={() => setDrawer(true)}
+                isLineGroup={isLineGroup}
+                subId={subId}
+              />
+            ) : (
+              <ChatMessageNoData
+                handleShowChatList={() => setShowChatList(!showChatList)}
+                handleShowCustomerInfoOpen={() =>
+                  setCustomerInfoOpen(!customerInfoOpen)
+                }
+              />
+            )}
+          </div>
 
-        <CreateOrderDialog
-          open={isCreateOrderOpen}
-          onOpenChange={setCreateOrderOpen}
-          customerId={selectedRoom?.customer?.id}
+          {customerInfoOpen && !isMobile && (
+            <div className="w-96">
+              {selectedRoom && selectedRoom?.id && subId && !isLoading ? (
+                <ChatCustomerInfo
+                  isLineGroup={isLineGroup}
+                  selectedRoom={selectedRoom}
+                  refetchCustomer={refetch}
+                  setCreateOrderOpen={setCreateOrderOpen}
+                  setAddCustomerDetail={setAddCustomerDetail}
+                  addCustomerDetail={addCustomerDetail}
+                  modelCustomerDetails={addCustomerDetail}
+                  currentCustomer={customerSingle}
+                  api={api}
+                />
+              ) : (
+                <MenuWhenNoData hasCustomerId={hasCustomerId} />
+              )}
+            </div>
+          )}
+
+          <AboutCustomer
+            open={addCustomerDetail}
+            onOpenChange={setAddCustomerDetail}
+            customer={customerSingle}
+            setAddCustomerDetail={setAddCustomerDetail}
+          />
+
+          <CreateOrderDialog
+            open={isCreateOrderOpen}
+            onOpenChange={setCreateOrderOpen}
+            customerId={customerId}
+          />
+        </OrderProvider>
+      </div>
+      {showPermissionBar && (
+        <PermissionBar
+          onAllow={requestNotification}
+          visible={visible}
+          setVisible={setVisible}
         />
-      </OrderProvider>
+      )}
     </div>
   );
 }

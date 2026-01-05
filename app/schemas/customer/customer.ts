@@ -29,9 +29,20 @@ export type CustomerType = {
 };
 
 export interface CustomerFormCreateProps {
+  customer?: any;
   form: UseFormReturn<CustomerValues>;
   loading?: boolean;
   dataFromAI?: any;
+  disabled?: boolean;
+  isEdit?: boolean;
+  setIsEdit?: React.Dispatch<React.SetStateAction<boolean>>;
+  mode?: string;
+
+  onClick?: (values: CustomerValues) => void;
+
+  onCancel?: (key: string) => void;
+  onEditForm?: (key: string) => void;
+  fetchCustomer?: () => void;
 }
 
 export interface CustomerContactFormProps {
@@ -86,7 +97,7 @@ export interface CustomerTypeOption {
 export interface CustomerRelationshipFormProps {
   form: UseFormReturn<CustomerValues>;
   customer?: CustomerValues;
-  users: UsersFormValues[];
+  users?: UsersFormValues[];
   loading?: boolean;
   isEdit?: boolean;
   fetchCustomer?: (
@@ -101,9 +112,6 @@ export interface DualProgressCircleProps {
   progress?: number | undefined;
 }
 
-export interface RelationshipCircleProps {
-  chartData?: { name?: string; progress?: number; fill?: string }[];
-}
 // export interface DualProgressCircleProps {
 //   chartData?: chartItemSchema[];
 // }
@@ -121,7 +129,7 @@ export type CustomerValueNote = {
 export type CustomerConnectedChatRoomAI = {
   message: string;
   messageType: string;
-  customerId: string;
+  chatRoomId: string;
 };
 
 export type CustomerUpdateValueNote = {
@@ -142,10 +150,21 @@ export type CustomerUpdateChatDetails = {
 };
 
 export type CustomerUpdateTags = {
-  tags: { name: string; active: boolean }[];
+  tags: { id?: string; active: boolean }[];
 };
 
 export type CustomerUpdateChatDetailsAndTags = {
   chatDetails: CustomerUpdateChatDetails;
   tags: CustomerUpdateTags;
+};
+
+export type CustomerCreateTag = {
+  active?: boolean;
+  name?: string;
+  code?: string;
+  color?: string;
+  description?: string;
+  priority?: number;
+  ordering?: number;
+  note?: string;
 };

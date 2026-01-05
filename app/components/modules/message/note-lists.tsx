@@ -11,30 +11,37 @@ import {
   useUpdateCustomerNote,
 } from "~/api/client/customer/useCustomer";
 import { DateISOToDisplayDate } from "~/utils/date-format";
+import GlobalButton from "~/components/shared/global-button";
+import { GetNoteFormAI } from "./modal-get-noteAi";
+import { GlobalTooltip } from "~/components/shared/global-tooltip";
+import { AiSparkleIcon } from "~/components/shared/icons/ai-sparkle-icon";
 
 interface TNote {
   id: string;
   note: string;
   user_id: string;
-  user_name: string;
+  userName: string;
   created_at: string;
   createdAt: string;
   updated_at: string;
 }
 
 interface NoteListProps {
-  customer: any;
-  refetchCustomer: () => void;
+  selectedRoom?: any;
+  customer?: any;
+  refetchCustomer?: () => void;
+  disable?: boolean;
 }
 
 export const NoteLists: React.FC<NoteListProps> = (props) => {
-  const { customer, refetchCustomer } = props;
+  const { selectedRoom, customer, refetchCustomer } = props;
 
   const { mutate: createCustomerNote } = useCreateCustomerNote(customer?.id);
   const { mutate: updateCustomerNote } = useUpdateCustomerNote(customer?.id);
   const { mutate: deleteCustomerNote } = useDeleteCustomerNote(customer?.id);
 
   const [open, setOpen] = React.useState<boolean>(false);
+  const [openAiNote, setOpenAiNote] = React.useState<boolean>(false);
   const [noteContent, setNoteContent] = React.useState<string>("");
   const [selectedNoteId, setSelectedNoteId] = React.useState<string | null>(
     null
@@ -78,7 +85,7 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
             toast.success("แก้ไขโน้ตเรียบร้อยแล้ว!", {
               id: toastId,
             });
-            refetchCustomer();
+            refetchCustomer?.();
           },
           onError: () => {
             toast.error("แก้ไขโน้ตไม่สำเร็จ กรุณาลองใหม่อีกครั้งภายหลัง", {
@@ -95,7 +102,7 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
             toast.success("สร้างโน้ตใหม่เรียบร้อยแล้ว", {
               id: toastId,
             });
-            refetchCustomer();
+            refetchCustomer?.();
           },
           onError: () => {
             toast.error("แก้ไขโน้ตไม่สำเร็จ กรุณาลองใหม่อีกครั้งภายหลัง", {
@@ -125,7 +132,7 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
               toast.success("ลบโน้ตที่เลือกเรียบร้อยแล้ว", {
                 id: toastId,
               });
-              refetchCustomer();
+              refetchCustomer?.();
             },
             onError: () => {
               toast.error(
@@ -143,29 +150,57 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
   };
 
   return (
-    <div>
-      <div className="flex justify-between">
-        <h2 className="text-base font-semibold">โน้ต</h2>
-        <PlusIcon
-          onClick={() => handleOnOpenModal()}
-          className="cursor-pointer"
-        />
+    <div className="mt-4 flex flex-col h-[calc(100vh-500px)]">
+      <div className="flex justify-between items-center">
+        <div className="flex flex-row gap-3">
+          <h2 className="text-base font-semibold">โน้ต</h2>
+
+          <GlobalTooltip content="สรุปโน้ตด้วย AI จากข้อความที่บันทึกไว้">
+            <div
+              className={`${
+                !props.disable
+                  ? "animate-[pulse_2s_ease-in-out_infinite] cursor-pointer"
+                  : "cursor-default animate-none text-gray-400 "
+              }`}
+              onClick={() => {
+                if (!props.disable) setOpenAiNote(true);
+              }}
+            >
+              <AiSparkleIcon />
+            </div>
+          </GlobalTooltip>
+        </div>
+
+        <GlobalTooltip content="เพิ่มโน้ตสำหรับบันทึกข้อความไว้">
+          <PlusIcon
+            onClick={() => {
+              if (!props.disable) handleOnOpenModal();
+            }}
+            className={`${
+              props.disable
+                ? "cursor-default text-gray-400 pointer-events-none"
+                : "cursor-pointer hover:text-blue-500"
+            }`}
+          />
+        </GlobalTooltip>
       </div>
 
-      <div className="space-y-3 mt-4 max-h-[calc(100vh-420px)] overflow-auto">
-        {sortedNotes && sortedNotes.length ? (
+      <div className="mt-4 flex-1 overflow-auto space-y-3 pb-40">
+        {sortedNotes && sortedNotes.length > 0 ? (
           sortedNotes.map((note: TNote) => (
             <div
               key={note.id}
-              className="border rounded-lg p-3 bg-white shadow-sm space-y-2"
+              className="border rounded-lg p-3 bg-background shadow-sm space-y-2"
             >
-              <p className="whitespace-pre-line text-sm text-gray-800">
+              <p className="whitespace-pre-line break-words text-popover-foreground">
                 {note.note}
               </p>
               <div className="flex items-center justify-between text-xs text-gray-500">
                 <span>
                   {DateISOToDisplayDate(note.created_at || note.createdAt)}{" "}
-                  {note.user_name}
+                  <span className="text-strong text-black">
+                    ({note.userName})
+                  </span>
                 </span>
                 <div className="flex gap-2">
                   <PencilIcon
@@ -193,6 +228,14 @@ export const NoteLists: React.FC<NoteListProps> = (props) => {
         onClose={handleOnCloseModal}
         onSubmit={handleSubmitFormModal}
       />
+      {openAiNote && (
+        <GetNoteFormAI
+          chatRoomId={selectedRoom?.id}
+          customerId={customer?.id}
+          open={openAiNote}
+          setOpen={setOpenAiNote}
+        />
+      )}
     </div>
   );
 };

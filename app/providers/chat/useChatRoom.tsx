@@ -3,10 +3,12 @@ import {
   type InfiniteData,
   type InfiniteQueryObserverResult,
 } from "@tanstack/react-query";
+import _ from "lodash";
 
 import React from "react";
 import { useCustomer } from "~/api/client/customer/useCustomer";
-import { usePaginatedChatRooms } from "~/api/client/settings";
+import { usePaginatedChatRooms } from "~/api/client/message/useMessage";
+import { useDebounce } from "~/hooks/use-debounce";
 import type { Customer } from "~/schemas/customer/customer-form";
 import type { ChatRoomSchemaType } from "~/schemas/settings";
 
@@ -43,7 +45,11 @@ export type ChatRoom = {
   users: RoomUser[];
   unreadMessageCount: number;
   latestMessage?: LatestMessage | null;
+  done: boolean;
+  isProcess: boolean;
+  isSpam: boolean;
   updatedAt?: string | null;
+  lineSubId?: string;
 };
 
 type IncomingRoomPayload = {
@@ -61,7 +67,12 @@ type IncomingRoomPayload = {
   unreadMessageCount?: number;
   latestMessage?: LatestMessage;
   updatedAt?: string;
+  done: boolean;
+  isProcess: boolean;
+  isSpam: boolean;
   isUpdateRoomDetails?: boolean;
+  isAiReply?: boolean;
+  lineSubId?: string;
 };
 
 export const mergeRoomImmutable = (
@@ -69,15 +80,23 @@ export const mergeRoomImmutable = (
   incoming: IncomingRoomPayload
 ): ChatRoom[] => {
   const incomingId = incoming.chatRoomId ?? incoming.id;
-  if (!incomingId) return allRooms;
+  if (!incomingId) {
+    return sortingChatRoomByLatestTime(allRooms);
+  }
+
+  //Check new room not update when message is incomming wrong body
+  if (incoming.hasOwnProperty("isAiReply")) {
+    return sortingChatRoomByLatestTime(allRooms);
+  }
 
   const idx = allRooms.findIndex((r) => r.id === incomingId);
-
   const pick = <T,>(a: T | undefined, b: T): T => (a !== undefined ? a : b);
 
   if (idx >= 0) {
     const prev = allRooms[idx];
-    if (!prev) return allRooms;
+    if (!prev) {
+      return sortingChatRoomByLatestTime(allRooms);
+    }
 
     if (incoming.isUpdateRoomDetails) {
       const merged: ChatRoom = {
@@ -96,14 +115,21 @@ export const mergeRoomImmutable = (
         ),
         latestMessage: pick(incoming.latestMessage, prev.latestMessage ?? null),
         updatedAt: pick(incoming.updatedAt, prev.updatedAt ?? null),
+        done: pick(incoming.done, prev.done),
+        isProcess: pick(incoming.isProcess, prev.isProcess),
+        isSpam: pick(incoming.isSpam, prev.isSpam),
+        lineSubId: pick(incoming.lineSubId, prev.lineSubId),
         customer: incoming.customer
           ? { ...(prev.customer ?? null), ...incoming.customer }
-          : prev.customer ?? null,
+          : (prev.customer ?? null),
       };
 
       const next = allRooms.slice();
       next[idx] = merged;
-      return next;
+
+      const result = sortingChatRoomByLatestTime(next);
+
+      return result;
     }
 
     const merged: ChatRoom = {
@@ -122,13 +148,19 @@ export const mergeRoomImmutable = (
       ),
       latestMessage: pick(incoming.latestMessage, prev.latestMessage ?? null),
       updatedAt: pick(incoming.updatedAt, prev.updatedAt ?? null),
+      done: pick(incoming.done, prev.done ?? null),
+      isProcess: pick(incoming.isProcess, prev.isProcess ?? null),
+      isSpam: pick(incoming.isSpam, prev.isSpam ?? null),
+      lineSubId: pick(incoming.lineSubId, prev.lineSubId),
       customer: incoming.customer
         ? { ...(prev.customer ?? null), ...incoming.customer }
-        : prev.customer ?? null,
+        : (prev.customer ?? null),
     };
 
     const without = allRooms.slice(0, idx).concat(allRooms.slice(idx + 1));
-    return [merged, ...without];
+    const finalItems = [merged, ...without];
+
+    return sortingChatRoomByLatestTime(finalItems);
   }
 
   const normalizedNew: ChatRoom = {
@@ -144,10 +176,15 @@ export const mergeRoomImmutable = (
     users: incoming.users ?? [],
     unreadMessageCount: incoming.unreadMessageCount ?? 0,
     latestMessage: incoming.latestMessage ?? null,
+    done: incoming.done ?? false,
+    isProcess: incoming.isProcess ?? false,
+    isSpam: incoming.isSpam ?? false,
+    lineSubId: incoming.lineSubId ?? "",
     updatedAt: incoming.updatedAt ?? new Date().toISOString(),
   };
 
-  return [normalizedNew, ...allRooms];
+  const finalNormalizes = [normalizedNew, ...allRooms];
+  return sortingChatRoomByLatestTime(finalNormalizes);
 };
 
 export const mergeChat = (rooms: any[], incoming: any) => {
@@ -191,7 +228,10 @@ export const computeRooms = (
 ): any[] => {
   const paginated = chatRooms?.pages?.flatMap((p: any) => p) ?? [];
   const baseRooms: any[] = paginated.flatMap((p: any) => p?.items ?? []);
-  if (!realtimeChatRooms) return baseRooms.filter((r) => r?.id);
+  if (!realtimeChatRooms) {
+    const crs = baseRooms.filter((r) => r?.id);
+    return sortingChatRoomByLatestTime(crs);
+  }
 
   const merged = mergeChat([...baseRooms], realtimeChatRooms as any);
 
@@ -222,7 +262,8 @@ export const computeRooms = (
     }
   }
 
-  return result.filter((r) => r?.id);
+  const chatrooms = result.filter((r) => r?.id);
+  return sortingChatRoomByLatestTime(chatrooms);
 };
 
 type PaginatedChatRoomsPage = {
@@ -256,9 +297,15 @@ type ChatRoomContextType = {
   setOnSelectRoom: (onSelectRoom: boolean) => void;
   autoReadMsg: boolean;
   setAutoReadMsg: (onSelectRoom: boolean) => void;
-
   rooms: any;
   setRooms: React.Dispatch<React.SetStateAction<any>>;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
+
+  select: string;
+  setSelect: React.Dispatch<React.SetStateAction<string>>;
+  search: string;
+  filterRoom: any;
+  meta: any;
 };
 
 const ChatRoomContext = React.createContext<ChatRoomContextType | undefined>(
@@ -283,13 +330,23 @@ export const ChatRoomProvider = ({
     users: [],
     latestMessage: { id: "", message: "", createdAt: "" },
   };
+
+  const [search, setSearch] = React.useState<string>("");
+  const [select, setSelect] = React.useState<string>("all");
+
+  const debouncedSearch = useDebounce(search);
+  const debouncedSearchSelectKey = useDebounce(select);
+
   const {
     data: chatRooms,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = usePaginatedChatRooms();
+  } = usePaginatedChatRooms(
+    debouncedSearch,
+    debouncedSearchSelectKey === "all" ? "" : debouncedSearchSelectKey
+  );
   const [realtimeChatRooms, setRealtimeChatRooms] = React.useState<any>();
   const [selectedRoom, setSelectedRoom] =
     React.useState<ChatRoomSchemaType>(initialState);
@@ -297,8 +354,9 @@ export const ChatRoomProvider = ({
   const [rooms, setRooms] = React.useState<any[]>(
     computeRooms(chatRooms, realtimeChatRooms)
   );
+
   const { data: customer, refetch: refetchCustomer } = useCustomer(
-    selectedRoom.customerId
+    selectedRoom.customerId ?? ""
   );
 
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
@@ -306,6 +364,11 @@ export const ChatRoomProvider = ({
   const [onSelectRoom, setOnSelectRoom] = React.useState<boolean>(false);
   const [autoReadMsg, setAutoReadMsg] = React.useState<boolean>(false);
 
+  const filterRoom = React.useMemo(() => {
+    if ((select === "" && search === "") || !chatRooms) return [];
+
+    return computeRooms(chatRooms, realtimeChatRooms);
+  }, [chatRooms, realtimeChatRooms]);
   return (
     <ChatRoomContext.Provider
       value={{
@@ -330,6 +393,14 @@ export const ChatRoomProvider = ({
         setAutoReadMsg,
         rooms,
         setRooms,
+        search,
+        setSearch,
+        select,
+        setSelect,
+        filterRoom,
+        meta: {
+          statusSummary: chatRooms && chatRooms.pages?.[0]?.statusSummary,
+        },
       }}
     >
       {children}
@@ -343,4 +414,31 @@ export const useChatRoom = () => {
     throw new Error("useChatRoom must be used within a ChatRoomProvider");
   }
   return context;
+};
+
+const sortingChatRoomByLatestTime = (chatrooms: ChatRoom[]): ChatRoom[] => {
+  const updatedRooms = chatrooms.map((item) => {
+    if (item.latestMessage) {
+      if (
+        !item.latestMessage.createdAt ||
+        isNaN(Date.parse(item.latestMessage.createdAt))
+      ) {
+        item.latestMessage.createdAt = new Date().toISOString();
+      }
+    }
+    return item;
+  });
+
+  const sorted = _.orderBy(
+    updatedRooms,
+    [
+      (item: ChatRoom) => {
+        if (!item.latestMessage) return new Date(0);
+        return new Date(item.latestMessage.createdAt as string);
+      },
+    ],
+    ["desc"]
+  );
+
+  return sorted;
 };

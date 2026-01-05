@@ -4,6 +4,7 @@ import {
   Building2,
   FileDown,
   FileUp,
+  SlidersVertical,
 } from "lucide-react";
 import React from "react";
 
@@ -47,9 +48,10 @@ export default function SettingLayout({
                   <FileDown /> นำเข้าข้อมูล
                 </React.Fragment>
               }
+              variant="outline"
               disabled
               key={"import-button"}
-              className="bg-blue-300 text-black hover:bg-blue-500 hover:text-white"
+              // className="bg-blue-300 text-black hover:bg-blue-500 hover:text-white"
             />,
             <GlobalButton
               label={
@@ -57,9 +59,10 @@ export default function SettingLayout({
                   <FileUp /> นำออกข้อมูล
                 </>
               }
+              variant="outline"
               disabled
               key={"export-button"}
-              className="bg-yellow-300 text-black hover:bg-yellow-500 hover:text-white"
+              // className="bg-yellow-300 text-black hover:bg-yellow-500 hover:text-white"
             />,
           ]}
         />
@@ -83,12 +86,12 @@ export default function SettingLayout({
                 <Building className="w-4 h-4 mr-2" />
               </TabsTrigger>
             </Link>
-            <Link to="/setting-organization/branch">
+            {/* <Link to="/setting-organization/branch">
               <TabsTrigger value="branch">
                 สาขา
                 <Building2 className="w-4 h-4 mr-2" />
               </TabsTrigger>
-            </Link>
+            </Link> */}
             <Link to="/setting-organization/third-party">
               <TabsTrigger value="third-party">
                 การเชื่อมต่อภายนอก
@@ -96,7 +99,7 @@ export default function SettingLayout({
               </TabsTrigger>
             </Link>
 
-            {/* <Link href="/organization/setting-organization/permission">
+            {/* <Link to="/organization/setting-organization/permission">
               <TabsTrigger value="permission">
                 การจัดการบทบาท
                 <SlidersVertical className="w-4 h-4 mr-2" />

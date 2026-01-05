@@ -22,6 +22,9 @@ import { useCategories } from "~/api/client/categories/useCategoryQuery";
 export const useFormProductSetup = (id: string) => {
   const { data: inventories } = useInventories();
   const { data: categories } = useCategories();
+  const inventoriesSafe = Array.isArray(inventories) ? inventories : [];
+  const categoriesSafe = Array.isArray(categories) ? categories : [];
+
   // const { data: materials } = useMaterials();
   // const { data: attributes } = useAttributes();
   // const { data: selections } = useSelections();
@@ -68,6 +71,12 @@ export const useFormProductSetup = (id: string) => {
     values: {
       unit: "kilogram",
       imageUrls: [],
+      discountPromotion: [
+        {
+          quantity: 0,
+          discount: 0,
+        },
+      ],
     } as unknown as ProductCreateDTO,
   });
 
@@ -79,7 +88,7 @@ export const useFormProductSetup = (id: string) => {
 
     form.clearErrors("inventoryId");
     setInventoriesSelected(
-      inventories.filter((inv: Inventory) =>
+      inventoriesSafe.filter((inv: Inventory) =>
         inventoryIds.includes(inv.id ?? "")
       )
     );
@@ -92,7 +101,9 @@ export const useFormProductSetup = (id: string) => {
       categoryIds.map((id) => ({ id, custom: false }))
     );
     setCategoriesSelected(
-      categories.filter((cat: Category) => categoryIds.includes(cat.id ?? ""))
+      categoriesSafe.filter((cat: Category) =>
+        categoryIds.includes(cat.id ?? "")
+      )
     );
   };
 
@@ -137,7 +148,9 @@ export const useFormProductSetup = (id: string) => {
       setSelectedInventoryIds(inventoryIds);
       form.setValue("inventoryId", inventoryIds.join(","));
       setInventoriesSelected(
-        inventories.filter((inv: Inventory) => inventoryIds.includes(inv.id))
+        inventoriesSafe.filter((inv: Inventory) =>
+          inventoryIds.includes(inv.id ?? "")
+        )
       );
     }
 
@@ -146,7 +159,9 @@ export const useFormProductSetup = (id: string) => {
       setSelectedCategoryIds(categoryIds);
       form.setValue("categories", data.categories);
       setCategoriesSelected(
-        categories.filter((cat: Category) => categoryIds.includes(cat.id ?? ""))
+        categoriesSafe.filter((cat: Category) =>
+          categoryIds.includes(cat.id ?? "")
+        )
       );
     }
     // if (data?.materials?.length) {
@@ -185,12 +200,12 @@ export const useFormProductSetup = (id: string) => {
         quantity: data.quantity ?? "0",
         sku: data.sku ?? "",
         matType: data.matType ?? "non_material",
-        status: data.status ?? "available",
+        status: data.status ?? "active",
         vatPrice: data.vatPrice ?? 0,
         salePrice: data.salePrice ?? 0,
         costPrice: data.costPrice ?? 0,
         discountPrice: data.discountPrice ?? 0,
-        productCategory: data.discountPrice ?? 0,
+        productCategory: data.discountPrice ?? "",
         imageUrl: data.imageUrl ?? "",
         description: data.description ?? "",
         refCode: data.refCode ?? "",

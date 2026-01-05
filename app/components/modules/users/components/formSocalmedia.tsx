@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
-import { PlusIcon } from "lucide-react";
+import { PenLine, PlusIcon, Trash2 } from "lucide-react";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 import { useFieldArray, useWatch, type UseFormReturn } from "react-hook-form";
 import type { UsersFormValues } from "~/schemas/users/user";
-import { CardContent } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { UserSocialModal } from "./formSocalmediaModal";
+import GlobalButton from "~/components/shared/global-button";
+import { Separator } from "~/components/ui/separator";
 
 export interface UserFormProfileProps {
   form: UseFormReturn<UsersFormValues>;
@@ -67,7 +69,7 @@ export const UserSocalmedias: React.FC<UserFormProfileProps> = ({
         !v?.url &&
         !v?.description &&
         !v?.isPrimary;
-      if (blank) removeSm(editingIndex);
+      removeSm(editingIndex);
     }
     setOpen(false);
     setEditingIndex(null);
@@ -144,7 +146,7 @@ export const UserSocalmedias: React.FC<UserFormProfileProps> = ({
   }, [data, replaceSm]);
 
   return (
-    <>
+    <div className="py-0 pb-5">
       {loading ? (
         <CardContent className="space-y-4">
           <SkeletonLoading />
@@ -156,7 +158,7 @@ export const UserSocalmedias: React.FC<UserFormProfileProps> = ({
         <CardContent className="space-y-4">
           <div className="lg:col-span-2 flex flex-col gap-3 mt-5">
             <div className="flex items-center justify-between">
-              <h1 className="font-bold">โซเชียลมีเดีย</h1>
+              <h1 className="font-bold  text-base">โซเชียลมีเดีย</h1>
               <Button
                 type="button"
                 size="sm"
@@ -181,7 +183,7 @@ export const UserSocalmedias: React.FC<UserFormProfileProps> = ({
                   const url = typeof sv?.url === "string" ? sv.url.trim() : "";
 
                   const titleParts: string[] = [];
-                  if (platform) titleParts.push(`แพลตฟอร์ม: ${platform}`);
+                  if (platform) titleParts.push(`แพลตฟอร์ม : ${platform}`);
                   const title =
                     titleParts.length > 0
                       ? titleParts.join(" ")
@@ -194,16 +196,13 @@ export const UserSocalmedias: React.FC<UserFormProfileProps> = ({
                   ].filter((d) => d.value && String(d.value).trim().length > 0);
 
                   return (
-                    <div
-                      key={row.id}
-                      className="rounded-xl border p-4 space-y-4"
-                    >
+                    <div key={row.id} className=" ">
                       <div className="flex items-center justify-between">
                         <div className="min-w-0">
                           <h4 className="font-semibold truncate">{title}</h4>
 
                           {details.length > 0 && (
-                            <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+                            <div className="mt-2 space-y-1 text-sm text-muted-foreground">
                               {details.map((d) => (
                                 <p
                                   key={d.label}
@@ -214,7 +213,7 @@ export const UserSocalmedias: React.FC<UserFormProfileProps> = ({
                                   }
                                 >
                                   <span className="font-medium">
-                                    {d.label}:
+                                    {d.label} :
                                   </span>{" "}
                                   {d.label === "ลิงก์" ? (
                                     <a
@@ -235,24 +234,30 @@ export const UserSocalmedias: React.FC<UserFormProfileProps> = ({
                         </div>
 
                         <div className="flex gap-2 flex-shrink-0">
-                          <Button
-                            type="button"
-                            variant="secondary"
-                            aria-label={`แก้ไขโซเชียลมีเดีย #${index + 1}`}
-                            onClick={() => handleOpenEdit(index)}
-                          >
-                            แก้ไข
-                          </Button>
-                          <Button
+                          <GlobalButton
+                            label="แก้ไข"
                             type="button"
                             variant="outline"
+                            width="80px"
+                            aria-label={`แก้ไขโซเชียลมีเดีย #${index + 1}`}
+                            onClick={() => handleOpenEdit(index)}
+                            className="  transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
+                            icon={<PenLine size={20} />}
+                          />
+
+                          <GlobalButton
+                            label="ลบรายการนี้"
+                            type="button"
+                            variant="secondary"
+                            width="120px"
                             aria-label={`ลบโซเชียลมีเดีย #${index + 1}`}
                             onClick={() => handleDelete(index)}
-                          >
-                            ลบรายการนี้
-                          </Button>
+                            className="  transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
+                            icon={<Trash2 size={20} />}
+                          />
                         </div>
                       </div>
+                      {smFields.length > 1 && <Separator className="my-2" />}
                     </div>
                   );
                 })}
@@ -276,6 +281,6 @@ export const UserSocalmedias: React.FC<UserFormProfileProps> = ({
           onSubmit={handleSubmitFromModal}
         />
       )}
-    </>
+    </div>
   );
 };

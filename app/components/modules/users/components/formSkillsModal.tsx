@@ -21,6 +21,7 @@ import type { UsersFormValues } from "~/schemas/users/user";
 import type { UseFormReturn } from "react-hook-form";
 import { Input } from "~/components/ui/input";
 import { Switch } from "~/components/ui/switch";
+import { GlobalFormField } from "~/components/shared/global-formField";
 
 type Props = {
   open: boolean;
@@ -83,10 +84,11 @@ export const UserSkillModal: React.FC<Props> = ({
                 name={`${index}.level`}
                 render={({ field }) => (
                   <FormItem>
-                    <RequiredLabel required>ระดับความชำนาญ</RequiredLabel>
+                    <FormLabel>ระดับความชำนาญ</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
+                        value={field.value ?? ""}
                         placeholder="เช่น Beginner, Intermediate, Advanced"
                       />
                     </FormControl>
@@ -141,7 +143,7 @@ export const UserSkillModal: React.FC<Props> = ({
                 )}
               />
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name={`${index}.description`}
                 render={({ field }) => (
@@ -157,7 +159,16 @@ export const UserSkillModal: React.FC<Props> = ({
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
+              <div className="md:col-span-2">
+                <GlobalFormField
+                  control={form.control}
+                  name={`${index}.description`}
+                  label="รายละเอียดเพิ่มเติม"
+                  type="input"
+                  placeholder="หมายเหตุ หรือรายละเอียดอื่นๆ"
+                />
+              </div>
             </div>
           </form>
         </Form>
@@ -171,7 +182,12 @@ export const UserSkillModal: React.FC<Props> = ({
           >
             ยกเลิก
           </Button>
-          <Button type="submit" form="skill-form" className="w-[222px]">
+          <Button
+            type="button"
+            form="skill-form"
+            onClick={onSubmit}
+            className="w-[222px]"
+          >
             บันทึก
           </Button>
         </DialogFooter>

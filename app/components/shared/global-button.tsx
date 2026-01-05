@@ -20,6 +20,7 @@ interface GlobalButtonProps {
     | "ghost"
     | "link";
   icon?: React.ReactNode;
+  width?: string;
 }
 
 const GlobalButton = ({
@@ -30,6 +31,8 @@ const GlobalButton = ({
   loading,
   disabled,
   className,
+  width = "100%",
+
   variant = "default",
   icon,
 }: GlobalButtonProps) => {
@@ -40,7 +43,7 @@ const GlobalButton = ({
       onClick={onClick}
       variant={variant}
       disabled={loading || disabled}
-      style={{ width: "100%" }}
+      style={{ width }}
       className={`${className} ${
         variant === "outline" && "border"
       } rounded-md px-4 py-2 flex items-center justify-center`}

@@ -9,7 +9,7 @@ import ImageUpload from "~/components/shared/image-upload";
 import { RequiredLabel } from "~/components/shared/required-design";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { Button } from "~/components/ui/button";
-import { CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Checkbox } from "~/components/ui/checkbox";
 import {
   Command,
@@ -41,26 +41,38 @@ import {
 import { Switch } from "~/components/ui/switch";
 import { UsersFormSchema, type UsersFormValues } from "~/schemas/users/user";
 import { getRequiredPaths } from "~/utils/form-adapter";
+import { OrganizationSelector } from "./formSelectOrganization";
+import { formToJSON } from "axios";
+import { useCheckUserEmailDuplicate } from "~/api/client/user";
+import { InputNumberBox } from "~/components/shared/input-number-box";
 
 export interface UserFormProfileProps {
   form: UseFormReturn<UsersFormValues>;
   data?: Partial<UsersFormValues>;
+  roles?: any;
   loading?: boolean;
+  isEdit?: boolean;
 }
+export type RangeDate = {
+  from?: Date;
+  to?: Date;
+};
 
 export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
   form,
-  data,
+  roles,
   loading = false,
 }) => {
   const checkFields = new Set(getRequiredPaths(UsersFormSchema as any));
   const [debouncedStatusSearch] = useState<string>("");
   const [openSub, setOpenSub] = React.useState(false);
   const [search, setSearch] = React.useState("");
+  const { mutateAsync: checkEmail } = useCheckUserEmailDuplicate();
+  const [rangeDate, setRangeDate] = React.useState<RangeDate>({});
 
-  const userDepartments = Array.isArray(data) ? data : [];
+  const allRoles = Array.isArray(roles) ? roles : [];
 
-  const filtered = userDepartments.filter((item: any) => {
+  const filtered = allRoles.filter((item: any) => {
     const a = item.name?.toLowerCase().includes(search.toLowerCase());
 
     return a;
@@ -81,28 +93,38 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
 
   const statusOptions = [
     { label: "ใช้งานอยู่", value: "active" },
-    { label: "ทดลองงาน", value: "probation" },
-    { label: "ลาหยุดชั่วคราว", value: "on_leave" },
-    { label: "ลาออกแล้ว", value: "resigned" },
-    { label: "เลิกจ้าง", value: "terminated" },
+    { label: "พนักงานงานใหม่", value: "new_user" },
+    { label: "พนักงานที่ไม่ใช้งานมานาน", value: "inactive" },
+    { label: "พนักงานที่ถูกระงับการใช้งาน", value: "suspended" },
+    { label: "พนักงานที่ลบบัญชีออกจากระบบ", value: "deleted" },
   ] as const;
 
   const filteredStatusOptions = statusOptions.filter((o) =>
     o.label.toLowerCase().includes(debouncedStatusSearch.toLowerCase())
   );
 
-  // types ที่ไม่ใช้ any
+  const handleBlur = async () => {
+    const email = form.getValues("email");
+    if (!email) return;
 
+    try {
+      const res = await checkEmail({ email });
+      if (res) {
+        form.setError("email", {
+          type: "manual",
+          message: "อีเมลนี้ถูกใช้งานแล้ว",
+        });
+      } else {
+        form.clearErrors("email");
+      }
+    } catch (error) {
+      console.error("email check failed", error);
+    }
+  };
   type OptionItem = { id: string; name: string; active?: boolean }; // ของ list ที่ใช้เลือก
 
   return (
-    <>
-      <CardHeader>
-        <div className="flex gap-2">
-          <CardTitle className="text-base font-bold">ข้อมูลพนักงาน</CardTitle>
-        </div>
-      </CardHeader>
-
+    <Card>
       {loading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
@@ -133,32 +155,43 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
               />
 
               <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <RequiredLabel required>อีเมล</RequiredLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="กรอกอีเมล"
+                          {...field}
+                          value={field.value ?? undefined}
+                          onBlur={handleBlur}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <GlobalFormField
                   control={form.control}
                   name="userName"
-                  label="ชื่อพนักงาน"
+                  label="User Name"
                   type="input"
                   checkFields={checkFields}
                   placeholder="กรอกชื่อพนักงาน"
                 />
-                <GlobalFormField
-                  control={form.control}
-                  name="email"
-                  label="อีเมล"
-                  type="input"
-                  checkFields={checkFields}
-                  placeholder="กรอกอีเมล"
-                />
-
                 <FormField
                   control={form.control}
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <RequiredLabel required>รหัสผ่าน</RequiredLabel>
+                      <RequiredLabel required>
+                        รหัสผ่าน <FormMessage />
+                      </RequiredLabel>
                       <FormControl>
                         <Input
-                          type="input"
+                          type="password"
                           placeholder="กรอกรหัสผ่าน"
                           aria-invalid={!!form.formState.errors.confirmPassword}
                           className={
@@ -167,7 +200,6 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                           {...field}
                         />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -180,7 +212,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                       <RequiredLabel required>ยืนยันรหัสผ่าน</RequiredLabel>
                       <FormControl>
                         <Input
-                          type="input"
+                          type="password"
                           placeholder="กรอกรหัสผ่านยืนยัน"
                           aria-invalid={!!form.formState.errors.confirmPassword}
                           className={
@@ -212,7 +244,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                             <SelectValue placeholder="เลือกสถานะองค์กร" />
                           </SelectTrigger>
                           <SelectContent>
-                            {filteredStatusOptions.map((option) => (
+                            {statusOptions.map((option) => (
                               <SelectItem
                                 key={option.value}
                                 value={option.value}
@@ -244,138 +276,163 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="profile.emId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>รหัสพนักงาน</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="กรอกรหัสพนักงาน"
+                          {...field}
+                          value={field.value ?? undefined}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <div className="md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
-                  name="userDepartments"
+                  name="organizationRoleId"
                   render={({ field }) => {
-                    const selected = Array.isArray(field.value)
-                      ? (field.value as {
-                          id: string;
-                          name: string;
-                          active: boolean;
-                        }[])
-                      : [];
+                    // const selected = Array.isArray(field.value)
+                    //   ? (field.value as {
+                    //       id: string;
+                    //       name: string;
+                    //       active: boolean;
+                    //     }[])
+                    //   : [];
 
-                    const toRef = (item: OptionItem) => ({
-                      id: item.id,
-                      name: item.name,
-                      active: item.active ?? true,
-                    });
+                    // const toRef = (item: OptionItem) => ({
+                    //   id: item.id,
+                    //   name: item.name,
+                    //   active: item.active ?? true,
+                    // });
 
-                    const selectedIds = new Set(selected.map((s) => s.id));
+                    // const selectedIds = new Set(selected.map((s) => s.id));
 
-                    const toggle = (item: OptionItem) => {
-                      const exists = selectedIds.has(item.id);
-                      const next = exists
-                        ? selected.filter((s) => s.id !== item.id)
-                        : [...selected, toRef(item)];
-                      field.onChange(next);
-                      field.onBlur?.();
-                    };
+                    // const toggle = (item: OptionItem) => {
+                    //   const exists = selectedIds.has(item.id);
+                    //   const next = exists
+                    //     ? selected.filter((s) => s.id !== item.id)
+                    //     : [...selected, toRef(item)];
+                    //   field.onChange(next);
+                    //   field.onBlur?.();
+                    // };
 
-                    const removeId = (id: string) => {
-                      const next = selected.filter((s) => s.id !== id);
-                      field.onChange(next);
-                      field.onBlur?.();
-                    };
+                    // const removeId = (id: string) => {
+                    //   const next = selected.filter((s) => s.id !== id);
+                    //   field.onChange(next);
+                    //   field.onBlur?.();
+                    // };
 
-                    const findDep = (id?: string) =>
-                      (userDepartments ?? []).find((d) => d.id === id);
+                    const selectedId = field.value as string | null;
+                    const selectedRole = (allRoles ?? []).find(
+                      (r) => r.id === selectedId
+                    );
 
                     return (
                       <FormItem>
-                        <RequiredLabel required>แผนก</RequiredLabel>
-                        <div className="flex flex-wrap gap-2">
-                          {selected.map((ref) => {
-                            const dep = findDep(ref.id);
-                            const depId = ref.id;
-                            const depName = dep?.name ?? ref.name ?? "-";
-                            return (
-                              <div
-                                key={depId}
-                                className="flex items-center gap-2 border-1 px-2 py-1.5 rounded-full"
-                              >
-                                <GlobalImage
-                                  src={`https://api.dicebear.com/9.x/initials/svg?seed=${depName}`}
-                                  alt={depName}
-                                  className="w-6 h-6 rounded-full"
-                                />
-                                <span>{depName}</span>
-                                <button
-                                  type="button"
-                                  onClick={() => removeId(depId)}
-                                  className="ml-1 text-gray-500 hover:text-red-500"
-                                >
-                                  <X className="h-3 w-3" />
-                                </button>
-                              </div>
-                            );
-                          })}
+                        <RequiredLabel required>ตำแหน่ง</RequiredLabel>
 
-                          <Popover
-                            open={openSub}
-                            onOpenChange={(v) => {
-                              setOpenSub(v);
-                              if (!v) field.onBlur?.();
-                            }}
-                          >
-                            <PopoverTrigger asChild>
-                              <Button
+                        <div className="flex flex-wrap gap-2">
+                          {/* แสดง role ที่มีอยู่แล้ว */}
+                          {selectedRole && (
+                            <div className="flex items-center gap-2 px-2 py-1.5 rounded-full border">
+                              <GlobalImage
+                                src={`https://api.dicebear.com/9.x/initials/svg?seed=${selectedRole.name}`}
+                                alt={selectedRole.name}
+                                className="w-6 h-6 rounded-full"
+                              />
+                              <span className="text-sm">
+                                {selectedRole.name}
+                              </span>
+                              <button
                                 type="button"
-                                variant="outline"
-                                className="px-4 py-2 rounded-full"
-                                disabled={!!selected.length}
+                                onClick={() => {
+                                  field.onChange(null);
+                                  field.onBlur?.();
+                                }}
+                                className="ml-1 text-muted-foreground hover:text-red-500"
                               >
-                                เพิ่มแผนก +
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-64">
-                              <Command>
-                                <CommandInput
-                                  placeholder="ค้นหา..."
-                                  value={search}
-                                  onValueChange={setSearch}
-                                />
-                                <CommandEmpty>ไม่มีข้อมูล</CommandEmpty>
-                                <CommandList>
-                                  {(filtered ?? []).map((item: OptionItem) => {
-                                    const checked = selectedIds.has(item.id);
-                                    return (
-                                      <CommandItem
-                                        key={item.id}
-                                        onSelect={() => {
-                                          toggle(item);
-                                          setOpenSub(false);
-                                        }}
-                                      >
-                                        <Checkbox
-                                          checked={checked}
-                                          onCheckedChange={() => {
-                                            toggle(item);
-                                            setOpenSub(false);
-                                          }}
-                                          className="mr-2"
-                                        />
-                                        {item.name}
-                                        {checked && (
-                                          <Check className="ml-auto h-4 w-4" />
-                                        )}
-                                      </CommandItem>
-                                    );
-                                  })}
-                                </CommandList>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          )}
+                          {!selectedRole && (
+                            <Popover
+                              open={openSub}
+                              onOpenChange={(v) => {
+                                setOpenSub(v);
+                                if (!v) field.onBlur?.();
+                              }}
+                            >
+                              <PopoverTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  className="px-4 py-2 rounded-full"
+                                  disabled={!!field.value}
+                                >
+                                  เพิ่มตำแหน่ง +
+                                </Button>
+                              </PopoverTrigger>
+
+                              <PopoverContent className="w-64">
+                                <Command>
+                                  <CommandInput
+                                    placeholder="ค้นหา..."
+                                    value={search}
+                                    onValueChange={setSearch}
+                                  />
+                                  <CommandEmpty>ไม่มีข้อมูล</CommandEmpty>
+
+                                  <CommandList>
+                                    {(filtered ?? []).map(
+                                      (item: OptionItem) => {
+                                        const checked = field.value === item.id;
+
+                                        return (
+                                          <CommandItem
+                                            key={item.id}
+                                            onSelect={() => {
+                                              field.onChange(item.id);
+                                              setOpenSub(false);
+                                            }}
+                                          >
+                                            <Checkbox
+                                              checked={checked}
+                                              className="mr-2"
+                                            />
+                                            {item.name}
+                                            {checked && (
+                                              <Check className="ml-auto h-4 w-4" />
+                                            )}
+                                          </CommandItem>
+                                        );
+                                      }
+                                    )}
+                                  </CommandList>
+                                </Command>
+                              </PopoverContent>
+                            </Popover>
+                          )}
                         </div>
+
                         <FormMessage />
                       </FormItem>
                     );
                   }}
                 />
+              </div>
+
+              <div>
+                <OrganizationSelector form={form} />
               </div>
 
               <h1 className="font-bold">ข้อมูลส่วนตัว</h1>
@@ -393,23 +450,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     { label: "นางสาว", value: "ms" },
                   ]}
                 /> */}
-                <FormField
-                  control={form.control}
-                  name="profile.nickName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>ชื่อเล่น</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="กรอกชื่อเล่น"
-                          {...field}
-                          value={field.value ?? undefined}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+
                 <FormField
                   control={form.control}
                   name="profile.firstName"
@@ -483,6 +524,44 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     { label: "ไม่ระบุ", value: "not_specified" },
                   ]}
                 /> */}
+
+                <FormField
+                  control={form.control}
+                  name="profile.nickName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ชื่อเล่น</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="กรอกชื่อเล่น"
+                          {...field}
+                          value={field.value ?? undefined}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="profile.phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>เบอร์โทรศัพท์</FormLabel>
+                      <FormControl>
+                        <InputNumberBox
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          groups={[3, 3, 4]}
+                          format="-"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="profile.birthDate"
@@ -499,23 +578,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="profile.phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>เบอร์โทรศัพท์</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="กรอกเบอร์โทร"
-                          {...field}
-                          value={field.value ?? undefined}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+
                 <FormField
                   control={form.control}
                   name="profile.age"
@@ -523,7 +586,11 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     <FormItem>
                       <RequiredLabel required>อายุ</RequiredLabel>
                       <FormControl>
-                        <Input placeholder="กรอกอายุ" {...field} />
+                        <Input
+                          placeholder="กรอกอายุ"
+                          {...field}
+                          value={field.value ?? undefined}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -536,16 +603,19 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     <FormItem>
                       <FormLabel>เลขประจำตัวผู้เสียภาษี</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="กรอกเลขประจำตัวผู้เสียภาษี"
-                          {...field}
-                          value={field.value ?? undefined}
+                        <InputNumberBox
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          groups={[1, 4, 5, 2, 1]}
+                          format="-"
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+              </div>
+              <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
                 <FormField
                   control={form.control}
                   name="profile.nationality"
@@ -563,6 +633,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="profile.religion"
@@ -580,19 +651,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="profile.weight"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>น้ำหนัก</FormLabel>
-                      <FormControl>
-                        <Input placeholder="กรอกน้ำหนัก" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+
                 <FormField
                   control={form.control}
                   name="profile.height"
@@ -606,6 +665,21 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="profile.weight"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>น้ำหนัก</FormLabel>
+                      <FormControl>
+                        <Input placeholder="กรอกน้ำหนัก" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="profile.startWorkDate"
@@ -615,7 +689,13 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                       <FormControl>
                         <DatePicker
                           value={field.value ?? undefined}
-                          onChange={(val) => field.onChange(val ?? undefined)}
+                          onChange={(val?: string) => {
+                            field.onChange(val);
+                            setRangeDate((prev) => ({
+                              ...prev,
+                              from: val ? new Date(val) : undefined,
+                            }));
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -632,6 +712,12 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                         <DatePicker
                           value={field.value ?? undefined}
                           onChange={(val) => field.onChange(val ?? undefined)}
+                          disabled={(d: string) => {
+                            if (!rangeDate.from) return false;
+                            const dd = new Date(d);
+                            dd.setHours(0, 0, 0, 0);
+                            return dd < rangeDate.from;
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -643,6 +729,6 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
           </div>
         </CardContent>
       )}
-    </>
+    </Card>
   );
 };

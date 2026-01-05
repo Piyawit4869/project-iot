@@ -1,15 +1,18 @@
 import React from "react";
 
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
-import { PlusIcon } from "lucide-react";
+import { PenLine, PlusIcon, Trash2 } from "lucide-react";
 import { GlobalModal } from "~/components/shared/modal/modal";
 import { toast } from "sonner";
 import dayjs from "dayjs";
 import { WorkExperienceModal } from "./formworkExperiencesModal";
 import { useFieldArray, useWatch, type UseFormReturn } from "react-hook-form";
 import type { UsersFormValues } from "~/schemas/users/user";
-import { CardContent } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
+import GlobalButton from "~/components/shared/global-button";
+import { Separator } from "~/components/ui/separator";
+import { contactTypeMap } from "~/initData/user-initData";
 
 export interface UserFormProfileProps {
   form: UseFormReturn<UsersFormValues>;
@@ -76,7 +79,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
         !v?.location &&
         !v?.description;
 
-      if (blank) removeWe(editingIndex);
+      removeWe(editingIndex);
     }
     setOpen(false);
     setEditingIndex(null);
@@ -97,6 +100,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
             `profile.workExperiences.${editingIndex}`
           );
           updateWe(editingIndex, {
+            ...current,
             company: current?.company ?? "",
             position: current?.position ?? "",
             employmentType: current?.employmentType ?? "",
@@ -109,7 +113,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
           toast.success("บันทึกเรียบร้อยแล้ว!", { id: toastId });
           setOpen(false);
           setEditingIndex(null);
-        } catch {
+        } catch (e) {
           toast.error("ดำเนินการไม่สำเร็จ กรุณาลองใหม่ภายหลัง", {
             id: toastId,
           });
@@ -144,7 +148,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
   };
 
   return (
-    <>
+    <div className="py-0 pb-5">
       {loading ? (
         <CardContent className="space-y-4 ">
           <SkeletonLoading />
@@ -156,7 +160,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
         <CardContent className="space-y-4">
           <div className="lg:col-span-2 flex flex-col gap-3 mt-5">
             <div className="flex items-center justify-between">
-              <h1 className="font-bold">ประสบการณ์ทำงาน</h1>
+              <h1 className="font-bold  text-base">ประสบการณ์ทำงาน</h1>
               <Button
                 type="button"
                 size="sm"
@@ -190,16 +194,17 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
                           wv?.isGraduated
                             ? formatDate(wv?.endDate)
                             : wv?.endDate
-                            ? formatDate(wv?.endDate)
-                            : "ปัจจุบัน"
+                              ? formatDate(wv?.endDate)
+                              : "ปัจจุบัน"
                         }`
                       : "";
 
                   const details = [
                     { label: "ตำแหน่ง", value: position ?? "-" },
+
                     {
                       label: "ประเภทการจ้างงาน",
-                      value: wv?.employmentType ?? "-",
+                      value: contactTypeMap[wv.employmentType] ?? "-",
                     },
                     { label: "ช่วงเวลา", value: period ?? "-" },
                     { label: "ที่ตั้ง", value: wv?.location ?? "-" },
@@ -207,22 +212,19 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
                   ].filter((d) => d.value && String(d.value).trim().length > 0);
 
                   return (
-                    <div
-                      key={row.id}
-                      className="rounded-xl border p-4 space-y-4"
-                    >
+                    <div key={row.id} className=" space-y-4">
                       <div className="flex items-center justify-between">
                         <div className="min-w-0">
                           <h4 className="font-semibold truncate">
                             {company
-                              ? `บริษัท: ${company}`
+                              ? `บริษัท : ${company}`
                               : position
-                              ? `ตำแหน่ง: ${position}`
-                              : `ประวัติประสบการณ์ทำงาน #${index + 1}`}
+                                ? `ตำแหน่ง : ${position}`
+                                : `ประวัติประสบการณ์ทำงาน #${index + 1}`}
                           </h4>
 
                           {details.length > 0 && (
-                            <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+                            <div className="mt-2 space-y-1 text-sm text-muted-foreground">
                               {details.map((d) => (
                                 <p
                                   key={d.label}
@@ -233,7 +235,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
                                   }
                                 >
                                   <span className="font-medium">
-                                    {d.label}:
+                                    {d.label} :
                                   </span>{" "}
                                   <span>{String(d.value)}</span>
                                 </p>
@@ -243,24 +245,30 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
                         </div>
 
                         <div className="flex gap-2 flex-shrink-0">
-                          <Button
-                            type="button"
-                            variant="secondary"
-                            aria-label={`แก้ไขประสบการณ์ทำงาน #${index + 1}`}
-                            onClick={() => handleOpenEdit(index)}
-                          >
-                            แก้ไข
-                          </Button>
-                          <Button
+                          <GlobalButton
+                            label="แก้ไข"
                             type="button"
                             variant="outline"
+                            width="80px"
+                            aria-label={`แก้ไขประสบการณ์ทำงาน #${index + 1}`}
+                            onClick={() => handleOpenEdit(index)}
+                            className="  transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
+                            icon={<PenLine size={20} />}
+                          />
+
+                          <GlobalButton
+                            label="ลบรายการนี้"
+                            type="button"
+                            variant="secondary"
+                            width="120px"
                             aria-label={`ลบประสบการณ์ทำงาน #${index + 1}`}
                             onClick={() => handleDelete(index)}
-                          >
-                            ลบรายการนี้
-                          </Button>
+                            className="  transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-sm"
+                            icon={<Trash2 size={20} />}
+                          />
                         </div>
                       </div>
+                      {weFields.length > 1 && <Separator className="my-2" />}
                     </div>
                   );
                 })}
@@ -284,6 +292,6 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
           onSubmit={handleSubmitFromModal}
         />
       )}
-    </>
+    </div>
   );
 };

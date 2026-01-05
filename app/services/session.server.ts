@@ -1,108 +1,29 @@
-// // app/services/session.server.ts
-// import {
-//   createCookieSessionStorage,
-//   redirect,
-//   type LoaderFunction,
-//   type LoaderFunctionArgs,
-// } from "react-router";
-// import type { UsersFormValues } from "~/schemas/users/user";
-
-// const USER_SESSION_KEY = "user";
-// const ACCESS_TOKEN_KEY = "accessToken";
-// const REFRESH_TOKEN_KEY = "refreshToken";
-
-// type JwtPayload = { exp?: number; [k: string]: unknown };
-
-// type User = { id: string; username: string; password: string };
-
-// function decodeJwtExp(token?: string): number | undefined {
-//   if (!token) return undefined;
-//   try {
-//     const [, payloadB64] = token.split(".");
-//     if (!payloadB64) return undefined;
-//     const json = Buffer.from(payloadB64, "base64url").toString("utf-8");
-//     const data = JSON.parse(json) as JwtPayload;
-//     return typeof data.exp === "number" ? data.exp : undefined; // exp in seconds (unix)
-//   } catch {
-//     return undefined;
-//   }
-// }
-
-// export const sessionStorage = createCookieSessionStorage({
-//   cookie: {
-//     name: "__session_rome_platform",
-//     secrets: ["s3cret"],
-//     sameSite: "lax",
-//     path: "/",
-//     httpOnly: true,
-//     secure: process.env.NODE_ENV === "production",
-//   },
-// });
-
-// export const { commitSession, destroySession } = sessionStorage;
-
-// const getUserSession = async (request: Request) => {
-//   return await sessionStorage.getSession(request.headers.get("Cookie"));
-// };
-
-// export async function logout(request: Request) {
-//   const session = await getUserSession(request);
-//   return redirect("/", {
-//     headers: { "Set-Cookie": await sessionStorage.destroySession(session) },
-//   });
-// }
-
-// export async function getUser(
-//   request: Request
-// ): Promise<UsersFormValues | undefined> {
-//   const session = await getUserSession(request);
-//   return session.get(USER_SESSION_KEY);
-// }
-
-// export async function getAccessToken(
-//   request: Request
-// ): Promise<string | undefined> {
-//   const session = await getUserSession(request);
-//   return session.get(ACCESS_TOKEN_KEY);
-// }
-
-// export async function createUserSession({
-//   request,
-//   user,
-//   accessToken,
-//   remember = true,
-//   redirectUrl,
-// }: {
-//   request: Request;
-//   user: UsersFormValues;
-//   accessToken: string;
-//   remember?: boolean;
-//   redirectUrl?: string;
-// }) {
-//   const session = await getUserSession(request);
-//   session.set(USER_SESSION_KEY, user);
-//   session.set(ACCESS_TOKEN_KEY, accessToken);
-
-//   return redirect(redirectUrl || "/", {
-//     headers: {
-//       "Set-Cookie": await sessionStorage.commitSession(session, {
-//         httpOnly: true,
-//         secure: process.env.NODE_ENV === "production",
-//         sameSite: "lax",
-//         // maxAge: remember ? 60 * 60 * 24 * 7 : undefined, // 7 วัน หรือ session-only
-
-//         maxAge: 60,
-//       }),
-//     },
-//   });
-// }
-
 // app/services/session.server.ts
 import axios, { type AxiosRequestConfig } from "axios";
 import { createCookieSessionStorage, redirect } from "react-router";
 import type { UsersFormValues } from "~/schemas/users/user";
 
 type JwtPayload = { exp?: number; [k: string]: unknown };
+
+function decodeJwt(token: string): { exp?: number } | null {
+  try {
+    const payload = token.split(".")[1];
+    const json = Buffer.from(payload, "base64").toString("utf8");
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
+}
+
+export function isTokenExpired(token: string, marginSeconds = 0): boolean {
+  if (!token) return true;
+
+  const decoded = decodeJwt(token);
+  if (!decoded?.exp) return true;
+
+  const now = Math.floor(Date.now() / 1000);
+  return decoded.exp <= now + marginSeconds;
+}
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -122,7 +43,7 @@ const ACCESS_TOKEN_KEY = "accessToken";
 const REFRESH_TOKEN_KEY = "refreshToken";
 
 // ---------- Utils ----------
-const getUserSession = async (request: Request) =>
+export const getUserSession = async (request: Request) =>
   sessionStorage.getSession(request.headers.get("Cookie"));
 
 function decodeJwtExp(token?: string): number | undefined {
@@ -159,9 +80,7 @@ export async function getUser(
   return session.get(USER_SESSION_KEY);
 }
 
-export async function getAccessToken(
-  request: Request
-): Promise<string | undefined> {
+export async function getAccessToken(request: Request): Promise<any> {
   const session = await getUserSession(request);
   return session.get(ACCESS_TOKEN_KEY);
 }
@@ -197,7 +116,20 @@ export async function createUserSession({
   session.set(ACCESS_TOKEN_KEY, accessToken);
   session.set(REFRESH_TOKEN_KEY, refreshToken);
 
-  const maxAge = decodeJwtExp(refreshToken);
+  let maxAge: number | undefined;
+
+  if (accessToken) {
+    const decoded = decodeJwt(accessToken);
+
+    if (decoded?.exp) {
+      const now = Math.floor(Date.now() / 1000);
+      const remaining = decoded.exp - now;
+
+      maxAge = remaining > 0 ? remaining : 60 * 60 * 24 * 7;
+    } else {
+      maxAge = 60 * 60 * 24 * 7; // default 7 days
+    }
+  }
 
   return redirect(redirectUrl || "/", {
     headers: {

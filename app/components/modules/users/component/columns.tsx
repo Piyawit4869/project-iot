@@ -1,9 +1,9 @@
 import { GlobalImage } from "~/components/shared/global-image";
 
-import { PenLine, Trash } from "lucide-react";
+import { Eye, PenLine, Trash } from "lucide-react";
 import GlobalButton from "~/components/shared/global-button";
 import { useMemo } from "react";
-import { formatDateBirthDay } from "~/components/shared/global-format";
+
 import type { ColumnDef } from "@tanstack/react-table";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
@@ -11,6 +11,11 @@ import { Button } from "~/components/ui/button";
 import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import type { UserColumn } from "~/types/user/type-user";
 import { statusMap } from "~/types/user/init-data";
+import {
+  formatDateAndTime,
+  formatDateTH,
+  formatPhoneNumber,
+} from "~/components/shared/global-format";
 
 export const useUserColumns = (): ColumnDef<UserColumn>[] => {
   const columns = useMemo<ColumnDef<UserColumn>[]>(
@@ -20,7 +25,6 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         header: "รูปภาพ",
         cell: (info) => {
           const url = info.getValue() as string;
-          const userName = info.row.original?.userName;
 
           return (
             <GlobalImage
@@ -29,7 +33,6 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
               width={60}
               height={60}
               className="rounded-xl w-[60px] h-[60px] object-cover object-center"
-              fallbackSrc={`https://api.dicebear.com/9.x/initials/svg?seed=${userName}`}
             />
           );
         },
@@ -50,24 +53,32 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
           }`.trim();
 
           return (
-            <Link to={`/users/${id}`}>
-              <span className=" text-muted-foreground hover:text-blue-400 hover:underline">
+            <span className="text-blue-400 hover:text-blue-300 hover:underline">
+              <Link to={`/users/${id}`}>
+                {/* <span className=" text-muted-foreground hover:text-blue-400 hover:underline"> */}
                 {fullName || "-"}
-              </span>
-            </Link>
+              </Link>
+            </span>
           );
         },
       },
       {
-        accessorKey: "emId",
+        accessorKey: "profile.emId",
         header: "รหัสพนักงาน",
         cell: (info) => (
           <span className="">{(info.getValue() as string) || "-"}</span>
         ),
       },
       {
+        accessorKey: "organizationRoles.name",
+        header: "ตำแหน่งงาน",
+        cell: (info) => (
+          <span className="">{(info.getValue() as string) || "-"}</span>
+        ),
+      },
+      {
         accessorKey: "userName",
-        header: "User Name",
+        header: "ชื่อผู้ใช้งาน",
         cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
       },
       {
@@ -76,14 +87,14 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         minSize: 600,
 
         cell: (info) => (
-          <span className="text-sm text-muted-foreground">
+          <span className="text-muted-foreground">
             {(info.getValue() as string) || "-"}
           </span>
         ),
       },
       {
         accessorKey: "active",
-        header: "เปิดใช้งาน",
+        header: "การใช้งาน",
         cell: (info) => {
           const status = info.getValue() as string;
           return (
@@ -101,7 +112,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
 
           const current = statusMap[status] || {
             label: status || "-",
-            className: "text-xs",
+            // className: "text-xs",
             icon: null,
           };
 
@@ -121,38 +132,62 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
           );
         },
       },
-
       {
         accessorKey: "phone",
         header: "เบอร์โทรศัพท์",
-        cell: (info) => (
-          <span className="">
-            {(info.row.original.profile?.phone as string) || "-"}
-          </span>
-        ),
-      },
-      {
-        accessorKey: "departmentName",
-        header: "แผนก",
-        cell: (info) => (
-          <span className="">{(info.getValue() as string) || "-"}</span>
-        ),
+        enableSorting: false,
+        cell: (info) => {
+          const phone = info.row.original.profile?.phone as string;
+          return <span>{phone ? formatPhoneNumber(phone) : "-"}</span>;
+        },
       },
       {
         accessorKey: "gender",
         header: "เพศ",
-        cell: (info) => (
-          <span className="">
-            {(info.row.original.profile?.gender as string) || "-"}
-          </span>
-        ),
+        cell: (info) => {
+          const genderMap: Record<string, string> = {
+            male: "ชาย",
+            female: "หญิง",
+            not_specified: "ไม่ระบุ",
+          };
+          const value = info.row.original.profile?.gender as string;
+          return <span>{genderMap[value] ?? "-"}</span>;
+        },
       },
       {
         accessorKey: "birthDate",
         header: "วัน / เดือน / ปีเกิด",
         cell: (info) => {
           const value = info.row.original.profile?.birthDate as string;
-          return <span className="">{formatDateBirthDay(value)}</span>;
+          return <span className="">{formatDateTH(value)}</span>;
+        },
+      },
+
+      {
+        accessorKey: "createdAt",
+        header: "วันที่สร้าง",
+        enableSorting: true,
+        cell: (info) => (
+          <span>{formatDateAndTime(info.getValue() as string)}</span>
+        ),
+      },
+
+      {
+        accessorKey: "createdBy",
+        header: "ผู้สร้าง",
+        cell: (info) => {
+          const id = info.row.original.createdById;
+          const name = (info.getValue() as string) || "-";
+
+          return id ? (
+            <Link to={`/users/${id}`}>
+              <span className="text-muted-foreground hover:text-blue-400 hover:underline">
+                {name}
+              </span>
+            </Link>
+          ) : (
+            <span className="text-muted-foreground">{name}</span>
+          );
         },
       },
       {
@@ -160,7 +195,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
         header: "วันที่แก้ไข",
         cell: (info) => {
           const value = info.getValue() as string;
-          return <span className="">{formatDateBirthDay(value)}</span>;
+          return <span className="">{formatDateAndTime(value)}</span>;
         },
       },
       {
@@ -194,11 +229,11 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
                   aria-label="แก้ไข"
                   title="แก้ไข"
                 >
-                  <PenLine className="w-4 h-4 text-white" />
+                  <Eye className="w-4 h-4 text-white" />
                 </Button>
               </Link>
 
-              <div className="w-9">
+              {/* <div className="w-9">
                 <GlobalButton
                   label=""
                   icon={<Trash className="w-4 h-4 text-white" />}
@@ -207,7 +242,7 @@ export const useUserColumns = (): ColumnDef<UserColumn>[] => {
                   aria-label="ลบ"
                   disabled
                 />
-              </div>
+              </div> */}
             </div>
           );
         },

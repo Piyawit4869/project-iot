@@ -16,6 +16,13 @@ const OrganizationTypeEnum = z.enum([
   "ordinary_partnership",
   "shop",
   "body_of_person",
+  "company_limited",
+  "public_company_limited",
+  "limited_partnership",
+  "foundation",
+  "association",
+  "joint_venture",
+  "others",
 ]);
 export const chartItemSchema = z.object({
   name: z.string().optional(),
@@ -47,7 +54,11 @@ const ProfileSchema = z.object({
   lineName: z.string().optional().nullable(),
   faceBookName: z.string().optional().nullable(),
   nickName: z.string().optional().nullable(),
-  firstName: z.string().nonempty("กรุณากรอกชื่อ"),
+  firstName: z
+    .string()
+    .nullable()
+    .transform((val) => val ?? "")
+    .refine((val) => val.trim() !== "", { message: "กรุณากรอกชื่อ" }),
 
   lastName: z
     .string()
@@ -84,6 +95,7 @@ const ProfileSchema = z.object({
 const OrganizationDetailsSchema = z.object({
   fromType: CustomerTypeEnum.optional(),
   orgType: OrganizationTypeEnum.optional(),
+  orgTypeOther: z.string().optional().nullable(),
   branchCode: z.string().optional().nullable(),
   businessName: z.string().optional().nullable(),
   businessPhone: z.preprocess((val) => {
@@ -92,7 +104,7 @@ const OrganizationDetailsSchema = z.object({
       return digits;
     }
     return "";
-  }, z.string().max(9, "หมายเลขโทรศัพท์ต้องไม่เกิน 9 หลัก").optional().nullable()),
+  }, z.string().optional().nullable()),
 
   businessFax: z.string().optional().nullable(),
   businessEmail: z.string().nullable().optional(),
@@ -118,6 +130,7 @@ const ContactSchema = z.object({
 
 // Tag
 const TagSchema = z.object({
+  id: z.string().optional(),
   name: z.string().optional(),
   active: z.boolean().optional(),
 });
@@ -164,7 +177,7 @@ export const CustomerSchema = z.object({
   organizationDetails: OrganizationDetailsSchema.optional(),
   contacts: z.array(ContactSchema).optional().nullable(),
   tags: z.array(TagSchema).optional().nullable(),
-  supports: z.array(SupportSchema).optional().nullable(),
+  // supports: z.array(SupportSchema).optional().nullable(),
   /* .min(2, "กรุณาเลือกผู้รับผิดชอบอย่างน้อย 2 คน") 
     .refine((supports) => supports.some((s) => s.isMain === true), {
       message: "กรุณาเลือกผู้รับผิดชอบหลัก 1 คน",
@@ -193,7 +206,7 @@ export const contactSchema = z.object({
   ),
   position: z.string().optional(),
   department: z.string().optional(),
-  email: z.string().email("อีเมลไม่ถูกต้อง").optional(),
+  email: z.email("อีเมลไม่ถูกต้อง").optional(),
   contactPlatform: z.string().optional(),
   platformId: z.string().optional(),
   isPrimary: z.boolean().optional(),
@@ -217,14 +230,35 @@ export const supportUserSchema = z.object({
   userId: z.string().uuid(),
 });
 
+export const CustomerTagSchema = z.object({
+  id: z.uuid(),
+  name: z.string(),
+  active: z.boolean(),
+  priority: z.number().int(),
+  customerId: z.uuid(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  deletedAt: z.string().nullable().optional(),
+  createdBy: z.string().nullable().optional(),
+  createdById: z.string().nullable().optional(),
+  updatedBy: z.string().nullable().optional(),
+  updatedById: z.string().nullable().optional(),
+  deletedBy: z.string().nullable().optional(),
+  deletedById: z.string().nullable().optional(),
+  code: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
+  ordering: z.any().nullable().optional(),
+  note: z.string().nullable().optional(),
+});
+
 export const QueryCustomerSchema = z.object({
   id: z.string().uuid(),
   status: CustomerStatusEnum,
   type: CustomerTypeEnum,
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
   deletedAt: z.string().nullable().optional(),
-  createdBy: z.string(),
+  createdBy: z.string().nullable().optional(),
   createdById: z.string().nullable().optional(),
   updatedBy: z.string().nullable().optional(),
   updatedById: z.string().nullable().optional(),
@@ -249,11 +283,9 @@ export const QueryCustomerSchema = z.object({
   branchId: z.string().uuid(),
   organizationDetails: z.any().nullable().optional(),
   contacts: z.array(z.any()),
-  supports: z.array(z.any()),
+  // supports: z.array(z.any()),
   profile: ProfileSchema.optional(),
-
   chatRoomAssistantId: z.string().optional(),
-
   aiReplySettings: z.array(
     z
       .object({
@@ -268,6 +300,7 @@ export const QueryCustomerSchema = z.object({
       .optional()
       .nullable()
   ),
+  tags: z.array(CustomerTagSchema).optional(),
 });
 
 export type Customer = z.infer<typeof QueryCustomerSchema>;
