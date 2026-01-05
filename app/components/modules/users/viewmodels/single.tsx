@@ -113,6 +113,7 @@ export default function SingleUsers() {
       lastName: raw?.profile?.lastName ?? "",
       firstNameTh: raw?.profile?.firstNameTh ?? "",
       lastNameTh: raw?.profile?.lastNameTh ?? "",
+      emId: raw?.profile?.emId ?? "",
       gender: raw?.profile?.gender ?? "",
       birthDate: raw?.profile?.birthDate ?? null,
       phone: raw?.profile?.phone ?? "",

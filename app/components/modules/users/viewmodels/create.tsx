@@ -61,6 +61,7 @@ export default function CreateUsers() {
         lastName: "",
         firstNameTh: "",
         lastNameTh: "",
+        emId: "",
         gender: "",
         birthDate: null,
         phone: "",
