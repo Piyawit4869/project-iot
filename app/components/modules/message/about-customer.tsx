@@ -208,7 +208,7 @@ export const AboutCustomer: React.FC<ChecklistDialogProps> = (props) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    สถานะลูกค้า <span className="text-red-500">*</span>
+                    ประเภทลูกค้า <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <Select {...field} onValueChange={(v) => field.onChange(v)}>
