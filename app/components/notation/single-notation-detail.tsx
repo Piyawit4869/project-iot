@@ -4,11 +4,12 @@ import {
   Box,
   FileText,
   PenLine,
+  Receipt,
   Save,
   Upload,
   X,
 } from "lucide-react";
-import { useParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import { useGetOrder } from "~/api/client/order/useGetOrder";
 import { useEntityBreadcrumb } from "~/providers/RouteProvider";
 
@@ -25,12 +26,23 @@ import GlobalButton from "~/components/shared/global-button";
 import { useOrderViewModel } from "../modules/order/viewmodels/useOrderViewModel";
 import ArrowProgress from "../modules/order/components/ArrowProgress";
 import { ViewCustomerActivityLog } from "../modules/customer/components/customer-activityLog";
-import { QuotationMock } from "./components/template/quotation";
 import { DocumentDetail } from "./components/template/document-detail";
+import { QuotationMock } from "./components/template/quotation";
+import { InvoiceMock } from "./components/template/invoice";
+import { ReceiptMock } from "./components/template/receipt";
 
 export default function NotationSingle() {
   const params = useParams();
   const id = params?.id as string;
+  const [searchParams] = useSearchParams();
+  const docType = searchParams.get("type"); // quotation | receipt | invoice
+  const docTypeTH = {
+    quotation: "ใบเสนอราคา",
+    receipt: "ใบเสร็จรับเงิน",
+    invoice: "ใบแจ้งหนี้",
+  } as const;
+
+  const docLabel = docType ? docTypeTH[docType as keyof typeof docTypeTH] : "";
 
   const {
     state: { formUpdate },
@@ -121,11 +133,6 @@ export default function NotationSingle() {
         ]}
       />
 
-      <div className="mb-4">
-        {" "}
-        <ArrowProgress />{" "}
-      </div>
-
       <div className="flex flex-col md:flex-row gap-4">
         <div className="w-full md:w-1/2 md:order-1">
           {loadOrder ? (
@@ -171,13 +178,27 @@ export default function NotationSingle() {
                               </span>
                               <Box />
                             </div>
-                            {/* <ViewOrderDetail order={order} /> */}
+
                             <QuotationMock
                               data={formUpdate.getValues()}
-                              product={productsSelected || []}
+                              product={productsSelected}
                               makeImage={makeImage}
                               approvedImage={approvedSign}
                             />
+
+                            {/* <ReceiptMock
+                              data={formUpdate.getValues()}
+                              product={productsSelected}
+                              makeImage={makeImage}
+                              approvedImage={approvedSign}
+                            />
+
+                            <InvoiceMock
+                              data={formUpdate.getValues()}
+                              product={productsSelected}
+                              makeImage={makeImage}
+                              approvedImage={approvedSign}
+                            /> */}
                           </div>
                         ),
                       },
