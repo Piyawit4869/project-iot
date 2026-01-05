@@ -14,12 +14,12 @@ import {
   UserRound,
 } from "lucide-react";
 import { ChatItem, FlexMessageType } from "~/types/chat/chat-items";
-import { GlobalImage } from "~/components/shared/global-image";
 import { FlexMessagePersonRender } from "./flex-message-person-render";
 import { FlexMessageProductRender } from "./flex-message-product-render";
 import { FlexMessagePlaceRender } from "./flex-message-place-render";
 import { FlexMessageImageRender } from "./flex-message-image-render";
 import React from "react";
+import { LocationMap } from "./location-map-render";
 
 const formatTime = (sec: number) => {
   const m = Math.floor(sec / 60);
@@ -284,7 +284,7 @@ export function MessageRenderer({
           <img
             src={message}
             onLoad={() => {
-              window.dispatchEvent(new Event("chat-image-loaded"));
+              window.dispatchEvent(new Event("chat-media-loaded"));
             }}
             className="
             rounded-xl 
@@ -390,16 +390,18 @@ export function MessageRenderer({
   if (type === ChatItem.LOCATION) {
     const mapUrl = `https://www.google.com/maps?q=${latitude ?? ""},${longitude ?? ""}&z=17`;
 
+    const lat = latitude ? Number(latitude) : undefined;
+    const lng = longitude ? Number(longitude) : undefined;
+
     return (
-      <Wrapper maxWidth="max-w-[330px]">
+      <Wrapper maxWidth="max-w-[330px] ">
         <a
           href={mapUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="block cursor-pointer"
         >
-          <LocationMap latitude={latitude} longitude={longitude} />
-
+          <LocationMap latitude={lat} longitude={lng} />;
           <div className="py-2 mt-0.5">
             <div className="truncate text-sm font-semibold">{title ?? ""}</div>
             <div className="mt-1 text-xs leading-snug text-neutral-400">
@@ -480,20 +482,6 @@ export function MessageRenderer({
   );
 }
 
-const LocationMap = React.memo(
-  ({ latitude, longitude }: { latitude?: number; longitude?: number }) => {
-    const mapUrl = `https://www.google.com/maps?q=${latitude ?? ""},${longitude ?? ""}&z=17`;
-
-    return (
-      <div className="h-[150px] w-full rounded-xl overflow-hidden border border-border shadow-sm">
-        <iframe
-          src={`${mapUrl}&output=embed`}
-          className="h-full w-full"
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          style={{ pointerEvents: "none" }}
-        />
-      </div>
-    );
-  }
-);
+export const MemoMessageRenderer = React.memo(MessageRenderer, (prev, next) => {
+  return prev.msg === next.msg;
+});
