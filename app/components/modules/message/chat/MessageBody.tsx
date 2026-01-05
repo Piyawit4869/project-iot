@@ -79,7 +79,7 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
       <div className="flex flex-1 flex-col h-full">
         <div
           ref={scrollRef}
-          className="flex h-[calc(100vh-330px)] flex-col space-y-4 overflow-y-auto px-4 z-0 relative dark:bg-background"
+          className="flex h-[calc(100vh-330px)] flex-col space-y-1  overflow-y-auto px-4 z-0 relative dark:bg-background"
         >
           {showTopLoading && (
             <div className={messageLoadingStyle}>กำลังโหลดข้อความ...</div>
@@ -137,30 +137,32 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
                         </span>
                       </div>
                     )}
-                    <MessageRenderer
-                      msg={msg}
-                      allMessages={combinedMessages}
-                      isBackoffice={isBackoffice}
-                      setPreviewUrl={setPreviewUrl}
-                      playing={playing}
-                      setPlaying={setPlaying}
-                      currentTime={currentTime}
-                      setCurrentTime={setCurrentTime}
-                      duration={duration}
-                      setDuration={setDuration}
-                      audioRef={audioRef}
-                      togglePlay={togglePlay}
-                    />
-                    {msg.platform === "line" && (
-                      <MessageMenu
+                    <div className="flex flex-row items-center gap-2 mt-1">
+                      <MessageRenderer
                         msg={msg}
-                        onReply={() => onReply(msg)}
-                        onCopy={() => copyMessage(msg.message)}
+                        allMessages={combinedMessages}
+                        isBackoffice={isBackoffice}
+                        setPreviewUrl={setPreviewUrl}
+                        playing={playing}
+                        setPlaying={setPlaying}
+                        currentTime={currentTime}
+                        setCurrentTime={setCurrentTime}
+                        duration={duration}
+                        setDuration={setDuration}
+                        audioRef={audioRef}
+                        togglePlay={togglePlay}
                       />
-                    )}
+                      {msg.platform === "line" && (
+                        <MessageMenu
+                          msg={msg}
+                          onReply={() => onReply(msg)}
+                          onCopy={() => copyMessage(msg.message)}
+                        />
+                      )}
+                    </div>
 
                     {msg.showTime && !msg.isLabel && (
-                      <span className="text-[10px] text-muted-foreground mt-1 ">
+                      <span className="text-[10px] text-muted-foreground mt-1.5">
                         {msg.read && <span>อ่านแล้ว,</span>} {formattedTime}
                       </span>
                     )}
@@ -181,22 +183,28 @@ export const MessageBody = React.forwardRef<HTMLDivElement, MessageBodyProps>(
           )}
         </div>
 
-        {typingUsers && typingUsers.length > 0 && (
-          <div className="px-4 py-2 text-sm text-muted-foreground bg-white dark:bg-background">
-            {typingUsers.length >= 3
-              ? "คนอื่น ๆ กำลังพิมพ์..."
-              : `${typingUsers.map((u) => u.fullName ?? "").join(", ")} กำลังพิมพ์...`}
-          </div>
-        )}
+        <div className="relative">
+          {typingUsers && typingUsers.length > 0 && (
+            <div
+              className="absolute bottom-full left-1 mb-1 px-4 py-2 text-sm
+                    text-muted-foreground bg-white dark:bg-background
+                     "
+            >
+              {typingUsers.length >= 3
+                ? "คนอื่น ๆ กำลังพิมพ์..."
+                : `${typingUsers.map((u) => u.fullName ?? "").join(", ")} กำลังพิมพ์...`}
+            </div>
+          )}
 
-        <ChatInput
-          api={api}
-          subId={subId}
-          selectedRoom={selectedRoom}
-          customer={customer}
-          replyRefMessage={replyRefMessage}
-          setReplyRefMessage={setReplyRefMessage}
-        />
+          <ChatInput
+            api={api}
+            subId={subId}
+            selectedRoom={selectedRoom}
+            customer={customer}
+            replyRefMessage={replyRefMessage}
+            setReplyRefMessage={setReplyRefMessage}
+          />
+        </div>
       </div>
     );
   }

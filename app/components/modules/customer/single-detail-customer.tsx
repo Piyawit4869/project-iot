@@ -321,7 +321,7 @@ export default function SingDetailleCustomer() {
                   icon: <LayoutDashboard className="w-4 h-4" />,
                   content: (
                     <DashboardTabContent
-                      isLoading={isLoading}
+                      // isLoading={isLoading}
                       customer={customer}
                       formUpdate={formUpdate}
                       loadCustomer={loadCustomer}

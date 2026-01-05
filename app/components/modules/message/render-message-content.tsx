@@ -129,10 +129,6 @@ export function MessageRenderer({
   const type = msg?.messageType;
   const isLabel = msg?.isLabel;
   const reference = msg?.messageReference;
-  const lastMessage =
-    Array.isArray(allMessages) && allMessages.length > 0
-      ? allMessages[allMessages.length - 1]
-      : null;
 
   const {
     address = "",
@@ -173,13 +169,19 @@ export function MessageRenderer({
     return (
       <div
         className={`
-        rounded-xl overflow-visible
-        ${onlyShow ? "" : isMedia ? "" : isBackoffice ? "bg-blue-500/10" : "bg-muted-foreground/10"}
-        ${fullBleed ? "max-w-none" : maxWidth ? maxWidth : ""}
-      `}
+    rounded-xl
+    overflow-hidden
+    ${onlyShow ? "" : isMedia ? "" : isBackoffice ? "bg-blue-500/10" : "bg-muted-foreground/10"}
+    ${fullBleed ? "max-w-none" : (maxWidth ?? "")}
+    break-words
+  `}
       >
         {reference && <ReplyReference refMsg={reference} />}
-        <div className={`${isMedia ? "p-0" : "px-4 py-2"}`}>{children}</div>
+        <div
+          className={`${isMedia ? "p-0" : "px-4 py-2"} break-words whitespace-pre-wrap`}
+        >
+          {children}
+        </div>
       </div>
     );
   };
@@ -187,59 +189,11 @@ export function MessageRenderer({
   // TEXT
   if (type === ChatItem.TEXT || type === null) {
     return (
-      <Wrapper>
+      <Wrapper maxWidth="max-w-[500px]">
         <MessageText text={String(message)} />
       </Wrapper>
     );
   }
-
-  // if (type === ChatItem.QUICK_REPLY) {
-  //   const lastLength = allMessages ? allMessages?.length - 1 : 0;
-
-  //   const lastMessage = allMessages && allMessages[lastLength];
-
-  //   const isLastMessage = lastMessage?.id === msg?.id;
-
-  //   return (
-  //     <>
-  //       <Wrapper>
-  //         <MessageText text={String(message)} />
-  //       </Wrapper>
-  //       {allMessages?.map((msg: any, msgIdx: number) => {
-  //         const textContent = Array.isArray(msg?.contents?.items)
-  //           ? msg.contents.items
-  //           : [];
-
-  //         if (lastMessage?.id === msg?.id)
-  //           return (
-  //             <div key={msgIdx} className="flex w-full flex-col">
-  //               <div className="flex flex-row gap-4 mt-4 ml-0 lg:ml-20">
-  //                 {textContent.map((p: any, idx: number) => (
-  //                   <div
-  //                     key={idx}
-  //                     className="max-w-[100%] rounded-2xl bg-white shadow p-1.5 px-3 text-sm leading-6 "
-  //                   >
-  //                     <div className="flex flex-row gap-2">
-  //                       {p?.imageUrl && (
-  //                         <img
-  //                           src={p?.imageUrl}
-  //                           alt="logo"
-  //                           width={10}
-  //                           height={10}
-  //                           className="w-6 h-6  object-cover rounded-full"
-  //                         />
-  //                       )}
-  //                       <span>{p?.action?.label}</span>
-  //                     </div>
-  //                   </div>
-  //                 ))}
-  //               </div>
-  //             </div>
-  //           );
-  //       })}
-  //     </>
-  //   );
-  // }
 
   if (type === ChatItem.QUICK_REPLY) {
     const lastMessage =

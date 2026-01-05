@@ -468,51 +468,52 @@ export default function ChatInput({
   return (
     <form
       onSubmit={sendText}
-      className="flex flex-col w-full gap-2 border-t p-2 dark:bg-background"
+      className="w-full border-t p-2 dark:bg-background"
     >
-      {showStickerSelector && (
-        <div className="w-full">
+      {/* ===== TOP BARS ===== */}
+      <div className="flex flex-col gap-2">
+        {showStickerSelector && (
           <StickerSelectorBar
             selectedRoom={selectedRoom}
             customer={customer}
             replyRefMessage={replyRefMessage}
             setShowStickerSelector={setShowStickerSelector}
           />
-        </div>
-      )}
+        )}
 
-      {replyRefMessage?.id && (
-        <div className="w-full">
+        {replyRefMessage?.id && (
           <ReplyContentBar
             selectedRoom={selectedRoom}
             customer={customer}
             replyRefMessage={replyRefMessage}
             setReplyRefMessage={setReplyRefMessage}
           />
-        </div>
-      )}
-      {/* Preview */}
-      {pendingImages.length > 0 && (
-        <div className="w-full grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-2">
-          {pendingImages.map((p) => (
-            <div key={p.id} className="relative group border rounded-md p-1">
-              <GlobalImage
-                src={p.url}
-                alt={p.name}
-                className="w-full h-24 object-contain"
-              />
-              <button
-                type="button"
-                onClick={() => handleRemovePending(p.id)}
-                className="absolute top-1 right-1 inline-flex items-center justify-center w-6 h-6 rounded-full bg-black/60 text-white"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+        )}
 
+        {/* ===== IMAGE PREVIEW ===== */}
+        {pendingImages.length > 0 && (
+          <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-2">
+            {pendingImages.map((p) => (
+              <div key={p.id} className="relative group border rounded-md p-1">
+                <GlobalImage
+                  src={p.url}
+                  alt={p.name}
+                  className="w-full h-24 object-contain"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleRemovePending(p.id)}
+                  className="absolute top-1 right-1 inline-flex items-center justify-center w-6 h-6 rounded-full bg-black/60 text-white"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ===== TEXT INPUT ===== */}
       <textarea
         ref={textareaRef}
         placeholder={
@@ -520,7 +521,18 @@ export default function ChatInput({
             ? "พิมพ์ข้อความเพื่อส่ง"
             : "Enter = ส่งข้อความ / Shift+Enter = ขึ้นบรรทัดใหม่"
         }
-        className="w-full resize-none p-2 border-0 rounded-md outline-none min-h-[44px] max-h-[40vh] leading-6 overflow-auto"
+        className="
+      mt-2
+      w-full
+      resize-none
+      rounded-md
+      p-2
+      outline-none
+      min-h-[44px]
+      max-h-[40vh]
+      leading-6
+      overflow-auto
+    "
         value={input}
         onChange={handleInputChange}
         disabled={isPending}
@@ -534,15 +546,8 @@ export default function ChatInput({
         }}
       />
 
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileUpload}
-        className="hidden"
-        multiple
-      />
-
-      <div className="flex justify-end gap-2 pt-1">
+      {/* ===== ACTION BAR (อยู่ล่างสุดเสมอ) ===== */}
+      <div className="mt-2 flex items-center justify-end gap-2">
         <ChatSelectLocation
           address={mapAddress}
           latlng={latlng}
@@ -587,6 +592,15 @@ export default function ChatInput({
           <Send className="w-4 h-4" />
         </Button>
       </div>
+
+      {/* hidden file input */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileUpload}
+        className="hidden"
+        multiple
+      />
     </form>
   );
 }
