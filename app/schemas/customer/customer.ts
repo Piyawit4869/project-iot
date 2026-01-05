@@ -37,6 +37,7 @@ export interface CustomerFormCreateProps {
   isEdit?: boolean;
   setIsEdit?: React.Dispatch<React.SetStateAction<boolean>>;
   mode?: string;
+  isLoading?: boolean;
 
   onClick?: (values: CustomerValues) => void;
 

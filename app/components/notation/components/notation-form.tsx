@@ -403,7 +403,7 @@ export const NotationForm: React.FC<NotationFormProps> = ({
           control={form.control}
           name="currency"
           label="สกุลเงิน"
-          type="number"
+          type="input"
           placeholder="THB"
           options={currencyType}
         />

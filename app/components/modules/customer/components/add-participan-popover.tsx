@@ -25,6 +25,7 @@ interface AddParticipantPopoverProps {
   isLoading?: boolean;
   isFetching?: boolean;
   disabled?: boolean;
+
   onSelect: (id: string) => void;
 }
 
@@ -47,7 +48,7 @@ export const AddParticipantPopover: React.FC<AddParticipantPopoverProps> = (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button disabled={disabled}>
-          <CirclePlus className="w-9 h-9 text-gray-300" />
+          <CirclePlus className="w-9 h-9 text-gray-300 cursor-pointer" />
         </button>
       </PopoverTrigger>
 

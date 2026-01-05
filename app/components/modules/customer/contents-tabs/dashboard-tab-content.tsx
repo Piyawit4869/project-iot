@@ -7,7 +7,7 @@ import { useOrdersPaginateFilter } from "~/api/client/order/useGetOrder";
 import { PieChart } from "~/components/shared/charts/pie-chart";
 
 export function DashboardTabContent({
-  isLoading,
+  // isLoading,
   customer,
   formUpdate,
   loadCustomer,
@@ -30,7 +30,7 @@ export function DashboardTabContent({
     <>
       <div className="flex flex-col md:flex-row gap-5">
         <div className="w-full md:w-[50%] h-auto">
-          {isLoading ? (
+          {loadCustomer ? (
             <>
               <Card className="py-4 h-full p-5">
                 <div className="flex justify-between ">
@@ -62,9 +62,10 @@ export function DashboardTabContent({
             <ContactCustomer
               customer={customer}
               form={formUpdate}
+              // isLoading={loadCustomer}
               loading={loadCustomer}
               onClick={onUpdate}
-              disabled={isLoading || isPending}
+              disabled={loadCustomer || isPending}
               mode={
                 customerForms.find((f: any) => f.key === "contact_detail")?.mode
               }

@@ -1291,8 +1291,8 @@ export default function ChatCustomerInfo({
                           ))}
                         </div>
                       ) : productsPaginate &&
-                        productsPaginate.items.length > 0 ? (
-                        productsPaginate.items.map((item: Product) => (
+                        productsPaginate?.items?.length > 0 ? (
+                        productsPaginate?.items.map((item: Product) => (
                           <li
                             key={item?.id}
                             className={cn(
