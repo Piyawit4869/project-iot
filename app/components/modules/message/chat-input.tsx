@@ -607,6 +607,13 @@ export default function ChatInput({
         </div>
       </div>
 
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileUpload}
+        className="hidden"
+        multiple
+      />
       {/* <textarea
         ref={textareaRef}
         placeholder={
