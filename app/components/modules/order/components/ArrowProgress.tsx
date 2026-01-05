@@ -34,7 +34,7 @@ export default function ArrowProgress({
 }: ArrowProgressProps) {
   const steps: Step[] = [
     { label: "Quatation \n ใบเสนอราคา - completed" },
-    { label: "PO Deposit 30% \n เมื่อหรับเงินแล้ว 30%" },
+    { label: "PO Deposit 30% \n เมื่อรับเงินแล้ว 30%" },
     { label: "Production \n เริ่มผลิตสินค้า - pending" },
     { label: "70%/100% Balance \n ชำระยอดคงเหลือ 70%/100% - pending" },
     { label: "Done \n ปิดงาน - pending" },

@@ -66,10 +66,10 @@ export function OrgSelector({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="group h-10 w-full justify-between rounded-md"
+          className="group h-10 w-full justify-between rounded-md "
           aria-label="Switch organization"
         >
-          <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center gap-2 min-w-0 group-data-[state=collapsed]:justify-center group-data-[state=collapsed]:gap-0">
             <Avatar className="h-6 w-6">
               <AvatarImage
                 src={current?.logoUrl}
@@ -79,19 +79,19 @@ export function OrgSelector({
                 <img
                   src={PlaceholderImage}
                   alt="placeholder"
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover "
                 />
               </AvatarFallback>
             </Avatar>
 
-            <div className="min-w-0 text-left">
+            <div className="min-w-0 text-left data-[state=collapsed]:hidden">
               <div className="truncate text-sm font-medium text-black">
                 {current?.nameTh ?? "-"}
               </div>
             </div>
           </div>
 
-          <ChevronsUpDown className="h-4 w-4 opacity-60" />
+          <ChevronsUpDown className="h-4 w-4 opacity-60 group-data-[state=collapsed]:hidden" />
         </Button>
       </PopoverTrigger>
 
