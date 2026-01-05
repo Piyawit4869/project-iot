@@ -4,28 +4,29 @@ on:
   push:
     branches:
       - develop
+      - release
 
   workflow_dispatch:
     inputs:
       branch:
-        description: 'Branch to build (only main and uat allowed)'
+        description: "Branch to build (only main and uat allowed)"
         required: true
-        default: 'uat'
+        default: "uat"
         type: choice
         options:
           - uat
           - main
 
       version:
-        description: 'Version tag to build (e.g., 1.0.0)'
+        description: "Version tag to build (e.g., 1.0.0)"
         required: true
-        default: '1.0.0'
+        default: "1.0.0"
         type: string
 
       environment:
-        description: 'Environment to deploy (dev, uat, prod)'
+        description: "Environment to deploy (dev, uat, prod)"
         required: true
-        default: 'dev'
+        default: "dev"
         type: choice
         options:
           - dev
@@ -33,14 +34,78 @@ on:
           - prod
 
 jobs:
+  code-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # -------------------------------------------------
+      # 1) Setup Node.js (no cache yet)
+      # -------------------------------------------------
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.12"
+
+      # -------------------------------------------------
+      # 2) Setup pnpm (adds pnpm to PATH)
+      # -------------------------------------------------
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      # -------------------------------------------------
+      # 3) Enable pnpm cache (AFTER pnpm exists)
+      # -------------------------------------------------
+      - name: Enable pnpm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.12"
+          cache: "pnpm"
+
+      # -------------------------------------------------
+      # 4) Install dependencies (verbose)
+      # -------------------------------------------------
+      - name: Install dependencies (pnpm)
+        run: |
+          pnpm -v
+          pnpm install --reporter=append-only
+
+      # -------------------------------------------------
+      # 5) Build & lint (verbose)
+      # -------------------------------------------------
+      - name: Build and Lint (verbose)
+        run: |
+          set -x
+          pnpm build --loglevel debug
+          pnpm lint --loglevel debug
+
+      # -------------------------------------------------
+      # 6) Notify Discord
+      # -------------------------------------------------
+      - name: Notify Discord (Code Check)
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: "Code check by ${{ github.actor }}"
+          description: "Code check ${{ job.status }} please check in github before pull request"
+          url: "${{ github.server_url }}/${{ github.repository }}"
+
   build:
     runs-on: ubuntu-latest
     if: contains('refs/heads/main refs/heads/uat refs/heads/develop', github.ref)
-    environment: 'gcp-cicd'
+    environment: "gcp-cicd"
+
     permissions:
       id-token: write
       contents: read
       actions: write
+
     env:
       GAR_REGION: asia-southeast1
       REGION: asia-southeast1
@@ -48,12 +113,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # -------------------------------------------------
+      # Repo / service name
+      # -------------------------------------------------
       - name: Extract repo name
         run: echo "REPO=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
 
       - name: Extract service name
         run: echo "SERVICE_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
 
+      # -------------------------------------------------
+      # GCP auth
+      # -------------------------------------------------
       - name: Set up gcloud
         uses: google-github-actions/setup-gcloud@v2
         with:
@@ -69,10 +140,16 @@ jobs:
       - name: Configure Docker auth
         run: gcloud auth configure-docker $GAR_REGION-docker.pkg.dev --quiet
 
+      # -------------------------------------------------
+      # Version logic
+      # -------------------------------------------------
       - name: Get version
         id: get_version
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.version }}" ] && [ "${{ github.event.inputs.branch }}" != "develop" ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && \
+             [ -n "${{ github.event.inputs.version }}" ] && \
+             [ "${{ github.event.inputs.branch }}" != "develop" ]; then
+
             BRANCH=${{ github.event.inputs.branch }}
 
             if [ "$BRANCH" = "uat" ]; then
@@ -84,22 +161,27 @@ jobs:
             echo "VERSION=dev" >> $GITHUB_OUTPUT
           fi
 
-      - name: Build & push image
+      # -------------------------------------------------
+      # Docker build & push (verbose)
+      # -------------------------------------------------
+      - name: Build & push image (verbose)
         id: build
         env:
           APP_VERSION: ${{ steps.get_version.outputs.VERSION }}
           APP_IMAGE: ${{ env.GAR_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-docker-images/${{ env.REPO }}
         run: |
-          echo "🔧 Building image..."
-          echo "APP_VERSION: $APP_VERSION"
-          echo "APP_IMAGE: $APP_IMAGE"
-          docker build -t "$APP_IMAGE:$APP_VERSION" .
+          set -x
+          echo "APP_VERSION=$APP_VERSION"
+          echo "APP_IMAGE=$APP_IMAGE"
 
-          echo "🚀 Pushing image..."
+          docker build --progress=plain -t "$APP_IMAGE:$APP_VERSION" .
           docker push "$APP_IMAGE:$APP_VERSION"
 
           echo "image=$APP_IMAGE:$APP_VERSION" >> $GITHUB_OUTPUT
 
+      # -------------------------------------------------
+      # Trigger deploy workflow
+      # -------------------------------------------------
       - name: Invoke Deploy workflow
         uses: benc-uk/workflow-dispatch@v1
         with:
@@ -110,3 +192,16 @@ jobs:
               "image": "${{ steps.build.outputs.image }}",
               "service": "${{ env.REPO }}-${{ github.event.inputs.environment || 'dev' }}"
             }
+
+      # -------------------------------------------------
+      # Notify Discord
+      # -------------------------------------------------
+      - name: 🔔 Notify Discord (Build)
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: "Build by ${{ github.actor }}"
+          description: "Packed prepared to deploy"
+          url: "${{ github.server_url }}/${{ github.repository }}"
