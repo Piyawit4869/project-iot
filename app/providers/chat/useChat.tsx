@@ -21,6 +21,11 @@ export type TypingUser = {
   fullName: string;
 };
 
+export type ChatInputLabel = {
+  chatRoomId: string;
+  label: string;
+};
+
 type ChatContextType = {
   currentRoomId: string;
   messages: Message[];
@@ -35,6 +40,8 @@ type ChatContextType = {
   setMessagesAI: (value: any) => void;
   typingUsers: TypingUser[];
   setTypingUsers: React.Dispatch<React.SetStateAction<TypingUser[]>>;
+  chatInputLabel: ChatInputLabel[];
+  setChatInputLabel: React.Dispatch<React.SetStateAction<ChatInputLabel[]>>;
 };
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -45,6 +52,9 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   const [currentRoomId, setCurrentRoomId] = useState<string>("");
 
   const [typingUsers, setTypingUsers] = React.useState<TypingUser[]>([]);
+  const [chatInputLabel, setChatInputLabel] = React.useState<ChatInputLabel[]>(
+    []
+  );
 
   const addMessagesToTop = (msgs: Message[]) => {
     setMessages((prev) => {
@@ -95,6 +105,8 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         setMessagesAI,
         typingUsers,
         setTypingUsers,
+        chatInputLabel,
+        setChatInputLabel,
       }}
     >
       {children}
