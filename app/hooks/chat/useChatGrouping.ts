@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import dayjs from "dayjs";
+import _ from "lodash";
 import type { ChatMessage, PaginatedPage } from "~/types/messages.type";
 
 export function useChatGrouping(
@@ -18,9 +19,10 @@ export function useChatGrouping(
 
       map.set(key, msg);
     });
-    const merged = Array.from(map.values());
 
-    merged
+    const value = Array.from(map.values());
+
+    const merged = value
       .sort(
         (a, b) =>
           dayjs(a.createdAt ?? a.timestamp).valueOf() -
