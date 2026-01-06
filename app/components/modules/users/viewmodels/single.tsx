@@ -42,7 +42,7 @@ export default function SingleUsers() {
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
   const { permission } = useRouteLoaderData("root");
-
+  const hasSaved = React.useRef(false);
   const {
     data,
     isLoading,
@@ -263,6 +263,7 @@ export default function SingleUsers() {
         mutate(cleaned as UsersFormValues, {
           onSuccess: () => {
             toast.success("แก้ไขพนักงานเรียบร้อยแล้ว!", { id: toastId });
+            hasSaved.current = true;
             setIsEdit(false);
             refetchUser?.();
           },
@@ -300,7 +301,11 @@ export default function SingleUsers() {
     setIsEdit(false);
   };
   const handleBack = React.useCallback(() => {
-    navigate(-1);
+    if (hasSaved.current) {
+      navigate("/users");
+    } else {
+      navigate(-1);
+    }
   }, [navigate]);
   return (
     <div className="flex flex-col space-y-3 p-8">
