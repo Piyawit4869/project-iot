@@ -36,12 +36,13 @@ export function ProfileCardCarousel({ items, category }: ProfileCardProps) {
     );
   };
 
-  const updateNav = () => {
+  const updateNav = React.useCallback(() => {
     const el = listRef.current;
     if (!el) return;
+
     setCanPrev(el.scrollLeft > 0);
     setCanNext(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
-  };
+  }, []);
 
   React.useEffect(() => {
     updateNav();
@@ -54,10 +55,25 @@ export function ProfileCardCarousel({ items, category }: ProfileCardProps) {
 
   const scrollByStep = (dir: "prev" | "next") => {
     const el = listRef.current;
-    if (!el) return;
-    const dx = getStep() * (dir === "next" ? 1 : -1);
-    el.scrollBy({ left: dx, behavior: "smooth" });
+    const step = getStep();
+    if (!el || step === 0) return;
+
+    el.scrollBy({
+      left: step * (dir === "next" ? 1 : -1),
+      behavior: "smooth",
+    });
   };
+
+  React.useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+
+    el.scrollTo({ left: 0, behavior: "auto" });
+    setCanPrev(false);
+    setCanNext(true);
+
+    requestAnimationFrame(updateNav);
+  }, [items]);
 
   let CardComponent: any = null;
 
@@ -124,7 +140,10 @@ export function ProfileCardCarousel({ items, category }: ProfileCardProps) {
               className="flex items-stretch gap-4 overflow-x-auto no-scrollbar scroll-smooth"
             >
               {CardComponent &&
-                cardSimple?.items?.map((p: any, idx: number) => (
+                cardSimple &&
+                cardSimple.items &&
+                cardSimple.items.length > 0 &&
+                cardSimple.items.map((p: any, idx: number) => (
                   <CardComponent
                     key={`${p.title ?? p.name}-${idx}`}
                     items={p}

@@ -37,6 +37,7 @@ export interface CustomerFormCreateProps {
   isEdit?: boolean;
   setIsEdit?: React.Dispatch<React.SetStateAction<boolean>>;
   mode?: string;
+  isLoading?: boolean;
 
   onClick?: (values: CustomerValues) => void;
 
@@ -147,6 +148,7 @@ export type CustomerUpdateChatDetails = {
   remark: string;
   rating: number;
   lineName: string;
+  customerType: string;
 };
 
 export type CustomerUpdateTags = {

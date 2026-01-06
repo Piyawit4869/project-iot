@@ -5,7 +5,7 @@ import { socketConfig } from "~/lib/sockets";
 import { CustomerChatSkeleton } from "./noData/customer-chat-skeleton";
 import type { ChatRoomSchemaType } from "~/schemas/message/message";
 import { usePaginatedMessagesCursor } from "~/api/client/message/useMessage";
-import { useChat } from "~/providers/chat/useChat";
+import { useChat, type TypingUser } from "~/providers/chat/useChat";
 
 import { useRouteLoaderData } from "react-router";
 import { MessageNoData } from "./chat/MessageNoData";
@@ -129,6 +129,10 @@ export const ChatMessages = ({
       console.error("copy failed", err);
     });
   };
+
+  const otherTypingUsers: TypingUser[] = typingUsers.filter(
+    (u) => u.userId !== me.id
+  );
 
   React.useEffect(() => {
     if (messagesData?.pages?.length === 1) {
@@ -254,7 +258,7 @@ export const ChatMessages = ({
   }, []);
 
   React.useEffect(() => {
-    const handleImageLoaded = () => {
+    const handleMediaLoaded = () => {
       const el = scrollAreaRef.current;
       if (!el) return;
 
@@ -270,9 +274,9 @@ export const ChatMessages = ({
       scheduleScrollToBottom();
     };
 
-    window.addEventListener("chat-image-loaded", handleImageLoaded);
+    window.addEventListener("chat-media-loaded", handleMediaLoaded);
     return () => {
-      window.removeEventListener("chat-image-loaded", handleImageLoaded);
+      window.removeEventListener("chat-media-loaded", handleMediaLoaded);
     };
   }, [scheduleScrollToBottom]);
 
@@ -344,7 +348,7 @@ export const ChatMessages = ({
         subId={subId}
         selectedRoom={selectedRoom}
         customer={customer}
-        typingUsers={typingUsers}
+        typingUsers={otherTypingUsers}
       />
 
       {previewUrl && (

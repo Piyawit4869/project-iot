@@ -17,7 +17,7 @@ import { ReplyContentBar } from "./reply-content-bar";
 import { ChatSelectLocation } from "./chat-select-location";
 import { handleSplitThaiAddress } from "~/utils/chats";
 import { useRouteLoaderData } from "react-router";
-import { useChat, type Message } from "~/providers/chat/useChat";
+import { useChat } from "~/providers/chat/useChat";
 import { socketConfig } from "~/lib/sockets";
 import { io, type Socket } from "socket.io-client";
 
@@ -130,19 +130,21 @@ export default function ChatInput({
   const { setMessages } = useCustomer();
   const isMobile = useIsMobile();
 
+  const { setChatInputLabel, chatInputLabel } = useChat();
+
   const [input, setInput] = useState("");
   const [showStickerSelector, setShowStickerSelector] = useState(false);
   const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const typingTriggeredRef = React.useRef(false);
+  const typingResetTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+
   const socketRef = React.useRef<Socket | null>(null);
 
   const [mapAddress, setMapAddress] = React.useState<string>("");
   const [latlng, setLatLng] = React.useState<LatLong | undefined>(undefined);
-
-  const typingTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-  const isTypingRef = React.useRef(false);
 
   const { chatRoomId: customerChatRoomId } =
     (customer && customer.chatRoomDetail) || {};
@@ -175,32 +177,29 @@ export default function ChatInput({
     const value = e.target.value;
     setInput(value);
 
-    const payload = {
-      chatRoomId: selectedRoom.id,
-      userId: me.id,
-    };
+    if (!selectedRoom?.id) return;
 
-    if (!isTypingRef.current) {
-      emitTyping(payload);
-      isTypingRef.current = true;
-    }
+    setChatInputLabel &&
+      setChatInputLabel((prev = []) => {
+        const index = prev.findIndex((p) => p.chatRoomId === selectedRoom.id);
 
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-    }
+        if (index > -1) {
+          const updated = [...prev];
+          updated[index] = {
+            ...updated[index],
+            label: value,
+          };
+          return updated;
+        }
 
-    setMessages((prev) => {
-      const roomIndex = prev.findIndex((p) => p.roomId === selectedRoom.id);
-      if (roomIndex > -1) {
-        const updated = [...prev];
-        updated[roomIndex] = {
-          ...updated[roomIndex],
-          lastestMessage: value,
-        } as CustomerMessage;
-        return updated;
-      }
-      return [...prev, { roomId: selectedRoom.id, lastestMessage: value }];
-    });
+        return [
+          ...prev,
+          {
+            chatRoomId: selectedRoom.id,
+            label: value,
+          },
+        ];
+      });
   };
 
   const uploadFile = (file: File) =>
@@ -282,6 +281,12 @@ export default function ChatInput({
         quoteToken: replyRefMessage?.quoteToken || "",
       });
     }
+
+    setChatInputLabel &&
+      setChatInputLabel((prev = []) =>
+        prev.filter((p) => p.chatRoomId !== selectedRoom.id)
+      );
+
     setReplyRefMessage(null);
     setInput("");
     requestAnimationFrame(autoResize);
@@ -426,6 +431,21 @@ export default function ChatInput({
     }
   };
 
+  const draftWording = React.useMemo(() => {
+    if (!chatInputLabel || !selectedRoom || !selectedRoom.id) return "";
+    return (
+      chatInputLabel.find((p) => p.chatRoomId === selectedRoom.id)?.label ?? ""
+    );
+  }, [chatInputLabel, selectedRoom?.id]);
+
+  React.useEffect(() => {
+    if (!selectedRoom || !selectedRoom?.id) {
+      setInput("");
+      return;
+    }
+    setInput(draftWording);
+  }, [draftWording, selectedRoom?.id]);
+
   React.useEffect(() => {
     const s = socketConfig(api);
 
@@ -468,71 +488,124 @@ export default function ChatInput({
   return (
     <form
       onSubmit={sendText}
-      className="flex flex-col w-full gap-2 border-t p-2 dark:bg-background"
+      className="w-full border-t p-2 dark:bg-background"
     >
-      {showStickerSelector && (
-        <div className="w-full">
+      {/* ===== TOP BARS ===== */}
+      <div className="flex flex-col gap-2">
+        {showStickerSelector && (
           <StickerSelectorBar
             selectedRoom={selectedRoom}
             customer={customer}
             replyRefMessage={replyRefMessage}
             setShowStickerSelector={setShowStickerSelector}
           />
-        </div>
-      )}
+        )}
 
-      {replyRefMessage?.id && (
-        <div className="w-full">
+        {replyRefMessage?.id && (
           <ReplyContentBar
             selectedRoom={selectedRoom}
             customer={customer}
             replyRefMessage={replyRefMessage}
             setReplyRefMessage={setReplyRefMessage}
           />
-        </div>
-      )}
-      {/* Preview */}
-      {pendingImages.length > 0 && (
-        <div className="w-full grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-2">
-          {pendingImages.map((p) => (
-            <div key={p.id} className="relative group border rounded-md p-1">
-              <GlobalImage
-                src={p.url}
-                alt={p.name}
-                className="w-full h-24 object-contain"
-              />
-              <button
-                type="button"
-                onClick={() => handleRemovePending(p.id)}
-                className="absolute top-1 right-1 inline-flex items-center justify-center w-6 h-6 rounded-full bg-black/60 text-white"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+        )}
 
-      <textarea
-        ref={textareaRef}
-        placeholder={
-          isMobile
-            ? "พิมพ์ข้อความเพื่อส่ง"
-            : "Enter = ส่งข้อความ / Shift+Enter = ขึ้นบรรทัดใหม่"
-        }
-        className="w-full resize-none p-2 border-0 rounded-md outline-none min-h-[44px] max-h-[40vh] leading-6 overflow-auto"
-        value={input}
-        onChange={handleInputChange}
-        disabled={isPending}
-        rows={1}
-        onInput={autoResize}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey && !isMobile) {
-            e.preventDefault();
-            (e.currentTarget.form as HTMLFormElement)?.requestSubmit();
-          }
-        }}
-      />
+        {/* ===== IMAGE PREVIEW ===== */}
+        {pendingImages.length > 0 && (
+          <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-2">
+            {pendingImages.map((p) => (
+              <div key={p.id} className="relative group border rounded-md p-1">
+                <GlobalImage
+                  src={p.url}
+                  alt={p.name}
+                  className="w-full h-24 object-contain"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleRemovePending(p.id)}
+                  className="absolute top-1 right-1 inline-flex items-center justify-center w-6 h-6 rounded-full bg-black/60 text-white"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ===== TEXT INPUT ===== */}
+
+      <div className="flex flex-col gap-2">
+        {/* ===== TEXTAREA (โตได้) ===== */}
+        <div className="relative">
+          <textarea
+            ref={textareaRef}
+            placeholder={
+              isMobile
+                ? "พิมพ์ข้อความเพื่อส่ง"
+                : "Enter = ส่งข้อความ / Shift+Enter = ขึ้นบรรทัดใหม่"
+            }
+            className=" w-full resize-none p-2 outline-none min-h-[55px] max-h-[55px] leading-6 overflow-auto"
+            value={input}
+            onChange={handleInputChange}
+            disabled={isPending}
+            rows={1}
+            onInput={autoResize}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey && !isMobile) {
+                e.preventDefault();
+                (e.currentTarget.form as HTMLFormElement)?.requestSubmit();
+              }
+            }}
+          />
+        </div>
+
+        <div className="flex items-center justify-end gap-2 shrink-0">
+          <ChatSelectLocation
+            address={mapAddress}
+            latlng={latlng}
+            setAddress={setMapAddress}
+            setLatLng={setLatLng}
+            handleSendLocation={handleSendLocation}
+          />
+
+          <Button
+            variant="ghost"
+            size="icon"
+            type="button"
+            title="อีโมจิ"
+            onClick={() => setShowStickerSelector((isOpen) => !isOpen)}
+          >
+            <Smile className="w-4 h-4" />
+          </Button>
+
+          <LineTemplatePickerModal
+            handleSelectChange={setInput}
+            subId={subId}
+            chatRoomId={customerChatRoomId}
+            onSendQuickReply={handleSendQuickReply}
+          />
+
+          <Button
+            variant="ghost"
+            size="icon"
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isPending}
+            title="แนบไฟล์"
+          >
+            {isPending ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <Paperclip />
+            )}
+          </Button>
+
+          <Button size="icon" type="submit" disabled={isPending} title="ส่ง">
+            <Send className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
 
       <input
         type="file"
@@ -541,8 +614,62 @@ export default function ChatInput({
         className="hidden"
         multiple
       />
+      {/* <textarea
+        ref={textareaRef}
+        placeholder={
+          isMobile
+            ? "พิมพ์ข้อความเพื่อส่ง"
+            : "Enter = ส่งข้อความ / Shift+Enter = ขึ้นบรรทัดใหม่"
+        }
+        className="
+      mt-2
+      w-full
+      resize-none
+      rounded-md
+      p-2
+      outline-none
+      min-h-[44px]
+      max-h-[40vh]
+      leading-6
+      overflow-auto
+    "
+        value={input}
+        disabled={isPending}
+        rows={1}
+        onChange={handleInputChange}
+        onInput={(e) => {
+          autoResize();
 
-      <div className="flex justify-end gap-2 pt-1">
+          if (typingTriggeredRef.current) return;
+
+          const value = (e.target as HTMLTextAreaElement).value;
+          if (!value || value.trim().length === 0) return;
+
+          emitTyping({
+            chatRoomId: selectedRoom.id,
+            userId: me.id,
+          });
+
+          typingTriggeredRef.current = true;
+
+          if (typingResetTimerRef.current) {
+            clearTimeout(typingResetTimerRef.current);
+          }
+
+          typingResetTimerRef.current = setTimeout(() => {
+            typingTriggeredRef.current = false;
+          }, 1000);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey && !isMobile) {
+            e.preventDefault();
+            (e.currentTarget.form as HTMLFormElement)?.requestSubmit();
+          }
+        }}
+      />
+
+      
+      <div className="mt-2 flex items-center justify-end gap-2">
         <ChatSelectLocation
           address={mapAddress}
           latlng={latlng}
@@ -587,6 +714,15 @@ export default function ChatInput({
           <Send className="w-4 h-4" />
         </Button>
       </div>
+
+      
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileUpload}
+        className="hidden"
+        multiple
+      /> */}
     </form>
   );
 }
