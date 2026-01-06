@@ -144,6 +144,7 @@ export function ChatItem({
             src="https://img.freepik.com/premium-vector/line-icon-vector-logo-set_1097694-1650.jpg"
             alt="avatar"
             className="rounded-full object-cover"
+            notShowPreview
           />
         </Avatar>
 
