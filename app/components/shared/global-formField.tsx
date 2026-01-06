@@ -137,12 +137,20 @@ export function GlobalFormField({
 
       case "image":
         return (
-          <GlobalImage
-            src={field.value}
-            width={widthImage || 110}
-            height={heightImage || 110}
-            className="object-cover rounded-md object-center"
-          />
+          <div
+            style={{
+              width: widthImage || 110,
+              height: heightImage || 110,
+            }}
+            className="flex-none"
+          >
+            <GlobalImage
+              src={field.value}
+              width={widthImage || 110}
+              height={heightImage || 110}
+              className="object-cover rounded-md object-center w-full h-full"
+            />
+          </div>
         );
 
       case "checkbox":

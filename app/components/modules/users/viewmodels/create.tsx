@@ -18,6 +18,7 @@ import { UserDocuments } from "../components/formDocuments";
 import { StepsVertical } from "~/components/shared/global-step";
 import { useGetAllRoles } from "~/api/client/role/useGetRole";
 import { Card } from "~/components/ui/card";
+import { useModalStore } from "~/components/shared/modal/modal-controller";
 
 export function calculateProgress(
   values: any,
@@ -91,7 +92,7 @@ export default function CreateUsers() {
     },
   });
 
-  const { isSubmitting } = formCreate.formState;
+  const { isSubmitting, isDirty } = formCreate.formState;
   const { mutate, isPending } = useCreateUsers();
 
   const onSubmit = (values: UsersFormValues) => {
@@ -116,6 +117,36 @@ export default function CreateUsers() {
         });
       },
     });
+  };
+
+  React.useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [isDirty]);
+
+  const cancelCreate = () => {
+    if (!isDirty) {
+      navigate("/users");
+    } else {
+      GlobalModal.info({
+        title: "ยืนยันการออกจากหน้าสร้างพนักงาน",
+        description:
+          "ข้อมูลที่กรอกไว้ยังไม่ได้ถูกบันทึก หากออกจากหน้านี้ ข้อมูลเหล่านี้จะไม่ถูกบันทึก",
+        confirmText: "ยืนยัน",
+        cancelText: "ยกเลิก",
+        onConfirm: () => {
+          navigate("/users");
+        },
+        onCancel: () => {
+          useModalStore.getState().hide();
+        },
+      });
+    }
   };
 
   const requiredUserFields = [
@@ -155,8 +186,7 @@ export default function CreateUsers() {
 
   return (
     <div className="flex flex-col space-y-3 p-8">
-      <TabControl title="สร้างพนักงาน" backpath="/users" />
-
+      <TabControl title="สร้างพนักงาน" backpath={() => cancelCreate()} />
       <Form {...formCreate}>
         <form
           id="users"

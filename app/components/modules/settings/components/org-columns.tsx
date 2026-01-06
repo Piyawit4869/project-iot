@@ -94,13 +94,15 @@ export const useOrganizationColumns = (): ColumnDef<OrganizationColumn>[] => {
           const url = info.getValue() as string | null | undefined;
 
           return (
-            <GlobalImage
-              src={url || ""}
-              alt="org-logo"
-              width={60}
-              height={60}
-              className="rounded-xl object-cover object-center"
-            />
+            <div style={{ width: 60, height: 60 }} className="flex-none">
+              <GlobalImage
+                src={url || ""}
+                alt="org-logo"
+                width={60}
+                height={60}
+                className="rounded-xl object-cover object-center w-full h-full"
+              />
+            </div>
           );
         },
       },
