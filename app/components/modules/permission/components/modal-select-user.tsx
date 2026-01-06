@@ -13,6 +13,7 @@ import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Checkbox } from "~/components/ui/checkbox";
 import React from "react";
+import { GlobalImage } from "~/components/shared/global-image";
 
 export default function ModalUser({
   users = [],
@@ -123,12 +124,13 @@ export default function ModalUser({
                     }`}
                   >
                     <td className="p-2">
-                      <img
-                        src={user?.profile?.imageUrl ?? "/default-avatar.png"}
-                        alt={`${user?.profile?.firstName} ${user?.profile?.lastName}`}
+                      <GlobalImage
+                        src={user?.profile?.imageUrl ?? ""}
+                        alt="avatar"
                         width={32}
                         height={32}
                         className="w-8 h-8 rounded-full object-cover"
+                        notShowPreview
                       />
                     </td>
                     <td className="p-2">
