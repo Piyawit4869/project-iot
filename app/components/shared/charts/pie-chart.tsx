@@ -5,41 +5,39 @@ export function convertStatsToChart(data: any) {
   const senderStats = data?.senderStats ?? [];
   const aiStats = data?.aiStats ?? [];
 
-  const totalMessages = senderStats.reduce(
+  const senderTotal = senderStats.reduce(
     (sum: number, s: any) => sum + (s.messageCount || 0),
     0
   );
+  const aiTotal = aiStats.reduce(
+    (sum: number, ai: any) => sum + (ai.messageCount || 0),
+    0
+  );
+
+  const grandTotal = senderTotal + aiTotal;
 
   // nodata
-  if (senderStats.length === 0 || totalMessages === 0) {
-    return [
-      {
-        type: "ไม่มีข้อมูล",
-        value: 0,
-      },
-    ];
+  if (grandTotal === 0) {
+    return [{ type: "ไม่มีข้อมูล", value: 0 }];
   }
 
-  // convert senderStats to percentage
   let chartData = senderStats.map((s: any) => ({
     type: s.sender,
-    value: Math.round((s.messageCount / totalMessages) * 100),
+    value: Math.round((s.messageCount / grandTotal) * 100),
   }));
 
-  const sum = chartData.reduce((a: number, b: any) => a + b.value, 0);
-
-  if (aiStats.length > 0) {
-    const aiTotal = aiStats.reduce(
-      (sum: number, ai: any) => sum + (ai.messageCount || 0),
-      0
-    );
-
+  if (aiTotal > 0) {
     chartData.push({
       type: "AI",
-      value: Math.round((aiTotal / totalMessages) * 100),
+      value: Math.round((aiTotal / grandTotal) * 100),
     });
+  }
 
-    return chartData;
+  const currentSum = chartData.reduce((a: number, b: any) => a + b.value, 0);
+
+  if (currentSum !== 100 && chartData.length > 0) {
+    const diff = 100 - currentSum;
+    chartData[chartData.length - 1].value += diff;
   }
 
   return chartData;
