@@ -345,11 +345,9 @@ export function GlobalFormField({
 
           {/*   VIEW MODE  */}
           {view === "view" ? (
-            // 🔴 โค้ดเดิม: มี w-full, h-full และ items-center
-            // <div className="text-sm w-full h-full flex items-center">
-
-            // 🟢 แก้ไขใหม่: เอา w-full, h-full ออก และเปลี่ยนเป็น items-start
-            <div className="text-sm flex items-start">{renderView(field)}</div>
+            <div className="text-sm w-full flex items-center">
+              {renderView(field)}
+            </div>
           ) : (
             <FormControl>{renderEdit(field)}</FormControl>
           )}
