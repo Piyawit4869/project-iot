@@ -60,7 +60,6 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
   const branch = data?.branch ?? {};
   const userDepartments = data?.userDepartments;
   const userRole = data?.organizationRoles?.[0]?.organizationRoles ?? "";
-  console.log(data);
   return (
     <>
       <CardHeader>
