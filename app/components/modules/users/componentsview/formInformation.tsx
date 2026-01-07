@@ -12,6 +12,7 @@ import {
   statusOptions,
 } from "~/initData/user-initData";
 import {
+  formatDateFull,
   formatPhoneNumber,
   formatTaxId,
 } from "~/components/shared/global-format";
@@ -125,7 +126,7 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
             <InfoRow
               label="วันเกิด"
               value={profile.birthDate}
-              format={(v) => (v ? dayjs(v).format("DD MMMM YYYY") : "-")}
+              format={(v) => (v ? formatDateFull(v) : "-")}
             />
             <InfoRow
               label="เพศ"
@@ -176,12 +177,12 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
             <InfoRow
               label="วันที่เริ่มงาน"
               value={profile.startWorkDate ?? null}
-              format={(v) => (v ? dayjs(v).format("DD MMMM YYYY") : "-")}
+              format={(v) => (v ? formatDateFull(v) : "-")}
             />
             <InfoRow
               label="วันที่สิ้นสุดงาน"
               value={profile.endWorkDate ?? null}
-              format={(v) => (v ? dayjs(v).format("DD MMMM YYYY") : "-")}
+              format={(v) => (v ? formatDateFull(v) : "-")}
             />
             <InfoRow
               label="ระยะเวลาการทำงาน"

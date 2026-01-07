@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { InfoRow } from "~/components/shared/InfoRow";
 import { contactTypeMap } from "~/initData/user-initData";
+import { formatDateFull } from "~/components/shared/global-format";
 
 type WorkItem = UsersFormValues["profile"]["workExperiences"][number];
 
@@ -115,16 +116,12 @@ export const UserWorkExperience: React.FC<UserWorkExperienceViewProps> = ({
                         <InfoRow
                           label="วันที่เริ่มงาน"
                           value={row.startDate}
-                          format={(v) =>
-                            v ? dayjs(v).format("DD MMMM YYYY") : "-"
-                          }
+                          format={(v) => (v ? formatDateFull(v) : "-")}
                         />
                         <InfoRow
                           label="วันที่สิ้นสุดงาน"
                           value={row.endDate}
-                          format={(v) =>
-                            v ? dayjs(v).format("DD MMMM YYYY") : "ปัจจุบัน"
-                          }
+                          format={(v) => (v ? formatDateFull(v) : "-")}
                         />
 
                         <InfoRow
