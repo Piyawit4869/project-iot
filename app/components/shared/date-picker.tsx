@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { toSafeDate } from "~/utils/date-format";
+import dayjs from "dayjs";
+import { formatDateFull } from "./global-format";
 
 interface DatePickerProps {
   value?: string | Date;
@@ -42,7 +44,7 @@ export function DatePicker({
         onClick={() => setShow((prev) => !prev)}
       >
         {selectedDate ? (
-          format(selectedDate, "PPP", { locale: th })
+          <span>{formatDateFull(selectedDate)}</span>
         ) : (
           <span className="text-gray-500">{placeholder ?? "เลือกวันที่"}</span>
         )}
@@ -61,6 +63,9 @@ export function DatePicker({
               );
 
               setShow(false);
+            }}
+            formatters={{
+              formatYearDropdown: (date) => dayjs(date).format("BBBB"),
             }}
             className="rounded-md border shadow-sm"
             captionLayout="dropdown"

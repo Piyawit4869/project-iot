@@ -1,3 +1,5 @@
+/* FIXME change name create organization to create barch*/
+
 import { useNavigate } from "react-router";
 
 import { GlobalModal } from "~/components/shared/modal/modal";

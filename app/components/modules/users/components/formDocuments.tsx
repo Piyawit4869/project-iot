@@ -97,6 +97,7 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
 
   const [open, setOpen] = React.useState(false);
   const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
+  const [originalData, setOriginalData] = React.useState<any>(null);
 
   const handleOpenCreate = () => {
     // appendDm({
@@ -116,38 +117,48 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
     //   remark: "",
     // });
     const nextIndex = form.getValues("profile.documents")?.length ?? 0;
+    setOriginalData(null);
     setEditingIndex(Math.max(nextIndex, 0));
     setOpen(true);
   };
 
   const handleOpenEdit = (index: number) => {
+    const current = form.getValues(`profile.documents.${index}`);
+    setOriginalData(structuredClone(current));
     setEditingIndex(index);
     setOpen(true);
   };
 
   const handleClose = () => {
     if (editingIndex !== null) {
-      const v = form.getValues(`profile.documents.${editingIndex}`);
-      const isTagsEmpty =
-        !v?.tags ||
-        (Array.isArray(v.tags) && v.tags.filter(Boolean).length === 0);
-      const blank =
-        !v?.type &&
-        !v?.fileName &&
-        !v?.mimeType &&
-        !v?.size &&
-        !v?.url &&
-        !v?.storageProvider &&
-        !v?.checksum &&
-        isTagsEmpty &&
-        !v?.isPrimary &&
-        !v?.version &&
-        !v?.expiresAt &&
-        !v?.verified &&
-        !v?.remark;
+      if (originalData) {
+        updateDm(editingIndex, originalData);
+      } else {
+        const v = form.getValues(`profile.documents.${editingIndex}`);
+        const isTagsEmpty =
+          !v?.tags ||
+          (Array.isArray(v.tags) && v.tags.filter(Boolean).length === 0);
+        const blank =
+          !v?.type &&
+          !v?.fileName &&
+          !v?.mimeType &&
+          !v?.size &&
+          !v?.url &&
+          !v?.storageProvider &&
+          !v?.checksum &&
+          isTagsEmpty &&
+          !v?.isPrimary &&
+          !v?.version &&
+          !v?.expiresAt &&
+          !v?.verified &&
+          !v?.remark;
 
-      removeDm(editingIndex);
+        if (blank) {
+          removeDm(editingIndex);
+        }
+      }
     }
+    setOriginalData(null);
     setOpen(false);
     setEditingIndex(null);
   };
@@ -201,6 +212,7 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
           });
 
           toast.success("บันทึกเรียบร้อยแล้ว!", { id: toastId });
+          setOriginalData(null);
           setOpen(false);
           setEditingIndex(null);
         } catch {
@@ -346,7 +358,7 @@ export const UserDocuments: React.FC<UserFormProfileProps> = ({
               <div className="grid grid-cols-1 gap-5">
                 {dmFields.map((row, index) => (
                   <div key={row.id}>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items:start sm:items-center justify-between flex-col sm:flex-row">
                       <div className="min-w-0">
                         <h4 className="font-semibold truncate">
                           {titleLine(index)}

@@ -41,6 +41,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
 
   const [open, setOpen] = React.useState(false);
   const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
+  const [originalData, setOriginalData] = React.useState<any>(null);
 
   const handleOpenCreate = () => {
     const nextIndex = form.getValues("profile.workExperiences")?.length ?? 0;
@@ -58,29 +59,39 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
     // });
 
     setEditingIndex(Math.max(nextIndex, 0));
+    setOriginalData(null);
     setOpen(true);
   };
 
   const handleOpenEdit = (index: number) => {
+    const current = form.getValues(`profile.workExperiences.${index}`);
+    setOriginalData(structuredClone(current));
     setEditingIndex(index);
     setOpen(true);
   };
 
   const handleClose = () => {
     if (editingIndex !== null) {
-      const v = form.getValues(`profile.workExperiences.${editingIndex}`);
-      const blank =
-        !v?.company &&
-        !v?.position &&
-        !v?.employmentType &&
-        !v?.startDate &&
-        !v?.endDate &&
-        !v?.isCurrent &&
-        !v?.location &&
-        !v?.description;
+      if (originalData) {
+        updateWe(editingIndex, originalData);
+      } else {
+        const v = form.getValues(`profile.workExperiences.${editingIndex}`);
+        const blank =
+          !v?.company &&
+          !v?.position &&
+          !v?.employmentType &&
+          !v?.startDate &&
+          !v?.endDate &&
+          !v?.isCurrent &&
+          !v?.location &&
+          !v?.description;
 
-      removeWe(editingIndex);
+        if (blank) {
+          removeWe(editingIndex);
+        }
+      }
     }
+    setOriginalData(null);
     setOpen(false);
     setEditingIndex(null);
   };
@@ -111,6 +122,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
             description: current?.description ?? "",
           });
           toast.success("บันทึกเรียบร้อยแล้ว!", { id: toastId });
+          setOriginalData(null);
           setOpen(false);
           setEditingIndex(null);
         } catch (e) {
@@ -213,7 +225,7 @@ export const UserWorkExperience: React.FC<UserFormProfileProps> = ({
 
                   return (
                     <div key={row.id} className=" space-y-4">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items:start sm:items-center justify-between flex-col sm:flex-row">
                         <div className="min-w-0">
                           <h4 className="font-semibold truncate">
                             {company

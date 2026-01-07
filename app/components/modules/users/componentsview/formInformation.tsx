@@ -12,6 +12,7 @@ import {
   statusOptions,
 } from "~/initData/user-initData";
 import {
+  formatDateFull,
   formatPhoneNumber,
   formatTaxId,
 } from "~/components/shared/global-format";
@@ -37,9 +38,12 @@ export function getWorkingDays(
 
   const days = end.diff(start, "day");
 
+  if (days < 0) {
+    return "ยังไม่ได้เริ่มทำงาน";
+  }
+
   return `${days} วัน`;
 }
-
 export interface UserFormProfileProps {
   data?: any;
 
@@ -55,7 +59,7 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
   const departments = data?.organization ?? {};
   const branch = data?.branch ?? {};
   const userDepartments = data?.userDepartments;
-
+  const userRole = data?.organizationRoles?.[0]?.organizationRoles ?? "";
   return (
     <>
       <CardHeader>
@@ -93,11 +97,11 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
             <InfoRow label="User Name" value={data?.userName ?? "-"} />
 
             <InfoRow label="อีเมล" value={data?.email ?? "-"} />
-            <InfoRow label="ตำแหน่ง" value={data?.mainDepartment} />
+            <InfoRow label="ตำแหน่ง" value={userRole.name} />
             <InfoRow label="รหัสพนักงาน" value={profile.emId} />
 
             <InfoRow label="องค์กร" value={departments?.nameTh} />
-            {/* <InfoRow label="สาขา" value={branch?.nameTh} /> */}
+            {/* <InfoRow label="สาขา" value={lookpla?.nameTh} /> */}
           </div>
           <h1 className="font-bold mt-4">ข้อมูลส่วนตัว</h1>
           <div className="grid gird-col-1 lg:grid-cols-2 gap-5">
@@ -124,7 +128,7 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
             <InfoRow
               label="วันเกิด"
               value={profile.birthDate}
-              format={(v) => (v ? dayjs(v).format("DD MMMM YYYY") : "-")}
+              format={(v) => (v ? formatDateFull(v) : "-")}
             />
             <InfoRow
               label="เพศ"
@@ -175,12 +179,12 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
             <InfoRow
               label="วันที่เริ่มงาน"
               value={profile.startWorkDate ?? null}
-              format={(v) => (v ? dayjs(v).format("DD MMMM YYYY") : "-")}
+              format={(v) => (v ? formatDateFull(v) : "-")}
             />
             <InfoRow
               label="วันที่สิ้นสุดงาน"
               value={profile.endWorkDate ?? null}
-              format={(v) => (v ? dayjs(v).format("DD MMMM YYYY") : "-")}
+              format={(v) => (v ? formatDateFull(v) : "-")}
             />
             <InfoRow
               label="ระยะเวลาการทำงาน"

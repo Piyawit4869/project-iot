@@ -96,6 +96,10 @@ export default function CreateUsers() {
   const { mutate, isPending } = useCreateUsers();
 
   const onSubmit = (values: UsersFormValues) => {
+    const payload: UsersFormValues = {
+      ...values,
+      userName: values.userName === "" ? null : values.userName,
+    };
     GlobalModal.info({
       title: "สร้างพนักงาน",
       description: "คุณต้องการสร้างพนักงานนี้ใช่หรือไม่",
@@ -103,7 +107,7 @@ export default function CreateUsers() {
       cancelText: "ยกเลิก",
       onConfirm: () => {
         const toastId = toast.loading("กำลังสร้างพนักงาน...");
-        mutate(values, {
+        mutate(payload, {
           onSuccess: (data) => {
             toast.success("สร้างพนักงานเรียบร้อยแล้ว!", { id: toastId });
             console.log("Created user:", data);

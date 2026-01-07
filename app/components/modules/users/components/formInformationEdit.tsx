@@ -49,7 +49,10 @@ import { OrganizationSelector } from "./formSelectOrganization";
 import { RadioCardGroup } from "~/components/shared/global-radio-card";
 import { gender, prefix } from "~/initData/customer-initData";
 import { InputNumberBox } from "~/components/shared/input-number-box";
-import { useCheckUserEmailDuplicate } from "~/api/client/user";
+import {
+  useCheckUserEmailDuplicate,
+  useCheckUserNameDuplicate,
+} from "~/api/client/user";
 import type { RangeDate } from "./formInformationCreate";
 
 type OptionItem = { id: string; name: string; active?: boolean };
@@ -80,6 +83,7 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
     return a;
   });
   const { mutateAsync: checkEmail } = useCheckUserEmailDuplicate();
+  const { mutateAsync: checkUserName } = useCheckUserNameDuplicate();
 
   const statusOptions = [
     { label: "พนักงานงานใหม่", value: "new_user" },
@@ -90,6 +94,9 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
   ] as const;
   const currentEmail = React.useRef<string | null>(
     form.getValues("email") ?? null
+  );
+  const currentUserName = React.useRef<string | null>(
+    form.getValues("userName") ?? null
   );
 
   const handleBlur = async () => {
@@ -112,6 +119,29 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
       }
     } catch (error) {
       console.error("email check failed", error);
+    }
+  };
+
+  const handleBlurUserName = async () => {
+    const username = form.getValues("userName");
+    if (!username) return;
+    if (username === currentUserName.current) {
+      form.clearErrors("userName");
+      return;
+    }
+
+    try {
+      const res = await checkUserName({ username });
+      if (res) {
+        form.setError("userName", {
+          type: "manual",
+          message: "User Name ถูกใช้งานแล้ว",
+        });
+      } else {
+        form.clearErrors("userName");
+      }
+    } catch (error) {
+      console.error("userName check failed", error);
     }
   };
 
@@ -181,61 +211,74 @@ export const UserProfileEdit: React.FC<UserFormProfileProps> = ({
                   checkFields={checkFields}
                   placeholder="กรอกชื่อพนักงาน"
                 /> */}
-                <FormField
-                  control={form.control}
-                  name="status"
-                  render={({ field }) => (
-                    <FormItem className="min-auto">
-                      <FormLabel>สถานะพนักงาน</FormLabel>
-                      <FormControl>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="เลือกสถานะ" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {filteredStatusOptions.map((option) => (
-                              <SelectItem
-                                key={option.value}
-                                value={option.value}
-                              >
-                                {option.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <GlobalFormField
-                  control={form.control}
-                  name="userName"
-                  label="User Name"
-                  type="input"
-                  checkFields={checkFields}
-                  placeholder="กรอก User Name ของพนักงาน"
-                />
-                <FormField
-                  control={form.control}
-                  name="profile.emId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>รหัสพนักงาน</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="กรอกรหัสพนักงาน"
-                          {...field}
-                          value={field.value ?? undefined}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className=" sm:col-span-2 flex flex-col sm:flex-row gap-5">
+                  <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem className="min-auto">
+                        <RequiredLabel required>สถานะพนักงาน</RequiredLabel>
+                        <FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="เลือกสถานะ" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {filteredStatusOptions.map((option) => (
+                                <SelectItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
+                                  {option.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="userName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>User Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="User Name"
+                            {...field}
+                            value={field.value ?? undefined}
+                            onBlur={handleBlurUserName}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="profile.emId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>รหัสพนักงาน</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="กรอกรหัสพนักงาน"
+                            {...field}
+                            value={field.value ?? undefined}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <div className="col-span-2">
                   <FormField
                     control={form.control}

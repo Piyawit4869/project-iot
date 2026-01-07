@@ -8,7 +8,10 @@ import type { UsersFormValues } from "~/schemas/users/user";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { InfoRow } from "~/components/shared/InfoRow";
-import { formatNumber } from "~/components/shared/global-format";
+import {
+  formatDateFull,
+  formatNumber,
+} from "~/components/shared/global-format";
 
 type EduItem = UsersFormValues["profile"]["educationInformations"][number];
 
@@ -84,7 +87,7 @@ export const UserStudy: React.FC<UserStudyViewProps> = ({
                           </Button>
                         )}
                       </div>
-                      <div className="grid grid-cols-4 gap-5">
+                      <div className="grid grid-cols-1 sm:grid-cols-4 gap-5">
                         <InfoRow
                           label="สถาบันการศึกษา"
                           value={row.institution}
@@ -103,16 +106,12 @@ export const UserStudy: React.FC<UserStudyViewProps> = ({
                         <InfoRow
                           label="เข้าเรียนเมื่อ"
                           value={row.startDate ?? null}
-                          format={(v) =>
-                            v ? dayjs(v).format("DD MMMM YYYY") : "-"
-                          }
+                          format={(v) => (v ? formatDateFull(v) : "-")}
                         />
                         <InfoRow
                           label="จบการศึกษาเมื่อ"
                           value={row.endDate ?? null}
-                          format={(v) =>
-                            v ? dayjs(v).format("DD MMMM YYYY") : "ปัจจุบัน"
-                          }
+                          format={(v) => (v ? formatDateFull(v) : "-")}
                         />
 
                         <InfoRow

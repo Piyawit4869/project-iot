@@ -43,6 +43,7 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
 
   const [open, setOpen] = React.useState(false);
   const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
+  const [originalData, setOriginalData] = React.useState<any>(null);
 
   const handleOpenCreate = () => {
     const nextIndex =
@@ -62,34 +63,44 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
     //   description: "",
     // });
 
+    setOriginalData(null);
     setEditingIndex(Math.max(nextIndex, 0));
     setOpen(true);
   };
 
   const handleOpenEdit = (index: number) => {
+    const current = form.getValues(`profile.compensationConfigs.${index}`);
+    setOriginalData(structuredClone(current));
     setEditingIndex(index);
     setOpen(true);
   };
 
   const handleClose = () => {
     if (editingIndex !== null) {
-      const v = form.getValues(`profile.compensationConfigs.${editingIndex}`);
-      const blank =
-        !v?.baseSalary &&
-        !v?.bonusEligible &&
-        !v?.bonusRate &&
-        !v?.allowance &&
-        !v?.insurance &&
-        !v?.providentFund &&
-        !v?.contractType &&
-        !v?.effectiveDate &&
-        !v?.expireDate &&
-        !v?.description;
+      if (originalData) {
+        updateCf(editingIndex, originalData);
+      } else {
+        const v = form.getValues(`profile.compensationConfigs.${editingIndex}`);
+        const blank =
+          !v?.baseSalary &&
+          !v?.bonusEligible &&
+          !v?.bonusRate &&
+          !v?.allowance &&
+          !v?.insurance &&
+          !v?.providentFund &&
+          !v?.contractType &&
+          !v?.effectiveDate &&
+          !v?.expireDate &&
+          !v?.description;
 
-      removeCf(editingIndex);
+        if (blank) {
+          removeCf(editingIndex);
+        }
+      }
     }
+    setOriginalData(null);
     setOpen(false);
-    // setEditingIndex(null);
+    setEditingIndex(null);
   };
 
   const handleSubmitFromModal = () => {
@@ -144,6 +155,7 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
 
           toast.success("บันทึกเรียบร้อยแล้ว!", { id: toastId });
           setOpen(false);
+          setOriginalData(null);
           setEditingIndex(null);
         } catch {
           toast.error("ดำเนินการไม่สำเร็จ กรุณาลองใหม่ภายหลัง", {
@@ -343,7 +355,7 @@ export const UserCompensation: React.FC<UserFormProfileProps> = ({
 
                   return (
                     <div key={row.id}>
-                      <div className="flex items-center justify-between">
+                      <div className="flex items:start sm:items-center justify-between flex-col sm:flex-row">
                         <div className="min-w-0">
                           <h4 className="font-semibold truncate">{title}</h4>
 

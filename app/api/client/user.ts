@@ -15,6 +15,7 @@ import {
   changeActiveOrg,
   checkUserEmailDuplicate,
   fetchGetSearchlUsers,
+  checkUserNameDuplicate,
 } from "../server/user";
 import type { UsersFormValues } from "~/schemas/users/user";
 import type { PasswordFormValues } from "~/schemas/users/password-user";
@@ -205,5 +206,12 @@ export const useCheckUserEmailDuplicate = () => {
   return useMutation({
     mutationFn: (payload: { email: string }) =>
       checkUserEmailDuplicate(payload),
+  });
+};
+
+export const useCheckUserNameDuplicate = () => {
+  return useMutation({
+    mutationFn: (payload: { username: string }) =>
+      checkUserNameDuplicate(payload),
   });
 };

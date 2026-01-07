@@ -209,3 +209,18 @@ export const checkUserEmailDuplicate = async (payload: {
     throw error;
   }
 };
+
+export const checkUserNameDuplicate = async (payload: {
+  username: string;
+}): Promise<boolean> => {
+  try {
+    const { data } = await ApiConfig.post(
+      "/crud/users/username-check",
+      payload
+    );
+
+    return data.result as boolean;
+  } catch (error) {
+    throw error;
+  }
+};

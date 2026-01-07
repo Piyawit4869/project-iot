@@ -9,7 +9,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { InfoRow } from "~/components/shared/InfoRow";
 import { contactTypeMap, currencyMap } from "~/initData/user-initData";
-import { formatNumber } from "~/components/shared/global-format";
+import {
+  formatDateFull,
+  formatNumber,
+} from "~/components/shared/global-format";
 
 type CompensationConfig =
   UsersFormValues["profile"]["compensationConfigs"][number];
@@ -131,16 +134,12 @@ export const UserCompensation: React.FC<UserCompensationViewProps> = ({
                         <InfoRow
                           label="วันที่เริ่มมีผล"
                           value={row.effectiveDate}
-                          format={(v) =>
-                            v ? dayjs(v).format("DD MMMM YYYY") : "-"
-                          }
+                          format={(v) => (v ? formatDateFull(v) : "-")}
                         />
                         <InfoRow
                           label="วันที่สิ้นสุด"
                           value={row.expireDate}
-                          format={(v) =>
-                            v ? dayjs(v).format("DD MMMM YYYY") : "-"
-                          }
+                          format={(v) => (v ? formatDateFull(v) : "-")}
                         />
 
                         <InfoRow
