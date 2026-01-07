@@ -55,7 +55,8 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
   const departments = data?.organization ?? {};
   const branch = data?.branch ?? {};
   const userDepartments = data?.userDepartments;
-
+  const userRole = data?.organizationRoles?.[0]?.organizationRoles;
+  console.log(data);
   return (
     <>
       <CardHeader>
@@ -93,7 +94,7 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
             <InfoRow label="User Name" value={data?.userName ?? "-"} />
 
             <InfoRow label="อีเมล" value={data?.email ?? "-"} />
-            <InfoRow label="ตำแหน่ง" value={data?.mainDepartment} />
+            <InfoRow label="ตำแหน่ง" value={userRole.name} />
             <InfoRow label="รหัสพนักงาน" value={profile.emId} />
 
             <InfoRow label="องค์กร" value={departments?.nameTh} />
