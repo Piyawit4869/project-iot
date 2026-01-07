@@ -87,7 +87,7 @@ export const UserStudy: React.FC<UserStudyViewProps> = ({
                           </Button>
                         )}
                       </div>
-                      <div className="grid grid-cols-4 gap-5">
+                      <div className="grid grid-cols-1 sm:grid-cols-4 gap-5">
                         <InfoRow
                           label="สถาบันการศึกษา"
                           value={row.institution}

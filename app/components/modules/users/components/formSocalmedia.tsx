@@ -40,7 +40,7 @@ export const UserSocalmedias: React.FC<UserFormProfileProps> = ({
 
   const [open, setOpen] = React.useState(false);
   const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
-
+  const [originalData, setOriginalData] = React.useState<any>(null);
   const handleOpenCreate = () => {
     // appendSm({
     //   id: uid(),
@@ -51,26 +51,36 @@ export const UserSocalmedias: React.FC<UserFormProfileProps> = ({
     //   description: "",
     // });
     const nextIndex = form.getValues("profile.socialMedia")?.length ?? 0;
+    setOriginalData(null);
     setEditingIndex(Math.max(nextIndex, 0));
     setOpen(true);
   };
 
   const handleOpenEdit = (index: number) => {
+    const current = form.getValues(`profile.socialMedia.${index}`);
+    setOriginalData(structuredClone(current));
     setEditingIndex(index);
     setOpen(true);
   };
 
   const handleClose = () => {
     if (editingIndex !== null) {
-      const v = form.getValues(`profile.socialMedia.${editingIndex}`);
-      const blank =
-        !v?.platform &&
-        !v?.username &&
-        !v?.url &&
-        !v?.description &&
-        !v?.isPrimary;
-      removeSm(editingIndex);
+      if (originalData) {
+        updateSm(editingIndex, originalData);
+      } else {
+        const v = form.getValues(`profile.socialMedia.${editingIndex}`);
+        const blank =
+          !v?.platform &&
+          !v?.username &&
+          !v?.url &&
+          !v?.description &&
+          !v?.isPrimary;
+        if (blank) {
+          removeSm(editingIndex);
+        }
+      }
     }
+    setOriginalData(null);
     setOpen(false);
     setEditingIndex(null);
   };
@@ -95,6 +105,7 @@ export const UserSocalmedias: React.FC<UserFormProfileProps> = ({
             description: current?.description ?? "",
           });
           toast.success("บันทึกเรียบร้อยแล้ว!", { id: toastId });
+          setOriginalData(null);
           setOpen(false);
           setEditingIndex(null);
         } catch (e) {
@@ -197,7 +208,7 @@ export const UserSocalmedias: React.FC<UserFormProfileProps> = ({
 
                   return (
                     <div key={row.id} className=" ">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items:start sm:items-center justify-between flex-col sm:flex-row">
                         <div className="min-w-0">
                           <h4 className="font-semibold truncate">{title}</h4>
 

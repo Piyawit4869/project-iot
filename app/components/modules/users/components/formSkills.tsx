@@ -38,6 +38,7 @@ export const UserSkills: React.FC<UserFormProfileProps> = ({
 
   const [open, setOpen] = React.useState(false);
   const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
+  const [originalData, setOriginalData] = React.useState<any>(null);
 
   const handleOpenCreate = () => {
     const nextIndex = form.getValues("profile.skills")?.length ?? 0;
@@ -54,6 +55,8 @@ export const UserSkills: React.FC<UserFormProfileProps> = ({
   };
 
   const handleOpenEdit = (index: number) => {
+    const current = form.getValues(`profile.skills.${index}`);
+    setOriginalData(structuredClone(current));
     setEditingIndex(index);
     setOpen(true);
   };
@@ -61,15 +64,23 @@ export const UserSkills: React.FC<UserFormProfileProps> = ({
   // ปิดโมดัล: ถ้ารายการเพิ่งสร้างและยังว่าง ให้ลบทิ้ง
   const handleClose = () => {
     if (editingIndex !== null) {
-      const v = form.getValues(`profile.skills.${editingIndex}`);
-      const blank =
-        !v?.name &&
-        !v?.level &&
-        !v?.description &&
-        !v?.yearsOfExperience &&
-        !v?.isPrimary;
-      removeSk(editingIndex);
+      if (originalData) {
+        updateSk(editingIndex, originalData);
+      } else {
+        const v = form.getValues(`profile.skills.${editingIndex}`);
+        const blank =
+          !v?.name &&
+          !v?.level &&
+          !v?.description &&
+          !v?.yearsOfExperience &&
+          !v?.isPrimary;
+
+        if (blank) {
+          removeSk(editingIndex);
+        }
+      }
     }
+    setOriginalData(null);
     setOpen(false);
     setEditingIndex(null);
   };
@@ -98,13 +109,12 @@ export const UserSkills: React.FC<UserFormProfileProps> = ({
             isPrimary: !!current?.isPrimary,
             description: current?.description ?? "",
           });
+          setOriginalData(null);
           toast.success("บันทึกเรียบร้อยแล้ว!", { id: toastId });
           setOpen(false);
           setEditingIndex(null);
         } catch {
-          toast.error("ดำเนินการไม่สำเร็จ กรุณาลองใหม่ภายหลัง", {
-            id: toastId,
-          });
+          toast.error("ดำเนินการไม่สำเร็จ", { id: toastId });
         }
       },
     });
@@ -188,7 +198,7 @@ export const UserSkills: React.FC<UserFormProfileProps> = ({
 
                   return (
                     <div key={row.id} className="">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items:start sm:items-center justify-between flex-col sm:flex-row">
                         <div className="min-w-0">
                           <h4 className="font-semibold truncate">
                             {name

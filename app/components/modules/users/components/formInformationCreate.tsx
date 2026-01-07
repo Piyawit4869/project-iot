@@ -43,8 +43,13 @@ import { UsersFormSchema, type UsersFormValues } from "~/schemas/users/user";
 import { getRequiredPaths } from "~/utils/form-adapter";
 import { OrganizationSelector } from "./formSelectOrganization";
 import { formToJSON } from "axios";
-import { useCheckUserEmailDuplicate } from "~/api/client/user";
+import {
+  useCheckUserEmailDuplicate,
+  useCheckUserNameDuplicate,
+} from "~/api/client/user";
 import { InputNumberBox } from "~/components/shared/input-number-box";
+import { RadioCardGroup } from "~/components/shared/global-radio-card";
+import { gender, prefix } from "~/initData/customer-initData";
 
 export interface UserFormProfileProps {
   form: UseFormReturn<UsersFormValues>;
@@ -68,6 +73,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
   const [openSub, setOpenSub] = React.useState(false);
   const [search, setSearch] = React.useState("");
   const { mutateAsync: checkEmail } = useCheckUserEmailDuplicate();
+  const { mutateAsync: checkUserName } = useCheckUserNameDuplicate();
   const [rangeDate, setRangeDate] = React.useState<RangeDate>({});
 
   const allRoles = Array.isArray(roles) ? roles : [];
@@ -103,7 +109,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
     o.label.toLowerCase().includes(debouncedStatusSearch.toLowerCase())
   );
 
-  const handleBlur = async () => {
+  const handleBlurEmail = async () => {
     const email = form.getValues("email");
     if (!email) return;
 
@@ -121,6 +127,30 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
       console.error("email check failed", error);
     }
   };
+  const handleBlurUserName = async () => {
+    const username = form.getValues("userName");
+
+    if (!username || username.trim() === "") {
+      form.clearErrors("userName");
+      return;
+    }
+
+    try {
+      const res = await checkUserName({ username: username.trim() });
+
+      if (res) {
+        form.setError("userName", {
+          type: "manual",
+          message: "User Name ถูกใช้งานแล้ว",
+        });
+      } else {
+        form.clearErrors("userName");
+      }
+    } catch (error) {
+      console.error("userName check failed", error);
+    }
+  };
+
   type OptionItem = { id: string; name: string; active?: boolean }; // ของ list ที่ใช้เลือก
 
   return (
@@ -166,21 +196,33 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                           placeholder="กรอกอีเมล"
                           {...field}
                           value={field.value ?? undefined}
-                          onBlur={handleBlur}
+                          onBlur={handleBlurEmail}
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <GlobalFormField
+
+                <FormField
                   control={form.control}
                   name="userName"
-                  label="User Name"
-                  type="input"
-                  checkFields={checkFields}
-                  placeholder="กรอกชื่อพนักงาน"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>User Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="กรอกชื่อพนักงาน"
+                          {...field}
+                          value={field.value ?? undefined}
+                          onBlur={handleBlurUserName}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
+
                 <FormField
                   control={form.control}
                   name="password"
@@ -436,21 +478,26 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
               </div>
 
               <h1 className="font-bold">ข้อมูลส่วนตัว</h1>
-              <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
-                {/* <GlobalFormField
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
                   control={form.control}
                   name="profile.prefix"
-                  label="คำนำหน้า"
-                  type="select"
-                  placeholder="mr"
-                  // checkFields={checkFields}
-                  selectOptions={[
-                    { label: "นาย", value: "mr" },
-                    { label: "นาง", value: "mrs" },
-                    { label: "นางสาว", value: "ms" },
-                  ]}
-                /> */}
+                  render={({ field }) => (
+                    <FormItem>
+                      <RequiredLabel>คำนำหน้า</RequiredLabel>
 
+                      <RadioCardGroup
+                        options={prefix}
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                        columns={3}
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
                 <FormField
                   control={form.control}
                   name="profile.firstName"
@@ -511,19 +558,6 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
-                {/* <GlobalFormField
-                  control={form.control}
-                  name="profile.gender"
-                  label="เพศ"
-                  type="select"
-                  placeholder="ชาย / หญิง"
-                  // checkFields={checkFields}
-                  selectOptions={[
-                    { label: "ชาย", value: "male" },
-                    { label: "หญิง", value: "female" },
-                    { label: "ไม่ระบุ", value: "not_specified" },
-                  ]}
-                /> */}
 
                 <FormField
                   control={form.control}
@@ -542,19 +576,18 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
-                  name="profile.phone"
+                  name="profile.gender"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>เบอร์โทรศัพท์</FormLabel>
+                      <FormLabel>เพศ</FormLabel>
                       <FormControl>
-                        <InputNumberBox
+                        <RadioCardGroup
+                          options={gender}
                           value={field.value || ""}
                           onChange={field.onChange}
-                          groups={[3, 3, 4]}
-                          format="-"
+                          columns={3}
                         />
                       </FormControl>
                       <FormMessage />
@@ -607,6 +640,24 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                           value={field.value || ""}
                           onChange={field.onChange}
                           groups={[1, 4, 5, 2, 1]}
+                          format="-"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="profile.phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>เบอร์โทรศัพท์</FormLabel>
+                      <FormControl>
+                        <InputNumberBox
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          groups={[3, 3, 4]}
                           format="-"
                         />
                       </FormControl>

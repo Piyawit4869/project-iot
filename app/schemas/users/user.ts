@@ -16,7 +16,18 @@ export const UsersFormSchema = z.object({
   confirmPassword: z
     .preprocess((v) => v ?? "", z.string().min(1, "กรุณาระบุยืนยันรหัสผ่าน"))
     .optional(),
-  status: z.string().default("active"),
+  status: z
+    .string()
+    .default("active")
+    .refine(
+      (val) =>
+        ["new_user", "active", "inactive", "suspended", "deleted"].includes(
+          val
+        ),
+      {
+        message: "กรุณาเลือกสถานะพนักงาน",
+      }
+    ),
   active: z.boolean().default(true),
 
   profile: z.object({

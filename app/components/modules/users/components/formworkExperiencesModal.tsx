@@ -166,7 +166,6 @@ export const WorkExperienceModal: React.FC<Props> = ({
                     <FormControl>
                       <DatePicker
                         value={field.value ?? ""}
-                        placeholder="เช่น Permanent, Contract"
                         onChange={(val?: string) => {
                           field.onChange(val);
                           setRangeDate((prev) => ({

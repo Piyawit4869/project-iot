@@ -42,6 +42,7 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
 
   const [open, setOpen] = React.useState(false);
   const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
+  const [originalData, setOriginalData] = React.useState<any>(null);
 
   const handleOnOpenModal = () => {
     const nextIndex =
@@ -61,30 +62,42 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
     // });
 
     setEditingIndex(Math.max(nextIndex, 0));
+    setOriginalData(null);
     setOpen(true);
   };
 
   const handleOpenEdit = (index: number) => {
+    const current = form.getValues(`profile.educationInformations.${index}`);
+    setOriginalData(structuredClone(current));
     setEditingIndex(index);
     setOpen(true);
   };
 
   const handleClose = () => {
     if (editingIndex !== null) {
-      const v = form.getValues(`profile.educationInformations.${editingIndex}`);
-      const blank =
-        !v?.institution &&
-        !v?.degree &&
-        !v?.major &&
-        !v?.faculty &&
-        !v?.gpa &&
-        !v?.startDate &&
-        !v?.endDate &&
-        !v?.isGraduated;
+      if (originalData) {
+        updateEdu(editingIndex, originalData);
+      } else {
+        const v = form.getValues(
+          `profile.educationInformations.${editingIndex}`
+        );
+        const blank =
+          !v?.institution &&
+          !v?.degree &&
+          !v?.major &&
+          !v?.faculty &&
+          !v?.gpa &&
+          !v?.startDate &&
+          !v?.endDate &&
+          !v?.isGraduated;
 
-      removeEdu(editingIndex);
+        if (blank) {
+          removeEdu(editingIndex);
+        }
+      }
     }
     setOpen(false);
+    setOriginalData(null);
     setEditingIndex(null);
   };
 
@@ -114,6 +127,7 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
             endDate: current?.endDate ?? "",
           });
           toast.success("บันทึกเรียบร้อยแล้ว!", { id: toastId });
+          setOriginalData(null);
           setOpen(false);
           setEditingIndex(null);
         } catch (e) {
@@ -255,7 +269,7 @@ export const UserStudy: React.FC<UserFormProfileProps> = ({
 
                   return (
                     <div key={row.id} className="space-y-4">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items:start sm:items-center justify-between flex-col sm:flex-row">
                         <div className="min-w-0">
                           <h4 className="font-semibold truncate">
                             {inst

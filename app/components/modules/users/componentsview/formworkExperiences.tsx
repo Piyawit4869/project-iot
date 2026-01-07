@@ -81,7 +81,7 @@ export const UserWorkExperience: React.FC<UserWorkExperienceViewProps> = ({
                         )}
                       </div>
 
-                      <div className="grid grid-cols-2 gap-5">
+                      <div className="grid gitd-cols-1 sm:grid-cols-2 gap-5">
                         <InfoRow label="ชื่อบริษัท" value={row.company} />
                         <InfoRow label="ตำแหน่งงาน" value={row.position} />
                         <InfoRow

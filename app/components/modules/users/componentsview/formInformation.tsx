@@ -59,7 +59,7 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
   const departments = data?.organization ?? {};
   const branch = data?.branch ?? {};
   const userDepartments = data?.userDepartments;
-  const userRole = data?.organizationRoles?.[0]?.organizationRoles;
+  const userRole = data?.organizationRoles?.[0]?.organizationRoles ?? "";
   console.log(data);
   return (
     <>
@@ -102,7 +102,7 @@ export const UserProfileView: React.FC<UserFormProfileProps> = ({
             <InfoRow label="รหัสพนักงาน" value={profile.emId} />
 
             <InfoRow label="องค์กร" value={departments?.nameTh} />
-            {/* <InfoRow label="สาขา" value={branch?.nameTh} /> */}
+            {/* <InfoRow label="สาขา" value={lookpla?.nameTh} /> */}
           </div>
           <h1 className="font-bold mt-4">ข้อมูลส่วนตัว</h1>
           <div className="grid gird-col-1 lg:grid-cols-2 gap-5">
