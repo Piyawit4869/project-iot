@@ -31,11 +31,35 @@ export const UsersFormSchema = z.object({
     emId: z.string().nullable(),
     gender: z.string().default("").nullable(),
     birthDate: z.string().nullable().default(null),
-    phone: z.string().nullable(),
+    phone: z
+      .string()
+      .nullable()
+      .optional()
+      .refine(
+        (val) => {
+          if (!val || val === "") return true;
+          return val.length === 10 || val.length === 9;
+        },
+        {
+          message: "กรุณากรอกเบอร์โทรศัพท์ให้ครบ",
+        }
+      ),
     age: z.coerce.number().nullable(),
     imageUrl: z.preprocess((v) => v ?? "", z.string()).default(""),
     photoUrl: z.preprocess((v) => v ?? "", z.string()).default(""),
-    taxId: z.string().nullable().optional(),
+    taxId: z
+      .string()
+      .nullable()
+      .optional()
+      .refine(
+        (val) => {
+          if (!val || val === "") return true;
+          return val.length === 13;
+        },
+        {
+          message: "กรุณากรอกเลขประจำตัวผู้เสียภาษีให้ครบ 13 หลัก",
+        }
+      ),
     nickName: z.string().nullable().optional(),
     nationality: z.string().nullable().optional(),
     religion: z.string().nullable().optional(),

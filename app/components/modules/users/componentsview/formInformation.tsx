@@ -38,9 +38,12 @@ export function getWorkingDays(
 
   const days = end.diff(start, "day");
 
+  if (days < 0) {
+    return "ยังไม่ได้เริ่มทำงาน";
+  }
+
   return `${days} วัน`;
 }
-
 export interface UserFormProfileProps {
   data?: any;
 
