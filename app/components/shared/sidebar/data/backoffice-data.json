@@ -15,96 +15,11 @@
       "isActive": true
     },
     {
-      "name": "แชท",
-      "key": "messages",
-      "icon": "MessageCircleMore",
-      "path": "/message",
-      "isActive": true
-    },
-    {
-      "name": "ลูกค้า",
-      "key": "customer",
-      "icon": "ShieldUser",
-      "isActive": true,
-      "path": "/customer"
-    },
-    {
-      "name": "ออเดอร์",
-      "key": "orders",
-      "icon": "BookA",
-      "isActive": true,
-      "path": "/orders"
-    },
-    {
-      "name": "คลังสินค้า",
-      "key": "inventory",
-      "icon": "Warehouse",
-      "isActive": true,
-      "path": "/inventory"
-    },
-    {
-      "name": "สินค้า",
-      "key": "product",
-      "icon": "Package",
-      "isActive": true,
-      "path": "/products"
-    },
-    {
-      "name": "พนักงาน",
+      "name": "บันทึกข้อมูล",
       "key": "employee",
       "path": "/users",
       "icon": "User",
       "isActive": true
-    },
-    {
-      "name": "บทบาท",
-      "key": "role",
-      "path": "/roles",
-      "icon": "Users",
-      "isActive": true
-    },
-    {
-      "name": "ออนบอร์ด",
-      "key": "on_boarding",
-      "path": "/on-boarding",
-      "icon": "BookOpen",
-      "isActive": true
-    },
-    {
-      "name": "เอกสาร",
-      "key": "notation",
-      "path": "/notation",
-      "icon": "FileText",
-      "isActive": true
-    },
-    {
-      "name": "ตั้งค่า",
-      "key": "setting-organization",
-      "icon": "Settings",
-      "isActive": true,
-      "path": "/setting-organization"
-    },
-    {
-      "name": "ประวัติการเข้าสู่ระบบ",
-      "key": "loginLog",
-      "icon": "History",
-      "isActive": true,
-      "path": "/login-log"
-    },
-
-    {
-      "name": "องค์กร",
-      "key": "organization",
-      "icon": "Hotel",
-      "isActive": false,
-      "path": "/organization"
-    },
-    {
-      "name": "สาขา",
-      "key": "branch",
-      "icon": "Network",
-      "isActive": false,
-      "path": "/branch"
     }
   ],
   "main": []
