@@ -20,10 +20,10 @@ import {
 } from "react-router";
 import { TabControl } from "~/components/shared/tab-control";
 import { TabIndexTableUser, UserFilterFields } from "~/types/user/init-data";
-import {
-  parseDateRangeParam,
-  pickSearchParams,
-} from "../../customer/utils/search-params";
+// import {
+//   parseDateRangeParam,
+//   pickSearchParams,
+// } from "../../customer/utils/search-params";
 import { getUserActionByPermission } from "~/utils/permission";
 import { PermissionBaseAction } from "~/types/roles/permission";
 
@@ -41,28 +41,28 @@ export default function Users() {
   const [status, setStatus] = useState("all");
   const [tableKey, setTableKey] = useState(0);
 
-  const filters = useMemo(
-    () =>
-      pickSearchParams(sp, [
-        "userName",
-        "fullname",
-        "email",
-        "status",
-        "emId",
-        "active",
-        "phone",
-        "gender",
-        "updatedBy",
-      ]),
-    [sp]
-  );
+  // const filters = useMemo(
+  //   () =>
+  //     pickSearchParams(sp, [
+  //       "userName",
+  //       "fullname",
+  //       "email",
+  //       "status",
+  //       "emId",
+  //       "active",
+  //       "phone",
+  //       "gender",
+  //       "updatedBy",
+  //     ]),
+  //   [sp]
+  // );
 
-  const created = parseDateRangeParam(sp, "createdAt") ?? {};
-  const updated = parseDateRangeParam(sp, "updatedAt") ?? {};
-  const createdFrom = created.fromDate;
-  const createdTo = created.toDate;
-  const updatedFrom = updated.fromDate;
-  const updatedTo = updated.toDate;
+  // const created = parseDateRangeParam(sp, "createdAt") ?? {};
+  // const updated = parseDateRangeParam(sp, "updatedAt") ?? {};
+  // const createdFrom = created.fromDate;
+  // const createdTo = created.toDate;
+  // const updatedFrom = updated.fromDate;
+  // const updatedTo = updated.toDate;
 
   const items = TabIndexTableUser(user);
   const clearAllFilters = useCallback(() => {
@@ -80,32 +80,7 @@ export default function Users() {
     }
   };
 
-  const tabControlButtons = [
-    <GlobalButton
-      label={
-        <>
-          <FileDown className="h-4 w-4" />
-          <span className="hidden sm:inline">&nbsp;นำเข้าข้อมูล</span>
-        </>
-      }
-      variant="outline"
-      disabled
-      key="import-button"
-      // className="bg-blue-300 text-black hover:bg-blue-500 hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-    />,
-    <GlobalButton
-      label={
-        <>
-          <FileUp className="h-4 w-4" />
-          <span className="hidden sm:inline">&nbsp;นำออกข้อมูล</span>
-        </>
-      }
-      variant="outline"
-      disabled
-      key="export-button"
-      // className="bg-yellow-300 text-black hover:bg-yellow-500 hover:text-white px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
-    />,
-  ];
+  const tabControlButtons = [];
 
   if (
     getUserActionByPermission(permission, "user", PermissionBaseAction.CREATE)
@@ -119,7 +94,7 @@ export default function Users() {
           <Plus className="h-4 w-4" />
           <span className="hidden sm:inline">&nbsp;สร้าง</span>
         </Button>
-      </Link>
+      </Link>,
     );
   }
 
@@ -134,11 +109,11 @@ export default function Users() {
             pageIndex: res.pageIndex,
             status: status === "all" ? "" : status,
             limit: res.pageSize,
-            ...filters,
-            createdFrom,
-            createdTo,
-            updatedFrom,
-            updatedTo,
+            // ...filters,
+            // createdFrom,
+            // createdTo,
+            // updatedFrom,
+            // updatedTo,
           } as any)
         }
         columns={columns}
@@ -161,7 +136,6 @@ export default function Users() {
             </TabsList>
           </Tabs>
         }
-        customerFilterFields={UserFilterFields}
         isCustomLoading={isLoading}
       />
     </div>

@@ -85,9 +85,7 @@ export function OrgSelector({
             </Avatar>
 
             <div className="min-w-0 text-left data-[state=collapsed]:hidden">
-              <div className="truncate text-sm font-medium text-black">
-                {current?.nameTh ?? "-"}
-              </div>
+              <div className="truncate text-sm font-medium text-black"> </div>
             </div>
           </div>
 

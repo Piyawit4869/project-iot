@@ -85,47 +85,18 @@ export const TabIndexTableUser = (user: extendedUser) => {
       status: "all",
     },
     {
-      label: "ใช้งานอยู่",
+      label: "ผ่าน",
       value: user?.active ?? 0,
       icon: <CheckCircle2 className="w-4 h-4 text-green-600" />,
       status: "active",
       color: "text-green-600",
     },
     {
-      label: "พนักงานงานใหม่",
-      value: user?.new_user ?? 0,
-      icon: <UserPlus className="w-4 h-4 text-blue-600" />,
-      status: "new_user",
-      color: "text-blue-600",
-    },
-
-    // {
-    //   label: "เปิดใช้งาน",
-    //   value: user?.active_user ?? 0,
-    //   icon: <UserCheck className="w-4 h-4 text-emerald-600" />,
-    //   status: "active_user",
-    //   color: "text-emerald-600",
-    // },
-    {
-      label: "พนักงานที่ไม่ใช้งานมานาน",
-      value: user?.inactive ?? 0,
-      icon: <UserMinus className="w-4 h-4 text-gray-500" />,
-      status: "inactive",
-      color: "text-gray-500",
-    },
-    {
-      label: "พนักงานที่ถูกระงับการใช้งาน",
+      label: "ไม่ผ่าน",
       value: user?.suspended ?? 0,
       icon: <Ban className="w-4 h-4 text-orange-600" />,
       status: "suspended",
       color: "text-orange-600",
-    },
-    {
-      label: "พนักงานที่ลบบัญชีออกจากระบบ",
-      value: user?.deleted ?? 0,
-      icon: <Trash2 className="w-4 h-4 text-red-600" />,
-      status: "deleted",
-      color: "text-red-600",
     },
   ];
 

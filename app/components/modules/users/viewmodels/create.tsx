@@ -23,7 +23,7 @@ import { useModalStore } from "~/components/shared/modal/modal-controller";
 export function calculateProgress(
   values: any,
   requiredFields: string[],
-  errors?: any
+  errors?: any,
 ) {
   let completed = 0;
 
@@ -173,7 +173,7 @@ export default function CreateUsers() {
   const progressUserData = calculateProgress(
     values,
     requiredUserFields,
-    formCreate.formState.errors
+    formCreate.formState.errors,
   );
   const totalSteps = 6;
   const hasEmailError = !!formCreate.formState.errors.email;
@@ -224,65 +224,6 @@ export default function CreateUsers() {
                     data={data}
                     roles={roles}
                   />
-                ),
-              },
-
-              {
-                title: "ข้อมูลด้านค่าตอบแทน",
-                descriptions:
-                  "กรอกรายละเอียดเกี่ยวกับเงินเดือน สวัสดิการ และรูปแบบค่าตอบแทน",
-                content: (
-                  <Card className="py-2">
-                    <UserCompensation form={formCreate} />
-                  </Card>
-                ),
-              },
-
-              {
-                title: "คุณสมบัติ & ความสามารถ",
-                descriptions: "กรอกทักษะ ความสามารถ และข้อมูลด้านการศึกษา",
-                content: (
-                  <div className="flex flex-col gap-2 py-2">
-                    <Card className="py-2">
-                      <UserSkills form={formCreate} />
-                    </Card>
-                    <Card className="py-2 mt-3">
-                      <UserStudy form={formCreate} />
-                    </Card>
-                  </div>
-                ),
-              },
-
-              {
-                title: "ประสบการณ์ทำงาน",
-                descriptions:
-                  "กรอกประวัติการทำงานก่อนหน้า รวมถึงหน้าที่และระยะเวลา",
-                content: (
-                  <Card className="py-2">
-                    <UserWorkExperience form={formCreate} />
-                  </Card>
-                ),
-              },
-
-              {
-                title: "โซเชียลมีเดีย",
-                descriptions:
-                  "กรอกช่องทางติดต่อต่าง ๆ ผ่านโซเชียลมีเดียหรือโปรไฟล์ออนไลน์",
-                content: (
-                  <Card className="py-2">
-                    <UserSocalmedias form={formCreate} />
-                  </Card>
-                ),
-              },
-
-              {
-                title: "เอกสารแนบ",
-                descriptions:
-                  "อัปโหลดเอกสารที่เกี่ยวข้อง เช่น สำเนาบัตร Resume หรือใบรับรองต่าง ๆ",
-                content: (
-                  <Card className="py-2">
-                    <UserDocuments form={formCreate} />
-                  </Card>
                 ),
               },
             ]}

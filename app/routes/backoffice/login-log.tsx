@@ -7,10 +7,10 @@ import type { LogEntry } from "~/types/login-log";
 import { useLoginLogPaginate } from "~/api/client/login-log/useGetLoginLog";
 
 import { useMemo } from "react";
-import {
-  parseDateRangeParam,
-  pickSearchParams,
-} from "~/components/modules/customer/utils/search-params";
+// import {
+//   parseDateRangeParam,
+//   pickSearchParams,
+// } from "~/components/modules/customer/utils/search-params";
 import { useSearchParams } from "react-router";
 import { ActivityFilterFields } from "~/utils/filter/activity-filter";
 
@@ -178,20 +178,20 @@ const columns: ColumnDef<LogEntry>[] = [
 export default function Loginlog() {
   const paginate = useLoginLogPaginate;
   const [sp] = useSearchParams();
-  const filters = useMemo(
-    () =>
-      pickSearchParams(sp, [
-        "name",
-        "email",
-        "event",
-        "createdFrom",
-        "createdTo",
-      ]),
-    [sp]
-  );
-  const created = parseDateRangeParam(sp, "createdAt") ?? {};
-  const createdFrom = created.fromDate;
-  const createdTo = created.toDate;
+  // const filters = useMemo(
+  //   () =>
+  //     pickSearchParams(sp, [
+  //       "name",
+  //       "email",
+  //       "event",
+  //       "createdFrom",
+  //       "createdTo",
+  //     ]),
+  //   [sp]
+  // );
+  // const created = parseDateRangeParam(sp, "createdAt") ?? {};
+  // const createdFrom = created.fromDate;
+  // const createdTo = created.toDate;
   return (
     <div className="flex flex-col w-full space-y-8 p-8">
       <TabControl title="ประวัติการเข้าสู่ระบบ" buttons={[]} />
@@ -200,9 +200,9 @@ export default function Loginlog() {
           paginate({
             pageIndex,
             pageSize,
-            ...filters,
-            createdFrom,
-            createdTo,
+            // ...filters,
+            // createdFrom,
+            // createdTo,
           } as any)
         }
         columns={columns}

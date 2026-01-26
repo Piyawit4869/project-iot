@@ -4,7 +4,7 @@ import { Heart, Pencil, Sparkles } from "lucide-react";
 import type { UsersFormValues } from "~/schemas/users/user";
 import { Button } from "~/components/ui/button";
 import { useGetUsersPersonalSummary } from "~/api/client/user";
-import LoadingAnimation from "../../message/loading-animation";
+// import LoadingAnimation from "../../message/loading-animation";
 
 export interface UserPersonalityViewProps {
   data?: Partial<UsersFormValues>;
@@ -58,7 +58,7 @@ export const UserPersonality: React.FC<UserPersonalityViewProps> = ({
 
       {isFetching ? (
         <div className="flex flex-col items-center justify-center h-48 w-full border rounded-lg bg-background/50">
-          <LoadingAnimation text="AI กำลังวิเคราะห์ข้อมูล" />
+          {/* <LoadingAnimation text="AI กำลังวิเคราะห์ข้อมูล" /> */}
         </div>
       ) : (
         <div className="text-base leading-relaxed whitespace-pre-line">

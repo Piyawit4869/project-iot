@@ -16,7 +16,7 @@ import {
 } from "../ui/select";
 import { DatePicker } from "./date-picker";
 import { Textarea } from "../ui/textarea";
-import { SignatureDocument } from "../modules/order/components/signature";
+// import { SignatureDocument } from "../modules/order/components/signature";
 import { Copy, ImageUp } from "lucide-react";
 import { formatDateFull } from "./global-format";
 import ImageUpload from "./image-upload";
