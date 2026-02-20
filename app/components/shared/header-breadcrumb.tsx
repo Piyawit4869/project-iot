@@ -13,7 +13,6 @@ import {
 import { useLocation, useRouteLoaderData } from "react-router";
 import { useRoute } from "~/providers/RouteProvider";
 import { isUUIDv4 } from "~/lib/utils";
-import { useLineBundleConfig } from "~/api/client/message/useMessage";
 
 export const HeaderBreadcrumb = () => {
   const { me } = useRouteLoaderData("root");

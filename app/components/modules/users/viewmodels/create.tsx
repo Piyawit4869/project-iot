@@ -1,24 +1,33 @@
 import React from "react";
-import { Form } from "~/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GlobalModal } from "~/components/shared/modal/modal";
-import { toast } from "sonner";
 import { useCreateUsers, useGetAllDepartments } from "~/api/client/user";
 import { useNavigate } from "react-router";
 import { TabControl } from "~/components/shared/tab-control";
 import { UsersFormSchema, type UsersFormValues } from "~/schemas/users/user";
-import { UserProfileCreate } from "../components/formInformationCreate";
-import { UserCompensation } from "../components/formCompensation";
-import { UserSkills } from "../components/formSkills";
-import { UserWorkExperience } from "../components/formworkExperiences";
-import { UserStudy } from "../components/formStudy";
-import { UserSocalmedias } from "../components/formSocalmedia";
-import { UserDocuments } from "../components/formDocuments";
-import { StepsVertical } from "~/components/shared/global-step";
-import { useGetAllRoles } from "~/api/client/role/useGetRole";
-import { Card } from "~/components/ui/card";
 import { useModalStore } from "~/components/shared/modal/modal-controller";
+import { Button } from "~/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { toast } from "sonner";
+import { StepsVertical } from "~/components/shared/global-step";
+import { UserProfileCreate } from "../components/formInformationCreate";
+import { Card, CardContent } from "~/components/ui/card";
+import ImageUpload from "~/components/shared/image-upload";
+import { Input } from "~/components/ui/input";
+
+type FormValues = {
+  faceImage: File | null;
+  name: string;
+  email: string;
+};
 
 export function calculateProgress(
   values: any,
@@ -41,10 +50,6 @@ export function calculateProgress(
 
 export default function CreateUsers() {
   const navigate = useNavigate();
-  const { data } = useGetAllDepartments(true);
-  const { data: roles } = useGetAllRoles();
-
-  const [current, setCurrent] = React.useState(0);
 
   const formCreate = useForm<UsersFormValues>({
     resolver: zodResolver(UsersFormSchema as any),
@@ -92,36 +97,15 @@ export default function CreateUsers() {
     },
   });
 
-  const { isSubmitting, isDirty } = formCreate.formState;
-  const { mutate, isPending } = useCreateUsers();
+  const { register, handleSubmit, setValue } = useForm<FormValues>({
+    defaultValues: {
+      faceImage: null,
+      name: "",
+      email: "",
+    },
+  });
 
-  const onSubmit = (values: UsersFormValues) => {
-    const payload: UsersFormValues = {
-      ...values,
-      userName: values.userName === "" ? null : values.userName,
-    };
-    GlobalModal.info({
-      title: "สร้างพนักงาน",
-      description: "คุณต้องการสร้างพนักงานนี้ใช่หรือไม่",
-      confirmText: "ยืนยัน",
-      cancelText: "ยกเลิก",
-      onConfirm: () => {
-        const toastId = toast.loading("กำลังสร้างพนักงาน...");
-        mutate(payload, {
-          onSuccess: (data) => {
-            toast.success("สร้างพนักงานเรียบร้อยแล้ว!", { id: toastId });
-            console.log("Created user:", data);
-
-            navigate(`/users/${data?.id}`);
-          },
-          onError: (error) => {
-            toast.error("เกิดข้อผิดพลาดขณะสร้างพนักงาน", { id: toastId });
-            console.log("Error creating user", error);
-          },
-        });
-      },
-    });
-  };
+  const { isDirty } = formCreate.formState;
 
   React.useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
@@ -153,81 +137,82 @@ export default function CreateUsers() {
     }
   };
 
-  const requiredUserFields = [
-    "email",
-    "password",
-    "confirmPassword",
-    "organizationRoleId",
-    "active",
-    "profile.firstName",
-    "profile.lastName",
-    "profile.age",
-  ];
-  const {
-    watch,
-    formState: { errors },
-  } = formCreate;
+  const onSubmit = async (data: FormValues) => {
+    const formData = new FormData();
 
-  const values = formCreate.watch();
+    if (data.faceImage) {
+      formData.append("files", data.faceImage);
+    }
 
-  const progressUserData = calculateProgress(
-    values,
-    requiredUserFields,
-    formCreate.formState.errors,
-  );
-  const totalSteps = 6;
-  const hasEmailError = !!formCreate.formState.errors.email;
+    formData.append("name", data.name);
 
-  const stepProgressMap = [hasEmailError ? 0 : progressUserData, 100, 100];
+    console.log("formData", formData);
 
-  const next = () => {
-    setCurrent((c) => Math.min(c + 1, totalSteps - 1));
-  };
-
-  const prev = () => {
-    setCurrent((c) => Math.max(c - 1, 0));
+    await fetch("http://127.0.0.1:9000/faces/upload", {
+      method: "POST",
+      headers: {
+        "x-agent-token": "supersecret",
+      },
+      body: formData,
+    });
   };
 
   return (
     <div className="flex flex-col space-y-3 p-8">
-      <TabControl title="สร้างพนักงาน" backpath={() => cancelCreate()} />
+      <TabControl
+        title="สร้างข้อมูลบุคคล"
+        backpath={() => cancelCreate()}
+        buttons={[
+          <Button
+            type="submit"
+            form="users"
+            className="px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm"
+          >
+            <span className="hidden sm:inline">สร้าง</span>
+          </Button>,
+        ]}
+      />
       <Form {...formCreate}>
-        <form
-          id="users"
-          onSubmit={formCreate.handleSubmit(onSubmit, (Onerrors) => {
-            const count = Object.keys(Onerrors).length;
-            if (count > 0) {
-              toast.error(`กรอกข้อมูลไม่ครบหรือไม่ถูกต้อง (${count} จุด)`);
-            }
-            console.log("errors", Onerrors);
-          })}
-        >
-          <StepsVertical
-            current={current}
-            onChange={setCurrent}
-            prev={prev}
-            next={next}
-            formName="users"
-            disableBtn={stepProgressMap[current] < 100}
-            finalButtonText="สร้างผู้ใช้งาน"
-            classNameContent="w-full"
-            totalSteps={totalSteps}
-            steps={[
-              {
-                title: "ข้อมูลพนักงาน",
-                descriptions:
-                  "กรอกข้อมูลพื้นฐานของพนักงาน เช่น ชื่อ ตำแหน่ง แผนก",
-                progress: progressUserData,
-                content: (
-                  <UserProfileCreate
-                    form={formCreate}
-                    data={data}
-                    roles={roles}
+        <form id="users" onSubmit={handleSubmit(onSubmit)}>
+          <Card>
+            <CardContent className="space-y-4">
+              <div className=" w-full">
+                <div className="lg:col-span-2 flex flex-col gap-3">
+                  <FormField
+                    control={formCreate.control}
+                    name="profile.imageUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>รูปบุคคล</FormLabel>
+                        <FormControl>
+                          <ImageUpload
+                            value={field.value || ""}
+                            onChange={field.onChange}
+                            className="object-contain"
+                            onFileChange={(file) => setValue("faceImage", file)}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                ),
-              },
-            ]}
-          />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <FormItem>
+                      <FormLabel>ชื่อบุคคล</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="กรอกชื่อบุคคล"
+                          {...register("name", { required: true })}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </form>
       </Form>
     </div>

@@ -1,22 +1,6 @@
-import { DataTable } from "~/components/shared/data-table";
 import { TabControl } from "~/components/shared/tab-control";
 import { Button } from "~/components/ui/button";
-import { useAllUserSummary, usePaginate } from "~/api/client/user";
-import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { TabIndexTableUser } from "~/types/user/init-data";
-import { cn } from "~/lib/utils";
-import { useSidebar } from "~/components/ui/sidebar";
 import React, { useRef } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router";
-import { mockUsers } from "./userData";
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "~/components/ui/empty";
-import { Spinner } from "~/components/ui/spinner";
 import {
   AlertCircle,
   Camera,
@@ -27,22 +11,58 @@ import {
   XCircle,
   Lock,
 } from "lucide-react";
-import { useUserColumns } from "../users/component/columns";
+import axios from "axios";
+import { accessLogColumns, type AccessLog } from "./columns";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "~/components/ui/empty";
+import { Spinner } from "~/components/ui/spinner";
+import { DataTable } from "~/components/shared/data-table";
+import { useLogsTableQuery } from "~/api/client/user";
+import LogsPage from "./table";
+
+type GetLogsParams = {
+  pageIndex: number;
+  limit: number;
+};
+
+export async function getLogsSafe({
+  pageIndex,
+  limit,
+  token,
+}: GetLogsParams & { token?: string }) {
+  try {
+    const res = await axios.get("http://127.0.0.1:9000/logs", {
+      params: { limit },
+      headers: token ? { "x-agent-token": token } : undefined,
+      timeout: 3000,
+    });
+
+    const items: AccessLog[] = res.data?.items ?? [];
+
+    return {
+      data: items,
+      meta: {
+        totalItems: items.length,
+      },
+    };
+  } catch (err) {
+    console.error(err);
+    return { data: [] as AccessLog[], meta: { totalItems: 0 } };
+  }
+}
 
 export default function HomeComponent() {
-  const columns = useUserColumns();
-  const paginate = usePaginate;
-  const { data: user } = useAllUserSummary();
-  const items = TabIndexTableUser(user);
-  const { isMobile } = useSidebar();
-  const [imgSrc, setImgSrc] = React.useState<string | null>(null);
-  const [tableKey, setTableKey] = React.useState(0);
-  const [sp, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const location = useLocation();
   const imgRef = useRef<HTMLImageElement | null>(null);
+  const [stream, setStream] = React.useState(false);
   const [status, setStatus] = React.useState<any>(null);
+  const simPercent = Math.round((status?.last_result?.sim ?? 0) * 100);
 
+  // fetch status
   React.useEffect(() => {
     const fetchStatus = async () => {
       try {
@@ -51,81 +71,51 @@ export default function HomeComponent() {
         );
         const data = await res.json();
         setStatus(data);
+        console.log("Fetched status:", data);
       } catch (err) {
         console.error("status error", err);
       }
     };
 
-    fetchStatus(); // เรียกทันที
-    const t = setInterval(fetchStatus, 1000); // ทุก 1 วิ
+    fetchStatus();
+    const t = setInterval(fetchStatus, 1000);
 
     return () => clearInterval(t);
   }, []);
 
+  // streaming camera
   React.useEffect(() => {
     const ws = new WebSocket("ws://127.0.0.1:9000/ws/stream");
-
-    ws.binaryType = "arraybuffer"; // สำคัญมาก
-
-    ws.onopen = () => {
-      console.log("WS connected");
-    };
+    ws.binaryType = "arraybuffer";
 
     ws.onmessage = (event) => {
+      if (typeof event.data === "string") {
+        const msg = JSON.parse(event.data);
+
+        if (msg.type === "status") {
+          setStream(msg.camera_ready);
+        }
+        return;
+      }
+
       const blob = new Blob([event.data], { type: "image/jpeg" });
       const url = URL.createObjectURL(blob);
 
       if (imgRef.current) {
         imgRef.current.src = url;
+        setStream(true);
       }
     };
 
-    ws.onerror = (err) => {
-      console.error("WS error", err);
-    };
+    ws.onclose = () => setStream(false);
+    ws.onerror = () => setStream(false);
 
-    ws.onclose = () => {
-      console.log("WS closed");
-    };
-
-    return () => {
-      ws.close(); // ปิดเมื่อออกจากหน้า
-    };
+    return () => ws.close();
   }, []);
 
-  const clearAllFilters = React.useCallback(() => {
-    setSearchParams({});
-
-    navigate(location.pathname, { replace: true });
-  }, [setSearchParams, navigate, location.pathname]);
-
-  const handleChangeTab = (val: string) => {
-    const hadQuery =
-      new URLSearchParams(window.location.search).toString().length > 0;
-    setStatus(val);
-    clearAllFilters();
-    if (hadQuery) {
-      setTableKey((k) => k + 1);
-    }
-  };
-
-  const mockPaginate = async ({
-    pageIndex,
-    limit,
-  }: {
-    pageIndex: number;
-    limit: number;
-  }) => {
-    return {
-      data: mockUsers.slice(pageIndex * limit, pageIndex * limit + limit),
-      total: mockUsers.length,
-    };
-  };
-
-  const ESP_BASE = "http://192.168.43.3:80";
-
+  // send to esp32
+  const ESP_BASE = "http://172.16.200.59:80";
   type Command = "unlock";
-
   const sendCommand = async (cmd: Command) => {
     try {
       const res = await fetch(`${ESP_BASE}/${cmd}`, {
@@ -140,7 +130,7 @@ export default function HomeComponent() {
   };
 
   return (
-    <div className="container h-[calc(100vh-58px)] mx-auto">
+    <div className="container mx-auto">
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Dashboard Content */}
@@ -162,8 +152,8 @@ export default function HomeComponent() {
           <div className="rounded-xl shadow-sm border p-6 dark:bg-card">
             <div className="flex">
               <div className="flex flex-1">
-                {!imgSrc ? (
-                  <Empty className="w-1/2 rounded-lg border-1 border-solid border-black">
+                {!stream && (
+                  <Empty className="w-1/2 rounded-lg border border-black">
                     <EmptyHeader>
                       <EmptyMedia variant="icon">
                         <Spinner className="w-8 h-8" />
@@ -174,14 +164,12 @@ export default function HomeComponent() {
                       </EmptyDescription>
                     </EmptyHeader>
                   </Empty>
-                ) : (
-                  <img
-                    ref={imgRef}
-                    src={imgSrc}
-                    alt="Live"
-                    className="w-1/2 bg-black rounded-lg"
-                  />
                 )}
+                <img
+                  ref={imgRef}
+                  alt="Live"
+                  className={`bg-black rounded-lg ${!stream ? "hidden" : ""}`}
+                />
               </div>
               <div className="flex flex-col flex-1">
                 <div className="ml-6">
@@ -195,58 +183,41 @@ export default function HomeComponent() {
                 <div className="flex-1 space-y-6 mt-4 ml-6">
                   <StatusCard
                     icon={<Camera className="w-5 h-5" />}
-                    label="Camera Status"
-                    value={status?.cameraReady ? "Ready" : "Offline"}
-                    status={status?.cameraReady ? "success" : "error"}
+                    label="สถานะกล้อง"
+                    value={stream ? "พร้อมใช้งาน" : "ไม่พร้อมใช้งาน"}
+                    status={stream ? "success" : "error"}
                   />
 
                   <StatusCard
                     icon={<User className="w-5 h-5" />}
-                    label="Person Detection"
+                    label="ตรวจจับบุคคล"
                     value={
-                      status?.personDetected ? "Person Detected" : "No Person"
+                      status?.last_result?.name
+                        ? status?.last_result?.name
+                        : "ไม่พบบุคคล"
                     }
-                    status={status?.personDetected ? "success" : "idle"}
+                    status={status?.last_result?.name ? "success" : "warning"}
                   />
 
-                  <StatusCard
-                    icon={<Scan className="w-5 h-5" />}
-                    label="Face Recognition"
-                    value={
-                      status?.faceMatched
-                        ? "Match Found"
-                        : status?.personDetected
-                          ? "Scanning..."
-                          : "Waiting"
-                    }
-                    status={
-                      status?.faceMatched
-                        ? "success"
-                        : status?.personDetected
-                          ? "warning"
-                          : "idle"
-                    }
-                  />
-
-                  <div className="bg-slate-700/50 rounded-xl p-4 border border-slate-600">
+                  <div className="rounded-xl p-4 bg-orange-400/10 border border-orange-400/30">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-slate-300 font-medium">
-                        Similarity Score
-                      </span>
-                      <span className="text-2xl font-bold text-white">
-                        {status?.similarityScore}%
+                      <p className="text-base font-semibold text-black mb-1">
+                        ค่าความถูกต้อง
+                      </p>
+                      <span className="text-2xl font-bold text-black">
+                        {simPercent}%
                       </span>
                     </div>
-                    <div className="w-full bg-slate-600 rounded-full h-3 overflow-hidden">
+                    <div className="w-full border border-black rounded-full h-3 overflow-hidden">
                       <div
                         className={`h-full transition-all duration-500 ${
-                          status?.similarityScore >= 80
+                          simPercent >= 80
                             ? "bg-green-400"
-                            : status?.similarityScore >= 60
+                            : simPercent >= 60
                               ? "bg-yellow-400"
                               : "bg-red-400"
                         }`}
-                        style={{ width: `${status?.similarityScore}%` }}
+                        style={{ width: `${simPercent}%` }}
                       />
                     </div>
                   </div>
@@ -259,9 +230,11 @@ export default function HomeComponent() {
                         <Unlock className="w-5 h-5" />
                       )
                     }
-                    label="Door Status"
-                    value={status?.doorLocked ? "Locked" : "Unlocked"}
-                    status={status?.doorLocked ? "idle" : "success"}
+                    label="สถานะประตู"
+                    value={
+                      status?.last_result?.ok ? "ปลดล็อคประตู" : "ล็อคประตู"
+                    }
+                    status={status?.last_result?.ok ? "success" : "error"}
                   />
                 </div>
               </div>
@@ -270,31 +243,14 @@ export default function HomeComponent() {
 
           <div className="mt-4">
             <DataTable
-              queryFunction={(res) =>
-                mockPaginate({
-                  pageIndex: res.pageIndex,
-                  limit: res.pageSize,
+              columns={accessLogColumns}
+              queryFunction={({ pageIndex, pageSize, sorting }) =>
+                useLogsTableQuery({
+                  pageIndex,
+                  pageSize,
+                  sorting,
+                  ok: status === "all" ? undefined : status === "success",
                 })
-              }
-              columns={columns}
-              addOn={
-                <Tabs
-                  value={status}
-                  onValueChange={handleChangeTab}
-                  className={cn("block", isMobile && "hidden")}
-                >
-                  <TabsList>
-                    {items.map((c) => (
-                      <TabsTrigger
-                        key={c.label}
-                        value={c.status}
-                        className="hover:bg-border relative px-4 py-2 !shadow-none !border-0 rounded-md after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-black after:transition-all after:w-0 data-[state=active]:after:w-full"
-                      >
-                        {c.icon} {c.label} ({c.value})
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-                </Tabs>
               }
             />
           </div>
@@ -316,7 +272,7 @@ function StatusCard({ icon, label, value, status }: StatusCardProps) {
     success: "text-green-400 bg-green-400/10 border-green-400/30",
     error: "text-red-400 bg-red-400/10 border-red-400/30",
     warning: "text-yellow-400 bg-yellow-400/10 border-yellow-400/30",
-    idle: "text-slate-400 bg-slate-700/50 border-slate-600",
+    idle: "text-yellow-400 bg-yellow-50 border border-yellow-400/30",
   };
 
   const StatusIcon = () => {
@@ -340,8 +296,8 @@ function StatusCard({ icon, label, value, status }: StatusCardProps) {
         <div className="flex items-center gap-3">
           <div className="opacity-70">{icon}</div>
           <div>
-            <p className="text-sm text-slate-400 mb-1">{label}</p>
-            <p className="font-semibold text-white">{value}</p>
+            <p className="text-base font-semibold text-black mb-1">{label}</p>
+            <p className="text-black">{value}</p>
           </div>
         </div>
         <StatusIcon />

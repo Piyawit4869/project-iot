@@ -11,6 +11,7 @@ import { cn } from "~/lib/utils";
 type ImageUploadProps = {
   value: string | null | undefined;
   onChange: (url: string) => void;
+  onFileChange?: (file: File) => void;
   width?: number;
   height?: number;
   className?: string;
@@ -21,6 +22,7 @@ type ImageUploadProps = {
 export default function ImageUpload({
   value,
   onChange,
+  onFileChange,
   width = 110,
   height = 110,
   className,
@@ -35,6 +37,8 @@ export default function ImageUpload({
     if (disabled) return; // กันทุกเคส
     const file = e.target.files?.[0];
     if (!file) return;
+
+    onFileChange?.(file);
 
     const formData = new FormData();
     formData.append("file", file);
@@ -53,7 +57,7 @@ export default function ImageUpload({
     <div
       className={cn(
         "flex flex-col justify-center w-full gap-4  my-2",
-        className
+        className,
       )}
       aria-disabled={disabled}
     >
@@ -65,7 +69,7 @@ export default function ImageUpload({
             "flex flex-col items-center justify-center border border-dashed rounded-lg w-28 h-28 text-sm",
             disabled
               ? "cursor-not-allowed border-muted-foreground/20 text-muted-foreground/60 bg-muted/20 pointer-events-none"
-              : "cursor-pointer border-gray-300 text-gray-600 hover:border-blue-400 hover:bg-border transition"
+              : "cursor-pointer border-gray-300 text-gray-600 hover:border-blue-400 hover:bg-border transition",
           )}
           style={{ width, height }}
           tabIndex={disabled ? -1 : 0}
@@ -79,7 +83,7 @@ export default function ImageUpload({
         <div
           className={cn(
             "relative w-fit flex justify-center",
-            disabled && "pointer-events-none select-none"
+            disabled && "pointer-events-none select-none",
           )}
           style={{ width, height }}
         >
@@ -98,7 +102,7 @@ export default function ImageUpload({
                 "absolute -top-2 -right-2 rounded-full p-1 shadow transition",
                 disabled
                   ? "bg-muted text-muted-foreground/70 border-muted-foreground/20 cursor-not-allowed"
-                  : "bg-white border-gray-300 hover:bg-gray-100"
+                  : "bg-white border-gray-300 hover:bg-gray-100",
               )}
               aria-disabled={disabled}
               tabIndex={disabled ? -1 : 0}

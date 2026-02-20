@@ -1,4 +1,9 @@
-import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   fetchChangePassword,
   fetchCreateUser,
@@ -16,11 +21,13 @@ import {
   checkUserEmailDuplicate,
   fetchGetSearchlUsers,
   checkUserNameDuplicate,
+  fetchLogsPagination,
+  fetchFacesPagination,
+  deleteFace,
 } from "../server/user";
 import type { UsersFormValues } from "~/schemas/users/user";
 import type { PasswordFormValues } from "~/schemas/users/password-user";
-import { getCurrentMe, getMe } from "../server/auth";
-import { fetchUserPersonalSummary } from "../server/customer/user";
+import { getCurrentMe } from "../server/auth";
 
 export const usePaginate = ({
   pageIndex,
@@ -101,6 +108,90 @@ export const usePaginate = ({
   });
 };
 
+export const useLogsTableQuery = ({
+  pageIndex,
+  pageSize,
+  sorting,
+  name,
+  ok,
+  trigger,
+}: {
+  pageIndex: number;
+  pageSize: number;
+  sorting: any;
+  name?: string;
+  ok?: boolean;
+  trigger?: string;
+}) => {
+  return useQuery({
+    queryKey: ["logs", pageIndex, pageSize, sorting, name, ok, trigger],
+    queryFn: async () => {
+      const res = await fetchLogsPagination({
+        page: pageIndex,
+        limit: pageSize,
+        name,
+        ok,
+        trigger,
+        token: "supersecret",
+      });
+
+      return {
+        items: res.data,
+        meta: {
+          totalItems: res.total,
+          totalPages: Math.ceil(res.total / pageSize),
+        },
+      };
+    },
+    placeholderData: keepPreviousData,
+  });
+};
+
+export const useFacesTableQuery = ({
+  pageIndex,
+  pageSize,
+  name,
+}: {
+  pageIndex: number;
+  pageSize: number;
+  name?: string;
+}) => {
+  return useQuery({
+    queryKey: ["faces", pageIndex, pageSize, name],
+    queryFn: async () => {
+      const res = await fetchFacesPagination({
+        page: pageIndex,
+        limit: pageSize,
+        name,
+        token: "supersecret",
+      });
+
+      return {
+        items: res.data,
+        meta: {
+          totalItems: res.total,
+          totalPages: Math.ceil(res.total / pageSize),
+        },
+      };
+    },
+    placeholderData: keepPreviousData,
+  });
+};
+
+export const useDeleteFace = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteFace,
+    onSuccess: () => {
+      // รีเฟรช DataTable
+      queryClient.invalidateQueries({
+        queryKey: ["faces"],
+      });
+    },
+  });
+};
+
 export const useGetMe = () =>
   useQuery({
     queryKey: ["me"],
@@ -113,13 +204,6 @@ export const useGetUsers = (id: string) =>
     queryFn: () => fetchUserById(id),
     enabled: !!id,
   });
-export const useGetUsersPersonalSummary = (userId: string, enabled = true) => {
-  return useQuery({
-    queryKey: ["user-personality", userId],
-    queryFn: () => fetchUserPersonalSummary(userId),
-    enabled: enabled && !!userId,
-  });
-};
 
 export const useGetAllUsers = (role?: string | null) =>
   useQuery({
@@ -156,12 +240,6 @@ export const useUpdateUsers = (id: string) => {
 export const useChangePassword = (id: string) => {
   return useMutation({
     mutationFn: (values: PasswordFormValues) => fetchChangePassword(id, values),
-  });
-};
-
-export const useDeleteUsers = () => {
-  return useMutation({
-    mutationFn: (id: string) => fetchDeleteUsers(id),
   });
 };
 

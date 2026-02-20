@@ -73,7 +73,7 @@ export function DataTable<TData, TValue>({
 
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 20,
+    pageSize: 5,
   });
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -115,7 +115,7 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
   const [colSizing, setColSizing] = React.useState<ColumnSizingState>({});
 
@@ -224,7 +224,7 @@ export function DataTable<TData, TValue>({
           className={cn(
             "rounded-md border overflow-x-auto max-w-[calc(100vw-320px)] ",
             isMobile && "max-w-[calc(100vw-60px)]",
-            state === "collapsed" && "max-w-[calc(100vw-120px)]"
+            state === "collapsed" && "max-w-[calc(100vw-120px)]",
           )}
           // className={cn(
           //   "rounded-md border overflow-x-auto w-full" // Ensure full width
@@ -254,11 +254,11 @@ export function DataTable<TData, TValue>({
                               header.column.id === "profile.imageUrl"
                             ? flexRender(
                                 header.column.columnDef.header,
-                                header.getContext()
+                                header.getContext(),
                               )
                             : flexRender(
                                 <SortableHeader column={header.column} />,
-                                header.getContext()
+                                header.getContext(),
                               )}
 
                         <ColumnResizer header={header} />
@@ -283,7 +283,7 @@ export function DataTable<TData, TValue>({
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </TableCell>
                     ))}

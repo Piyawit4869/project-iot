@@ -4,7 +4,7 @@ import { DataTable } from "~/components/shared/data-table";
 import { formatDateAndTime } from "~/components/shared/global-format";
 import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
 import type { LogEntry } from "~/types/login-log";
-import { useLoginLogPaginate } from "~/api/client/login-log/useGetLoginLog";
+// import { useLoginLogPaginate } from "~/api/client/login-log/useGetLoginLog";
 
 import { useMemo } from "react";
 // import {
@@ -176,7 +176,7 @@ const columns: ColumnDef<LogEntry>[] = [
 ];
 
 export default function Loginlog() {
-  const paginate = useLoginLogPaginate;
+  // const paginate = useLoginLogPaginate;
   const [sp] = useSearchParams();
   // const filters = useMemo(
   //   () =>
@@ -195,7 +195,7 @@ export default function Loginlog() {
   return (
     <div className="flex flex-col w-full space-y-8 p-8">
       <TabControl title="ประวัติการเข้าสู่ระบบ" buttons={[]} />
-      <DataTable
+      {/* <DataTable
         queryFunction={({ pageIndex, pageSize }) =>
           paginate({
             pageIndex,
@@ -207,7 +207,7 @@ export default function Loginlog() {
         }
         columns={columns}
         customerFilterFields={ActivityFilterFields}
-      />
+      /> */}
     </div>
   );
 }

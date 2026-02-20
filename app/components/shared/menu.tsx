@@ -15,6 +15,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { SkeletonLoading } from "./skeleton-loading";
 import { GlobalImage } from "./global-image";
+import logoIoT from "/assets/images/logoIoT.png";
 
 type ItemMenuType = {
   key: string;
@@ -186,54 +187,13 @@ export function Menu() {
             <br />
             {item.email}
           </p>
-        </div>
+        </div>,
       );
     }
     return elements;
   }
   return (
     <div className="justify-between items-center flex gap-1 pr-3">
-      {/* <button
-        onClick={toggleLanguage}
-        className="relative w-10 h-5 rounded-full border border-border shadow-inner transition-colors duration-300"
-      >
-        <span
-          className={`absolute top-[2px] left-[2px] h-4 w-6 flex items-center justify-center rounded-full text-xs font-bold transition-all duration-300
-          ${language === "en" ? "translate-x-[10px]" : "translate-x-0"}
-          text-black dark:text-white`}
-        >
-          {language.toUpperCase()}
-        </span>
-      </button> */}
-      {/*
-      <Popover>
-        <PopoverTrigger asChild>
-          <Icons.BellRing className="items-center hover:text-accent1 hover:scale-110 mr-5 mt-1 p-1 cursor-pointer" />
-        </PopoverTrigger>
-        <PopoverContent>
-          <DropdownMenuLabel className="text-base">
-            การแจ้งเตือน
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuLabel className="text-base flex ">
-            <button className="flex  text-blue-600">
-              <Icons.Check className="items-center hover:text-accent1  " />
-              ทำเครื่องหมายทั้งหมดว่าอ่านแล้ว
-            </button>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <div className="grid gap-4 mt-4 overflow-y-auto max-h-128 pr-2 bg-blue-1">
-            {renderNotification(notification)}
-          </div>
-          <DropdownMenuSeparator />
-          <DropdownMenuLabel className="text-base flex justify-center item-aligmen-center">
-            <button className="flex justify-center text-blue-600">
-              ดูการแจ้งเตือนทั้งหมด
-            </button>
-          </DropdownMenuLabel>
-        </PopoverContent>
-      </Popover> */}
-
       <DropdownMenu>
         <DropdownMenuTrigger className="hover:scale-110">
           {!me?.profile ? (
@@ -244,7 +204,7 @@ export function Menu() {
             />
           ) : (
             <GlobalImage
-              src={me?.profile?.imageUrl}
+              src={logoIoT}
               alt="profile-image"
               width={30}
               height={30}
@@ -253,7 +213,7 @@ export function Menu() {
           )}
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
-          <DropdownMenuLabel>
+          {/* <DropdownMenuLabel>
             <div className="space-y-1 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-primary" />
@@ -276,7 +236,7 @@ export function Menu() {
               </div>
             </div>
           </DropdownMenuLabel>
-          <DropdownMenuSeparator />
+          <DropdownMenuSeparator /> */}
           <DropdownMenuGroup>
             {items.map((item) => (
               <DropdownMenuItem

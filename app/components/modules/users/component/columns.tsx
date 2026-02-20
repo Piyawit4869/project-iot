@@ -1,255 +1,77 @@
-import { GlobalImage } from "~/components/shared/global-image";
-
-import { Eye, PenLine, Trash } from "lucide-react";
-import GlobalButton from "~/components/shared/global-button";
-import { useMemo } from "react";
-
 import type { ColumnDef } from "@tanstack/react-table";
+import { Eye, Trash2 } from "lucide-react";
 import { Link } from "react-router";
+import { useDeleteFace } from "~/api/client/user";
+import { GlobalImage } from "~/components/shared/global-image";
 import { Button } from "~/components/ui/button";
 
-import { GlobalStatusBadge } from "~/components/shared/global-status-tag";
-import type { UserColumn } from "~/types/user/type-user";
-import { statusMap } from "~/types/user/init-data";
-import {
-  formatDateAndTime,
-  formatDateTH,
-  formatPhoneNumber,
-} from "~/components/shared/global-format";
-
-export const useUserColumns = (): ColumnDef<UserColumn>[] => {
-  const columns = useMemo<ColumnDef<UserColumn>[]>(
-    () => [
-      {
-        accessorKey: "profile.imageUrl",
-        header: "รูปภาพ",
-        cell: (info) => {
-          const url = info.getValue() as string;
-
-          return (
-            <GlobalImage
-              src={url}
-              alt="user-image"
-              width={60}
-              height={60}
-              className="rounded-xl w-[60px] h-[60px] object-cover object-center"
-            />
-          );
-        },
-      },
-      {
-        accessorKey: "profile",
-        header: "ชื่อ",
-        cell: (info) => {
-          const id = info.row.original.id;
-          const nickName = info.row.original.profile?.nickName
-            ? `( ${info.row.original.profile?.nickName} )`
-            : "";
-
-          const fullName = `${info.row.original.profile?.prefix || ""} ${
-            info.row.original.profile?.firstName || ""
-          } ${info.row.original.profile?.lastName || ""} ${
-            nickName || ""
-          }`.trim();
-
-          return (
-            <span className="text-blue-400 hover:text-blue-300 hover:underline">
-              <Link to={`/users/${id}`}>
-                {/* <span className=" text-muted-foreground hover:text-blue-400 hover:underline"> */}
-                {fullName || "-"}
-              </Link>
-            </span>
-          );
-        },
-      },
-      {
-        accessorKey: "profile.emId",
-        header: "รหัสพนักงาน",
-        cell: (info) => (
-          <span className="">{(info.getValue() as string) || "-"}</span>
-        ),
-      },
-      {
-        accessorKey: "organizationRoles.name",
-        header: "ตำแหน่งงาน",
-        cell: (info) => (
-          <span className="">{(info.getValue() as string) || "-"}</span>
-        ),
-      },
-      {
-        accessorKey: "userName",
-        header: "ชื่อผู้ใช้งาน",
-        cell: (info) => <span>{(info.getValue() as string) || "-"}</span>,
-      },
-      {
-        accessorKey: "email",
-        header: "อีเมล",
-        minSize: 600,
-
-        cell: (info) => (
-          <span className="text-muted-foreground">
-            {(info.getValue() as string) || "-"}
-          </span>
-        ),
-      },
-      {
-        accessorKey: "active",
-        header: "การใช้งาน",
-        cell: (info) => {
-          const status = info.getValue() as string;
-          return (
-            <span className="">
-              <GlobalStatusBadge value={status} />
-            </span>
-          );
-        },
-      },
-      {
-        accessorKey: "status",
-        header: "สถานะ",
-        cell: (info) => {
-          const status = info.getValue() as string;
-
-          const current = statusMap[status] || {
-            label: status || "-",
-            // className: "text-xs",
-            icon: null,
-          };
-
-          return (
-            <div className="mt-1">
-              <span
-                className={`inline-flex items-center justify-center rounded-xl border py-1 px-3 text-sm font-medium w-fit whitespace-nowrap shrink-0 gap-1 transition-colors ${current.className}`}
-              >
-                {current.icon && (
-                  <span className="w-3 h-3 flex items-center justify-center">
-                    {current.icon}
-                  </span>
-                )}
-                {current.label}
-              </span>
-            </div>
-          );
-        },
-      },
-      {
-        accessorKey: "phone",
-        header: "เบอร์โทรศัพท์",
-        enableSorting: false,
-        cell: (info) => {
-          const phone = info.row.original.profile?.phone as string;
-          return <span>{phone ? formatPhoneNumber(phone) : "-"}</span>;
-        },
-      },
-      {
-        accessorKey: "gender",
-        header: "เพศ",
-        cell: (info) => {
-          const genderMap: Record<string, string> = {
-            male: "ชาย",
-            female: "หญิง",
-            not_specified: "ไม่ระบุ",
-          };
-          const value = info.row.original.profile?.gender as string;
-          return <span>{genderMap[value] ?? "-"}</span>;
-        },
-      },
-      {
-        accessorKey: "birthDate",
-        header: "วัน / เดือน / ปีเกิด",
-        cell: (info) => {
-          const value = info.row.original.profile?.birthDate as string;
-          return <span className="">{formatDateTH(value)}</span>;
-        },
-      },
-
-      {
-        accessorKey: "createdAt",
-        header: "วันที่สร้าง",
-        enableSorting: true,
-        cell: (info) => (
-          <span>{formatDateAndTime(info.getValue() as string)}</span>
-        ),
-      },
-
-      {
-        accessorKey: "createdBy",
-        header: "ผู้สร้าง",
-        cell: (info) => {
-          const id = info.row.original.createdById;
-          const name = (info.getValue() as string) || "-";
-
-          return id ? (
-            <Link to={`/users/${id}`}>
-              <span className="text-muted-foreground hover:text-blue-400 hover:underline">
-                {name}
-              </span>
-            </Link>
-          ) : (
-            <span className="text-muted-foreground">{name}</span>
-          );
-        },
-      },
-      {
-        accessorKey: "updatedAt",
-        header: "วันที่แก้ไข",
-        cell: (info) => {
-          const value = info.getValue() as string;
-          return <span className="">{formatDateAndTime(value)}</span>;
-        },
-      },
-      {
-        accessorKey: "updatedBy",
-        header: "ผู้ที่แก้ไข",
-        cell: (info) => {
-          const id = info.row.original.updatedById;
-          const name = (info.getValue() as string) || "-";
-
-          return id ? (
-            <Link to={`/users/${id}`}>
-              <span className="text-muted-foreground hover:text-blue-400 hover:underline">
-                {name}
-              </span>
-            </Link>
-          ) : (
-            <span className="text-muted-foreground">{name}</span>
-          );
-        },
-      },
-      {
-        id: "actions",
-        header: "การดำเนินการ",
-        cell: (info) => {
-          const id = info.row.original.id;
-          return (
-            <div className="flex items-center gap-2">
-              <Link to={`/users/${id}`}>
-                <Button
-                  className="h-9 w-9 p-0 bg-[#737373] hover:bg-[#5E5E5E]"
-                  aria-label="แก้ไข"
-                  title="แก้ไข"
-                >
-                  <Eye className="w-4 h-4 text-white" />
-                </Button>
-              </Link>
-
-              {/* <div className="w-9">
-                <GlobalButton
-                  label=""
-                  icon={<Trash className="w-4 h-4 text-white" />}
-                  onClick={() => {}}
-                  className="h-10 w-10 p-0 bg-[#FF7062] text-white hover:bg-[#E8594B] hover:text-white transition-colors"
-                  aria-label="ลบ"
-                  disabled
-                />
-              </div> */}
-            </div>
-          );
-        },
-      },
-    ],
-    []
-  );
-
-  return columns;
+export type UserLog = {
+  id: number;
+  name: string | null;
+  cover: string | null;
 };
+
+export const userColumns: ColumnDef<UserLog>[] = [
+  {
+    accessorKey: "cover",
+    header: "รูปภาพ",
+    cell: ({ row }) => {
+      const cover = row.original.cover as string | null;
+      const name = row.original.name as string;
+
+      const url = cover ? `http://127.0.0.1:9000/media${cover}` : "";
+
+      console.log("IMG URL:", url);
+
+      return (
+        <GlobalImage
+          src={url}
+          alt={name}
+          width={60}
+          height={60}
+          className="rounded-xl w-[60px] h-[60px] object-cover object-center"
+        />
+      );
+    },
+  },
+  {
+    accessorKey: "name",
+    header: "Name",
+    cell: (info) => info.getValue() ?? "-",
+  },
+  {
+    id: "actions",
+    header: "การดำเนินการ",
+    cell: (info) => {
+      const id = info.row.original.id;
+      const name = info.row.original.name as string;
+      const { mutate } = useDeleteFace();
+      return (
+        <div className="flex items-center gap-2">
+          <Link to={`/users/${id}`}>
+            <Button
+              className="h-9 w-9 p-0 bg-[#737373] hover:bg-[#5E5E5E]"
+              aria-label="แก้ไข"
+              title="แก้ไข"
+            >
+              <Eye className="w-4 h-4 text-white" />
+            </Button>
+          </Link>
+          <Button
+            className="h-9 w-9 p-0 bg-red-500 hover:bg-red-600"
+            aria-label="แก้ไข"
+            title="แก้ไข"
+            onClick={() => {
+              mutate({
+                name,
+                token: "supersecret",
+              });
+            }}
+          >
+            <Trash2 className="w-4 h-4 text-white" />
+          </Button>
+        </div>
+      );
+    },
+  },
+];

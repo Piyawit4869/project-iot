@@ -41,6 +41,108 @@ export const fetchUserPagination = async (params: {
   }
 };
 
+export const fetchLogsPagination = async ({
+  page,
+  limit,
+  name,
+  ok,
+  trigger,
+  token,
+}: {
+  page: number;
+  limit: number;
+  name?: string;
+  ok?: boolean;
+  trigger?: string;
+  token: string;
+}) => {
+  try {
+    const params = new URLSearchParams({
+      token,
+      page: String(page),
+      limit: String(limit),
+    });
+
+    if (name) params.append("name", name);
+    if (ok !== undefined) params.append("ok", String(ok));
+    if (trigger) params.append("trigger", trigger);
+
+    const url = `http://127.0.0.1:9000/logs?${params.toString()}`;
+
+    const res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error(`HTTP error ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching logs:", error);
+    throw error;
+  }
+};
+
+export const fetchFacesPagination = async ({
+  page,
+  limit,
+  name,
+  token,
+}: {
+  page: number;
+  limit: number;
+  name?: string;
+  token: string;
+}) => {
+  const params = new URLSearchParams({
+    token,
+    page: String(page),
+    limit: String(limit),
+  });
+
+  if (name) params.append("name", name);
+
+  const url = `http://127.0.0.1:9000/faces/list?${params.toString()}`;
+
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error(`HTTP error ${res.status}`);
+  }
+
+  const data = await res.json();
+  console.log("data", data);
+
+  return data;
+};
+
+export const deleteFace = async ({
+  name,
+  token,
+}: {
+  name: string;
+  token: string;
+}) => {
+  const params = new URLSearchParams({
+    token,
+    name,
+  });
+
+  const res = await fetch(
+    `http://127.0.0.1:9000/faces/delete?${params.toString()}`,
+    {
+      method: "DELETE",
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error("Delete failed");
+  }
+
+  return res.json();
+};
+
 export const fetchGetSearchlUsers = async (params: { search?: string }) => {
   try {
     const { data } = await ApiConfig.get(`/crud/users/paginate`, {
@@ -99,7 +201,7 @@ export const fetchCreateUser = async (payload: UsersFormValues) => {
 
 export const fetchUpdateUsers = async (
   id: string,
-  payload: UsersFormValues
+  payload: UsersFormValues,
 ) => {
   try {
     const res = await ApiConfig.put(`/crud/users/edit/${id}`, payload);
@@ -111,12 +213,12 @@ export const fetchUpdateUsers = async (
 
 export const fetchChangePassword = async (
   id: string,
-  payload: PasswordFormValues
+  payload: PasswordFormValues,
 ) => {
   try {
     const { data } = await ApiConfig.put(
       `/crud/users/change-password/${id}`,
-      payload
+      payload,
     );
     return data;
   } catch (error) {
@@ -170,14 +272,14 @@ export const fetchSearchUserOrgs = async (search?: string) => {
 
 export const fetchSearchUserBranches = async (
   groupId: string,
-  search?: string
+  search?: string,
 ) => {
   try {
     const { data } = await ApiConfig.get(
       `/crud/users/search/${groupId}/branches`,
       {
         params: search,
-      }
+      },
     );
 
     return data;
@@ -188,7 +290,7 @@ export const fetchSearchUserBranches = async (
 
 export const changeActiveOrg = async (
   userId: string,
-  payload: { organizationId: string }
+  payload: { organizationId: string },
 ) => {
   try {
     const { data } = await ApiConfig.put(`/crud/users/meta/${userId}`, payload);
@@ -216,7 +318,7 @@ export const checkUserNameDuplicate = async (payload: {
   try {
     const { data } = await ApiConfig.post(
       "/crud/users/username-check",
-      payload
+      payload,
     );
 
     return data.result as boolean;

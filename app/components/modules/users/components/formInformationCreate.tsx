@@ -1,15 +1,15 @@
-import { Check, X } from "lucide-react";
+"use client";
+
 import React, { useEffect } from "react";
 import { useState } from "react";
-import type { UseFormReturn } from "react-hook-form";
+import { Controller, useForm, type UseFormReturn } from "react-hook-form";
 import { DatePicker } from "~/components/shared/date-picker";
-import { GlobalFormField } from "~/components/shared/global-form";
 import { GlobalImage } from "~/components/shared/global-image";
 import ImageUpload from "~/components/shared/image-upload";
 import { RequiredLabel } from "~/components/shared/required-design";
 import { SkeletonLoading } from "~/components/shared/skeleton-loading";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Checkbox } from "~/components/ui/checkbox";
 import {
   Command,
@@ -42,7 +42,6 @@ import { Switch } from "~/components/ui/switch";
 import { UsersFormSchema, type UsersFormValues } from "~/schemas/users/user";
 import { getRequiredPaths } from "~/utils/form-adapter";
 import { OrganizationSelector } from "./formSelectOrganization";
-import { formToJSON } from "axios";
 import {
   useCheckUserEmailDuplicate,
   useCheckUserNameDuplicate,
@@ -63,6 +62,12 @@ export type RangeDate = {
   to?: Date;
 };
 
+type FormValues = {
+  faceImage: File | null;
+  name: string;
+  email: string;
+};
+
 export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
   form,
   roles,
@@ -75,6 +80,14 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
   const { mutateAsync: checkEmail } = useCheckUserEmailDuplicate();
   const { mutateAsync: checkUserName } = useCheckUserNameDuplicate();
   const [rangeDate, setRangeDate] = React.useState<RangeDate>({});
+
+  const { register, handleSubmit, setValue } = useForm<FormValues>({
+    defaultValues: {
+      faceImage: null,
+      name: "",
+      email: "",
+    },
+  });
 
   const allRoles = Array.isArray(roles) ? roles : [];
 
@@ -106,7 +119,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
   ] as const;
 
   const filteredStatusOptions = statusOptions.filter((o) =>
-    o.label.toLowerCase().includes(debouncedStatusSearch.toLowerCase())
+    o.label.toLowerCase().includes(debouncedStatusSearch.toLowerCase()),
   );
 
   const handleBlurEmail = async () => {
@@ -174,9 +187,11 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     <FormLabel>รูปพนักงาน</FormLabel>
                     <FormControl>
                       <ImageUpload
+                        mode="file"
                         value={field.value || ""}
                         onChange={field.onChange}
                         className="object-contain"
+                        onFileChange={(file) => field.onChange(file)}
                       />
                     </FormControl>
                     <FormMessage />
@@ -185,7 +200,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
               />
 
               <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="email"
                   render={({ field }) => (
@@ -202,7 +217,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
 
                 <FormField
                   control={form.control}
@@ -223,7 +238,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                   )}
                 />
 
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="password"
                   render={({ field }) => (
@@ -334,11 +349,11 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
               </div>
 
               <div className="md:grid-cols-2 gap-4">
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="organizationRoleId"
                   render={({ field }) => {
@@ -375,7 +390,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
 
                     const selectedId = field.value as string | null;
                     const selectedRole = (allRoles ?? []).find(
-                      (r) => r.id === selectedId
+                      (r) => r.id === selectedId,
                     );
 
                     return (
@@ -383,7 +398,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                         <RequiredLabel required>ตำแหน่ง</RequiredLabel>
 
                         <div className="flex flex-wrap gap-2">
-                          {/* แสดง role ที่มีอยู่แล้ว */}
+                          {/* แสดง role ที่มีอยู่แล้ว 
                           {selectedRole && (
                             <div className="flex items-center gap-2 px-2 py-1.5 rounded-full border">
                               <GlobalImage
@@ -457,7 +472,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                                             )}
                                           </CommandItem>
                                         );
-                                      }
+                                      },
                                     )}
                                   </CommandList>
                                 </Command>
@@ -470,14 +485,14 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                       </FormItem>
                     );
                   }}
-                />
+                /> */}
               </div>
 
-              <div>
+              {/* <div>
                 <OrganizationSelector form={form} />
-              </div>
+              </div> */}
 
-              <h1 className="font-bold">ข้อมูลส่วนตัว</h1>
+              {/* <h1 className="font-bold">ข้อมูลส่วนตัว</h1>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
@@ -775,7 +790,7 @@ export const UserProfileCreate: React.FC<UserFormProfileProps> = ({
                     </FormItem>
                   )}
                 />
-              </div>
+              </div> */}
             </div>
           </div>
         </CardContent>

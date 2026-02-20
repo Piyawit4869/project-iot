@@ -26,7 +26,6 @@ import { UserCompensation } from "../components/formCompensation";
 import { UserProfileEdit } from "../components/formInformationEdit";
 import { UserDocuments } from "../components/formDocuments";
 import { SingleUsersView } from "./single-users-view";
-import { useGetAllRoles } from "~/api/client/role/useGetRole";
 import { getUserActionByPermission } from "~/utils/permission";
 import { PermissionBaseAction } from "~/types/roles/permission";
 
@@ -51,7 +50,6 @@ export default function SingleUsers() {
   } = useGetUsers(params.id ?? "");
   const { mutate: DeleteUsers } = useDeleteUsers();
 
-  const { data: roles } = useGetAllRoles();
   const [isEdit, setIsEdit] = React.useState(false);
   const displayName =
     `${data?.profile?.firstName}` + " " + `${data?.profile?.lastName}`;
@@ -132,7 +130,7 @@ export default function SingleUsers() {
       deviceToken: raw?.profile?.deviceToken || "",
 
       educationInformations: ensureIds(
-        raw?.profile?.educationInformations ?? []
+        raw?.profile?.educationInformations ?? [],
       ).map((e: any) => ({
         id: e.id ?? undefined,
         institution: e.institution ?? "",
@@ -183,11 +181,11 @@ export default function SingleUsers() {
           description: w.description ?? "",
           createdAt: w.createdAt ?? undefined,
           updatedAt: w.updatedAt ?? undefined,
-        })
+        }),
       ),
 
       compensationConfigs: ensureIds(
-        raw?.profile?.compensationConfigs ?? []
+        raw?.profile?.compensationConfigs ?? [],
       ).map((c: any) => ({
         id: c.id ?? undefined,
         contractType: c.contractType ?? "",
@@ -349,7 +347,7 @@ export default function SingleUsers() {
               {getUserActionByPermission(
                 permission,
                 "user",
-                PermissionBaseAction.DELETE
+                PermissionBaseAction.DELETE,
               ) && (
                 <GlobalButton
                   label="ลบ"
@@ -363,7 +361,7 @@ export default function SingleUsers() {
               {getUserActionByPermission(
                 permission,
                 "user",
-                PermissionBaseAction.UPDATE
+                PermissionBaseAction.UPDATE,
               ) && (
                 <GlobalButton
                   label="แก้ไข"
@@ -402,7 +400,7 @@ export default function SingleUsers() {
                   const count = Object.keys(errors).length;
                   if (count > 0) {
                     toast.error(
-                      `กรอกข้อมูลไม่ครบหรือไม่ถูกต้อง (${count} จุด)`
+                      `กรอกข้อมูลไม่ครบหรือไม่ถูกต้อง (${count} จุด)`,
                     );
                   }
                 })}
@@ -410,12 +408,12 @@ export default function SingleUsers() {
                 <div className="mt-2 flex flex-col md:flex-row gap-5">
                   <div className="md:w-[45%] h-[50%] w-full flex flex-col gap-5">
                     <Card className=" h-full">
-                      <UserProfileEdit
+                      {/* <UserProfileEdit
                         form={form}
                         data={data}
                         // departments={departments}
-                        roles={roles}
-                      />
+                        // roles={roles}
+                      /> */}
                     </Card>
                     <Card className="p-2 ">
                       <UserSkills form={form} data={data} />

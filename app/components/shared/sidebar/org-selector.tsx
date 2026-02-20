@@ -19,7 +19,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { cn } from "~/lib/utils";
 import { useSearchUserOrgs } from "~/api/client/user";
-import PlaceholderImage from "/assets/images/placeholder.webp";
+import logoIoT from "/assets/images/logoIoT.png";
 
 type Org = {
   id: string;
@@ -62,134 +62,32 @@ export function OrgSelector({
   }, [orgs, currentOrgId]);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className="group h-10 w-full justify-between rounded-md "
-          aria-label="Switch organization"
-        >
-          <div className="flex items-center gap-2 min-w-0 group-data-[state=collapsed]:justify-center group-data-[state=collapsed]:gap-0">
-            <Avatar className="h-6 w-6">
-              <AvatarImage
-                src={current?.logoUrl}
-                alt={current?.nameTh ?? "Organization"}
-              />
-              <AvatarFallback className="text-black">
-                <img
-                  src={PlaceholderImage}
-                  alt="placeholder"
-                  className="h-full w-full object-cover "
-                />
-              </AvatarFallback>
-            </Avatar>
-
-            <div className="min-w-0 text-left data-[state=collapsed]:hidden">
-              <div className="truncate text-sm font-medium text-black"> </div>
-            </div>
-          </div>
-
-          <ChevronsUpDown className="h-4 w-4 opacity-60 group-data-[state=collapsed]:hidden" />
-        </Button>
-      </PopoverTrigger>
-
-      <PopoverContent className="w-full" align="end">
-        <Command className="w-full">
-          <CommandInput
-            placeholder="ค้นหารายชื่อ เช่น องค์กร A"
-            value={search}
-            onValueChange={(val) => setSearch(val)}
+    <Button
+      variant="outline"
+      className="group h-10 w-full justify-between rounded-md "
+      aria-label="Switch organization"
+    >
+      <div className="flex items-center gap-2 min-w-0 group-data-[state=collapsed]:justify-center group-data-[state=collapsed]:gap-0">
+        <Avatar className="h-6 w-6">
+          <AvatarImage
+            src={current?.logoUrl}
+            alt={current?.nameTh ?? "Organization"}
           />
+          <AvatarFallback className="text-black">
+            <img
+              src={logoIoT}
+              alt="placeholder"
+              className="h-full w-full object-cover "
+            />
+          </AvatarFallback>
+        </Avatar>
 
-          <CommandList className="pt-2 max-h-[320px]">
-            <CommandEmpty>ไม่พบองค์กร</CommandEmpty>
-
-            <CommandGroup heading="รายชื่อองค์กร">
-              {orgs && orgs.length ? (
-                orgs.map((org: Org) => {
-                  const selected = org.id === currentOrgId;
-
-                  return (
-                    <CommandItem
-                      key={org.id}
-                      value={org.nameTh}
-                      onSelect={() => {
-                        !selected && onChangeOrg(org.id);
-                        setOpen(false);
-                      }}
-                      className="rounded-lg h-[45px] cursor-pointer"
-                    >
-                      <div className="flex items-center gap-2 min-w-0 flex-1">
-                        <Avatar className="h-6 w-6">
-                          <AvatarImage src={org.logoUrl} alt={org.nameTh} />
-                          <AvatarFallback>
-                            <img
-                              src={PlaceholderImage}
-                              alt="placeholder"
-                              className="h-full w-full object-cover"
-                            />
-                          </AvatarFallback>
-                        </Avatar>
-
-                        <div className="min-w-0">
-                          <div className="truncate text-sm">{org.nameTh}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {/* {org.status === "inactive" ? "Inactive" : "Active"} */}
-
-                            {selected ? "เลือกอยู่" : ""}
-                          </div>
-                        </div>
-                      </div>
-
-                      <Check
-                        className={cn(
-                          "h-4 w-4",
-                          selected ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                    </CommandItem>
-                  );
-                })
-              ) : (
-                <></>
-              )}
-            </CommandGroup>
-
-            {(onOpenManage || onOpenCreate) && (
-              <>
-                <CommandSeparator />
-                <CommandGroup heading="Actions">
-                  {onOpenManage && (
-                    <CommandItem
-                      onSelect={() => {
-                        onOpenManage();
-                        setOpen(false);
-                      }}
-                      className="rounded-lg"
-                    >
-                      <Settings className="mr-2 h-4 w-4" />
-                      Manage organizations
-                    </CommandItem>
-                  )}
-
-                  {onOpenCreate && (
-                    <CommandItem
-                      onSelect={() => {
-                        onOpenCreate();
-                        setOpen(false);
-                      }}
-                      className="rounded-lg"
-                    >
-                      <Plus className="mr-2 h-4 w-4" />
-                      Create new organization
-                    </CommandItem>
-                  )}
-                </CommandGroup>
-              </>
-            )}
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+        <div className="min-w-0 text-left data-[state=collapsed]:hidden">
+          <div className="truncate text-sm font-medium text-black">
+            Smart AI Access Control System
+          </div>
+        </div>
+      </div>
+    </Button>
   );
 }
